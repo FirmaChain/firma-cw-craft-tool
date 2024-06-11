@@ -48,7 +48,7 @@ const Sidebar = () => {
   };
 
   const onClickConnectWallet = () => {
-    console.log('click connect waller');
+    console.log('click connect wallet');
   };
 
   const onClickNetworkMenu = (type: NETWORK_TYPE) => {
