@@ -2,6 +2,8 @@ import { bindActionCreators } from "redux";
 import { ThunkAction } from "@reduxjs/toolkit";
 
 import { ACTIONS as globalActions } from "./reducers/globalReducer";
+import { ACTIONS as modalActions } from "./reducers/modalReducer";
+import { ACTIONS as walletActions } from "./reducers/walletReducer";
 
 import { store } from ".";
 const { dispatch } = store;
@@ -16,3 +18,5 @@ declare module "redux" {
 }
 
 export const GlobalActions = bindActionCreators(globalActions, dispatch);
+export const ModalActions = bindActionCreators(modalActions, dispatch);
+export const WalletActions = bindActionCreators(walletActions, dispatch);

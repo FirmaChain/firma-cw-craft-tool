@@ -10,7 +10,7 @@ import Icons from "../../atoms/icons";
 import { MenuItemText } from "./style";
 import ColorButton from "../../atoms/buttons/colorButton";
 import { rootState } from "../../../redux/reducers";
-import { GlobalActions } from "../../../redux/actions";
+import { GlobalActions, ModalActions } from "../../../redux/actions";
 import NetworkMenu from "./network";
 import { CRAFT_CONFIGS } from "../../../config";
 import { shortenAddress } from "../../../utils/common";
@@ -23,8 +23,7 @@ const SOCIAL_LIST = [
 ];
 
 const Sidebar = () => {
-  const isInit: boolean = false;
-  const address: string = '';
+  const { isInit, address } = useSelector((state: rootState) => state.wallet);
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,7 +47,7 @@ const Sidebar = () => {
   };
 
   const onClickConnectWallet = () => {
-    console.log('click connect wallet');
+    ModalActions.handleConnectWallet(true);
   };
 
   const onClickNetworkMenu = (type: NETWORK_TYPE) => {
