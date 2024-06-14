@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Container, MainContent } from "../styles/instantiate";
-import { Content, Header } from "../components/organisms/instantiate";
+import { Content, Header, Preview } from "../components/organisms/instantiate";
 import { rootState } from "../redux/reducers";
 import { IWallet } from "../interfaces/wallet";
 
@@ -61,6 +61,22 @@ const Cw20Instantiate = () => {
           onChangeMinterble={(value) => setMinterble(value)}
           onChangeMinterCap={(value) => setMinterCap(value)}
           onChangeMinterAddress={(value) => setMinterAddress(value)}
+        />
+        <Preview
+          isBasic={isBasic}
+          tokenLogoUrl={tokenLogoUrl}
+          tokenName={tokenName}
+          tokenSymbol={tokenSymbol}
+          tokenDescription={tokenDescription}
+          minterble={minterble}
+          minterCap={minterCap}
+          minterAddress={minterAddress}
+          totalSupply={totalSupply}
+          walletList={walletList}
+          decimals={decimals}
+          label={label}
+          marketingAddress={marketingAddress}
+          marketingProject={marketingProject}
         />
       </MainContent>
     </Container>

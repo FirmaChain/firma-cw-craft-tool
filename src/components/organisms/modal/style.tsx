@@ -60,3 +60,70 @@ export const ContactUsRightTypo = styled.div`
   text-decoration: underline;
   cursor: pointer;
 `;
+
+export const TxConfirmWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const TxConfirmTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const TxConfirmContentTypo = styled.div`
+  color: var(--Gray-750, #DCDCDC);
+  text-align: center;
+  font-family: "General Sans Variable";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+`;
+
+export const TxCofirmTitleTypoWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
+export const TxConfirmModuleTypo = styled.div`
+  color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+  font-family: "General Sans Variable";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+`;
+
+export const TxConfirmSuccessTypo = styled.div`
+  color: var(--Status-Success, var(--Primary-Base-White, #57D962));
+  font-family: "General Sans Variable";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+`;
+
+export const TxConfirmFailedTypo = styled.div`
+  color: rgb(229, 82, 80);
+  font-family: "General Sans Variable";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+`;
+
+export const TxConfirmButtonWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+  margin-bottom: 24px;
+`;
