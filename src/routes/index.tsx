@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
 import Cw20Instantiate from '../pages/cw20Instantiate';
+import Cw20Mytoken from '../pages/cw20MyToken';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
   path,
@@ -13,7 +14,7 @@ const routes: any[] = [
   routeByAuth('/instantiate', <Cw20Instantiate />, false),
   routeByAuth('/execute', <></>, false),
   routeByAuth('/search', <></>, false),
-  routeByAuth('/mytoken', <></>, false),
+  routeByAuth('/mytoken', <Cw20Mytoken />, false),
   routeByAuth('/mytoken/detail/:contractAddress', <></>, false),
 ];
 
