@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 
 import Cw20Instantiate from '../pages/cw20Instantiate';
 import Cw20Mytoken from '../pages/cw20MyToken';
+import Cw20TokenDetail from '../pages/cw20TokenDetail';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
   path,
@@ -15,7 +16,7 @@ const routes: any[] = [
   routeByAuth('/execute', <></>, false),
   routeByAuth('/search', <></>, false),
   routeByAuth('/mytoken', <Cw20Mytoken />, false),
-  routeByAuth('/mytoken/detail/:contractAddress', <></>, false),
+  routeByAuth('/mytoken/detail/:contractAddress', <Cw20TokenDetail />, false),
 ];
 
 const AppRoutes = () => {
