@@ -1,18 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Cw20SpenderAllowance } from "@firmachain/firma-js";
 
 import { rootState } from "../redux/reducers";
 
 import { Container } from "../styles/tokenDetail";
 import { Header, TokenDetailContent } from "../components/organisms/tokenDetail";
 import useTokenDetail from "../hooks/useTokenDetail";
+import useApollo from "../hooks/useApollo";
+import { getTransactionsByAddress } from "../apollo/queries";
+import { Cw20SpenderAllowance } from "@firmachain/firma-js";
+import { ITransaction } from "../interfaces/cw20";
+import { determineMsgTypeAndSpender } from "../utils/common";
 
 
 const Cw20TokenDetail = () => {
   const targetContractAddress = window.location.pathname.replace('/mytoken/detail/', '');
 
   const { getTokenDetail } = useTokenDetail();
+
+  const { client } = useApollo();
 
   const { isInit, address } = useSelector((state: rootState) => state.wallet);
   
@@ -34,6 +40,7 @@ const Cw20TokenDetail = () => {
   const [allAllowances, setAllAllowances] = useState<Cw20SpenderAllowance[]>([]);
   const [allSpenders, setAllSpenders] = useState<Cw20SpenderAllowance[]>([]);
   const [allAccounts, setAllAccounts] = useState<any[]>([]);
+  const [transactionList, setTransactionList] = useState<ITransaction[]>([]);
 
   const fetchTokenList = useCallback(async () => {
     if (isInit) {
@@ -60,9 +67,40 @@ const Cw20TokenDetail = () => {
     }
   }, [getTokenDetail, isInit]);
 
+  const fetchTransactionList = useCallback(async () => {
+    if (client) {
+      getTransactionsByAddress(client, targetContractAddress, 15).then((data) => {
+        const convertTransactions: ITransaction[] = [];
+
+        for (const message of data.messagesByAddress) {
+          const { block, hash, height, messages, success } = message.transaction;
+          const type = determineMsgTypeAndSpender(messages);
+
+          convertTransactions.push({
+            hash: hash,
+            height: height.toString(),
+            timestamp: block.timestamp,
+            type: type[0].type,
+            address: type[0].sender,
+            success: success
+          });
+        }  
+
+        setTransactionList(convertTransactions);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  }, [client]);
+
   useEffect(() => {
     fetchTokenList();
   }, [fetchTokenList]);
+
+  useEffect(() => {
+    fetchTransactionList();
+  }, [client, fetchTransactionList]);
 
   return (
     <Container>
@@ -87,6 +125,7 @@ const Cw20TokenDetail = () => {
         allAllowances={allAllowances}
         allSpenders={allSpenders}
         allAccounts={allAccounts}
+        transactionList={transactionList}
       />
     </Container>
   )

@@ -1,4 +1,6 @@
 import { FirmaUtil } from "@firmachain/firma-js";
+import { CW20_TRANSACTION_TYPES } from "../constants/cw20Types";
+import { IMsg } from "../interfaces/cw20";
 
 // Add commas to integers
 export const addCommasToNumberString = (numberString: string): string => {
@@ -58,6 +60,27 @@ export const shortenAddress = (address: string, startLength: number = 6, endLeng
   return `${start}...${end}`;
 }
 
+export const determineMsgTypeAndSpender = (messages: IMsg[]): { type: string, sender: string }[] => {
+  return messages.map((item) => {
+    const msgKey = Object.keys(item.msg)[0];
+    const messageType = CW20_TRANSACTION_TYPES.find(type => type.key === msgKey);
+    const sender = item.sender;
+
+    return {
+      type: messageType ? messageType.value : 'Unknown',
+      sender: sender,
+    };
+  });
+};
+
+export const determineMsgType = (data: IMsg[]): string[] => {
+  return data.map((item) => {
+    const msgKey = Object.keys(item.msg)[0];
+    const messageType = CW20_TRANSACTION_TYPES.find(type => type.key === msgKey);
+    return messageType ? messageType.value : 'Unknown';
+  });
+};
+
 export const isValidAddress = (address: string) => {
   return FirmaUtil.isValidAddress(address);
 };
@@ -71,4 +94,35 @@ export const compareStringsAsNumbers = (str1: string, str2: string) => {
   if (paddedStr1 > paddedStr2) return 1;
 
   return 0;
+};
+
+export const getTimeAgo = (timestampStr: string) => {
+  const now = new Date();
+  const timestamp = new Date(timestampStr);
+
+  const timezoneOffset = now.getTimezoneOffset() * 60 * 1000;
+
+  const localTimestamp = new Date(timestamp.getTime() - timezoneOffset);
+  const delta = now.getTime() - localTimestamp.getTime();
+
+  const seconds = Math.floor(delta / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  if (seconds < 60) {
+    return `${seconds} s ago`;
+  } else if (minutes < 60) {
+    return `${minutes} m ago`;
+  } else if (hours < 24) {
+    return `${hours} h ago`;
+  } else if (days < 30) {
+    return `${days} d ago`;
+  } else if (months < 12) {
+    return `${months} mo ago`;
+  } else {
+    return `${years} y ago`;
+  }
 };

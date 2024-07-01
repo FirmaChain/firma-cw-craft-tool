@@ -2,6 +2,8 @@ import { Cw20SpenderAllowance } from "@firmachain/firma-js";
 import ContentBody from "./body";
 import { ContentWrapper } from "./style";
 import Title from "./title/title";
+import { ITransaction } from "../../../../interfaces/cw20";
+import WalletSearch from "./search";
 
 interface IProps {
   isBasic: boolean;
@@ -23,6 +25,7 @@ interface IProps {
   allAllowances: Cw20SpenderAllowance[];
   allSpenders: Cw20SpenderAllowance[];
   allAccounts: any[];
+  transactionList: ITransaction[];
 }
 
 const TokenDetailContent = ({
@@ -45,6 +48,7 @@ const TokenDetailContent = ({
   allAllowances,
   allSpenders,
   allAccounts,
+  transactionList
 }: IProps) => {
   return (
     <ContentWrapper>
@@ -68,7 +72,9 @@ const TokenDetailContent = ({
         allAllowances={allAllowances}
         allSpenders={allSpenders}
         allAccounts={allAccounts}
+        transactionList={transactionList}
       />
+      <WalletSearch tokenSymbol={tokenSymbol} decimals={decimals} contractAddress={contractAddress} />
     </ContentWrapper>
   )
 }

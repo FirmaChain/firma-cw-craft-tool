@@ -6,6 +6,8 @@ import { ContentBodyContainer } from "./style";
 import TokenInformation from "./tokenInfomation";
 import MyAllowances from "./myAllowances";
 import AllAccounts from "./allAccounts";
+import { ITransaction } from "../../../../../interfaces/cw20";
+import Transactions from "./transactions";
 
 interface IProps {
   isBasic: boolean;
@@ -26,6 +28,7 @@ interface IProps {
   allAllowances: Cw20SpenderAllowance[];
   allSpenders: Cw20SpenderAllowance[];
   allAccounts: any[];
+  transactionList: ITransaction[];
 }
 
 const ContentBody = ({
@@ -47,6 +50,7 @@ const ContentBody = ({
   allAllowances,
   allSpenders,
   allAccounts,
+  transactionList,
 }: IProps) => {
   return (
     <ContentBodyContainer>
@@ -76,6 +80,7 @@ const ContentBody = ({
       <HalfDottedDivider />
       <AllAccounts decimals={decimals} allAccounts={allAccounts} />
       <HalfDottedDivider />
+      <Transactions transactionList={transactionList} />
     </ContentBodyContainer>
   )
 };

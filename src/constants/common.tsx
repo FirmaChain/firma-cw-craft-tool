@@ -9,3 +9,6 @@ export type MENU_TYPE = typeof MENUS[number];
 
 export const CW20_MODE = ["BASIC", "ADVANCED"] as const;
 export type CW20_MODE_TYPE = typeof CW20_MODE[number];
+
+export const TRANSACTION = ["ALL", "MY"] as const;
+export type TRANSACTION_TYPE = typeof TRANSACTION[number];
