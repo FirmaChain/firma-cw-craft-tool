@@ -90,11 +90,6 @@ export const SpecificMetadataValueWrapper = styled.div`
   width: 100%;
   display: flex;
   gap: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 export const SpecificMetadataTypo = styled.div`

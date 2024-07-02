@@ -8,6 +8,7 @@ import Icons from "../../../../../atoms/icons";
 import JsonViewer from "../../../../../atoms/viewer/jsonViewer";
 import { rootState } from "../../../../../../redux/reducers";
 import { CRAFT_CONFIGS } from "../../../../../../config";
+import CopyIconButton from "../../../../../atoms/buttons/copyIconButton";
 
 interface IProps {
   contractAddress: string;
@@ -83,9 +84,9 @@ const AdditionalInformation = ({ contractAddress, marketingLogo, marketingDescri
         <SpecificItemByStart>
           <SpecificLabelTypo>Metadata</SpecificLabelTypo>
           <SpecificMetadataWrapper>
-            <SpecificMetadataValueWrapper onClick={onClickViewMetadata}>
+            <SpecificMetadataValueWrapper>
               <SpecificMetadataTypo>View Metadata</SpecificMetadataTypo>
-              <Icons.ExternalLink width={'20px'} height={'20px'} />
+              <CopyIconButton text={""} width={"20px"} height={"20px"} />
             </SpecificMetadataValueWrapper>
             {metadata !== "" ? <JsonViewer data={JSON.parse(metadata)} /> : <></> }
             {/* <ReactJson src={JSON.parse(metadata)} /> */}
