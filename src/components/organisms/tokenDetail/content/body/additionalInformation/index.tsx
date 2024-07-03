@@ -75,7 +75,10 @@ const AdditionalInformation = ({ contractAddress, marketingLogo, marketingDescri
         </SpecificItem>
         <SpecificItem>
           <SpecificLabelTypo>Marketing Address</SpecificLabelTypo>
-          <SpecificValueTypo>{marketingAddress}</SpecificValueTypo>
+          <SpecificMetadataValueWrapper>
+            <SpecificValueTypo>{marketingAddress}</SpecificValueTypo>
+            <CopyIconButton text={""} width={"20px"} height={"20px"} />
+          </SpecificMetadataValueWrapper>
         </SpecificItem>
         <SpecificItem>
           <SpecificLabelTypo>Marketing Project</SpecificLabelTypo>

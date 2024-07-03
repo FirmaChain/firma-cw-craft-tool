@@ -1,3 +1,5 @@
+export const BASIC_LABEL = "CW20 CONTRACT - BASIC";
+
 export const MINT = {
   key: "mint",
   value: "Mint"

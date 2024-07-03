@@ -87,7 +87,6 @@ export const SpecificMetadataWrapper = styled.div`
 `;
 
 export const SpecificMetadataValueWrapper = styled.div`
-  width: 100%;
   display: flex;
   gap: 4px;
 `;
