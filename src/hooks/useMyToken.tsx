@@ -13,6 +13,7 @@ const useMyToken = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { network } = useSelector((state: rootState) => state.global);
+  const { address } = useSelector((state: rootState) => state.wallet);
 
   const [firmaSDK, setFirmaSDK] = useState<FirmaSDK | null>(null);
   const [codeId, setCodeId] = useState<string>("0");
@@ -34,9 +35,18 @@ const useMyToken = () => {
     if (!firmaSDK) return [];
     
     try {
-      const contractList = await firmaSDK.CosmWasm.getContractListFromCodeId(codeId);
+      let contracts = await firmaSDK.CosmWasm.getContractListFromCodeId(codeId);
+
+      const myContracts = [];
+
+      for (const contract of contracts) {
+        const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contract);
+        if (contractInfo.contract_info.admin === address) {
+          myContracts.push(contractInfo.address);
+        }
+      }
       
-      return contractList;
+      return myContracts;
     } catch (error) {
       enqueueSnackbar(`failed get "CW20" contract list`, {
         variant: 'error',
@@ -59,6 +69,7 @@ const useMyToken = () => {
     if (!firmaSDK) return resultData;
 
     try {
+      console.log(contractAddress);
       const contractInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
       const { logo  } = await firmaSDK.Cw20.getMarketingInfo(contractAddress);
       
