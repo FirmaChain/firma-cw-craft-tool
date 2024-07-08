@@ -8,9 +8,11 @@ import Dashboard from "./dashboard";
 import Submit from "./submit";
 import { ModalActions } from "../../../../redux/actions";
 import { rootState } from "../../../../redux/reducers";
-import { compareStringsAsNumbers, getTokenStrFromUTokenStr, getUTokenStrFromTokenStr, isValidAddress } from "../../../../utils/common";
+import { compareStringsAsNumbers, getApplyDecimalsAmount, getTokenStrFromUTokenStr, getUTokenStrFromTokenStr, isValidAddress, validateSymbol } from "../../../../utils/common";
 import { NETWORKS } from "../../../../constants/common";
+import { BASIC_LABEL } from "../../../../constants/cw20Types";
 import { CRAFT_CONFIGS } from "../../../../config";
+
 
 interface IProps {
   isBasic: boolean;
@@ -60,19 +62,16 @@ const Preview = ({
   const handleInstantiate = () => {
     if (isInit) {
       const newDecimals = isBasic ? 6 : Number(decimals);
-      console.log(newDecimals);
-      let decimalsTotalSupply = getUTokenStrFromTokenStr(totalSupply, newDecimals.toString());
-      let decimalsMinterCap = getUTokenStrFromTokenStr(minterCap, newDecimals.toString());
-      
-      console.log(decimalsTotalSupply);
-      console.log(decimalsMinterCap);
+
+      let decimalsTotalSupply = getApplyDecimalsAmount(totalSupply, newDecimals.toString());
+      let decimalsMinterCap = getApplyDecimalsAmount(minterCap, newDecimals.toString());
 
       let convertWalletList = [];
 
       for (const wallet of walletList) {
         convertWalletList.push({
           address: wallet.address,
-          amount: getUTokenStrFromTokenStr(wallet.amount, newDecimals.toString())
+          amount: getApplyDecimalsAmount(wallet.amount, newDecimals.toString())
         });
       }
 
@@ -97,19 +96,19 @@ const Preview = ({
             project: isBasic ? `${address} PROJECT` : marketingProject === '' ? `${address} PROJECT` : marketingProject
           }
         };
-  
+
         ModalActions.handleData({
           module: '/cosmwasm/instantiateContract',
           params: {
             admin: address,
             codeId: codeId,
-            label: label === '' ? 'CW20 Contract - BASIC' : label,
+            label: label === '' ? BASIC_LABEL : label,
             msg: JSON.stringify(messageData)
           }
         });
 
         ModalActions.handleQrConfirm(true);
-        
+
       } else {
         ModalActions.handleData({
           module: 'Instantiation',
@@ -127,12 +126,15 @@ const Preview = ({
   const checkInstantiate = (isBasic: boolean, walletList: IWallet[], totalSupply: string, minterCap: string) => {
     const addresses = walletList.map(item => item.address);
     const uniqueAddresses = new Set(addresses);
-    
+
     if (tokenName === '')
       return 'Empty Token Name';
 
     if (tokenSymbol === '')
       return 'Empty Token Symbol';
+
+    if (!validateSymbol(tokenSymbol))
+      return 'Symbol is not in expected format [a-zA-Z0-9\\-]{3,12}';
 
     if (!isBasic && decimals === '')
       return 'Empty Decimals';
@@ -153,10 +155,10 @@ const Preview = ({
     if (walletList.length >= 1 && addresses.length !== uniqueAddresses.size)
       return 'Duplicated address';
 
-    if (!isBasic && minterAddress === '')
+    if (minterble && minterAddress === '')
       return 'Empty minter address';
 
-    if (minterble && !isBasic && minterCap === '')
+    if (minterble && minterCap === '')
       return 'Empty minter cap amount';
 
     if (minterble && compareStringsAsNumbers(minterCap, totalSupply) === -1)

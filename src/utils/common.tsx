@@ -7,6 +7,30 @@ export const addCommasToNumberString = (numberString: string): string => {
   return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
+export const validateSymbol = (symbol: string): boolean => {
+  const symbolRegex = /^[a-zA-Z\-]{3,12}$/;
+  if (!symbolRegex.test(symbol)) {
+    return false;
+  }
+
+  return true;
+};
+
+export const getApplyDecimalsAmount = (amount: string, decimals: string): string => {
+  const zerosToAdd = parseInt(decimals, 10);
+
+  if (amount.includes('.')) {
+    const [integerPart, fractionalPart] = amount.split('.');
+    const fractionalLength = fractionalPart.length;
+    if (fractionalLength >= zerosToAdd) {
+      return integerPart + fractionalPart.slice(0, zerosToAdd);
+    }
+    return integerPart + fractionalPart + '0'.repeat(zerosToAdd - fractionalLength);
+  } else {
+    return amount + '0'.repeat(zerosToAdd);
+  }
+};
+
 // getUTokenStrFromTokenStr
 export const getUTokenStrFromTokenStr = (numberString: string, decimals: string): string => {
   const convertDecimals = Number(decimals);
@@ -30,7 +54,7 @@ export const getUTokenStrFromTokenStr = (numberString: string, decimals: string)
 export const getTokenStrFromUTokenStr = (amount: string, decimals: string) => {
   const decimalsNumber = parseInt(decimals, 10);
   const pointIndex = amount.length - decimalsNumber;
-  
+
   let result = '';
   if (pointIndex > 0) {
     result = amount.slice(0, pointIndex) + '.' + amount.slice(pointIndex);
