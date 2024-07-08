@@ -102,6 +102,9 @@ export const GoToExecuteButton = styled.div`
   width: calc(150px - 48px);
   height: calc(40px - 20px);
   display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   padding: 10px 24px;
   border-radius: 8px;
   border: 1px solid var(--Green-500, #02E191);

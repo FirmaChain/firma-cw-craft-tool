@@ -1,22 +1,19 @@
 import { Button } from "@mui/material";
-import { styled } from '@mui/system';
 import { useSnackbar } from "notistack";
 
 import Icons from "../icons";
+import styled from "styled-components";
 
-const StyledButton = styled(Button, {
-  shouldForwardProp: (prop) =>
-    prop !== 'buttonWidth' && prop !== 'buttonHeight' && prop !== 'buttonBorder',
-})<{
-  buttonWidth: string;
-  buttonHeight: string;
-  buttonBorder?: string;
-}>(({ buttonWidth, buttonHeight, buttonBorder }) => ({
-  width: buttonWidth,
-  height: buttonHeight,
+const StyledButton = styled(Button)<{
+  $buttonWidth: string;
+  $buttonHeight: string;
+  $buttonBorder?: string;
+}>(({ $buttonWidth, $buttonHeight, $buttonBorder = 'none' }) => ({
+  width: `${$buttonWidth} !important`,
+  height: `${$buttonHeight} !important`,
   minWidth: 0,
   color: '#fff',
-  border: buttonBorder,
+  border: `${$buttonBorder} !important`,
   padding: 0,
   '&:hover': {
     opacity: 0.8,
@@ -51,8 +48,8 @@ const CopyIconButton = ({ text, width, height }: IProps) => {
 
   return (
     <StyledButton
-      buttonWidth={width}
-      buttonHeight={height}
+      $buttonWidth={width}
+      $buttonHeight={height}
       onClick={onCopyToClipboard}
     >
       <Icons.Copy width={width} height={width} />

@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
-import { styled } from '@mui/system';
 import { CSSProperties } from 'react';
+import styled from 'styled-components';
 
 interface IProps {
   width: string;
@@ -12,36 +12,38 @@ interface IProps {
   onClick: () => void;
 }
 
-const StyledButton = styled(Button, {
-  shouldForwardProp: (prop) =>
-    prop !== 'buttonColor' && prop !== 'buttonWidth' && prop !== 'buttonHeight' && prop !== 'buttonBorder',
-})<{
-  buttonColor: string;
-  buttonWidth: string;
-  buttonHeight: string;
-  buttonBorder?: string;
-}>(({ buttonColor, buttonWidth, buttonHeight, buttonBorder }) => ({
-  backgroundColor: buttonColor,
-  width: buttonWidth,
-  height: buttonHeight,
+const StyledButton = styled(Button)<{
+  $buttonColor: string;
+  $buttonWidth: string;
+  $buttonHeight: string;
+  $buttonBorder?: string;
+}>(({ $buttonColor, $buttonWidth, $buttonHeight, $buttonBorder = 'none' }) => ({
+  backgroundColor: `${$buttonColor} !important`,
+  width: `${$buttonWidth} !important`,
+  height: `${$buttonHeight} !important`,
   color: '#fff',
-  border: buttonBorder,
+  border: `${$buttonBorder} !important`,
   '&:hover': {
-    backgroundColor: buttonColor,
+    backgroundColor: `${$buttonColor} !important`,
     opacity: 0.8,
   },
   textAlign: 'center',
 }));
 
-const ColorButton = ({ width, height, color, text, border, sx = {}, onClick }: IProps) => {
+const ColorButton = ({ width, height, color, text, border, sx = {}, onClick, ...props }: IProps) => {
+
+  console.log(color, text, border);
+  
+
   return (
     <StyledButton
-      buttonColor={color}
-      buttonWidth={width}
-      buttonHeight={height}
-      buttonBorder={border}
+      $buttonColor={color}
+      $buttonWidth={width}
+      $buttonHeight={height}
+      $buttonBorder={border}
       onClick={onClick}
       sx={sx}
+      {...props}
     >
       {text}
     </StyledButton>
