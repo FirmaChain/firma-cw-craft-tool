@@ -1,15 +1,21 @@
 import styled from "styled-components";
 
-const Container = styled.div`
+import { useContractContext } from "../context/contractContext";
+import MintPreview from "./previews/mint";
+import { ITokenInfoState } from "../hooks/useExecueteHook";
+import DefaultView from "./previews/default";
+
+const Container = styled.div<{ $isSelectMenu: boolean}>`
     width: 100%;
     display: flex;
     height: auto;
     padding: 48px;
     flex-direction: column;
+    justify-content: center;
     align-items: flex-start;
-    gap: 10px;
+    gap: 24px;
     border-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
+    border: ${(props) => props.$isSelectMenu ? '1px solid var(--Green-500, #02e191)' : '1px solid var(--Green-500, #444)'};
     background: var(--200, #1e1e1e);
 `;
 
@@ -22,10 +28,18 @@ const TitleTypo = styled.div`
     line-height: 22px;
 `;
 
-const Preview = () => {
+interface IProps {
+    tokenInfoState: ITokenInfoState
+}
+
+const Preview = ({ tokenInfoState }: IProps) => {
+    const { selectMenu } = useContractContext();
+
     return (
-        <Container>
+        <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
             <TitleTypo>{"EXECUTION PREVIEW"}</TitleTypo>
+            {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
+            {selectMenu.value === "mint" && <MintPreview minterCap={tokenInfoState.minter.cap} totalSupply={tokenInfoState.totalSupply} decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />}
         </Container>
     );
 };

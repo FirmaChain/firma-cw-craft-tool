@@ -23,8 +23,8 @@ interface IProps {
 const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply, walletList, decimals }: IProps) => {
   const [toggleMinterDetail, setToggleMinterDetail] = useState<boolean>(false);
 
-  const onClickToggleMinterDetail = () => {
-    setToggleMinterDetail(!toggleMinterDetail);
+  const onClickToggleMinterDetail = (isOpen: boolean) => {
+    setToggleMinterDetail(isOpen);
   };
 
   return (
@@ -40,7 +40,7 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
               <HeaderRightWrapper>
                 <HeaderMinterCapAmount>{minterCap !== "" ? getUTokenStrFromTokenStr(minterCap, decimals) : "0"}</HeaderMinterCapAmount>
                 <HeaderMinterCapTokenSymbol>{tokenSymbol !== "" ? tokenSymbol : ""}</HeaderMinterCapTokenSymbol>
-                <ArrowToggleButton isOpen={toggleMinterDetail} onToggle={onClickToggleMinterDetail} />
+                <ArrowToggleButton onToggle={onClickToggleMinterDetail} />
               </HeaderRightWrapper>
             </MinterCapHeaderWrapper>
             {toggleMinterDetail ?

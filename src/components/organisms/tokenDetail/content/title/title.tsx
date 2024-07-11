@@ -73,7 +73,7 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply }: IProps) =>
                 </TokenInfoWrapper>
             </TitleWrapper>
             <GoToExecuteButton onClick={onClickExecute}>
-                <GoToButtonTypo>Go to execute</GoToButtonTypo>
+                <GoToButtonTypo>Go to excute</GoToButtonTypo>
                 <GoToButtonTypo>→</GoToButtonTypo>
             </GoToExecuteButton>
         </TitleContainer>

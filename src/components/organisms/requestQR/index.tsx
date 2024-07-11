@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { QRContainer, QRTimerText, RefreshIconButton } from './style';
@@ -19,7 +19,7 @@ interface IProps {
 const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IProps) => {
   const { network } = useSelector((state: rootState) => state.global);
   const { checkRequest, generateRequestQR } = useAPI();
-  const [craftServerURI, setCraftServerURI] = useState<string>(CRAFT_CONFIGS.MAINNET.CRAFT_SERVER_URI);
+  // const [craftServerURI, setCraftServerURI] = useState<string>(CRAFT_CONFIGS.MAINNET.CRAFT_SERVER_URI);
 
   const [requestKey, setRequestKey] = useState('');
   const [qrcode, setQrcode] = useState('');
@@ -27,10 +27,9 @@ const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IP
   const [timerText, setTimerText] = useState('02:59');
   const [activeQR, setActiveQR] = useState(false);
 
-  useEffect(() => {
+  const craftServerURI = useMemo(() => {
     const craftURI = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.CRAFT_SERVER_URI : CRAFT_CONFIGS.TESTNET.CRAFT_SERVER_URI;
-    
-    setCraftServerURI(craftURI);
+    return craftURI;
   }, [network]);
 
   useEffect(() => requestQR(), []);

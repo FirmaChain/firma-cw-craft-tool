@@ -1,7 +1,6 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent, SelectProps } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
-import { IC_SELECT_ARROW } from "../icons/pngIcons";
 
 const Container = styled.div`
     max-width: 300px;
@@ -35,13 +34,6 @@ const CustomSelect = styled(Select)<SelectProps>(({ theme }) => ({
     },
 }));
 
-const CustomArrowIcon = styled.div`
-    background-image: url("/images/img_achivement_bg1.png");
-    // background-img: url(${IC_SELECT_ARROW});
-    width: 20px;
-    height: 20px;
-`;
-
 interface IMenuState {
     value: any;
     label: string;
@@ -50,19 +42,21 @@ interface IMenuState {
 interface IProps {
     maxWidth?: string;
     menus: IMenuState[];
+    onChangeMenu: (value: string) => void;
 }
 
-const CustomSelectInput = ({ maxWidth = "300px", menus }: IProps) => {
+const CustomSelectInput = ({ maxWidth = "300px", menus, onChangeMenu }: IProps) => {
     const [value, setValue] = useState("");
 
     const handleChange = (event: SelectChangeEvent<any>) => {
         setValue(event.target.value as string);
+        onChangeMenu(event.target.value as string);
     };
 
     return (
         <FormControl variant="outlined" fullWidth>
             <Container style={{ maxWidth }}>
-                <CustomSelect hiddenLabel={true} value={value} onChange={handleChange} IconComponent={CustomArrowIcon}>
+                <CustomSelect value={value} onChange={handleChange}>
                     {menus.map((value, index) => {
                         return (
                             <MenuItem key={index} value={value.value}>

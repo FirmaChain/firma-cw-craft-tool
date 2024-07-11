@@ -15,7 +15,6 @@ interface IProps {
 const Headers = ["Receiver", "Amount", "Expires"];
 
 const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
-    console.log(allSpenders);
     const [searchAddress, setSearchAddress] = useState<string>("");
 
     const [allowancesToShow, setAllowancesToShow] = useState<IAllowances[]>([]);

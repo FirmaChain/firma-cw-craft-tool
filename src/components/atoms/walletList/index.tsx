@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FirmaUtil } from "@firmachain/firma-js";
 
-import InputAddressAmount from "../../../../../atoms/input/inputAddressAmount";
 import {
   AddWalletCountWrapper,
   AddWalletTypo,
   AddWalletWrapper,
-  DeleteAllButton,
   MaxWalletCountTypo,
   NowWalletCountTypo,
   TotalWalletTypo,
@@ -16,16 +14,21 @@ import {
   WalletListWrapper
 } from "./style";
 
-import { IWallet } from "../../../../../../interfaces/wallet"
-import Icons from "../../../../../atoms/icons";
+import { IWallet } from "../../../interfaces/wallet";
+import InputAddressAmount from "../input/inputAddressAmount";
+import Icons from "../icons";
+import { useSnackbar } from "notistack";
+
 
 interface IProps {
   decimals: string;
-  maxLength?: number;
+  maxWalletCount?: number;
   onChangeWalletList: (walletList: IWallet[]) => void;
 }
 
-const WalletList = ({ decimals, maxLength = 20, onChangeWalletList }: IProps) => {
+const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList }: IProps) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [walletList, setWalletList] = useState<IWallet[]>([{ recipient: '', amount: '' }]);
   const [validity, setValidity] = useState<boolean[]>([true]);
 
@@ -37,11 +40,18 @@ const WalletList = ({ decimals, maxLength = 20, onChangeWalletList }: IProps) =>
 
   useEffect(() => {
     onChangeWalletList(walletList);
-  }, [walletList, onChangeWalletList]);
-  
+  }, [walletList]);
+
   const handleAddWallet = () => {
-    setWalletList([...walletList, { recipient: '', amount: '' }]);
-    setValidity([...validity, true]);
+    if (walletList.length < maxWalletCount) {
+      setWalletList([...walletList, { recipient: '', amount: '' }]);
+      setValidity([...validity, true]);
+    } else {
+      enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
+        variant: "info",
+        autoHideDuration: 2000,
+    });
+    }
   };
 
   const handleRemoveWallet = (index: number) => {
@@ -70,11 +80,6 @@ const WalletList = ({ decimals, maxLength = 20, onChangeWalletList }: IProps) =>
     return FirmaUtil.isValidAddress(value);
   };
 
-  const handleDeleteAll = () => {
-    setWalletList([{ recipient: '', amount: '' }]);
-    setValidity([true]);
-  };
-
   return (
     <WalletListWrapper>
       <WalletListSummery>
@@ -82,10 +87,9 @@ const WalletList = ({ decimals, maxLength = 20, onChangeWalletList }: IProps) =>
           <TotalWalletTypo>Total Wallet</TotalWalletTypo>
           <WalletCountWrapper>
             <NowWalletCountTypo>{walletList.length}</NowWalletCountTypo>
-            <MaxWalletCountTypo>/20</MaxWalletCountTypo>
+            <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
           </WalletCountWrapper>
         </TotalWalletWrapper>
-        <DeleteAllButton length={walletList.length} onClick={handleDeleteAll}>Delete All</DeleteAllButton>
       </WalletListSummery>
       {walletList.map((wallet, index) => (
         <InputAddressAmount
@@ -107,7 +111,7 @@ const WalletList = ({ decimals, maxLength = 20, onChangeWalletList }: IProps) =>
         <AddWalletCountWrapper>
           <AddWalletTypo>{'('}</AddWalletTypo>
           <AddWalletTypo>{walletList.length}</AddWalletTypo>
-          <AddWalletTypo>{`/${maxLength})`}</AddWalletTypo>
+          <AddWalletTypo>{`/${maxWalletCount})`}</AddWalletTypo>
         </AddWalletCountWrapper>
       </AddWalletWrapper>
     </WalletListWrapper>

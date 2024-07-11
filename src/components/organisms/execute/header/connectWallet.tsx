@@ -3,6 +3,7 @@ import ColorButton from "../../../atoms/buttons/colorButton";
 import { ModalActions } from "../../../../redux/actions";
 
 const Container = styled.div`
+    width: calc(100% - 160px);
     display: flex;
     padding: 80px;
     justify-content: center;

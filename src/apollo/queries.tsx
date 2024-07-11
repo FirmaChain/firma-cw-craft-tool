@@ -40,6 +40,3 @@ export const getTransactionsByAddress = async (
     return null;
   }
 };
-
-// firma1mp3dl27wwhdkhkyed5d4ypaq7h5dewazqkqhny98sxcy2cpu23ls369adt
-// hash, type, block, from, result, time

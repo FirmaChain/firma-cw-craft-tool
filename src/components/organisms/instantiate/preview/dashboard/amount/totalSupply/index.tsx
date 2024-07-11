@@ -16,8 +16,8 @@ interface IProps {
 const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps) => {
   const [toggleWalletList, setToggleWalletList] = useState<boolean>(false);
   
-  const onClickToggleWalletList = () => {
-    setToggleWalletList(!toggleWalletList);
+  const onClickToggleWalletList = (isOpen: boolean) => {
+    setToggleWalletList(isOpen);
   };
 
   return (
@@ -30,7 +30,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
         <SummeryRightWrapeer>
           <SummeryRightTotalSupply>{totalSupply !== "" ? getUTokenStrFromTokenStr(totalSupply, decimals) : ""}</SummeryRightTotalSupply>
           <SummeryRightTokenSymbol>{tokenSymbol !== "" ? tokenSymbol : ""}</SummeryRightTokenSymbol>
-          <ArrowToggleButton isOpen={toggleWalletList} onToggle={onClickToggleWalletList} />
+          <ArrowToggleButton onToggle={onClickToggleWalletList} />
         </SummeryRightWrapeer>
       </TotalSupplySummery>
       {toggleWalletList ?
@@ -48,7 +48,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
               <WalletListItem key={index}>
                 <ItemLeftWrapper>
                   <Icons.wallet width={'20px'} height={'20px'} />
-                  <ItemLeftAddress>{wallet.address !== "" ? wallet.address : "-"}</ItemLeftAddress>
+                  <ItemLeftAddress>{wallet.recipient !== "" ? wallet.recipient : "-"}</ItemLeftAddress>
                 </ItemLeftWrapper>
                 <ItemTokenAmount>{wallet.amount !== "" ? getUTokenStrFromTokenStr(wallet.amount, decimals) : "0"}</ItemTokenAmount>
               </WalletListItem>

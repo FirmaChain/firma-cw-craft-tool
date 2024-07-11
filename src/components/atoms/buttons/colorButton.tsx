@@ -31,10 +31,6 @@ const StyledButton = styled(Button)<{
 }));
 
 const ColorButton = ({ width, height, color, text, border, sx = {}, onClick, ...props }: IProps) => {
-
-  console.log(color, text, border);
-  
-
   return (
     <StyledButton
       $buttonColor={color}

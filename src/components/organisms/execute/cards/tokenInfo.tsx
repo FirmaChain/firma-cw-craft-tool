@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+
 import Icons from "../../../atoms/icons";
-import { IC_VALID_SHIELD } from "../../../atoms/icons/pngIcons";
+import { IC_DOTTED_DIVIDER, IC_VALID_SHIELD } from "../../../atoms/icons/pngIcons";
 import { BASIC_LABEL } from "../../../../constants/cw20Types";
 import CustomSelectInput from "../../../atoms/input/customSelectInput";
+import Mint from "./functions/mint";
+import { useContractContext } from "../context/contractContext";
+import { ITokenInfoState } from "../hooks/useExecueteHook";
 
-const Container = styled.div`
+const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
     display: flex;
     padding: 48px;
@@ -14,8 +18,16 @@ const Container = styled.div`
     gap: 32px;
     align-self: stretch;
     border-radius: 24px;
-    border: 1px solid var(--Green-500, #02e191);
+    /* border: ; */
+    border: ${(props) => props.$isSelectMenu ? '1px solid var(--Green-500, #02e191)' : '1px solid var(--Green-500, #444)'};
     background: var(--200, #1e1e1e);
+`;
+
+const TokenInfoWrap = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 `;
 
 const TitleTypo = styled.div`
@@ -107,26 +119,54 @@ const ContractTypeTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-interface IProps {
-    tokenName: string;
-    tokenSymbol: string;
-    tokenLogoUrl: string;
-    contractLabel: string;
+const DOTTED_DIVIDER = styled.img`
+    width: 100%;
+    height: auto;
+`;
+
+export interface IMenuItem {
+    value: string;
+    label: string;
 }
 
-const TokenInfo = ({ tokenName, tokenSymbol, tokenLogoUrl, contractLabel }: IProps) => {
+const basicMenuItems: IMenuItem[] = [
+    { value: "select", label: "Select" },
+    { value: "mint", label: "Mint" },
+    { value: "burn", label: "Burn" },
+    { value: "burnFrom", label: "Burn From" },
+    { value: "increaseAllowance", label: "Increase Allowance" },
+    { value: "decreaseAllowance", label: "Decrease Allowance" },
+    { value: "transfer", label: "Transfer" },
+    { value: "transferFrom", label: "Transfer From" },
+    { value: "updateLogo", label: "Update Logo" },
+    { value: "updateMarketing", label: "Update Marketing" },
+];
+
+const advancedMenuItems: IMenuItem[] = [
+    ...basicMenuItems,
+    { value: "updateMinter", label: "Update Minter" }
+];
+
+interface IProps {
+    tokenInfoState: ITokenInfoState
+}
+
+const TokenInfo = ({ tokenInfoState }: IProps) => {
+    const { setSelectMenu } = useContractContext();
+
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>("");
+    const [selectMenu, _setSelectMenu] = useState<IMenuItem>({ value: "select", label: "Select" });
 
     const ContractTypeLabel = useMemo(() => {
-        return BASIC_LABEL === contractLabel ? "BASIC" : "ADVANCED";
-    }, [contractLabel]);
+        return BASIC_LABEL === tokenInfoState.label ? "BASIC" : "ADVANCED";
+    }, [tokenInfoState.label]);
 
     useEffect(() => {
-        if (tokenLogoUrl) {
+        if (tokenInfoState.marketingLogoUrl) {
             const img = new Image();
-            img.src = tokenLogoUrl;
+            img.src = tokenInfoState.marketingLogoUrl;
             img.onload = () => {
-                setValidTokenLogoUrl(tokenLogoUrl);
+                setValidTokenLogoUrl(tokenInfoState.marketingLogoUrl);
             };
             img.onerror = () => {
                 setValidTokenLogoUrl("");
@@ -134,7 +174,7 @@ const TokenInfo = ({ tokenName, tokenSymbol, tokenLogoUrl, contractLabel }: IPro
         } else {
             setValidTokenLogoUrl("");
         }
-    }, [tokenLogoUrl]);
+    }, [tokenInfoState.marketingLogoUrl]);
 
     const RenderTokenLogo = useCallback(() => {
         const isValid = !Boolean(validTokenLogoUrl === "");
@@ -145,30 +185,36 @@ const TokenInfo = ({ tokenName, tokenSymbol, tokenLogoUrl, contractLabel }: IPro
         );
     }, [validTokenLogoUrl]);
 
+    const handleChangeMenu = (menu: string) => {
+        const menuItem = ContractTypeLabel === "BASIC" ? basicMenuItems : advancedMenuItems;
+        const _selectedMenu = menuItem.filter((item) => {
+            return item.value === menu;
+        });
+        _setSelectMenu(_selectedMenu[0]);
+        setSelectMenu(_selectedMenu[0]);
+    }
+
     return (
-        <Container>
-            <TitleTypo>{"TOKEN INFO"}</TitleTypo>
-            <TokenBox>
-                <RenderTokenLogo />
-                <TokenInfoBox>
-                    <TokenTitleWrap>
-                        <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo>
-                        <ValidShieldIcon src={IC_VALID_SHIELD} alt={"Firmachain Valid Contract"} />
-                        <ContractTypeLabelWrap>
-                            <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
-                        </ContractTypeLabelWrap>
-                    </TokenTitleWrap>
-                    <TokenNameTypo>{tokenName}</TokenNameTypo>
-                </TokenInfoBox>
-            </TokenBox>
-            <CustomSelectInput
-                menus={[
-                    { value: "test", label: "Test" },
-                    { value: "test1", label: "Test1" },
-                    { value: "test2", label: "Test2" },
-                    { value: "test3", label: "Test3" },
-                ]}
-            />
+        <Container $isSelectMenu={(selectMenu.value === 'select' || selectMenu.value === '')}>
+            <TokenInfoWrap>
+                <TitleTypo>{"TOKEN INFO"}</TitleTypo>
+                <TokenBox>
+                    <RenderTokenLogo />
+                    <TokenInfoBox>
+                        <TokenTitleWrap>
+                            <TokenSymbolTypo>{tokenInfoState.tokenSymbol}</TokenSymbolTypo>
+                            <ValidShieldIcon src={IC_VALID_SHIELD} alt={"Firmachain Valid Contract"} />
+                            <ContractTypeLabelWrap>
+                                <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
+                            </ContractTypeLabelWrap>
+                        </TokenTitleWrap>
+                        <TokenNameTypo>{tokenInfoState.tokenName}</TokenNameTypo>
+                    </TokenInfoBox>
+                </TokenBox>
+            </TokenInfoWrap>
+            <CustomSelectInput menus={tokenInfoState.label === BASIC_LABEL ? basicMenuItems : advancedMenuItems} onChangeMenu={handleChangeMenu} />
+            {selectMenu.value && selectMenu.value !== "select" && <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={"Dotted Divider"} />}
+            {selectMenu.value === "mint" && <Mint totalSupply={tokenInfoState.totalSupply} minterCap={tokenInfoState.minter.cap} tokenSymbol={tokenInfoState.tokenSymbol} decimals={tokenInfoState.decimals}/>}
         </Container>
     );
 };

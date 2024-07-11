@@ -150,3 +150,32 @@ export const getTimeAgo = (timestampStr: string) => {
     return `${years} y ago`;
   }
 };
+
+export const addStringNumbers = (number1: string, number2: string) => {
+  while (number1.length < number2.length) {
+    number1 = '0' + number1;
+  }
+  while (number2.length < number1.length) {
+    number2 = '0' + number2;
+  }
+
+  let carry = 0;
+  let result = '';
+
+  for (let i = number1.length - 1; i >= 0; i--) {
+    let sum = parseInt(number1[i]) + parseInt(number2[i]) + carry;
+    if (sum >= 10) {
+      carry = 1;
+      sum -= 10;
+    } else {
+      carry = 0;
+    }
+    result = sum.toString() + result;
+  }
+
+  if (carry > 0) {
+    result = carry.toString() + result;
+  }
+
+  return result;
+}

@@ -10,9 +10,8 @@ import { ModalActions } from "../../../../redux/actions";
 import { rootState } from "../../../../redux/reducers";
 import { compareStringsAsNumbers, getApplyDecimalsAmount, getTokenStrFromUTokenStr, getUTokenStrFromTokenStr, isValidAddress, validateSymbol } from "../../../../utils/common";
 import { NETWORKS } from "../../../../constants/common";
-import { BASIC_LABEL } from "../../../../constants/cw20Types";
 import { CRAFT_CONFIGS } from "../../../../config";
-
+import { BASIC_LABEL } from "../../../../constants/cw20Types";
 
 interface IProps {
   isBasic: boolean;
@@ -70,7 +69,7 @@ const Preview = ({
 
       for (const wallet of walletList) {
         convertWalletList.push({
-          address: wallet.address,
+          address: wallet.recipient,
           amount: getApplyDecimalsAmount(wallet.amount, newDecimals.toString())
         });
       }
@@ -124,7 +123,7 @@ const Preview = ({
   }
 
   const checkInstantiate = (isBasic: boolean, walletList: IWallet[], totalSupply: string, minterCap: string) => {
-    const addresses = walletList.map(item => item.address);
+    const addresses = walletList.map(item => item.recipient);
     const uniqueAddresses = new Set(addresses);
 
     if (tokenName === '')
@@ -146,10 +145,10 @@ const Preview = ({
       return 'Not add a wallet';
 
     for (const wallet of walletList) {
-      if (wallet.address === "") return 'Empty initial wallet address';
+      if (wallet.recipient === "") return 'Empty initial wallet address';
       if (wallet.amount === "0") return 'Wallet amount must be greater than 0';
       if (wallet.amount === "") return 'Empty initial wallet amount';
-      if (!isValidAddress(wallet.address)) return 'Is valid address in wallet list';
+      if (!isValidAddress(wallet.recipient)) return 'Is valid address in wallet list';
     }
 
     if (walletList.length >= 1 && addresses.length !== uniqueAddresses.size)
