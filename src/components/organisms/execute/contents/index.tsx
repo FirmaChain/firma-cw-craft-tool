@@ -1,12 +1,12 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
 
-import TokenInfo from "../cards/tokenInfo";
-import Preview from "../cards/preview";
-import { useContractContext } from "../context/contractContext";
+import TokenInfo from '../cards/tokenInfo';
+import Preview from '../cards/preview';
+import { useContractContext } from '../context/contractContext';
 
-import { FIRMA_DIM_LOGO } from "../../../atoms/icons/pngIcons";
-import useExecuteHook, { ITokenInfoState } from "../hooks/useExecueteHook";
+import { FIRMA_DIM_LOGO } from '../../../atoms/icons/pngIcons';
+import useExecuteHook, { ITokenInfoState } from '../hooks/useExecueteHook';
 
 const Container = styled.div`
     display: flex;
@@ -27,7 +27,7 @@ const DimBox = styled.div`
 const Contents = () => {
     const { contract } = useContractContext();
     const { getContractTokenInfo } = useExecuteHook();
-    
+
     const [contractTokenInfo, setContractTokenInfo] = useState<ITokenInfoState | null>(null);
 
     const fetchTokenInfo = useCallback(async () => {
@@ -40,7 +40,7 @@ const Contents = () => {
     }, [contract]);
 
     const ContractExist = useMemo(() => {
-        return !Boolean(contract === "");
+        return !Boolean(contract === '');
     }, [contract]);
 
     useEffect(() => {
@@ -64,7 +64,7 @@ const Contents = () => {
                 </Container>
             ) : (
                 <DimBox>
-                    <img src={FIRMA_DIM_LOGO} alt={"Firmachain"} style={{ width: "480px", height: "480px" }} />
+                    <img src={FIRMA_DIM_LOGO} alt={'Firmachain'} style={{ width: '480px', height: '480px' }} />
                 </DimBox>
             )}
         </Fragment>

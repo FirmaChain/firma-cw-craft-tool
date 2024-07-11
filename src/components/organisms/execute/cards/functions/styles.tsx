@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 export const Container = styled.div`
@@ -25,8 +25,8 @@ export const TitleWrap = styled.div`
 `;
 
 export const HeaderTitleTypo = styled.div`
-    color: var(--Green-300, #63F6A5);
-    font-family: "General Sans Variable";
+    color: var(--Green-300, #63f6a5);
+    font-family: 'General Sans Variable';
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
@@ -34,8 +34,8 @@ export const HeaderTitleTypo = styled.div`
 `;
 
 export const HeaderDescTypo = styled.div`
-    color: var(--Gray-650, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-650, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -47,6 +47,7 @@ export const SummeryCard = styled.div`
     padding: 16px 24px;
     flex-direction: column;
     align-items: flex-start;
-    align-self: stretch;border-radius: 12px;
+    align-self: stretch;
+    border-radius: 12px;
     background: var(--Gray-150, #141414);
 `;

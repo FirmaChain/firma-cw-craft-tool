@@ -1,13 +1,13 @@
-import { IMessage } from "./cw20";
+import { IMessage } from './cw20';
 
 export interface IMessageByAddress {
-  messagesByAddress: {
-    transaction: {
-      block: { timestamp: string };
-      hash: string;
-      height: number;
-      messages: IMessage[];
-      success: boolean;
-    };
-  }[];
+    messagesByAddress: {
+        transaction: {
+            block: { timestamp: string };
+            hash: string;
+            height: number;
+            messages: IMessage[];
+            success: boolean;
+        };
+    }[];
 }

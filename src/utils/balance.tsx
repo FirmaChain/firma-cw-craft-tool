@@ -2,7 +2,7 @@ export const getTokenAmountFromUToken = (amount: string, decimals: string) => {
     const amountLength = amount.length;
     const decimalIndex = amountLength - parseInt(decimals);
 
-    let result = "0";
+    let result = '0';
     if (decimalIndex <= 0) {
         result = '0.' + '0'.repeat(Math.abs(decimalIndex)) + amount;
     } else {

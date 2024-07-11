@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
 export const HeaderWrapper = styled.div`
     width: 100%;
@@ -11,7 +11,7 @@ export const HeaderWrapper = styled.div`
 
 export const HeaderTitle = styled.div`
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 24px;
     font-style: normal;
     font-weight: 600;

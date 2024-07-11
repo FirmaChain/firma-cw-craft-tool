@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { Container, MainContent } from "../styles/instantiate";
-import { Content, Header, Preview } from "../components/organisms/instantiate";
-import { rootState } from "../redux/reducers";
-import { IWallet } from "../interfaces/wallet";
+import { Container, MainContent } from '../styles/instantiate';
+import { Content, Header, Preview } from '../components/organisms/instantiate';
+import { rootState } from '../redux/reducers';
+import { IWallet } from '../interfaces/wallet';
 
 const Cw20Instantiate = () => {
     const { cw20Mode } = useSelector((state: rootState) => state.global);
 
     const [isBasic, setIsBasic] = useState<boolean>(true);
-    const [tokenName, setTokenName] = useState<string>("");
-    const [tokenSymbol, setTokenSymbol] = useState<string>("");
-    const [tokenLogoUrl, setTokenLogoUrl] = useState<string>("");
-    const [tokenDescription, setTokenDescription] = useState<string>("");
-    const [minterCap, setMinterCap] = useState<string>("");
+    const [tokenName, setTokenName] = useState<string>('');
+    const [tokenSymbol, setTokenSymbol] = useState<string>('');
+    const [tokenLogoUrl, setTokenLogoUrl] = useState<string>('');
+    const [tokenDescription, setTokenDescription] = useState<string>('');
+    const [minterCap, setMinterCap] = useState<string>('');
     const [walletList, setWalletList] = useState<IWallet[]>([]);
-    const [decimals, setDecimals] = useState<string>("");
-    const [label, setLabel] = useState<string>("");
-    const [marketingAddress, setMarketingAddress] = useState<string>("");
-    const [marketingProject, setMarketingProject] = useState<string>("");
-    const [minterAddress, setMinterAddress] = useState<string>("");
-    const [totalSupply, setTotalSupply] = useState<string>("");
+    const [decimals, setDecimals] = useState<string>('');
+    const [label, setLabel] = useState<string>('');
+    const [marketingAddress, setMarketingAddress] = useState<string>('');
+    const [marketingProject, setMarketingProject] = useState<string>('');
+    const [minterAddress, setMinterAddress] = useState<string>('');
+    const [totalSupply, setTotalSupply] = useState<string>('');
     const [walletCount, setWalletCount] = useState<number>(0);
     const [minterble, setMinterble] = useState<boolean>(false);
 
     useEffect(() => {
-        if (cw20Mode === "BASIC") setIsBasic(true);
+        if (cw20Mode === 'BASIC') setIsBasic(true);
         else setIsBasic(false);
     }, [cw20Mode]);
 

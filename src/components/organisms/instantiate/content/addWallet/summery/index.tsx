@@ -1,24 +1,24 @@
-import React from "react";
+import React from 'react';
 
-import { SummeryAttribute, SummeryAttributeKey, SummeryAttributeValue, SummeryContainer } from "./style";
-import { getUTokenStrFromTokenStr } from "../../../../../../utils/common";
+import { SummeryAttribute, SummeryAttributeKey, SummeryAttributeValue, SummeryContainer } from './style';
+import { getUTokenStrFromTokenStr } from '../../../../../../utils/common';
 
 interface IProps {
-  totalSupply: string;
-  tokenSymbol: string;
-  decimals: string;
+    totalSupply: string;
+    tokenSymbol: string;
+    decimals: string;
 }
 
 const Summery = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
-  return (
-    <SummeryContainer>
-      <SummeryAttribute>
-        <SummeryAttributeKey>Total Amount :</SummeryAttributeKey>
-        <SummeryAttributeValue>{getUTokenStrFromTokenStr(totalSupply, decimals)}</SummeryAttributeValue>
-        <SummeryAttributeValue>{tokenSymbol}</SummeryAttributeValue>
-      </SummeryAttribute>
-    </SummeryContainer>
-  )
-}
+    return (
+        <SummeryContainer>
+            <SummeryAttribute>
+                <SummeryAttributeKey>Total Amount :</SummeryAttributeKey>
+                <SummeryAttributeValue>{getUTokenStrFromTokenStr(totalSupply, decimals)}</SummeryAttributeValue>
+                <SummeryAttributeValue>{tokenSymbol}</SummeryAttributeValue>
+            </SummeryAttribute>
+        </SummeryContainer>
+    );
+};
 
 export default React.memo(Summery);

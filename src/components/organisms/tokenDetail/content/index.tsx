@@ -1,10 +1,10 @@
-import { Cw20SpenderAllowance } from "@firmachain/firma-js";
-import ContentBody from "./body";
-import { ContentWrapper } from "./style";
-import Title from "./title/title";
-import { ITransaction } from "../../../../interfaces/cw20";
-import WalletSearch from "./search";
-import { IAccounts, IAllowances, ISpenders } from "../../../../hooks/useTokenDetail";
+import { Cw20SpenderAllowance } from '@firmachain/firma-js';
+import ContentBody from './body';
+import { ContentWrapper } from './style';
+import Title from './title/title';
+import { ITransaction } from '../../../../interfaces/cw20';
+import WalletSearch from './search';
+import { IAccounts, IAllowances, ISpenders } from '../../../../hooks/useTokenDetail';
 
 interface IProps {
     isBasic: boolean;
@@ -49,7 +49,7 @@ const TokenDetailContent = ({
     allAllowances,
     allSpenders,
     allAccounts,
-    transactionList,
+    transactionList
 }: IProps) => {
     return (
         <ContentWrapper>

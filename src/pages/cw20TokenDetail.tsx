@@ -1,19 +1,19 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { rootState } from "../redux/reducers";
+import { rootState } from '../redux/reducers';
 
-import { Container } from "../styles/tokenDetail";
-import { Header, TokenDetailContent } from "../components/organisms/tokenDetail";
-import useTokenDetail, { IAccounts, IAllowances, ISpenders } from "../hooks/useTokenDetail";
-import useApollo from "../hooks/useApollo";
-import { getTransactionsByAddress } from "../apollo/queries";
-import { Cw20SpenderAllowance } from "@firmachain/firma-js";
-import { ITransaction } from "../interfaces/cw20";
-import { determineMsgTypeAndSpender } from "../utils/common";
+import { Container } from '../styles/tokenDetail';
+import { Header, TokenDetailContent } from '../components/organisms/tokenDetail';
+import useTokenDetail, { IAccounts, IAllowances, ISpenders } from '../hooks/useTokenDetail';
+import useApollo from '../hooks/useApollo';
+import { getTransactionsByAddress } from '../apollo/queries';
+import { Cw20SpenderAllowance } from '@firmachain/firma-js';
+import { ITransaction } from '../interfaces/cw20';
+import { determineMsgTypeAndSpender } from '../utils/common';
 
 const Cw20TokenDetail = () => {
-    const targetContractAddress = window.location.pathname.replace("/mytoken/detail/", "");
+    const targetContractAddress = window.location.pathname.replace('/mytoken/detail/', '');
 
     const { getTokenDetail } = useTokenDetail();
 
@@ -22,20 +22,20 @@ const Cw20TokenDetail = () => {
     const { isInit, address } = useSelector((state: rootState) => state.wallet);
 
     const [isBasic, setIsBasic] = useState<boolean>(false);
-    const [tokenName, setTokenName] = useState<string>("");
-    const [tokenSymbol, setTokenSymbol] = useState<string>("");
-    const [tokenLogoUrl, setTokenLogoUrl] = useState<string>("");
-    const [totalSupply, setTotalSupply] = useState<string>("");
-    const [decimals, setDecimals] = useState<string>("");
-    const [label, setLabel] = useState<string>("");
-    const [addressBalance, setAddressBalance] = useState<string>("");
-    const [minterAddress, setMinterAddress] = useState<string>("");
-    const [minterCap, setMinterCap] = useState<string>("");
-    const [marketingLogo, setMarketingLogo] = useState<string>("");
-    const [marketingDescription, setMarketingDescription] = useState<string>("");
-    const [marketingAddress, setMarketingAddress] = useState<string>("");
-    const [marketingProject, setMarketingProject] = useState<string>("");
-    const [metadata, setMetadata] = useState<string>("");
+    const [tokenName, setTokenName] = useState<string>('');
+    const [tokenSymbol, setTokenSymbol] = useState<string>('');
+    const [tokenLogoUrl, setTokenLogoUrl] = useState<string>('');
+    const [totalSupply, setTotalSupply] = useState<string>('');
+    const [decimals, setDecimals] = useState<string>('');
+    const [label, setLabel] = useState<string>('');
+    const [addressBalance, setAddressBalance] = useState<string>('');
+    const [minterAddress, setMinterAddress] = useState<string>('');
+    const [minterCap, setMinterCap] = useState<string>('');
+    const [marketingLogo, setMarketingLogo] = useState<string>('');
+    const [marketingDescription, setMarketingDescription] = useState<string>('');
+    const [marketingAddress, setMarketingAddress] = useState<string>('');
+    const [marketingProject, setMarketingProject] = useState<string>('');
+    const [metadata, setMetadata] = useState<string>('');
     const [allAllowances, setAllAllowances] = useState<IAllowances[]>([]);
     const [allSpenders, setAllSpenders] = useState<ISpenders[]>([]);
     const [allAccounts, setAllAccounts] = useState<IAccounts[]>([]);
@@ -82,7 +82,7 @@ const Cw20TokenDetail = () => {
                             timestamp: block.timestamp,
                             type: type[0].type,
                             address: type[0].sender,
-                            success: success,
+                            success: success
                         });
                     }
 

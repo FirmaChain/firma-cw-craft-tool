@@ -1,14 +1,19 @@
-import { useMemo, useState } from "react";
-import styled from "styled-components";
-import { Tooltip } from "@mui/material";
+import { useMemo, useState } from 'react';
+import styled from 'styled-components';
+import { Tooltip } from '@mui/material';
 
-import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from "./styles";
-import { IC_DOTTED_DIVIDER, IC_TOOLTIP_INFO } from "../../../../atoms/icons/pngIcons";
-import { useContractContext } from "../../context/contractContext";
-import WalletList from "../../../../atoms/walletList";
-import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from "../../../../../utils/balance";
-import { IWallet } from "../../../../../interfaces/wallet";
-
+import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
+import { IC_DOTTED_DIVIDER, IC_TOOLTIP_INFO } from '../../../../atoms/icons/pngIcons';
+import { useContractContext } from '../../context/contractContext';
+import WalletList from '../../../../atoms/walletList';
+import {
+    addStringAmount,
+    formatWithCommas,
+    getTokenAmountFromUToken,
+    getUTokenAmountFromToken,
+    subtractStringAmount
+} from '../../../../../utils/balance';
+import { IWallet } from '../../../../../interfaces/wallet';
 
 const MintCardWrap = styled.div`
     display: flex;
@@ -23,8 +28,8 @@ const TotalMintWrap = styled.div`
 `;
 
 const TotalMintLabelTypo = styled.div`
-    color: var(--Gray-650, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-650, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -32,8 +37,8 @@ const TotalMintLabelTypo = styled.div`
 `;
 
 const TotalMintSupplyBalance = styled.div`
-    color: var(--Gray-800, #E6E6E6);
-    font-family: "General Sans Variable";
+    color: var(--Gray-800, #e6e6e6);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -42,7 +47,7 @@ const TotalMintSupplyBalance = styled.div`
 
 const TotalMintSubLabelTypo = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -51,7 +56,7 @@ const TotalMintSubLabelTypo = styled.div`
 
 const TotalMintSubBalance = styled.div`
     color: var(--Gray-600, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -78,7 +83,7 @@ interface IProps {
 
 const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
     const { setWalletList } = useContractContext();
-    
+
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
     const mintableAmount = useMemo(() => {
@@ -86,7 +91,7 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
     }, [totalSupply]);
 
     const totalMintAmount = useMemo(() => {
-        let addAmount = "0";
+        let addAmount = '0';
         for (const wallet of addWalletList) {
             addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, decimals), addAmount);
         }
@@ -97,7 +102,7 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
         setAddWalletList(value);
         setWalletList(value);
     };
-    
+
     return (
         <Container>
             <HeaderWrap>
@@ -109,19 +114,23 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
                     <MintCardWrap>
                         <TotalMintWrap>
                             <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
-                            <TotalMintSupplyBalance>{formatWithCommas(getTokenAmountFromUToken(totalMintAmount, decimals))}</TotalMintSupplyBalance>
+                            <TotalMintSupplyBalance>
+                                {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, decimals))}
+                            </TotalMintSupplyBalance>
                             <TotalMintSupplyBalance>{tokenSymbol}</TotalMintSupplyBalance>
                         </TotalMintWrap>
-                        <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={"Dotted Divider"} />
+                        <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
                         <TotalMintWrap>
                             <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                            <TotalMintSubBalance>{formatWithCommas(getTokenAmountFromUToken(mintableAmount, decimals))}</TotalMintSubBalance>
+                            <TotalMintSubBalance>
+                                {formatWithCommas(getTokenAmountFromUToken(mintableAmount, decimals))}
+                            </TotalMintSubBalance>
                             <TotalMintSubBalance>{tokenSymbol}</TotalMintSubBalance>
-                            <Tooltip title={"Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted."}>
+                            <Tooltip title={'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.'}>
                                 <AdditionalTooltipIcon
                                     src={IC_TOOLTIP_INFO}
-                                    alt={"Additional Mintable Balance Tooltip"}
-                                    data-tip={"This is the tooltip text"}
+                                    alt={'Additional Mintable Balance Tooltip'}
+                                    data-tip={'This is the tooltip text'}
                                 />
                             </Tooltip>
                         </TotalMintWrap>
@@ -130,7 +139,7 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
             </HeaderWrap>
             <WalletList decimals={decimals} onChangeWalletList={handleWalletList} />
         </Container>
-    )
+    );
 };
 
 export default Mint;

@@ -1,10 +1,18 @@
-import { Cw20SpenderAllowance } from "@firmachain/firma-js";
-import { AllowanceCard, AllowanceWrapper, AllowanceCardHeaderTypo, AllowanceCardHeaderWrapper, AllowanceContentWrapper, AllowanceItem, ItemLabel } from "./style";
-import PaginatedTable from "./pagination";
-import SearchInput from "../../../../../atoms/input/searchInput";
-import { useEffect, useState } from "react";
-import Icons from "../../../../../atoms/icons";
-import { IAllowances, ISpenders } from "../../../../../../hooks/useTokenDetail";
+import { Cw20SpenderAllowance } from '@firmachain/firma-js';
+import {
+    AllowanceCard,
+    AllowanceWrapper,
+    AllowanceCardHeaderTypo,
+    AllowanceCardHeaderWrapper,
+    AllowanceContentWrapper,
+    AllowanceItem,
+    ItemLabel
+} from './style';
+import PaginatedTable from './pagination';
+import SearchInput from '../../../../../atoms/input/searchInput';
+import { useEffect, useState } from 'react';
+import Icons from '../../../../../atoms/icons';
+import { IAllowances, ISpenders } from '../../../../../../hooks/useTokenDetail';
 
 interface IProps {
     decimals: string;
@@ -12,10 +20,10 @@ interface IProps {
     allSpenders: ISpenders[];
 }
 
-const Headers = ["Receiver", "Amount", "Expires"];
+const Headers = ['Receiver', 'Amount', 'Expires'];
 
 const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
-    const [searchAddress, setSearchAddress] = useState<string>("");
+    const [searchAddress, setSearchAddress] = useState<string>('');
 
     const [allowancesToShow, setAllowancesToShow] = useState<IAllowances[]>([]);
     const [receiverToShow, setReceiverToShow] = useState<ISpenders[]>([]);
@@ -25,11 +33,13 @@ const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
     };
 
     useEffect(() => {
-        const filteredAllowances = searchAddress ? allAllowances.filter((allowance) => allowance["Receiver"] === searchAddress) : allAllowances;
+        const filteredAllowances = searchAddress
+            ? allAllowances.filter((allowance) => allowance['Receiver'] === searchAddress)
+            : allAllowances;
         const findAllowance = filteredAllowances.length > 0 ? filteredAllowances : allAllowances;
         setAllowancesToShow(findAllowance);
 
-        const filteredReceivers = searchAddress ? allSpenders.filter((receiver) => receiver["Receiver"] === searchAddress) : allSpenders;
+        const filteredReceivers = searchAddress ? allSpenders.filter((receiver) => receiver['Receiver'] === searchAddress) : allSpenders;
         const findReceiver = filteredReceivers.length > 0 ? filteredReceivers : allSpenders;
         setReceiverToShow(findReceiver);
     }, [searchAddress, allAllowances, allSpenders]);
@@ -39,13 +49,13 @@ const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
             <AllowanceCardHeaderWrapper>
                 <AllowanceCardHeaderTypo>My Allowances</AllowanceCardHeaderTypo>
                 <SearchInput
-                    placeholder={"Search Wallet Address"}
+                    placeholder={'Search Wallet Address'}
                     value={searchAddress}
                     onChange={handleSearchAddress}
-                    icon={<Icons.search width={"15px"} height={"15px"} />}
+                    icon={<Icons.search width={'15px'} height={'15px'} />}
                     sx={{
-                        width: "564px",
-                        height: "44px",
+                        width: '564px',
+                        height: '44px'
                     }}
                 />
             </AllowanceCardHeaderWrapper>

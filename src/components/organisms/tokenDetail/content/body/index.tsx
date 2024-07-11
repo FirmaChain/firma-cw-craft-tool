@@ -1,13 +1,13 @@
-import { Cw20SpenderAllowance } from "@firmachain/firma-js";
-import { HalfDottedDivider } from "../../../../atoms/divider/dottedDivider";
-import AdditionalInformation from "./additionalInformation";
-import { ContentBodyContainer } from "./style";
-import TokenInformation from "./tokenInfomation";
-import MyAllowances from "./myAllowances";
-import AllAccounts from "./allAccounts";
-import { ITransaction } from "../../../../../interfaces/cw20";
-import Transactions from "./transactions";
-import { IAccounts, IAllowances, ISpenders } from "../../../../../hooks/useTokenDetail";
+import { Cw20SpenderAllowance } from '@firmachain/firma-js';
+import { HalfDottedDivider } from '../../../../atoms/divider/dottedDivider';
+import AdditionalInformation from './additionalInformation';
+import { ContentBodyContainer } from './style';
+import TokenInformation from './tokenInfomation';
+import MyAllowances from './myAllowances';
+import AllAccounts from './allAccounts';
+import { ITransaction } from '../../../../../interfaces/cw20';
+import Transactions from './transactions';
+import { IAccounts, IAllowances, ISpenders } from '../../../../../hooks/useTokenDetail';
 
 interface IProps {
     isBasic: boolean;
@@ -50,7 +50,7 @@ const ContentBody = ({
     allAllowances,
     allSpenders,
     allAccounts,
-    transactionList,
+    transactionList
 }: IProps) => {
     return (
         <ContentBodyContainer>

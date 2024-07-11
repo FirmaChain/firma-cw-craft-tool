@@ -1,4 +1,4 @@
-import Header from "./header";
-import TokenDetailContent from "./content";
+import Header from './header';
+import TokenDetailContent from './content';
 
-export { Header, TokenDetailContent }
+export { Header, TokenDetailContent };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 import {
     GoToButtonTypo,
@@ -13,10 +13,10 @@ import {
     TokenSymbolTypo,
     TotalSupplyBalanceTypo,
     TotalSupplySymbolTypo,
-    TotalSupplyWrapper,
-} from "./style";
-import Icons from "../../../../atoms/icons";
-import { useNavigate } from "react-router-dom";
+    TotalSupplyWrapper
+} from './style';
+import Icons from '../../../../atoms/icons';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
     tokenLogoUrl: string;
@@ -27,7 +27,7 @@ interface IProps {
 
 const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply }: IProps) => {
     const navigatge = useNavigate();
-    const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>("");
+    const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
     useEffect(() => {
         if (tokenLogoUrl) {
@@ -37,33 +37,33 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply }: IProps) =>
                 setValidTokenLogoUrl(tokenLogoUrl);
             };
             img.onerror = () => {
-                setValidTokenLogoUrl("");
+                setValidTokenLogoUrl('');
             };
         } else {
-            setValidTokenLogoUrl("");
+            setValidTokenLogoUrl('');
         }
     }, [tokenLogoUrl]);
 
     const onClickExecute = () => {
-        navigatge("/execute");
+        navigatge('/execute');
     };
 
     return (
         <TitleContainer>
             <TitleWrapper>
                 <TitleLogoImage>
-                    {validTokenLogoUrl === "" ? (
+                    {validTokenLogoUrl === '' ? (
                         <IconBackground>
-                            <Icons.picture width={"34px"} height={"34px"} />
+                            <Icons.picture width={'34px'} height={'34px'} />
                         </IconBackground>
                     ) : (
-                        <img src={validTokenLogoUrl} style={{ width: "72px", height: "72px", maxHeight: "100%", maxWidth: "100%" }} />
+                        <img src={validTokenLogoUrl} style={{ width: '72px', height: '72px', maxHeight: '100%', maxWidth: '100%' }} />
                     )}
                 </TitleLogoImage>
                 <TokenInfoWrapper>
                     <TokenInfo>
                         <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo>
-                        <Icons.Dot width={"4px"} height={"4px"} />
+                        <Icons.Dot width={'4px'} height={'4px'} />
                         <TokenNameTypo>{tokenName}</TokenNameTypo>
                     </TokenInfo>
                     <TotalSupplyWrapper>

@@ -1,4 +1,4 @@
 export interface IWallet {
-  recipient: string;
-  amount: string;
+    recipient: string;
+    amount: string;
 }

@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import { useSnackbar } from "notistack";
-import { useSelector } from "react-redux";
-import { FirmaSDK } from "@firmachain/firma-js";
+import { useCallback, useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import { useSelector } from 'react-redux';
+import { FirmaSDK } from '@firmachain/firma-js';
 
-import { rootState } from "../redux/reducers";
-import { NETWORKS } from "../constants/common";
-import { CRAFT_CONFIGS } from "../config";
+import { rootState } from '../redux/reducers';
+import { NETWORKS } from '../constants/common';
+import { CRAFT_CONFIGS } from '../config';
 
 export interface IAllowances {
     Receiver: string;
@@ -20,7 +20,7 @@ export interface ISpenders {
 }
 
 export interface IAccounts {
-    "Wallet Address": string;
+    'Wallet Address': string;
     Balance: string;
 }
 
@@ -63,22 +63,22 @@ const useTokenDetail = () => {
     const getTokenDetail = useCallback(
         async (contractAddress: string, address: string) => {
             const resultData: ITokenDetailState = {
-                label: "",
-                decimals: "",
-                tokenName: "",
-                tokenSymbol: "",
-                totalSupply: "",
-                minterCap: "",
-                minterAddress: "",
-                marketingDescription: "",
-                marketingLogoUrl: "",
-                marketing: "",
-                marketingProject: "",
-                addressBalance: "",
+                label: '',
+                decimals: '',
+                tokenName: '',
+                tokenSymbol: '',
+                totalSupply: '',
+                minterCap: '',
+                minterAddress: '',
+                marketingDescription: '',
+                marketingLogoUrl: '',
+                marketing: '',
+                marketingProject: '',
+                addressBalance: '',
                 allAllowances: [],
                 allSpenders: [],
                 allAccounts: [],
-                metadata: "",
+                metadata: ''
             };
 
             if (!firmaSDK) return resultData;
@@ -106,10 +106,10 @@ const useTokenDetail = () => {
                     resultData.minterAddress = minterInfo.minter;
                 }
 
-                resultData.marketingDescription = marketingInfo.description || "";
-                resultData.marketingLogoUrl = marketingInfo.logo === null ? "" : marketingInfo.logo.url;
-                resultData.marketing = marketingInfo.marketing || "";
-                resultData.marketingProject = marketingInfo.project || "";
+                resultData.marketingDescription = marketingInfo.description || '';
+                resultData.marketingLogoUrl = marketingInfo.logo === null ? '' : marketingInfo.logo.url;
+                resultData.marketing = marketingInfo.marketing || '';
+                resultData.marketingProject = marketingInfo.project || '';
 
                 resultData.addressBalance = addressBalance;
 
@@ -118,7 +118,7 @@ const useTokenDetail = () => {
                     convertAllAllowances.push({
                         Receiver: allowance.spender,
                         Amount: allowance.allowance,
-                        Expires: allowance.expires,
+                        Expires: allowance.expires
                     });
                 }
                 resultData.allAllowances = convertAllAllowances;
@@ -130,7 +130,7 @@ const useTokenDetail = () => {
                     convertAllSpenders.push({
                         Receiver: spenders.owner,
                         Amount: spenders.allowance,
-                        Expires: spenders.expires,
+                        Expires: spenders.expires
                     });
                 }
                 resultData.allSpenders = convertAllSpenders;
@@ -139,8 +139,8 @@ const useTokenDetail = () => {
                 for (const account of allAccounts) {
                     const balance = await firmaSDK.Cw20.getBalance(contractAddress, account);
                     convertAllAccounts.push({
-                        "Wallet Address": account,
-                        Balance: balance,
+                        'Wallet Address': account,
+                        Balance: balance
                     });
                 }
                 resultData.allAccounts = convertAllAccounts;
@@ -148,8 +148,8 @@ const useTokenDetail = () => {
                 resultData.metadata = JSON.stringify(firstHistory);
             } catch (error) {
                 enqueueSnackbar(`failed get '${contractAddress}' contract info`, {
-                    variant: "error",
-                    autoHideDuration: 2000,
+                    variant: 'error',
+                    autoHideDuration: 2000
                 });
             } finally {
                 return resultData;
@@ -161,9 +161,9 @@ const useTokenDetail = () => {
     const getWalletSearch = useCallback(
         async (contractAddress: string, address: string) => {
             const resultData = {
-                balanceAmount: "",
+                balanceAmount: '',
                 allAllowances: [],
-                allSpenders: [],
+                allSpenders: []
             };
 
             if (!firmaSDK) return resultData;
@@ -179,7 +179,7 @@ const useTokenDetail = () => {
                     convertAllAllowances.push({
                         Receiver: allowance.spender,
                         Amount: allowance.allowance,
-                        Expires: allowance.expires,
+                        Expires: allowance.expires
                     });
                 }
                 resultData.allAllowances = convertAllAllowances;
@@ -191,14 +191,14 @@ const useTokenDetail = () => {
                     convertAllSpenders.push({
                         Receiver: spenders.owner,
                         Amount: spenders.allowance,
-                        Expires: spenders.expires,
+                        Expires: spenders.expires
                     });
                 }
                 resultData.allSpenders = convertAllSpenders;
             } catch (error) {
                 enqueueSnackbar(`failed get search wallet address: ${address}`, {
-                    variant: "error",
-                    autoHideDuration: 2000,
+                    variant: 'error',
+                    autoHideDuration: 2000
                 });
             } finally {
                 return resultData;
@@ -209,7 +209,7 @@ const useTokenDetail = () => {
 
     return {
         getTokenDetail,
-        getWalletSearch,
+        getWalletSearch
     };
 };
 

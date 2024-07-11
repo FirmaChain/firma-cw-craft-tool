@@ -10,12 +10,11 @@ const container = document.getElementById('root');
 const root = createRoot(container!);
 
 root.render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <SnackbarProvider maxSnack={5}>
-        <App />
-      </SnackbarProvider>
-    </PersistGate>
-  </Provider>
-)
-
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+            <SnackbarProvider maxSnack={5}>
+                <App />
+            </SnackbarProvider>
+        </PersistGate>
+    </Provider>
+);

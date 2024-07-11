@@ -1,23 +1,23 @@
-import React from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import React from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
-import Cw20Instantiate from "../pages/cw20Instantiate";
-import Cw20Mytoken from "../pages/cw20MyToken";
-import Cw20TokenDetail from "../pages/cw20TokenDetail";
-import Execute from "../pages/execute";
+import Cw20Instantiate from '../pages/cw20Instantiate';
+import Cw20Mytoken from '../pages/cw20MyToken';
+import Cw20TokenDetail from '../pages/cw20TokenDetail';
+import Execute from '../pages/execute';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
     path,
     element,
-    auth,
+    auth
 });
 
 const routes: any[] = [
-    routeByAuth("/instantiate", <Cw20Instantiate />, false),
-    routeByAuth("/execute", <Execute />, false),
-    routeByAuth("/search", <></>, false),
-    routeByAuth("/mytoken", <Cw20Mytoken />, false),
-    routeByAuth("/mytoken/detail/:contractAddress", <Cw20TokenDetail />, false),
+    routeByAuth('/instantiate', <Cw20Instantiate />, false),
+    routeByAuth('/execute', <Execute />, false),
+    routeByAuth('/search', <></>, false),
+    routeByAuth('/mytoken', <Cw20Mytoken />, false),
+    routeByAuth('/mytoken/detail/:contractAddress', <Cw20TokenDetail />, false)
 ];
 
 const AppRoutes = () => {

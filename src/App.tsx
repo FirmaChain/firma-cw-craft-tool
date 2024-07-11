@@ -12,22 +12,18 @@ import QrConfirmModal from './components/organisms/modal/qrConfirmModal';
 import TxConfirmModal from './components/organisms/modal/txConfirmModal';
 
 const App = () => {
-  const {
-    connectWallet,
-    qrConfirm,
-    txConfirm,
-  } = useSelector((state: rootState) => state.modal);
-  
-  return (
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <Main />
-        {connectWallet && <ConnectWalletModal />}
-        {qrConfirm && <QrConfirmModal />}
-        {txConfirm && <TxConfirmModal />}
-      </ThemeProvider>
-    </BrowserRouter>
-  )
+    const { connectWallet, qrConfirm, txConfirm } = useSelector((state: rootState) => state.modal);
+
+    return (
+        <BrowserRouter>
+            <ThemeProvider theme={theme}>
+                <Main />
+                {connectWallet && <ConnectWalletModal />}
+                {qrConfirm && <QrConfirmModal />}
+                {txConfirm && <TxConfirmModal />}
+            </ThemeProvider>
+        </BrowserRouter>
+    );
 };
 
 export default App;

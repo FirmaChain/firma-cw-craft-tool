@@ -1,11 +1,11 @@
-import { FirmaUtil } from "@firmachain/firma-js";
+import { FirmaUtil } from '@firmachain/firma-js';
 
 export const isValidAddress = (address: string) => {
     return FirmaUtil.isValidAddress(address);
 };
 
 export const shortenAddress = (address: string, startLength: number = 6, endLength: number = 6) => {
-    if (address.length <= (startLength + endLength)) {
+    if (address.length <= startLength + endLength) {
         return address;
     }
 

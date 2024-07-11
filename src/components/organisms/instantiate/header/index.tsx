@@ -1,8 +1,8 @@
-import { HeaderTitle, HeaderWrapper } from "./style";
+import { HeaderTitle, HeaderWrapper } from './style';
 
-import { CW20_MODE, CW20_MODE_TYPE } from "../../../../constants/common";
-import { GlobalActions } from "../../../../redux/actions";
-import ModeSwitch from "./modeSwitch";
+import { CW20_MODE, CW20_MODE_TYPE } from '../../../../constants/common';
+import { GlobalActions } from '../../../../redux/actions';
+import ModeSwitch from './modeSwitch';
 
 const Header = () => {
     const onChangeMenu = (value: string) => {

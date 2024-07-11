@@ -1,5 +1,5 @@
-import { styled } from "styled-components";
-import { IC_LEFT_ARROW_CIRCLE } from "../../../../atoms/icons/pngIcons";
+import { styled } from 'styled-components';
+import { IC_LEFT_ARROW_CIRCLE } from '../../../../atoms/icons/pngIcons';
 
 const Container = styled.div`
     width: 100%;
@@ -13,7 +13,7 @@ const Container = styled.div`
 
 const NoSelectCommentTypo = styled.div`
     color: var(--Gray-600, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
     font-weight: 500;
@@ -35,11 +35,11 @@ const DefaultView = () => {
     return (
         <Container>
             <NoSelectCommentWrap>
-                <LeftArrowCircleIcon src={IC_LEFT_ARROW_CIRCLE} alt={"Left Arrow Circle Icon"} />
+                <LeftArrowCircleIcon src={IC_LEFT_ARROW_CIRCLE} alt={'Left Arrow Circle Icon'} />
                 <NoSelectCommentTypo>Select the execution options</NoSelectCommentTypo>
             </NoSelectCommentWrap>
         </Container>
-    )
-}
+    );
+};
 
 export default DefaultView;
