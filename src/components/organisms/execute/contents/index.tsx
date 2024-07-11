@@ -25,7 +25,7 @@ const DimBox = styled.div`
 `;
 
 const Contents = () => {
-    const { contract } = useContractContext();
+    const { contract, isFetched, setSelectMenu, setIsFetched } = useContractContext();
     const { getContractTokenInfo } = useExecuteHook();
 
     const [contractTokenInfo, setContractTokenInfo] = useState<ITokenInfoState | null>(null);
@@ -46,8 +46,11 @@ const Contents = () => {
     useEffect(() => {
         if (ContractExist) {
             fetchTokenInfo();
+            setIsFetched(false);
+        } else {
+            setSelectMenu({ value: 'select', label: 'Select' });
         }
-    }, [ContractExist]);
+    }, [ContractExist, isFetched]);
 
     return (
         <Fragment>

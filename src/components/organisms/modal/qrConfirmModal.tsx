@@ -16,6 +16,7 @@ const QrConfirmModal = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
 
     const onCloseModal = () => {
+        ModalActions.handleClearCallback();
         ModalActions.handleData({});
         ModalActions.handleQrConfirm(false);
     };
@@ -33,7 +34,6 @@ const QrConfirmModal = () => {
                         signer={address}
                         onSuccess={(requestData: any) => {
                             onCloseModal();
-                            // on tx success modal
                         }}
                         onFailed={() => {
                             onCloseModal();

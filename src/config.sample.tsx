@@ -1,22 +1,34 @@
-import { FirmaConfig } from '@firmachain/firma-js';
+import { FirmaConfig } from "@firmachain/firma-js";
 
 export const CRAFT_CONFIGS = {
-    MAINNET: {
-        FIRMACHAIN_CONFIG: FirmaConfig.MainNetConfig,
-        LEDGER_FEE: 30000,
-        LEDGER_GAS: 300000,
-        IS_DEFAULT_GAS: false,
-        CRAFT_SERVER_CONFIG: {
-            URI: 'https://:3005/api'
-        }
+  MAINNET: {
+    FIRMACHAIN_CONFIG: FirmaConfig.MainNetConfig,
+    LEDGER_FEE: 30000,
+    LEDGER_GAS: 300000,
+    IS_DEFAULT_GAS: false,
+    CRAFT_SERVER_URI: '',
+    GRAPHQL_CONFIG: {
+      URI: 'https://:8080/v1/graphql'
     },
-    TESTNET: {
-        FIRMACHAIN_CONFIG: FirmaConfig.TestNetConfig,
-        LEDGER_FEE: 30000,
-        LEDGER_GAS: 300000,
-        IS_DEFAULT_GAS: false,
-        CRAFT_SERVER_CONFIG: {
-            URI: 'https://:3005/api'
-        }
+    GRAPHQL_API_KEY: '',
+    BLOCK_EXPLORER: 'https://explorer.firmachain.dev',
+    CW20: {
+      CODE_ID: ""
     }
+  },
+  TESTNET: {
+    FIRMACHAIN_CONFIG: FirmaConfig.TestNetConfig,
+    LEDGER_FEE: 30000,
+    LEDGER_GAS: 300000,
+    IS_DEFAULT_GAS: false,
+    CRAFT_SERVER_URI: '',
+    GRAPHQL_CONFIG: {
+      URI: 'https://:8080/v1/graphql'
+    },
+    GRAPHQL_API_KEY: '',
+    BLOCK_EXPLORER: 'https://explorer-testnet.firmachain.dev',
+    CW20: {
+      CODE_ID: ""
+    }
+  }
 };

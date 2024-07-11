@@ -44,7 +44,6 @@ const useAPI = () => {
     };
 
     const getRequestStatus = async (requestUrl: string, requestKey: string) => {
-        console.log(requestKey);
         const response = await axios.get(`${requestUrl}/connect/requests/${requestKey}`);
 
         if (response.data.code < 0 || response.data.status === -1) {

@@ -129,7 +129,7 @@ const Information = ({
                         <InputTextWithLabel
                             label={'Decimals'}
                             placeHolderLeft={'0 ~ 16'}
-                            maxLength={16}
+                            maxLength={20}
                             type={'number'}
                             value={decimals}
                             onChange={handleDecimals}

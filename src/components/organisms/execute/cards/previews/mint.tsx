@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '../../../../atoms/icons/pngIcons';
 import ArrowToggleButton from '../../../../atoms/buttons/arrowToggleButton';
-import { useContractContext } from '../../context/contractContext';
 import {
     addStringAmount,
     compareStringNumbers,
@@ -11,10 +10,13 @@ import {
     getTokenAmountFromUToken,
     getUTokenAmountFromToken,
     subtractStringAmount
-} from '../../../../../utils/balance';
-import { isValidAddress, shortenAddress } from '../../../../../utils/address';
-import { useSelector } from 'react-redux';
-import { ModalActions } from '../../../../../redux/actions';
+} from '@/utils/balance';
+import { IWallet } from '@/interfaces/wallet';
+import { ModalActions } from '@/redux/actions';
+import { isValidAddress, shortenAddress } from '@/utils/address';
+import { useContractContext } from '../../context/contractContext';
+import { useDispatch } from 'react-redux';
+import { ACTION_CREATORS } from '@/redux/reducers/modalReducer';
 
 const Container = styled.div`
     width: 100%;
@@ -217,9 +219,8 @@ interface IProps {
     tokenSymbol: string;
 }
 
-const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {
-    // const { } = useSelector(() => )
-    const { contract, walletList } = useContractContext();
+const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {    
+    const { contract, walletList, setIsFetched } = useContractContext();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [totalMintBalance, setTotalMintBalance] = useState<string>('0');
@@ -252,14 +253,27 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
     }, [walletList, calculateTotalMintBalance]);
 
     const onClickMint = () => {
+        const convertWalletList: IWallet[] = [];
+
+        for (const wallet of walletList) {
+            convertWalletList.push({
+                recipient: wallet.recipient,
+                amount: getUTokenAmountFromToken(wallet.amount, decimals)
+            });
+        }
+
         ModalActions.handleData({
             module: '/cw20/mintToken',
             params: {
                 contract: contract,
-                msg: walletList
+                msg: convertWalletList
             }
         });
         ModalActions.handleQrConfirm(true);
+        ModalActions.handleSetCallback({ callback: () => {
+            console.log("CALLBACK !!!!");
+            setIsFetched(true);
+        }});
     };
 
     return (
