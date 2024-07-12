@@ -71,3 +71,21 @@ export const AddWalletTypo = styled.div`
     font-weight: 400;
     line-height: 20px;
 `;
+
+export const DeleteAllButton = styled.button<{ length: number }>`
+    display: flex;
+    padding: 6px 12px;
+    align-items: flex-start;
+    gap: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--Gray-600, #707070);
+    background: var(--200, #1e1e1e);
+    color: var(--Gray-700, #999);
+    text-align: right;
+    font-family: 'General Sans Variable';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px; /* 116.667% */
+    cursor: pointer;
+`;

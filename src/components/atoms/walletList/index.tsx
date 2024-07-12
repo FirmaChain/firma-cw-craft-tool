@@ -11,7 +11,8 @@ import {
     TotalWalletWrapper,
     WalletCountWrapper,
     WalletListSummery,
-    WalletListWrapper
+    WalletListWrapper,
+    DeleteAllButton
 } from './style';
 
 import { IWallet } from '../../../interfaces/wallet';
@@ -80,6 +81,11 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
         return FirmaUtil.isValidAddress(value);
     };
 
+    const handleDeleteAll = () => {
+        setWalletList([{ recipient: '', amount: '' }]);
+        setValidity([true]);
+    };
+
     return (
         <WalletListWrapper>
             <WalletListSummery>
@@ -90,6 +96,9 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
                         <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
                     </WalletCountWrapper>
                 </TotalWalletWrapper>
+                <DeleteAllButton length={walletList.length} onClick={handleDeleteAll}>
+                    Delete All
+                </DeleteAllButton>
             </WalletListSummery>
             {walletList.map((wallet, index) => (
                 <InputAddressAmount
