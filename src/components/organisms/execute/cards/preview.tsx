@@ -4,6 +4,7 @@ import { useContractContext } from '../context/contractContext';
 import MintPreview from './previews/mint';
 import { ITokenInfoState } from '../hooks/useExecueteHook';
 import DefaultView from './previews/default';
+import BurnPreview from './previews/burn';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -45,6 +46,13 @@ const Preview = ({ tokenInfoState }: IProps) => {
                     totalSupply={tokenInfoState.totalSupply}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
+                />
+            )}
+            {selectMenu.value === 'burn' && (
+                <BurnPreview
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                    addressAmount={tokenInfoState.addressAmount}
+                    decimals={tokenInfoState.decimals}
                 />
             )}
         </Container>

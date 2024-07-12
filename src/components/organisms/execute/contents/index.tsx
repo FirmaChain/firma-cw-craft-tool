@@ -7,6 +7,8 @@ import { useContractContext } from '../context/contractContext';
 
 import { FIRMA_DIM_LOGO } from '../../../atoms/icons/pngIcons';
 import useExecuteHook, { ITokenInfoState } from '../hooks/useExecueteHook';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const Container = styled.div`
     display: flex;
@@ -25,6 +27,8 @@ const DimBox = styled.div`
 `;
 
 const Contents = () => {
+    const { address } = useSelector((state: rootState) => state.wallet);
+
     const { contract, isFetched, setSelectMenu, setIsFetched } = useContractContext();
     const { getContractTokenInfo } = useExecuteHook();
 
@@ -32,7 +36,7 @@ const Contents = () => {
 
     const fetchTokenInfo = useCallback(async () => {
         try {
-            const info = await getContractTokenInfo(contract);
+            const info = await getContractTokenInfo(contract, address);
             setContractTokenInfo(info);
         } catch (error) {
             console.log(error);
@@ -50,7 +54,7 @@ const Contents = () => {
         } else {
             setSelectMenu({ value: 'select', label: 'Select' });
         }
-    }, [ContractExist, isFetched]);
+    }, [contract, ContractExist, isFetched]);
 
     return (
         <Fragment>

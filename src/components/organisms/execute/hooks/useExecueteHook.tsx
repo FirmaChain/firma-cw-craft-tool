@@ -27,6 +27,8 @@ export interface ITokenInfoState {
     marketingDescription: string;
     marketingProject: string;
     marketingAddress: string;
+
+    addressAmount: string;
 }
 
 const useExecuteHook = () => {
@@ -42,7 +44,7 @@ const useExecuteHook = () => {
     }, [network]);
 
     const getContractTokenInfo = useCallback(
-        async (contractAddress: string) => {
+        async (contractAddress: string, address: string) => {
             const resultData: ITokenInfoState = {
                 success: false,
 
@@ -62,7 +64,9 @@ const useExecuteHook = () => {
                 marketingLogoUrl: '',
                 marketingDescription: '',
                 marketingProject: '',
-                marketingAddress: ''
+                marketingAddress: '',
+
+                addressAmount: '',
             };
 
             if (!firmaSDK()) return resultData;
@@ -72,9 +76,9 @@ const useExecuteHook = () => {
                 const tokenInfo = await firmaSDK().Cw20.getTokenInfo(contractAddress);
                 const minterInfo = await firmaSDK().Cw20.getMinter(contractAddress);
                 const marketingInfo = await firmaSDK().Cw20.getMarketingInfo(contractAddress);
+                const balanceInfo = await firmaSDK().Cw20.getBalance(contractAddress, address)
 
                 resultData.success = true;
-
                 resultData.contractAddress = contractInfo.address;
                 resultData.label = contractInfo.contract_info.label;
 
@@ -90,6 +94,8 @@ const useExecuteHook = () => {
                 resultData.marketingDescription = marketingInfo.description;
                 resultData.marketingAddress = marketingInfo.marketing;
                 resultData.marketingProject = marketingInfo.project;
+
+                resultData.addressAmount = balanceInfo;
             } catch (error) {
                 resultData.success = false;
             } finally {

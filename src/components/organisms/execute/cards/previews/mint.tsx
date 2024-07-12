@@ -271,7 +271,6 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({ callback: () => {
-            console.log("CALLBACK !!!!");
             setIsFetched(true);
         }});
     };

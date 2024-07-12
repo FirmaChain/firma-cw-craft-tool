@@ -8,6 +8,10 @@ import CustomSelectInput from '../../../atoms/input/customSelectInput';
 import Mint from './functions/mint';
 import { useContractContext } from '../context/contractContext';
 import { ITokenInfoState } from '../hooks/useExecueteHook';
+import Burn from './functions/burn';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import BurnFrom from './functions/burnFrom';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -131,7 +135,6 @@ export interface IMenuItem {
 
 const basicMenuItems: IMenuItem[] = [
     { value: 'select', label: 'Select' },
-    { value: 'mint', label: 'Mint' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
     { value: 'increaseAllowance', label: 'Increase Allowance' },
@@ -142,13 +145,27 @@ const basicMenuItems: IMenuItem[] = [
     { value: 'updateMarketing', label: 'Update Marketing' }
 ];
 
-const advancedMenuItems: IMenuItem[] = [...basicMenuItems, { value: 'updateMinter', label: 'Update Minter' }];
+const minterMenuItems: IMenuItem[] = [
+    { value: 'select', label: 'Select' },
+    { value: 'mint', label: 'Mint' },
+    { value: 'burn', label: 'Burn' },
+    { value: 'burnFrom', label: 'Burn From' },
+    { value: 'increaseAllowance', label: 'Increase Allowance' },
+    { value: 'decreaseAllowance', label: 'Decrease Allowance' },
+    { value: 'transfer', label: 'Transfer' },
+    { value: 'transferFrom', label: 'Transfer From' },
+    { value: 'updateLogo', label: 'Update Logo' },
+    { value: 'updateMarketing', label: 'Update Marketing' },
+    { value: 'updateMinter', label: 'Update Minter' }
+];
 
 interface IProps {
     tokenInfoState: ITokenInfoState;
 }
 
 const TokenInfo = ({ tokenInfoState }: IProps) => {
+    const { address } = useSelector((state: rootState) => state.wallet);
+
     const { setSelectMenu } = useContractContext();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
@@ -187,10 +204,12 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
     }, [validTokenLogoUrl]);
 
     const handleChangeMenu = (menu: string) => {
-        const menuItem = ContractTypeLabel === 'BASIC' ? basicMenuItems : advancedMenuItems;
+        const menuItem = tokenInfoState.minter.minter === address ? minterMenuItems : basicMenuItems;
+
         const _selectedMenu = menuItem.filter((item) => {
             return item.value === menu;
         });
+
         _setSelectMenu(_selectedMenu[0]);
         setSelectMenu(_selectedMenu[0]);
     };
@@ -214,7 +233,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                 </TokenBox>
             </TokenInfoWrap>
             <CustomSelectInput
-                menus={tokenInfoState.label === BASIC_LABEL ? basicMenuItems : advancedMenuItems}
+                menus={tokenInfoState.minter.minter === address ? minterMenuItems : basicMenuItems}
                 onChangeMenu={handleChangeMenu}
             />
             {selectMenu.value && selectMenu.value !== 'select' && <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />}
@@ -225,6 +244,12 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                     tokenSymbol={tokenInfoState.tokenSymbol}
                     decimals={tokenInfoState.decimals}
                 />
+            )}
+            {selectMenu.value === 'burn' && (
+                <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />
+            )}
+            {selectMenu.value === 'burnFrom' && (
+                <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
             )}
         </Container>
     );
