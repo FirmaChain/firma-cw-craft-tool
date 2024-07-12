@@ -184,7 +184,7 @@ const PaginatedTable = ({ decimals, headers, data, itemsPerPage }: IProps) => {
                                     header === 'Receiver' ? (
                                         <TableCell width={'740px'} color={'#00827A'} key={cellIndex}>
                                             <CellWrapper>
-                                                <Icons.wallet width={'22px'} height={'22px'} fill={'#00827A'} />
+                                                <Icons.Wallet width={'22px'} height={'22px'} fill={'#00827A'} />
                                                 <CellColorTypo color={'#00827A'} onClick={(e: any) => onClickAddress(e, item[header])}>
                                                     {shortenAddress(item[header], 8, 10)}
                                                 </CellColorTypo>

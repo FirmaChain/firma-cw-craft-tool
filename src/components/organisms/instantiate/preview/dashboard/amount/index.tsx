@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-
-import Icons from '../../../../../atoms/icons';
+import Icons from '@/components/atoms/icons';
 import {
     AmountWrapper,
     DetailAddressText,
@@ -15,12 +14,11 @@ import {
     MinterCapHeaderWrapper,
     MinterCapWrapper
 } from './style';
-
 import TotalSupply from './totalSupply';
-import { IWallet } from '../../../../../../interfaces/wallet';
-import { getUTokenStrFromTokenStr } from '../../../../../../utils/common';
-import ArrowToggleButton from '../../../../../atoms/buttons/arrowToggleButton';
-import { HalfDottedDivider } from '../../../../../atoms/divider/dottedDivider';
+import { IWallet } from '@/interfaces/wallet';
+import { getUTokenStrFromTokenStr } from '@/utils/common';
+import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
+import { HalfDottedDivider } from '@/components/atoms/divider/dottedDivider';
 
 interface IProps {
     minterble: boolean;
@@ -60,7 +58,7 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                         {toggleMinterDetail ? (
                             <DetailWrapper>
                                 <DetailLeftWrapper>
-                                    <Icons.wallet width={'20px'} height={'20px'} />
+                                    <Icons.Wallet width={'20px'} height={'20px'} />
                                     <DetailAddressText>{minterAddress !== '' ? minterAddress : '-'}</DetailAddressText>
                                 </DetailLeftWrapper>
                                 <DetailMinterCapAmount>

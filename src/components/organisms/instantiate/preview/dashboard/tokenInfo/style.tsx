@@ -13,7 +13,7 @@ export const TokenInfoWrapper = styled.div`
 `;
 
 export const TokenInfoLogoImage = styled.div`
-    width: 90px;
+    min-width: 90px;
     height: 90px;
     background-color: #262626;
     border-radius: 153.409px;
@@ -38,6 +38,7 @@ export const TokenInfoDetail = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
+    word-break: break-word;
 `;
 
 export const DetailTitle = styled.div`
@@ -62,6 +63,7 @@ export const TokenSymbolText = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+    white-space: pre;
 `;
 
 export const TokenDescriptionText = styled.div`

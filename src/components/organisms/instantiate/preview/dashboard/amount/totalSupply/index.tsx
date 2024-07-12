@@ -14,10 +14,10 @@ import {
     WalletListItem,
     WalletListWrapper
 } from './style';
-import Icons from '../../../../../../atoms/icons';
-import { IWallet } from '../../../../../../../interfaces/wallet';
-import { getUTokenStrFromTokenStr } from '../../../../../../../utils/common';
-import ArrowToggleButton from '../../../../../../atoms/buttons/arrowToggleButton';
+import Icons from '@/components/atoms/icons';
+import { IWallet } from '@/interfaces/wallet';
+import { getUTokenStrFromTokenStr } from '@/utils/common';
+import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 
 interface IProps {
     totalSupply: string;
@@ -52,7 +52,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                 walletList.length === 0 ? (
                     <WalletListItem>
                         <ItemLeftWrapper>
-                            <Icons.wallet width={'20px'} height={'20px'} />
+                            <Icons.Wallet width={'20px'} height={'20px'} />
                             <ItemLeftAddress>{'-'}</ItemLeftAddress>
                         </ItemLeftWrapper>
                         <ItemTokenAmount>{'0'}</ItemTokenAmount>
@@ -62,7 +62,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                         {walletList.map((wallet, index) => (
                             <WalletListItem key={index}>
                                 <ItemLeftWrapper>
-                                    <Icons.wallet width={'20px'} height={'20px'} />
+                                    <Icons.Wallet width={'20px'} height={'20px'} />
                                     <ItemLeftAddress>{wallet.recipient !== '' ? wallet.recipient : '-'}</ItemLeftAddress>
                                 </ItemLeftWrapper>
                                 <ItemTokenAmount>

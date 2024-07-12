@@ -1,11 +1,11 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FirmaUtil } from '@firmachain/firma-js';
 
-import SimpleSwitch from '../../../../../atoms/switch/simpleSwitch';
-import InputTextWithLabelTip from '../../../../../atoms/input/inputTextWithLabelTip';
-import { GlobalActions } from '../../../../../../redux/actions';
-import { rootState } from '../../../../../../redux/reducers';
+import SimpleSwitch from '@/components/atoms/switch/simpleSwitch';
+import InputTextWithLabelTip from '@/components/atoms/input/inputTextWithLabelTip';
+import { GlobalActions } from '@/redux/actions';
+import { rootState } from '@/redux/reducers';
 
 import { MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
 

@@ -67,7 +67,7 @@ const PaginatedItem = ({
                 <TokenLogoImage>
                     {validTokenLogoUrl === '' ? (
                         <IconBackground>
-                            <Icons.picture width={'22px'} height={'22px'} />
+                            <Icons.Picture width={'22px'} height={'22px'} />
                         </IconBackground>
                     ) : (
                         <img src={validTokenLogoUrl} style={{ width: '48px', height: '48px', maxHeight: '100%', maxWidth: '100%' }} />

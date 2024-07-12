@@ -1,4 +1,4 @@
-import { IWallet } from '../../../../interfaces/wallet';
+import { IWallet } from '@/interfaces/wallet';
 import AddWallet from './addWallet';
 import Information from './information';
 import { ContentWrapper } from './style';

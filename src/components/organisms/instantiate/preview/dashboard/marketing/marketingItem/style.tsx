@@ -32,12 +32,12 @@ export const ItemValue = styled.div`
     overflow: hidden;
 `;
 
-export const ItemValueCover = styled.div`
+export const ItemValueCover = styled.div<{ $visible: boolean }>`
+    display: flex;
     padding: 4px 12px;
     border-radius: 100px;
-    border: 1px solid var(--Gray-500, #383838);
-    background: var(--Gray-400, #2c2c2c);
-    display: flex;
+    border: ${({ $visible }) => ($visible ? '1px solid var(--Gray-500, #383838)' : 'none')};
+    background: ${({ $visible }) => ($visible ? 'var(--Gray-400, #2c2c2c)' : 'none')};
     align-items: center;
     justify-content: center;
     overflow: hidden;

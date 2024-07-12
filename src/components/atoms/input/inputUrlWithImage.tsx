@@ -1,10 +1,8 @@
-import React, { CSSProperties, useEffect, useState } from 'react';
-import { Box, FormControl, FormLabel, Stack, TextField } from '@mui/material';
-
-import { InputType } from '../../../interfaces/input';
+import React, { CSSProperties, useState } from 'react';
+import { InputType } from '@/interfaces/input';
 import { styled } from 'styled-components';
-import theme from '../../../themes';
 import Icons from '../icons';
+import VariableInput from './variableInput';
 
 interface IProps {
     label: string;
@@ -25,86 +23,70 @@ const IconBackground = styled.div`
     background: var(--Gray-450, #262626);
 `;
 
+const checkImageUrl = (url: string, onValid: () => void, onInvalid: () => void) => {
+    if (url) {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => onValid();
+        img.onerror = () => onInvalid();
+    } else {
+        onValid();
+    }
+};
+
+const INVLIAD_URL_MESSAGE = 'Input valid image url';
+
 const InputUrlWithImage = ({ label, placeHolder, value, type = 'url', sx = {}, onChange }: IProps) => {
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
-
-    useEffect(() => {
-        if (value) {
-            const img = new Image();
-            img.src = value;
-            img.onload = () => {
-                setValidTokenLogoUrl(value);
-            };
-            img.onerror = () => {
-                setValidTokenLogoUrl('');
-            };
-        } else {
-            setValidTokenLogoUrl('');
-        }
-    }, [value]);
+    const [errorMessage, setErrorMessage] = useState<string[]>([]);
 
     const handleInputUrl = (event: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(event.currentTarget.value);
+        const currentInput = event.currentTarget.value;
+
+        checkImageUrl(
+            currentInput,
+            () => {
+                setValidTokenLogoUrl(currentInput);
+                setErrorMessage((v) => v.filter((one) => one !== INVLIAD_URL_MESSAGE));
+            },
+            () => {
+                setValidTokenLogoUrl('');
+                if (!errorMessage.includes(INVLIAD_URL_MESSAGE)) setErrorMessage([...errorMessage, INVLIAD_URL_MESSAGE]);
+            }
+        );
+        onChange(currentInput);
     };
 
-    // https://i.seadn.io/gcs/files/11570389cac190891fea96fe285cbf01.png?auto=format&dpr=1&w=48
     return (
-        <Stack sx={{ ...sx, width: '100%' }}>
-            <FormControl variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <FormLabel>
-                    <Stack sx={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{label}</Stack>
-                </FormLabel>
-                <Stack
-                    sx={{
-                        width: '90px',
-                        height: '90px',
-                        backgroundColor: '#262626',
-                        borderRadius: '153.409px',
-                        border: '1px solid #383838',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                    }}
-                >
-                    {validTokenLogoUrl === '' ? (
-                        <IconBackground>
-                            <Icons.picture width={'34px'} height={'34px'} />
-                        </IconBackground>
-                    ) : (
-                        <img src={validTokenLogoUrl} style={{ width: '90px', height: '90px', maxHeight: '100%', maxWidth: '100%' }} />
-                    )}
-                </Stack>
-                <TextField
-                    id="custom-text-input-with-label"
-                    hiddenLabel
-                    autoComplete="off"
-                    type={type}
-                    value={value}
-                    variant="outlined"
-                    onChange={handleInputUrl}
-                    placeholder={value ? '' : placeHolder}
-                    InputProps={{
-                        sx: {
-                            backgroundColor: '#2C2C2C',
-                            '& .MuiOutlinedInput-input::placeholder': {
-                                color: '#707070',
-                                fontSize: '14px',
-                                fontWeight: '500',
-                                lineHeight: '20px'
-                            },
-                            '& .MuiOutlinedInput-input': {
-                                paddingLeft: '16px',
-                                fontSize: '14px',
-                                fontWeight: '500',
-                                lineHeight: '20px',
-                                color: '#FFF'
-                            }
-                        }
-                    }}
-                />
-            </FormControl>
-        </Stack>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'felx-start', width: '100%', gap: '8px' }}>
+            <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{label}</div>
+            <div
+                style={{
+                    display: 'flex',
+                    width: '90px',
+                    height: '90px',
+                    backgroundColor: '#262626',
+                    borderRadius: '153.409px',
+                    border: '1px solid #383838',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden'
+                }}
+            >
+                {validTokenLogoUrl === '' ? (
+                    <IconBackground>
+                        <Icons.Picture width={'34px'} height={'34px'} />
+                    </IconBackground>
+                ) : (
+                    <img
+                        src={validTokenLogoUrl}
+                        alt="token-logo"
+                        style={{ width: '90px', height: '90px', maxHeight: '100%', maxWidth: '100%' }}
+                    />
+                )}
+            </div>
+            <VariableInput value={value} onChange={handleInputUrl} placeHolder={value ? '' : placeHolder} errorMessage={errorMessage} />
+        </div>
     );
 };
 

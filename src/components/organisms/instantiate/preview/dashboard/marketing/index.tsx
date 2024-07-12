@@ -1,4 +1,4 @@
-import Icons from '../../../../../atoms/icons';
+import Icons from '@/components/atoms/icons';
 import MarketingItem from './marketingItem';
 import { MarketingWrapper } from './style';
 
@@ -11,14 +11,14 @@ interface IProps {
 const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IProps) => {
     return (
         <MarketingWrapper>
-            <MarketingItem isCover={true} imageChild={<Icons.tag width={'24px'} height={'24px'} />} name={'Label'} value={label} />
-            <MarketingItem imageChild={<Icons.percent width={'24px'} height={'24px'} />} name={'Decimal'} value={decimals} />
+            <MarketingItem isCover={true} imageChild={<Icons.Tag width={'24px'} height={'24px'} />} name={'Label'} value={label} />
+            <MarketingItem imageChild={<Icons.Percent width={'24px'} height={'24px'} />} name={'Decimal'} value={decimals} />
             <MarketingItem
-                imageChild={<Icons.wallet width={'24px'} height={'24px'} />}
+                imageChild={<Icons.Wallet width={'24px'} height={'24px'} />}
                 name={'Marketing Address'}
                 value={marketingAddress}
             />
-            <MarketingItem imageChild={<Icons.link width={'24px'} height={'24px'} />} name={'Marketing Project'} value={marketingProject} />
+            <MarketingItem imageChild={<Icons.Link width={'24px'} height={'24px'} />} name={'Marketing Project'} value={marketingProject} />
         </MarketingWrapper>
     );
 };

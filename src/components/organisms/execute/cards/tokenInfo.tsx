@@ -180,7 +180,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                 {isValid ? (
                     <img src={validTokenLogoUrl} style={{ width: '72px', height: '72px' }} />
                 ) : (
-                    <Icons.picture width={'34px'} height={'34px'} />
+                    <Icons.Picture width={'34px'} height={'34px'} />
                 )}
             </ImageWrap>
         );

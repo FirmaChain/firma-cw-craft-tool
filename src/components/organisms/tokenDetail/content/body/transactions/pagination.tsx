@@ -255,7 +255,7 @@ const PaginatedTable = ({ enablePagination = false, headers, data, itemsPerPage 
                                             cell = (
                                                 <TableCell key={cellIndex}>
                                                     <CellWrapper>
-                                                        <Icons.wallet width={'22px'} height={'22px'} fill={'#00827A'} />
+                                                        <Icons.Wallet width={'22px'} height={'22px'} fill={'#00827A'} />
                                                         <CellColorTypo
                                                             color={'#00827A'}
                                                             onClick={(e: any) => onClickAddress(e, item.address)}

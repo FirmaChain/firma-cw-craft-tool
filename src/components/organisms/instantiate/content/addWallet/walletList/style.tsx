@@ -1,3 +1,4 @@
+import IconButton from '@/components/atoms/buttons/iconButton';
 import { styled } from 'styled-components';
 
 export const WalletListWrapper = styled.div`
@@ -66,7 +67,7 @@ export const MaxWalletCountTypo = styled.div`
     line-height: 20px;
 `;
 
-export const AddWalletWrapper = styled.div`
+export const AddWalletWrapper = styled(IconButton)`
     width: 100%;
     padding: 8px 0px;
     display: flex;

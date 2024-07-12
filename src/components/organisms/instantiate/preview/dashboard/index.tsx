@@ -48,7 +48,7 @@ const Dashboard = ({
         <DashboardWrapper>
             <TitleWrapper>
                 <IconBackground>
-                    <Icons.preview width={'32px'} height={'32px'} />
+                    <Icons.Preview width={'32px'} height={'32px'} />
                 </IconBackground>
                 <TextGroupWrapper>
                     <TitleText>PREVIEW</TitleText>

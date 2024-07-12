@@ -232,7 +232,7 @@ const FirmaChain = (props: any) => {
         </svg>
     );
 };
-const picture = (props: any) => {
+const Picture = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Image 2">
@@ -271,7 +271,7 @@ const picture = (props: any) => {
     );
 };
 
-const info = (props: any) => {
+const Info = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Iconly/Bold/Info Circle">
@@ -294,7 +294,7 @@ const info = (props: any) => {
     );
 };
 
-const link = (props: any) => {
+const Link = (props: any) => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <path
@@ -308,7 +308,7 @@ const link = (props: any) => {
     );
 };
 
-const medium = (props: any) => {
+const Medium = (props: any) => {
     return (
         <svg
             width={props.width}
@@ -334,7 +334,7 @@ const medium = (props: any) => {
     );
 };
 
-const minusCircle = (props: any) => {
+const MinusCircle = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="minus-circle">
@@ -356,7 +356,7 @@ const minusCircle = (props: any) => {
     );
 };
 
-const percent = (props: any) => {
+const Percent = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="percent-02">
@@ -390,7 +390,7 @@ const percent = (props: any) => {
     );
 };
 
-const plusCircle = (props: any) => {
+const PlusCircle = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="plus-circle">
@@ -412,7 +412,7 @@ const plusCircle = (props: any) => {
     );
 };
 
-const preview = (props: any) => {
+const Preview = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="coins-01">
@@ -439,7 +439,7 @@ const preview = (props: any) => {
     );
 };
 
-const search = (props: any) => {
+const Search = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="search-refraction">
@@ -465,7 +465,7 @@ const search = (props: any) => {
     );
 };
 
-const setting = (props: any) => {
+const Setting = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Iconly/Bold/Setting">
@@ -483,7 +483,7 @@ const setting = (props: any) => {
     );
 };
 
-const tag = (props: any) => {
+const Tag = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="tag-01">
@@ -505,7 +505,7 @@ const tag = (props: any) => {
     );
 };
 
-const telegram = (props: any) => {
+const Telegram = (props: any) => {
     return (
         <svg
             width={props.width}
@@ -531,7 +531,7 @@ const telegram = (props: any) => {
     );
 };
 
-const twitter = (props: any) => {
+const Twitter = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="ic_twitter_gy_32px">
@@ -545,7 +545,7 @@ const twitter = (props: any) => {
     );
 };
 
-const valid = (props: any) => {
+const Valid = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="Frame 2227">
@@ -561,7 +561,7 @@ const valid = (props: any) => {
     );
 };
 
-const wallet = (props: any) => {
+const Wallet = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="wallet-fill">
@@ -747,21 +747,21 @@ const Icons = {
     Edit,
     FirmaCraft,
     FirmaChain,
-    picture,
-    info,
-    link,
-    minusCircle,
-    percent,
-    plusCircle,
-    preview,
-    search,
-    setting,
-    twitter,
-    telegram,
-    valid,
-    medium,
-    wallet,
-    tag,
+    Picture,
+    Info,
+    Link,
+    MinusCircle,
+    Percent,
+    PlusCircle,
+    Preview,
+    Search,
+    Setting,
+    Twitter,
+    Telegram,
+    Valid,
+    Medium,
+    Wallet,
+    Tag,
     RightArrow,
     LeftArrow,
     Dot,

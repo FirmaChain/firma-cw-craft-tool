@@ -17,7 +17,7 @@ const Header = () => {
                 placeholder={'Search Token Name, Token Symbols'}
                 value={searchValue}
                 onChange={onChangeSearchValue}
-                icon={<Icons.search width={'16px'} height={'16px'} />}
+                icon={<Icons.Search width={'16px'} height={'16px'} />}
                 sx={{
                     width: '309px'
                 }}

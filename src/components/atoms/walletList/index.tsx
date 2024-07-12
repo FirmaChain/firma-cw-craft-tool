@@ -23,9 +23,12 @@ interface IProps {
     decimals: string;
     maxWalletCount?: number;
     onChangeWalletList: (walletList: IWallet[]) => void;
+    addressTitle: string;
+    addressPlaceholder: string;
+    amountTitle: string;
 }
 
-const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList }: IProps) => {
+const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, addressTitle, addressPlaceholder, amountTitle }: IProps) => {
     const { enqueueSnackbar } = useSnackbar();
 
     const [walletList, setWalletList] = useState<IWallet[]>([{ recipient: '', amount: '' }]);
@@ -100,6 +103,9 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList }: IProp
                     isLast={index === walletList.length - 1}
                     isValid={validity[index]}
                     decimals={decimals}
+                    addressTitle={addressTitle}
+                    addressPlaceholder={addressPlaceholder}
+                    amountTitle={amountTitle}
                 />
             ))}
             <AddWalletWrapper onClick={handleAddWallet}>

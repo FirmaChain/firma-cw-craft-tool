@@ -42,7 +42,7 @@ const AllAccounts = ({ decimals, allAccounts }: IProps) => {
                     placeholder={'Search Wallet Address'}
                     value={searchAddress}
                     onChange={handleSearchAddress}
-                    icon={<Icons.search width={'15px'} height={'15px'} />}
+                    icon={<Icons.Search width={'15px'} height={'15px'} />}
                     sx={{
                         width: '564px',
                         height: '44px'

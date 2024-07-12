@@ -54,7 +54,7 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply }: IProps) =>
                 <TitleLogoImage>
                     {validTokenLogoUrl === '' ? (
                         <IconBackground>
-                            <Icons.picture width={'34px'} height={'34px'} />
+                            <Icons.Picture width={'34px'} height={'34px'} />
                         </IconBackground>
                     ) : (
                         <img src={validTokenLogoUrl} style={{ width: '72px', height: '72px', maxHeight: '100%', maxWidth: '100%' }} />

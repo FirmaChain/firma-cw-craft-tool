@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Box } from '@mui/material';
 
 const shouldForwardActiveProp = (prop: PropertyKey) => prop !== 'isActive' && prop !== 'position';
 
@@ -14,7 +13,7 @@ export const SwitchContainer = styled.div`
     position: relative;
 `;
 
-export const SwitchButton = styled(Box).withConfig({ shouldForwardProp: shouldForwardActiveProp })<{
+export const SwitchButton = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp })<{
     isActive: boolean;
     position: 'left' | 'right';
 }>`
@@ -29,7 +28,7 @@ export const SwitchButton = styled(Box).withConfig({ shouldForwardProp: shouldFo
     z-index: 1;
 `;
 
-export const ActiveIndicator = styled(Box).withConfig({ shouldForwardProp: shouldForwardActiveProp })<{ position: 'left' | 'right' }>`
+export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp })<{ position: 'left' | 'right' }>`
     background-color: #e6e6e6;
     border-radius: 32px;
     width: 168px;

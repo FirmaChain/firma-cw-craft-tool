@@ -41,7 +41,7 @@ const SearchContract = () => {
                 fontWeight: 500,
                 lineHeight: '22px'
             }}
-            icon={<Icons.search width={'16px'} height={'16px'} />}
+            icon={<Icons.Search width={'16px'} height={'16px'} />}
             alwaysShowButton={false}
             placeholder={'Search CW20 contract address'}
             value={keyword}

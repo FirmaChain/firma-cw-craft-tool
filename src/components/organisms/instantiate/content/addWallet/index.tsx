@@ -1,9 +1,9 @@
-import { IWallet } from '../../../../../interfaces/wallet';
-import Icons from '../../../../atoms/icons';
+import { IWallet } from '@/interfaces/wallet';
+import Icons from '@/components/atoms/icons';
 import Minterble from './minterble';
 import { AddWalletWrapper, IconBackground, TextGroupWrapper, TitleDescription, TitleText, TitleWrapper } from './style';
 import Summery from './summery';
-import WalletList from './walletList';
+import WalletList from '@/components/atoms/walletList';
 
 interface IProps {
     walletCount: number;
@@ -30,7 +30,7 @@ const AddWallet = ({
         <AddWalletWrapper>
             <TitleWrapper>
                 <IconBackground>
-                    <Icons.wallet width={'32px'} height={'32px'} />
+                    <Icons.Wallet width={'32px'} height={'32px'} />
                 </IconBackground>
                 <TextGroupWrapper>
                     <TitleText>ADD INITIAL WALLET</TitleText>
@@ -38,7 +38,13 @@ const AddWallet = ({
                 </TextGroupWrapper>
             </TitleWrapper>
             <Summery totalSupply={totalSupply} tokenSymbol={tokenSymbol} decimals={decimals} />
-            <WalletList decimals={decimals} onChangeWalletList={onChangeWalletList} />
+            <WalletList
+                decimals={decimals}
+                onChangeWalletList={onChangeWalletList}
+                addressTitle={'Recipient Address'}
+                addressPlaceholder={'Input Wallet Address'}
+                amountTitle={'Amount'}
+            />
             <Minterble
                 decimals={decimals}
                 onChangeMinterble={onChangeMinterble}

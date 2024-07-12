@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import {
     IconBackground,
     InformationBody,
@@ -10,10 +9,11 @@ import {
     TitleWrapper,
     TokenNameSymbol
 } from './style';
-import InputTextWithLabel from '../../../../atoms/input/inputTextWithLabel';
-import InputUrlWithImage from '../../../../atoms/input/inputUrlWithImage';
-
-import Icons from '../../../../atoms/icons';
+import InputTextWithLabel from '@/components/atoms/input/inputTextWithLabel';
+import InputUrlWithImage from '@/components/atoms/input/inputUrlWithImage';
+import Icons from '@/components/atoms/icons';
+import SymbolInput from '@/components/atoms/input/symbolInput';
+import TokenNameInput from '@/components/atoms/input/tokenNameInput';
 
 interface IProps {
     isBasic: boolean;
@@ -107,7 +107,7 @@ const Information = ({
             </TitleWrapper>
             <InformationBody>
                 <TokenNameSymbol>
-                    <InputTextWithLabel
+                    <TokenNameInput
                         label={'Token Name'}
                         placeHolderLeft={'ex) My CW Token'}
                         enableLength={true}
@@ -115,7 +115,7 @@ const Information = ({
                         value={tokenName}
                         onChange={handleTokenName}
                     />
-                    <InputTextWithLabel
+                    <SymbolInput
                         label={'Token Symbol'}
                         placeHolderLeft={'ex) MCT, FCT'}
                         enableLength={true}

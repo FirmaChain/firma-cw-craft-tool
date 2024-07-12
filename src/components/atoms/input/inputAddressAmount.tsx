@@ -1,31 +1,35 @@
-import React, { CSSProperties } from 'react';
-import { FormControl, IconButton, Stack, TextField } from '@mui/material';
-
+import React from 'react';
 import Icons from '../icons';
+import VariableInput from './variableInput';
+import IconButton from '../buttons/iconButton';
 
 interface IProps {
     index: number;
     address: string;
     amount: string;
-    sx?: CSSProperties;
     onChangeAddress: (value: string) => void;
     onChangeAmount: (value: string) => void;
     onRemoveClick: () => void;
     isLast: boolean;
     isValid: boolean;
     decimals: string;
+    addressTitle: string;
+    addressPlaceholder: string;
+    amountTitle: string;
 }
 
 const InputAddressAmount = ({
     index,
     address,
     amount,
-    sx = {},
     onChangeAddress,
     onChangeAmount,
     onRemoveClick,
     isValid,
-    decimals
+    decimals,
+    addressTitle,
+    addressPlaceholder,
+    amountTitle
 }: IProps) => {
     const handleAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
         onChangeAddress(event.currentTarget.value);
@@ -45,120 +49,80 @@ const InputAddressAmount = ({
     };
 
     return (
-        <Stack sx={{ ...sx, width: '100%' }}>
-            <FormControl variant="outlined">
-                <Stack height={'76px'} gap={'12px'} display={'flex'} flexDirection={'row'}>
-                    {/* Wallet Address */}
-                    <Stack width={'420px'} height={'76px'} gap={'8px'}>
-                        <Stack sx={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' }}>
-                            <Stack
-                                sx={{
-                                    display: 'flex',
-                                    width: '24px',
-                                    height: '24px',
-                                    borderRadius: '6px',
-                                    background: '#313131',
-                                    fontSize: '12px',
-                                    color: '#999',
-                                    textAlign: 'center'
-                                }}
-                            >
-                                {index}
-                            </Stack>
-                            <Stack sx={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>
-                                Recipient Address
-                            </Stack>
-                        </Stack>
-                        <TextField
-                            id="custom-text-input-with-label"
-                            hiddenLabel
-                            autoComplete="off"
-                            type={'text'}
-                            value={address || ''}
-                            variant="outlined"
-                            onChange={handleAddress}
-                            placeholder={address ? '' : 'Input wallet Address'}
-                            error={isValid === undefined ? false : !isValid}
-                            InputProps={{
-                                sx: {
-                                    height: '48px',
-                                    padding: '14px',
-                                    backgroundColor: '#2C2C2C',
-                                    '& .MuiOutlinedInput-input::placeholder': {
-                                        color: '#707070',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        lineHeight: '20px'
-                                    },
-                                    '& .MuiOutlinedInput-input': {
-                                        paddingLeft: '16px',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        lineHeight: '20px',
-                                        color: '#FFF'
-                                    },
-                                    '& fieldset': {
-                                        borderColor: isValid === undefined ? 'inherit' : isValid ? 'inherit' : '#E55250'
-                                    }
-                                }
+        <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
+                {/* Wallet Address */}
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '420px', gap: '8px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '6px',
+                                background: '#313131',
+                                fontSize: '12px',
+                                color: '#999',
+                                justifyContent: 'center',
+                                alignItems: 'center'
                             }}
-                        />
-                    </Stack>
-                    {/* Wallet Amount */}
-                    <Stack width={'164px'} height={'76px'} gap={'8px'}>
-                        <Stack sx={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>Amount</Stack>
-                        <TextField
-                            id="custom-text-input-with-label"
-                            hiddenLabel
-                            autoComplete="off"
-                            type={'number'}
-                            value={amount || ''}
-                            variant="outlined"
-                            onChange={handleAmount}
-                            placeholder={amount ? '' : '0'}
-                            InputProps={{
-                                sx: {
-                                    height: '48px',
-                                    padding: '14px',
-                                    backgroundColor: '#2C2C2C',
-                                    '& .MuiOutlinedInput-input::placeholder': {
-                                        color: '#707070',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        lineHeight: '20px'
-                                    },
-                                    '& .MuiOutlinedInput-input': {
-                                        paddingLeft: '16px',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        lineHeight: '20px',
-                                        color: '#FFF',
-                                        textAlign: 'right'
-                                    },
-                                    '& input[type=number]': {
-                                        MozAppearance: 'textfield',
-                                        '&::-webkit-outer-spin-button': {
-                                            WebkitAppearance: 'none',
-                                            margin: 0
-                                        },
-                                        '&::-webkit-inner-spin-button': {
-                                            WebkitAppearance: 'none',
-                                            margin: 0
-                                        }
-                                    }
-                                }
-                            }}
-                        />
-                    </Stack>
-                    {/* Button */}
-                    <Stack width={'32px'} height={'70px'} paddingBottom={'6px'} display={'flex'} justifyContent={'flex-end'}>
-                        <IconButton sx={{ width: '32px', height: '32px', padding: '0' }} onClick={handleRemoveWallet}>
-                            <Icons.minusCircle />
-                        </IconButton>
-                    </Stack>
-                </Stack>
-            </FormControl>
-        </Stack>
+                        >
+                            {index}
+                        </div>
+                        <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{addressTitle}</div>
+                        {/* Recipient Address */}
+                    </div>
+                    <VariableInput
+                        value={address}
+                        onChange={handleAddress}
+                        placeHolder={addressPlaceholder}
+                        // Input wallet Address
+                        errorMessage={!isValid ? ['Input valid wallet address'] : []}
+                    />
+                </div>
+                {/* Wallet Amount */}
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '164px', gap: '8px' }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'flex-start',
+                            minHeight: '24px'
+                        }}
+                    >
+                        <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{amountTitle}</div>
+                        {/* Amount */}
+                    </div>
+                    <VariableInput value={amount} onChange={handleAmount} placeHolder={'0'} textAlign="right" />
+                </div>
+                {/* Button */}
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: '32px',
+                        height: '70px',
+                        paddingBottom: '6px',
+                        justifyContent: 'flex-end'
+                    }}
+                >
+                    <IconButton
+                        style={{
+                            width: '32px',
+                            height: '32px',
+                            padding: '0',
+                            background: 'transparent',
+                            border: 'unset',
+                            cursor: 'pointer'
+                        }}
+                        onClick={handleRemoveWallet}
+                    >
+                        <Icons.MinusCircle />
+                    </IconButton>
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -25,6 +25,7 @@ export const SummeryLeftText = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+    white-space: pre;
 `;
 
 export const SummeryRightWrapeer = styled.div`
@@ -49,6 +50,7 @@ export const SummeryRightTokenSymbol = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+    word-break: break-word;
 `;
 
 export const WalletListWrapper = styled.div`

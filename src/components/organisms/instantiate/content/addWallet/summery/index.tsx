@@ -1,7 +1,6 @@
 import React from 'react';
-
 import { SummeryAttribute, SummeryAttributeKey, SummeryAttributeValue, SummeryContainer } from './style';
-import { getUTokenStrFromTokenStr } from '../../../../../../utils/common';
+import { getUTokenStrFromTokenStr } from '@/utils/common';
 
 interface IProps {
     totalSupply: string;

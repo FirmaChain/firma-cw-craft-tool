@@ -33,10 +33,10 @@ import { CRAFT_CONFIGS } from '../../../config';
 import { shortenAddress } from '../../../utils/common';
 
 const SOCIAL_LIST = [
-    { Icon: <Icons.medium width={'100%'} height={'100%'} />, socialLink: 'https://medium.com/firmachain' },
+    { Icon: <Icons.Medium width={'100%'} height={'100%'} />, socialLink: 'https://medium.com/firmachain' },
     { Icon: <Icons.FirmaChain width={'100%'} height={'100%'} />, socialLink: 'https://firmachain.org' },
-    { Icon: <Icons.telegram width={'100%'} height={'100%'} />, socialLink: 'https://t.me/firmachain_announcement' },
-    { Icon: <Icons.twitter width={'100%'} height={'100%'} />, socialLink: 'https://twitter.com/firmachain' }
+    { Icon: <Icons.Telegram width={'100%'} height={'100%'} />, socialLink: 'https://t.me/firmachain_announcement' },
+    { Icon: <Icons.Twitter width={'100%'} height={'100%'} />, socialLink: 'https://twitter.com/firmachain' }
 ];
 
 const Sidebar = () => {
@@ -99,7 +99,7 @@ const Sidebar = () => {
                     {/* BUTTONS */}
                     <MenuListWrapper>
                         <MenuItem onClick={(e) => onClickMenu(e, '/instantiate')}>
-                            <Icons.plusCircle
+                            <Icons.PlusCircle
                                 selected={'/' + location.pathname.split('/')[1] === '/instantiate'}
                                 width={'16px'}
                                 height={'16px'}
@@ -107,12 +107,12 @@ const Sidebar = () => {
                             <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/instantiate'}>Instantiate</MenuItemText>
                         </MenuItem>
                         <MenuItem onClick={(e) => onClickMenu(e, '/execute')}>
-                            <Icons.setting selected={'/' + location.pathname.split('/')[1] === '/execute'} width={'16px'} height={'16px'} />
+                            <Icons.Setting selected={'/' + location.pathname.split('/')[1] === '/execute'} width={'16px'} height={'16px'} />
                             <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/execute'}>Execute</MenuItemText>
                         </MenuItem>
                         <LineDivider />
                         <MenuItem onClick={(e) => onClickMenu(e, '/search')}>
-                            <Icons.search selected={'/' + location.pathname.split('/')[1] === '/search'} width={'16px'} height={'16px'} />
+                            <Icons.Search selected={'/' + location.pathname.split('/')[1] === '/search'} width={'16px'} height={'16px'} />
                             <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/search'}>Search</MenuItemText>
                         </MenuItem>
                         <MenuItem onClick={(e) => onClickMenu(e, '/mytoken')}>

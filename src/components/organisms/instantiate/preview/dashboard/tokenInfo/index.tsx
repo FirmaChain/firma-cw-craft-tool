@@ -9,7 +9,7 @@ import {
     TokenNameText,
     TokenSymbolText
 } from './style';
-import Icons from '../../../../../atoms/icons';
+import Icons from '@/components/atoms/icons';
 
 interface IProps {
     tokenLogoUrl: string;
@@ -41,10 +41,14 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
             <TokenInfoLogoImage>
                 {validTokenLogoUrl === '' ? (
                     <IconBackground>
-                        <Icons.picture width={'34px'} height={'34px'} />
+                        <Icons.Picture width={'34px'} height={'34px'} />
                     </IconBackground>
                 ) : (
-                    <img src={validTokenLogoUrl} style={{ width: '90px', height: '90px', maxHeight: '100%', maxWidth: '100%' }} />
+                    <img
+                        src={validTokenLogoUrl}
+                        style={{ width: '90px', height: '90px', maxHeight: '100%', maxWidth: '100%' }}
+                        alt="token-logo"
+                    />
                 )}
             </TokenInfoLogoImage>
             <TokenInfoDetail>

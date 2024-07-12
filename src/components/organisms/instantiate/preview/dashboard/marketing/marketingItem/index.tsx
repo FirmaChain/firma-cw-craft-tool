@@ -18,7 +18,7 @@ const MarketingItem = ({ imageChild, name, value, isCover = false }: IProps) => 
             {!isCover ? (
                 <ItemValue>{value}</ItemValue>
             ) : (
-                <ItemValueCover>
+                <ItemValueCover $visible={value.length > 0}>
                     <ItemCoverValue>{value}</ItemCoverValue>
                 </ItemValueCover>
             )}

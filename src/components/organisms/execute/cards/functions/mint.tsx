@@ -137,7 +137,13 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
                     </MintCardWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <WalletList decimals={decimals} onChangeWalletList={handleWalletList} />
+            <WalletList
+                decimals={decimals}
+                onChangeWalletList={handleWalletList}
+                addressTitle={'Recipient Address'}
+                addressPlaceholder={'Input Wallet Address'}
+                amountTitle={'Amount'}
+            />
         </Container>
     );
 };
