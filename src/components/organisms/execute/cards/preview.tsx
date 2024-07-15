@@ -5,6 +5,7 @@ import MintPreview from './previews/mint';
 import { ITokenInfoState } from '../hooks/useExecueteHook';
 import DefaultView from './previews/default';
 import BurnPreview from './previews/burn';
+import BurnFromPreview from './previews/burnFrom';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -53,6 +54,13 @@ const Preview = ({ tokenInfoState }: IProps) => {
                     tokenSymbol={tokenInfoState.tokenSymbol}
                     addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
+                />
+            )}
+            {selectMenu.value === 'burnFrom' && (
+                <BurnFromPreview
+                totalSupply={tokenInfoState.totalSupply}
+                decimals={tokenInfoState.decimals}
+                tokenSymbol={tokenInfoState.tokenSymbol}
                 />
             )}
         </Container>

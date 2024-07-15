@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { ModalActions } from '@/redux/actions';
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '../../../../atoms/icons/pngIcons';
 import ArrowToggleButton from '../../../../atoms/buttons/arrowToggleButton';
@@ -12,11 +13,8 @@ import {
     subtractStringAmount
 } from '@/utils/balance';
 import { IWallet } from '@/interfaces/wallet';
-import { ModalActions } from '@/redux/actions';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import { useContractContext } from '../../context/contractContext';
-import { useDispatch } from 'react-redux';
-import { ACTION_CREATORS } from '@/redux/reducers/modalReducer';
 
 const Container = styled.div`
     width: 100%;
@@ -219,8 +217,8 @@ interface IProps {
     tokenSymbol: string;
 }
 
-const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {    
-    const { contract, walletList, setIsFetched } = useContractContext();
+const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {
+    const { contract, walletList, setIsFetched, setWalletList } = useContractContext();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [totalMintBalance, setTotalMintBalance] = useState<string>('0');
@@ -271,6 +269,7 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({ callback: () => {
+            setWalletList([]);
             setIsFetched(true);
         }});
     };

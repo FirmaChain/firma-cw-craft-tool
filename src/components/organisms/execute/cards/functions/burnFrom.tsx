@@ -4,6 +4,7 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, Ti
 import WalletList from "@/components/atoms/walletList";
 import { IWallet } from "@/interfaces/wallet";
 import { useState } from "react";
+import { useContractContext } from "../../context/contractContext";
 
 const ContentWrap = styled.div`
     display: flex;
@@ -50,7 +51,14 @@ interface IProps {
 }
 
 const BurnFrom = ({ decimals, tokenSymbol }: IProps) => {
+    const { setWalletList } = useContractContext();
+    
     const [burnWalletList, setBurnWalletList] = useState<IWallet[]>([]);
+
+    const handleWalletList = (value: IWallet[]) => {
+        setBurnWalletList(value);
+        setWalletList(value);
+    };
 
     return (
         <Container>
@@ -69,10 +77,10 @@ const BurnFrom = ({ decimals, tokenSymbol }: IProps) => {
             </HeaderWrap>
             <WalletList
                 decimals={decimals}
+                onChangeWalletList={handleWalletList}
                 addressTitle={"Owner Address"}
                 addressPlaceholder={"Input Wallet Address"}
                 amountTitle={"Burn Amount"}
-                onChangeWalletList={(value) => setBurnWalletList(value)}
             />
         </Container>
     )

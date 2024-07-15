@@ -1,12 +1,10 @@
+import { useMemo } from "react";
+import { ModalActions } from "@/redux/actions";
 import styled from "styled-components";
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from "@/components/atoms/icons/pngIcons";
 import { useContractContext } from "../../context/contractContext";
 import { formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from "@/utils/balance";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { rootState } from "@/redux/reducers";
-import { ModalActions } from "@/redux/actions";
 
 const Container = styled.div`
     width: 100%;
@@ -157,7 +155,7 @@ interface IProps {
 }
 
 const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
-    const { contract, burnAmount, setIsFetched } = useContractContext();
+    const { contract, burnAmount, setIsFetched, setBurnAmount } = useContractContext();
 
     const updatedBalance = useMemo(() => {
         let amount = '0';
@@ -182,6 +180,7 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({ callback: () => {
             setIsFetched(true);
+            setBurnAmount("0");
         }});
     };
 

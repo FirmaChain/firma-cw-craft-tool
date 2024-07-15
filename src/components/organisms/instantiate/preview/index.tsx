@@ -153,7 +153,7 @@ const Preview = ({
 
         if (walletList.length >= 1 && addresses.length !== uniqueAddresses.size) return 'Duplicated address';
 
-        if (minterble && minterAddress === '') return 'Empty minter address';
+        if (!isBasic && minterble && minterAddress === '') return 'Empty minter address';
 
         if (minterble && minterCap === '') return 'Empty minter cap amount';
 
