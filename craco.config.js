@@ -6,6 +6,7 @@ const configureWebpack = (webpackConfig, { env, paths }) => {
     const fallback = webpackConfig.resolve.fallback || {};
     webpackConfig.resolve.fallback = Object.assign(fallback, {
         crypto: require.resolve('crypto-browserify'),
+        'process/browser': require.resolve('process/browser'),
         stream: require.resolve('stream-browserify'),
         assert: require.resolve('assert'),
         os: require.resolve('os-browserify'),

@@ -9,11 +9,10 @@ import {
     TitleWrapper,
     TokenNameSymbol
 } from './style';
-import InputTextWithLabel from '@/components/atoms/input/inputTextWithLabel';
-import InputUrlWithImage from '@/components/atoms/input/inputUrlWithImage';
 import Icons from '@/components/atoms/icons';
-import SymbolInput from '@/components/atoms/input/symbolInput';
-import TokenNameInput from '@/components/atoms/input/tokenNameInput';
+import LabelInput2 from '@/components/atoms/input/labelInput2';
+import { FirmaUtil } from '@firmachain/firma-js';
+import useFormStore from '@/store/formStore';
 
 interface IProps {
     isBasic: boolean;
@@ -41,6 +40,9 @@ const Information = ({
     onChangeMarketingAddress,
     onChangeMarketingProject
 }: IProps) => {
+    const setFormError = useFormStore((state) => state.setFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
+
     const [tokenName, setTokenName] = useState<string>('');
     const [tokenSymbol, setTokenSymbol] = useState<string>('');
     const [tokenLogoUrl, setTokenLogoUrl] = useState<string>('');
@@ -56,8 +58,21 @@ const Information = ({
     };
 
     const handleTokenSymbol = (value: string) => {
+        // tokenSymbol
         setTokenSymbol(value);
         onChangeTokenSymbol(value);
+
+        if (/^[a-zA-Z]+$/.test(value) || value.length === 0) {
+            clearFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH' });
+        } else {
+            setFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH', message: 'Number is not included.' });
+        }
+
+        if (value.length === 0 || value.length >= 3) {
+            clearFormError({ id: 'tokenSymbol', type: 'MINIMAL_SYMBOL_LENGTH' });
+        } else {
+            setFormError({ id: 'tokenSymbol', type: 'MINIMAL_SYMBOL_LENGTH', message: 'Minimum 3 characters required.' });
+        }
     };
 
     const handleTokenLogoUrl = (value: string) => {
@@ -87,6 +102,12 @@ const Information = ({
     const handleMarketingAddress = (value: string) => {
         setMarketingAddress(value);
         onChangeMarketingAddress(value);
+
+        if (FirmaUtil.isValidAddress(value) || value === '') {
+            clearFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS' });
+        } else {
+            setFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS', message: 'Please input valid firmachain wallet address.' });
+        }
     };
 
     const handleMarketingProject = (value: string) => {
@@ -107,70 +128,105 @@ const Information = ({
             </TitleWrapper>
             <InformationBody>
                 <TokenNameSymbol>
-                    <TokenNameInput
-                        label={'Token Name'}
-                        placeHolderLeft={'ex) My CW Token'}
-                        enableLength={true}
-                        maxLength={30}
-                        value={tokenName}
-                        onChange={handleTokenName}
+                    <LabelInput2
+                        labelProps={{ label: 'Token Name' }}
+                        inputProps={{
+                            value: tokenName,
+                            formId: 'tokenName',
+                            placeHolder: 'ex) My CW Token',
+                            maxLength: 30,
+                            onChange: handleTokenName,
+                            emptyErrorMessage: 'Please input token name.',
+                            regex: /[^A-Za-z0-9\s]/g
+                        }}
                     />
-                    <SymbolInput
-                        label={'Token Symbol'}
-                        placeHolderLeft={'ex) MCT, FCT'}
-                        enableLength={true}
-                        maxLength={6}
-                        value={tokenSymbol}
-                        onChange={handleTokenSymbol}
+
+                    <LabelInput2
+                        labelProps={{ label: 'Token Symbol' }}
+                        inputProps={{
+                            value: tokenSymbol,
+                            formId: 'tokenSymbol',
+                            placeHolder: 'ex) MCT, FCT',
+                            maxLength: 6,
+                            onChange: handleTokenSymbol,
+                            emptyErrorMessage: 'Please input token symbol.',
+                            regex: /[^a-zA-Z0-9]/g
+                        }}
                     />
                 </TokenNameSymbol>
-                {!isBasic ? (
+                {!isBasic && (
                     <>
-                        <InputTextWithLabel
-                            label={'Decimals'}
-                            placeHolderLeft={'0 ~ 16'}
-                            maxLength={20}
-                            type={'number'}
-                            value={decimals}
-                            onChange={handleDecimals}
+                        <LabelInput2
+                            labelProps={{ label: 'Decimals' }}
+                            inputProps={{
+                                value: decimals,
+                                formId: 'tokenDecimal',
+                                placeHolder: '0 ~ 18',
+
+                                onChange: handleDecimals,
+                                emptyErrorMessage: 'Please input token decimal.',
+                                type: 'number',
+                                decimal: 0,
+                                maxValue: 18
+                            }}
                         />
-                        <InputTextWithLabel
-                            label={'Label'}
-                            placeHolderLeft={'ex) Event reward contract'}
-                            value={label}
-                            onChange={handleLabel}
+
+                        <LabelInput2
+                            labelProps={{ label: 'Label' }}
+                            inputProps={{
+                                value: label,
+                                formId: 'tokenLabel',
+                                placeHolder: 'ex) Event reward contract',
+                                onChange: handleLabel,
+                                emptyErrorMessage: 'Please input token label.'
+                            }}
                         />
                     </>
-                ) : null}
-                <InputUrlWithImage
-                    label={isBasic ? 'Token Image Link (Optional)' : 'Marketing Logo (Optional)'}
-                    placeHolder={'ex) https://example.thisismy.token.jpg'}
-                    value={tokenLogoUrl}
-                    onChange={handleTokenLogoUrl}
+                )}
+
+                <LabelInput2
+                    labelProps={{ label: isBasic ? 'Token Image Link (Optional)' : 'Marketing Logo (Optional)' }}
+                    inputProps={{
+                        value: tokenLogoUrl,
+                        formId: 'tokenLogoUrl',
+                        placeHolder: 'ex) https://example.thisismy.token.jpg',
+                        onChange: handleTokenLogoUrl,
+                        imgPreview: true
+                    }}
                 />
-                <InputTextWithLabel
-                    label={isBasic ? 'Token Description (Optional)' : 'Marketing Description (Optional)'}
-                    placeHolderLeft={'ex) This is my token'}
-                    enableLength={false}
-                    value={tokenDescription}
-                    onChange={handleDescription}
+
+                <LabelInput2
+                    labelProps={{ label: isBasic ? 'Token Description (Optional)' : 'Marketing Description (Optional)' }}
+                    inputProps={{
+                        value: tokenDescription,
+                        formId: 'tokenDescription',
+                        placeHolder: 'ex) This is my token',
+                        onChange: handleDescription
+                    }}
                 />
-                {!isBasic ? (
+                {!isBasic && (
                     <>
-                        <InputTextWithLabel
-                            label={'Marketing Address (Optional)'}
-                            placeHolderLeft={'Input wallet Address'}
-                            value={marketingAddress}
-                            onChange={handleMarketingAddress}
+                        <LabelInput2
+                            labelProps={{ label: 'Marketing Address (Optional)' }}
+                            inputProps={{
+                                value: marketingAddress,
+                                formId: 'marketingAddress',
+                                placeHolder: 'Input wallet Address',
+                                onChange: handleMarketingAddress
+                            }}
                         />
-                        <InputTextWithLabel
-                            label={'Marketing Project (Optional)'}
-                            placeHolderLeft={'ex) http://firmachain.org'}
-                            value={marketingProject}
-                            onChange={handleMarketingProject}
+
+                        <LabelInput2
+                            labelProps={{ label: 'Marketing Project (Optional)' }}
+                            inputProps={{
+                                value: marketingProject,
+                                formId: 'marketingProject',
+                                placeHolder: 'ex) http://firmachain.org',
+                                onChange: handleMarketingProject
+                            }}
                         />
                     </>
-                ) : null}
+                )}
             </InformationBody>
         </InformationWrapper>
     );

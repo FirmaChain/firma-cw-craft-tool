@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { IWallet } from '../../../../interfaces/wallet';
+import { IWallet } from '@/interfaces/wallet';
 import { PreviewWrapper } from './style';
 
 import Dashboard from './dashboard';
 import Submit from './submit';
-import { ModalActions } from '../../../../redux/actions';
-import { rootState } from '../../../../redux/reducers';
+import { ModalActions } from '@/redux/actions';
+import { rootState } from '@/redux/reducers';
 import {
+    compareAmounts,
     compareStringsAsNumbers,
     getApplyDecimalsAmount,
     getTokenStrFromUTokenStr,
     getUTokenStrFromTokenStr,
     isValidAddress,
     validateSymbol
-} from '../../../../utils/common';
-import { NETWORKS } from '../../../../constants/common';
-import { CRAFT_CONFIGS } from '../../../../config';
-import { BASIC_LABEL } from '../../../../constants/cw20Types';
+} from '@/utils/common';
+import { NETWORKS } from '@/constants/common';
+import { CRAFT_CONFIGS } from '@/config';
+import { BASIC_LABEL } from '@/constants/cw20Types';
+import useFormStore from '@/store/formStore';
 
 interface IProps {
     isBasic: boolean;
@@ -53,8 +55,12 @@ const Preview = ({
     marketingAddress,
     marketingProject
 }: IProps) => {
-    const { isInit, address } = useSelector((state: rootState) => state.wallet);
-    const { network } = useSelector((state: rootState) => state.global);
+    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const network = useSelector((state: rootState) => state.global.network);
+
+    const setFormError = useFormStore((state) => state.setFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
     const [codeId, setCodeId] = useState<string>('');
 
@@ -162,6 +168,59 @@ const Preview = ({
         return '';
     };
 
+    const disableButton = useMemo(() => {
+        if (isInit) {
+            const addresses = walletList.map((item) => item.recipient);
+            const uniqueAddresses = new Set(addresses);
+
+            if (tokenName === '') return true;
+
+            if (tokenSymbol === '') return true;
+
+            if (!validateSymbol(tokenSymbol)) return true;
+
+            if (!isBasic && decimals === '') return true;
+
+            if (!isBasic && label === '') return true;
+
+            if (walletList.length === 0) return true;
+
+            for (const wallet of walletList) {
+                if (wallet.recipient === '') return true;
+                if (wallet.amount === '0') return true;
+                if (wallet.amount === '') return true;
+                if (!isValidAddress(wallet.recipient)) return true;
+            }
+
+            if (walletList.length >= 1 && addresses.length !== uniqueAddresses.size) return true;
+
+            if (!isBasic && minterble && minterAddress === '') return true;
+
+            if (minterble && minterCap === '') return true;
+
+            if (minterble && compareAmounts(minterCap, totalSupply)) return true;
+
+            return false;
+        } else {
+            return false;
+        }
+    }, [decimals, isBasic, isInit, label, minterAddress, minterCap, minterble, tokenName, tokenSymbol, totalSupply, walletList]);
+
+    useEffect(() => {
+        if (minterble && Number(totalSupply) > 0 && compareAmounts(minterCap, totalSupply)) {
+            setFormError({
+                id: 'minterCap',
+                type: 'INSUFFICIENT_MINTER_CAP',
+                message: 'Minter cap must always be equal to or greater than Total supply.'
+            });
+        } else {
+            clearFormError({
+                id: 'minterCap',
+                type: 'INSUFFICIENT_MINTER_CAP'
+            });
+        }
+    }, [minterCap, totalSupply, minterble]);
+
     return (
         <PreviewWrapper>
             <Dashboard
@@ -180,7 +239,7 @@ const Preview = ({
                 marketingAddress={marketingAddress}
                 marketingProject={marketingProject}
             />
-            <Submit onClickInstantiate={handleInstantiate} />
+            <Submit onClickInstantiate={handleInstantiate} disableButton={disableButton} />
         </PreviewWrapper>
     );
 };

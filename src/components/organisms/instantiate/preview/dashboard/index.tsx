@@ -8,6 +8,7 @@ import TokenInfo from './tokenInfo';
 import Amount from './amount';
 import { IWallet } from '../../../../../interfaces/wallet';
 import Marketing from './marketing';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 interface IProps {
     isBasic: boolean;
@@ -42,43 +43,48 @@ const Dashboard = ({
     marketingAddress,
     marketingProject
 }: IProps) => {
-    const { cw20Mode } = useSelector((state: rootState) => state.global);
+    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
 
     return (
-        <DashboardWrapper>
-            <TitleWrapper>
-                <IconBackground>
-                    <Icons.Preview width={'32px'} height={'32px'} />
-                </IconBackground>
-                <TextGroupWrapper>
-                    <TitleText>PREVIEW</TitleText>
-                    <TitleDescription>View all token informations at a glance.</TitleDescription>
-                </TextGroupWrapper>
-            </TitleWrapper>
+        <PerfectScrollbar>
+            <DashboardWrapper>
+                <TitleWrapper>
+                    <IconBackground>
+                        <Icons.Preview width={'32px'} height={'32px'} />
+                    </IconBackground>
+                    <TextGroupWrapper>
+                        <TitleText>PREVIEW</TitleText>
+                        <TitleDescription>View all token informations at a glance.</TitleDescription>
+                    </TextGroupWrapper>
+                </TitleWrapper>
 
-            <DashboardBody>
-                <TokenInfo
-                    tokenLogoUrl={tokenLogoUrl}
-                    tokenName={tokenName}
-                    tokenSymbol={tokenSymbol}
-                    tokenDescription={tokenDescription}
-                />
-                {cw20Mode === 'ADVANCED' ? (
-                    <Marketing label={label} decimals={decimals} marketingAddress={marketingAddress} marketingProject={marketingProject} />
-                ) : (
-                    <></>
-                )}
-                <Amount
-                    minterble={minterble}
-                    minterCap={minterCap}
-                    tokenSymbol={tokenSymbol}
-                    minterAddress={minterAddress}
-                    totalSupply={totalSupply}
-                    walletList={walletList}
-                    decimals={decimals}
-                />
-            </DashboardBody>
-        </DashboardWrapper>
+                <DashboardBody>
+                    <TokenInfo
+                        tokenLogoUrl={tokenLogoUrl}
+                        tokenName={tokenName}
+                        tokenSymbol={tokenSymbol}
+                        tokenDescription={tokenDescription}
+                    />
+                    {cw20Mode === 'ADVANCED' && (
+                        <Marketing
+                            label={label}
+                            decimals={decimals}
+                            marketingAddress={marketingAddress}
+                            marketingProject={marketingProject}
+                        />
+                    )}
+                    <Amount
+                        minterble={minterble}
+                        minterCap={minterCap}
+                        tokenSymbol={tokenSymbol}
+                        minterAddress={minterAddress}
+                        totalSupply={totalSupply}
+                        walletList={walletList}
+                        decimals={decimals}
+                    />
+                </DashboardBody>
+            </DashboardWrapper>
+        </PerfectScrollbar>
     );
 };
 

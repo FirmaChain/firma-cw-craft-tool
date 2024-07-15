@@ -58,9 +58,9 @@ const Preview = ({ tokenInfoState }: IProps) => {
             )}
             {selectMenu.value === 'burnFrom' && (
                 <BurnFromPreview
-                totalSupply={tokenInfoState.totalSupply}
-                decimals={tokenInfoState.decimals}
-                tokenSymbol={tokenInfoState.tokenSymbol}
+                    totalSupply={tokenInfoState.totalSupply}
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
                 />
             )}
         </Container>

@@ -4,6 +4,8 @@ export const DashboardWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 40px;
+
+    overflow-x: hidden;
 `;
 
 export const TitleWrapper = styled.div`

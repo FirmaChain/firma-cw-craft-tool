@@ -15,16 +15,20 @@
         "notistack": "^3.0.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
+        "react-perfect-scrollbar": "^1.5.8",
         "react-qrcode-logo": "^3.0.0",
         "react-redux": "^8.0.4",
         "react-router-dom": "^6.23.1",
         "react-scripts": "5.0.1",
         "react-select": "^5.8.0",
         "react-spinners": "^0.13.8",
+        "react-tooltip": "^5.27.1",
         "redux": "^4.2.1",
         "redux-persist": "^6.0.0",
         "styled-components": "^6.1.11",
-        "web-vitals": "^2.1.4"
+        "uuid": "^10.0.0",
+        "web-vitals": "^2.1.4",
+        "zustand": "^4.5.4"
     },
     "scripts": {
         "start": "craco start",

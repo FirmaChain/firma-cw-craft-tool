@@ -37,7 +37,13 @@ const AddWallet = ({
                     <TitleDescription>Enter wallet information to add funds.</TitleDescription>
                 </TextGroupWrapper>
             </TitleWrapper>
+
+            <div style={{ paddingBottom: '20px' }} />
+
             <Summery totalSupply={totalSupply} tokenSymbol={tokenSymbol} decimals={decimals} />
+
+            <div style={{ paddingBottom: '40px' }} />
+
             <WalletList
                 decimals={decimals}
                 onChangeWalletList={onChangeWalletList}
@@ -45,6 +51,8 @@ const AddWallet = ({
                 addressPlaceholder={'Input Wallet Address'}
                 amountTitle={'Amount'}
             />
+            {/* <HalfDottedDivider /> */}
+            <div style={{ width: '100%', borderTop: '1px dashed #383838', margin: '32px 0' }} />
             <Minterble
                 decimals={decimals}
                 onChangeMinterble={onChangeMinterble}

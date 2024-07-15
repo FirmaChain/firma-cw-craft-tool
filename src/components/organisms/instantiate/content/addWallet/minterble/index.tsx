@@ -3,11 +3,12 @@ import { useSelector } from 'react-redux';
 import { FirmaUtil } from '@firmachain/firma-js';
 
 import SimpleSwitch from '@/components/atoms/switch/simpleSwitch';
-import InputTextWithLabelTip from '@/components/atoms/input/inputTextWithLabelTip';
 import { GlobalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
 
 import { MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
+import LabelInput2 from '@/components/atoms/input/labelInput2';
+import useFormStore from '@/store/formStore';
 
 interface IProps {
     decimals: string;
@@ -17,11 +18,14 @@ interface IProps {
 }
 
 const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMinterAddress }: IProps) => {
-    const { cw20Mode } = useSelector((state: rootState) => state.global);
+    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+    const setFormError = useFormStore((state) => state.setFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
+
     const [isMinterble, setIsMinterble] = useState<boolean>(false);
     const [minterCap, setMinterCap] = useState<string>('');
     const [minterAddress, setMinterAddress] = useState<string>('');
-    const [isValid, setIsValid] = useState<boolean>(true);
+    // const [isValid, setIsValid] = useState<boolean>(true);
 
     const CAP_TOOLTIP_TEXT = 'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.';
     const ADDRESS_TOOLTIP_TEXT =
@@ -36,7 +40,20 @@ const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMin
     const handleMinterAddress = (value: string) => {
         setMinterAddress(value);
         onChangeMinterAddress(value);
-        setIsValid(validateAddress(value));
+
+        if (validateAddress(value) || value === '') clearFormError({ id: 'minterAddress', type: 'ADDRESS_VALIDATION' });
+        else {
+            setFormError({
+                id: 'minterAddress',
+                type: 'ADDRESS_VALIDATION',
+                message: 'Please input valid firmachain wallet address.'
+            });
+        }
+    };
+
+    const handleMinterCap = (value: string) => {
+        setMinterCap(value);
+        onChangeMinterCap(value);
     };
 
     const validateAddress = (value: string): boolean => {
@@ -49,46 +66,70 @@ const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMin
                 <MinterbleText>Additional Instantiation</MinterbleText>
                 <SimpleSwitch checked={isMinterble} onChange={handleMinterble} />
             </MinterbleOption>
-            {!isMinterble ? (
-                <></>
-            ) : cw20Mode === 'BASIC' ? (
-                <InputTextWithLabelTip
-                    placeHolderLeft="0"
-                    label="Minter Cap"
-                    tooltipText={CAP_TOOLTIP_TEXT}
-                    value={minterCap}
-                    type="number"
-                    decimals={decimals === '' ? '6' : decimals}
-                    onChange={(value) => {
-                        setMinterCap(value);
-                        onChangeMinterCap(value);
-                    }}
-                />
-            ) : (
-                <Fragment>
-                    <InputTextWithLabelTip
-                        placeHolderLeft="Input minter address"
-                        label="Minter Address"
-                        tooltipText={ADDRESS_TOOLTIP_TEXT}
-                        value={minterAddress}
-                        type="text"
-                        isValid={!isValid}
-                        onChange={handleMinterAddress}
-                    />
-                    <InputTextWithLabelTip
-                        placeHolderLeft="0"
-                        label="Minter Cap"
-                        tooltipText={''}
-                        value={minterCap}
-                        type="number"
-                        decimals={decimals === '' ? '6' : decimals}
-                        onChange={(value) => {
-                            setMinterCap(value);
-                            onChangeMinterCap(value);
-                        }}
-                    />
-                </Fragment>
-            )}
+            {
+                isMinterble && (
+                    // (cw20Mode === 'BASIC' ? (
+                    //     <InputTextWithLabelTip
+                    //         placeHolderLeft="0"
+                    //         label="Minter Cap"
+                    //         tooltipText={CAP_TOOLTIP_TEXT}
+                    //         value={minterCap}
+                    //         type="number"
+                    //         decimals={decimals === '' ? '6' : decimals}
+                    //         onChange={(value) => {
+                    //             setMinterCap(value);
+                    //             onChangeMinterCap(value);
+                    //         }}
+                    //     />
+                    // ) : (
+                    <Fragment>
+                        {cw20Mode === 'ADVANCED' && (
+                            // InputTextWithLabelTip
+                            <LabelInput2
+                                labelProps={{ label: 'Minter Address', tooltip: ADDRESS_TOOLTIP_TEXT }}
+                                inputProps={{
+                                    value: minterAddress,
+                                    formId: 'minterAddress',
+                                    placeHolder: 'Input minter address',
+                                    onChange: handleMinterAddress,
+                                    emptyErrorMessage: 'Please input minter address.'
+                                }}
+                                // placeHolderLeft="Input minter address"
+                                // label="Minter Address"
+                                // tooltipText={ADDRESS_TOOLTIP_TEXT}
+                                // value={minterAddress}
+                                // type="text"
+                                // isValid={!isValid}
+                                // onChange={handleMinterAddress}
+                            />
+                        )}
+                        {/* InputTextWithLabelTip */}
+                        <LabelInput2
+                            labelProps={{ label: 'Minter Cap', tooltip: cw20Mode === 'BASIC' ? CAP_TOOLTIP_TEXT : '' }}
+                            inputProps={{
+                                value: minterCap,
+                                formId: 'minterCap',
+                                placeHolder: '0',
+                                onChange: handleMinterCap,
+                                emptyErrorMessage: 'Please input minter cap.',
+                                type: 'number',
+                                decimal: decimals === '' ? 6 : Number(decimals)
+                            }}
+                            // placeHolderLeft="0"
+                            // label="Minter Cap"
+                            // tooltipText={cw20Mode === 'BASIC' ? CAP_TOOLTIP_TEXT : ''}
+                            // value={minterCap}
+                            // type="number"
+                            // decimals={decimals === '' ? '6' : decimals}
+                            // onChange={(value) => {
+                            //     setMinterCap(value);
+                            //     onChangeMinterCap(value);
+                            // }}
+                        />
+                    </Fragment>
+                )
+                // ))
+            }
         </MinterbleWrapper>
     );
 };

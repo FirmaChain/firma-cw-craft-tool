@@ -3,7 +3,6 @@ import { styled } from 'styled-components';
 export const WalletListWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
     gap: 20px;
 `;
 
@@ -15,6 +14,7 @@ export const WalletListSummery = styled.div`
 export const TotalWalletWrapper = styled.div`
     display: flex;
     gap: 8px;
+    align-items: center;
 `;
 
 export const TotalWalletTypo = styled.div`
@@ -65,27 +65,33 @@ export const AddWalletCountWrapper = styled.div`
 
 export const AddWalletTypo = styled.div`
     color: var(--Gray-700, #999);
-    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
 `;
 
-export const DeleteAllButton = styled.button<{ length: number }>`
+export const DeleteAllButton = styled.button<{ $length: number; disabled?: boolean }>`
+    //? outside
+    height: 26px;
+    border-radius: 6px;
+    border: 1px solid ${({ disabled }) => (disabled ? 'var(--Gray-450, #313131)' : 'var(--Gray-600, #707070)')};
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+    //? inside
     display: flex;
     padding: 6px 12px;
-    align-items: flex-start;
-    gap: 8px;
-    border-radius: 6px;
-    border: 1px solid var(--Gray-600, #707070);
+    align-items: center;
+    justify-content: center;
     background: var(--200, #1e1e1e);
-    color: var(--Gray-700, #999);
-    text-align: right;
-    font-family: 'General Sans Variable';
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 14px; /* 116.667% */
-    cursor: pointer;
+    gap: 8px;
+
+    //? inside-text
+    .button-text {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 14px; /* 116.667% */
+        color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-700, #999)')};
+    }
 `;

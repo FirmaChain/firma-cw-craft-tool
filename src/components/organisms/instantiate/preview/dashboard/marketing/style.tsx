@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 export const MarketingWrapper = styled.div`
-    width: calc(100% - 88px);
+    box-sizing: border-box;
+    width: 100%;
     padding: 36px 44px;
     display: flex;
     flex-direction: column;

@@ -1,9 +1,11 @@
 import { styled } from 'styled-components';
 
-export const ItemWrapper = styled.div`
+export const ItemWrapper = styled.div<{ $isCover?: boolean }>`
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 32px;
+    height: ${({ $isCover }) => ($isCover ? '28px' : '24px')};
 `;
 
 export const ItemLeftWrapper = styled.div`

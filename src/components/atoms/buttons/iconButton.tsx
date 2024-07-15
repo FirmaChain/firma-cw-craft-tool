@@ -4,7 +4,7 @@ const IconButton = styled('button')(({ disabled = false }: { disabled?: boolean 
     const styleOptions = disabled
         ? {
               filter: 'brightness(0.8)',
-              cursor: 'auto'
+              cursor: 'not-allowed'
           }
         : {
               cursor: 'pointer',

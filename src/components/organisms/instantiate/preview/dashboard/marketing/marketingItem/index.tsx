@@ -10,7 +10,7 @@ interface IProps {
 
 const MarketingItem = ({ imageChild, name, value, isCover = false }: IProps) => {
     return (
-        <ItemWrapper>
+        <ItemWrapper $isCover={isCover}>
             <ItemLeftWrapper>
                 {imageChild}
                 <ItemText>{name}</ItemText>

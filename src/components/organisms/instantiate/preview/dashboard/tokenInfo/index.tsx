@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     DetailTitle,
     IconBackground,
+    TokenDescriptionClampTypo,
     TokenDescriptionText,
     TokenInfoDetail,
     TokenInfoLogoImage,
@@ -10,6 +11,7 @@ import {
     TokenSymbolText
 } from './style';
 import Icons from '@/components/atoms/icons';
+import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 
 interface IProps {
     tokenLogoUrl: string;
@@ -19,6 +21,10 @@ interface IProps {
 }
 
 const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: IProps) => {
+    const descRef = useRef<HTMLDivElement>();
+    const [needClamp, setNeedClamp] = useState(false);
+    const [isClamped, setIsClamped] = useState(true);
+
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
     useEffect(() => {
@@ -35,6 +41,21 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
             setValidTokenLogoUrl('');
         }
     }, [tokenLogoUrl]);
+
+    const openClamp = () => setIsClamped(false);
+    const closeClamp = () => setIsClamped(true);
+
+    useEffect(() => {
+        const height = descRef.current?.clientHeight;
+
+        if (height > 60) {
+            if (!needClamp) setNeedClamp(true);
+        } else {
+            //? height < 60px
+            if (needClamp) setNeedClamp(false);
+            setIsClamped(true);
+        }
+    }, [tokenDescription]);
 
     return (
         <TokenInfoWrapper>
@@ -56,7 +77,68 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
                     <TokenNameText>{tokenName === '' ? 'Name' : tokenName}</TokenNameText>
                     <TokenSymbolText>{tokenSymbol === '' ? 'Symbol' : tokenSymbol}</TokenSymbolText>
                 </DetailTitle>
-                <TokenDescriptionText>{tokenDescription === '' ? 'Description' : tokenDescription}</TokenDescriptionText>
+                <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
+                    <TokenDescriptionText ref={descRef} style={{ zIndex: -1, position: 'absolute', opacity: 0 }}>
+                        {tokenDescription === '' ? 'Description' : tokenDescription}
+                    </TokenDescriptionText>
+                    <div
+                        style={{
+                            maxHeight: isClamped ? '60px' : 'unset',
+                            overflow: isClamped ? 'hidden' : 'visible'
+                        }}
+                    >
+                        <TokenDescriptionText>
+                            <span>{tokenDescription === '' ? 'Description' : tokenDescription}</span>
+
+                            {needClamp && !isClamped && (
+                                <span
+                                    style={{
+                                        display: 'relative',
+                                        background: 'var(--200, #1e1e1e)',
+                                        padding: 0,
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={closeClamp}
+                                >
+                                    {' '}
+                                    <TokenDescriptionClampTypo>less</TokenDescriptionClampTypo>
+                                    <img
+                                        src={IC_ROUND_ARROW_UP}
+                                        alt="arrow"
+                                        style={{ width: '16px', height: '16px', transform: 'translateY(2px)' }}
+                                    />
+                                </span>
+                            )}
+                        </TokenDescriptionText>
+
+                        {needClamp && isClamped && (
+                            <span
+                                style={{
+                                    width: 'fit-content',
+                                    height: '20px',
+                                    position: 'absolute',
+                                    right: 0,
+                                    bottom: 0,
+                                    background: 'var(--200, #1e1e1e)',
+                                    padding: 0,
+                                    paddingLeft: '4px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={openClamp}
+                            >
+                                <TokenDescriptionClampTypo>more</TokenDescriptionClampTypo>
+                                <img
+                                    src={IC_ROUND_ARROW_UP}
+                                    alt="arrow"
+                                    style={{ width: '16px', height: '16px', transform: 'rotate(180deg)' }}
+                                />
+                            </span>
+                        )}
+                    </div>
+                </div>
             </TokenInfoDetail>
         </TokenInfoWrapper>
     );

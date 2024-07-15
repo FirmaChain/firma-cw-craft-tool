@@ -2,7 +2,6 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { CW20_TRANSACTION_TYPES } from '../constants/cw20Types';
 import { IMsg } from '../interfaces/cw20';
 
-// Add commas to integers
 export const addCommasToNumberString = (numberString: string): string => {
     return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
@@ -35,6 +34,7 @@ export const getApplyDecimalsAmount = (amount: string, decimals: string): string
 export const getUTokenStrFromTokenStr = (numberString: string, decimals: string): string => {
     const convertDecimals = Number(decimals);
     const number = parseFloat(numberString);
+
     if (isNaN(number)) {
         return numberString;
     }
@@ -43,6 +43,7 @@ export const getUTokenStrFromTokenStr = (numberString: string, decimals: string)
     const formattedInteger = parseInt(integerPart, 10).toLocaleString('en-US');
 
     let formattedDecimal = decimalPart ? decimalPart.slice(0, convertDecimals) : '';
+
     let formattedNumber = formattedInteger;
     if (formattedDecimal) {
         formattedNumber += '.' + formattedDecimal;
@@ -179,3 +180,128 @@ export const addStringNumbers = (number1: string, number2: string) => {
 
     return result;
 };
+
+export const omitKey = <T extends object, K extends keyof T>(key: K, obj: T): Omit<T, K> => {
+    const { [key]: omitted, ...rest } = obj;
+    return rest;
+};
+
+export function commaNumber(number: number | string) {
+    const numStr = number.toString();
+
+    if (numStr.includes('e') || numStr.includes('E')) {
+        return numStr;
+    }
+
+    const isNegative = numStr.startsWith('-');
+
+    const absoluteValue = isNegative ? numStr.slice(1) : numStr;
+
+    const parts = absoluteValue.split('.');
+    let integerPart = parts[0];
+    const decimalPart = parts[1] || '';
+
+    let result = '';
+    let count = 0;
+    for (let i = integerPart.length - 1; i >= 0; i--) {
+        result = integerPart[i] + result;
+        count++;
+
+        if (count === 3 && i !== 0) {
+            result = ',' + result;
+            count = 0;
+        }
+    }
+
+    if (isNegative) {
+        result = '-' + result;
+    }
+
+    if (decimalPart) {
+        result += '.' + decimalPart;
+    }
+
+    return result;
+}
+
+export function addDecimals(...decimalStrings: string[]): string {
+    let integerSum = 0;
+    let decimalSum = 0;
+    let maxDecimalLength = 0;
+
+    for (let decimalStr of decimalStrings) {
+        let integerPart = '0';
+        let decimalPart = '0';
+
+        const [_integerPart, _decimalPart] = decimalStr.split('.');
+
+        if (!isNaN(Number(_integerPart))) integerPart = _integerPart;
+        if (!isNaN(Number(_decimalPart))) decimalPart = _decimalPart;
+
+        const parsedInt = parseInt(integerPart, 10);
+
+        integerSum += isNaN(parsedInt) ? 0 : parsedInt;
+
+        if (decimalPart) {
+            maxDecimalLength = Math.max(maxDecimalLength, decimalPart.length);
+            decimalSum += parseInt(decimalPart, 10) * Math.pow(10, -decimalPart.length);
+        }
+    }
+
+    if (decimalSum === 0) return String(integerSum);
+
+    const total = (integerSum + decimalSum).toFixed(maxDecimalLength);
+    return Number(total) === 0 ? '0' : total;
+}
+
+export function compareAmounts(maxAmount: string, totalAmount: string): boolean {
+    // Return false if maxAmount is an empty string
+    // if (maxAmount === '') {
+    //     return false;
+    // }
+
+    // Helper function to split a number into integer and decimal parts
+    const splitNumber = (num: string) => {
+        let [integerPart, decimalPart] = num.split('.');
+        decimalPart = decimalPart || ''; // Default to an empty string if there's no decimal part
+        return [integerPart, decimalPart];
+    };
+
+    const [maxInteger, maxDecimal] = splitNumber(maxAmount);
+    const [totalInteger, totalDecimal] = splitNumber(totalAmount);
+
+    // Compare integer parts first
+    if (maxInteger.length > totalInteger.length) {
+        return false;
+    } else if (maxInteger.length < totalInteger.length) {
+        return true;
+    }
+
+    // If integer parts are of the same length, compare digit by digit
+    for (let i = 0; i < maxInteger.length; i++) {
+        if (maxInteger[i] > totalInteger[i]) {
+            return false;
+        } else if (maxInteger[i] < totalInteger[i]) {
+            return true;
+        }
+    }
+
+    // If integer parts are the same, compare decimal parts
+    const maxDecimalLength = maxDecimal.length;
+    const totalDecimalLength = totalDecimal.length;
+    const maxLength = Math.max(maxDecimalLength, totalDecimalLength);
+
+    for (let i = 0; i < maxLength; i++) {
+        const maxDigit = i < maxDecimalLength ? maxDecimal[i] : '0';
+        const totalDigit = i < totalDecimalLength ? totalDecimal[i] : '0';
+
+        if (maxDigit > totalDigit) {
+            return false;
+        } else if (maxDigit < totalDigit) {
+            return true;
+        }
+    }
+
+    // If all digits are the same, return false
+    return false;
+}

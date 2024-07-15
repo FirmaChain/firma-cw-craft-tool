@@ -8,3 +8,4 @@ export const IC_COIN_STACK = PUBLIC_URL + 'ic_coin_stack.png';
 export const IC_WALLET = PUBLIC_URL + 'ic_wallet.png';
 export const IC_DOTTED_DIVIDER = PUBLIC_URL + 'ic_dotted_divider.png';
 export const IC_COIN_STACK2 = PUBLIC_URL + 'ic_coin_stack2.png';
+export const IC_ROUND_ARROW_UP = PUBLIC_URL + 'ic_round_arrow_up.png';

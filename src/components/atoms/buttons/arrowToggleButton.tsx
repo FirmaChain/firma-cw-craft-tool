@@ -1,7 +1,7 @@
-import { IconButton, Stack } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useState } from 'react';
+import IconButton from './iconButton';
 
 interface IProps {
     onToggle: (isOpen: boolean) => void;
@@ -16,15 +16,15 @@ const ArrowToggleButton = ({ onToggle }: IProps) => {
     };
 
     return (
-        <Stack>
-            <IconButton sx={{ padding: 0 }} onClick={onClickButton}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <IconButton style={{ display: 'flex' }} onClick={onClickButton}>
                 {!isOpen ? (
                     <KeyboardArrowDownIcon sx={{ color: '#FFFFFF', width: '20px', height: '20px' }} />
                 ) : (
                     <KeyboardArrowUpIcon sx={{ color: '#FFFFFF', width: '20px', height: '20px' }} />
                 )}
             </IconButton>
-        </Stack>
+        </div>
     );
 };
 

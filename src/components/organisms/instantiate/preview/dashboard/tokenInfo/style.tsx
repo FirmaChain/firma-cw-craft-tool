@@ -1,9 +1,10 @@
 import { styled } from 'styled-components';
 
 export const TokenInfoWrapper = styled.div`
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    width: calc(100% - 88px);
+    width: 100%;
     padding: 28px 44px;
     gap: 32px;
     border-radius: 24px 24px 0px 0px;
@@ -39,6 +40,7 @@ export const TokenInfoDetail = styled.div`
     flex-direction: column;
     gap: 8px;
     word-break: break-word;
+    padding-top: 10px;
 `;
 
 export const DetailTitle = styled.div`
@@ -73,4 +75,15 @@ export const TokenDescriptionText = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+`;
+
+export const TokenDescriptionClampTypo = styled.span`
+    color: var(--Gray-750, #dcdcdc);
+
+    /* Body/Body2 - Semibd */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
 `;
