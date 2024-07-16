@@ -74,6 +74,21 @@ export const addStringAmount = (amount1: string, amount2: string) => {
 };
 
 export const subtractStringAmount = (amount1: string, amount2: string) => {
+    const compareStrings = (str1: string, str2: string): boolean => {
+        const [intPart1, decPart1 = ''] = str1.split('.');
+        const [intPart2, decPart2 = ''] = str2.split('.');
+        
+        if (intPart1.length !== intPart2.length) {
+            return intPart1.length < intPart2.length;
+        }
+        
+        if (intPart1 !== intPart2) {
+            return intPart1 < intPart2;
+        }
+        
+        return decPart1 < decPart2;
+    };
+
     const [intPart1, decPart1] = amount1.split('.');
     const [intPart2, decPart2] = amount2.split('.');
 
@@ -81,10 +96,21 @@ export const subtractStringAmount = (amount1: string, amount2: string) => {
     const dec1 = (decPart1 || '').padEnd(decLength, '0');
     const dec2 = (decPart2 || '').padEnd(decLength, '0');
 
+    let isNegative = compareStrings(amount1, amount2);
+    if (isNegative) {
+        [amount1, amount2] = [amount2, amount1];
+    }
+
+    const [newIntPart1, newDecPart1] = amount1.split('.');
+    const [newIntPart2, newDecPart2] = amount2.split('.');
+
+    const newDec1 = (newDecPart1 || '').padEnd(decLength, '0');
+    const newDec2 = (newDecPart2 || '').padEnd(decLength, '0');
+
     let borrow = 0;
     let decResult = '';
     for (let i = decLength - 1; i >= 0; i--) {
-        let sub = parseInt(dec1[i]) - parseInt(dec2[i]) - borrow;
+        let sub = parseInt(newDec1[i]) - parseInt(newDec2[i]) - borrow;
         if (sub < 0) {
             sub += 10;
             borrow = 1;
@@ -94,9 +120,9 @@ export const subtractStringAmount = (amount1: string, amount2: string) => {
         decResult = sub + decResult;
     }
 
-    const maxLength = Math.max(intPart1.length, intPart2.length);
-    const int1 = intPart1.padStart(maxLength, '0');
-    const int2 = intPart2.padStart(maxLength, '0');
+    const maxLength = Math.max(newIntPart1.length, newIntPart2.length);
+    const int1 = newIntPart1.padStart(maxLength, '0');
+    const int2 = newIntPart2.padStart(maxLength, '0');
     let intResult = '';
     for (let i = maxLength - 1; i >= 0; i--) {
         let sub = parseInt(int1[i]) - parseInt(int2[i]) - borrow;
@@ -115,6 +141,10 @@ export const subtractStringAmount = (amount1: string, amount2: string) => {
         if (decResult) {
             result += '.' + decResult;
         }
+    }
+
+    if (isNegative && result !== '0') {
+        result = '-' + result;
     }
 
     return result;

@@ -111,30 +111,28 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
                     <HeaderDescTypo>Create new tokens and add them to the total supply</HeaderDescTypo>
                 </TitleWrap>
                 <SummeryCard>
-                    <MintCardWrap>
-                        <TotalMintWrap>
-                            <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
-                            <TotalMintSupplyBalance>
-                                {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, decimals))}
-                            </TotalMintSupplyBalance>
-                            <TotalMintSupplyBalance>{tokenSymbol}</TotalMintSupplyBalance>
-                        </TotalMintWrap>
-                        <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
-                        <TotalMintWrap>
-                            <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                            <TotalMintSubBalance>
-                                {formatWithCommas(getTokenAmountFromUToken(mintableAmount, decimals))}
-                            </TotalMintSubBalance>
-                            <TotalMintSubBalance>{tokenSymbol}</TotalMintSubBalance>
-                            <Tooltip title={'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.'}>
-                                <AdditionalTooltipIcon
-                                    src={IC_TOOLTIP_INFO}
-                                    alt={'Additional Mintable Balance Tooltip'}
-                                    data-tip={'This is the tooltip text'}
-                                />
-                            </Tooltip>
-                        </TotalMintWrap>
-                    </MintCardWrap>
+                    <TotalMintWrap>
+                        <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
+                        <TotalMintSupplyBalance>
+                            {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, decimals))}
+                        </TotalMintSupplyBalance>
+                        <TotalMintSupplyBalance>{tokenSymbol}</TotalMintSupplyBalance>
+                    </TotalMintWrap>
+                    <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                    <TotalMintWrap>
+                        <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
+                        <TotalMintSubBalance>
+                            {formatWithCommas(getTokenAmountFromUToken(mintableAmount, decimals))}
+                        </TotalMintSubBalance>
+                        <TotalMintSubBalance>{tokenSymbol}</TotalMintSubBalance>
+                        <Tooltip title={'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.'}>
+                            <AdditionalTooltipIcon
+                                src={IC_TOOLTIP_INFO}
+                                alt={'Additional Mintable Balance Tooltip'}
+                                data-tip={'This is the tooltip text'}
+                            />
+                        </Tooltip>
+                    </TotalMintWrap>
                 </SummeryCard>
             </HeaderWrap>
             <WalletList

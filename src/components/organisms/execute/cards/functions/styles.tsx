@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 export const Container = styled.div`
     width: 100%;
@@ -44,6 +43,8 @@ export const HeaderDescTypo = styled.div`
 
 export const SummeryCard = styled.div`
     display: flex;
+    flex-direction: column;
+    gap: 16px;
     padding: 16px 24px;
     flex-direction: column;
     align-items: flex-start;

@@ -12,6 +12,7 @@ import Burn from './functions/burn';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import BurnFrom from './functions/burnFrom';
+import Transfer from './functions/transfer';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -250,6 +251,9 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
             )}
             {selectMenu.value === 'burnFrom' && (
                 <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
+            )}
+            {selectMenu.value === 'transfer' && (
+                <Transfer decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} addressAmount={tokenInfoState.addressAmount} />
             )}
         </Container>
     );

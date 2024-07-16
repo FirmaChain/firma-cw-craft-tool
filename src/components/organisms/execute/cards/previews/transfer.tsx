@@ -1,12 +1,11 @@
+import ArrowToggleButton from "@/components/atoms/buttons/arrowToggleButton";
+import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from "@/components/atoms/icons/pngIcons";
+import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from "@/utils/balance";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-
-import { IC_COIN_STACK, IC_WALLET } from "@/components/atoms/icons/pngIcons";
-import { IWallet } from "@/interfaces/wallet";
 import { useContractContext } from "../../context/contractContext";
-import { isValidAddress, shortenAddress } from "@/utils/address";
-import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from "@/utils/balance";
-import ArrowToggleButton from "@/components/atoms/buttons/arrowToggleButton";
+import { shortenAddress } from "@/utils/common";
+import { isValidAddress } from "@/utils/address";
 import { ModalActions } from "@/redux/actions";
 
 const Container = styled.div`
@@ -121,6 +120,43 @@ const WalletItemTokenAmount = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
+const DOTTED_DIVIDER = styled.img`
+    width: 100%;
+    height: auto;
+`;
+
+const CoinStack2Icon = styled.img`
+    width: 24px;
+    height: 24px;    
+`;
+
+const UpdatedBalanceLabelTypo = styled.div`
+    color: var(--Gray-700, #999);
+    font-family: "General Sans Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+`;
+
+const UpdatedBalanceTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    font-family: "General Sans Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 137.5% */
+`;
+
+const UpdatedSymbolTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    font-family: "General Sans Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+`;
+
 const ButtonWrap = styled.div`
     width: 100%;
     height: auto;
@@ -161,20 +197,21 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 interface IProps {
-    totalSupply: string;
+    addressAmount: string;
     tokenSymbol: string;
     decimals: string;
 }
 
-const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
+const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
     const { contract, walletList, setIsFetched, setWalletList } = useContractContext();
 
-    const [totalBurnBalance, setTotalBurnBalance] = useState<string>('0');
+    const [totalTransferAmount, setTotalTransferAmount] = useState<string>('0');
+    const [updatedAmount, setUpdatedAmount] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-
+    
     const calculateTotalBurnBalance = useCallback(() => {
-        let totalAmount = '0';
+        let calcTransferAmount = '0';
         let allAddressesValid = true;
         let allAmountsValid = true;
 
@@ -185,26 +222,32 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
             if (!wallet.amount || wallet.amount.trim() === '') {
                 allAmountsValid = false;
             }
-            totalAmount = addStringAmount(totalAmount, wallet.amount);
+            calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
         }
 
+        const remainAmount = subtractStringAmount(addressAmount, getUTokenAmountFromToken(calcTransferAmount, decimals));
+        setUpdatedAmount(remainAmount);
 
         setIsEnableButton(allAddressesValid && allAmountsValid);
-        setTotalBurnBalance(getUTokenAmountFromToken(totalAmount, decimals));
-    }, [walletList, totalSupply, decimals]);
+        setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, decimals));
+    }, [walletList, addressAmount, decimals]);
 
-    const onClickBurn = () => {
+    useEffect(() => {
+        calculateTotalBurnBalance();
+    }, [walletList, calculateTotalBurnBalance]);
+    
+    const onClickTransfer = () => {
         const convertWalletList = [];
 
         for (const wallet of walletList) {
             convertWalletList.push({
-                owner: wallet.recipient,
+                recipient: wallet.recipient,
                 amount: getUTokenAmountFromToken(wallet.amount, decimals)
             });
         }
 
         ModalActions.handleData({
-            module: '/cw20/burnFrom',
+            module: '/cw20/transfer',
             params: {
                 contract: contract,
                 msg: convertWalletList
@@ -215,22 +258,18 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
             setWalletList([]);
             setIsFetched(true);
         }});
-    };
-
-    useEffect(() => {
-        calculateTotalBurnBalance();
-    }, [walletList, calculateTotalBurnBalance]);
+    }
 
     return (
         <Container>
             <ContentWrap>
                 <ItemWrap>
                     <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Burn From Title Icon'} />
-                        <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
+                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                        <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, decimals))}</ItemAmountTypo>
+                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, decimals))}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenSymbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
@@ -250,14 +289,25 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
                         ))}
                     </WalletListWrap>
                 )}
+                <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                <ItemWrap>
+                    <ItemLabelWrap>
+                        <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'}/>
+                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                    </ItemLabelWrap>
+                    <ItemLabelWrap>
+                        <UpdatedBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(updatedAmount, decimals))}</UpdatedBalanceTypo>
+                        <UpdatedSymbolTypo>{tokenSymbol}</UpdatedSymbolTypo>
+                    </ItemLabelWrap>
+                </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton $isEnable={isEnableButton} onClick={onClickBurn}>
-                    <ExecuteButtonTypo>Burn From</ExecuteButtonTypo>
+                <ExecuteButton $isEnable={isEnableButton} onClick={onClickTransfer}>
+                    <ExecuteButtonTypo>Transfer</ExecuteButtonTypo>
                 </ExecuteButton>
             </ButtonWrap>
         </Container>
     )
 };
 
-export default BurnFromPreview;
+export default TransferPreview;

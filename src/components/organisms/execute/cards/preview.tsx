@@ -6,6 +6,7 @@ import { ITokenInfoState } from '../hooks/useExecueteHook';
 import DefaultView from './previews/default';
 import BurnPreview from './previews/burn';
 import BurnFromPreview from './previews/burnFrom';
+import TransferPreview from './previews/transfer';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -59,6 +60,13 @@ const Preview = ({ tokenInfoState }: IProps) => {
             {selectMenu.value === 'burnFrom' && (
                 <BurnFromPreview
                     totalSupply={tokenInfoState.totalSupply}
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                />
+            )}
+            {selectMenu.value === 'transfer' && (
+                <TransferPreview
+                    addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />
