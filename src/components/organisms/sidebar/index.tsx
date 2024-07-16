@@ -21,16 +21,18 @@ import {
     SwitchWrapper
 } from './style';
 import CwSwitch from './cwSwitch';
-import { CW_TYPE, NETWORK_TYPE } from '../../../constants/common';
-import LineDivider from '../../atoms/divider/lineDivider';
-import Icons from '../../atoms/icons';
+import { CW_TYPE, NETWORK_TYPE } from '@/constants/common';
+import LineDivider from '@/components/atoms/divider/lineDivider';
+import Icons from '@/components/atoms/icons';
 import { MenuItemText } from './style';
-import ColorButton from '../../atoms/buttons/colorButton';
-import { rootState } from '../../../redux/reducers';
-import { GlobalActions, ModalActions } from '../../../redux/actions';
+import ColorButton from '@/components/atoms/buttons/colorButton';
+import { rootState } from '@/redux/reducers';
+import { GlobalActions, ModalActions } from '@/redux/actions';
 import NetworkMenu from './network';
-import { CRAFT_CONFIGS } from '../../../config';
-import { shortenAddress } from '../../../utils/common';
+import { CRAFT_CONFIGS } from '@/config';
+import { copyToClipboard, shortenAddress } from '@/utils/common';
+import IconButton from '@/components/atoms/buttons/iconButton';
+import { useSnackbar } from 'notistack';
 
 const SOCIAL_LIST = [
     { Icon: <Icons.Medium width={'100%'} height={'100%'} />, socialLink: 'https://medium.com/firmachain' },
@@ -41,11 +43,11 @@ const SOCIAL_LIST = [
 
 const Sidebar = () => {
     const { isInit, address } = useSelector((state: rootState) => state.wallet);
+    const { network } = useSelector((state: rootState) => state.global);
 
     const location = useLocation();
     const navigate = useNavigate();
-
-    const { network } = useSelector((state: rootState) => state.global);
+    const { enqueueSnackbar } = useSnackbar();
 
     const [blockExplorerLink, setBlockExplorerLink] = useState<string>();
 
@@ -71,8 +73,7 @@ const Sidebar = () => {
         GlobalActions.handleNetwork(type);
     };
 
-    const onClickExternalLink = (e: any) => {
-        e.preventDefault();
+    const onClickExternalLink = () => {
         window.open(blockExplorerLink);
     };
 
@@ -81,6 +82,13 @@ const Sidebar = () => {
             e.preventDefault();
             window.open(socialLink);
         }
+    };
+
+    const onClickAddress = async () => {
+        const errorMessage = await copyToClipboard(address);
+
+        if (errorMessage) enqueueSnackbar({ variant: 'error', message: errorMessage });
+        else enqueueSnackbar({ variant: 'success', message: 'Connected wallet address has been copied to clipboard.' });
     };
 
     return (
@@ -121,9 +129,11 @@ const Sidebar = () => {
                         </MenuItem>
                     </MenuListWrapper>
                     {isInit ? (
-                        <AddressCard>
-                            <AddressText>{shortenAddress(address, 10, 6)}</AddressText>
-                        </AddressCard>
+                        <IconButton style={{ padding: 0 }} onClick={onClickAddress}>
+                            <AddressCard>
+                                <AddressText>{shortenAddress(address, 10, 6)}</AddressText>
+                            </AddressCard>
+                        </IconButton>
                     ) : (
                         <ColorButton
                             width={'100%'}
@@ -144,7 +154,7 @@ const Sidebar = () => {
                 <FooterWrapper>
                     <NetworkMenu onChange={onClickNetworkMenu} />
                     <ExternalLinkWrapper>
-                        <ExternalLinkButton onClick={(e) => onClickExternalLink(e)}>Block Explorer</ExternalLinkButton>
+                        <ExternalLinkButton onClick={onClickExternalLink}>Block Explorer</ExternalLinkButton>
                         <ExternalLinkButton>Contact Us</ExternalLinkButton>
                     </ExternalLinkWrapper>
                     <LineDivider />

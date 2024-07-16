@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Drawer } from '@mui/material';
+import IconButton from '@/components/atoms/buttons/iconButton';
 
 export const DrawerStyled = styled(Drawer)`
     & .MuiDrawer-paper {
@@ -54,13 +55,14 @@ export const MenuListWrapper = styled.div`
     gap: 16px;
 `;
 
-export const MenuItem = styled.div`
+export const MenuItem = styled(IconButton)`
     width: 168px;
     height: 22px;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 12px;
+    padding: 0;
 `;
 
 export const MenuItemText = styled.div<{ selected: boolean }>`

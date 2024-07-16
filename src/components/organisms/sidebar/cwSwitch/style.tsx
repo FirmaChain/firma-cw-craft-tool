@@ -1,3 +1,4 @@
+import IconButton from '@/components/atoms/buttons/iconButton';
 import { Box } from '@mui/material';
 import styled from 'styled-components';
 
@@ -25,13 +26,13 @@ export const ActiveIndicator = styled(Box)<{ position: 'left' | 'right' }>`
     transition: left 0.3s ease;
 `;
 
-export const SwitchButton = styled(Box)`
+export const SwitchButton = styled(IconButton)<{ disabled?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
     width: 50%;
-    cursor: pointer;
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
     z-index: 1;
 `;
 
