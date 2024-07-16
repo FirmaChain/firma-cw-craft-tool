@@ -31,17 +31,9 @@ const Cw20Instantiate = () => {
     const [minterble, setMinterble] = useState<boolean>(false);
 
     const isBasic = cw20Mode === 'BASIC';
-    // useEffect(() => {
-    //     if (cw20Mode === 'BASIC') setIsBasic(true);
-    //     else setIsBasic(false);
-    // }, [cw20Mode]);
 
     useEffect(() => {
         const sumAmount = addDecimals(...walletList.map((one) => one.amount));
-        // let sumAmount: number = 0;
-        // for (const wallet of walletList) {
-        //     sumAmount += Number(wallet.amount);
-        // }
 
         setTotalSupply(sumAmount.toString());
         setWalletCount(walletList.length);

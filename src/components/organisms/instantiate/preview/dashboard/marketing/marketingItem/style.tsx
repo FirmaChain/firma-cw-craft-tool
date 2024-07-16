@@ -25,13 +25,18 @@ export const ItemText = styled.div`
 `;
 
 export const ItemValue = styled.div`
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
-    overflow: hidden;
 `;
 
 export const ItemValueCover = styled.div<{ $visible: boolean }>`
@@ -46,10 +51,15 @@ export const ItemValueCover = styled.div<{ $visible: boolean }>`
 `;
 
 export const ItemCoverValue = styled.div`
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
     color: #707070;
-    overflow: hidden;
 `;

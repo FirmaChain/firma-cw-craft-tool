@@ -1,8 +1,14 @@
 import styled from 'styled-components';
 
 export const ContentWrapper = styled.div`
-    width: calc(100% - 96px);
-    max-width: calc(736px - 96px);
+    box-sizing: border-box;
+    width: 736px;
+    min-width: 736px;
+
+    height: 100%;
+
+    // width: calc(100% - 96px);
+    // max-width: calc(736px - 96px);
     padding: 48px 48px;
     display: flex;
     flex-direction: column;

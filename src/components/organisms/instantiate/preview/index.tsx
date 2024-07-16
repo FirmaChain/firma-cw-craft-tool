@@ -21,6 +21,8 @@ import { NETWORKS } from '@/constants/common';
 import { CRAFT_CONFIGS } from '@/config';
 import { BASIC_LABEL } from '@/constants/cw20Types';
 import useFormStore from '@/store/formStore';
+import { useModalStore } from '../../../../hooks/useModal';
+import InstantitateModal from '../../modal/instantitateModal';
 
 interface IProps {
     isBasic: boolean;
@@ -58,6 +60,8 @@ const Preview = ({
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
+
+    const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
@@ -109,17 +113,17 @@ const Preview = ({
                     }
                 };
 
-                ModalActions.handleData({
-                    module: '/cosmwasm/instantiateContract',
-                    params: {
-                        admin: address,
-                        codeId: codeId,
-                        label: label === '' ? BASIC_LABEL : label,
-                        msg: JSON.stringify(messageData)
-                    }
-                });
+                const params = {
+                    admin: address,
+                    codeId: codeId,
+                    label: label === '' ? BASIC_LABEL : label,
+                    msg: JSON.stringify(messageData)
+                };
 
-                ModalActions.handleQrConfirm(true);
+                modal.openModal({
+                    modalType: 'custom',
+                    _component: ({ id }) => <InstantitateModal module="/cosmwasm/instantiateContract" id={id} params={params} />
+                });
             } else {
                 ModalActions.handleData({
                     module: 'Instantiation',

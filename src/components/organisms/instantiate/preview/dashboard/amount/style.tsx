@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 
 export const AmountWrapper = styled.div`
-    width: 552px;
+    width: 100%;
+    box-sizing: border-box;
+    // width: 552px;
     padding: 32px 44px;
     display: flex;
     flex-direction: column;
-    border-radius: 0px 0px 24px 24px;
-    border: 1px solid var(--Gray-550, #444);
+    // border-radius: 0px 0px 24px 24px;
+    border-top: 1px solid var(--Gray-550, #444);
     gap: 24px;
 `;
 

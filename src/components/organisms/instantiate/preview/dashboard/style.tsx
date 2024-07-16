@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
 export const DashboardWrapper = styled.div`
+    height: 100%;
+    overflow: hidden;
+
     display: flex;
     flex-direction: column;
     gap: 40px;
-
-    overflow-x: hidden;
 `;
 
 export const TitleWrapper = styled.div`
@@ -51,4 +52,13 @@ export const TitleDescription = styled.div`
 export const DashboardBody = styled.div`
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 `;

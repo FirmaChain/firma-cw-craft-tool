@@ -1,8 +1,15 @@
 import styled from 'styled-components';
 
 export const PreviewWrapper = styled.div`
-    width: calc(100% - 96px);
-    max-width: calc(736px - 96px);
+    box-sizing: border-box;
+    width: 736px;
+    min-width: 736px;
+    max-height: 742px;
+
+    overflow: hidden;
+
+    // width: calc(100% - 96px);
+    // max-width: calc(736px - 96px);
     height: 100%;
     padding: 48px;
     display: flex;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     IconBackground,
     InformationBody,
@@ -114,6 +114,26 @@ const Information = ({
         setMarketingProject(value);
         onChangeMarketingProject(value);
     };
+
+    useEffect(() => {
+        //? Reset unused states by mode
+        if (isBasic) {
+            handleDecimals('');
+            clearFormError({ id: 'tokenDecimal' });
+
+            handleLabel('');
+            clearFormError({ id: 'tokenLabel' });
+
+            handleMarketingAddress('');
+            clearFormError({ id: 'marketingAddress' });
+
+            handleMarketingProject('');
+            clearFormError({ id: 'marketingProject' });
+        } else {
+            handleDescription('');
+            clearFormError({ id: 'tokenDescription' });
+        }
+    }, [isBasic]);
 
     return (
         <InformationWrapper>

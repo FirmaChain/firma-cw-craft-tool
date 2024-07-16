@@ -1,14 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import Icons from '../../../../atoms/icons';
+import Icons from '@/components/atoms/icons';
 import { DashboardBody, DashboardWrapper, IconBackground, TextGroupWrapper, TitleDescription, TitleText, TitleWrapper } from './style';
-import { rootState } from '../../../../../redux/reducers';
+import { rootState } from '@/redux/reducers';
 import TokenInfo from './tokenInfo';
 import Amount from './amount';
-import { IWallet } from '../../../../../interfaces/wallet';
+import { IWallet } from '@/interfaces/wallet';
 import Marketing from './marketing';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 
 interface IProps {
     isBasic: boolean;
@@ -46,45 +45,38 @@ const Dashboard = ({
     const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
 
     return (
-        <PerfectScrollbar>
-            <DashboardWrapper>
-                <TitleWrapper>
-                    <IconBackground>
-                        <Icons.Preview width={'32px'} height={'32px'} />
-                    </IconBackground>
-                    <TextGroupWrapper>
-                        <TitleText>PREVIEW</TitleText>
-                        <TitleDescription>View all token informations at a glance.</TitleDescription>
-                    </TextGroupWrapper>
-                </TitleWrapper>
+        <DashboardWrapper>
+            <TitleWrapper>
+                <IconBackground>
+                    <Icons.Preview width={'32px'} height={'32px'} />
+                </IconBackground>
+                <TextGroupWrapper>
+                    <TitleText>PREVIEW</TitleText>
+                    <TitleDescription>View all token informations at a glance.</TitleDescription>
+                </TextGroupWrapper>
+            </TitleWrapper>
 
-                <DashboardBody>
-                    <TokenInfo
-                        tokenLogoUrl={tokenLogoUrl}
-                        tokenName={tokenName}
-                        tokenSymbol={tokenSymbol}
-                        tokenDescription={tokenDescription}
-                    />
-                    {cw20Mode === 'ADVANCED' && (
-                        <Marketing
-                            label={label}
-                            decimals={decimals}
-                            marketingAddress={marketingAddress}
-                            marketingProject={marketingProject}
-                        />
-                    )}
-                    <Amount
-                        minterble={minterble}
-                        minterCap={minterCap}
-                        tokenSymbol={tokenSymbol}
-                        minterAddress={minterAddress}
-                        totalSupply={totalSupply}
-                        walletList={walletList}
-                        decimals={decimals}
-                    />
-                </DashboardBody>
-            </DashboardWrapper>
-        </PerfectScrollbar>
+            <DashboardBody>
+                <TokenInfo
+                    tokenLogoUrl={tokenLogoUrl}
+                    tokenName={tokenName}
+                    tokenSymbol={tokenSymbol}
+                    tokenDescription={tokenDescription}
+                />
+                {cw20Mode === 'ADVANCED' && (
+                    <Marketing label={label} decimals={decimals} marketingAddress={marketingAddress} marketingProject={marketingProject} />
+                )}
+                <Amount
+                    minterble={minterble}
+                    minterCap={minterCap}
+                    tokenSymbol={tokenSymbol}
+                    minterAddress={minterAddress}
+                    totalSupply={totalSupply}
+                    walletList={walletList}
+                    decimals={decimals}
+                />
+            </DashboardBody>
+        </DashboardWrapper>
     );
 };
 

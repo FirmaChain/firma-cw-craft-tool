@@ -78,7 +78,11 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
                     <TokenSymbolText>{tokenSymbol === '' ? 'Symbol' : tokenSymbol}</TokenSymbolText>
                 </DetailTitle>
                 <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
-                    <TokenDescriptionText ref={descRef} style={{ zIndex: -1, position: 'absolute', opacity: 0 }}>
+                    {/* //? hidden description typo for more/less button */}
+                    <TokenDescriptionText
+                        ref={descRef}
+                        style={{ zIndex: -1, position: 'absolute', opacity: 0, maxHeight: '70px', overflow: 'hidden' }}
+                    >
                         {tokenDescription === '' ? 'Description' : tokenDescription}
                     </TokenDescriptionText>
                     <div
@@ -88,19 +92,18 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
                         }}
                     >
                         <TokenDescriptionText>
-                            <span>{tokenDescription === '' ? 'Description' : tokenDescription}</span>
+                            <span>{tokenDescription === '' ? 'Description' : tokenDescription} </span>
 
                             {needClamp && !isClamped && (
                                 <span
                                     style={{
-                                        display: 'relative',
                                         background: 'var(--200, #1e1e1e)',
                                         padding: 0,
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        whiteSpace: 'pre'
                                     }}
                                     onClick={closeClamp}
                                 >
-                                    {' '}
                                     <TokenDescriptionClampTypo>less</TokenDescriptionClampTypo>
                                     <img
                                         src={IC_ROUND_ARROW_UP}

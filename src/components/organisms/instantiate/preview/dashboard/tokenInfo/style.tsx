@@ -7,10 +7,10 @@ export const TokenInfoWrapper = styled.div`
     width: 100%;
     padding: 28px 44px;
     gap: 32px;
-    border-radius: 24px 24px 0px 0px;
-    border-top: 1px solid var(--Gray-550, #444);
-    border-right: 1px solid var(--Gray-550, #444);
-    border-left: 1px solid var(--Gray-550, #444);
+    // border-radius: 24px 24px 0px 0px;
+    // border-top: 1px solid var(--Gray-550, #444);
+    // border-right: 1px solid var(--Gray-550, #444);
+    // border-left: 1px solid var(--Gray-550, #444);
 `;
 
 export const TokenInfoLogoImage = styled.div`
