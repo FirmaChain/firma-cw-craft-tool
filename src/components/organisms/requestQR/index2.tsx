@@ -89,32 +89,37 @@ const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IP
                     onTickCheckRequest();
                 }}
             />
-            {qrcode !== '' && (
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '4px',
-                        height: '30px',
-                        padding: '0 12px',
-                        borderRadius: '32px',
-                        background: 'var(--Green-500, #02E191)',
-                        userSelect: 'none',
-                        cursor: 'pointer'
-                    }}
-                    onClick={() => refreshRequestQR()}
-                >
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        {timerText.split('').map((typo, idx) => (
-                            <TimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
-                                {typo}
-                            </TimerTypo>
-                        ))}
-                    </div>
-                    <img src={IC_RESET} alt="reset" style={{ width: '16px', height: '16px' }} />
-                </div>
-            )}
+            {/* {qrcode !== '' && ( */}
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '4px',
+                    minWidth: '70px',
+                    height: '30px',
+                    padding: '0 12px',
+                    borderRadius: '32px',
+                    background: 'var(--Green-500, #02E191)',
+                    userSelect: 'none',
+                    cursor: 'pointer'
+                }}
+                onClick={() => qrcode !== '' && refreshRequestQR()}
+            >
+                {qrcode !== '' && (
+                    <>
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            {timerText.split('').map((typo, idx) => (
+                                <TimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
+                                    {typo}
+                                </TimerTypo>
+                            ))}
+                        </div>
+                        <img src={IC_RESET} alt="reset" style={{ width: '16px', height: '16px' }} />
+                    </>
+                )}
+            </div>
+            {/* )} */}
         </QRContainer>
     );
 };

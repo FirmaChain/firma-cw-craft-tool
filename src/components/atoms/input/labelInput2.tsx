@@ -85,18 +85,18 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
                 inputValue,
                 () => {
                     setValidTokenLogoUrl(inputValue);
-                    clearFormError({
-                        id: formId,
-                        type: 'INVALID_IMAGE_URL'
-                    });
+                    // clearFormError({
+                    //     id: formId,
+                    //     type: 'INVALID_IMAGE_URL'
+                    // });
                 },
                 () => {
                     setValidTokenLogoUrl('');
-                    setFormError({
-                        id: formId,
-                        type: 'INVALID_IMAGE_URL',
-                        message: 'Input valid image url'
-                    });
+                    // setFormError({
+                    //     id: formId,
+                    //     type: 'INVALID_IMAGE_URL',
+                    //     message: 'Input valid image url'
+                    // });
                 }
             );
         }

@@ -168,9 +168,9 @@ const InstantitateModal = ({
                                 }}
                             >
                                 <SignTitle>Instantiate</SignTitle>
-                                <SignDesc>Securely connect your wallet with the firmastation app.</SignDesc>
+                                <SignDesc>Instantiate your own CW20 token with the firmastation app.</SignDesc>
                             </div>
-                            {/* <QRCodeBox> */}
+
                             <RequestQR
                                 module={module}
                                 params={params}
@@ -189,7 +189,6 @@ const InstantitateModal = ({
                                     });
                                 }}
                             />
-                            {/* </QRCodeBox> */}
                         </div>
                         <div
                             style={{
@@ -205,21 +204,6 @@ const InstantitateModal = ({
                                 background: 'var(--Gray-200, #1A1A1A)'
                             }}
                         >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '12px'
-                                }}
-                            >
-                                <StepIcon>
-                                    <img src={IC_FIRMA_LOGO} alt="firma-logo" />
-                                </StepIcon>
-                                <StepDesc>{`1. Open station\napp`}</StepDesc>
-                            </div>
-
                             <div style={{ height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <img
                                     src={IC_ROUND_ARROW_UP}
@@ -227,20 +211,50 @@ const InstantitateModal = ({
                                     style={{ width: '16px', aspectRatio: '1/1', transform: 'rotate(90deg)' }}
                                 />
                             </div>
-
                             <div
                                 style={{
+                                    position: 'absolute',
+                                    top: '32px',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
                                     display: 'flex',
-                                    flexDirection: 'column',
+                                    flexDirection: 'row',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    gap: '12px'
+                                    gap: '40px'
                                 }}
                             >
-                                <StepIcon>
-                                    <img src={IC_SCAN} alt="firma-logo" />
-                                </StepIcon>
-                                <StepDesc>{`2. Sign transaction`}</StepDesc>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '12px',
+                                        width: '100px'
+                                    }}
+                                >
+                                    <StepIcon>
+                                        <img src={IC_FIRMA_LOGO} alt="firma-logo" />
+                                    </StepIcon>
+                                    <StepDesc>{`1. Open station\napp`}</StepDesc>
+                                </div>
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '12px',
+                                        width: '100px'
+                                    }}
+                                >
+                                    <StepIcon>
+                                        <img src={IC_SCAN} alt="firma-logo" />
+                                    </StepIcon>
+                                    <StepDesc>{`2. Sign transaction`}</StepDesc>
+                                </div>
                             </div>
                         </div>
                     </>
