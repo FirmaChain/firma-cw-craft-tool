@@ -127,3 +127,29 @@ export const TxConfirmButtonWrapper = styled.div`
     margin-top: 12px;
     margin-bottom: 24px;
 `;
+
+export const TxResultBox = styled.div`
+    position: relative;
+
+    display: flex;
+    padding: 48px 24px 24px 24px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    border-radius: 16px;
+    background: var(--Gray-350, #262626);
+    overflow: hidden;
+`;
+
+export const TxResultTypo = styled.div`
+    color: var(--Gray-750, #dcdcdc);
+    text-align: center;
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: break-spaces;
+    padding-bottom: 32px;
+`;

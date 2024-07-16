@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
 export const QRContainer = styled.div`
-    width: 100%;
-    height: 208px;
-    margin-top: 20px;
+    // width: 100%;
+    // height: 208px;
+    // margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,4 +28,16 @@ export const RefreshIconButton = styled.div`
     background-image: url('${({ theme }) => theme.images.ic_refresh}');
     background-size: contain;
     background-position: center;
+`;
+
+export const TimerTypo = styled.div`
+    color: var(--Gray-100, #121212);
+
+    /* Heading/H5 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 110%;
+    font-variant-numeric: tabular-nums;
 `;

@@ -2,10 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { rootState } from '../../../redux/reducers';
-import { ModalActions } from '../../../redux/actions';
-import { Modal } from '../../modal';
-import Icons from '../../atoms/icons';
+import { rootState } from '@/redux/reducers';
+import { ModalActions } from '@/redux/actions';
+import { Modal } from '@/components/modal/index';
+import Icons from '@/components/atoms/icons';
 import {
     TxCofirmTitleTypoWrapper,
     TxConfirmWrapper,
@@ -13,10 +13,10 @@ import {
     TxConfirmModuleTypo,
     TxConfirmSuccessTypo,
     TxConfirmTitle,
-    TxConfirmContentTypo,
+    TxResultTypo,
     TxConfirmButtonWrapper
 } from './style';
-import ColorButton from '../../atoms/buttons/colorButton';
+import ColorButton from '@/components/atoms/buttons/colorButton';
 
 const TxConfirmModal = () => {
     const navigate = useNavigate();
@@ -54,7 +54,7 @@ const TxConfirmModal = () => {
                         </>
                     )}
                 </TxConfirmTitle>
-                <TxConfirmContentTypo>{data.message}</TxConfirmContentTypo>
+                <TxResultTypo>{data.message}</TxResultTypo>
                 <TxConfirmButtonWrapper>
                     {data.result ? (
                         <>

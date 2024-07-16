@@ -12,8 +12,6 @@ import DefaultTooltip from './styles/tooltip';
 import './styles/index.css';
 import './styles/font.css';
 import 'react-tooltip/dist/react-tooltip.css';
-import 'react-perfect-scrollbar/dist/css/styles.css';
-
 const App = () => {
     const { connectWallet, qrConfirm, txConfirm } = useSelector((state: rootState) => state.modal);
 

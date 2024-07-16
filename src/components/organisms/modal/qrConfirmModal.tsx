@@ -2,18 +2,18 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 
-import { ModalActions } from '../../../redux/actions';
+import { ModalActions } from '@/redux/actions';
 
-import Modal from '../../modal/modal';
+import Modal from '@/components/modal/modal';
 import RequestQR from '../requestQR';
 import { ModalContent, ModalSubTitle, ModalTitle, QRContainer } from './style';
-import { rootState } from '../../../redux/reducers';
+import { rootState } from '@/redux/reducers';
 
 const QrConfirmModal = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const { data } = useSelector((state: rootState) => state.modal);
-    const { address } = useSelector((state: rootState) => state.wallet);
+    const data = useSelector((state: rootState) => state.modal.data);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
     const onCloseModal = () => {
         ModalActions.handleClearCallback();

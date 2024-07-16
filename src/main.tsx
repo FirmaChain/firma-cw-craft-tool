@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Sidebar from './components/organisms/sidebar';
 import AppRoutes from './routes';
+import { ModalRenderer } from './hooks/useModal';
 
 const MainContainer = styled.div`
     position: relative;
@@ -23,6 +24,7 @@ const RightContainer = styled.div`
 const Main = () => {
     return (
         <MainContainer>
+            <ModalRenderer />
             <Sidebar />
             <RightContainer>
                 <AppRoutes />
