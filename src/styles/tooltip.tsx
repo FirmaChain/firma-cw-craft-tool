@@ -7,8 +7,9 @@ const DefaultTooltip = styled(Tooltip)`
     padding: 8px 12px !important;
 
     //? inside
-    background: #d9d9d9;
+    background: #4a4a4a !important;
     text-align: center;
+    opacity: 1 !important;
 
     //? text
     color: var(--Primary-Base-White, #fff) !important;

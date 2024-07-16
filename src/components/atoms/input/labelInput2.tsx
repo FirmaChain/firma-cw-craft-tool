@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import VariableInput2 from './variableInput2';
 import useFormStore from '@/store/formStore';
 import Icons from '../icons';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 import styled from 'styled-components';
 import commaNumber from 'comma-number';
+import IconTooltip from '../tooltip';
 
 interface ILabelProps {
     index?: number;
@@ -85,18 +85,9 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
                 inputValue,
                 () => {
                     setValidTokenLogoUrl(inputValue);
-                    // clearFormError({
-                    //     id: formId,
-                    //     type: 'INVALID_IMAGE_URL'
-                    // });
                 },
                 () => {
                     setValidTokenLogoUrl('');
-                    // setFormError({
-                    //     id: formId,
-                    //     type: 'INVALID_IMAGE_URL',
-                    //     message: 'Input valid image url'
-                    // });
                 }
             );
         }
@@ -154,21 +145,7 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
                     </div>
                 )}
                 <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{label}</div>
-                {typeof tooltip === 'string' && tooltip.length > 0 && (
-                    <div
-                        data-tooltip-content={tooltip}
-                        data-tooltip-id={TOOLTIP_ID.COMMON}
-                        data-tooltip-wrapper="span"
-                        data-tooltip-place="bottom"
-                        style={{ display: 'flex', cursor: 'help', height: 'fit-content' }}
-                    >
-                        {typeof TooltipIcon === 'string' ? (
-                            <img src={TooltipIcon} alt="tooltip-icon" style={{ width: '12px', height: '12px' }}></img>
-                        ) : (
-                            TooltipIcon
-                        )}
-                    </div>
-                )}
+                {typeof tooltip === 'string' && tooltip.length > 0 && <IconTooltip tooltip={tooltip} TooltipIcon={TooltipIcon} />}
             </div>
 
             {imgPreview && (

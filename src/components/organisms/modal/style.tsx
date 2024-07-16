@@ -128,7 +128,7 @@ export const TxConfirmButtonWrapper = styled.div`
     margin-bottom: 24px;
 `;
 
-export const TxResultBox = styled.div`
+export const ModalBase = styled.div`
     position: relative;
 
     display: flex;
@@ -152,4 +152,56 @@ export const TxResultTypo = styled.div`
     line-height: 20px;
     white-space: break-spaces;
     padding-bottom: 32px;
+`;
+
+export const SignTitle = styled.div`
+    color: var(--Primary-Base-White, #fff);
+    text-align: center;
+
+    /* Heading/H3 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 100% */
+`;
+
+export const SignDesc = styled.div`
+    color: var(--Gray-750, #999);
+
+    /* Body/Body1 - Rg */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+`;
+
+export const StepIcon = styled.div`
+    width: 56px;
+    aspect-ratio: 1/1;
+    border-radius: 8px;
+    background: var(--Gray-500, #383838);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 40px;
+        aspect-ratio: 1/1;
+    }
+`;
+
+export const StepDesc = styled.div`
+    color: var(--Gray-850, #e6e6e6);
+    text-align: center;
+
+    /* Body/Body3 */
+    font-family: 'General Sans Variable';
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px; /* 138.462% */
+
+    white-space: break-spaces;
 `;

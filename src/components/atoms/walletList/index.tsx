@@ -124,7 +124,7 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletWrapper onClick={handleAddWallet}>
+            <AddWalletWrapper disabled={walletList.length === 20} onClick={handleAddWallet}>
                 <Icons.Add width={'16px'} height={'16px'} />
                 <AddWalletTypo>
                     Add (<span style={{ fontWeight: '600' }}>{walletList.length}</span>/{maxWalletCount})

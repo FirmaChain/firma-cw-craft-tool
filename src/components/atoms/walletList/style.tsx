@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import IconButton from '../buttons/iconButton';
 
 export const WalletListWrapper = styled.div`
     display: flex;
@@ -48,7 +49,7 @@ export const MaxWalletCountTypo = styled.div`
     line-height: 20px;
 `;
 
-export const AddWalletWrapper = styled.div`
+export const AddWalletWrapper = styled(IconButton)`
     width: 100%;
     padding: 8px 0px;
     display: flex;
