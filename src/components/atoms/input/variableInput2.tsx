@@ -1,4 +1,3 @@
-import { InputType } from '@/interfaces/input';
 import { useId, useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,6 +7,7 @@ const StyledInput = styled.div<{
     $error?: boolean;
     $currentLength?: number;
     $textAlign?: 'left' | 'center' | 'right';
+    $readOnly?: boolean;
 }>`
     width: 100%;
     min-height: 48px;
@@ -21,10 +21,10 @@ const StyledInput = styled.div<{
 
     //? Set border color by state
     border: 1px solid
-        ${({ $isFocus, $error }) =>
+        ${({ $isFocus, $error, $readOnly }) =>
             $error
                 ? 'var(--Status-Alert, #E55250) !important'
-                : $isFocus
+                : $isFocus && !$readOnly
                   ? 'var(--Gray-550, #FFFFFF) !important'
                   : 'var(--Gray-500, #383838)'};
     border-radius: 6px;
@@ -32,7 +32,7 @@ const StyledInput = styled.div<{
     box-sizing: border-box;
 
     &:hover {
-        border: 1px solid ${({ $isFocus }) => ($isFocus ? '#FFFFFF' : 'var(--Gray-550, #444)')};
+        border: 1px solid ${({ $isFocus, $readOnly }) => ($isFocus && !$readOnly ? '#FFFFFF' : 'var(--Gray-550, #444)')};
     }
 
     input {
@@ -62,10 +62,10 @@ const StyledInput = styled.div<{
         }
 
         outline: none;
-        &:focus: {
+        &:focus {
             outline: 0;
         }
-        &:focus-visible: {
+        &:focus-visible {
             outline: 0;
         }
     }
@@ -99,25 +99,35 @@ const ErrorMessage = styled.div`
     line-height: 14px; /* 116.667% */
 `;
 
+interface InputProps {
+    value: string; //
+    placeHolder: string; //
+    maxLength?: number; //
+    onChange: (value: string) => void; //
+    onBlur?: () => void; //
+    errorMessage?: string[]; //
+    regex?: RegExp; //
+    type?: 'string' | 'number'; //
+    decimal?: number; //
+    maxValue?: number; //
+    textAlign?: 'left' | 'center' | 'right'; //
+    readOnly?: boolean; //
+}
+
 const VariableInput2 = ({
     value,
-    type = 'text',
+    type = 'string',
     onChange,
-    onBlur,
+    onBlur = () => {},
     maxLength,
     placeHolder,
     textAlign = 'left',
-    errorMessage = []
-}: {
-    value: string | number | null;
-    type?: InputType;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur?: () => void;
-    maxLength?: number;
-    placeHolder?: string;
-    textAlign?: 'left' | 'center' | 'right';
-    errorMessage?: string[];
-}) => {
+    errorMessage = [],
+    readOnly = false,
+    decimal = 6,
+    maxValue,
+    regex
+}: InputProps) => {
     const key = useId();
     const [isFocus, setIsFocus] = useState(false);
 
@@ -125,6 +135,36 @@ const VariableInput2 = ({
 
     const valueLength = typeof value === 'object' ? 0 : String(value).length;
     const isError = errorMessage.length > 0;
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let inputValue = event.currentTarget.value;
+
+        if (inputValue.length > 0) {
+            if (type === 'number') {
+                inputValue = inputValue.replace(decimal === 0 ? /[^0-9]/g : /[^0-9.]/g, '');
+
+                if (inputValue.length > 0 && inputValue.split('').every((one) => one === '0')) inputValue = '0';
+
+                const firstDotIndex = inputValue.indexOf('.');
+                if (firstDotIndex !== -1) {
+                    inputValue = inputValue.substring(0, firstDotIndex + 1) + inputValue.substring(firstDotIndex + 1).replace(/\./g, '');
+                }
+
+                if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
+
+                //? check if value is bigger than max-value (if maxValue is provided)
+                if (typeof maxValue === 'number') inputValue = Number(inputValue) > maxValue ? String(maxValue) : inputValue;
+            } else {
+                //? Filter input string if valid regex provided
+                if (regex) inputValue = inputValue.replace(regex, '');
+
+                //? Slice remaining string if maxLength provided
+                if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);
+            }
+        }
+
+        onChange(inputValue);
+    };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', height: 'fit-content' }}>
@@ -138,14 +178,16 @@ const VariableInput2 = ({
                 $error={isError}
                 $currentLength={String(value).length}
                 $textAlign={textAlign}
-                onFocus={() => setIsFocus(true)}
+                $readOnly={readOnly}
+                onFocus={() => !readOnly && setIsFocus(true)}
             >
                 <input
                     ref={inputRef}
                     value={value}
                     type={type === 'number' ? 'text' : type}
-                    onChange={onChange}
+                    onChange={handleChange}
                     placeholder={placeHolder}
+                    readOnly={readOnly}
                 />
                 {typeof maxLength === 'number' && (
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingRight: '16px' }}>

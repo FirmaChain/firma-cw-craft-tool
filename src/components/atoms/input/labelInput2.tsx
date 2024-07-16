@@ -4,6 +4,7 @@ import useFormStore from '@/store/formStore';
 import Icons from '../icons';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import styled from 'styled-components';
+import commaNumber from 'comma-number';
 
 interface ILabelProps {
     index?: number;
@@ -27,6 +28,7 @@ interface IInputProps {
     decimal?: number;
     maxValue?: number;
     textAlign?: 'left' | 'center' | 'right';
+    readOnly?: boolean;
 }
 
 const IconBackground = styled.div`
@@ -65,7 +67,8 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
         type = 'string',
         decimal = 6,
         maxValue,
-        textAlign = 'left'
+        textAlign = 'left',
+        readOnly = false
     } = inputProps;
 
     const errorMessage = Object.values(useFormStore((state) => state.formError[formId]) || {});
@@ -74,32 +77,8 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let inputValue = event.currentTarget.value;
-
-        if (inputValue.length > 0) {
-            if (type === 'number') {
-                inputValue = inputValue.replace(decimal === 0 ? /[^0-9]/g : /[^0-9.]/g, '');
-
-                if (inputValue.length > 0 && inputValue.split('').every((one) => one === '0')) inputValue = '0';
-
-                const firstDotIndex = inputValue.indexOf('.');
-                if (firstDotIndex !== -1) {
-                    inputValue = inputValue.substring(0, firstDotIndex + 1) + inputValue.substring(firstDotIndex + 1).replace(/\./g, '');
-                }
-
-                if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
-
-                //? check if value is bigger than max-value (if maxValue is provided)
-                if (typeof maxValue === 'number') inputValue = Number(inputValue) > maxValue ? String(maxValue) : inputValue;
-            } else {
-                //? Filter input string if valid regex provided
-                if (regex) inputValue = inputValue.replace(regex, '');
-
-                //? Slice remaining string if maxLength provided
-                if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);
-            }
-        }
+    const handleChange = (value: string) => {
+        let inputValue = value;
 
         if (imgPreview) {
             checkImageUrl(
@@ -179,6 +158,7 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
                     <div
                         data-tooltip-content={tooltip}
                         data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
                         data-tooltip-place="bottom"
                         style={{ display: 'flex', cursor: 'help', height: 'fit-content' }}
                     >
@@ -220,13 +200,18 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
             )}
 
             <VariableInput2
-                value={value}
+                value={type === 'number' ? commaNumber(value) : value}
+                type={type}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 maxLength={maxLength}
                 placeHolder={placeHolder}
-                onBlur={handleBlur}
-                errorMessage={errorMessage}
                 textAlign={textAlign}
+                errorMessage={errorMessage}
+                readOnly={readOnly}
+                decimal={decimal}
+                maxValue={maxValue}
+                regex={regex}
             />
         </div>
     );
