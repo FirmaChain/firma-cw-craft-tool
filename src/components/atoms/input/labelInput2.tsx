@@ -24,7 +24,7 @@ interface IInputProps {
     emptyErrorMessage?: string;
     imgPreview?: boolean; //? if require preive image
     regex?: RegExp;
-    type?: 'string' | 'number';
+    type?: 'string' | 'number' | 'date';
     decimal?: number;
     maxValue?: number;
     textAlign?: 'left' | 'center' | 'right';

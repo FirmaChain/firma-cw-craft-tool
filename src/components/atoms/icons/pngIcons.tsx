@@ -14,3 +14,4 @@ export const IC_CLOSE = PUBLIC_URL + 'ic_close.png';
 export const IC_FIRMA_LOGO = PUBLIC_URL + 'android-chrome-192x192.png';
 export const IC_SCAN = PUBLIC_URL + 'ic_scan.png';
 export const IC_RESET = PUBLIC_URL + 'ic_reset.png';
+export const IC_CALENDAR = PUBLIC_URL + 'ic_calendar.png';

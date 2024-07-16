@@ -1,5 +1,8 @@
 import { useId, useRef, useState } from 'react';
 import styled from 'styled-components';
+import DatePicker from 'react-datepicker';
+import { format } from 'date-fns';
+import { IC_CALENDAR } from '../icons/pngIcons';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -107,7 +110,7 @@ interface InputProps {
     onBlur?: () => void; //
     errorMessage?: string[]; //
     regex?: RegExp; //
-    type?: 'string' | 'number'; //
+    type?: 'string' | 'number' | 'date'; //
     decimal?: number; //
     maxValue?: number; //
     textAlign?: 'left' | 'center' | 'right'; //
@@ -166,8 +169,21 @@ const VariableInput2 = ({
         onChange(inputValue);
     };
 
+    const handleDateChange = (date: Date) => {
+        onChange(String(Number(date)));
+    };
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', height: 'fit-content' }}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                width: '100%',
+                height: 'fit-content',
+                position: 'relative'
+            }}
+        >
             <StyledInput
                 onClick={() => inputRef.current?.focus()}
                 onBlur={() => {
@@ -183,8 +199,8 @@ const VariableInput2 = ({
             >
                 <input
                     ref={inputRef}
-                    value={value}
-                    type={type === 'number' ? 'text' : type}
+                    value={value && type === 'date' ? format(Number(value), 'yyyy-MM-dd hh:mm:ss') : value}
+                    type="text"
                     onChange={handleChange}
                     placeholder={placeHolder}
                     readOnly={readOnly}
@@ -195,8 +211,19 @@ const VariableInput2 = ({
                         <div className="available-length">/{maxLength}</div>
                     </div>
                 )}
+                {type === 'date' && (
+                    <div style={{ marginRight: '16px' }}>
+                        <DatePicker
+                            selected={value ? new Date(Number(value)) : new Date()}
+                            shouldCloseOnSelect
+                            onChange={handleDateChange}
+                            showTimeSelect
+                            customInput={<img src={IC_CALENDAR} alt="date-picker" style={{ width: '24px', cursor: 'pointer' }} />}
+                        />
+                    </div>
+                )}
             </StyledInput>
-            <div style={{ paddingTop: '4px', paddingLeft: '8px' }}>
+            <div style={{ paddingTop: errorMessage.length > 0 ? '4px' : 0, paddingLeft: '8px' }}>
                 {errorMessage.map((one, idx) => (
                     <ErrorMessage key={key + '_' + idx}>{one}</ErrorMessage>
                 ))}

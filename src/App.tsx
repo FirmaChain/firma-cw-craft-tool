@@ -13,6 +13,7 @@ import './styles/index.css';
 import './styles/font.css';
 import 'react-tooltip/dist/react-tooltip.css';
 import 'overlayscrollbars/overlayscrollbars.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const App = () => {
     const { connectWallet, qrConfirm, txConfirm } = useSelector((state: rootState) => state.modal);
