@@ -186,44 +186,6 @@ export const omitKey = <T extends object, K extends keyof T>(key: K, obj: T): Om
     return rest;
 };
 
-export function commaNumber(number: number | string) {
-    const numStr = number.toString();
-
-    if (numStr.includes('e') || numStr.includes('E')) {
-        return numStr;
-    }
-
-    const isNegative = numStr.startsWith('-');
-
-    const absoluteValue = isNegative ? numStr.slice(1) : numStr;
-
-    const parts = absoluteValue.split('.');
-    let integerPart = parts[0];
-    const decimalPart = parts[1] || '';
-
-    let result = '';
-    let count = 0;
-    for (let i = integerPart.length - 1; i >= 0; i--) {
-        result = integerPart[i] + result;
-        count++;
-
-        if (count === 3 && i !== 0) {
-            result = ',' + result;
-            count = 0;
-        }
-    }
-
-    if (isNegative) {
-        result = '-' + result;
-    }
-
-    if (decimalPart) {
-        result += '.' + decimalPart;
-    }
-
-    return result;
-}
-
 export function addDecimals(...decimalStrings: string[]): string {
     let integerSum = 0;
     let decimalSum = 0;
@@ -305,3 +267,18 @@ export function compareAmounts(maxAmount: string, totalAmount: string): boolean 
     // If all digits are the same, return false
     return false;
 }
+
+export const copyToClipboard = async (text: string): Promise<void | string> => {
+    if (!navigator.clipboard) {
+        //   console.error('Clipboard API is not available');
+        return 'Clipboard API is not available';
+    }
+
+    try {
+        await navigator.clipboard.writeText(text);
+        // console.log('Text copied to clipboard');
+    } catch (error) {
+        console.error('Failed to copy text to clipboard', error);
+        return 'Failed to copy text to clipboard';
+    }
+};

@@ -16,8 +16,8 @@ import {
 } from './style';
 import Icons from '@/components/atoms/icons';
 import { IWallet } from '@/interfaces/wallet';
-import { getUTokenStrFromTokenStr } from '@/utils/common';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
+import commaNumber from 'comma-number';
 
 interface IProps {
     totalSupply: string;
@@ -41,8 +41,9 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                     <SummeryLeftText>Total Supply</SummeryLeftText>
                 </SummeryLeftWrapper>
                 <SummeryRightWrapeer>
-                    <SummeryRightTotalSupply>
-                        {totalSupply !== '' ? getUTokenStrFromTokenStr(totalSupply, decimals) : ''}
+                    <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>
+                        {commaNumber(totalSupply)}
+                        {/* {totalSupply !== '' ? getUTokenStrFromTokenStr(totalSupply, decimals) : ''} */}
                     </SummeryRightTotalSupply>
                     <SummeryRightTokenSymbol>{tokenSymbol !== '' ? tokenSymbol : ''}</SummeryRightTokenSymbol>
                     <ArrowToggleButton onToggle={onClickToggleWalletList} />
@@ -63,10 +64,13 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                             <WalletListItem key={index}>
                                 <ItemLeftWrapper>
                                     <Icons.Wallet width={'20px'} height={'20px'} />
-                                    <ItemLeftAddress>{wallet.recipient !== '' ? wallet.recipient : '-'}</ItemLeftAddress>
+                                    <ItemLeftAddress $disabled={!Boolean(wallet.recipient)}>
+                                        {wallet.recipient || 'Wallet Address'}
+                                    </ItemLeftAddress>
                                 </ItemLeftWrapper>
-                                <ItemTokenAmount>
-                                    {wallet.amount !== '' ? getUTokenStrFromTokenStr(wallet.amount, decimals) : '0'}
+                                <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))}>
+                                    {/* {wallet.amount !== '' ? getUTokenStrFromTokenStr(wallet.amount, decimals) : '0'} */}
+                                    {commaNumber(wallet.amount) || '0'}
                                 </ItemTokenAmount>
                             </WalletListItem>
                         ))}

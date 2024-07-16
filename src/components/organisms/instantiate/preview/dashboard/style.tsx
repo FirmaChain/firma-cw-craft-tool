@@ -1,3 +1,4 @@
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import styled from 'styled-components';
 
 export const DashboardWrapper = styled.div`
@@ -60,5 +61,17 @@ export const DashboardBody = styled.div`
 
     &::-webkit-scrollbar {
         display: none;
+    }
+`;
+
+export const StyledOverlayScrollbar = styled(OverlayScrollbarsComponent)`
+    .os-scrollbar {
+        --os-size: 16px;
+        --os-padding-perpendicular: 5px;
+        --os-padding-axis: 20px;
+        --os-track-border-radius: 50%;
+        --os-handle-bg: var(--Gray-550, #444);
+        --os-handle-bg-hover: var(--Gray-550, #444);
+        --os-handle-bg-active: var(--Gray-550, #444);
     }
 `;

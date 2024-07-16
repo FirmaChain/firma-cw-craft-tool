@@ -34,8 +34,9 @@ export const SummeryRightWrapeer = styled.div`
     gap: 8px;
 `;
 
-export const SummeryRightTotalSupply = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #02e191));
+export const SummeryRightTotalSupply = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-900, var(--Primary-Base-White, #02e191))')};
+    // var(--Gray-900, var(--Primary-Base-White, #02e191));
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
@@ -75,8 +76,9 @@ export const ItemLeftWrapper = styled.div`
     gap: 16px;
 `;
 
-export const ItemLeftAddress = styled.div`
-    color: var(--Gray-600, #707070);
+export const ItemLeftAddress = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-600, #707070)')};
+    // var(--Gray-600, #707070);
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -84,8 +86,9 @@ export const ItemLeftAddress = styled.div`
     line-height: 20px;
 `;
 
-export const ItemTokenAmount = styled.div`
-    color: var(--Gray-650, #807e7e);
+export const ItemTokenAmount = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #807e7e)')};
+    // var(--Gray-650, #807e7e);
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;

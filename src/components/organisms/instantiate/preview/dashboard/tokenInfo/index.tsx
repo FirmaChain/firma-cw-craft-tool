@@ -74,8 +74,8 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
             </TokenInfoLogoImage>
             <TokenInfoDetail>
                 <DetailTitle>
-                    <TokenNameText>{tokenName === '' ? 'Name' : tokenName}</TokenNameText>
-                    <TokenSymbolText>{tokenSymbol === '' ? 'Symbol' : tokenSymbol}</TokenSymbolText>
+                    <TokenNameText $disabled={tokenName === ''}>{tokenName || 'Name'}</TokenNameText>
+                    <TokenSymbolText $disabled={tokenSymbol === ''}>{tokenSymbol || 'Symbol'}</TokenSymbolText>
                 </DetailTitle>
                 <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
                     {/* //? hidden description typo for more/less button */}
@@ -91,8 +91,8 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
                             overflow: isClamped ? 'hidden' : 'visible'
                         }}
                     >
-                        <TokenDescriptionText>
-                            <span>{tokenDescription === '' ? 'Description' : tokenDescription} </span>
+                        <TokenDescriptionText $disabled={tokenDescription === ''}>
+                            <span>{tokenDescription || 'Description'} </span>
 
                             {needClamp && !isClamped && (
                                 <span
@@ -124,7 +124,6 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
                                     bottom: 0,
                                     background: 'var(--200, #1e1e1e)',
                                     padding: 0,
-                                    paddingLeft: '4px',
                                     display: 'flex',
                                     flexDirection: 'row',
                                     alignItems: 'center',
@@ -132,7 +131,9 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
                                 }}
                                 onClick={openClamp}
                             >
-                                <TokenDescriptionClampTypo>more</TokenDescriptionClampTypo>
+                                <TokenDescriptionClampTypo>
+                                    <span style={{ color: 'var(--Gray-600, #707070)' }}>... </span>more
+                                </TokenDescriptionClampTypo>
                                 <img
                                     src={IC_ROUND_ARROW_UP}
                                     alt="arrow"

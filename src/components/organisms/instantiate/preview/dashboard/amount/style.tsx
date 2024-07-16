@@ -5,6 +5,7 @@ export const AmountWrapper = styled.div`
     box-sizing: border-box;
     // width: 552px;
     padding: 32px 44px;
+    padding-right: 33px;
     display: flex;
     flex-direction: column;
     // border-radius: 0px 0px 24px 24px;
@@ -28,7 +29,7 @@ export const MinterCapHeaderWrapper = styled.div`
 export const HeaderLeftWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    gap: 17px;
+    gap: 16px;
     align-items: center;
 `;
 
@@ -47,8 +48,9 @@ export const HeaderRightWrapper = styled.div`
     gap: 8px;
 `;
 
-export const HeaderMinterCapAmount = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+export const HeaderMinterCapAmount = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Primary-Base-White, #fff)')};
+    // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
@@ -81,8 +83,8 @@ export const DetailLeftWrapper = styled.div`
     gap: 16px;
 `;
 
-export const DetailAddressText = styled.div`
-    color: var(--Gray-650, #807e7e);
+export const DetailAddressText = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #707070)')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -90,8 +92,9 @@ export const DetailAddressText = styled.div`
     line-height: 20px;
 `;
 
-export const DetailMinterCapAmount = styled.div`
-    color: var(--Gray-650, #807e7e);
+export const DetailMinterCapAmount = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-700, #807E7E)')};
+    // var(--Gray-650, #807e7e);
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;

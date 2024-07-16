@@ -6,6 +6,9 @@ export const TokenInfoWrapper = styled.div`
     flex-direction: row;
     width: 100%;
     padding: 28px 44px;
+
+    padding-right: 33px;
+
     gap: 32px;
     // border-radius: 24px 24px 0px 0px;
     // border-top: 1px solid var(--Gray-550, #444);
@@ -49,8 +52,9 @@ export const DetailTitle = styled.div`
     gap: 12px;
 `;
 
-export const TokenNameText = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+export const TokenNameText = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-550, #444)' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))')};
+    // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -58,8 +62,8 @@ export const TokenNameText = styled.div`
     line-height: 22px;
 `;
 
-export const TokenSymbolText = styled.div`
-    color: var(--Gray-700, #999);
+export const TokenSymbolText = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-700, #999)')};
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -68,8 +72,8 @@ export const TokenSymbolText = styled.div`
     white-space: pre;
 `;
 
-export const TokenDescriptionText = styled.div`
-    color: var(--Gray-600, #707070);
+export const TokenDescriptionText = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-600, #707070)')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;

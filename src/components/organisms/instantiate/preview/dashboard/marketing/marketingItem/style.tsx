@@ -27,9 +27,9 @@ export const ItemText = styled.div`
 export const ItemValue = styled.div`
     display: -webkit-box;
     overflow: hidden;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-    word-break: break-word;
+    word-break: break-all;
 
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
@@ -53,9 +53,9 @@ export const ItemValueCover = styled.div<{ $visible: boolean }>`
 export const ItemCoverValue = styled.div`
     display: -webkit-box;
     overflow: hidden;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-    word-break: break-word;
+    word-break: break-all;
 
     font-size: 14px;
     font-style: normal;

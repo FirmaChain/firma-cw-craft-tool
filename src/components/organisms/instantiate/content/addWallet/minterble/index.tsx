@@ -26,7 +26,7 @@ const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMin
     const [minterCap, setMinterCap] = useState<string>('');
     const [minterAddress, setMinterAddress] = useState<string>('');
 
-    const CAP_TOOLTIP_TEXT = 'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.';
+    const CAP_TOOLTIP_TEXT = `Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.\nYou can mint more tokens by subtracting\nthe Total Supply from the Minter Cap.`;
     const ADDRESS_TOOLTIP_TEXT =
         'If you enter a wallet address, the Minter Cap will be applied\nto that wallet. But if you do not enter a wallet address,\nthe Minter Cap will be applied to your own wallet';
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Icons from '@/components/atoms/icons';
 import {
     AmountWrapper,
@@ -16,9 +16,12 @@ import {
 } from './style';
 import TotalSupply from './totalSupply';
 import { IWallet } from '@/interfaces/wallet';
-import { getUTokenStrFromTokenStr } from '@/utils/common';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { HalfDottedDivider } from '@/components/atoms/divider/dottedDivider';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import IconTooltip from '@/components/atoms/tooltip';
+import commaNumber from 'comma-number';
 
 interface IProps {
     minterble: boolean;
@@ -30,12 +33,31 @@ interface IProps {
     decimals: string;
 }
 
+const CAP_TOOLTIP_TEXT = `Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.\nYou can mint more tokens by subtracting\nthe Total Supply from the Minter Cap.`;
+
 const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply, walletList, decimals }: IProps) => {
+    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+
     const [toggleMinterDetail, setToggleMinterDetail] = useState<boolean>(false);
 
     const onClickToggleMinterDetail = (isOpen: boolean) => {
         setToggleMinterDetail(isOpen);
     };
+
+    const isBasic = cw20Mode === 'BASIC';
+
+    const currentMinterAddress = useMemo(() => {
+        if (isBasic) {
+            return '';
+        } else {
+            //? If advanced mode
+            return minterAddress;
+        }
+    }, [isBasic, minterAddress]);
+
+    useEffect(() => {
+        if (isBasic) setToggleMinterDetail(false);
+    }, [isBasic]);
 
     return (
         <AmountWrapper>
@@ -45,24 +67,32 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                         <MinterCapHeaderWrapper>
                             <HeaderLeftWrapper>
                                 <Icons.CoinStack2 width={'24px'} height={'24px'} />
-                                <HeaderMinterCapText>Minter Cap</HeaderMinterCapText>
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                    <HeaderMinterCapText>Minter Cap</HeaderMinterCapText>
+                                    <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} />
+                                </div>
                             </HeaderLeftWrapper>
                             <HeaderRightWrapper>
-                                <HeaderMinterCapAmount>
-                                    {minterCap !== '' ? getUTokenStrFromTokenStr(minterCap, decimals) : '0'}
+                                <HeaderMinterCapAmount $disabled={!Boolean(Number(minterCap))}>
+                                    {commaNumber(minterCap) || 0}
+                                    {/* {minterCap !== '' ? getUTokenStrFromTokenStr(minterCap, decimals) : '0'} */}
                                 </HeaderMinterCapAmount>
                                 <HeaderMinterCapTokenSymbol>{tokenSymbol !== '' ? tokenSymbol : ''}</HeaderMinterCapTokenSymbol>
-                                <ArrowToggleButton onToggle={onClickToggleMinterDetail} />
+                                {!isBasic && <ArrowToggleButton onToggle={onClickToggleMinterDetail} />}
                             </HeaderRightWrapper>
                         </MinterCapHeaderWrapper>
                         {toggleMinterDetail ? (
                             <DetailWrapper>
                                 <DetailLeftWrapper>
                                     <Icons.Wallet width={'20px'} height={'20px'} />
-                                    <DetailAddressText>{minterAddress !== '' ? minterAddress : '-'}</DetailAddressText>
+                                    {/* <DetailAddressText>{minterAddress !== '' ? minterAddress : '-'}</DetailAddressText> */}
+                                    <DetailAddressText $disabled={!Boolean(currentMinterAddress)}>
+                                        {currentMinterAddress || 'Wallet Address'}
+                                    </DetailAddressText>
                                 </DetailLeftWrapper>
-                                <DetailMinterCapAmount>
-                                    {minterCap !== '' ? getUTokenStrFromTokenStr(minterCap, decimals) : '0'}
+                                <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))}>
+                                    {commaNumber(minterCap) || 0}
+                                    {/* {minterCap !== '' ? getUTokenStrFromTokenStr(minterCap, decimals) : '0'} */}
                                 </DetailMinterCapAmount>
                             </DetailWrapper>
                         ) : (

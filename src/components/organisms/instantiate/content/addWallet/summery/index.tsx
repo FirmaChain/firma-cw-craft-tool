@@ -1,6 +1,6 @@
 import React from 'react';
 import { SummeryAttribute, SummeryAttributeKey, SummeryAttributeValue, SummeryContainer } from './style';
-import { commaNumber, getUTokenStrFromTokenStr } from '@/utils/common';
+import commaNumber from 'comma-number';
 
 interface IProps {
     totalSupply: string;

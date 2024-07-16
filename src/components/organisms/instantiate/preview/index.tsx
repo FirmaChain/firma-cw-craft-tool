@@ -21,8 +21,9 @@ import { NETWORKS } from '@/constants/common';
 import { CRAFT_CONFIGS } from '@/config';
 import { BASIC_LABEL } from '@/constants/cw20Types';
 import useFormStore from '@/store/formStore';
-import { useModalStore } from '../../../../hooks/useModal';
+import { useModalStore } from '@/hooks/useModal';
 import InstantitateModal from '../../modal/instantitateModal';
+import WalletConnectModal from '../../modal/walletConnectModal';
 
 interface IProps {
     isBasic: boolean;
@@ -134,7 +135,8 @@ const Preview = ({
                 ModalActions.handleTxConfirm(true);
             }
         } else {
-            ModalActions.handleConnectWallet(true);
+            modal.openModal({ modalType: 'custom', _component: ({ id }) => <WalletConnectModal id={id} /> });
+            // ModalActions.handleConnectWallet(true);
         }
     };
 

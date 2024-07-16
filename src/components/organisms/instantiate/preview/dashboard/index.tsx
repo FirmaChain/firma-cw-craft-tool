@@ -2,7 +2,16 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import Icons from '@/components/atoms/icons';
-import { DashboardBody, DashboardWrapper, IconBackground, TextGroupWrapper, TitleDescription, TitleText, TitleWrapper } from './style';
+import {
+    DashboardBody,
+    DashboardWrapper,
+    IconBackground,
+    StyledOverlayScrollbar,
+    TextGroupWrapper,
+    TitleDescription,
+    TitleText,
+    TitleWrapper
+} from './style';
 import { rootState } from '@/redux/reducers';
 import TokenInfo from './tokenInfo';
 import Amount from './amount';
@@ -57,24 +66,36 @@ const Dashboard = ({
             </TitleWrapper>
 
             <DashboardBody>
-                <TokenInfo
-                    tokenLogoUrl={tokenLogoUrl}
-                    tokenName={tokenName}
-                    tokenSymbol={tokenSymbol}
-                    tokenDescription={tokenDescription}
-                />
-                {cw20Mode === 'ADVANCED' && (
-                    <Marketing label={label} decimals={decimals} marketingAddress={marketingAddress} marketingProject={marketingProject} />
-                )}
-                <Amount
-                    minterble={minterble}
-                    minterCap={minterCap}
-                    tokenSymbol={tokenSymbol}
-                    minterAddress={minterAddress}
-                    totalSupply={totalSupply}
-                    walletList={walletList}
-                    decimals={decimals}
-                />
+                <StyledOverlayScrollbar
+                    defer
+                    overflow={{
+                        x: 'hidden'
+                    }}
+                >
+                    <TokenInfo
+                        tokenLogoUrl={tokenLogoUrl}
+                        tokenName={tokenName}
+                        tokenSymbol={tokenSymbol}
+                        tokenDescription={tokenDescription}
+                    />
+                    {cw20Mode === 'ADVANCED' && (
+                        <Marketing
+                            label={label}
+                            decimals={decimals}
+                            marketingAddress={marketingAddress}
+                            marketingProject={marketingProject}
+                        />
+                    )}
+                    <Amount
+                        minterble={minterble}
+                        minterCap={minterCap}
+                        tokenSymbol={tokenSymbol}
+                        minterAddress={minterAddress}
+                        totalSupply={totalSupply}
+                        walletList={walletList}
+                        decimals={decimals}
+                    />
+                </StyledOverlayScrollbar>
             </DashboardBody>
         </DashboardWrapper>
     );
