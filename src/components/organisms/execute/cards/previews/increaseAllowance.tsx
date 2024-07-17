@@ -1,20 +1,18 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import commaNumber from 'comma-number';
+
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import {
     addStringAmount,
     formatWithCommas,
     getTokenAmountFromUToken,
-    getUTokenAmountFromToken,
-    subtractStringAmount
 } from '@/utils/balance';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
 import { useContractContext } from '../../context/contractContext';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import { ModalActions } from '@/redux/actions';
-import commaNumber from 'comma-number';
 import IconTooltip from '@/components/atoms/tooltip';
-import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteHook from '../../hooks/useExecueteHook';
 
 const Container = styled.div`
@@ -196,7 +194,7 @@ interface IProps {
 }
 
 const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
-    const { _contract, _allowanceInfo, _isFetched, _setIsFetched } = useContractContext();
+    const { _contract, _allowanceInfo, _isFetched, _setIsFetched, _setAllowanceInfo } = useContractContext();
     const { getCw20Balance } = useExecuteHook();
 
     const [updatedAmount, setUpdatedAmount] = useState<string>('0');
@@ -255,6 +253,12 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({
             callback: () => {
+                _setAllowanceInfo({
+                    address: "",
+                    amount: "",
+                    expire: "",
+                    type: ""
+                });
                 _setIsFetched(true);
             }
         });

@@ -312,14 +312,12 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                     {selectMenu.value === 'increaseAllowance' && (
                         <IncreaseAllowance
                             decimals={tokenInfoState.decimals}
-                            tokenSymbol={tokenInfoState.tokenSymbol}
                             userBalance={tokenInfoState.addressAmount}
                         />
                     )}
                     {selectMenu.value === 'decreaseAllowance' && (
                         <DecreaseAllowance
                             decimals={tokenInfoState.decimals}
-                            tokenSymbol={tokenInfoState.tokenSymbol}
                             userBalance={tokenInfoState.addressAmount}
                         />
                     )}

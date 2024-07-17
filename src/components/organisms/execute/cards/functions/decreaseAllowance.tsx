@@ -1,21 +1,19 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
-import WalletList from '@/components/atoms/walletList';
-import { IWallet } from '@/interfaces/wallet';
-import { useId, useState } from 'react';
-import { useContractContext } from '../../context/contractContext';
-import LabelInput2 from '@/components/atoms/input/labelInput2';
-import InputAddressAmount from '@/components/atoms/input/inputAddressAmount';
 import { FirmaUtil } from '@firmachain/firma-js';
-import { getTokenStrFromUTokenStr, getUTokenStrFromTokenStr } from '@/utils/common';
+
+import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
+import LabelInput2 from '@/components/atoms/input/labelInput2';
+import { getTokenStrFromUTokenStr } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput2 from '@/components/atoms/input/variableInput2';
+import useFormStore from '@/store/formStore';
+import { useContractContext } from '../../context/contractContext';
+import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { addNanoSeconds } from '@/utils/time';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
-
-    /* Body/Body4 */
     font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
@@ -25,8 +23,6 @@ const UserBalanceTypo = styled.div`
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
-
-    /* Body/Body2 - Rg */
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -34,12 +30,10 @@ const InputTitle = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
+const ExpirationTypeButton = styled(IconButton)<{ $selected?: boolean }>`
     width: 152px;
     height: 36px;
     border-radius: 8px;
-    // padding: 8px 16px;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,7 +44,6 @@ const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
         color: ${({ $selected }) =>
             $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
 
-        /* Body/Body2 - Bd */
         font-family: 'General Sans Variable';
         font-size: 14px;
         font-style: normal;
@@ -67,24 +60,87 @@ enum ExpirationType {
 
 interface IProps {
     decimals: string;
-    tokenSymbol: string;
     userBalance: string;
 }
 
-const DecreaseAllowance = ({ decimals, tokenSymbol, userBalance }: IProps) => {
+const DecreaseAllowance = ({ decimals, userBalance }: IProps) => {
+    const { _allowanceInfo, _isFetched, _setAllowanceInfo } = useContractContext();
+    
+    const setFormError = useFormStore((state) => state.setFormError);
+    const clearFromError = useFormStore((state) => state.clearFormError);
+    
     const inputId = 'DECREASE_ALLOWANCE';
 
     const [address, setAddress] = useState('');
     const [amount, setAmount] = useState('');
-    const [expirationTyp, setExpirationTyp] = useState<ExpirationType>(ExpirationType.Height);
+    const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
 
+    useEffect(() => {
+        setAddress('');
+        setAmount('');
+        setExpirationType(ExpirationType.Height);
+        setExpInputValue('');
+    }, [_isFetched]);
+
     const handleChangeAddress = (value: string) => {
+        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+
         setAddress(value);
+        _setAllowanceInfo({ address: value, amount: _allowanceInfo.amount, type: _allowanceInfo.type, expire: _allowanceInfo.expire });
     };
 
     const handleChangeAmount = (value: string) => {
-        setAmount(value);
+        const truncateDecimals = (value: string) => {
+            const decimalPlaces = parseInt(decimals, 10);
+            const fractionalPart = value.split('.')[1];
+
+            if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
+                return value;
+            }
+            return userBalance;
+        };
+
+        const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
+        if (!isValidFormat) {
+            return;
+        }
+    
+        const truncatedValue = truncateDecimals(value);
+        const convertDecreaseAmount = getUTokenAmountFromToken(truncatedValue, decimals);
+        const decreaseAmount = compareStringNumbers(userBalance, convertDecreaseAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(userBalance, decimals);
+
+        setAmount(decreaseAmount);
+        _setAllowanceInfo({ address: _allowanceInfo.address, amount: getUTokenAmountFromToken(value, decimals), type: _allowanceInfo.type, expire: _allowanceInfo.expire });
+    };
+
+    const handleChangeExpireType = (value: ExpirationType) => {
+        if (value !== expirationType) {
+            setExpInputValue('');
+            setExpirationType(value);
+    
+            let expireType = "";
+            switch (value) {
+                case "Time":    expireType = "at_time";     break;
+                case "Height":  expireType = "at_height";   break;
+                case "Forever": expireType = "never";       break;
+            }
+    
+            _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: expireType, expire: "" });
+        }
+    };
+    
+    const handleChangeExpireValue = (value: string) => {
+        setExpInputValue(value);
+        let expireValue = "";
+        if (_allowanceInfo.type === "at_hieght") {
+            expireValue = addNanoSeconds(value);
+        } else if (_allowanceInfo.type === "at_height") {
+            expireValue = value;
+        }
+
+        _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: _allowanceInfo.type, expire: expireValue });
     };
 
     return (
@@ -122,7 +178,7 @@ const DecreaseAllowance = ({ decimals, tokenSymbol, userBalance }: IProps) => {
                             }}
                         >
                             <LabelInput2
-                                labelProps={{ label: 'Increaes Amount' }}
+                                labelProps={{ label: 'Decrease Amount' }}
                                 inputProps={{
                                     formId: `${inputId}_AMOUNT`,
                                     value: amount,
@@ -145,34 +201,33 @@ const DecreaseAllowance = ({ decimals, tokenSymbol, userBalance }: IProps) => {
                     <InputTitle>Expiration</InputTitle>
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
                         {Object.values(ExpirationType).map((type) => (
-                            <ExpirationTypButton
+                            <ExpirationTypeButton
                                 key={`EXPIRATION_TYPE_${type}`}
-                                $selected={expirationTyp === type}
+                                $selected={expirationType === type}
                                 onClick={() => {
-                                    setExpInputValue('');
-                                    setExpirationTyp(ExpirationType[type]);
+                                    handleChangeExpireType(ExpirationType[type]);
                                 }}
                             >
                                 <span>
                                     {type !== ExpirationType.Forever && 'At '}
                                     {type}
                                 </span>
-                            </ExpirationTypButton>
+                            </ExpirationTypeButton>
                         ))}
                     </div>
                 </div>
                 <VariableInput2
                     value={expInputValue}
                     placeHolder={
-                        expirationTyp === ExpirationType.Height
+                        expirationType === ExpirationType.Height
                             ? 'ex) 7216240'
-                            : expirationTyp === ExpirationType.Time
+                            : expirationType === ExpirationType.Time
                               ? 'ex) MM-DD-YYYY  HH:MM:SS'
                               : 'Forever'
                     }
-                    type={expirationTyp === ExpirationType.Time ? 'date' : 'number'}
-                    onChange={(v) => setExpInputValue(v)}
-                    readOnly={expirationTyp === ExpirationType.Forever}
+                    type={expirationType === ExpirationType.Time ? 'date' : 'number'}
+                    onChange={handleChangeExpireValue}
+                    readOnly={expirationType === ExpirationType.Forever}
                     decimal={0}
                 />
             </div>

@@ -94,7 +94,6 @@ const Preview = ({ tokenInfoState }: IProps) => {
 
             {_selectMenu.value === 'decreaseAllowance' && (
                 <DecreaseAllowancePreview
-                    addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />

@@ -1,14 +1,11 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
-import WalletList from '@/components/atoms/walletList';
-import { IWallet } from '@/interfaces/wallet';
-import { useId, useState } from 'react';
+import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import { useContractContext } from '../../context/contractContext';
 import LabelInput2 from '@/components/atoms/input/labelInput2';
-import InputAddressAmount from '@/components/atoms/input/inputAddressAmount';
-import { Expires, FirmaUtil } from '@firmachain/firma-js';
-import { getTokenStrFromUTokenStr, getUTokenStrFromTokenStr } from '@/utils/common';
+import { FirmaUtil } from '@firmachain/firma-js';
+import { getTokenStrFromUTokenStr } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput2 from '@/components/atoms/input/variableInput2';
 import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
@@ -70,12 +67,11 @@ enum ExpirationType {
 
 interface IProps {
     decimals: string;
-    tokenSymbol: string;
     userBalance: string;
 }
 
-const IncreaseAllowance = ({ decimals, tokenSymbol, userBalance }: IProps) => {
-    const { _allowanceInfo, _setAllowanceInfo } = useContractContext();
+const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
+    const { _allowanceInfo, _isFetched, _setAllowanceInfo } = useContractContext();
     
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
@@ -86,6 +82,13 @@ const IncreaseAllowance = ({ decimals, tokenSymbol, userBalance }: IProps) => {
     const [amount, setAmount] = useState('');
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
+
+    useEffect(() => {
+        setAddress('');
+        setAmount('');
+        setExpirationType(ExpirationType.Height);
+        setExpInputValue('');
+    }, [_isFetched]);
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
@@ -116,21 +119,23 @@ const IncreaseAllowance = ({ decimals, tokenSymbol, userBalance }: IProps) => {
         const increaseAmount = compareStringNumbers(userBalance, convertIncreaseAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(userBalance, decimals);
 
         setAmount(increaseAmount);
-        _setAllowanceInfo({ address: _allowanceInfo.address, amount: getUTokenAmountFromToken(value, decimals), type: _allowanceInfo.type, expire: _allowanceInfo.expire });
+        _setAllowanceInfo({ address: _allowanceInfo.address, amount: getUTokenAmountFromToken(increaseAmount, decimals), type: _allowanceInfo.type, expire: _allowanceInfo.expire });
     };
 
     const handleChangeExpireType = (value: ExpirationType) => {
-        setExpInputValue('');
-        setExpirationType(value);
-
-        let expireType = "";
-        switch (value) {
-            case "Time":    expireType = "at_time";     break;
-            case "Height":  expireType = "at_height";   break;
-            case "Forever": expireType = "never";       break;
+        if (value !== expirationType) {
+            setExpInputValue('');
+            setExpirationType(value);
+    
+            let expireType = "";
+            switch (value) {
+                case "Time":    expireType = "at_time";     break;
+                case "Height":  expireType = "at_height";   break;
+                case "Forever": expireType = "never";       break;
+            }
+    
+            _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: expireType, expire: "" });
         }
-
-        _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: expireType, expire: "" });
     };
     
     const handleChangeExpireValue = (value: string) => {

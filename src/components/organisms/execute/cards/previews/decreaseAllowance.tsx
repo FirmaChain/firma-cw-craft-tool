@@ -1,21 +1,19 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import commaNumber from 'comma-number';
+
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import {
-    addStringAmount,
     formatWithCommas,
     getTokenAmountFromUToken,
-    getUTokenAmountFromToken,
     subtractStringAmount
 } from '@/utils/balance';
-import { useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { useContractContext } from '../../context/contractContext';
-import { shortenAddress } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
 import { ModalActions } from '@/redux/actions';
-import commaNumber from 'comma-number';
 import IconTooltip from '@/components/atoms/tooltip';
-import IconButton from '@/components/atoms/buttons/iconButton';
+import useExecuteHook from '../../hooks/useExecueteHook';
 
 const Container = styled.div`
     width: 100%;
@@ -95,41 +93,6 @@ const AccordionBox = styled.div`
     background: var(--Gray-150, #141414);
 `;
 
-const WalletItemWrap = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-`;
-
-const WalletLeftItemWrap = styled.div`
-    width: 100%;
-    display: flex;
-    gap: 16px;
-`;
-
-const WalletItemIcon = styled.img`
-    width: 20px;
-    height: 20px;
-`;
-
-const WalletItemAddressTypo = styled.div`
-    color: var(--Gray-650, #707070);
-    font-family: 'General Sans Variable';
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
-`;
-
-const WalletItemTokenAmount = styled.div`
-    color: var(--Gray-700, #807e7e);
-    font-family: 'General Sans Variable';
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 20px; /* 142.857% */
-`;
-
 const DOTTED_DIVIDER = styled.img`
     width: 100%;
     height: auto;
@@ -175,20 +138,25 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const ExecuteButton = styled(IconButton)<{ disabled?: boolean }>`
+const ExecuteButton = styled.button<{ $isEnable: boolean }>`
     width: 220px !important;
     height: 48px;
     border-radius: 8px;
-    background: ${({ disabled }) => (!disabled ? '#02E191' : '#707070')};
+    background: ${(props) => (props.$isEnable ? '#02E191' : '#707070')};
     display: flex;
     justify-content: center;
     align-items: center;
-
+    cursor: ${(props) => (props.$isEnable ? 'pointer' : 'inherit')};
+    pointer-events: ${(props) => (props.$isEnable ? 'auto' : 'none')};
     border: none;
     outline: none;
     transition:
         background 0.1s,
         transform 0.1s;
+
+    &:active {
+        transform: scale(0.99);
+    }
 `;
 
 const ExecuteButtonTypo = styled.div`
@@ -223,70 +191,88 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 interface IProps {
-    addressAmount: string;
     tokenSymbol: string;
     decimals: string;
 }
 
-const DecreaseAllowancePreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
-    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
-
-    const [totalTransferAmount, setTotalTransferAmount] = useState<string>('0');
+const DecreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
+    const { _contract, _allowanceInfo, _isFetched, _setIsFetched, _setAllowanceInfo } = useContractContext();
+    const { getCw20Balance } = useExecuteHook();
+    
     const [updatedAmount, setUpdatedAmount] = useState<string>('0');
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const calculateTotalBurnBalance = useCallback(() => {
-        let calcTransferAmount = '0';
-        let allAddressesValid = true;
-        let allAmountsValid = true;
-
-        for (const wallet of _walletList) {
-            if (!isValidAddress(wallet.recipient)) {
-                allAddressesValid = false;
+    const fetchTokenInfo = useCallback(async () => {
+        try {
+            if (addressExist) {
+                const result = await getCw20Balance(_contract, _allowanceInfo.address);
+                const targetBalance = result.success === true ? result.balance : "0";
+                
+                setUpdatedAmount(subtractStringAmount(targetBalance, _allowanceInfo.amount));
             }
-            if (!wallet.amount || wallet.amount.trim() === '') {
-                allAmountsValid = false;
-            }
-            calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
+        } catch (error) {
+            console.log(error);
         }
+    }, [_contract, _allowanceInfo.address, _allowanceInfo.amount]);
 
-        const remainAmount = subtractStringAmount(addressAmount, getUTokenAmountFromToken(calcTransferAmount, decimals));
-        setUpdatedAmount(remainAmount);
-
-        setIsEnableButton(allAddressesValid && allAmountsValid);
-        setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, decimals));
-    }, [_walletList, addressAmount, decimals]);
+    const addressExist = useMemo(() => {
+        return isValidAddress(_allowanceInfo.address);
+    }, [_allowanceInfo.address]);
 
     useEffect(() => {
-        calculateTotalBurnBalance();
-    }, [_walletList, calculateTotalBurnBalance]);
-
-    const onClickTransfer = () => {
-        const convertWalletList = [];
-
-        for (const wallet of _walletList) {
-            convertWalletList.push({
-                recipient: wallet.recipient,
-                amount: getUTokenAmountFromToken(wallet.amount, decimals)
-            });
+        if (addressExist) {
+            fetchTokenInfo();
+            _setIsFetched(false);
         }
+    }, [_contract, _allowanceInfo, _isFetched]);
 
+    const onClickDecreaseAllowance = () => {
+        let expires = {}
+        if (_allowanceInfo.type === "at_height") {
+            expires = {
+                'at_height': parseInt(_allowanceInfo.expire)
+            }
+        } else if (_allowanceInfo.type === "at_time") {
+            expires = {
+                'at_time': _allowanceInfo.expire.toString()
+            }
+        } else {
+            expires = {
+                never: {}
+            }
+        }
         ModalActions.handleData({
-            module: '/cw20/transfer',
+            module: '/cw20/decreaseAllowance',
             params: {
                 contract: _contract,
-                msg: convertWalletList
+                msg: {
+                    amount: _allowanceInfo.amount,
+                    expires: expires,
+                    spender: _allowanceInfo.address
+                }
             }
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({
             callback: () => {
-                _setWalletList([]);
+                _setAllowanceInfo({
+                    address: "",
+                    amount: "",
+                    expire: "",
+                    type: ""
+                });
                 _setIsFetched(true);
             }
         });
     };
+
+    const isEnableButton = useMemo(() => {
+        if (!addressExist || _allowanceInfo.amount === "") return false;
+        if (_allowanceInfo.type === "never") return true;
+        if (_allowanceInfo.expire === "" || _allowanceInfo.type === "") return false;
+
+        return true;
+    }, [addressExist, _allowanceInfo.amount, _allowanceInfo.expire, _allowanceInfo.type, _allowanceInfo.address]);
 
     return (
         <Container>
@@ -297,7 +283,7 @@ const DecreaseAllowancePreview = ({ addressAmount, tokenSymbol, decimals }: IPro
                         <ItemLabelTypo>Decrease Allowance Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, decimals))}</ItemAmountTypo>
+                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(_allowanceInfo.amount, decimals))}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenSymbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
@@ -339,7 +325,7 @@ const DecreaseAllowancePreview = ({ addressAmount, tokenSymbol, decimals }: IPro
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton disabled onClick={onClickTransfer}>
+                <ExecuteButton $isEnable={isEnableButton} onClick={onClickDecreaseAllowance}>
                     <ExecuteButtonTypo>Decrease Allowance</ExecuteButtonTypo>
                 </ExecuteButton>
             </ButtonWrap>
