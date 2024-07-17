@@ -29,32 +29,32 @@ const DimBox = styled.div`
 const Contents = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
 
-    const { contract, isFetched, setSelectMenu, setIsFetched } = useContractContext();
+    const { _contract, _isFetched, _setSelectMenu, _setIsFetched } = useContractContext();
     const { getContractTokenInfo } = useExecuteHook();
 
     const [contractTokenInfo, setContractTokenInfo] = useState<ITokenInfoState | null>(null);
 
     const fetchTokenInfo = useCallback(async () => {
         try {
-            const info = await getContractTokenInfo(contract, address);
+            const info = await getContractTokenInfo(_contract, address);
             setContractTokenInfo(info);
         } catch (error) {
             console.log(error);
         }
-    }, [contract]);
+    }, [_contract]);
 
     const ContractExist = useMemo(() => {
-        return !Boolean(contract === '');
-    }, [contract]);
+        return !Boolean(_contract === '');
+    }, [_contract]);
 
     useEffect(() => {
         if (ContractExist) {
             fetchTokenInfo();
-            setIsFetched(false);
+            _setIsFetched(false);
         } else {
-            setSelectMenu({ value: 'select', label: 'Select' });
+            _setSelectMenu({ value: 'select', label: 'Select' });
         }
-    }, [contract, ContractExist, isFetched]);
+    }, [_contract, ContractExist, _isFetched]);
 
     return (
         <Fragment>

@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import BurnFrom from './functions/burnFrom';
 import Transfer from './functions/transfer';
+import UpdateMarketing from './functions/updateMarketing';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -167,10 +168,10 @@ interface IProps {
 const TokenInfo = ({ tokenInfoState }: IProps) => {
     const { address } = useSelector((state: rootState) => state.wallet);
 
-    const { setSelectMenu } = useContractContext();
+    const { _setSelectMenu } = useContractContext();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
-    const [selectMenu, _setSelectMenu] = useState<IMenuItem>({ value: 'select', label: 'Select' });
+    const [selectMenu, setSelectMenu] = useState<IMenuItem>({ value: 'select', label: 'Select' });
 
     const ContractTypeLabel = useMemo(() => {
         return BASIC_LABEL === tokenInfoState.label ? 'BASIC' : 'ADVANCED';
@@ -254,6 +255,9 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
             )}
             {selectMenu.value === 'transfer' && (
                 <Transfer decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} addressAmount={tokenInfoState.addressAmount} />
+            )}
+            {selectMenu.value === 'updateMarketing' && (
+                <UpdateMarketing label={tokenInfoState.label} />
             )}
         </Container>
     );

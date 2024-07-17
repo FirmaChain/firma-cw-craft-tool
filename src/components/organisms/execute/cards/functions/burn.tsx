@@ -32,7 +32,7 @@ interface IProps {
 }
 
 const Burn = ({ decimals, addressAmount }: IProps) => {
-    const { isFetched, setBurnAmount } = useContractContext();
+    const { _isFetched, _setBurnAmount } = useContractContext();
     const [inputBurnAmount, setInputBurnAmount] = useState<string>("");
 
     const handleBurnAmount = (value: string) => {
@@ -53,16 +53,16 @@ const Burn = ({ decimals, addressAmount }: IProps) => {
     
         const truncatedValue = truncateDecimals(value);
         const convertBurnAmount = getUTokenAmountFromToken(truncatedValue, decimals);
-        const _burnAmount = compareStringNumbers(addressAmount, convertBurnAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(addressAmount, decimals);
+        const burnAmount = compareStringNumbers(addressAmount, convertBurnAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(addressAmount, decimals);
 
-        setInputBurnAmount(_burnAmount);
-        setBurnAmount(_burnAmount);
+        setInputBurnAmount(burnAmount);
+        _setBurnAmount(burnAmount);
     };
     
     useEffect(() => {
         setInputBurnAmount("");
-        setBurnAmount("0");
-    }, [isFetched]);
+        _setBurnAmount("0");
+    }, [_isFetched]);
     
     return (
         <Container>

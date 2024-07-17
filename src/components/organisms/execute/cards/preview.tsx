@@ -7,6 +7,7 @@ import DefaultView from './previews/default';
 import BurnPreview from './previews/burn';
 import BurnFromPreview from './previews/burnFrom';
 import TransferPreview from './previews/transfer';
+import UpdateMarketingPreview from './previews/updateMarketing';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -36,13 +37,13 @@ interface IProps {
 }
 
 const Preview = ({ tokenInfoState }: IProps) => {
-    const { selectMenu } = useContractContext();
+    const { _selectMenu } = useContractContext();
 
     return (
-        <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
+        <Container $isSelectMenu={!(_selectMenu.value === 'select' || _selectMenu.value === '')}>
             <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
-            {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
-            {selectMenu.value === 'mint' && (
+            {(_selectMenu.value === 'select' || _selectMenu.value === '') && <DefaultView />}
+            {_selectMenu.value === 'mint' && (
                 <MintPreview
                     minterCap={tokenInfoState.minter.cap}
                     totalSupply={tokenInfoState.totalSupply}
@@ -50,26 +51,29 @@ const Preview = ({ tokenInfoState }: IProps) => {
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />
             )}
-            {selectMenu.value === 'burn' && (
+            {_selectMenu.value === 'burn' && (
                 <BurnPreview
                     tokenSymbol={tokenInfoState.tokenSymbol}
                     addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
                 />
             )}
-            {selectMenu.value === 'burnFrom' && (
+            {_selectMenu.value === 'burnFrom' && (
                 <BurnFromPreview
                     totalSupply={tokenInfoState.totalSupply}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />
             )}
-            {selectMenu.value === 'transfer' && (
+            {_selectMenu.value === 'transfer' && (
                 <TransferPreview
                     addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />
+            )}
+            {_selectMenu.value === 'updateMarketing' && (
+                <UpdateMarketingPreview label={tokenInfoState.label} marketingDescription={tokenInfoState.marketingDescription} marketingAddress={tokenInfoState.marketingAddress} marketingProject={tokenInfoState.marketingProject} />
             )}
         </Container>
     );

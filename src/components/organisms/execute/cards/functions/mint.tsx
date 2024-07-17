@@ -82,7 +82,7 @@ interface IProps {
 }
 
 const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
-    const { setWalletList } = useContractContext();
+    const { _setWalletList } = useContractContext();
 
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
@@ -100,7 +100,7 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
 
     const handleWalletList = (value: IWallet[]) => {
         setAddWalletList(value);
-        setWalletList(value);
+        _setWalletList(value);
     };
 
     return (

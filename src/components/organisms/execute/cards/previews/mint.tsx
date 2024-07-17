@@ -218,7 +218,7 @@ interface IProps {
 }
 
 const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {
-    const { contract, walletList, setIsFetched, setWalletList } = useContractContext();
+    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [totalMintBalance, setTotalMintBalance] = useState<string>('0');
@@ -229,7 +229,7 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
         let allAddressesValid = true;
         let allAmountsValid = true;
 
-        for (const wallet of walletList) {
+        for (const wallet of _walletList) {
             if (!isValidAddress(wallet.recipient)) {
                 allAddressesValid = false;
             }
@@ -244,16 +244,16 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
 
         setIsEnableButton(allAddressesValid && allAmountsValid && compare !== 1);
         setTotalMintBalance(getUTokenAmountFromToken(totalAmount, decimals));
-    }, [walletList, minterCap, totalSupply, decimals]);
+    }, [_walletList, minterCap, totalSupply, decimals]);
 
     useEffect(() => {
         calculateTotalMintBalance();
-    }, [walletList, calculateTotalMintBalance]);
+    }, [_walletList, calculateTotalMintBalance]);
 
     const onClickMint = () => {
         const convertWalletList: IWallet[] = [];
 
-        for (const wallet of walletList) {
+        for (const wallet of _walletList) {
             convertWalletList.push({
                 recipient: wallet.recipient,
                 amount: getUTokenAmountFromToken(wallet.amount, decimals)
@@ -263,14 +263,14 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
         ModalActions.handleData({
             module: '/cw20/mintToken',
             params: {
-                contract: contract,
+                contract: _contract,
                 msg: convertWalletList
             }
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({ callback: () => {
-            setWalletList([]);
-            setIsFetched(true);
+            _setWalletList([]);
+            _setIsFetched(true);
         }});
     };
 
@@ -293,7 +293,7 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
                     </TokenInfoWrap>
                     {isOpen && (
                         <WalletListWrap>
-                            {walletList.map((value, index) => (
+                            {_walletList.map((value, index) => (
                                 <WalletItemWrap key={index}>
                                     <WalletLeftItemWrap>
                                         <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />

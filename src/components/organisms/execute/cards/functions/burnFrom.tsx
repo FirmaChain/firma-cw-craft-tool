@@ -51,13 +51,10 @@ interface IProps {
 }
 
 const BurnFrom = ({ decimals, tokenSymbol }: IProps) => {
-    const { setWalletList } = useContractContext();
-    
-    const [burnWalletList, setBurnWalletList] = useState<IWallet[]>([]);
+    const { _setWalletList } = useContractContext();
 
     const handleWalletList = (value: IWallet[]) => {
-        setBurnWalletList(value);
-        setWalletList(value);
+        _setWalletList(value);
     };
 
     return (

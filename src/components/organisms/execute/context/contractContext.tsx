@@ -3,19 +3,25 @@ import { IWallet } from '../../../../interfaces/wallet';
 import { IMenuItem } from '../cards/tokenInfo';
 
 interface ContractContextProps {
-    contract: string;
-    selectMenu: IMenuItem;
-    isFetched: boolean;
+    _contract: string;
+    _selectMenu: IMenuItem;
+    _isFetched: boolean;
 
-    walletList: IWallet[];
-    burnAmount: string;
+    _walletList: IWallet[];
+    _burnAmount: string;
+    _marketingDescription: string;
+    _marketingAddress: string;
+    _marketingProject: string;
 
-    setContract: (value: string) => void;
-    setSelectMenu: (value: IMenuItem) => void;
-    setIsFetched:(value: boolean) => void;
+    _setContract: (value: string) => void;
+    _setSelectMenu: (value: IMenuItem) => void;
+    _setIsFetched:(value: boolean) => void;
 
-    setWalletList: (value: IWallet[]) => void;
-    setBurnAmount: (value: string) => void;
+    _setWalletList: (value: IWallet[]) => void;
+    _setBurnAmount: (value: string) => void;
+    _setMarketingDescription: (value: string) => void;
+    _setMarketingAddress: (value: string) => void;
+    _setMarketingProject: (value: string) => void;
 }
 
 const ContractContext = createContext<ContractContextProps | undefined>(undefined);
@@ -29,28 +35,38 @@ export const useContractContext = () => {
 };
 
 export const ContractProvider = ({ children }: { children: ReactNode }) => {
-    const [contract, setContract] = useState<string>("");
-    const [selectMenu, setSelectMenu] = useState<IMenuItem>({ value: "", label: "" });
-    const [isFetched, setIsFetched] = useState<boolean>(false);
+    const [_contract, _setContract] = useState<string>("");
+    const [_selectMenu, _setSelectMenu] = useState<IMenuItem>({ value: "", label: "" });
+    const [_isFetched, _setIsFetched] = useState<boolean>(false);
 
-    const [walletList, setWalletList] = useState<IWallet[]>([]);
-    const [burnAmount, setBurnAmount] = useState<string>("");
-    
+    const [_walletList, _setWalletList] = useState<IWallet[]>([]);
+    const [_burnAmount, _setBurnAmount] = useState<string>("");
+    const [_marketingDescription, _setMarketingDescription] = useState<string>("");
+    const [_marketingAddress, _setMarketingAddress] = useState<string>("");
+    const [_marketingProject, _setMarketingProject] = useState<string>("");
+
     return (
         <ContractContext.Provider
             value={{
-                contract,
-                selectMenu,
-                isFetched,
+                _contract,
+                _selectMenu,
+                _isFetched,
                 
-                setContract,
-                setSelectMenu,
-                setIsFetched,
+                _walletList,
+                _burnAmount,
+                _marketingDescription,
+                _marketingAddress,
+                _marketingProject,
+
+                _setContract,
+                _setSelectMenu,
+                _setIsFetched,
                 
-                walletList,
-                setWalletList,
-                burnAmount,
-                setBurnAmount,
+                _setWalletList,
+                _setBurnAmount,
+                _setMarketingDescription,
+                _setMarketingAddress,
+                _setMarketingProject,
             }}
         >
             {children}

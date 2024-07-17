@@ -155,41 +155,41 @@ interface IProps {
 }
 
 const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
-    const { contract, burnAmount, setIsFetched, setBurnAmount } = useContractContext();
+    const { _contract, _burnAmount, _setIsFetched, _setBurnAmount } = useContractContext();
 
     const updatedBalance = useMemo(() => {
         let amount = '0';
 
-        amount = subtractStringAmount(getTokenAmountFromUToken(addressAmount, decimals), burnAmount);
+        amount = subtractStringAmount(getTokenAmountFromUToken(addressAmount, decimals), _burnAmount);
 
         return amount;
-    }, [addressAmount, burnAmount]);
+    }, [addressAmount, _burnAmount]);
 
     const onClickBurn = () => {
         const message = {
-            amount: getUTokenAmountFromToken(burnAmount, decimals)
+            amount: getUTokenAmountFromToken(_burnAmount, decimals)
         }
 
         ModalActions.handleData({
             module: '/cw20/burnToken',
             params: {
-                contract: contract,
+                contract: _contract,
                 msg: message
             }
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({ callback: () => {
-            setIsFetched(true);
-            setBurnAmount("0");
+            _setIsFetched(true);
+            _setBurnAmount("0");
         }});
     };
 
     const isEnableButton = useMemo(() => {
         if (addressAmount === "" || addressAmount === "0") return false;
-        if (burnAmount === "" || burnAmount === "0") return false;
+        if (_burnAmount === "" || _burnAmount === "0") return false;
 
         return true;
-    }, [addressAmount, burnAmount]);
+    }, [addressAmount, _burnAmount]);
 
     return (
         <Container>
@@ -200,7 +200,7 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
                         <BurnInfoTitleTypo>Total Burn Amount</BurnInfoTitleTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <BurnAmountTypo>{formatWithCommas(burnAmount)}</BurnAmountTypo>
+                        <BurnAmountTypo>{formatWithCommas(_burnAmount)}</BurnAmountTypo>
                         <BurnSymbolTypo>{tokenSymbol}</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>

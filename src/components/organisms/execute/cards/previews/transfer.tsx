@@ -203,7 +203,7 @@ interface IProps {
 }
 
 const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
-    const { contract, walletList, setIsFetched, setWalletList } = useContractContext();
+    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
 
     const [totalTransferAmount, setTotalTransferAmount] = useState<string>('0');
     const [updatedAmount, setUpdatedAmount] = useState<string>('0');
@@ -215,7 +215,7 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
         let allAddressesValid = true;
         let allAmountsValid = true;
 
-        for (const wallet of walletList) {
+        for (const wallet of _walletList) {
             if (!isValidAddress(wallet.recipient)) {
                 allAddressesValid = false;
             }
@@ -230,16 +230,16 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
 
         setIsEnableButton(allAddressesValid && allAmountsValid);
         setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, decimals));
-    }, [walletList, addressAmount, decimals]);
+    }, [_walletList, addressAmount, decimals]);
 
     useEffect(() => {
         calculateTotalBurnBalance();
-    }, [walletList, calculateTotalBurnBalance]);
+    }, [_walletList, calculateTotalBurnBalance]);
     
     const onClickTransfer = () => {
         const convertWalletList = [];
 
-        for (const wallet of walletList) {
+        for (const wallet of _walletList) {
             convertWalletList.push({
                 recipient: wallet.recipient,
                 amount: getUTokenAmountFromToken(wallet.amount, decimals)
@@ -249,14 +249,14 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
         ModalActions.handleData({
             module: '/cw20/transfer',
             params: {
-                contract: contract,
+                contract: _contract,
                 msg: convertWalletList
             }
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({ callback: () => {
-            setWalletList([]);
-            setIsFetched(true);
+            _setWalletList([]);
+            _setIsFetched(true);
         }});
     }
 
@@ -276,7 +276,7 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
                 </ItemWrap>
                 {isOpen && (
                     <WalletListWrap>
-                        {walletList.map((value, index) => (
+                        {_walletList.map((value, index) => (
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />

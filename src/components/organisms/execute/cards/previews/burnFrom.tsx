@@ -167,7 +167,7 @@ interface IProps {
 }
 
 const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
-    const { contract, walletList, setIsFetched, setWalletList } = useContractContext();
+    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
 
     const [totalBurnBalance, setTotalBurnBalance] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
@@ -178,7 +178,7 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
         let allAddressesValid = true;
         let allAmountsValid = true;
 
-        for (const wallet of walletList) {
+        for (const wallet of _walletList) {
             if (!isValidAddress(wallet.recipient)) {
                 allAddressesValid = false;
             }
@@ -191,12 +191,12 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
 
         setIsEnableButton(allAddressesValid && allAmountsValid);
         setTotalBurnBalance(getUTokenAmountFromToken(totalAmount, decimals));
-    }, [walletList, totalSupply, decimals]);
+    }, [_walletList, totalSupply, decimals]);
 
     const onClickBurn = () => {
         const convertWalletList = [];
 
-        for (const wallet of walletList) {
+        for (const wallet of _walletList) {
             convertWalletList.push({
                 owner: wallet.recipient,
                 amount: getUTokenAmountFromToken(wallet.amount, decimals)
@@ -206,20 +206,20 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
         ModalActions.handleData({
             module: '/cw20/burnFrom',
             params: {
-                contract: contract,
+                contract: _contract,
                 msg: convertWalletList
             }
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({ callback: () => {
-            setWalletList([]);
-            setIsFetched(true);
+            _setWalletList([]);
+            _setIsFetched(true);
         }});
     };
 
     useEffect(() => {
         calculateTotalBurnBalance();
-    }, [walletList, calculateTotalBurnBalance]);
+    }, [_walletList, calculateTotalBurnBalance]);
 
     return (
         <Container>
@@ -237,7 +237,7 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
                 </ItemWrap>
                 {isOpen && (
                     <WalletListWrap>
-                        {walletList.map((value, index) => (
+                        {_walletList.map((value, index) => (
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />

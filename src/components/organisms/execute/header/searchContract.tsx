@@ -6,7 +6,7 @@ import { isValidAddress } from '../../../../utils/common';
 import { enqueueSnackbar } from 'notistack';
 
 const SearchContract = () => {
-    const { setContract } = useContractContext();
+    const { _setContract } = useContractContext();
     const [keyword, setKeyword] = useState<string>('');
 
     const onChangeSearchValue = (value: string) => {
@@ -15,13 +15,13 @@ const SearchContract = () => {
 
     const resetSearchValue = () => {
         setKeyword('');
-        setContract('');
+        _setContract('');
     };
 
     const onClickSearch = useCallback(() => {
         const valid = isValidAddress(keyword);
         if (valid) {
-            setContract(keyword);
+            _setContract(keyword);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
                 variant: 'error',
