@@ -5,6 +5,8 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import { useMemo } from 'react';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { ModalActions } from '@/redux/actions';
+import { useContractContext } from '../../context/contractContext';
 
 const Container = styled.div`
     width: 100%;
@@ -102,6 +104,7 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const UpdateMinter = ({ minterAddress }: { minterAddress: string }) => {
+    const { _contract, _setIsFetched, _setSelectMenu } = useContractContext();
     const _minterAddress = useExecuteStore((state) => state.minterAddress);
 
     const errorMessage = useMemo(() => {
@@ -110,6 +113,23 @@ const UpdateMinter = ({ minterAddress }: { minterAddress: string }) => {
         if (_minterAddress === minterAddress) return 'Same address as before';
         return '';
     }, [_minterAddress, minterAddress]);
+
+    const onClickUpdateMinter = () => {
+        ModalActions.handleData({
+            module: '/cw20/updateMinter',
+            params: {
+                contract: _contract,
+                msg: {
+                    new_minter: _minterAddress
+                }
+            }
+        });
+        ModalActions.handleQrConfirm(true);
+        ModalActions.handleSetCallback({ callback: () => {
+            _setIsFetched(true);
+            _setSelectMenu({ label: "Select", value: "select" });
+        }});
+    };
 
     return (
         <Container>
@@ -128,7 +148,7 @@ const UpdateMinter = ({ minterAddress }: { minterAddress: string }) => {
             <ButtonWrap>
                 <ExecuteButton
                     disabled={!minterAddress || Boolean(errorMessage)}
-                    onClick={() => {}}
+                    onClick={onClickUpdateMinter}
                     data-tooltip-content={errorMessage}
                     data-tooltip-id={TOOLTIP_ID.COMMON}
                     data-tooltip-wrapper="span"

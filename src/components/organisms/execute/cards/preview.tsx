@@ -11,6 +11,7 @@ import UpdateMarketingPreview from './previews/updateMarketing';
 import IncreaseAllowancePreview from './previews/increaseAllowance';
 import TransferFromPreview from './previews/transferFrom';
 import UpdateMinter from './previews/updateMinter';
+import DecreaseAllowancePreview from './previews/decreaseAllowance';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -86,14 +87,13 @@ const Preview = ({ tokenInfoState }: IProps) => {
 
             {_selectMenu.value === 'increaseAllowance' && (
                 <IncreaseAllowancePreview
-                    addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />
             )}
 
             {_selectMenu.value === 'decreaseAllowance' && (
-                <IncreaseAllowancePreview
+                <DecreaseAllowancePreview
                     addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}

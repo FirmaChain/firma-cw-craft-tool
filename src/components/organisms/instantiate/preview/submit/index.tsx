@@ -13,7 +13,7 @@ const Submit = ({ onClickInstantiate, disableButton }: IProps) => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
     const buttonText = useMemo(() => {
-        return isInit ? 'Instantiate Token' : 'Connect Wallet';
+        return isInit ? 'Instantiate' : 'Connect Wallet';
     }, [isInit]);
 
     return (

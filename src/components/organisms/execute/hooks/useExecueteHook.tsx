@@ -105,8 +105,30 @@ const useExecuteHook = () => {
         [firmaSDK, enqueueSnackbar]
     );
 
+    const getCw20Balance = useCallback(
+        async (contractAddress: string, address: string) => {
+            const resultData = {
+                success: true,
+                balance: ''
+            };
+
+            if (!firmaSDK()) return resultData;
+
+            try {
+                const balance = await firmaSDK().Cw20.getBalance(contractAddress, address);
+                resultData.balance = balance;
+            } catch (error) {
+                resultData.success = false;
+            } finally {
+                return resultData;
+            }
+        },
+        [firmaSDK, enqueueSnackbar]
+    );
+
     return {
-        getContractTokenInfo
+        getContractTokenInfo,
+        getCw20Balance
     };
 };
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import Icons from '../../../atoms/icons';
@@ -289,50 +289,54 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                 </TokenBox>
             </TokenInfoWrap>
             <CustomSelectInput menus={ownerMenus} onChangeMenu={handleChangeMenu} />
-            {selectMenu.value && selectMenu.value !== 'select' && <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />}
-            {selectMenu.value === 'mint' && (
-                <Mint
-                    totalSupply={tokenInfoState.totalSupply}
-                    minterCap={tokenInfoState.minter.cap}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                    decimals={tokenInfoState.decimals}
-                />
+            {selectMenu.value !== 'select' && (
+                <Fragment>
+                    <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                    {selectMenu.value === 'mint' && (
+                        <Mint
+                            totalSupply={tokenInfoState.totalSupply}
+                            minterCap={tokenInfoState.minter.cap}
+                            tokenSymbol={tokenInfoState.tokenSymbol}
+                            decimals={tokenInfoState.decimals}
+                        />
+                    )}
+                    {selectMenu.value === 'burn' && <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />}
+                    {selectMenu.value === 'burnFrom' && <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />}
+                    {selectMenu.value === 'transfer' && (
+                        <Transfer
+                            decimals={tokenInfoState.decimals}
+                            tokenSymbol={tokenInfoState.tokenSymbol}
+                            addressAmount={tokenInfoState.addressAmount}
+                        />
+                    )}
+                    {selectMenu.value === 'increaseAllowance' && (
+                        <IncreaseAllowance
+                            decimals={tokenInfoState.decimals}
+                            tokenSymbol={tokenInfoState.tokenSymbol}
+                            userBalance={tokenInfoState.addressAmount}
+                        />
+                    )}
+                    {selectMenu.value === 'decreaseAllowance' && (
+                        <DecreaseAllowance
+                            decimals={tokenInfoState.decimals}
+                            tokenSymbol={tokenInfoState.tokenSymbol}
+                            userBalance={tokenInfoState.addressAmount}
+                        />
+                    )}
+                    {selectMenu.value === 'updateMarketing' && (
+                        <UpdateMarketing
+                            label={tokenInfoState.label}
+                            marketingDescription={tokenInfoState.marketingDescription}
+                            marketingAddress={tokenInfoState.marketingAddress}
+                            marketingProject={tokenInfoState.marketingProject}
+                        />
+                    )}
+                    {selectMenu.value === 'transferFrom' && (
+                        <TransferFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
+                    )}
+                    {selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
+                </Fragment>
             )}
-            {selectMenu.value === 'burn' && <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />}
-            {selectMenu.value === 'burnFrom' && <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />}
-            {selectMenu.value === 'transfer' && (
-                <Transfer
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                    addressAmount={tokenInfoState.addressAmount}
-                />
-            )}
-            {selectMenu.value === 'increaseAllowance' && (
-                <IncreaseAllowance
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                    userBalance={tokenInfoState.addressAmount}
-                />
-            )}
-            {selectMenu.value === 'decreaseAllowance' && (
-                <DecreaseAllowance
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                    userBalance={tokenInfoState.addressAmount}
-                />
-            )}
-            {selectMenu.value === 'updateMarketing' && (
-                <UpdateMarketing
-                    label={tokenInfoState.label}
-                    marketingDescription={tokenInfoState.marketingDescription}
-                    marketingAddress={tokenInfoState.marketingAddress}
-                    marketingProject={tokenInfoState.marketingProject}
-                />
-            )}
-            {selectMenu.value === 'transferFrom' && (
-                <TransferFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
-            )}
-            {selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
         </Container>
     );
 };

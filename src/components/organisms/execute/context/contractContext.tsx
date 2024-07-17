@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
+
 import { IWallet } from '../../../../interfaces/wallet';
 import { IMenuItem } from '../cards/tokenInfo';
 
@@ -12,6 +13,7 @@ interface ContractContextProps {
     _marketingDescription: string;
     _marketingAddress: string;
     _marketingProject: string;
+    _allowanceInfo: { address: string, amount: string, type: string, expire: string };
 
     _setContract: (value: string) => void;
     _setSelectMenu: (value: IMenuItem) => void;
@@ -22,6 +24,7 @@ interface ContractContextProps {
     _setMarketingDescription: (value: string) => void;
     _setMarketingAddress: (value: string) => void;
     _setMarketingProject: (value: string) => void;
+    _setAllowanceInfo: (value: { address: string, amount: string, type: string, expire: string }) => void;
 }
 
 const ContractContext = createContext<ContractContextProps | undefined>(undefined);
@@ -44,6 +47,7 @@ export const ContractProvider = ({ children }: { children: ReactNode }) => {
     const [_marketingDescription, _setMarketingDescription] = useState<string>("");
     const [_marketingAddress, _setMarketingAddress] = useState<string>("");
     const [_marketingProject, _setMarketingProject] = useState<string>("");
+    const [_allowanceInfo, _setAllowanceInfo] = useState<{ address: string, amount: string, type: string, expire: string }>({ address: "", amount: "", type: "at_height", expire: "" });
 
     return (
         <ContractContext.Provider
@@ -57,6 +61,7 @@ export const ContractProvider = ({ children }: { children: ReactNode }) => {
                 _marketingDescription,
                 _marketingAddress,
                 _marketingProject,
+                _allowanceInfo,
 
                 _setContract,
                 _setSelectMenu,
@@ -67,6 +72,7 @@ export const ContractProvider = ({ children }: { children: ReactNode }) => {
                 _setMarketingDescription,
                 _setMarketingAddress,
                 _setMarketingProject,
+                _setAllowanceInfo,
             }}
         >
             {children}
