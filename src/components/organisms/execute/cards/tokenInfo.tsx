@@ -16,6 +16,7 @@ import Transfer from './functions/transfer';
 import UpdateMarketing from './functions/updateMarketing';
 import IncreaseAllowance from './functions/increaseAllowance';
 import DecreaseAllowance from './functions/decreaseAllowance';
+import TransferFrom from './functions/transferFrom';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -144,7 +145,7 @@ const basicMenuItems: IMenuItem[] = [
     { value: 'increaseAllowance', label: 'Increase Allowance' },
     { value: 'decreaseAllowance', label: 'Decrease Allowance' },
     { value: 'transfer', label: 'Transfer' },
-    { value: 'transferFrom', label: 'Transfer From' },
+    { value: 'transferFrom', label: 'Transfer From' }
 ];
 
 const minterMenuItems: IMenuItem[] = [
@@ -156,7 +157,7 @@ const minterMenuItems: IMenuItem[] = [
     { value: 'decreaseAllowance', label: 'Decrease Allowance' },
     { value: 'transfer', label: 'Transfer' },
     { value: 'transferFrom', label: 'Transfer From' },
-    { value: 'updateMinter', label: 'Update Minter' },
+    { value: 'updateMinter', label: 'Update Minter' }
 ];
 
 const marketingMenuItems: IMenuItem[] = [
@@ -168,7 +169,7 @@ const marketingMenuItems: IMenuItem[] = [
     { value: 'transfer', label: 'Transfer' },
     { value: 'transferFrom', label: 'Transfer From' },
     { value: 'updateLogo', label: 'Update Logo' },
-    { value: 'updateMarketing', label: 'Update Marketing' },
+    { value: 'updateMarketing', label: 'Update Marketing' }
 ];
 
 const allOwnerMenuItems: IMenuItem[] = [
@@ -182,8 +183,8 @@ const allOwnerMenuItems: IMenuItem[] = [
     { value: 'transferFrom', label: 'Transfer From' },
     { value: 'updateMinter', label: 'Update Minter' },
     { value: 'updateLogo', label: 'Update Logo' },
-    { value: 'updateMarketing', label: 'Update Marketing' },
-]
+    { value: 'updateMarketing', label: 'Update Marketing' }
+];
 
 interface IProps {
     tokenInfoState: ITokenInfoState;
@@ -244,7 +245,6 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
         }
 
         setOwnerMenus(ruleMenus);
-
     }, [tokenInfoState.marketingAddress, tokenInfoState.minter]);
 
     const RenderTokenLogo = useCallback(() => {
@@ -287,10 +287,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                     </TokenInfoBox>
                 </TokenBox>
             </TokenInfoWrap>
-            <CustomSelectInput
-                menus={ownerMenus}
-                onChangeMenu={handleChangeMenu}
-            />
+            <CustomSelectInput menus={ownerMenus} onChangeMenu={handleChangeMenu} />
             {selectMenu.value && selectMenu.value !== 'select' && <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />}
             {selectMenu.value === 'mint' && (
                 <Mint
@@ -324,7 +321,15 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                 />
             )}
             {selectMenu.value === 'updateMarketing' && (
-                <UpdateMarketing label={tokenInfoState.label} marketingDescription={tokenInfoState.marketingDescription} marketingAddress={tokenInfoState.marketingAddress} marketingProject={tokenInfoState.marketingProject}/>
+                <UpdateMarketing
+                    label={tokenInfoState.label}
+                    marketingDescription={tokenInfoState.marketingDescription}
+                    marketingAddress={tokenInfoState.marketingAddress}
+                    marketingProject={tokenInfoState.marketingProject}
+                />
+            )}
+            {selectMenu.value === 'transferFrom' && (
+                <TransferFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
             )}
         </Container>
     );

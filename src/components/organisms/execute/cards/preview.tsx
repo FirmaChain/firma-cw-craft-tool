@@ -9,6 +9,7 @@ import BurnFromPreview from './previews/burnFrom';
 import TransferPreview from './previews/transfer';
 import UpdateMarketingPreview from './previews/updateMarketing';
 import IncreaseAllowancePreview from './previews/increaseAllowance';
+import TransferFromPreview from './previews/transferFrom';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -97,6 +98,16 @@ const Preview = ({ tokenInfoState }: IProps) => {
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />
             )}
+
+            {_selectMenu.value === 'transferFrom' && (
+                <TransferFromPreview
+                    addressAmount={tokenInfoState.addressAmount}
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                />
+            )}
+
+            {/* TransferFromPreview */}
         </Container>
     );
 };
