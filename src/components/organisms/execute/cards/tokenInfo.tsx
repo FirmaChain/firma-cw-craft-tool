@@ -15,7 +15,7 @@ import BurnFrom from './functions/burnFrom';
 import Transfer from './functions/transfer';
 import UpdateMarketing from './functions/updateMarketing';
 import IncreaseAllowance from './functions/increaseAllowance';
-import DecreaseAllowance from './functions/decreaseAllowance copy';
+import DecreaseAllowance from './functions/decreaseAllowance';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -145,8 +145,6 @@ const basicMenuItems: IMenuItem[] = [
     { value: 'decreaseAllowance', label: 'Decrease Allowance' },
     { value: 'transfer', label: 'Transfer' },
     { value: 'transferFrom', label: 'Transfer From' },
-    { value: 'updateLogo', label: 'Update Logo' },
-    { value: 'updateMarketing', label: 'Update Marketing' }
 ];
 
 const minterMenuItems: IMenuItem[] = [
@@ -158,10 +156,34 @@ const minterMenuItems: IMenuItem[] = [
     { value: 'decreaseAllowance', label: 'Decrease Allowance' },
     { value: 'transfer', label: 'Transfer' },
     { value: 'transferFrom', label: 'Transfer From' },
+    { value: 'updateMinter', label: 'Update Minter' },
+];
+
+const marketingMenuItems: IMenuItem[] = [
+    { value: 'select', label: 'Select' },
+    { value: 'burn', label: 'Burn' },
+    { value: 'burnFrom', label: 'Burn From' },
+    { value: 'increaseAllowance', label: 'Increase Allowance' },
+    { value: 'decreaseAllowance', label: 'Decrease Allowance' },
+    { value: 'transfer', label: 'Transfer' },
+    { value: 'transferFrom', label: 'Transfer From' },
     { value: 'updateLogo', label: 'Update Logo' },
     { value: 'updateMarketing', label: 'Update Marketing' },
-    { value: 'updateMinter', label: 'Update Minter' }
 ];
+
+const allOwnerMenuItems: IMenuItem[] = [
+    { value: 'select', label: 'Select' },
+    { value: 'mint', label: 'Mint' },
+    { value: 'burn', label: 'Burn' },
+    { value: 'burnFrom', label: 'Burn From' },
+    { value: 'increaseAllowance', label: 'Increase Allowance' },
+    { value: 'decreaseAllowance', label: 'Decrease Allowance' },
+    { value: 'transfer', label: 'Transfer' },
+    { value: 'transferFrom', label: 'Transfer From' },
+    { value: 'updateMinter', label: 'Update Minter' },
+    { value: 'updateLogo', label: 'Update Logo' },
+    { value: 'updateMarketing', label: 'Update Marketing' },
+]
 
 interface IProps {
     tokenInfoState: ITokenInfoState;
@@ -173,6 +195,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
     const { _setSelectMenu } = useContractContext();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
+    const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
     const [selectMenu, setSelectMenu] = useState<IMenuItem>({ value: 'select', label: 'Select' });
 
     const ContractTypeLabel = useMemo(() => {
@@ -194,6 +217,36 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
         }
     }, [tokenInfoState.marketingLogoUrl]);
 
+    useEffect(() => {
+        let ruleMenus: IMenuItem[] = [];
+
+        if (tokenInfoState.minter !== null) {
+            console.log(`minter: ${tokenInfoState.minter.minter}`);
+            console.log(`marketing: ${tokenInfoState.marketingAddress}`);
+            if (tokenInfoState.minter.minter === address && tokenInfoState.marketingAddress === address) {
+                console.log(1);
+                ruleMenus = [...allOwnerMenuItems];
+            } else if (tokenInfoState.minter.minter === address && tokenInfoState.marketingAddress !== address) {
+                console.log(2);
+                ruleMenus = [...minterMenuItems];
+            } else if (tokenInfoState.minter.minter !== address && tokenInfoState.marketingAddress === address) {
+                console.log(3);
+                ruleMenus = [...marketingMenuItems];
+            } else {
+                ruleMenus = [...basicMenuItems];
+            }
+        } else {
+            if (tokenInfoState.marketingAddress === address) {
+                ruleMenus = [...marketingMenuItems];
+            } else {
+                ruleMenus = [...basicMenuItems];
+            }
+        }
+
+        setOwnerMenus(ruleMenus);
+
+    }, [tokenInfoState.marketingAddress, tokenInfoState.minter]);
+
     const RenderTokenLogo = useCallback(() => {
         const isValid = !Boolean(validTokenLogoUrl === '');
         return (
@@ -208,9 +261,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
     }, [validTokenLogoUrl]);
 
     const handleChangeMenu = (menu: string) => {
-        const menuItem = tokenInfoState.minter.minter === address ? minterMenuItems : basicMenuItems;
-
-        const _selectedMenu = menuItem.filter((item) => {
+        const _selectedMenu = ownerMenus.filter((item) => {
             return item.value === menu;
         });
 
@@ -237,7 +288,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                 </TokenBox>
             </TokenInfoWrap>
             <CustomSelectInput
-                menus={tokenInfoState.minter.minter === address ? minterMenuItems : basicMenuItems}
+                menus={ownerMenus}
                 onChangeMenu={handleChangeMenu}
             />
             {selectMenu.value && selectMenu.value !== 'select' && <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />}
@@ -265,13 +316,15 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                     userBalance={tokenInfoState.addressAmount}
                 />
             )}
-            {selectMenu.value === 'updateMarketing' && <UpdateMarketing label={tokenInfoState.label} />}
             {selectMenu.value === 'decreaseAllowance' && (
                 <DecreaseAllowance
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
                     userBalance={tokenInfoState.addressAmount}
                 />
+            )}
+            {selectMenu.value === 'updateMarketing' && (
+                <UpdateMarketing label={tokenInfoState.label} marketingDescription={tokenInfoState.marketingDescription} marketingAddress={tokenInfoState.marketingAddress} marketingProject={tokenInfoState.marketingProject}/>
             )}
         </Container>
     );

@@ -2,9 +2,11 @@ import styled from "styled-components";
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from "./styles";
 import LabelInput2 from "@/components/atoms/input/labelInput2";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { BASIC_LABEL } from "@/constants/cw20Types";
 import { useContractContext } from "../../context/contractContext";
+import { FirmaUtil } from "@firmachain/firma-js";
+import useFormStore from "@/store/formStore";
 
 const ContentWrap = styled.div`
     display: flex;
@@ -14,21 +16,36 @@ const ContentWrap = styled.div`
 
 interface IProps {
     label: string;
+    marketingDescription: string;
+    marketingAddress: string;
+    marketingProject: string;
 };
 
-const UpdateMarketing = ({ label }: IProps) => {
+const UpdateMarketing = ({ label, marketingDescription, marketingAddress, marketingProject }: IProps) => {
     const { _setMarketingDescription, _setMarketingAddress, _setMarketingProject } = useContractContext();
+    
+    const setFormError = useFormStore((state) => state.setFormError);
+    const clearFromError = useFormStore((state) => state.clearFormError);
 
-    const [inputDescription, setInputDescription] = useState<string>("");
-    const [inputAddress, setInputAddress] = useState<string>("");
-    const [inputProject, setInputProject] = useState<string>("");
+    useEffect(() => {
+        setInputDescription(marketingDescription);
+        setInputAddress(marketingAddress);
+        setInputProject(marketingProject);
+    }, [marketingDescription, marketingAddress, marketingProject]);
+
+    const [inputDescription, setInputDescription] = useState<string>('');
+    const [inputAddress, setInputAddress] = useState<string>('');
+    const [inputProject, setInputProject] = useState<string>('');
+    const [isValidInputAddress, setIsValidInputAddress] = useState<boolean>(true);
 
     const handleDescription = (value: string) => {
         setInputDescription(value);
         _setMarketingDescription(value);
     };
-
     const handleAddress = (value: string) => {
+        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
+        else setFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+
         setInputAddress(value);
         _setMarketingAddress(value);
     };
@@ -68,7 +85,9 @@ const UpdateMarketing = ({ label }: IProps) => {
                                 value: inputAddress,
                                 formId: "input address",
                                 placeHolder: "Input Wallet Address",
-                                onChange: handleAddress
+                                onChange: handleAddress,
+                                emptyErrorMessage: 'Please input firmachain wallet address',
+                                
                             }}
                         />
                         <LabelInput2
