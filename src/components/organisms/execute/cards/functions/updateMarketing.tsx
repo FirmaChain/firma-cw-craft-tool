@@ -7,6 +7,7 @@ import { BASIC_LABEL } from "@/constants/cw20Types";
 import { useContractContext } from "../../context/contractContext";
 import { FirmaUtil } from "@firmachain/firma-js";
 import useFormStore from "@/store/formStore";
+import React from "react";
 
 const ContentWrap = styled.div`
     display: flex;
@@ -27,21 +28,25 @@ const UpdateMarketing = ({ label, marketingDescription, marketingAddress, market
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
 
+    const [inputDescription, setInputDescription] = useState<string>(marketingDescription);
+    const [inputAddress, setInputAddress] = useState<string>(marketingAddress);
+    const [inputProject, setInputProject] = useState<string>(marketingProject);
+
     useEffect(() => {
         setInputDescription(marketingDescription);
         setInputAddress(marketingAddress);
         setInputProject(marketingProject);
+        
+        _setMarketingDescription(marketingDescription);
+        _setMarketingAddress(marketingAddress);
+        _setMarketingProject(marketingProject);
     }, [marketingDescription, marketingAddress, marketingProject]);
-
-    const [inputDescription, setInputDescription] = useState<string>('');
-    const [inputAddress, setInputAddress] = useState<string>('');
-    const [inputProject, setInputProject] = useState<string>('');
-    const [isValidInputAddress, setIsValidInputAddress] = useState<boolean>(true);
 
     const handleDescription = (value: string) => {
         setInputDescription(value);
         _setMarketingDescription(value);
     };
+
     const handleAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
@@ -85,9 +90,7 @@ const UpdateMarketing = ({ label, marketingDescription, marketingAddress, market
                                 value: inputAddress,
                                 formId: "input address",
                                 placeHolder: "Input Wallet Address",
-                                onChange: handleAddress,
-                                emptyErrorMessage: 'Please input firmachain wallet address',
-                                
+                                onChange: handleAddress
                             }}
                         />
                         <LabelInput2

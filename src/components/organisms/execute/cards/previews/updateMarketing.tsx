@@ -3,7 +3,9 @@ import styled from "styled-components";
 import { useContractContext } from "../../context/contractContext";
 import { Fragment } from "react/jsx-runtime";
 import { BASIC_LABEL } from "@/constants/cw20Types";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import React from "react";
+import { ModalActions } from "@/redux/actions";
 
 const Container = styled.div`
     width: 100%;
@@ -68,6 +70,7 @@ const ItemValueTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+    white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 `;
@@ -130,15 +133,32 @@ interface IProps {
 const UpdateMarketingPreview = ({ label, marketingDescription, marketingAddress, marketingProject }: IProps) => {
     const { _contract, _marketingDescription, _marketingAddress, _marketingProject, _setIsFetched } = useContractContext();
     
+    useEffect(() => {
+        console.log(_marketingDescription);
+    }, [_marketingDescription]);
 
     const onClickUpdateMarketing = () => {
-
+        ModalActions.handleData({
+            module: '/cw20/updateMarketing',
+            params: {
+                contract: _contract,
+                msg: {
+                    project: _marketingProject,
+                    marketing: _marketingAddress,
+                    description: _marketingDescription
+                }
+            }
+        });
+        ModalActions.handleQrConfirm(true);
+        ModalActions.handleSetCallback({ callback: () => {
+            _setIsFetched(true);
+        }});
     };
 
     const isEnableButton = useMemo(() => {
-        if (_marketingDescription === "" || _marketingAddress === "0" || _marketingProject) return false;
+        if (_marketingDescription !== marketingDescription || _marketingAddress !== marketingAddress || _marketingProject !== marketingProject) return true;
 
-        return true;
+        return false;
     }, [_marketingDescription, _marketingAddress, _marketingProject]);
 
     return (
@@ -175,7 +195,7 @@ const UpdateMarketingPreview = ({ label, marketingDescription, marketingAddress,
             </ContentWrap>
             <ButtonWrap>
                 <ExecuteButton $isEnable={isEnableButton} onClick={onClickUpdateMarketing}>
-                    <ExecuteButtonTypo>Burn</ExecuteButtonTypo>
+                    <ExecuteButtonTypo>Update Marketing</ExecuteButtonTypo>
                 </ExecuteButton>
             </ButtonWrap>
         </Container>
