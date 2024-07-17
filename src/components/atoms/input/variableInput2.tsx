@@ -6,7 +6,6 @@ import { IC_CALENDAR } from '../icons/pngIcons';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
-    $isHover?: boolean;
     $error?: boolean;
     $currentLength?: number;
     $textAlign?: 'left' | 'center' | 'right';
@@ -115,6 +114,7 @@ interface InputProps {
     maxValue?: number; //
     textAlign?: 'left' | 'center' | 'right'; //
     readOnly?: boolean; //
+    disabled?: boolean;
 }
 
 const VariableInput2 = ({
@@ -127,6 +127,7 @@ const VariableInput2 = ({
     textAlign = 'left',
     errorMessage = [],
     readOnly = false,
+    disabled = false,
     decimal = 6,
     maxValue,
     regex
@@ -194,7 +195,7 @@ const VariableInput2 = ({
                 $error={isError}
                 $currentLength={String(value).length}
                 $textAlign={textAlign}
-                $readOnly={readOnly}
+                $readOnly={readOnly || disabled}
                 onFocus={() => !readOnly && setIsFocus(true)}
             >
                 <input

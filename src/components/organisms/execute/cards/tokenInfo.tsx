@@ -14,6 +14,8 @@ import { rootState } from '@/redux/reducers';
 import BurnFrom from './functions/burnFrom';
 import Transfer from './functions/transfer';
 import UpdateMarketing from './functions/updateMarketing';
+import IncreaseAllowance from './functions/increaseAllowance';
+import DecreaseAllowance from './functions/decreaseAllowance copy';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -247,17 +249,29 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                     decimals={tokenInfoState.decimals}
                 />
             )}
-            {selectMenu.value === 'burn' && (
-                <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />
-            )}
-            {selectMenu.value === 'burnFrom' && (
-                <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
-            )}
+            {selectMenu.value === 'burn' && <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />}
+            {selectMenu.value === 'burnFrom' && <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />}
             {selectMenu.value === 'transfer' && (
-                <Transfer decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} addressAmount={tokenInfoState.addressAmount} />
+                <Transfer
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                    addressAmount={tokenInfoState.addressAmount}
+                />
             )}
-            {selectMenu.value === 'updateMarketing' && (
-                <UpdateMarketing label={tokenInfoState.label} />
+            {selectMenu.value === 'increaseAllowance' && (
+                <IncreaseAllowance
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                    userBalance={tokenInfoState.addressAmount}
+                />
+            )}
+            {selectMenu.value === 'updateMarketing' && <UpdateMarketing label={tokenInfoState.label} />}
+            {selectMenu.value === 'decreaseAllowance' && (
+                <DecreaseAllowance
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                    userBalance={tokenInfoState.addressAmount}
+                />
             )}
         </Container>
     );

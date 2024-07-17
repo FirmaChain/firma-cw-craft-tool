@@ -1,16 +1,18 @@
+import IconButton from '@/components/atoms/buttons/iconButton';
 import { Button } from '@mui/material';
 import { styled } from 'styled-components';
 
 export const TitleContainer = styled.div`
     width: calc(100% - 80px);
     display: flex;
-    padding: 32px 40px;
+    padding: 28px 40px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
     background: var(--200, #1e1e1e);
+    gap: 32px;
 `;
 
 export const TitleWrapper = styled.div`
@@ -22,7 +24,7 @@ export const TitleWrapper = styled.div`
 `;
 
 export const TitleLogoImage = styled.div`
-    width: 72px;
+    min-width: 72px;
     height: 72px;
     background-color: #262626;
     border-radius: 153.409px;
@@ -44,15 +46,16 @@ export const IconBackground = styled.div`
 `;
 
 export const TokenInfoWrapper = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 `;
 
 export const TokenInfo = styled.div`
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: 16px;
     align-items: center;
 `;
 
@@ -76,7 +79,7 @@ export const TokenNameTypo = styled.div`
 
 export const TotalSupplyWrapper = styled.div`
     display: flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
 `;
 
@@ -89,18 +92,37 @@ export const TotalSupplyBalanceTypo = styled.div`
     line-height: 22px;
 `;
 
-export const TotalSupplySymbolTypo = styled.div`
-    color: var(--Gray-600, #707070);
+export const TotalSupplyTypo = styled.div`
+    color: #02e191;
+
+    /* Body/Body2 - Rg */
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 20px; /* 142.857% */
+
+    filter: brightness(0.6);
 `;
 
-export const GoToExecuteButton = styled.div`
-    width: calc(150px - 48px);
-    height: calc(40px - 20px);
+export const TotalSupplySymbolTypo = styled.div`
+    color: var(--Green-500, #02e191);
+
+    /* Body/Body1 - Rg */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+
+    .bold {
+        font-weight: 600;
+    }
+`;
+
+export const GoToExecuteButton = styled(IconButton)`
+    // width: calc(150px - 48px);
+    // height: calc(40px - 20px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -109,19 +131,24 @@ export const GoToExecuteButton = styled.div`
     border-radius: 8px;
     border: 1px solid var(--Green-500, #02e191);
     background: var(--Gray-350, #262626);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    &:hover {
-        cursor: pointer;
-    }
+
+    // cursor: pointer;
+    // transition: background-color 0.3s ease;
+    // &:hover {
+    //     cursor: pointer;
+    // }
 `;
 
 export const GoToButtonTypo = styled.div`
     color: var(--Green-500, #02e191);
     text-align: center;
+
+    /* Body/Body2 - Bd */
     font-family: 'General Sans Variable';
-    font-size: 12px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
-    line-height: 20px;
+    line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;

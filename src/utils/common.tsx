@@ -40,11 +40,12 @@ export const getUTokenStrFromTokenStr = (numberString: string, decimals: string)
     }
 
     const [integerPart, decimalPart] = numberString.split('.');
-    const formattedInteger = parseInt(integerPart, 10).toLocaleString('en-US');
+    const formattedInteger = parseInt(integerPart, 10).toString(); // .toLocaleString('en-US');
 
     let formattedDecimal = decimalPart ? decimalPart.slice(0, convertDecimals) : '';
 
     let formattedNumber = formattedInteger;
+
     if (formattedDecimal) {
         formattedNumber += '.' + formattedDecimal;
     }

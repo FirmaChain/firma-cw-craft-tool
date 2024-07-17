@@ -14,4 +14,6 @@ export const HeaderTitle = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 24px;
+    height: 24px;
+    overflow: hidden;
 `;

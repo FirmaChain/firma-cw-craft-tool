@@ -71,8 +71,9 @@ export const IconBackground = styled.div`
     background: var(--Gray-450, #262626);
 `;
 
-export const SpecificValueTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+export const SpecificValueTypo = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-900, var(--Primary-Base-White, #fff))')};
+    // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;

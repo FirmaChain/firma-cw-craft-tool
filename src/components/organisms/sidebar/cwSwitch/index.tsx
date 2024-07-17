@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { CW_TYPE } from '@/constants/common';
 import { ActiveIndicator, SwitchButton, SwitchContainer, SwitchLabel } from './style';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 
 interface IProps {
     onChange: (type: CW_TYPE) => void;
@@ -25,10 +24,6 @@ const CwSwitch = ({ onChange }: IProps) => {
             <SwitchButton
                 disabled
                 // onClick={() => onChangeActiveType('CW721')}
-                data-tooltip-content={'Not yet supported'}
-                data-tooltip-id={TOOLTIP_ID.COMMON}
-                data-tooltip-wrapper="span"
-                data-tooltip-place="bottom"
             >
                 <SwitchLabel $active={active === 'CW721' ? 'true' : 'false'}>CW 721</SwitchLabel>
             </SwitchButton>

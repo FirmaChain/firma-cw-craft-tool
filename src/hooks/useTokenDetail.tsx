@@ -124,14 +124,17 @@ const useTokenDetail = () => {
                 resultData.allAllowances = convertAllAllowances;
 
                 const convertAllSpenders = [];
-                const parseAllSpenders = JSON.parse(JSON.stringify(allSpenders)).allowances;
 
-                for (const spenders of parseAllSpenders) {
-                    convertAllSpenders.push({
-                        Receiver: spenders.owner,
-                        Amount: spenders.allowance,
-                        Expires: spenders.expires
-                    });
+                if (allSpenders.length > 0) {
+                    const parseAllSpenders = JSON.parse(JSON.stringify(allSpenders)).allowances;
+
+                    for (const spenders of parseAllSpenders) {
+                        convertAllSpenders.push({
+                            Receiver: spenders.owner,
+                            Amount: spenders.allowance,
+                            Expires: spenders.expires
+                        });
+                    }
                 }
                 resultData.allSpenders = convertAllSpenders;
 
@@ -147,6 +150,8 @@ const useTokenDetail = () => {
 
                 resultData.metadata = JSON.stringify(firstHistory);
             } catch (error) {
+                console.log(error);
+
                 enqueueSnackbar(`failed get '${contractAddress}' contract info`, {
                     variant: 'error',
                     autoHideDuration: 2000

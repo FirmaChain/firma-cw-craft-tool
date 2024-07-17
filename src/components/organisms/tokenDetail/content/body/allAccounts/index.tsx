@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import SearchInput from '../../../../../atoms/input/searchInput';
+// import SearchInput from '../../../../../atoms/input/searchInput';
 import PaginatedTable from './pagination';
 import {
     AllAccountsCard,
@@ -10,6 +10,7 @@ import {
     ItemLabel
 } from './style';
 import Icons from '../../../../../atoms/icons';
+import SearchInput2 from '@/components/atoms/input/searchInput2';
 
 interface IProps {
     decimals: string;
@@ -38,15 +39,19 @@ const AllAccounts = ({ decimals, allAccounts }: IProps) => {
         <AllAccountsCard>
             <AllAccountsCardWrapper>
                 <AllAccountsCardHeaderTypo>All Accounts</AllAccountsCardHeaderTypo>
-                <SearchInput
-                    placeholder={'Search Wallet Address'}
+                <SearchInput2
+                    placeHolder={'Search Wallet Address'}
                     value={searchAddress}
                     onChange={handleSearchAddress}
-                    icon={<Icons.Search width={'15px'} height={'15px'} />}
-                    sx={{
-                        width: '564px',
-                        height: '44px'
+                    adornment={{
+                        start: <Icons.Search width={'15px'} height={'15px'} />
                     }}
+                    maxWidth="564px"
+                    // icon={<Icons.Search width={'15px'} height={'15px'} />}
+                    // sx={{
+                    //     width: '564px',
+                    //     height: '44px'
+                    // }}
                 />
             </AllAccountsCardWrapper>
             <AllAccountsContentWrapper>

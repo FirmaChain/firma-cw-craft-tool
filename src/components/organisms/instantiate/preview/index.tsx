@@ -107,10 +107,10 @@ const Preview = ({
                         }
                     }),
                     marketing: {
-                        description: tokenDescription === '' ? 'description' : tokenDescription,
-                        logo: { url: tokenLogoUrl === '' ? 'token logo url' : tokenLogoUrl },
+                        description: tokenDescription === '' ? 'null' : tokenDescription,
+                        logo: { url: tokenLogoUrl === '' ? 'null' : tokenLogoUrl },
                         marketing: isBasic ? address : marketingAddress === '' ? address : marketingAddress,
-                        project: isBasic ? `${address} PROJECT` : marketingProject === '' ? `${address} PROJECT` : marketingProject
+                        project: isBasic ? `null` : marketingProject === '' ? `null` : marketingProject
                     }
                 };
 
@@ -135,7 +135,7 @@ const Preview = ({
                 ModalActions.handleTxConfirm(true);
             }
         } else {
-            modal.openModal({ modalType: 'custom', _component: ({ id }) => <WalletConnectModal id={id} /> });
+            modal.openModal({ modalType: 'connectWallet' });
             // ModalActions.handleConnectWallet(true);
         }
     };

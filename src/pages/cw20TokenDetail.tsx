@@ -44,6 +44,7 @@ const Cw20TokenDetail = () => {
     const fetchTokenList = useCallback(async () => {
         if (isInit) {
             const tokenDetail = await getTokenDetail(targetContractAddress, address);
+
             if (tokenDetail) {
                 setTokenName(tokenDetail.tokenName);
                 setTokenSymbol(tokenDetail.tokenSymbol);

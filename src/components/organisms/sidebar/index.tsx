@@ -27,12 +27,13 @@ import Icons from '@/components/atoms/icons';
 import { MenuItemText } from './style';
 import ColorButton from '@/components/atoms/buttons/colorButton';
 import { rootState } from '@/redux/reducers';
-import { GlobalActions, ModalActions } from '@/redux/actions';
+import { GlobalActions } from '@/redux/actions';
 import NetworkMenu from './network';
 import { CRAFT_CONFIGS } from '@/config';
 import { copyToClipboard, shortenAddress } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { useSnackbar } from 'notistack';
+import { useModalStore } from '@/hooks/useModal';
 
 const SOCIAL_LIST = [
     { Icon: <Icons.Medium width={'100%'} height={'100%'} />, socialLink: 'https://medium.com/firmachain' },
@@ -48,6 +49,7 @@ const Sidebar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const modal = useModalStore();
 
     const [blockExplorerLink, setBlockExplorerLink] = useState<string>();
 
@@ -66,7 +68,8 @@ const Sidebar = () => {
     };
 
     const onClickConnectWallet = () => {
-        ModalActions.handleConnectWallet(true);
+        // ModalActions.handleConnectWallet(true);
+        modal.openModal({ modalType: 'connectWallet' });
     };
 
     const onClickNetworkMenu = (type: NETWORK_TYPE) => {

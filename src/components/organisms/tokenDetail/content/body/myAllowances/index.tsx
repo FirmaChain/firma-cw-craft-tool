@@ -9,10 +9,10 @@ import {
     ItemLabel
 } from './style';
 import PaginatedTable from './pagination';
-import SearchInput from '../../../../../atoms/input/searchInput';
 import { useEffect, useState } from 'react';
-import Icons from '../../../../../atoms/icons';
-import { IAllowances, ISpenders } from '../../../../../../hooks/useTokenDetail';
+import Icons from '@/components/atoms/icons';
+import { IAllowances, ISpenders } from '@/hooks/useTokenDetail';
+import SearchInput2 from '@/components/atoms/input/searchInput2';
 
 interface IProps {
     decimals: string;
@@ -48,14 +48,13 @@ const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
         <AllowanceCard>
             <AllowanceCardHeaderWrapper>
                 <AllowanceCardHeaderTypo>My Allowances</AllowanceCardHeaderTypo>
-                <SearchInput
-                    placeholder={'Search Wallet Address'}
+
+                <SearchInput2
+                    placeHolder={'Search Wallet Address'}
                     value={searchAddress}
                     onChange={handleSearchAddress}
-                    icon={<Icons.Search width={'15px'} height={'15px'} />}
-                    sx={{
-                        width: '564px',
-                        height: '44px'
+                    adornment={{
+                        end: <Icons.Search width={'15px'} height={'15px'} />
                     }}
                 />
             </AllowanceCardHeaderWrapper>

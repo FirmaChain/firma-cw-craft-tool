@@ -11,21 +11,25 @@ import {
     TokenInfoWrapper,
     TokenNameTypo,
     TokenSymbolTypo,
-    TotalSupplyBalanceTypo,
     TotalSupplySymbolTypo,
+    TotalSupplyTypo,
     TotalSupplyWrapper
 } from './style';
-import Icons from '../../../../atoms/icons';
+import Icons from '@/components/atoms/icons';
 import { useNavigate } from 'react-router-dom';
+import { IC_APPROVED } from '@/components/atoms/icons/pngIcons';
+import commaNumber from 'comma-number';
+import { getTokenStrFromUTokenStr } from '@/utils/common';
 
 interface IProps {
     tokenLogoUrl: string;
     tokenSymbol: string;
     tokenName: string;
     totalSupply: string;
+    tokenDecimal: string;
 }
 
-const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply }: IProps) => {
+const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal }: IProps) => {
     const navigatge = useNavigate();
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
@@ -57,18 +61,37 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply }: IProps) =>
                             <Icons.Picture width={'34px'} height={'34px'} />
                         </IconBackground>
                     ) : (
-                        <img src={validTokenLogoUrl} style={{ width: '72px', height: '72px', maxHeight: '100%', maxWidth: '100%' }} />
+                        <img
+                            src={validTokenLogoUrl}
+                            alt="token-img"
+                            style={{ width: '72px', height: '72px', maxHeight: '100%', maxWidth: '100%' }}
+                        />
                     )}
                 </TitleLogoImage>
                 <TokenInfoWrapper>
-                    <TokenInfo>
-                        <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo>
-                        <Icons.Dot width={'4px'} height={'4px'} />
+                    <TokenInfo style={{ height: '24px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                            <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo>
+                            {/* <img src={IC_APPROVED} alt="approved" style={{ width: '24px' }} /> */}
+                        </div>
+
+                        <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />
+
                         <TokenNameTypo>{tokenName}</TokenNameTypo>
                     </TokenInfo>
-                    <TotalSupplyWrapper>
-                        <TotalSupplyBalanceTypo>{totalSupply}</TotalSupplyBalanceTypo>
-                        <TotalSupplySymbolTypo>{tokenSymbol}</TotalSupplySymbolTypo>
+
+                    <div style={{ width: '100%', height: '1px', background: 'var(--Gray-400, #2C2C2C)' }} />
+
+                    <TotalSupplyWrapper style={{ height: '22px' }}>
+                        <TotalSupplyTypo>Total Supply : </TotalSupplyTypo>
+
+                        {tokenSymbol && (
+                            <TotalSupplySymbolTypo>
+                                <span className="bold">{commaNumber(getTokenStrFromUTokenStr(totalSupply, tokenDecimal))}</span>
+                                {` `}
+                                {tokenSymbol}
+                            </TotalSupplySymbolTypo>
+                        )}
                     </TotalSupplyWrapper>
                 </TokenInfoWrapper>
             </TitleWrapper>

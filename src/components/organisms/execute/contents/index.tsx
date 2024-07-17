@@ -70,9 +70,7 @@ const Contents = () => {
                     )}
                 </Container>
             ) : (
-                <DimBox>
-                    <img src={FIRMA_DIM_LOGO} alt={'Firmachain'} style={{ width: '480px', height: '480px' }} />
-                </DimBox>
+                <DimBox>{/* <img src={FIRMA_DIM_LOGO} alt={'Firmachain'} style={{ width: '480px', height: '480px' }} /> */}</DimBox>
             )}
         </Fragment>
     );

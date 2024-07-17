@@ -600,7 +600,7 @@ const LeftArrow = (props: any) => {
                     id="Icon"
                     d="M15 4L7 12L15 20"
                     stroke={props.isCheck ? '#FFFFFF' : '#707070'}
-                    strokeWidth="2"
+                    strokeWidth={props.strokeWidth || '2'}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                 />

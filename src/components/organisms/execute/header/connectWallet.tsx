@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import ColorButton from '../../../atoms/buttons/colorButton';
-import { ModalActions } from '../../../../redux/actions';
+import ColorButton from '@/components/atoms/buttons/colorButton';
+import { ModalActions } from '@/redux/actions';
+import { useModalStore } from '@/hooks/useModal';
 
 const Container = styled.div`
     width: calc(100% - 160px);
@@ -14,8 +15,13 @@ const Container = styled.div`
 `;
 
 const ConnectWallet = () => {
+    const modal = useModalStore();
+
     const onClickConnectWallet = () => {
-        ModalActions.handleConnectWallet(true);
+        // ModalActions.handleConnectWallet(true);
+        modal.openModal({
+            modalType: 'connectWallet'
+        });
     };
 
     return (

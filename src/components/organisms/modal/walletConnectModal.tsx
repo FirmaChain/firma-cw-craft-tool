@@ -18,7 +18,7 @@ const WalletConnectModal = ({ id }: { id: string }) => {
     };
 
     return (
-        <ModalBase style={{ width: '544px', padding: '48px 0 0' }}>
+        <ModalBase style={{ width: '544px', padding: '48px 0 0', userSelect: 'none' }}>
             <img
                 src={IC_CLOSE}
                 alt="close"

@@ -1,10 +1,10 @@
-import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import Icons from '../icons';
 import styled from 'styled-components';
+import IconButton from './iconButton';
 
-const StyledButton = styled(Button)<{
+const StyledButton = styled(IconButton)<{
     $buttonWidth: string;
     $buttonHeight: string;
     $buttonBorder?: string;
@@ -15,9 +15,6 @@ const StyledButton = styled(Button)<{
     color: '#fff',
     border: `${$buttonBorder} !important`,
     padding: 0,
-    '&:hover': {
-        opacity: 0.8
-    },
     textAlign: 'center'
 }));
 

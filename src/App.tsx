@@ -4,7 +4,6 @@ import { ThemeProvider } from 'styled-components';
 import Main from './main';
 import theme from './themes';
 import { rootState } from './redux/reducers';
-import ConnectWalletModal from './components/organisms/modal/connectWalletModal';
 import QrConfirmModal from './components/organisms/modal/qrConfirmModal';
 import TxConfirmModal from './components/organisms/modal/txConfirmModal';
 import { TOOLTIP_ID } from './constants/tooltip';
@@ -16,13 +15,13 @@ import 'overlayscrollbars/overlayscrollbars.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const App = () => {
-    const { connectWallet, qrConfirm, txConfirm } = useSelector((state: rootState) => state.modal);
+    const { qrConfirm, txConfirm } = useSelector((state: rootState) => state.modal);
 
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
                 <Main />
-                {connectWallet && <ConnectWalletModal />}
+
                 {qrConfirm && <QrConfirmModal />}
                 {txConfirm && <TxConfirmModal />}
                 <DefaultTooltip id={TOOLTIP_ID.COMMON} place="bottom" style={{ cursor: 'default', zIndex: 100 }} />

@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconButton } from '@mui/material';
 
 import { HeaderTitle, HeaderWrapper } from './style';
-import Icons from '../../../atoms/icons';
+import Icons from '@/components/atoms/icons';
+import IconButton from '@/components/atoms/buttons/iconButton';
 
 interface IProps {
     tokenName: string;
@@ -18,8 +17,8 @@ const Header = ({ tokenName }: IProps) => {
 
     return (
         <HeaderWrapper>
-            <IconButton sx={{ padding: 0 }} onClick={onClickPrev}>
-                <Icons.LeftArrow width={'24'} height={'24'} />
+            <IconButton style={{ padding: 0, height: '24px' }} onClick={onClickPrev}>
+                <Icons.LeftArrow width={'24'} height={'24'} strokeWidth={'2px'} isCheck />
             </IconButton>
             <HeaderTitle>{tokenName}</HeaderTitle>
         </HeaderWrapper>

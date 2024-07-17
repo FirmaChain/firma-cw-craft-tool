@@ -1,6 +1,6 @@
-import { getTokenStrFromUTokenStr } from '../../../../../../utils/common';
-import CopyIconButton from '../../../../../atoms/buttons/copyIconButton';
-import Icons from '../../../../../atoms/icons';
+import { getTokenStrFromUTokenStr } from '@/utils/common';
+import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
+
 import {
     SpecificItem,
     SpecificLabelTypo,
@@ -61,24 +61,31 @@ const TokenInformation = ({
                     <SpecificLabelTypo>Decimals</SpecificLabelTypo>
                     <SpecificValueTypo>{decimals}</SpecificValueTypo>
                 </SpecificItem>
-                <SpecificItem>
+
+                <SpecificItem style={{ height: '28px' }}>
                     <SpecificLabelTypo>Label</SpecificLabelTypo>
-                    <SpecificValueCover>{label}</SpecificValueCover>
+                    {label && <SpecificValueCover>{label}</SpecificValueCover>}
                 </SpecificItem>
+
                 <SpecificItem>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     <SpecificValueWrapper>
                         <SpecificValueTypo>{getTokenStrFromUTokenStr(totalSupply, decimals)}</SpecificValueTypo>
+
                         <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                     </SpecificValueWrapper>
                 </SpecificItem>
-                <SpecificItem>
-                    <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
-                    <SpecificValueWrapper>
-                        <SpecificValueTypo>{minterAddress}</SpecificValueTypo>
-                        <CopyIconButton text={minterAddress} width={'22px'} height={'22px'} />
-                    </SpecificValueWrapper>
-                </SpecificItem>
+
+                {minterAddress && (
+                    <SpecificItem>
+                        <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
+                        <SpecificValueWrapper>
+                            <SpecificValueTypo>{minterAddress}</SpecificValueTypo>
+                            <CopyIconButton text={minterAddress} width={'22px'} height={'22px'} />
+                        </SpecificValueWrapper>
+                    </SpecificItem>
+                )}
+
                 <SpecificItem>
                     <SpecificLabelTypo>Minter Cap</SpecificLabelTypo>
                     <SpecificValueWrapper>
@@ -87,7 +94,7 @@ const TokenInformation = ({
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
-                    <SpecificLabelTypo>Balance</SpecificLabelTypo>
+                    <SpecificLabelTypo>My Balance</SpecificLabelTypo>
                     <SpecificValueWrapper>
                         <SpecificValueTypo>{getTokenStrFromUTokenStr(addressBalance, decimals)}</SpecificValueTypo>
                         <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>

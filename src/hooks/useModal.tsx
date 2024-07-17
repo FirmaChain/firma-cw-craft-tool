@@ -6,6 +6,7 @@ import { useLocation } from 'react-router';
 import { useKeyPress } from 'react-use';
 import Portal from '@/components/modal/portal';
 import { ModalOverlay } from '@/components/modal/style';
+import WalletConnectModal from '@/components/organisms/modal/walletConnectModal';
 
 interface Modal extends ModalContent {
     id: string;
@@ -116,21 +117,21 @@ const Modal: React.FC<ModalProps> = ({
         }
     };
 
-    const handleClose = () => {
-        if (props?.onClose) {
-            props.onClose(id);
-        } else {
-            closeModal();
-        }
-    };
+    // const handleClose = () => {
+    //     if (props?.onClose) {
+    //         props.onClose(id);
+    //     } else {
+    //         closeModal();
+    //     }
+    // };
 
-    const handleConfirm = () => {
-        if (props?.onConfirm) {
-            props.onConfirm(id);
-        } else {
-            closeModal();
-        }
-    };
+    // const handleConfirm = () => {
+    //     if (props?.onConfirm) {
+    //         props.onConfirm(id);
+    //     } else {
+    //         closeModal();
+    //     }
+    // };
 
     useEffect(() => {
         return () => {
@@ -155,6 +156,7 @@ const Modal: React.FC<ModalProps> = ({
         <Portal elementId="modal-root">
             <ModalOverlay />
             <div
+                onClick={handleClickBackdrop}
                 style={{
                     position: 'fixed',
                     left: 0,
@@ -167,7 +169,13 @@ const Modal: React.FC<ModalProps> = ({
                     zIndex: 1000
                 }}
             >
-                {modalType == 'custom' ? <_component id={id} {...props} /> : <></>}
+                {modalType == 'custom' ? (
+                    <_component id={id} {...props} />
+                ) : modalType == 'connectWallet' ? (
+                    <WalletConnectModal id={id} />
+                ) : (
+                    <></>
+                )}
             </div>
         </Portal>
     );

@@ -40,7 +40,7 @@ export const AllowanceItem = styled.div`
 
 export const ItemLabel = styled.div`
     width: 224px;
-    color: var(--Gray-700, #999);
+    color: var(--Gray-750, #999);
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;

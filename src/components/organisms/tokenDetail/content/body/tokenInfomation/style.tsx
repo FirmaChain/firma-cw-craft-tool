@@ -61,7 +61,7 @@ export const SpecificValueSymbol = styled.div`
 `;
 
 export const SpecificValueCover = styled.div`
-    padding: 4px 12px;
+    padding: 3px 12px;
     border-radius: 100px;
     border: 1px solid var(--Gray-500, #383838);
     background: var(--Gray-400, #2c2c2c);

@@ -8,12 +8,13 @@ import BurnPreview from './previews/burn';
 import BurnFromPreview from './previews/burnFrom';
 import TransferPreview from './previews/transfer';
 import UpdateMarketingPreview from './previews/updateMarketing';
+import IncreaseAllowancePreview from './previews/increaseAllowance';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
     display: flex;
     height: auto;
-    padding: 48px;
+    padding: 48px 48px 40px;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
@@ -73,7 +74,28 @@ const Preview = ({ tokenInfoState }: IProps) => {
                 />
             )}
             {_selectMenu.value === 'updateMarketing' && (
-                <UpdateMarketingPreview label={tokenInfoState.label} marketingDescription={tokenInfoState.marketingDescription} marketingAddress={tokenInfoState.marketingAddress} marketingProject={tokenInfoState.marketingProject} />
+                <UpdateMarketingPreview
+                    label={tokenInfoState.label}
+                    marketingDescription={tokenInfoState.marketingDescription}
+                    marketingAddress={tokenInfoState.marketingAddress}
+                    marketingProject={tokenInfoState.marketingProject}
+                />
+            )}
+
+            {_selectMenu.value === 'increaseAllowance' && (
+                <IncreaseAllowancePreview
+                    addressAmount={tokenInfoState.addressAmount}
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                />
+            )}
+
+            {_selectMenu.value === 'decreaseAllowance' && (
+                <IncreaseAllowancePreview
+                    addressAmount={tokenInfoState.addressAmount}
+                    decimals={tokenInfoState.decimals}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
+                />
             )}
         </Container>
     );

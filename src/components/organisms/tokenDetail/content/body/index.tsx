@@ -1,13 +1,14 @@
-import { Cw20SpenderAllowance } from '@firmachain/firma-js';
-import { HalfDottedDivider } from '../../../../atoms/divider/dottedDivider';
+import { HalfDottedDivider } from '@/components/atoms/divider/dottedDivider';
 import AdditionalInformation from './additionalInformation';
 import { ContentBodyContainer } from './style';
 import TokenInformation from './tokenInfomation';
 import MyAllowances from './myAllowances';
 import AllAccounts from './allAccounts';
-import { ITransaction } from '../../../../../interfaces/cw20';
+import { ITransaction } from '@/interfaces/cw20';
 import Transactions from './transactions';
-import { IAccounts, IAllowances, ISpenders } from '../../../../../hooks/useTokenDetail';
+import { IAccounts, IAllowances, ISpenders } from '@/hooks/useTokenDetail';
+import { IC_DASHED_LINE } from '@/components/atoms/icons/pngIcons';
+import LineDivider from '@/components/atoms/divider/lineDivider';
 
 interface IProps {
     isBasic: boolean;
@@ -66,7 +67,7 @@ const ContentBody = ({
                 minterAddress={minterAddress}
                 minterCap={minterCap}
             />
-            <HalfDottedDivider />
+            <LineDivider />
             <AdditionalInformation
                 contractAddress={contractAddress}
                 marketingLogo={marketingLogo}
@@ -75,11 +76,11 @@ const ContentBody = ({
                 marketingProject={marketingProject}
                 metadata={metadata}
             />
-            <HalfDottedDivider />
+            <LineDivider />
             <MyAllowances decimals={decimals} allAllowances={allAllowances} allSpenders={allSpenders} />
-            <HalfDottedDivider />
+            <LineDivider />
             <AllAccounts decimals={decimals} allAccounts={allAccounts} />
-            <HalfDottedDivider />
+            <LineDivider />
             <Transactions transactionList={transactionList} />
         </ContentBodyContainer>
     );
