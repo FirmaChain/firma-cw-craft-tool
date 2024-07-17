@@ -12,6 +12,10 @@ export interface ITransferInfo {
 interface FormProps {
     transferList: ITransferInfo[];
     setTransferList: (newList: ITransferInfo[]) => void;
+
+    minterAddress: string;
+    setMinterAddress: (v: string) => void;
+
     clearForm: () => void;
 }
 
@@ -23,6 +27,11 @@ const useExecuteStore = create<FormProps>()(
         setTransferList: (data) =>
             set((state) => {
                 state.transferList = data;
+            }),
+        minterAddress: '',
+        setMinterAddress: (data) =>
+            set((state) => {
+                state.minterAddress = data;
             }),
         clearForm: () =>
             set((state) => {

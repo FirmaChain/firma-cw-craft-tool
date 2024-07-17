@@ -10,6 +10,7 @@ import TransferPreview from './previews/transfer';
 import UpdateMarketingPreview from './previews/updateMarketing';
 import IncreaseAllowancePreview from './previews/increaseAllowance';
 import TransferFromPreview from './previews/transferFrom';
+import UpdateMinter from './previews/updateMinter';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -106,6 +107,8 @@ const Preview = ({ tokenInfoState }: IProps) => {
                     tokenSymbol={tokenInfoState.tokenSymbol}
                 />
             )}
+
+            {_selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
 
             {/* TransferFromPreview */}
         </Container>

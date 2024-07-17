@@ -17,6 +17,7 @@ import UpdateMarketing from './functions/updateMarketing';
 import IncreaseAllowance from './functions/increaseAllowance';
 import DecreaseAllowance from './functions/decreaseAllowance';
 import TransferFrom from './functions/transferFrom';
+import UpdateMinter from './functions/updateMinter';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -331,6 +332,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
             {selectMenu.value === 'transferFrom' && (
                 <TransferFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
             )}
+            {selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
         </Container>
     );
 };

@@ -23,3 +23,4 @@ export const IC_DASHED_LINE = PUBLIC_URL + 'ic_dashed_line.png';
 export const IC_NAVIGATION = PUBLIC_URL + 'ic_nagivation.png';
 export const IC_CLOCK = PUBLIC_URL + 'ic_clock.png';
 export const IC_ARROW_WITH_TAIL = PUBLIC_URL + 'ic_arrow_with_tail.png';
+export const IC_REFRESH = PUBLIC_URL + 'ic_refresh.png';
