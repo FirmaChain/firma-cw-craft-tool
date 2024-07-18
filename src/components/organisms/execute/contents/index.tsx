@@ -9,6 +9,7 @@ import { FIRMA_DIM_LOGO } from '../../../atoms/icons/pngIcons';
 import useExecuteHook, { ITokenInfoState } from '../hooks/useExecueteHook';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     display: flex;
@@ -27,17 +28,23 @@ const DimBox = styled.div`
 `;
 
 const Contents = () => {
-    const { address } = useSelector((state: rootState) => state.wallet);
+    const walletAddress = useSelector((state: rootState) => state.wallet.address);
 
     const { _contract, _isFetched, _setSelectMenu, _setIsFetched } = useContractContext();
     const { getContractTokenInfo } = useExecuteHook();
+    const { enqueueSnackbar } = useSnackbar();
 
     const [contractTokenInfo, setContractTokenInfo] = useState<ITokenInfoState | null>(null);
 
     const fetchTokenInfo = useCallback(async () => {
         try {
-            const info = await getContractTokenInfo(_contract, address);
-            setContractTokenInfo(info);
+            const info = await getContractTokenInfo(_contract, walletAddress);
+
+            if (info.success) setContractTokenInfo(info);
+            else {
+                setContractTokenInfo(null);
+                enqueueSnackbar({ variant: 'error', message: 'Invalid address.' });
+            }
         } catch (error) {
             console.log(error);
         }

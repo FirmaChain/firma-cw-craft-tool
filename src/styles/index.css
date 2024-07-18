@@ -180,12 +180,19 @@ body>#root>div {
   min-height: 100vh;
 }
 
-/* @font-face {
-  src: url("/public/assets/fonts/GeneralSans-Semibold.woff") format("woff");
-  font-family: "General Sans Variable";
-} */
 
 html {
   font-size: 62.5%;
   background-color: #121212;
+}
+
+.hide-scrollbar {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.notistack-Snackbar {
+  min-width: unset;
+  width: fit-content;
 }

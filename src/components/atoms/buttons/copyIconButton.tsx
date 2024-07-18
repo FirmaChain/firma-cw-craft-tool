@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import Icons from '../icons';
 import styled from 'styled-components';
 import IconButton from './iconButton';
+import { copyToClipboard } from '@/utils/common';
 
 const StyledButton = styled(IconButton)<{
     $buttonWidth: string;
@@ -27,21 +28,11 @@ interface IProps {
 const CopyIconButton = ({ text, width, height }: IProps) => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const onCopyToClipboard = () => {
-        navigator.clipboard
-            .writeText(text)
-            .then(() => {
-                enqueueSnackbar(`Copy to clipboard: ${text}`, {
-                    variant: 'success',
-                    autoHideDuration: 2000
-                });
-            })
-            .catch((error) => {
-                enqueueSnackbar(`Failed copy text: ${text}`, {
-                    variant: 'error',
-                    autoHideDuration: 2000
-                });
-            });
+    const onCopyToClipboard = async () => {
+        const errorMessage = await copyToClipboard(text);
+
+        if (errorMessage) enqueueSnackbar({ variant: 'error', message: errorMessage });
+        else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
     };
 
     return (

@@ -91,7 +91,7 @@ const Sidebar = () => {
         const errorMessage = await copyToClipboard(address);
 
         if (errorMessage) enqueueSnackbar({ variant: 'error', message: errorMessage });
-        else enqueueSnackbar({ variant: 'success', message: 'Connected wallet address has been copied to clipboard.' });
+        else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
     };
 
     return (

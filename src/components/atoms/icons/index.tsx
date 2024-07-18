@@ -1,6 +1,6 @@
 const Amount = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="wallet-fill">
                 <g id="Dollar Coin 1">
                     <path
@@ -20,7 +20,7 @@ const Amount = (props: any) => {
 
 const CoinStack1 = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
                 d="M5 8C5 5.79086 6.79086 4 9 4H15C17.2091 4 19 5.79086 19 8V16.1552C19 18.0007 17.7374 19.6066 15.944 20.0422L12.944 20.7707C12.3237 20.9214 11.6763 20.9214 11.056 20.7707L8.05601 20.0422C6.26262 19.6066 5 18.0007 5 16.1552V8Z"
                 fill="#02E191"
@@ -52,7 +52,7 @@ const CoinStack1 = (props: any) => {
 
 const CoinStack2 = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 20" fill="none">
             <g id="coins-stacked-02">
                 <g id="Icon">
                     <path
@@ -86,7 +86,7 @@ const CoinStack2 = (props: any) => {
 
 const Coins = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
             <g id="coins-01" clipPath="url(#clip0_34_1828)">
                 <path
                     id="Icon"
@@ -118,7 +118,7 @@ const Coins = (props: any) => {
 
 const Edit = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 22 22" fill="none">
             <g id="edit-02">
                 <path
                     id="Icon"
@@ -135,7 +135,7 @@ const Edit = (props: any) => {
 
 const FirmaCraft = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 132 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 132 34" fill="none">
             <g id="Frame 2243">
                 <g id="Group 427320625">
                     <g id="Group 427320628">
@@ -209,7 +209,7 @@ const FirmaCraft = (props: any) => {
 
 const FirmaChain = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="symbol_white 1">
                 <g id="&#234;&#183;&#184;&#235;&#163;&#185; 27393">
                     <path
@@ -234,7 +234,7 @@ const FirmaChain = (props: any) => {
 };
 const Picture = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 36 36" fill="none">
             <g id="Image 2">
                 <g id="Fill 1">
                     <path
@@ -273,7 +273,7 @@ const Picture = (props: any) => {
 
 const Info = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 14 14" fill="none">
             <g id="Iconly/Bold/Info Circle">
                 <g id="Info Circle">
                     <g id="Info Circle_2">
@@ -296,7 +296,7 @@ const Info = (props: any) => {
 
 const Link = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <path
                 d="M12.7076 18.3644L11.2933 19.7786C9.34072 21.7313 6.1749 21.7313 4.22228 19.7786C2.26966 17.826 2.26966 14.6602 4.22228 12.7076L5.63649 11.2933M18.3644 12.7076L19.7786 11.2933C21.7312 9.34072 21.7312 6.1749 19.7786 4.22228C17.826 2.26966 14.6602 2.26966 12.7076 4.22228L11.2933 5.63649M8.50045 15.5004L15.5005 8.50043"
                 stroke="#807E7E"
@@ -310,14 +310,7 @@ const Link = (props: any) => {
 
 const Medium = (props: any) => {
     return (
-        <svg
-            width={props.width}
-            height={props.height}
-            viewBox="0 0 24 26"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-        >
+        <svg width={props.width} height={props.height} viewBox="0 0 24 26" fill="none" xmlnsXlink="http://www.w3.org/1999/xlink">
             <rect y="0.285156" width="24" height="24" fill="url(#pattern0_575_26732)" />
             <defs>
                 <pattern id="pattern0_575_26732" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -336,7 +329,7 @@ const Medium = (props: any) => {
 
 const MinusCircle = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none">
             <g id="minus-circle">
                 <g id="Icon">
                     <path
@@ -358,7 +351,7 @@ const MinusCircle = (props: any) => {
 
 const Percent = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="percent-02">
                 <path id="Icon" d="M19 5L5 19" stroke="#807E7E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <g id="Icon_2">
@@ -392,7 +385,7 @@ const Percent = (props: any) => {
 
 const PlusCircle = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
             <g id="plus-circle">
                 <path
                     id="Icon"
@@ -414,7 +407,7 @@ const PlusCircle = (props: any) => {
 
 const Preview = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none">
             <g id="coins-01">
                 <path
                     id="Icon"
@@ -441,7 +434,7 @@ const Preview = (props: any) => {
 
 const Search = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
             <g id="search-refraction">
                 <path
                     id="Icon"
@@ -467,7 +460,7 @@ const Search = (props: any) => {
 
 const Setting = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
             <g id="Iconly/Bold/Setting">
                 <g id="Setting">
                     <path
@@ -485,7 +478,7 @@ const Setting = (props: any) => {
 
 const Tag = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="tag-01">
                 <path
                     id="Icon"
@@ -507,14 +500,7 @@ const Tag = (props: any) => {
 
 const Telegram = (props: any) => {
     return (
-        <svg
-            width={props.width}
-            height={props.height}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            xlinkHref="http://www.w3.org/1999/xlink"
-        >
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xlinkHref="http://www.w3.org/1999/xlink">
             <rect width="24" height="24" fill="url(#pattern0_575_26740)" />
             <defs>
                 <pattern id="pattern0_575_26740" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -533,7 +519,7 @@ const Telegram = (props: any) => {
 
 const Twitter = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="ic_twitter_gy_32px">
                 <path
                     id="path1009"
@@ -547,7 +533,7 @@ const Twitter = (props: any) => {
 
 const Valid = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="Frame 2227">
                 <path
                     id="Union"
@@ -563,7 +549,7 @@ const Valid = (props: any) => {
 
 const Wallet = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="wallet-fill">
                 <path
                     id="Vector"
@@ -577,7 +563,7 @@ const Wallet = (props: any) => {
 
 const RightArrow = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <g id="chevron-down">
                 <path
                     id="Icon"
@@ -592,9 +578,23 @@ const RightArrow = (props: any) => {
     );
 };
 
+const PrevPage = (props: any) => {
+    return (
+        <svg width={props.width || '20'} height={props.height || '20'} viewBox="0 0 20 20" fill="none" {...props}>
+            <path
+                d="M12.334 6L8.33398 9.99999L12.334 14"
+                stroke={props.isCheck ? '#FFFFFF' : '#707070'}
+                strokeWidth={props.strokeWidth || '1.2'}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+};
+
 const LeftArrow = (props: any) => {
     return (
-        <svg width={props.width || '24'} height={props.height || '24'} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={props.width || '24'} height={props.height || '24'} viewBox="0 0 24 24" fill="none">
             <g id="chevron-down">
                 <path
                     id="Icon"
@@ -611,7 +611,7 @@ const LeftArrow = (props: any) => {
 
 const Dot = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 4 4" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 4 4" fill="none">
             <circle cx="2" cy="2" r="2" fill="#999999" />
         </svg>
     );
@@ -619,7 +619,7 @@ const Dot = (props: any) => {
 
 const Copy = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 22 22" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 22 22" fill="none">
             <path
                 d="M17.4167 4H8.08333C7.92862 4 7.78025 4.06146 7.67085 4.17085C7.56146 4.28025 7.5 4.42862 7.5 4.58333V7.5H4.58333C4.42862 7.5 4.28025 7.56146 4.17085 7.67085C4.06146 7.78025 4 7.92862 4 8.08333V17.4167C4 17.5714 4.06146 17.7197 4.17085 17.8291C4.28025 17.9385 4.42862 18 4.58333 18H13.9167C14.0714 18 14.2197 17.9385 14.3291 17.8291C14.4385 17.7197 14.5 17.5714 14.5 17.4167V14.5H17.4167C17.5714 14.5 17.7197 14.4385 17.8291 14.3291C17.9385 14.2197 18 14.0714 18 13.9167V4.58333C18 4.42862 17.9385 4.28025 17.8291 4.17085C17.7197 4.06146 17.5714 4 17.4167 4ZM13.3333 16.8333H5.16667V8.66667H13.3333V16.8333ZM16.8333 13.3333H14.5V8.08333C14.5 7.92862 14.4385 7.78025 14.3291 7.67085C14.2197 7.56146 14.0714 7.5 13.9167 7.5H8.66667V5.16667H16.8333V13.3333Z"
                 fill="#999999"
@@ -630,7 +630,7 @@ const Copy = (props: any) => {
 
 const ExternalLink = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
             <path
                 d="M16.25 7.91667L16.25 3.75M16.25 3.75H12.0833M16.25 3.75L10.6944 9.30556M8.61111 5.13889H7.08333C5.91656 5.13889 5.33317 5.13889 4.88752 5.36596C4.49552 5.56569 4.17681 5.8844 3.97707 6.27641C3.75 6.72206 3.75 7.30545 3.75 8.47222V12.9167C3.75 14.0834 3.75 14.6668 3.97707 15.1125C4.17681 15.5045 4.49552 15.8232 4.88752 16.0229C5.33317 16.25 5.91656 16.25 7.08333 16.25H11.5278C12.6946 16.25 13.2779 16.25 13.7236 16.0229C14.1156 15.8232 14.4343 15.5045 14.634 15.1125C14.8611 14.6668 14.8611 14.0834 14.8611 12.9167V11.3889"
                 stroke="#DCDCDC"
@@ -644,7 +644,7 @@ const ExternalLink = (props: any) => {
 
 const LeftDoubleArrow = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
             <path
                 d="M14.332 14L10.332 10L14.332 6.00002"
                 stroke={props.isCheck ? '#FFFFFF' : '#707070'}
@@ -665,7 +665,7 @@ const LeftDoubleArrow = (props: any) => {
 
 const RightDoubleArrow = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
             <path
                 d="M6.33594 6L10.3359 9.99999L6.33594 14"
                 stroke={props.isCheck ? '#FFFFFF' : '#707070'}
@@ -686,7 +686,7 @@ const RightDoubleArrow = (props: any) => {
 
 const Success = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
             <circle opacity="0.7" cx="8" cy="8" r="7" fill="#57D962" />
             <path d="M4 7.5L7 10.5L12 5.5" stroke="#121212" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -695,7 +695,7 @@ const Success = (props: any) => {
 
 const Failed = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
             <circle opacity="0.7" cx="8" cy="8" r="7" fill="#E55250" />
             <path d="M11 5L5 11" stroke="#121212" strokeLinecap="round" />
             <path d="M11 11L5 5" stroke="#121212" strokeLinecap="round" />
@@ -705,7 +705,7 @@ const Failed = (props: any) => {
 
 const Add = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
             <path d="M8 3V13" stroke="#999999" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M13 8L3 8" stroke="#999999" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -714,7 +714,7 @@ const Add = (props: any) => {
 
 const Close = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
             <path d="M4 4L20 20" stroke="#807E7E" />
             <path d="M20 4L4 20" stroke="#807E7E" />
         </svg>
@@ -723,7 +723,7 @@ const Close = (props: any) => {
 
 const XCircle = (props: any) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 32 32" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none">
             <path
                 d="M16.0013 29.3327C23.3651 29.3327 29.3346 23.3631 29.3346 15.9993C29.3346 8.63555 23.3651 2.66602 16.0013 2.66602C8.63751 2.66602 2.66797 8.63555 2.66797 15.9993C2.66797 23.3631 8.63751 29.3327 16.0013 29.3327Z"
                 fill="#707070"
@@ -738,6 +738,57 @@ const XCircle = (props: any) => {
         </svg>
     );
 };
+
+const SnackbarSuccess = (props: any) => {
+    return (
+        <svg width={props.width || '28'} height={props.height || '28'} viewBox="0 0 28 28" fill="none">
+            <path
+                d="M14 25.375C20.2822 25.375 25.375 20.2822 25.375 14C25.375 7.71776 20.2822 2.625 14 2.625C7.71776 2.625 2.625 7.71776 2.625 14C2.625 20.2822 7.71776 25.375 14 25.375Z"
+                fill={props.fill || '#57D962'}
+            />
+            <path d="M8.75 14L12.25 17.5L19.25 10.5" stroke="#313131" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+
+const SnackbarWarn = (props: any) => {
+    return (
+        <svg width={props.width || '28'} height={props.height || '28'} viewBox="0 0 28 28" fill="none">
+            <path
+                d="M14 25.375C20.2822 25.375 25.375 20.2822 25.375 14C25.375 7.71776 20.2822 2.625 14 2.625C7.71776 2.625 2.625 7.71776 2.625 14C2.625 20.2822 7.71776 25.375 14 25.375Z"
+                fill={props.fill || '#FFD426'}
+            />
+            <path
+                d="M13.1176 15.5926L12.5042 9.72344C12.4131 8.85015 13.0979 8.08984 13.976 8.08984H14.0092C14.8868 8.08984 15.5712 8.84885 15.4809 9.7217L14.8737 15.5913C14.8275 16.0371 14.4519 16.3761 14.0035 16.3761H13.9874C13.5394 16.3761 13.1638 16.0376 13.1171 15.5922L13.1176 15.5926ZM12.6369 18.5593V18.5318C12.6369 17.7863 13.2414 17.1817 13.9869 17.1817H14.0144C14.7599 17.1817 15.3645 17.7863 15.3645 18.5318V18.5593C15.3645 19.3048 14.7599 19.9093 14.0144 19.9093H13.9869C13.2414 19.9093 12.6369 19.3048 12.6369 18.5593Z"
+                fill="#313131"
+            />
+        </svg>
+    );
+};
+
+const SnackbarError = (props: any) => {
+    return (
+        <svg width={props.width || '28'} height={props.height || '28'} viewBox="0 0 28 28" fill="none">
+            <path
+                d="M14 25.375C20.2822 25.375 25.375 20.2822 25.375 14C25.375 7.71776 20.2822 2.625 14 2.625C7.71776 2.625 2.625 7.71776 2.625 14C2.625 20.2822 7.71776 25.375 14 25.375Z"
+                fill={props.fill || '#E55250'}
+            />
+            <path d="M10.5 17.5L17.5 10.5" stroke="#313131" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M10.5 10.5L17.5 17.5" stroke="#313131" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+};
+
+const CloseIcon = (props: any) => (
+    <svg width={props.width || '28'} height={props.height || '28'} viewBox="0 0 28 28" fill="none">
+        <path
+            d="M14 25.375C20.2822 25.375 25.375 20.2822 25.375 14C25.375 7.71776 20.2822 2.625 14 2.625C7.71776 2.625 2.625 7.71776 2.625 14C2.625 20.2822 7.71776 25.375 14 25.375Z"
+            fill={props.fill || '#474747'}
+        />
+        <path d="M9.625 9.625L18.375 18.375" stroke="#807E7E" strokeWidth="1.575" strokeLinecap="round" />
+        <path d="M18.375 9.625L9.625 18.375" stroke="#807E7E" strokeWidth="1.575" strokeLinecap="round" />
+    </svg>
+);
 
 const Icons = {
     Amount,
@@ -763,6 +814,7 @@ const Icons = {
     Wallet,
     Tag,
     RightArrow,
+    PrevPage,
     LeftArrow,
     Dot,
     Copy,
@@ -773,7 +825,11 @@ const Icons = {
     Failed,
     Add,
     Close,
-    XCircle
+    XCircle,
+    SnackbarSuccess,
+    SnackbarWarn,
+    SnackbarError,
+    CloseIcon
 };
 
 export default Icons;
