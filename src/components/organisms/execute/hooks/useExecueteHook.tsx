@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { FirmaSDK } from '@firmachain/firma-js';
+import { Expires, FirmaSDK } from '@firmachain/firma-js';
 
 import { rootState } from '../../../../redux/reducers';
 import { NETWORKS } from '../../../../constants/common';
@@ -30,6 +30,15 @@ export interface ITokenInfoState {
 
     addressAmount: string;
 }
+
+interface IAllowanceBalanceState {
+    success: boolean;
+    blockHeight: string;
+    data: {
+        allowance: string;
+        expires: Expires;
+    }
+};
 
 const useExecuteHook = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -126,9 +135,41 @@ const useExecuteHook = () => {
         [firmaSDK, enqueueSnackbar]
     );
 
+    const getCw20AllowanceBalance = useCallback(
+        async (contractAddress: string, owner: string, spender: string) => {
+            const resultData: IAllowanceBalanceState = {
+                success: true,
+                blockHeight: '0',
+                data: {
+                    allowance: '',
+                    expires: {
+                        at_height: 0
+                    }
+                }
+            }
+
+            if (!firmaSDK()) return resultData;
+
+            try {
+                const allowance = await firmaSDK().Cw20.getAllowance(contractAddress, owner, spender);
+                const blockHeight = (await firmaSDK().BlockChain.getChainSyncInfo()).latest_block_height;
+
+                resultData.blockHeight = blockHeight;
+                resultData.data = allowance;
+            } catch (error) {
+                console.log(error);
+                resultData.success = false;
+            } finally {
+                return resultData;
+            }
+        },
+        [firmaSDK, enqueueSnackbar]
+    );
+
     return {
         getContractTokenInfo,
-        getCw20Balance
+        getCw20Balance,
+        getCw20AllowanceBalance
     };
 };
 

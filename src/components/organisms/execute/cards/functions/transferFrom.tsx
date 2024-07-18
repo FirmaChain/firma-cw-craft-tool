@@ -1,16 +1,10 @@
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import TransferFromWalletList from '@/components/atoms/walletList/transferFromWalletList';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { addDecimals, getUTokenStrFromTokenStr } from '@/utils/common';
-
-const ContentWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-`;
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -52,8 +46,10 @@ interface IProps {
 
 export interface ITransferFrom {
     fromAddress: string;
+    fromAmount: string;
     toAddress: string;
-    amount: string;
+    toAmount: string;
+    allowanceAmount: string;
     id: string;
 }
 
@@ -62,7 +58,7 @@ const TransferFrom = ({ decimals, tokenSymbol }: IProps) => {
     const setTransferList = useExecuteStore((state) => state.setTransferList);
 
     const totalTransferAmount = useMemo(() => {
-        const amounts = transferList.map((info) => getUTokenStrFromTokenStr(info.amount, decimals));
+        const amounts = transferList.map((info) => getUTokenStrFromTokenStr(info.toAmount, decimals));
 
         return addDecimals(...amounts);
     }, [transferList]);
@@ -89,11 +85,10 @@ const TransferFrom = ({ decimals, tokenSymbol }: IProps) => {
             <TransferFromWalletList
                 decimals={decimals}
                 transferList={transferList}
-                setTransferList={(newList: ITransferFrom[]) => setTransferList(newList)}
-                onChangeWalletList={() => {}}
+                setTransferList={(newList) => setTransferList(newList)}
                 addressTitle={'Owner Address'}
                 addressPlaceholder={'Input Wallet Address'}
-                amountTitle={'Burn Amount'}
+                amountTitle={'Amount'}
             />
         </Container>
     );

@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
+
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput2 from './labelInput2';
 import useFormStore from '@/store/formStore';
-import styled from 'styled-components';
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
+import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { isValidAddress } from '@/utils/address';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -19,7 +22,7 @@ const AllowanceTypo = styled.div`
 
 interface IProps {
     index: number;
-    transfreFromInfo: ITransferFrom;
+    transferFromInfo: ITransferFrom;
     // address: string;
     // amount: string;
     onChange: (index, value: ITransferFrom) => void;
@@ -37,7 +40,7 @@ interface IProps {
 
 const TransferFromWalletInput = ({
     index,
-    transfreFromInfo,
+    transferFromInfo,
     // address,
     // amount,
     onChange,
@@ -62,19 +65,30 @@ const TransferFromWalletInput = ({
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const handleOnChange = (id: string, value: string) => {
-        const _data = { ...transfreFromInfo };
+        const _data = { ...transferFromInfo };
 
         switch (id) {
             case fromAddressId:
                 _data.fromAddress = value;
-
                 break;
+
+            case fromBalanceId:
+                _data.fromAmount = value;
+                break;
+
             case toAddressId:
                 _data.toAddress = value;
-
                 break;
+
             case transferAmountId:
-                _data.amount = value;
+                if (isValidAddress(_data.toAddress)){
+                    const compare = compareStringNumbers(getUTokenAmountFromToken(value, decimals), _data.allowanceAmount);
+                    if (compare === 1) {
+                        _data.toAmount = getTokenAmountFromUToken(_data.allowanceAmount, decimals);
+                    } else {
+                        _data.toAmount = value;
+                    }
+                }
                 break;
         }
 
@@ -105,7 +119,7 @@ const TransferFromWalletInput = ({
                                 labelProps={{ index, label: 'Owner Address' }}
                                 inputProps={{
                                     formId: fromAddressId,
-                                    value: transfreFromInfo.fromAddress,
+                                    value: transferFromInfo.fromAddress,
                                     onChange: (v) => handleOnChange(fromAddressId, v),
                                     placeHolder: 'Input address'
                                 }}
@@ -117,8 +131,7 @@ const TransferFromWalletInput = ({
                                 labelProps={{ label: 'Balance' }}
                                 inputProps={{
                                     formId: fromBalanceId,
-                                    value: '',
-
+                                    value: getTokenAmountFromUToken(transferFromInfo.fromAmount, decimals),
                                     onChange: (v) => handleOnChange(fromBalanceId, v),
                                     placeHolder: '0',
                                     type: 'number',
@@ -139,7 +152,7 @@ const TransferFromWalletInput = ({
                                 labelProps={{ index, label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: toAddressId,
-                                    value: transfreFromInfo.toAddress,
+                                    value: transferFromInfo.toAddress,
                                     onChange: (v) => handleOnChange(toAddressId, v),
 
                                     placeHolder: 'Input address'
@@ -152,7 +165,7 @@ const TransferFromWalletInput = ({
                                 labelProps={{ label: 'Amount' }}
                                 inputProps={{
                                     formId: transferAmountId,
-                                    value: transfreFromInfo.amount,
+                                    value: transferFromInfo.toAmount,
                                     onChange: (v) => handleOnChange(transferAmountId, v),
                                     //  handleAmount,
                                     placeHolder: '0',
@@ -161,7 +174,7 @@ const TransferFromWalletInput = ({
                                     textAlign: 'right'
                                 }}
                             />
-                            <AllowanceTypo>Allowance : {0}</AllowanceTypo>
+                            <AllowanceTypo>{`Allowance : ${formatWithCommas(getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals))}`}</AllowanceTypo>
                         </div>
                     </div>
                 </div>

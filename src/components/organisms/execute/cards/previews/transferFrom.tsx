@@ -1,13 +1,12 @@
+import { useMemo, useState } from 'react';
+import styled from 'styled-components';
+
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_ARROW_WITH_TAIL, IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { addStringAmount, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
+import { addStringAmount, formatWithCommas, getUTokenAmountFromToken } from '@/utils/balance';
 import { useContractContext } from '../../context/contractContext';
-import { addDecimals, getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
-import { isValidAddress } from '@/utils/address';
+import { getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
 import { ModalActions } from '@/redux/actions';
-import commaNumber from 'comma-number';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
 
@@ -165,66 +164,47 @@ interface IProps {
 }
 
 const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
-    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
+    const { _contract, _setIsFetched } = useContractContext();
 
     const transferList = useExecuteStore((state) => state.transferList);
+    const setTransferList = useExecuteStore((state) => state.setTransferList);
 
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const totalTransferAmount = useMemo(() => {
-        const amounts = transferList.map((info) => getUTokenStrFromTokenStr(info.amount, decimals));
+        const amounts = transferList.map((info) => getUTokenStrFromTokenStr(info.toAmount, decimals));
 
-        return addDecimals(...amounts);
-    }, [transferList]);
-
-    const calculateTotalBurnBalance = useCallback(() => {
-        let calcTransferAmount = '0';
-        let allAddressesValid = true;
-        let allAmountsValid = true;
-
-        for (const wallet of _walletList) {
-            if (!isValidAddress(wallet.recipient)) {
-                allAddressesValid = false;
-            }
-            if (!wallet.amount || wallet.amount.trim() === '') {
-                allAmountsValid = false;
-            }
-            calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
+        let totalAmount = "0";
+        for (const amount of amounts) {
+            totalAmount = addStringAmount(totalAmount, amount);
         }
 
-        const remainAmount = subtractStringAmount(addressAmount, getUTokenAmountFromToken(calcTransferAmount, decimals));
-        // setUpdatedAmount(remainAmount);
-
-        setIsEnableButton(allAddressesValid && allAmountsValid);
-        // setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, decimals));
-    }, [_walletList, addressAmount, decimals]);
-
-    useEffect(() => {
-        calculateTotalBurnBalance();
-    }, [_walletList, calculateTotalBurnBalance]);
+        return totalAmount;
+    }, [transferList]);
 
     const onClickTransfer = () => {
-        const convertWalletList = [];
+        const convertTransferList = [];
 
-        for (const wallet of _walletList) {
-            convertWalletList.push({
-                recipient: wallet.recipient,
-                amount: getUTokenAmountFromToken(wallet.amount, decimals)
+        for (const transfer of transferList) {
+            convertTransferList.push({
+                owner: transfer.fromAddress,
+                amount: getUTokenAmountFromToken(transfer.toAmount, decimals),
+                recipient: transfer.toAddress,
             });
         }
 
         ModalActions.handleData({
-            module: '/cw20/transfer',
+            module: '/cw20/transferFrom',
             params: {
                 contract: _contract,
-                msg: convertWalletList
+                msg: convertTransferList
             }
         });
         ModalActions.handleQrConfirm(true);
         ModalActions.handleSetCallback({
             callback: () => {
-                _setWalletList([]);
+                setTransferList([]);
                 _setIsFetched(true);
             }
         });
@@ -239,7 +219,7 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{commaNumber(totalTransferAmount, decimals)}</ItemAmountTypo>
+                        <ItemAmountTypo>{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenSymbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
@@ -247,13 +227,13 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
                 {isOpen && (
                     <AccordionBox>
                         {transferList.map((info) => (
-                            <FromToAddressLine from={info.fromAddress} to={info.toAddress} amount={info.amount} decimal={decimals} />
+                            <FromToAddressLine from={info.fromAddress} to={info.toAddress} amount={info.toAmount} decimal={decimals} />
                         ))}
                     </AccordionBox>
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton disabled onClick={onClickTransfer}>
+                <ExecuteButton onClick={onClickTransfer}>
                     <ExecuteButtonTypo>Transfer</ExecuteButtonTypo>
                 </ExecuteButton>
             </ButtonWrap>

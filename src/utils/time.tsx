@@ -5,3 +5,7 @@ export const addNanoSeconds = (value: string) => {
 export const removeNanoSeconds = (value: string) => {
     return value.slice(0, -6);
 };
+
+export const getCurrentUTCTimeStamp = (): string => {
+    return Math.floor(new Date().getTime()).toString();
+};

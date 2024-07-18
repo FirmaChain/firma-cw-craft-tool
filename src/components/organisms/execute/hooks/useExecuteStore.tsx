@@ -4,8 +4,10 @@ import { v4 } from 'uuid';
 
 export interface ITransferInfo {
     fromAddress: string;
+    fromAmount: string;
     toAddress: string;
-    amount: string;
+    toAmount: string;
+    allowanceAmount: string;
     id: string;
 }
 
@@ -19,7 +21,7 @@ interface FormProps {
     clearForm: () => void;
 }
 
-const INIT_TRANSFER_LIST: ITransferInfo[] = [{ fromAddress: '', toAddress: '', amount: '', id: v4() }];
+const INIT_TRANSFER_LIST: ITransferInfo[] = [{ fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: v4() }];
 
 const useExecuteStore = create<FormProps>()(
     immer((set) => ({
