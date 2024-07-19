@@ -12,7 +12,7 @@ import { useSnackbar } from 'notistack';
 const useMyToken = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const { network } = useSelector((state: rootState) => state.global);
+    const { network, cw20Mode } = useSelector((state: rootState) => state.global);
     const { address } = useSelector((state: rootState) => state.wallet);
 
     const [firmaSDK, setFirmaSDK] = useState<FirmaSDK | null>(null);
@@ -25,7 +25,7 @@ const useMyToken = () => {
             const newFirmaSDK = new FirmaSDK(craftConfig.FIRMACHAIN_CONFIG);
             setFirmaSDK(newFirmaSDK);
 
-            const codeId = craftConfig.CW20.CODE_ID;
+            const codeId = cw20Mode === "BASIC" ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
             setCodeId(codeId);
         };
         initializeFirmaSDK();

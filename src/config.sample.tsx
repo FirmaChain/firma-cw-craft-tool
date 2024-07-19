@@ -13,7 +13,8 @@ export const CRAFT_CONFIGS = {
     GRAPHQL_API_KEY: '',
     BLOCK_EXPLORER: 'https://explorer.firmachain.dev',
     CW20: {
-      CODE_ID: ""
+      BASIC_CODE_ID: "",
+      ADVANCED_CODE_ID: ""
     }
   },
   TESTNET: {
@@ -28,7 +29,8 @@ export const CRAFT_CONFIGS = {
     GRAPHQL_API_KEY: '',
     BLOCK_EXPLORER: 'https://explorer-testnet.firmachain.dev',
     CW20: {
-      CODE_ID: ""
+      BASIC_CODE_ID: "",
+      ADVANCED_CODE_ID: ""
     }
   }
 };

@@ -52,6 +52,7 @@ const Preview = ({
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
+    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
 
     const modal = useModalStore();
 
@@ -62,7 +63,7 @@ const Preview = ({
 
     useEffect(() => {
         const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        const cw20CodeId = craftConfig.CW20.CODE_ID;
+        const cw20CodeId = cw20Mode === "BASIC" ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
 
         setCodeId(cw20CodeId);
     }, [network]);
