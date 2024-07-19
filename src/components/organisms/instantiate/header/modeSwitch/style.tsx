@@ -12,7 +12,7 @@ export const SwitchContainer = styled.div`
     width: 254px;
     height: 38px;
     position: relative;
-    padding: 4px;
+    padding: 3px 4px;
     box-sizing: border-box;
 `;
 
@@ -51,6 +51,8 @@ export const SwitchLabel = styled.div`
     font-size: 16px;
     font-style: normal;
     line-height: 22px;
+
+    transition: all 0.2s;
 `;
 
 export const BasicTypo = styled(SwitchLabel)<{ $active?: boolean }>`
@@ -64,5 +66,5 @@ export const AdvancedTypo = styled(SwitchLabel)<{ $active?: boolean }>`
 background-clip: text;
 -webkit-background-clip: text;
 -webkit-text-fill-color: transparent;`
-            : 'var(--Gray-700, #807e7e);'}
+            : 'color: var(--Gray-700, #807e7e);'}
 `;

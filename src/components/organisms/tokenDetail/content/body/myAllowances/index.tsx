@@ -9,20 +9,18 @@ import {
 
 import { useMemo, useState } from 'react';
 import Icons from '@/components/atoms/icons';
-import { IAllowances, ISpenders } from '@/hooks/useTokenDetail';
 import SearchInput2 from '@/components/atoms/input/searchInput';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import commaNumber from 'comma-number';
 import { getTokenStrFromUTokenStr, parseExpires } from '@/utils/common';
+import useTokenDetailStore from '@/store/useTokenDetailStore';
 
-interface IProps {
-    decimals: string;
-    allAllowances: IAllowances[];
-    allSpenders: ISpenders[];
-}
+const MyAllowances = () => {
+    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
+    const allowances = useTokenDetailStore((state) => state.tokenDetail?.allAllowances) || [];
+    const spenders = useTokenDetailStore((state) => state.tokenDetail?.allSpenders) || [];
 
-const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
     const [keyword, setKeyword] = useState<string>('');
 
     const handleSearchAddress = (value: string) => {
@@ -30,14 +28,14 @@ const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
     };
 
     const allowancesList = useMemo(() => {
-        if (keyword === '') return allAllowances;
-        else return allAllowances.filter((one) => one.Receiver.toLowerCase().includes(keyword.toLowerCase()));
-    }, [allAllowances, keyword]);
+        if (keyword === '') return allowances;
+        else return allowances.filter((one) => one.Receiver.toLowerCase().includes(keyword.toLowerCase()));
+    }, [allowances, keyword]);
 
     const receiverList = useMemo(() => {
-        if (keyword === '') return allSpenders;
-        else return allSpenders.filter((one) => one.Receiver.toLowerCase().includes(keyword.toLowerCase()));
-    }, [allSpenders, keyword]);
+        if (keyword === '') return spenders;
+        else return spenders.filter((one) => one.Receiver.toLowerCase().includes(keyword.toLowerCase()));
+    }, [spenders, keyword]);
 
     const columns: IColumn[] = [
         {

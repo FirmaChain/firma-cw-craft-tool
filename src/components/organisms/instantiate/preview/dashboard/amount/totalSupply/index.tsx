@@ -41,10 +41,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                     <SummeryLeftText>Total Supply</SummeryLeftText>
                 </SummeryLeftWrapper>
                 <SummeryRightWrapeer>
-                    <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>
-                        {commaNumber(totalSupply)}
-                        {/* {totalSupply !== '' ? getUTokenStrFromTokenStr(totalSupply, decimals) : ''} */}
-                    </SummeryRightTotalSupply>
+                    <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>{commaNumber(totalSupply)}</SummeryRightTotalSupply>
                     <SummeryRightTokenSymbol>{tokenSymbol !== '' ? tokenSymbol : ''}</SummeryRightTokenSymbol>
                     <ArrowToggleButton onToggle={onClickToggleWalletList} />
                 </SummeryRightWrapeer>
@@ -69,7 +66,6 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                     </ItemLeftAddress>
                                 </ItemLeftWrapper>
                                 <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))}>
-                                    {/* {wallet.amount !== '' ? getUTokenStrFromTokenStr(wallet.amount, decimals) : '0'} */}
                                     {commaNumber(wallet.amount) || '0'}
                                 </ItemTokenAmount>
                             </WalletListItem>

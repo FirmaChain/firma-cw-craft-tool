@@ -112,7 +112,7 @@ const Sidebar = () => {
                         <MenuListWrapper>
                             <MenuItem onClick={(e) => onClickMenu(e, '/instantiate')}>
                                 <Icons.PlusCircle
-                                    selected={'/' + location.pathname.split('/')[1] === '/instantiate'}
+                                    $selected={'/' + location.pathname.split('/')[1] === '/instantiate'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
@@ -120,7 +120,7 @@ const Sidebar = () => {
                             </MenuItem>
                             <MenuItem onClick={(e) => onClickMenu(e, '/execute')}>
                                 <Icons.Setting
-                                    selected={'/' + location.pathname.split('/')[1] === '/execute'}
+                                    $isCheck={'/' + location.pathname.split('/')[1] === '/execute'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
@@ -129,7 +129,7 @@ const Sidebar = () => {
                             <LineDivider />
                             <MenuItem onClick={(e) => onClickMenu(e, '/search')}>
                                 <Icons.Search
-                                    selected={'/' + location.pathname.split('/')[1] === '/search'}
+                                    $isCheck={'/' + location.pathname.split('/')[1] === '/search'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
@@ -137,7 +137,7 @@ const Sidebar = () => {
                             </MenuItem>
                             <MenuItem onClick={(e) => onClickMenu(e, '/mytoken')}>
                                 <Icons.Coins
-                                    selected={'/' + location.pathname.split('/')[1] === '/mytoken'}
+                                    $isCheck={'/' + location.pathname.split('/')[1] === '/mytoken'}
                                     width={'16px'}
                                     height={'16px'}
                                 />

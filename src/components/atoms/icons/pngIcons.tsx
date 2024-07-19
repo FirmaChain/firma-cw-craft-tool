@@ -17,6 +17,7 @@ export const IC_RESET = PUBLIC_URL + 'ic_reset.png';
 export const IC_CALENDAR = PUBLIC_URL + 'ic_calendar.png';
 export const IC_TALK = PUBLIC_URL + 'ic_talk.png';
 export const IC_WALLET_FILL = PUBLIC_URL + 'ic_wallet_fill.png';
+export const IC_WALLET_FILL_00827A = PUBLIC_URL + 'ic_wallet_fill_00827A.png';
 export const IC_LINK_FILL = PUBLIC_URL + 'ic_link_fill.png';
 export const IC_APPROVED = PUBLIC_URL + 'ic_approved.png';
 export const IC_DASHED_LINE = PUBLIC_URL + 'ic_dashed_line.png';

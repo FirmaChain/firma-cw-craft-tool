@@ -31,8 +31,8 @@ const JsonViewer = ({ data }) => {
     };
 
     return (
-        <div style={{ height: '100%', overflow: 'hidden' }}>
-            <Wrapper style={{ maxHeight: '400px' }}>
+        <div style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
+            <Wrapper style={{ maxHeight: '348px', maxWidth: '750px', width: '100%' }}>
                 <StyledOverlayScrollbar defer>
                     <Container>
                         <div key={`${id}_start`}>{'{'}</div>

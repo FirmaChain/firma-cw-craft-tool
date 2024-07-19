@@ -51,11 +51,11 @@ export const SpecificColumnValue = styled.div`
 `;
 
 export const LogoImage = styled.div`
-    width: 72px;
-    height: 72px;
-    background-color: #262626;
-    border-radius: 153.409px;
-    border: 1px solid #383838;
+    width: 90px;
+    height: 90px;
+    // background-color: #262626;
+    // border-radius: 153.409px;
+    // border: 1px solid #383838;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,13 +63,15 @@ export const LogoImage = styled.div`
 `;
 
 export const IconBackground = styled.div`
-    width: 72px;
-    height: 72px;
+    width: 90px;
+    height: 90px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 6.933px;
+    border-radius: 50%;
     background: var(--Gray-450, #262626);
+
+    border: 1px solid #383838;
 `;
 
 export const SpecificValueTypo = styled.div<{ $disabled?: boolean }>`
@@ -91,6 +93,7 @@ export const SpecificMetadataWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
 `;
 
 export const SpecificMetadataValueWrapper = styled.div`

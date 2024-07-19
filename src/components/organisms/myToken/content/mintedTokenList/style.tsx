@@ -18,6 +18,7 @@ export const ItemWrapper = styled(IconButton)`
     align-items: center;
     background: #222;
     border-radius: 24px;
+    gap: 16px;
 `;
 
 export const ItemLeft = styled.div`
@@ -85,6 +86,12 @@ export const TokenInfoNameTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
 `;
 
 export const ItemRight = styled.div`

@@ -19,12 +19,7 @@ import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButt
 import styled from 'styled-components';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
-
-interface IProps {
-    tokenSymbol: string;
-    decimals: string;
-    contractAddress: string;
-}
+import useTokenDetailStore from '@/store/useTokenDetailStore';
 
 const SearchButton = styled(IconButton)`
     //? outside
@@ -79,8 +74,12 @@ const EndAdornment = ({
     );
 };
 
-const WalletSearch = ({ contractAddress, tokenSymbol, decimals }: IProps) => {
+const WalletSearch = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
+
+    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
+    const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
+    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals);
 
     const { getWalletSearch } = useTokenDetail();
 
@@ -107,22 +106,24 @@ const WalletSearch = ({ contractAddress, tokenSymbol, decimals }: IProps) => {
 
     return (
         <WalletSearchWrapper>
-            <WalletTitleTypo>Wallet Address Search</WalletTitleTypo>
-            <SearchInputWithButton2
-                value={searchAddress}
-                placeHolder={'Input Wallet Address'}
-                onChange={setSearchAddress}
-                adornment={{
-                    end: (
-                        <EndAdornment
-                            keyword={searchAddress}
-                            disableSearch={!isValidAddress(searchAddress)}
-                            onClickSearch={onClickSearch}
-                            onClickClear={() => setSearchAddress('')}
-                        />
-                    )
-                }}
-            />
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+                <WalletTitleTypo>Wallet Address Search</WalletTitleTypo>
+                <SearchInputWithButton2
+                    value={searchAddress}
+                    placeHolder={'Input Wallet Address'}
+                    onChange={setSearchAddress}
+                    adornment={{
+                        end: (
+                            <EndAdornment
+                                keyword={searchAddress}
+                                disableSearch={!isValidAddress(searchAddress)}
+                                onClickSearch={onClickSearch}
+                                onClickClear={() => setSearchAddress('')}
+                            />
+                        )
+                    }}
+                />
+            </div>
             <FullDottedDivider />
             <BalanceWrapper>
                 <BalanceLabelTypo>Balances</BalanceLabelTypo>
@@ -131,7 +132,7 @@ const WalletSearch = ({ contractAddress, tokenSymbol, decimals }: IProps) => {
                     <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
                 </BalanceAmountWrapper>
             </BalanceWrapper>
-            <Allowances decimals={decimals} searchAllowances={allAllowances} searchReceivers={allReceives} />
+            <Allowances searchAllowances={allAllowances} searchReceivers={allReceives} />
         </WalletSearchWrapper>
     );
 };

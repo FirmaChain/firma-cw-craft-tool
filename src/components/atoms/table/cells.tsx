@@ -1,5 +1,5 @@
 import CopyIconButton from '../buttons/copyIconButton';
-import { IC_WALLET_FILL } from '../icons/pngIcons';
+import { IC_VALID_SHIELD, IC_WALLET_FILL_00827A } from '../icons/pngIcons';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
@@ -10,13 +10,14 @@ import { DefaultTypo, TypeCover, TypeTypo, WalletAddressWrap } from './styles';
 const WalletAddress = ({ address, sliceLength }: { address: string; sliceLength?: number }) => {
     return (
         <WalletAddressWrap>
-            <img src={IC_WALLET_FILL} alt="wallet" style={{ width: '16px', marginRight: '6px' }} />
+            <img src={IC_WALLET_FILL_00827A} alt="wallet" style={{ width: '16px', marginRight: '6px' }} />
             <DefaultTypo style={{ color: 'var(--Green-800, #00827A)', marginRight: '2px' }}>
                 {sliceLength
                     ? `${address.slice(0, sliceLength)}...${address.slice(address.length - sliceLength, address.length)}`
                     : address}
             </DefaultTypo>
-            <CopyIconButton text={address} width={'16px'} height={'16px'} />
+            <img src={IC_VALID_SHIELD} alt="wallet" style={{ width: '20px' }} />
+            <CopyIconButton text={address} width={'20px'} height={'20px'} />
         </WalletAddressWrap>
     );
 };
@@ -26,9 +27,26 @@ const Hash = ({ hash, sliceLength = 10 }: { hash: string; sliceLength?: number }
     const explorerUrl = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
 
     const onClick = () => window.open(`${explorerUrl}/transactions/${hash}`);
+
     return (
-        <DefaultTypo onClick={onClick} style={{ cursor: 'pointer', color: '#00827A' }}>
-            {hash.slice(0, sliceLength)}...{hash.slice(hash.length - sliceLength, hash.length)}
+        <DefaultTypo onClick={onClick} style={{ cursor: 'pointer', color: '#00827A', display: 'flex' }}>
+            {hash
+                .slice(0, sliceLength)
+                .split('')
+                .map((one) => (
+                    <span key={one} style={{ width: '9px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {one}
+                    </span>
+                ))}
+            ...
+            {hash
+                .slice(hash.length - sliceLength, hash.length)
+                .split('')
+                .map((one) => (
+                    <span key={one} style={{ width: '9px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        {one}
+                    </span>
+                ))}
         </DefaultTypo>
     );
 };

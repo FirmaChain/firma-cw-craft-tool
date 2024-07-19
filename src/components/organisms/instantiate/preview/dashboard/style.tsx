@@ -68,10 +68,14 @@ export const StyledOverlayScrollbar = styled(OverlayScrollbarsComponent)`
     .os-scrollbar {
         --os-size: 16px;
         --os-padding-perpendicular: 5px;
-        --os-padding-axis: 20px;
+        // --os-padding-axis: 30px;
         --os-track-border-radius: 50%;
         --os-handle-bg: var(--Gray-550, #444);
         --os-handle-bg-hover: var(--Gray-550, #444);
         --os-handle-bg-active: var(--Gray-550, #444);
+    }
+
+    .os-scrollbar-vertical {
+        padding: 20px 5px;
     }
 `;

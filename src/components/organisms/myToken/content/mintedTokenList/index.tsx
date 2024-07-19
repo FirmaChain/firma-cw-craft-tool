@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useMyToken from '@/hooks/useMyToken';
-import PaginatedItem from './paginationItem';
+import MintedTokenCard from './tokenCard';
 import { Container, CurrentPageNumber, PaginationButton, PaginationContainer } from './style';
 import Icons from '@/components/atoms/icons';
 import RowsPerPageSelect from '@/components/atoms/select/rowsPerPageSelect';
@@ -20,7 +20,7 @@ interface IContractItem {
     decimals: number;
 }
 
-const PaginatedList = ({ contractList }: IProps) => {
+const MyMintedTokenList = ({ contractList }: IProps) => {
     const navigate = useNavigate();
 
     const { getCW20ContractInfo } = useMyToken();
@@ -57,6 +57,9 @@ const PaginatedList = ({ contractList }: IProps) => {
                     }
                 })
             );
+
+            console.log('update', fetchedItems);
+
             setPaginatedItems(fetchedItems);
             setLoading(false);
         };
@@ -93,7 +96,7 @@ const PaginatedList = ({ contractList }: IProps) => {
                 <div>Loading...</div>
             ) : (
                 paginatedItems.map((item, index) => (
-                    <PaginatedItem
+                    <MintedTokenCard
                         key={index}
                         tokenLogoUrl={item.tokenLogoUrl}
                         tokenSymbol={item.tokenSymbol}
@@ -117,10 +120,10 @@ const PaginatedList = ({ contractList }: IProps) => {
             >
                 <PaginationContainer style={{ justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
                     <PaginationButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
-                        <Icons.LeftDoubleArrow width={'20px'} height={'20px'} isCheck={currentPage !== 1} />
+                        <Icons.LeftDoubleArrow width={'20px'} height={'20px'} $isCheck={currentPage !== 1} />
                     </PaginationButton>
                     <PaginationButton onClick={handlePrevPage} disabled={currentPage === 1}>
-                        <Icons.PrevPage width={'20px'} height={'20px'} isCheck={currentPage !== 1} />
+                        <Icons.PrevPage width={'20px'} height={'20px'} $isCheck={currentPage !== 1} />
                     </PaginationButton>
                     <CurrentPageNumber>{currentPage}</CurrentPageNumber>
                     <PaginationButton onClick={handleNextPage} disabled={currentPage === totalPages}>
@@ -128,11 +131,11 @@ const PaginatedList = ({ contractList }: IProps) => {
                             width={'20px'}
                             height={'20px'}
                             style={{ transform: 'rotate(180deg)' }}
-                            isCheck={currentPage !== totalPages}
+                            $isCheck={currentPage !== totalPages}
                         />
                     </PaginationButton>
                     <PaginationButton onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
-                        <Icons.RightDoubleArrow width={'20px'} height={'20px'} isCheck={currentPage !== totalPages} />
+                        <Icons.RightDoubleArrow width={'20px'} height={'20px'} $isCheck={currentPage !== totalPages} />
                     </PaginationButton>
                 </PaginationContainer>
 
@@ -151,4 +154,4 @@ const PaginatedList = ({ contractList }: IProps) => {
     );
 };
 
-export default PaginatedList;
+export default MyMintedTokenList;

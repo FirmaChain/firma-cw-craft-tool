@@ -32,7 +32,7 @@ interface IProps {
     onClickItem: (contractAddress: string) => void;
 }
 
-const PaginatedItem = ({
+const MintedTokenCard = ({
     tokenLogoUrl,
     tokenSymbol,
     tokenName,
@@ -92,10 +92,10 @@ const PaginatedItem = ({
                     <TotalSupplyTypo>{totalSupplyTypo}</TotalSupplyTypo>
                     <SupplySymbolTypo>{tokenSymbol}</SupplySymbolTypo>
                 </SupplyWrapper>
-                <Icons.RightArrow width={'20px'} height={'20px'} isCheck />
+                <Icons.RightArrow width={'20px'} height={'20px'} $isCheck />
             </ItemRight>
         </ItemWrapper>
     );
 };
 
-export default React.memo(PaginatedItem);
+export default React.memo(MintedTokenCard);

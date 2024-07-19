@@ -1,87 +1,14 @@
-import { Cw20SpenderAllowance } from '@firmachain/firma-js';
 import ContentBody from './body';
 import { ContentWrapper } from './style';
 import Title from './title/title';
-import { ITransaction } from '@/interfaces/cw20';
 import WalletSearch from './search';
-import { IAccounts, IAllowances, ISpenders } from '@/hooks/useTokenDetail';
 
-interface IProps {
-    isBasic: boolean;
-    tokenName: string;
-    tokenSymbol: string;
-    tokenLogoUrl: string;
-    totalSupply: string;
-    contractAddress: string;
-    decimals: string;
-    label: string;
-    addressBalance: string;
-    minterAddress: string;
-    minterCap: string;
-    marketingLogo: string;
-    marketingDescription: string;
-    marketingAddress: string;
-    marketingProject: string;
-    metadata: string;
-    allAllowances: IAllowances[];
-    allSpenders: ISpenders[];
-    allAccounts: IAccounts[];
-    transactionList: ITransaction[];
-}
-
-const TokenDetailContent = ({
-    isBasic,
-    tokenName,
-    tokenLogoUrl,
-    tokenSymbol,
-    totalSupply,
-    contractAddress,
-    decimals,
-    label,
-    addressBalance,
-    minterAddress,
-    minterCap,
-    marketingLogo,
-    marketingDescription,
-    marketingAddress,
-    marketingProject,
-    metadata,
-    allAllowances,
-    allSpenders,
-    allAccounts,
-    transactionList
-}: IProps) => {
+const TokenDetailContent = () => {
     return (
         <ContentWrapper>
-            <Title
-                tokenLogoUrl={tokenLogoUrl}
-                tokenSymbol={tokenSymbol}
-                tokenName={tokenName}
-                totalSupply={totalSupply}
-                tokenDecimal={decimals}
-            />
-            <ContentBody
-                isBasic={isBasic}
-                contractAddress={contractAddress}
-                tokenName={tokenName}
-                tokenSymbol={tokenSymbol}
-                decimals={decimals}
-                label={label}
-                addressBalance={addressBalance}
-                totalSupply={totalSupply}
-                minterAddress={minterAddress}
-                minterCap={minterCap}
-                marketingLogo={marketingLogo}
-                marketingDescription={marketingDescription}
-                marketingAddress={marketingAddress}
-                marketingProject={marketingProject}
-                metadata={metadata}
-                allAllowances={allAllowances}
-                allSpenders={allSpenders}
-                allAccounts={allAccounts}
-                transactionList={transactionList}
-            />
-            <WalletSearch tokenSymbol={tokenSymbol} decimals={decimals} contractAddress={contractAddress} />
+            <Title />
+            <ContentBody />
+            <WalletSearch />
         </ContentWrapper>
     );
 };

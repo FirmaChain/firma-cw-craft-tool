@@ -1,14 +1,12 @@
-import { ITransaction } from '@/interfaces/cw20';
 import { CradHeaderWrapper, HeaderSubTitleTypo, HeaderTitleTypo, TransactionContent, TransactionsCard } from './style';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import useTokenDetailStore from '@/store/useTokenDetailStore';
 
-interface IProps {
-    transactionList: ITransaction[];
-}
+const Transactions = () => {
+    const transactions = useTokenDetailStore((state) => state.transactions) || [];
 
-const Transactions = ({ transactionList }: IProps) => {
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },
         { id: 'type', label: 'Type', renderCell: (id, row) => <Cell.TransactionType type={row[id]} />, minWidth: '150px' },
@@ -34,10 +32,10 @@ const Transactions = ({ transactionList }: IProps) => {
         <TransactionsCard>
             <CradHeaderWrapper>
                 <HeaderTitleTypo>Transactions</HeaderTitleTypo>
-                <HeaderSubTitleTypo>Lastest 15 records</HeaderSubTitleTypo>
+                <HeaderSubTitleTypo>The lastest 15 records</HeaderSubTitleTypo>
             </CradHeaderWrapper>
             <TransactionContent>
-                <StyledTable columns={columns} rows={transactionList} rowsPerPage={15} />
+                <StyledTable columns={columns} rows={transactions} rowsPerPage={15} />
             </TransactionContent>
         </TransactionsCard>
     );

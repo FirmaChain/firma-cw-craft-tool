@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ActiveIndicator, AdvancedTypo, BasicTypo, SwitchButton, SwitchContainer, SwitchLabel } from './style';
+import { ActiveIndicator, AdvancedTypo, BasicTypo, SwitchButton, SwitchContainer } from './style';
 
 interface IProps {
     leftMenu: string;

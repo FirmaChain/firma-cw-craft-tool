@@ -12,32 +12,19 @@ import {
     TokenCardHeaderTypo,
     TokenCardSpecific
 } from './style';
+import useTokenDetailStore from '@/store/useTokenDetailStore';
 
-interface IProps {
-    isBasic: boolean;
-    contractAddress: string;
-    tokenName: string;
-    tokenSymbol: string;
-    decimals: string;
-    label: string;
-    addressBalance: string;
-    totalSupply: string;
-    minterAddress: string;
-    minterCap: string;
-}
+const TokenInformation = () => {
+    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
+    const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName) || '';
+    const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol) || '';
+    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
+    const label = useTokenDetailStore((state) => state.tokenDetail?.label) || '';
+    const addressBalance = useTokenDetailStore((state) => state.tokenDetail?.addressBalance) || '';
+    const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply) || '';
+    const minterAddress = useTokenDetailStore((state) => state.tokenDetail?.minterAddress) || '';
+    const minterCap = useTokenDetailStore((state) => state.tokenDetail?.minterCap);
 
-const TokenInformation = ({
-    isBasic,
-    contractAddress,
-    tokenName,
-    tokenSymbol,
-    decimals,
-    label,
-    addressBalance,
-    totalSupply,
-    minterAddress,
-    minterCap
-}: IProps) => {
     return (
         <TokenCard>
             <TokenCardHeaderTypo>Token Information</TokenCardHeaderTypo>
@@ -75,21 +62,26 @@ const TokenInformation = ({
                     </SpecificValueWrapper>
                 </SpecificItem>
 
-                <SpecificItem>
-                    <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
-                    <SpecificValueWrapper>
-                        <SpecificValueTypo>{minterAddress}</SpecificValueTypo>
-                        {minterAddress && <CopyIconButton text={minterAddress} width={'22px'} height={'22px'} />}
-                    </SpecificValueWrapper>
-                </SpecificItem>
+                {minterAddress && (
+                    <SpecificItem>
+                        <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
+                        <SpecificValueWrapper>
+                            <SpecificValueTypo>{minterAddress}</SpecificValueTypo>
+                            {minterAddress && <CopyIconButton text={minterAddress} width={'22px'} height={'22px'} />}
+                        </SpecificValueWrapper>
+                    </SpecificItem>
+                )}
 
                 <SpecificItem>
                     <SpecificLabelTypo>Minter Cap</SpecificLabelTypo>
-                    <SpecificValueWrapper>
-                        <SpecificValueTypo>{minterCap && getTokenStrFromUTokenStr(minterCap, decimals)}</SpecificValueTypo>
-                        <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
-                    </SpecificValueWrapper>
+                    {minterCap !== undefined && minterCap !== '' && (
+                        <SpecificValueWrapper>
+                            <SpecificValueTypo>{getTokenStrFromUTokenStr(minterCap, decimals)}</SpecificValueTypo>
+                            <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
+                        </SpecificValueWrapper>
+                    )}
                 </SpecificItem>
+
                 <SpecificItem>
                     <SpecificLabelTypo>My Balance</SpecificLabelTypo>
                     <SpecificValueWrapper>

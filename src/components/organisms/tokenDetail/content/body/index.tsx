@@ -3,83 +3,21 @@ import { ContentBodyContainer } from './style';
 import TokenInformation from './tokenInfomation';
 import MyAllowances from './myAllowances';
 import AllAccounts from './allAccounts';
-import { ITransaction } from '@/interfaces/cw20';
 import Transactions from './transactions';
-import { IAccounts, IAllowances, ISpenders } from '@/hooks/useTokenDetail';
 import LineDivider from '@/components/atoms/divider/lineDivider';
 
-interface IProps {
-    isBasic: boolean;
-    contractAddress: string;
-    tokenName: string;
-    tokenSymbol: string;
-    decimals: string;
-    label: string;
-    addressBalance: string;
-    totalSupply: string;
-    minterAddress: string;
-    minterCap: string;
-    marketingLogo: string;
-    marketingDescription: string;
-    marketingAddress: string;
-    marketingProject: string;
-    metadata: string;
-    allAllowances: IAllowances[];
-    allSpenders: ISpenders[];
-    allAccounts: IAccounts[];
-    transactionList: ITransaction[];
-}
-
-const ContentBody = ({
-    isBasic,
-    contractAddress,
-    tokenName,
-    tokenSymbol,
-    decimals,
-    label,
-    addressBalance,
-    totalSupply,
-    minterAddress,
-    minterCap,
-    marketingLogo,
-    marketingDescription,
-    marketingAddress,
-    marketingProject,
-    metadata,
-    allAllowances,
-    allSpenders,
-    allAccounts,
-    transactionList
-}: IProps) => {
+const ContentBody = () => {
     return (
         <ContentBodyContainer>
-            <TokenInformation
-                isBasic={isBasic}
-                contractAddress={contractAddress}
-                tokenName={tokenName}
-                tokenSymbol={tokenSymbol}
-                decimals={decimals}
-                label={label}
-                addressBalance={addressBalance}
-                totalSupply={totalSupply}
-                minterAddress={minterAddress}
-                minterCap={minterCap}
-            />
+            <TokenInformation />
             <LineDivider />
-            <AdditionalInformation
-                contractAddress={contractAddress}
-                marketingLogo={marketingLogo}
-                marketingDescription={marketingDescription}
-                marketingAddress={marketingAddress}
-                marketingProject={marketingProject}
-                metadata={metadata}
-            />
+            <AdditionalInformation />
             <LineDivider />
-            <MyAllowances decimals={decimals} allAllowances={allAllowances} allSpenders={allSpenders} />
+            <MyAllowances />
             <LineDivider />
-            <AllAccounts decimals={decimals} allAccounts={allAccounts} />
+            <AllAccounts />
             <LineDivider />
-            <Transactions transactionList={transactionList} />
+            <Transactions />
         </ContentBodyContainer>
     );
 };

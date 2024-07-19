@@ -31,7 +31,7 @@ const StyledInput = styled.div<{
                 : $isFocus && !$readOnly
                   ? 'var(--Gray-550, #FFFFFF) !important'
                   : 'var(--Gray-550, #444)'};
-    border-radius: 6px;
+    border-radius: 12px;
     cursor: text;
     box-sizing: border-box;
 

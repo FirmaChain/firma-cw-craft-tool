@@ -1,97 +1,58 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-
 import { rootState } from '../redux/reducers';
-
 import { Header, TokenDetailContent } from '../components/organisms/tokenDetail';
-import useTokenDetail, { IAccounts, IAllowances, ISpenders } from '../hooks/useTokenDetail';
+import useTokenDetail from '../hooks/useTokenDetail';
 import useApollo from '../hooks/useApollo';
 import { getTransactionsByAddress } from '../apollo/queries';
-import { Cw20SpenderAllowance } from '@firmachain/firma-js';
 import { ITransaction } from '../interfaces/cw20';
 import { determineMsgTypeAndSpender } from '../utils/common';
 import { Container } from '@/styles/instantiate';
+import useTokenDetailStore from '@/store/useTokenDetailStore';
 
 const Cw20TokenDetail = () => {
-    const targetContractAddress = window.location.pathname.replace('/mytoken/detail/', '');
+    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const setTokenDetail = useTokenDetailStore((state) => state.setTokenDetail);
+    const setTransactions = useTokenDetailStore((state) => state.setTransactions);
+
+    const contractAddress = window.location.pathname.replace('/mytoken/detail/', '');
 
     const { getTokenDetail } = useTokenDetail();
 
     const { client } = useApollo();
 
-    const { isInit, address } = useSelector((state: rootState) => state.wallet);
-
-    const [isBasic, setIsBasic] = useState<boolean>(false);
-    const [tokenName, setTokenName] = useState<string>('');
-    const [tokenSymbol, setTokenSymbol] = useState<string>('');
-    const [tokenLogoUrl, setTokenLogoUrl] = useState<string>('');
-    const [totalSupply, setTotalSupply] = useState<string>('');
-    const [decimals, setDecimals] = useState<string>('');
-    const [label, setLabel] = useState<string>('');
-    const [addressBalance, setAddressBalance] = useState<string>('');
-    const [minterAddress, setMinterAddress] = useState<string>('');
-    const [minterCap, setMinterCap] = useState<string>('');
-    const [marketingLogo, setMarketingLogo] = useState<string>('');
-    const [marketingDescription, setMarketingDescription] = useState<string>('');
-    const [marketingAddress, setMarketingAddress] = useState<string>('');
-    const [marketingProject, setMarketingProject] = useState<string>('');
-    const [metadata, setMetadata] = useState<string>('');
-    const [allAllowances, setAllAllowances] = useState<IAllowances[]>([]);
-    const [allSpenders, setAllSpenders] = useState<ISpenders[]>([]);
-    const [allAccounts, setAllAccounts] = useState<IAccounts[]>([]);
-    const [transactionList, setTransactionList] = useState<ITransaction[]>([]);
-
     const fetchTokenList = useCallback(async () => {
         if (isInit) {
-            const tokenDetail = await getTokenDetail(targetContractAddress, address);
+            const tokenDetail = await getTokenDetail(contractAddress, address);
 
             if (tokenDetail) {
-                setTokenName(tokenDetail.tokenName);
-                setTokenSymbol(tokenDetail.tokenSymbol);
-                setTokenLogoUrl(tokenDetail.marketingLogoUrl);
-                setTotalSupply(tokenDetail.totalSupply);
-                setDecimals(tokenDetail.decimals);
-                setLabel(tokenDetail.label);
-                setAddressBalance(tokenDetail.addressBalance);
-                setMinterAddress(tokenDetail.minterAddress);
-                setMinterCap(tokenDetail.minterCap);
-                setMarketingLogo(tokenDetail.marketingLogoUrl);
-                setMarketingDescription(tokenDetail.marketingDescription);
-                setMarketingAddress(tokenDetail.marketing);
-                setMarketingProject(tokenDetail.marketingProject);
-                setMetadata(tokenDetail.metadata);
-                setAllAllowances(tokenDetail.allAllowances);
-                setAllSpenders(tokenDetail.allSpenders);
-                setAllAccounts(tokenDetail.allAccounts);
+                setTokenDetail({ ...tokenDetail, contractAddress });
             }
         }
     }, [getTokenDetail, isInit]);
 
     const fetchTransactionList = useCallback(async () => {
         if (client) {
-            getTransactionsByAddress(client, targetContractAddress, 15)
-                .then((data) => {
-                    const convertTransactions: ITransaction[] = [];
+            const { messagesByAddress } = await getTransactionsByAddress(client, contractAddress, 15);
 
-                    for (const message of data.messagesByAddress) {
-                        const { block, hash, height, messages, success } = message.transaction;
-                        const type = determineMsgTypeAndSpender(messages);
+            const result: ITransaction[] = [];
 
-                        convertTransactions.push({
-                            hash: hash,
-                            height: height.toString(),
-                            timestamp: block.timestamp,
-                            type: type[0].type,
-                            address: type[0].sender,
-                            success: success
-                        });
-                    }
+            for (const message of messagesByAddress) {
+                const { block, hash, height, messages, success } = message.transaction;
+                const type = determineMsgTypeAndSpender(messages);
 
-                    setTransactionList(convertTransactions);
-                })
-                .catch((error) => {
-                    console.log(error);
+                result.push({
+                    hash: hash,
+                    height: height.toString(),
+                    timestamp: block.timestamp,
+                    type: type[0].type,
+                    address: type[0].sender,
+                    success: success
                 });
+            }
+
+            setTransactions(result);
         }
     }, [client]);
 
@@ -103,31 +64,14 @@ const Cw20TokenDetail = () => {
         fetchTransactionList();
     }, [client, fetchTransactionList]);
 
+    useEffect(() => {
+        return () => useTokenDetailStore.getState().clearForm();
+    }, []);
+
     return (
-        <Container>
-            <Header tokenName={tokenName} />
-            <TokenDetailContent
-                isBasic={true}
-                tokenName={tokenName}
-                tokenSymbol={tokenSymbol}
-                tokenLogoUrl={tokenLogoUrl}
-                totalSupply={totalSupply}
-                contractAddress={targetContractAddress}
-                decimals={decimals}
-                label={label}
-                addressBalance={addressBalance}
-                minterAddress={minterAddress}
-                minterCap={minterCap}
-                marketingLogo={marketingLogo}
-                marketingDescription={marketingDescription}
-                marketingAddress={marketingAddress}
-                marketingProject={marketingProject}
-                metadata={metadata}
-                allAllowances={allAllowances}
-                allSpenders={allSpenders}
-                allAccounts={allAccounts}
-                transactionList={transactionList}
-            />
+        <Container style={{ gap: '40px' }}>
+            <Header />
+            <TokenDetailContent />
         </Container>
     );
 };

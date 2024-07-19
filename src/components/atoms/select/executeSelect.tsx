@@ -3,14 +3,6 @@ import Select from 'react-select';
 import styled from 'styled-components';
 
 const customStyles = {
-    dropdownIndicator: (provided, state) => ({
-        ...provided,
-        color: state.isHovered ? '#FFFFFF' : 'var(--Gray-750, #999)',
-        padding: 0,
-        ':hover': {
-            color: 'var(--Gray-750, #999)'
-        }
-    }),
     menu: (provided) => ({
         ...provided,
         backgroundColor: '#1E1E1E',

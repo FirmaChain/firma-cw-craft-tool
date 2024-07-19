@@ -32,12 +32,12 @@ const HeaderCell = styled.th`
     padding: 0;
     padding-bottom: 8px;
     text-align: left;
-    color: var(--Gray-650, #807e7e);
+    color: var(--Gray-700, #807e7e);
     font-family: 'General Sans Variable';
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 18px;
 `;
 
 const TableCell = styled.td`
@@ -75,14 +75,14 @@ const PaginationButton = styled(IconButton)`
 
 const NoDataWrapper = styled.div`
     width: 100%;
-    padding: 36px 0px;
+    padding: 36px 0px 16px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--Gray-750, #dcdcdc);
     font-family: 'General Sans Variable';
     font-size: 14px;
-    font-style: normal;
+
     font-weight: 400;
     line-height: 20px;
 `;
@@ -183,10 +183,10 @@ const StyledTable = ({
             {rows.length !== 0 && (
                 <PaginationContainer style={{ justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
                     <PaginationButton onClick={() => handleClick(1)} disabled={currentPage === 1}>
-                        <Icons.LeftDoubleArrow width={'20px'} height={'20px'} isCheck={currentPage !== 1} />
+                        <Icons.LeftDoubleArrow width={'20px'} height={'20px'} $isCheck={currentPage !== 1} />
                     </PaginationButton>
                     <PaginationButton onClick={() => handleClick(currentPage - 1)} disabled={currentPage === 1}>
-                        <Icons.PrevPage width={'20px'} height={'20px'} isCheck={currentPage !== 1} />
+                        <Icons.PrevPage width={'20px'} height={'20px'} $isCheck={currentPage !== 1} />
                     </PaginationButton>
                     <CurrentPageNumber>{currentPage}</CurrentPageNumber>
                     <PaginationButton onClick={() => handleClick(currentPage + 1)} disabled={currentPage === totalPages}>
@@ -194,11 +194,11 @@ const StyledTable = ({
                             width={'20px'}
                             height={'20px'}
                             style={{ transform: 'rotate(180deg)' }}
-                            isCheck={currentPage !== totalPages}
+                            $isCheck={currentPage !== totalPages}
                         />
                     </PaginationButton>
                     <PaginationButton onClick={() => handleClick(totalPages)} disabled={currentPage === totalPages}>
-                        <Icons.RightDoubleArrow width={'20px'} height={'20px'} isCheck={currentPage !== totalPages} />
+                        <Icons.RightDoubleArrow width={'20px'} height={'20px'} $isCheck={currentPage !== totalPages} />
                     </PaginationButton>
                 </PaginationContainer>
             )}

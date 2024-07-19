@@ -7,13 +7,12 @@ import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import commaNumber from 'comma-number';
 import { getTokenStrFromUTokenStr } from '@/utils/common';
+import useTokenDetailStore from '@/store/useTokenDetailStore';
 
-interface IProps {
-    decimals: string;
-    allAccounts: { 'Wallet Address': string; Balance: string }[];
-}
+const AllAccounts = () => {
+    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
+    const accounts = useTokenDetailStore((state) => state.tokenDetail?.allAccounts) || [];
 
-const AllAccounts = ({ decimals, allAccounts }: IProps) => {
     const [keyword, setKeyword] = useState<string>('');
 
     const handleKeyword = (value: string) => {
@@ -37,11 +36,11 @@ const AllAccounts = ({ decimals, allAccounts }: IProps) => {
 
     const rows = useMemo(() => {
         if (keyword !== '') {
-            return allAccounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword));
+            return accounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword));
         } else {
-            return allAccounts;
+            return accounts;
         }
-    }, [allAccounts, keyword]);
+    }, [accounts, keyword]);
 
     return (
         <AllAccountsCard>

@@ -20,25 +20,24 @@ import { useNavigate } from 'react-router-dom';
 import { IC_APPROVED } from '@/components/atoms/icons/pngIcons';
 import commaNumber from 'comma-number';
 import { getTokenStrFromUTokenStr } from '@/utils/common';
+import useTokenDetailStore from '@/store/useTokenDetailStore';
 
-interface IProps {
-    tokenLogoUrl: string;
-    tokenSymbol: string;
-    tokenName: string;
-    totalSupply: string;
-    tokenDecimal: string;
-}
+const Title = () => {
+    const tokenUrl = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl);
+    const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
+    const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName);
+    const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply);
+    const tokenDecimal = useTokenDetailStore((state) => state.tokenDetail?.decimals);
 
-const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal }: IProps) => {
     const navigatge = useNavigate();
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
     useEffect(() => {
-        if (tokenLogoUrl) {
+        if (tokenUrl) {
             const img = new Image();
-            img.src = tokenLogoUrl;
+            img.src = tokenUrl;
             img.onload = () => {
-                setValidTokenLogoUrl(tokenLogoUrl);
+                setValidTokenLogoUrl(tokenUrl);
             };
             img.onerror = () => {
                 setValidTokenLogoUrl('');
@@ -46,7 +45,7 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal
         } else {
             setValidTokenLogoUrl('');
         }
-    }, [tokenLogoUrl]);
+    }, [tokenUrl]);
 
     const onClickExecute = () => {
         navigatge('/execute');
@@ -64,7 +63,7 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal
                         <img
                             src={validTokenLogoUrl}
                             alt="token-img"
-                            style={{ width: '72px', height: '72px', maxHeight: '100%', maxWidth: '100%' }}
+                            style={{ minWidth: '72px', minHeight: '72px', maxHeight: '100%', maxWidth: '100%' }}
                         />
                     )}
                 </TitleLogoImage>
@@ -72,6 +71,8 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal
                     <TokenInfo style={{ height: '24px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
                             <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo>
+
+                            <img src={IC_APPROVED} alt="approved" style={{ width: '24px' }} />
                         </div>
 
                         <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />
@@ -79,7 +80,15 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal
                         <TokenNameTypo>{tokenName}</TokenNameTypo>
                     </TokenInfo>
 
-                    <div style={{ width: '100%', height: '1px', background: 'var(--Gray-400, #2C2C2C)' }} />
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '1px',
+                            background: 'var(--Gray-400, #2C2C2C)',
+                            marginTop: '12px',
+                            marginBottom: '8px'
+                        }}
+                    />
 
                     <TotalSupplyWrapper style={{ height: '22px' }}>
                         <TotalSupplyTypo>Total Supply : </TotalSupplyTypo>
@@ -87,7 +96,7 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal
                         {tokenSymbol && (
                             <TotalSupplySymbolTypo>
                                 <span className="bold">{commaNumber(getTokenStrFromUTokenStr(totalSupply, tokenDecimal))}</span>
-                                {` `}
+
                                 {tokenSymbol}
                             </TotalSupplySymbolTypo>
                         )}

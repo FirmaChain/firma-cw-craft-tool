@@ -47,7 +47,7 @@ export const TokenInfoWrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0;
 `;
 
 export const TokenInfo = styled.div`
@@ -67,12 +67,13 @@ export const TokenSymbolTypo = styled.div`
 `;
 
 export const TokenNameTypo = styled.div`
-    color: var(--Gray-700, #999);
+    color: var(--Gray-650, #707070);
+
     font-family: 'General Sans Variable';
-    font-size: 18px;
-    font-style: normal;
+    font-size: 16px;
+
     font-weight: 400;
-    line-height: 22px;
+    line-height: 22px; /* 137.5% */
 
     display: -webkit-box;
     overflow: hidden;
@@ -110,12 +111,16 @@ export const TotalSupplyTypo = styled.div`
 `;
 
 export const TotalSupplySymbolTypo = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
     color: var(--Green-500, #02e191);
 
     /* Body/Body1 - Rg */
     font-family: 'General Sans Variable';
     font-size: 16px;
-    font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
 
@@ -125,8 +130,6 @@ export const TotalSupplySymbolTypo = styled.div`
 `;
 
 export const GoToExecuteButton = styled(IconButton)`
-    // width: calc(150px - 48px);
-    // height: calc(40px - 20px);
     display: flex;
     justify-content: center;
     align-items: center;
