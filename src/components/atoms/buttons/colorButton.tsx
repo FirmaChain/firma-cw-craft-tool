@@ -1,6 +1,6 @@
-import { Button } from '@mui/material';
 import { CSSProperties } from 'react';
 import styled from 'styled-components';
+import IconButton from './iconButton';
 
 interface IProps {
     width: string;
@@ -12,7 +12,7 @@ interface IProps {
     onClick: () => void;
 }
 
-const StyledButton = styled(Button)<{
+const StyledButton = styled(IconButton)<{
     $buttonColor: string;
     $buttonWidth: string;
     $buttonHeight: string;
@@ -23,6 +23,7 @@ const StyledButton = styled(Button)<{
     height: `${$buttonHeight} !important`,
     color: '#fff',
     border: `${$buttonBorder} !important`,
+    borderRadius: '8px',
     '&:hover': {
         backgroundColor: `${$buttonColor} !important`,
         opacity: 0.8
@@ -38,7 +39,7 @@ const ColorButton = ({ width, height, color, text, border, sx = {}, onClick, ...
             $buttonHeight={height}
             $buttonBorder={border}
             onClick={onClick}
-            sx={sx}
+            style={sx}
             {...props}
         >
             {text}

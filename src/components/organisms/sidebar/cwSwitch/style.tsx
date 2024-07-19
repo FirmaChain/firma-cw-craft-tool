@@ -1,5 +1,4 @@
 import IconButton from '@/components/atoms/buttons/iconButton';
-import { Box } from '@mui/material';
 import styled from 'styled-components';
 
 export const SwitchContainer = styled.div`
@@ -13,16 +12,16 @@ export const SwitchContainer = styled.div`
     position: relative;
 `;
 
-export const ActiveIndicator = styled(Box)<{ position: 'left' | 'right' }>`
+export const ActiveIndicator = styled('div')<{ $position: 'left' | 'right' }>`
     background-color: #000;
     border-radius: 6px;
     width: 81px;
     height: 30px;
     margin-top: 3px;
-    margin-left: ${({ position }) => (position === 'left' ? '3px' : '0px')};
+    margin-left: ${({ $position: position }) => (position === 'left' ? '3px' : '0px')};
     position: absolute;
     top: 0;
-    left: ${({ position }) => (position === 'left' ? '0' : '50%')};
+    left: ${({ $position: position }) => (position === 'left' ? '0' : '50%')};
     transition: left 0.3s ease;
 `;
 

@@ -1,25 +1,19 @@
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Tooltip } from '@mui/material';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
-import { IC_DOTTED_DIVIDER, IC_TOOLTIP_INFO } from '../../../../atoms/icons/pngIcons';
+import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
 import { useContractContext } from '../../context/contractContext';
-import WalletList from '../../../../atoms/walletList';
+import WalletList from '@/components/atoms/walletList';
 import {
     addStringAmount,
     formatWithCommas,
     getTokenAmountFromUToken,
     getUTokenAmountFromToken,
     subtractStringAmount
-} from '../../../../../utils/balance';
-import { IWallet } from '../../../../../interfaces/wallet';
-
-const MintCardWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-`;
+} from '@/utils/balance';
+import { IWallet } from '@/interfaces/wallet';
+import IconTooltip from '@/components/atoms/tooltip';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -61,12 +55,6 @@ const TotalMintSubBalance = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
-`;
-
-const AdditionalTooltipIcon = styled.img`
-    width: 14px;
-    height: 14px;
-    cursor: pointer;
 `;
 
 const DOTTED_DIVIDER = styled.img`
@@ -121,17 +109,12 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
                     <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
                     <TotalMintWrap>
                         <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                        <TotalMintSubBalance>
-                            {formatWithCommas(getTokenAmountFromUToken(mintableAmount, decimals))}
-                        </TotalMintSubBalance>
+                        <TotalMintSubBalance>{formatWithCommas(getTokenAmountFromUToken(mintableAmount, decimals))}</TotalMintSubBalance>
                         <TotalMintSubBalance>{tokenSymbol}</TotalMintSubBalance>
-                        <Tooltip title={'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.'}>
-                            <AdditionalTooltipIcon
-                                src={IC_TOOLTIP_INFO}
-                                alt={'Additional Mintable Balance Tooltip'}
-                                data-tip={'This is the tooltip text'}
-                            />
-                        </Tooltip>
+                        <IconTooltip
+                            size="14px"
+                            tooltip={'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.'}
+                        />
                     </TotalMintWrap>
                 </SummeryCard>
             </HeaderWrap>
