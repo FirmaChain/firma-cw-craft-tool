@@ -1,39 +1,47 @@
-import { useEffect, useState } from 'react';
-// import SearchInput from '../../../../../atoms/input/searchInput';
-import PaginatedTable from './pagination';
-import {
-    AllAccountsCard,
-    AllAccountsCardHeaderTypo,
-    AllAccountsCardWrapper,
-    AllAccountsContentWrapper,
-    AllAccountsItem,
-    ItemLabel
-} from './style';
-import Icons from '../../../../../atoms/icons';
-import SearchInput2 from '@/components/atoms/input/searchInput2';
+import { useMemo, useState } from 'react';
+
+import { AllAccountsCard, AllAccountsCardHeaderTypo, AllAccountsCardWrapper, AllAccountsContentWrapper } from './style';
+import Icons from '@/components/atoms/icons';
+import SearchInput2 from '@/components/atoms/input/searchInput';
+import StyledTable, { IColumn } from '@/components/atoms/table';
+import Cell from '@/components/atoms/table/cells';
+import commaNumber from 'comma-number';
+import { getTokenStrFromUTokenStr } from '@/utils/common';
 
 interface IProps {
     decimals: string;
-    allAccounts: any[];
+    allAccounts: { 'Wallet Address': string; Balance: string }[];
 }
 
-const Headers = ['Wallet Address', 'Balance'];
-
 const AllAccounts = ({ decimals, allAccounts }: IProps) => {
-    const [searchAddress, setSearchAddress] = useState<string>('');
-    const [allAccountsToShow, setAllAccountsToShow] = useState<any[]>([]);
+    const [keyword, setKeyword] = useState<string>('');
 
-    const handleSearchAddress = (value: string) => {
-        setSearchAddress(value);
+    const handleKeyword = (value: string) => {
+        setKeyword(value);
     };
 
-    useEffect(() => {
-        const filteredAllAccounts = searchAddress
-            ? allAccounts.filter((account) => account['Wallet Address'] === searchAddress)
-            : allAccounts;
-        const findAllowance = filteredAllAccounts.length > 0 ? filteredAllAccounts : allAccounts;
-        setAllAccountsToShow(findAllowance);
-    }, [searchAddress, allAccounts]);
+    const columns: IColumn[] = [
+        {
+            id: 'Wallet Address',
+            label: 'Wallet Address',
+            renderCell: (id, row) => <Cell.WalletAddress address={row['Wallet Address']} />,
+            width: '60%'
+        },
+        {
+            id: 'Balance',
+            label: 'Balance',
+            renderCell: (id, row) => commaNumber(getTokenStrFromUTokenStr(row['Balance'], decimals)),
+            width: '40%'
+        }
+    ];
+
+    const rows = useMemo(() => {
+        if (keyword !== '') {
+            return allAccounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword));
+        } else {
+            return allAccounts;
+        }
+    }, [allAccounts, keyword]);
 
     return (
         <AllAccountsCard>
@@ -41,21 +49,16 @@ const AllAccounts = ({ decimals, allAccounts }: IProps) => {
                 <AllAccountsCardHeaderTypo>All Accounts</AllAccountsCardHeaderTypo>
                 <SearchInput2
                     placeHolder={'Search Wallet Address'}
-                    value={searchAddress}
-                    onChange={handleSearchAddress}
+                    value={keyword}
+                    onChange={handleKeyword}
                     adornment={{
-                        start: <Icons.Search width={'15px'} height={'15px'} />
+                        end: <Icons.Search width={'15px'} height={'15px'} />
                     }}
                     maxWidth="564px"
-                    // icon={<Icons.Search width={'15px'} height={'15px'} />}
-                    // sx={{
-                    //     width: '564px',
-                    //     height: '44px'
-                    // }}
                 />
             </AllAccountsCardWrapper>
             <AllAccountsContentWrapper>
-                <PaginatedTable decimals={decimals} headers={Headers} data={allAccountsToShow} itemsPerPage={5} />
+                <StyledTable columns={columns} rows={rows} />
             </AllAccountsContentWrapper>
         </AllAccountsCard>
     );

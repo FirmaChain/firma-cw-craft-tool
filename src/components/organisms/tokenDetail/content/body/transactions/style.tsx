@@ -8,6 +8,7 @@ export const TransactionsCard = styled.div`
 
 export const CradHeaderWrapper = styled.div`
     display: flex;
+    align-items: center;
     gap: 16px;
 `;
 

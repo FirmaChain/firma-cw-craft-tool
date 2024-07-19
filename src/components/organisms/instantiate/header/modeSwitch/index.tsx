@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ActiveIndicator, SwitchButton, SwitchContainer, SwitchLabel } from './style';
+import { ActiveIndicator, AdvancedTypo, BasicTypo, SwitchButton, SwitchContainer, SwitchLabel } from './style';
 
 interface IProps {
     leftMenu: string;
@@ -14,14 +14,15 @@ const ModeSwitch = ({ leftMenu, rightMenu, onChangeMenu }: IProps) => {
         setSelectMenu(value);
         onChangeMenu(value);
     };
+
     return (
         <SwitchContainer>
-            <ActiveIndicator position={selectMenu === leftMenu ? 'left' : 'right'} />
-            <SwitchButton isActive={selectMenu === leftMenu} position="left" onClick={() => handleChangeMode(leftMenu)}>
-                <SwitchLabel>BASIC</SwitchLabel>
+            <ActiveIndicator $position={selectMenu === leftMenu ? 'left' : 'right'} />
+            <SwitchButton $isActive={selectMenu === leftMenu} $position="left" onClick={() => handleChangeMode(leftMenu)}>
+                <BasicTypo $active={selectMenu === leftMenu}>BASIC</BasicTypo>
             </SwitchButton>
-            <SwitchButton isActive={selectMenu === rightMenu} position="right" onClick={() => handleChangeMode(rightMenu)}>
-                <SwitchLabel>ADVANCED</SwitchLabel>
+            <SwitchButton $isActive={selectMenu === rightMenu} $position="right" onClick={() => handleChangeMode(rightMenu)}>
+                <AdvancedTypo $active={selectMenu === rightMenu}>ADVANCED</AdvancedTypo>
             </SwitchButton>
         </SwitchContainer>
     );

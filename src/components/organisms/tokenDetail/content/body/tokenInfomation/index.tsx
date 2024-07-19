@@ -70,33 +70,30 @@ const TokenInformation = ({
                 <SpecificItem>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <SpecificValueTypo>{getTokenStrFromUTokenStr(totalSupply, decimals)}</SpecificValueTypo>
-
+                        <SpecificValueTypo>{totalSupply && getTokenStrFromUTokenStr(totalSupply, decimals)}</SpecificValueTypo>
                         <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                     </SpecificValueWrapper>
                 </SpecificItem>
 
-                {minterAddress && (
-                    <SpecificItem>
-                        <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
-                        <SpecificValueWrapper>
-                            <SpecificValueTypo>{minterAddress}</SpecificValueTypo>
-                            <CopyIconButton text={minterAddress} width={'22px'} height={'22px'} />
-                        </SpecificValueWrapper>
-                    </SpecificItem>
-                )}
+                <SpecificItem>
+                    <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
+                    <SpecificValueWrapper>
+                        <SpecificValueTypo>{minterAddress}</SpecificValueTypo>
+                        {minterAddress && <CopyIconButton text={minterAddress} width={'22px'} height={'22px'} />}
+                    </SpecificValueWrapper>
+                </SpecificItem>
 
                 <SpecificItem>
                     <SpecificLabelTypo>Minter Cap</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <SpecificValueTypo>{getTokenStrFromUTokenStr(minterCap, decimals)}</SpecificValueTypo>
+                        <SpecificValueTypo>{minterCap && getTokenStrFromUTokenStr(minterCap, decimals)}</SpecificValueTypo>
                         <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>My Balance</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <SpecificValueTypo>{getTokenStrFromUTokenStr(addressBalance, decimals)}</SpecificValueTypo>
+                        <SpecificValueTypo>{addressBalance && getTokenStrFromUTokenStr(addressBalance, decimals)}</SpecificValueTypo>
                         <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                     </SpecificValueWrapper>
                 </SpecificItem>

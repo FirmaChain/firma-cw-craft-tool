@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
-import { IC_DOTTED_DIVIDER } from '../../../../atoms/icons/pngIcons';
+import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
 import { useContractContext } from '../../context/contractContext';
-import WalletList from '../../../../atoms/walletList';
-import { IWallet } from '../../../../../interfaces/wallet';
+import WalletList from '@/components/atoms/walletList';
+import { IWallet } from '@/interfaces/wallet';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 
 const ItemWrap = styled.div`
@@ -14,8 +14,8 @@ const ItemWrap = styled.div`
 `;
 
 const TotalTransferLabelTypo = styled.div`
-    color: var(--Gray-700, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-700, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -23,8 +23,8 @@ const TotalTransferLabelTypo = styled.div`
 `;
 
 const TotalTransferAmountTypo = styled.div`
-    color: var(--Gray-850, #E6E6E6);
-    font-family: "General Sans Variable";
+    color: var(--Gray-850, #e6e6e6);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -38,7 +38,7 @@ const DOTTED_DIVIDER = styled.img`
 
 const MyWalletLabelTypo = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -47,7 +47,7 @@ const MyWalletLabelTypo = styled.div`
 
 const MyWalletAmountTypo = styled.div`
     color: var(--Gray-650, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;

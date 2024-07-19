@@ -72,7 +72,6 @@ const Title = ({ tokenLogoUrl, tokenSymbol, tokenName, totalSupply, tokenDecimal
                     <TokenInfo style={{ height: '24px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
                             <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo>
-                            {/* <img src={IC_APPROVED} alt="approved" style={{ width: '24px' }} /> */}
                         </div>
 
                         <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />

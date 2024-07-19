@@ -2,11 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { QRContainer, QRTimerText, RefreshIconButton } from './style';
-import ConnectQR from '../../atoms/connectQR';
-import { CRAFT_CONFIGS } from '../../../config';
-import { rootState } from '../../../redux/reducers';
-import useAPI from '../../../hooks/useAPI';
-import Icons from '../../atoms/icons';
+import ConnectQR from '@/components/atoms/connectQR';
+import { CRAFT_CONFIGS } from '@/config';
+import { rootState } from '@/redux/reducers';
+import useAPI from '@/components/../hooks/useAPI';
+import Icons from '@/components/atoms/icons';
 
 interface IProps {
     module: string;

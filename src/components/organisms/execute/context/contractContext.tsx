@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
 
-import { IWallet } from '../../../../interfaces/wallet';
+import { IWallet } from '@/interfaces/wallet';
 import { IMenuItem } from '../cards/tokenInfo';
 
 interface ContractContextProps {
@@ -13,18 +13,18 @@ interface ContractContextProps {
     _marketingDescription: string;
     _marketingAddress: string;
     _marketingProject: string;
-    _allowanceInfo: { address: string, amount: string, type: string, expire: string };
+    _allowanceInfo: { address: string; amount: string; type: string; expire: string };
 
     _setContract: (value: string) => void;
     _setSelectMenu: (value: IMenuItem) => void;
-    _setIsFetched:(value: boolean) => void;
+    _setIsFetched: (value: boolean) => void;
 
     _setWalletList: (value: IWallet[]) => void;
     _setBurnAmount: (value: string) => void;
     _setMarketingDescription: (value: string) => void;
     _setMarketingAddress: (value: string) => void;
     _setMarketingProject: (value: string) => void;
-    _setAllowanceInfo: (value: { address: string, amount: string, type: string, expire: string }) => void;
+    _setAllowanceInfo: (value: { address: string; amount: string; type: string; expire: string }) => void;
 }
 
 const ContractContext = createContext<ContractContextProps | undefined>(undefined);
@@ -38,16 +38,21 @@ export const useContractContext = () => {
 };
 
 export const ContractProvider = ({ children }: { children: ReactNode }) => {
-    const [_contract, _setContract] = useState<string>("");
-    const [_selectMenu, _setSelectMenu] = useState<IMenuItem>({ value: "", label: "" });
+    const [_contract, _setContract] = useState<string>('');
+    const [_selectMenu, _setSelectMenu] = useState<IMenuItem>({ value: '', label: '' });
     const [_isFetched, _setIsFetched] = useState<boolean>(false);
 
     const [_walletList, _setWalletList] = useState<IWallet[]>([]);
-    const [_burnAmount, _setBurnAmount] = useState<string>("");
-    const [_marketingDescription, _setMarketingDescription] = useState<string>("");
-    const [_marketingAddress, _setMarketingAddress] = useState<string>("");
-    const [_marketingProject, _setMarketingProject] = useState<string>("");
-    const [_allowanceInfo, _setAllowanceInfo] = useState<{ address: string, amount: string, type: string, expire: string }>({ address: "", amount: "", type: "at_height", expire: "" });
+    const [_burnAmount, _setBurnAmount] = useState<string>('');
+    const [_marketingDescription, _setMarketingDescription] = useState<string>('');
+    const [_marketingAddress, _setMarketingAddress] = useState<string>('');
+    const [_marketingProject, _setMarketingProject] = useState<string>('');
+    const [_allowanceInfo, _setAllowanceInfo] = useState<{ address: string; amount: string; type: string; expire: string }>({
+        address: '',
+        amount: '',
+        type: 'at_height',
+        expire: ''
+    });
 
     return (
         <ContractContext.Provider
@@ -55,7 +60,7 @@ export const ContractProvider = ({ children }: { children: ReactNode }) => {
                 _contract,
                 _selectMenu,
                 _isFetched,
-                
+
                 _walletList,
                 _burnAmount,
                 _marketingDescription,
@@ -66,13 +71,13 @@ export const ContractProvider = ({ children }: { children: ReactNode }) => {
                 _setContract,
                 _setSelectMenu,
                 _setIsFetched,
-                
+
                 _setWalletList,
                 _setBurnAmount,
                 _setMarketingDescription,
                 _setMarketingAddress,
                 _setMarketingProject,
-                _setAllowanceInfo,
+                _setAllowanceInfo
             }}
         >
             {children}

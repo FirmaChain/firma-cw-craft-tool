@@ -17,7 +17,7 @@ const CwSwitch = ({ onChange }: IProps) => {
 
     return (
         <SwitchContainer>
-            <ActiveIndicator position={active === 'CW20' ? 'left' : 'right'} />
+            <ActiveIndicator $position={active === 'CW20' ? 'left' : 'right'} />
             <SwitchButton onClick={() => onChangeActiveType('CW20')}>
                 <SwitchLabel $active={active === 'CW20' ? 'true' : 'false'}>CW 20</SwitchLabel>
             </SwitchButton>

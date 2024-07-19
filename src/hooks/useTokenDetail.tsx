@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
-import { FirmaSDK } from '@firmachain/firma-js';
+import { Cw20SpenderAllowance, FirmaSDK } from '@firmachain/firma-js';
 
 import { rootState } from '../redux/reducers';
 import { NETWORKS } from '../constants/common';
@@ -41,6 +41,10 @@ export interface ITokenDetailState {
     allSpenders: ISpenders[];
     allAccounts: IAccounts[];
     metadata: string;
+}
+
+interface _Cw20SpenderAllowance extends Cw20SpenderAllowance {
+    owner?: string;
 }
 
 const useTokenDetail = () => {
@@ -176,7 +180,7 @@ const useTokenDetail = () => {
             try {
                 const balanceAmount = await firmaSDK.Cw20.getBalance(contractAddress, address);
                 const allAllowances = await firmaSDK.Cw20.getAllAllowances(contractAddress, address);
-                const allSpenders = await firmaSDK.Cw20.getAllSpenderAllowances(contractAddress, address);
+                const allSpenders: _Cw20SpenderAllowance[] = await firmaSDK.Cw20.getAllSpenderAllowances(contractAddress, address);
 
                 resultData.balanceAmount = balanceAmount;
                 const convertAllAllowances = [];
@@ -190,17 +194,19 @@ const useTokenDetail = () => {
                 resultData.allAllowances = convertAllAllowances;
 
                 const convertAllSpenders = [];
-                const parseAllSpenders = JSON.parse(JSON.stringify(allSpenders)).allowances;
 
-                for (const spenders of parseAllSpenders) {
+                for (const spenders of allSpenders) {
                     convertAllSpenders.push({
                         Receiver: spenders.owner,
                         Amount: spenders.allowance,
                         Expires: spenders.expires
                     });
                 }
+
                 resultData.allSpenders = convertAllSpenders;
             } catch (error) {
+                console.log(error);
+
                 enqueueSnackbar(`failed get search wallet address: ${address}`, {
                     variant: 'error',
                     autoHideDuration: 2000

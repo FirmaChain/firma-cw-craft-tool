@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Container } from '../styles/myToken';
-import { Header, MyTokenContent } from '../components/organisms/myToken';
+import { Header, MyTokenContent } from '@/components/organisms/myToken';
+import { Container } from '@/styles/instantiate';
 
 const Cw20MyToken = () => {
     return (

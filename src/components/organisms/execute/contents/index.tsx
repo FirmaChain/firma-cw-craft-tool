@@ -5,7 +5,7 @@ import TokenInfo from '../cards/tokenInfo';
 import Preview from '../cards/preview';
 import { useContractContext } from '../context/contractContext';
 
-import { FIRMA_DIM_LOGO } from '../../../atoms/icons/pngIcons';
+import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
 import useExecuteHook, { ITokenInfoState } from '../hooks/useExecueteHook';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';

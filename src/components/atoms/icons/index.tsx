@@ -594,12 +594,12 @@ const PrevPage = (props: any) => {
 
 const LeftArrow = (props: any) => {
     return (
-        <svg width={props.width || '24'} height={props.height || '24'} viewBox="0 0 24 24" fill="none">
+        <svg width={props.width || '24'} height={props.height || '24'} viewBox="0 0 24 24" fill="none" {...props}>
             <g id="chevron-down">
                 <path
                     id="Icon"
                     d="M15 4L7 12L15 20"
-                    stroke={props.isCheck ? '#FFFFFF' : '#707070'}
+                    stroke={props.stroke || props.isCheck ? '#FFFFFF' : '#707070'}
                     strokeWidth={props.strokeWidth || '2'}
                     strokeLinecap="round"
                     strokeLinejoin="round"

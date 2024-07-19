@@ -1,115 +1,118 @@
-import React, { CSSProperties, useState } from 'react';
-import { TextField, InputAdornment, Stack, IconButton } from '@mui/material';
-import Icons from '../icons';
+import { useRef, useState } from 'react';
+import styled from 'styled-components';
 
-interface IProps {
-    placeholder: string;
-    value: string;
-    sx?: CSSProperties;
-    icon?: React.ReactNode;
-    alwaysShowButton?: boolean;
-    onChange: (value: string) => void;
-    onClickRemove: () => void;
-    onClickSearch: () => void;
+const StyledInput = styled.div<{
+    $isFocus?: boolean;
+    $error?: boolean;
+    $currentLength?: number;
+    $textAlign?: 'left' | 'center' | 'right';
+    $readOnly?: boolean;
+}>`
+    width: 100%;
+    max-width: 100%;
+    min-height: 60px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 24px;
+    padding-right: 10px;
+    gap: 8px;
+
+    background: var(--Gray-200, #1a1a1a);
+
+    //? Set border color by state
+    border: 1px solid
+        ${({ $isFocus, $error, $readOnly }) =>
+            $error
+                ? 'var(--Status-Alert, #E55250) !important'
+                : $isFocus && !$readOnly
+                  ? 'var(--Gray-550, #FFFFFF) !important'
+                  : 'var(--Gray-550, #444)'};
+    border-radius: 6px;
+    cursor: text;
+    box-sizing: border-box;
+
+    &:hover {
+        border: 1px solid ${({ $isFocus, $readOnly }) => ($isFocus && !$readOnly ? '#FFFFFF' : 'var(--Gray-550, #565656)')};
+    }
+
+    input {
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        color: #ffffff;
+        border: none;
+
+        // padding: 0 16px;
+
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px; /* 142.857% */
+
+        text-align: ${({ $textAlign }) => $textAlign};
+
+        &::placeholder {
+            color: var(--Gray-600, #707070);
+            /* Body/Body2 - Md */
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px; /* 142.857% */
+        }
+
+        outline: none;
+        &:focus {
+            outline: 0;
+        }
+        &:focus-visible {
+            outline: 0;
+        }
+    }
+`;
+
+interface InputProps {
+    value: string; //
+    placeHolder: string; //
+    onChange: (value: string) => void; //
+    textAlign?: 'left' | 'center' | 'right'; //
+    readOnly?: boolean; //
+    adornment?: {
+        start?: React.ReactElement;
+        end?: React.ReactElement;
+    };
 }
 
-const SearchInputWithButton = ({
-    placeholder,
-    value,
-    sx,
-    icon = <></>,
-    alwaysShowButton = true,
-    onChange,
-    onClickRemove,
-    onClickSearch
-}: IProps) => {
-    const [isFocused, setIsFocused] = useState<boolean>(false);
+const SearchInputWithButton2 = ({ value, onChange, placeHolder, textAlign = 'left', readOnly = false, adornment }: InputProps) => {
+    const [isFocus, setIsFocus] = useState(false);
 
-    const handleSearchValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputRef = useRef<HTMLInputElement>();
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onChange(event.currentTarget.value);
     };
 
-    const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-        setIsFocused(true);
-    };
-
-    const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-        setIsFocused(false);
-    };
-
     return (
-        <Stack sx={{ ...sx }}>
-            <TextField
-                variant="outlined"
-                value={value}
-                onChange={handleSearchValue}
-                placeholder={placeholder}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                InputProps={{
-                    startAdornment: <InputAdornment position="start">{icon}</InputAdornment>,
-                    endAdornment: (
-                        <InputAdornment sx={{ height: '100%' }} position="end">
-                            {value && (
-                                <IconButton onClick={onClickRemove} edge="end">
-                                    <Icons.XCircle width={'32px'} height={'32px'} />
-                                </IconButton>
-                            )}
-                            <IconButton
-                                sx={{
-                                    display: alwaysShowButton ? 'block' : isFocused || value !== '' ? 'block' : 'none',
-                                    marginLeft: '16px',
-                                    marginRight: '5px',
-                                    width: '168px',
-                                    borderRadius: '8px',
-                                    background: value === '' ? '#707070' : '#02E191',
-                                    cursor: value === '' ? 'cursor' : 'pointer',
-                                    '&:hover': {
-                                        background: value === '' ? '#707070' : '#02E191'
-                                    }
-                                }}
-                                onClick={onClickSearch}
-                                edge="end"
-                            >
-                                Search
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                    sx: {
-                        backgroundColor: '#1A1A1A',
-                        color: '#DCDCDC',
-                        textAlign: 'center',
-                        border: '1px solid var(--Gray-550, #444)',
-                        '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'transparent'
-                        },
-                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'transparent'
-                        },
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'transparent'
-                        },
-                        '& .MuiOutlinedInput-input::placeholder': {
-                            color: '#707070',
-                            fontSize: '14px',
-                            fontWeight: '500',
-                            fontStyle: 'normal',
-                            lineHeight: '20px'
-                        },
-                        '& .MuiOutlinedInput-input': {
-                            color: '#FFF',
-                            fontFamily: 'General Sans Variable',
-                            fontSize: '18px',
-                            fontStyle: 'normal',
-                            fontWeight: 500,
-                            lineHeight: '22px'
-                        }
-                    }
-                }}
-                fullWidth
-            />
-        </Stack>
+        <StyledInput
+            onClick={() => inputRef.current?.focus()}
+            onBlur={() => {
+                setIsFocus(false);
+            }}
+            $isFocus={isFocus}
+            $currentLength={String(value).length}
+            $textAlign={textAlign}
+            $readOnly={readOnly}
+            onFocus={() => !readOnly && setIsFocus(true)}
+        >
+            {adornment.start && <>{adornment.start}</>}
+            <input ref={inputRef} value={value} type="text" onChange={handleChange} placeholder={placeHolder} readOnly={readOnly} />
+            {adornment.end && <>{adornment.end}</>}
+        </StyledInput>
     );
 };
 
-export default SearchInputWithButton;
+export default SearchInputWithButton2;

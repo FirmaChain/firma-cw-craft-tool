@@ -1,4 +1,3 @@
-import { HalfDottedDivider } from '@/components/atoms/divider/dottedDivider';
 import AdditionalInformation from './additionalInformation';
 import { ContentBodyContainer } from './style';
 import TokenInformation from './tokenInfomation';
@@ -7,7 +6,6 @@ import AllAccounts from './allAccounts';
 import { ITransaction } from '@/interfaces/cw20';
 import Transactions from './transactions';
 import { IAccounts, IAllowances, ISpenders } from '@/hooks/useTokenDetail';
-import { IC_DASHED_LINE } from '@/components/atoms/icons/pngIcons';
 import LineDivider from '@/components/atoms/divider/lineDivider';
 
 interface IProps {

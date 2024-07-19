@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import ColorButton from '../../../atoms/buttons/colorButton';
+import ColorButton from '@/components/atoms/buttons/colorButton';
 import { ContentBodyWrapper, NoTokenTypo, NoTokenWrapper } from './style';
 
 const NoToken = () => {

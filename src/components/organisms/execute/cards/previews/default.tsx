@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { IC_LEFT_ARROW_CIRCLE } from '../../../../atoms/icons/pngIcons';
+import { IC_LEFT_ARROW_CIRCLE } from '@/components/atoms/icons/pngIcons';
 
 const Container = styled.div`
     width: 100%;

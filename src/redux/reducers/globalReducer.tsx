@@ -1,5 +1,5 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
-import { CW20_MODE_TYPE, CW_TYPE, MENU_TYPE, NETWORK_TYPE } from '../../constants/common';
+import { CW20_MODE_TYPE, CW_TYPE, MENU_TYPE, NETWORK_TYPE } from '@/constants/common';
 
 export interface IGlobalStateProps {
     network: NETWORK_TYPE;

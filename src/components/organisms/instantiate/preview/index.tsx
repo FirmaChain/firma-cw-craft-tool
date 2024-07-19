@@ -8,22 +8,13 @@ import Dashboard from './dashboard';
 import Submit from './submit';
 import { ModalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
-import {
-    compareAmounts,
-    compareStringsAsNumbers,
-    getApplyDecimalsAmount,
-    getTokenStrFromUTokenStr,
-    getUTokenStrFromTokenStr,
-    isValidAddress,
-    validateSymbol
-} from '@/utils/common';
+import { compareAmounts, compareStringsAsNumbers, getApplyDecimalsAmount, isValidAddress, validateSymbol } from '@/utils/common';
 import { NETWORKS } from '@/constants/common';
 import { CRAFT_CONFIGS } from '@/config';
 import { BASIC_LABEL } from '@/constants/cw20Types';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import InstantitateModal from '../../modal/instantitateModal';
-import WalletConnectModal from '../../modal/walletConnectModal';
 
 interface IProps {
     isBasic: boolean;

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 import { TokenCardSpecific } from '../tokenInfomation/style';
 import {
@@ -10,7 +9,6 @@ import {
     SpecificItem,
     SpecificItemByStart,
     SpecificLabelTypo,
-    SpecificMetadataJSON,
     SpecificMetadataTypo,
     SpecificMetadataValueWrapper,
     SpecificMetadataWrapper,
@@ -35,6 +33,10 @@ interface IProps {
     metadata: string;
 }
 
+const isFalsy = (value?: string) => {
+    return value === '' || value.toLowerCase() === 'null' || !Boolean(value);
+};
+
 const AdditionalInformation = ({
     contractAddress,
     marketingLogo,
@@ -44,12 +46,12 @@ const AdditionalInformation = ({
     metadata
 }: IProps) => {
     const network = useSelector((state: rootState) => state.global.network);
-    const navigate = useNavigate();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
     const [blockExplorerLink, setBlockExplorerLink] = useState<string>('');
 
     const isBasic = useMemo(() => {
+        if (!marketingLogo && !marketingDescription && !marketingProject) return true;
         return marketingLogo === 'null' && marketingDescription === 'null' && marketingProject === 'null';
     }, [marketingDescription, marketingLogo, marketingProject]);
 
@@ -105,8 +107,8 @@ const AdditionalInformation = ({
                 </SpecificItemByStart>
                 <SpecificItem>
                     <SpecificLabelTypo>{isBasic ? 'Token' : 'Marketing'} Decsription</SpecificLabelTypo>
-                    <SpecificValueTypo $disabled={!Boolean(marketingDescription) || marketingDescription === 'null'}>
-                        {marketingDescription !== 'null' ? marketingDescription : 'Token Description'}
+                    <SpecificValueTypo $disabled={isFalsy(marketingDescription)}>
+                        {isFalsy(marketingDescription) ? 'Token Description' : marketingDescription}
                     </SpecificValueTypo>
                 </SpecificItem>
                 {!isBasic && (
@@ -114,8 +116,8 @@ const AdditionalInformation = ({
                         <SpecificItem>
                             <SpecificLabelTypo>Marketing Address</SpecificLabelTypo>
                             <SpecificMetadataValueWrapper>
-                                <SpecificValueTypo $disabled={!Boolean(marketingDescription) || marketingAddress === 'null'}>
-                                    {marketingAddress === 'null' ? 'Marketing Address' : marketingAddress}
+                                <SpecificValueTypo $disabled={isFalsy(marketingAddress)}>
+                                    {isFalsy(marketingAddress) ? 'Marketing Address' : marketingAddress}
                                 </SpecificValueTypo>
                                 {marketingAddress !== 'null' && <CopyIconButton text={marketingAddress} width={'20px'} height={'20px'} />}
                             </SpecificMetadataValueWrapper>
@@ -123,8 +125,8 @@ const AdditionalInformation = ({
 
                         <SpecificItem>
                             <SpecificLabelTypo>Marketing Project</SpecificLabelTypo>
-                            <SpecificValueTypo $disabled={!Boolean(marketingProject) || marketingProject === 'null'}>
-                                {marketingProject === 'null' ? 'Marketing Project' : marketingProject}
+                            <SpecificValueTypo $disabled={isFalsy(marketingProject)}>
+                                {isFalsy(marketingProject) ? 'Marketing Project' : marketingProject}
                             </SpecificValueTypo>
                         </SpecificItem>
                     </>

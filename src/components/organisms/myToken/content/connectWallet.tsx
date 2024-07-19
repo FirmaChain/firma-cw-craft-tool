@@ -1,6 +1,5 @@
 import { useModalStore } from '@/hooks/useModal';
-import { ModalActions } from '../../../../redux/actions';
-import ColorButton from '../../../atoms/buttons/colorButton';
+import ColorButton from '@/components/atoms/buttons/colorButton';
 import { ContentBodyWrapper } from './style';
 
 const ConnectWallet = () => {
@@ -8,7 +7,6 @@ const ConnectWallet = () => {
 
     const onClickConnectWallet = () => {
         modal.openModal({ modalType: 'connectWallet' });
-        // ModalActions.handleConnectWallet(true);
     };
 
     return (

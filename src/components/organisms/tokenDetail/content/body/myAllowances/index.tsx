@@ -1,18 +1,20 @@
-import { Cw20SpenderAllowance } from '@firmachain/firma-js';
 import {
     AllowanceCard,
     AllowanceWrapper,
     AllowanceCardHeaderTypo,
     AllowanceCardHeaderWrapper,
     AllowanceContentWrapper,
-    AllowanceItem,
     ItemLabel
 } from './style';
-import PaginatedTable from './pagination';
-import { useEffect, useState } from 'react';
+
+import { useMemo, useState } from 'react';
 import Icons from '@/components/atoms/icons';
 import { IAllowances, ISpenders } from '@/hooks/useTokenDetail';
-import SearchInput2 from '@/components/atoms/input/searchInput2';
+import SearchInput2 from '@/components/atoms/input/searchInput';
+import StyledTable, { IColumn } from '@/components/atoms/table';
+import Cell from '@/components/atoms/table/cells';
+import commaNumber from 'comma-number';
+import { getTokenStrFromUTokenStr, parseExpires } from '@/utils/common';
 
 interface IProps {
     decimals: string;
@@ -20,29 +22,43 @@ interface IProps {
     allSpenders: ISpenders[];
 }
 
-const Headers = ['Receiver', 'Amount', 'Expires'];
-
 const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
-    const [searchAddress, setSearchAddress] = useState<string>('');
-
-    const [allowancesToShow, setAllowancesToShow] = useState<IAllowances[]>([]);
-    const [receiverToShow, setReceiverToShow] = useState<ISpenders[]>([]);
+    const [keyword, setKeyword] = useState<string>('');
 
     const handleSearchAddress = (value: string) => {
-        setSearchAddress(value);
+        setKeyword(value);
     };
 
-    useEffect(() => {
-        const filteredAllowances = searchAddress
-            ? allAllowances.filter((allowance) => allowance['Receiver'] === searchAddress)
-            : allAllowances;
-        const findAllowance = filteredAllowances.length > 0 ? filteredAllowances : allAllowances;
-        setAllowancesToShow(findAllowance);
+    const allowancesList = useMemo(() => {
+        if (keyword === '') return allAllowances;
+        else return allAllowances.filter((one) => one.Receiver.toLowerCase().includes(keyword.toLowerCase()));
+    }, [allAllowances, keyword]);
 
-        const filteredReceivers = searchAddress ? allSpenders.filter((receiver) => receiver['Receiver'] === searchAddress) : allSpenders;
-        const findReceiver = filteredReceivers.length > 0 ? filteredReceivers : allSpenders;
-        setReceiverToShow(findReceiver);
-    }, [searchAddress, allAllowances, allSpenders]);
+    const receiverList = useMemo(() => {
+        if (keyword === '') return allSpenders;
+        else return allSpenders.filter((one) => one.Receiver.toLowerCase().includes(keyword.toLowerCase()));
+    }, [allSpenders, keyword]);
+
+    const columns: IColumn[] = [
+        {
+            id: 'Receiver',
+            label: 'Receiver',
+            renderCell: (id, row) => <Cell.WalletAddress address={row['Receiver']} />,
+            width: '50%'
+        },
+        {
+            id: 'Amount',
+            label: 'Amount',
+            renderCell: (id, row) => commaNumber(getTokenStrFromUTokenStr(row['Amount'], decimals)),
+            width: '20%'
+        },
+        {
+            id: 'Expires',
+            label: 'Expires',
+            renderCell: (id: string, row: any) => parseExpires(JSON.stringify(row['Expires'])),
+            width: '30%'
+        }
+    ];
 
     return (
         <AllowanceCard>
@@ -51,23 +67,24 @@ const MyAllowances = ({ decimals, allAllowances, allSpenders }: IProps) => {
 
                 <SearchInput2
                     placeHolder={'Search Wallet Address'}
-                    value={searchAddress}
+                    value={keyword}
                     onChange={handleSearchAddress}
                     adornment={{
                         end: <Icons.Search width={'15px'} height={'15px'} />
                     }}
+                    maxWidth="564px"
                 />
             </AllowanceCardHeaderWrapper>
             <AllowanceWrapper>
                 <AllowanceContentWrapper>
                     <ItemLabel>Allowances to others</ItemLabel>
-                    <PaginatedTable decimals={decimals} headers={Headers} data={allowancesToShow} itemsPerPage={5} />
+                    <StyledTable columns={columns} rows={allowancesList} />
                 </AllowanceContentWrapper>
             </AllowanceWrapper>
             <AllowanceWrapper>
                 <AllowanceContentWrapper>
                     <ItemLabel>Received Allowances</ItemLabel>
-                    <PaginatedTable decimals={decimals} headers={Headers} data={receiverToShow} itemsPerPage={5} />
+                    <StyledTable columns={columns} rows={receiverList} />
                 </AllowanceContentWrapper>
             </AllowanceWrapper>
         </AllowanceCard>

@@ -1,7 +1,8 @@
-import Select from 'react-select';
-
-import { NETWORK_TYPE } from '../../../../constants/common';
-import { MenuHeader, NetworkMenuContainer, SelectStyle } from './style';
+import { NETWORK_TYPE } from '@/constants/common';
+import { MenuHeader, NetworkMenuContainer } from './style';
+import NetworkSelect from '@/components/atoms/select/networkSelect';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 interface IProps {
     onChange: (type: NETWORK_TYPE) => void;
@@ -13,21 +14,16 @@ const options = [
 ];
 
 export const NetworkMenu = ({ onChange }: IProps) => {
-    const onChangeActiveMenu = (e: any) => {
-        if (e === null) return;
+    const network = useSelector((state: rootState) => state.global.network);
 
-        onChange(e.value);
+    const onChangeActiveMenu = (newTypo: NETWORK_TYPE) => {
+        onChange(newTypo);
     };
 
     return (
         <NetworkMenuContainer>
             <MenuHeader>Network</MenuHeader>
-            <Select
-                options={options}
-                styles={SelectStyle}
-                defaultValue={options.find((option) => option.value === 'TESTNET')}
-                onChange={onChangeActiveMenu}
-            />
+            <NetworkSelect value={network} options={options} onChange={onChangeActiveMenu} />
         </NetworkMenuContainer>
     );
 };

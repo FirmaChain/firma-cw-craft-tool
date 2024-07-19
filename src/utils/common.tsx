@@ -1,4 +1,4 @@
-import { FirmaUtil } from '@firmachain/firma-js';
+import { Expires, FirmaUtil } from '@firmachain/firma-js';
 import { CW20_TRANSACTION_TYPES } from '../constants/cw20Types';
 import { IMsg } from '../interfaces/cw20';
 
@@ -282,4 +282,23 @@ export const copyToClipboard = async (text: string): Promise<void | string> => {
         console.error('Failed to copy text to clipboard', error);
         return 'Failed to copy text to clipboard';
     }
+};
+
+export const parseExpires = (data: string) => {
+    const parsedData: Expires = JSON.parse(data);
+
+    if ('at_time' in parsedData) {
+        const date = new Date(Number(parsedData.at_time) / 1_000_000); // Convert nanoseconds to milliseconds
+        return date.toLocaleString('en-US', { timeZone: 'Asia/Seoul', hour12: true });
+    }
+
+    if ('never' in parsedData) {
+        return 'No Expiration';
+    }
+
+    if ('at_height' in parsedData) {
+        return `${parsedData.at_height.toLocaleString()} Block`;
+    }
+
+    return '';
 };

@@ -3,8 +3,8 @@ import SortSelect from './sortSelect';
 import { ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
 import ConnectWallet from './connectWallet';
 import { useSelector } from 'react-redux';
-import { rootState } from '../../../../redux/reducers';
-import useMyToken from '../../../../hooks/useMyToken';
+import { rootState } from '@/redux/reducers';
+import useMyToken from '@/hooks/useMyToken';
 import NoToken from './noToken';
 import PaginatedList from './paginatedList/paginatedList';
 

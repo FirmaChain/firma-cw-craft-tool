@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 
 import { rootState } from '../redux/reducers';
 
-import { Container } from '../styles/tokenDetail';
 import { Header, TokenDetailContent } from '../components/organisms/tokenDetail';
 import useTokenDetail, { IAccounts, IAllowances, ISpenders } from '../hooks/useTokenDetail';
 import useApollo from '../hooks/useApollo';
@@ -11,6 +10,7 @@ import { getTransactionsByAddress } from '../apollo/queries';
 import { Cw20SpenderAllowance } from '@firmachain/firma-js';
 import { ITransaction } from '../interfaces/cw20';
 import { determineMsgTypeAndSpender } from '../utils/common';
+import { Container } from '@/styles/instantiate';
 
 const Cw20TokenDetail = () => {
     const targetContractAddress = window.location.pathname.replace('/mytoken/detail/', '');
