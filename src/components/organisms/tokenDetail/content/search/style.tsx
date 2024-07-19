@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const WalletSearchWrapper = styled.div`
-    width: calc(100% - 80px);
     padding: 40px 40px;
     display: flex;
     flex-direction: column;

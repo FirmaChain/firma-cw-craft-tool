@@ -34,7 +34,8 @@ export const SpecificItemByStart = styled.div`
 `;
 
 export const SpecificLabelTypo = styled.div`
-    width: 224px;
+    min-width: 224px;
+    max-width: 224px;
     color: var(--Gray-700, #999);
     font-family: 'General Sans Variable';
     font-size: 16px;
@@ -73,12 +74,17 @@ export const IconBackground = styled.div`
 
 export const SpecificValueTypo = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-900, var(--Primary-Base-White, #fff))')};
-    // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
     line-height: 22px;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
 `;
 
 export const SpecificMetadataWrapper = styled.div`

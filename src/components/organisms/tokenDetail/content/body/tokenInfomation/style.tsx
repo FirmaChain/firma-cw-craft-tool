@@ -28,7 +28,8 @@ export const SpecificItem = styled.div`
 `;
 
 export const SpecificLabelTypo = styled.div`
-    width: 224px;
+    min-width: 224px;
+    max-width: 224px;
     color: var(--Gray-700, #999);
     font-family: 'General Sans Variable';
     font-size: 16px;
@@ -49,6 +50,12 @@ export const SpecificValueTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 22px;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
 `;
 
 export const SpecificValueSymbol = styled.div`
@@ -71,4 +78,10 @@ export const SpecificValueCover = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
 `;

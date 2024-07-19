@@ -17,7 +17,6 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    width: calc(100% - 88px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -43,7 +42,6 @@ const ItemLabelTypo = styled.div`
 `;
 
 const AccordionBox = styled.div`
-    width: calc(100% - 64px);
     height: auto;
     padding: 24px 32px;
     display: flex;
@@ -125,10 +123,12 @@ const UpdateMinter = ({ minterAddress }: { minterAddress: string }) => {
             }
         });
         ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({ callback: () => {
-            _setIsFetched(true);
-            _setSelectMenu({ label: "Select", value: "select" });
-        }});
+        ModalActions.handleSetCallback({
+            callback: () => {
+                _setIsFetched(true);
+                _setSelectMenu({ label: 'Select', value: 'select' });
+            }
+        });
     };
 
     return (

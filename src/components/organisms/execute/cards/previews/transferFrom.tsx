@@ -19,7 +19,6 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    width: calc(100% - 88px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -78,7 +77,6 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const AccordionBox = styled.div`
-    width: calc(100% - 64px);
     height: auto;
     padding: 24px 32px;
     display: flex;
@@ -175,7 +173,7 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
     const totalTransferAmount = useMemo(() => {
         const amounts = transferList.map((info) => getUTokenStrFromTokenStr(info.toAmount, decimals));
 
-        let totalAmount = "0";
+        let totalAmount = '0';
         for (const amount of amounts) {
             totalAmount = addStringAmount(totalAmount, amount);
         }
@@ -190,7 +188,7 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
             convertTransferList.push({
                 owner: transfer.fromAddress,
                 amount: getUTokenAmountFromToken(transfer.toAmount, decimals),
-                recipient: transfer.toAddress,
+                recipient: transfer.toAddress
             });
         }
 

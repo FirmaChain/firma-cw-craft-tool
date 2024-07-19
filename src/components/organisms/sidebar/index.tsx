@@ -95,85 +95,101 @@ const Sidebar = () => {
     };
 
     return (
-        <DrawerStyled variant="permanent" anchor="left">
-            <SidebarWrapper>
-                <FeatureWrapper>
-                    <LogoWrapper>
-                        <Link to={{ pathname: '/' }}>
-                            <Icons.FirmaCraft width={'132px'} height={'34px'} />
-                        </Link>
-                    </LogoWrapper>
-                    {/* SWITCH */}
-                    <SwitchWrapper>
-                        <CwSwitch onChange={onChangeSwitch} />
-                    </SwitchWrapper>
-                    {/* BUTTONS */}
-                    <MenuListWrapper>
-                        <MenuItem onClick={(e) => onClickMenu(e, '/instantiate')}>
-                            <Icons.PlusCircle
-                                selected={'/' + location.pathname.split('/')[1] === '/instantiate'}
-                                width={'16px'}
-                                height={'16px'}
+        <div style={{ minWidth: '224px', height: '100vh' }}>
+            <DrawerStyled>
+                <SidebarWrapper>
+                    <FeatureWrapper>
+                        <LogoWrapper>
+                            <Link to={{ pathname: '/' }}>
+                                <Icons.FirmaCraft width={'132px'} height={'34px'} />
+                            </Link>
+                        </LogoWrapper>
+                        {/* SWITCH */}
+                        <SwitchWrapper>
+                            <CwSwitch onChange={onChangeSwitch} />
+                        </SwitchWrapper>
+                        {/* BUTTONS */}
+                        <MenuListWrapper>
+                            <MenuItem onClick={(e) => onClickMenu(e, '/instantiate')}>
+                                <Icons.PlusCircle
+                                    selected={'/' + location.pathname.split('/')[1] === '/instantiate'}
+                                    width={'16px'}
+                                    height={'16px'}
+                                />
+                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/instantiate'}>Instantiate</MenuItemText>
+                            </MenuItem>
+                            <MenuItem onClick={(e) => onClickMenu(e, '/execute')}>
+                                <Icons.Setting
+                                    selected={'/' + location.pathname.split('/')[1] === '/execute'}
+                                    width={'16px'}
+                                    height={'16px'}
+                                />
+                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/execute'}>Execute</MenuItemText>
+                            </MenuItem>
+                            <LineDivider />
+                            <MenuItem onClick={(e) => onClickMenu(e, '/search')}>
+                                <Icons.Search
+                                    selected={'/' + location.pathname.split('/')[1] === '/search'}
+                                    width={'16px'}
+                                    height={'16px'}
+                                />
+                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/search'}>Search</MenuItemText>
+                            </MenuItem>
+                            <MenuItem onClick={(e) => onClickMenu(e, '/mytoken')}>
+                                <Icons.Coins
+                                    selected={'/' + location.pathname.split('/')[1] === '/mytoken'}
+                                    width={'16px'}
+                                    height={'16px'}
+                                />
+                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/mytoken'}>
+                                    My Minted Tokens
+                                </MenuItemText>
+                            </MenuItem>
+                        </MenuListWrapper>
+                        {isInit ? (
+                            <IconButton style={{ padding: 0 }} onClick={onClickAddress}>
+                                <AddressCard>
+                                    <AddressText>{shortenAddress(address, 10, 6)}</AddressText>
+                                </AddressCard>
+                            </IconButton>
+                        ) : (
+                            <ColorButton
+                                width={'100%'}
+                                height={'40px'}
+                                color={'#02E191'}
+                                text={'Connect Wallet'}
+                                sx={{
+                                    fontSize: '14px',
+                                    fontStyle: 'normal',
+                                    fontWeight: 600,
+                                    lineHeight: '20px',
+                                    color: '#121212'
+                                }}
+                                onClick={onClickConnectWallet}
                             />
-                            <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/instantiate'}>Instantiate</MenuItemText>
-                        </MenuItem>
-                        <MenuItem onClick={(e) => onClickMenu(e, '/execute')}>
-                            <Icons.Setting selected={'/' + location.pathname.split('/')[1] === '/execute'} width={'16px'} height={'16px'} />
-                            <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/execute'}>Execute</MenuItemText>
-                        </MenuItem>
+                        )}
+                    </FeatureWrapper>
+                    <FooterWrapper>
+                        <NetworkMenu onChange={onClickNetworkMenu} />
+                        <ExternalLinkWrapper>
+                            <ExternalLinkButton onClick={onClickExternalLink}>Block Explorer</ExternalLinkButton>
+                            <ExternalLinkButton>Contact Us</ExternalLinkButton>
+                        </ExternalLinkWrapper>
                         <LineDivider />
-                        <MenuItem onClick={(e) => onClickMenu(e, '/search')}>
-                            <Icons.Search selected={'/' + location.pathname.split('/')[1] === '/search'} width={'16px'} height={'16px'} />
-                            <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/search'}>Search</MenuItemText>
-                        </MenuItem>
-                        <MenuItem onClick={(e) => onClickMenu(e, '/mytoken')}>
-                            <Icons.Coins selected={'/' + location.pathname.split('/')[1] === '/mytoken'} width={'16px'} height={'16px'} />
-                            <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/mytoken'}>My Minted Tokens</MenuItemText>
-                        </MenuItem>
-                    </MenuListWrapper>
-                    {isInit ? (
-                        <IconButton style={{ padding: 0 }} onClick={onClickAddress}>
-                            <AddressCard>
-                                <AddressText>{shortenAddress(address, 10, 6)}</AddressText>
-                            </AddressCard>
-                        </IconButton>
-                    ) : (
-                        <ColorButton
-                            width={'100%'}
-                            height={'40px'}
-                            color={'#02E191'}
-                            text={'Connect Wallet'}
-                            sx={{
-                                fontSize: '14px',
-                                fontStyle: 'normal',
-                                fontWeight: 600,
-                                lineHeight: '20px',
-                                color: '#121212'
-                            }}
-                            onClick={onClickConnectWallet}
-                        />
-                    )}
-                </FeatureWrapper>
-                <FooterWrapper>
-                    <NetworkMenu onChange={onClickNetworkMenu} />
-                    <ExternalLinkWrapper>
-                        <ExternalLinkButton onClick={onClickExternalLink}>Block Explorer</ExternalLinkButton>
-                        <ExternalLinkButton>Contact Us</ExternalLinkButton>
-                    </ExternalLinkWrapper>
-                    <LineDivider />
-                    <SocialWrapper>
-                        {SOCIAL_LIST.map((value, index) => (
-                            <SocialIconButton key={index} onClick={(e) => onClickSocialLink(e, value.socialLink)}>
-                                {value.Icon}
-                            </SocialIconButton>
-                        ))}
-                    </SocialWrapper>
-                    <CopyrightWrapper>
-                        <CopyrightText>Powered by FIRMACHAIN</CopyrightText>
-                    </CopyrightWrapper>
-                </FooterWrapper>
-            </SidebarWrapper>
-        </DrawerStyled>
+                        <SocialWrapper>
+                            {SOCIAL_LIST.map((value, index) => (
+                                <SocialIconButton key={index} onClick={(e) => onClickSocialLink(e, value.socialLink)}>
+                                    {value.Icon}
+                                </SocialIconButton>
+                            ))}
+                        </SocialWrapper>
+                        <CopyrightWrapper>
+                            <CopyrightText>Powered by FIRMACHAIN</CopyrightText>
+                        </CopyrightWrapper>
+                    </FooterWrapper>
+                </SidebarWrapper>
+            </DrawerStyled>
+        </div>
     );
 };
 

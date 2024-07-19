@@ -1,10 +1,9 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import Icons from '../../../atoms/icons';
-import { IC_DOTTED_DIVIDER, IC_VALID_SHIELD } from '../../../atoms/icons/pngIcons';
-import { BASIC_LABEL } from '../../../../constants/cw20Types';
-import CustomSelectInput from '../../../atoms/input/customSelectInput';
+import Icons from '@/components/atoms/icons';
+import { IC_DOTTED_DIVIDER, IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
+import { BASIC_LABEL } from '@/constants/cw20Types';
 import Mint from './functions/mint';
 import { useContractContext } from '../context/contractContext';
 import { ITokenInfoState } from '../hooks/useExecueteHook';
@@ -18,8 +17,10 @@ import IncreaseAllowance from './functions/increaseAllowance';
 import DecreaseAllowance from './functions/decreaseAllowance';
 import TransferFrom from './functions/transferFrom';
 import UpdateMinter from './functions/updateMinter';
+import ExecuteSelect from '@/components/atoms/select/executeSelect';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
+    min-width: 736px;
     width: 100%;
     display: flex;
     padding: 48px;
@@ -140,7 +141,7 @@ export interface IMenuItem {
 }
 
 const basicMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
+    // { value: 'select', label: 'Select' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
     { value: 'increaseAllowance', label: 'Increase Allowance' },
@@ -150,7 +151,7 @@ const basicMenuItems: IMenuItem[] = [
 ];
 
 const minterMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
+    // { value: 'select', label: 'Select' },
     { value: 'mint', label: 'Mint' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
@@ -162,7 +163,7 @@ const minterMenuItems: IMenuItem[] = [
 ];
 
 const marketingMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
+    // { value: 'select', label: 'Select' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
     { value: 'increaseAllowance', label: 'Increase Allowance' },
@@ -174,7 +175,7 @@ const marketingMenuItems: IMenuItem[] = [
 ];
 
 const allOwnerMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
+    // { value: 'select', label: 'Select' },
     { value: 'mint', label: 'Mint' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
@@ -262,12 +263,10 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
     }, [validTokenLogoUrl]);
 
     const handleChangeMenu = (menu: string) => {
-        const _selectedMenu = ownerMenus.filter((item) => {
-            return item.value === menu;
-        });
+        const _selectedMenu = ownerMenus.find((item) => item.value === menu);
 
-        _setSelectMenu(_selectedMenu[0]);
-        setSelectMenu(_selectedMenu[0]);
+        _setSelectMenu(_selectedMenu);
+        setSelectMenu(_selectedMenu);
     };
 
     return (
@@ -288,7 +287,14 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                     </TokenInfoBox>
                 </TokenBox>
             </TokenInfoWrap>
-            <CustomSelectInput menus={ownerMenus} onChangeMenu={handleChangeMenu} />
+            <ExecuteSelect
+                value={selectMenu.value}
+                placeHolder="Select"
+                options={ownerMenus}
+                onChange={handleChangeMenu}
+                minWidth="214px"
+            />
+            {/* <CustomSelectInput menus={ownerMenus} onChangeMenu={handleChangeMenu} /> */}
             {selectMenu.value !== 'select' && (
                 <Fragment>
                     <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
@@ -300,8 +306,12 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                             decimals={tokenInfoState.decimals}
                         />
                     )}
-                    {selectMenu.value === 'burn' && <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />}
-                    {selectMenu.value === 'burnFrom' && <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />}
+                    {selectMenu.value === 'burn' && (
+                        <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />
+                    )}
+                    {selectMenu.value === 'burnFrom' && (
+                        <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
+                    )}
                     {selectMenu.value === 'transfer' && (
                         <Transfer
                             decimals={tokenInfoState.decimals}
@@ -310,16 +320,10 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                         />
                     )}
                     {selectMenu.value === 'increaseAllowance' && (
-                        <IncreaseAllowance
-                            decimals={tokenInfoState.decimals}
-                            userBalance={tokenInfoState.addressAmount}
-                        />
+                        <IncreaseAllowance decimals={tokenInfoState.decimals} userBalance={tokenInfoState.addressAmount} />
                     )}
                     {selectMenu.value === 'decreaseAllowance' && (
-                        <DecreaseAllowance
-                            decimals={tokenInfoState.decimals}
-                            userBalance={tokenInfoState.addressAmount}
-                        />
+                        <DecreaseAllowance decimals={tokenInfoState.decimals} userBalance={tokenInfoState.addressAmount} />
                     )}
                     {selectMenu.value === 'updateMarketing' && (
                         <UpdateMarketing

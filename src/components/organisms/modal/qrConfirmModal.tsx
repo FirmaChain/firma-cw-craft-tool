@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 
 import { ModalActions } from '@/redux/actions';
 
-import Modal from '@/components/modal/modal';
+import Modal from '@/components/modal';
 import RequestQR from '../requestQR';
 import { ModalContent, ModalSubTitle, ModalTitle, QRContainer } from './style';
 import { rootState } from '@/redux/reducers';

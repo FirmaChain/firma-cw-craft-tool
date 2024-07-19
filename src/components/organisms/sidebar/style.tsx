@@ -1,23 +1,25 @@
 import styled from 'styled-components';
-import { Drawer } from '@mui/material';
 import IconButton from '@/components/atoms/buttons/iconButton';
 
-export const DrawerStyled = styled(Drawer)`
-    & .MuiDrawer-paper {
-        border: 0px;
-        margin: 0px;
-        padding: 0px;
-        background-color: ${({ theme }) => theme.colors.background_navbar};
-        width: ${({ theme }) => theme.sizes.navbar_width};
-    }
+export const DrawerStyled = styled('div')`
+    box-sizing: border-box;
+    height: 100%;
+    min-width: 224px;
+
+    position: fixed;
+
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    background-color: ${({ theme }) => theme.colors.background_navbar};
     width: ${({ theme }) => theme.sizes.navbar_width};
-    @media only screen and (max-width: 1400px) {
-        display: none;
-    }
+
+    // @media only screen and (max-width: 1400px) {
+    //     display: none;
+    // }
 `;
 
 export const SidebarWrapper = styled.div`
-    width: calc(100% - 56px);
     height: 100%;
     padding: 26px 28px;
     display: flex;
@@ -40,12 +42,10 @@ export const FooterWrapper = styled.div`
 `;
 
 export const LogoWrapper = styled.div`
-    width: calc(100% - 36px);
     padding: 0px 18px;
 `;
 
 export const SwitchWrapper = styled.div`
-    width: calc(100% - 56px);
     height: 36px;
 `;
 

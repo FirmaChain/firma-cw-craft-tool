@@ -14,6 +14,7 @@ import UpdateMinter from './previews/updateMinter';
 import DecreaseAllowancePreview from './previews/decreaseAllowance';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
+    min-width: 736px;
     width: 100%;
     display: flex;
     height: auto;
@@ -86,17 +87,11 @@ const Preview = ({ tokenInfoState }: IProps) => {
             )}
 
             {_selectMenu.value === 'increaseAllowance' && (
-                <IncreaseAllowancePreview
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                />
+                <IncreaseAllowancePreview decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
             )}
 
             {_selectMenu.value === 'decreaseAllowance' && (
-                <DecreaseAllowancePreview
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                />
+                <DecreaseAllowancePreview decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
             )}
 
             {_selectMenu.value === 'transferFrom' && (

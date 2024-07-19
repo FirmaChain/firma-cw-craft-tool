@@ -4,11 +4,7 @@ import commaNumber from 'comma-number';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import {
-    addStringAmount,
-    formatWithCommas,
-    getTokenAmountFromUToken,
-} from '@/utils/balance';
+import { addStringAmount, formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import { useContractContext } from '../../context/contractContext';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import { ModalActions } from '@/redux/actions';
@@ -24,7 +20,6 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    width: calc(100% - 88px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -83,7 +78,6 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const AccordionBox = styled.div`
-    width: calc(100% - 64px);
     height: auto;
     padding: 24px 32px;
     display: flex;
@@ -204,7 +198,7 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
         try {
             if (addressExist) {
                 const result = await getCw20Balance(_contract, _allowanceInfo.address);
-                const targetBalance = result.success === true ? result.balance : "0";
+                const targetBalance = result.success === true ? result.balance : '0';
 
                 setUpdatedAmount(addStringAmount(_allowanceInfo.amount, targetBalance));
             }
@@ -225,19 +219,19 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
     }, [_contract, _allowanceInfo, _isFetched]);
 
     const onClickIncreaseAllowance = () => {
-        let expires = {}
-        if (_allowanceInfo.type === "at_height") {
+        let expires = {};
+        if (_allowanceInfo.type === 'at_height') {
             expires = {
-                'at_height': parseInt(_allowanceInfo.expire)
-            }
-        } else if (_allowanceInfo.type === "at_time") {
+                at_height: parseInt(_allowanceInfo.expire)
+            };
+        } else if (_allowanceInfo.type === 'at_time') {
             expires = {
-                'at_time': _allowanceInfo.expire.toString()
-            }
+                at_time: _allowanceInfo.expire.toString()
+            };
         } else {
             expires = {
                 never: {}
-            }
+            };
         }
         ModalActions.handleData({
             module: '/cw20/increaseAllowance',
@@ -254,10 +248,10 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
         ModalActions.handleSetCallback({
             callback: () => {
                 _setAllowanceInfo({
-                    address: "",
-                    amount: "",
-                    expire: "",
-                    type: ""
+                    address: '',
+                    amount: '',
+                    expire: '',
+                    type: ''
                 });
                 _setIsFetched(true);
             }
@@ -265,8 +259,8 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
     };
 
     const isEnableButton = useMemo(() => {
-        if (!addressExist || _allowanceInfo.amount === "") return false;
-        if (_allowanceInfo.expire === "" || _allowanceInfo.type === "") return false;
+        if (!addressExist || _allowanceInfo.amount === '') return false;
+        if (_allowanceInfo.expire === '' || _allowanceInfo.type === '') return false;
 
         return true;
     }, [addressExist, _allowanceInfo.amount, _allowanceInfo.expire, _allowanceInfo.type, _allowanceInfo.address]);
@@ -298,7 +292,9 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
                                     justifyContent: 'space-between'
                                 }}
                             >
-                                <AccordionTypo $disabled={true}>{_allowanceInfo.address === "" ? "Wallet Address": shortenAddress(_allowanceInfo.address, 16, 16)}</AccordionTypo>
+                                <AccordionTypo $disabled={true}>
+                                    {_allowanceInfo.address === '' ? 'Wallet Address' : shortenAddress(_allowanceInfo.address, 16, 16)}
+                                </AccordionTypo>
                                 <AccordionTypo $disabled={true}>{commaNumber(0)}</AccordionTypo>
                             </div>
                         </AccordionRow>

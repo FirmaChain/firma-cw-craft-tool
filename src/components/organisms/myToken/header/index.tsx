@@ -1,8 +1,8 @@
-import { ChangeEvent, useState } from 'react';
-// import SearchInput from '../../../atoms/input/searchInput';
+import { useState } from 'react';
+
 import { HeaderTitle, HeaderWrapper } from './style';
-import Icons from '../../../atoms/icons';
-import SearchInput2 from '@/components/atoms/input/searchInput2';
+import Icons from '@/components/atoms/icons';
+import SearchInput2 from '@/components/atoms/input/searchInput';
 
 const Header = () => {
     const [searchValue, setSearchValue] = useState<string>('');
@@ -19,13 +19,9 @@ const Header = () => {
                 value={searchValue}
                 onChange={onChangeSearchValue}
                 adornment={{
-                    start: <Icons.Search width={'16px'} height={'16px'} />
+                    end: <Icons.Search width={'16px'} height={'16px'} />
                 }}
-                maxWidth="309px"
-                // icon={<Icons.Search width={'16px'} height={'16px'} />}
-                // sx={{
-                //     width: '309px'
-                // }}
+                maxWidth="352px"
             />
         </HeaderWrapper>
     );

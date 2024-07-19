@@ -55,7 +55,6 @@ export const SummeryRightTokenSymbol = styled.div`
 `;
 
 export const WalletListWrapper = styled.div`
-    width: calc(100% - 64px);
     padding: 24px 32px;
     display: flex;
     flex-direction: column;

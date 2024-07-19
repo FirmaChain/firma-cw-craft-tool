@@ -144,7 +144,7 @@ const InstantitateModal = ({
                         style={{
                             position: 'relative',
                             width: '100%',
-                            height: '104px',
+                            minHeight: '168px',
                             padding: '32px 0',
                             display: 'flex',
                             flexDirection: 'row',

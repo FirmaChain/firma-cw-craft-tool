@@ -68,7 +68,6 @@ export const HeaderMinterCapTokenSymbol = styled.div`
 `;
 
 export const DetailWrapper = styled.div`
-    width: calc(100% - 64px);
     display: flex;
     padding: 24px 32px;
     flex-direction: row;

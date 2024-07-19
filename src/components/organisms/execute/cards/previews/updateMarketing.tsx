@@ -1,11 +1,11 @@
-import { IC_LINK_FILL, IC_TALK, IC_WALLET_FILL } from "@/components/atoms/icons/pngIcons";
-import styled from "styled-components";
-import { useContractContext } from "../../context/contractContext";
-import { Fragment } from "react/jsx-runtime";
-import { BASIC_LABEL } from "@/constants/cw20Types";
-import { useEffect, useMemo } from "react";
-import React from "react";
-import { ModalActions } from "@/redux/actions";
+import { IC_LINK_FILL, IC_TALK, IC_WALLET_FILL } from '@/components/atoms/icons/pngIcons';
+import styled from 'styled-components';
+import { useContractContext } from '../../context/contractContext';
+import { Fragment } from 'react/jsx-runtime';
+import { BASIC_LABEL } from '@/constants/cw20Types';
+import { useEffect, useMemo } from 'react';
+import React from 'react';
+import { ModalActions } from '@/redux/actions';
 
 const Container = styled.div`
     width: 100%;
@@ -16,7 +16,6 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    width: calc(100% - 88px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -43,8 +42,8 @@ const MarketingIcon = styled.img`
 
 const ItemLabelTypo = styled.div`
     width: 138px;
-    color: #02E191;
-    font-family: "General Sans Variable";
+    color: #02e191;
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -53,8 +52,8 @@ const ItemLabelTypo = styled.div`
 
 const ItemValueForDescTypo = styled.div`
     width: 338px;
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -64,8 +63,8 @@ const ItemValueForDescTypo = styled.div`
 
 const ItemValueTypo = styled.div`
     width: 338px;
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -77,7 +76,7 @@ const ItemValueTypo = styled.div`
 
 const ItemDefaultTypo = styled.div`
     color: var(--Gray-500, #383838);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -132,7 +131,7 @@ interface IProps {
 
 const UpdateMarketingPreview = ({ label, marketingDescription, marketingAddress, marketingProject }: IProps) => {
     const { _contract, _marketingDescription, _marketingAddress, _marketingProject, _setIsFetched } = useContractContext();
-    
+
     useEffect(() => {
         console.log(_marketingDescription);
     }, [_marketingDescription]);
@@ -150,13 +149,20 @@ const UpdateMarketingPreview = ({ label, marketingDescription, marketingAddress,
             }
         });
         ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({ callback: () => {
-            _setIsFetched(true);
-        }});
+        ModalActions.handleSetCallback({
+            callback: () => {
+                _setIsFetched(true);
+            }
+        });
     };
 
     const isEnableButton = useMemo(() => {
-        if (_marketingDescription !== marketingDescription || _marketingAddress !== marketingAddress || _marketingProject !== marketingProject) return true;
+        if (
+            _marketingDescription !== marketingDescription ||
+            _marketingAddress !== marketingAddress ||
+            _marketingProject !== marketingProject
+        )
+            return true;
 
         return false;
     }, [_marketingDescription, _marketingAddress, _marketingProject]);
@@ -169,29 +175,29 @@ const UpdateMarketingPreview = ({ label, marketingDescription, marketingAddress,
                         <MarketingIcon src={IC_TALK}></MarketingIcon>
                         <ItemLabelTypo>Marketing Desc</ItemLabelTypo>
                     </ItemLabelWrap>
-                    {_marketingDescription !== "" && <ItemValueForDescTypo>{_marketingDescription}</ItemValueForDescTypo>}
-                    {_marketingDescription === "" && <ItemDefaultTypo>Description</ItemDefaultTypo>}
+                    {_marketingDescription !== '' && <ItemValueForDescTypo>{_marketingDescription}</ItemValueForDescTypo>}
+                    {_marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>}
                 </ItemWrap>
-                {label !== BASIC_LABEL && 
+                {label !== BASIC_LABEL && (
                     <Fragment>
                         <ItemWrap>
                             <ItemLabelWrap>
                                 <MarketingIcon src={IC_WALLET_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Address</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {_marketingAddress !== "" && <ItemValueTypo>{_marketingAddress}</ItemValueTypo>}
-                            {_marketingAddress === "" && <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>}
+                            {_marketingAddress !== '' && <ItemValueTypo>{_marketingAddress}</ItemValueTypo>}
+                            {_marketingAddress === '' && <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>}
                         </ItemWrap>
                         <ItemWrap>
                             <ItemLabelWrap>
                                 <MarketingIcon src={IC_LINK_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Project</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {_marketingProject !== "" && <ItemValueTypo>{_marketingProject}</ItemValueTypo>}
-                            {_marketingProject === "" && <ItemDefaultTypo>Project Url</ItemDefaultTypo>}
+                            {_marketingProject !== '' && <ItemValueTypo>{_marketingProject}</ItemValueTypo>}
+                            {_marketingProject === '' && <ItemDefaultTypo>Project Url</ItemDefaultTypo>}
                         </ItemWrap>
                     </Fragment>
-                }
+                )}
             </ContentWrap>
             <ButtonWrap>
                 <ExecuteButton $isEnable={isEnableButton} onClick={onClickUpdateMarketing}>

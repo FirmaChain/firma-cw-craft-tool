@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { ModalActions } from "@/redux/actions";
-import styled from "styled-components";
+import { useMemo } from 'react';
+import { ModalActions } from '@/redux/actions';
+import styled from 'styled-components';
 
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from "@/components/atoms/icons/pngIcons";
-import { useContractContext } from "../../context/contractContext";
-import { formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from "@/utils/balance";
+import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
+import { useContractContext } from '../../context/contractContext';
+import { formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
 
 const Container = styled.div`
     width: 100%;
@@ -15,7 +15,6 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    width: calc(100% - 88px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -41,8 +40,8 @@ const CoinStackIcon = styled.img`
 `;
 
 const BurnInfoTitleTypo = styled.div`
-    color: #02E191;
-    font-family: "General Sans Variable";
+    color: #02e191;
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -55,8 +54,8 @@ const ItemRightWrap = styled.div`
 `;
 
 const BurnAmountTypo = styled.div`
-    color: var(--Green-500, #02E191);
-    font-family: "General Sans Variable";
+    color: var(--Green-500, #02e191);
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -64,8 +63,8 @@ const BurnAmountTypo = styled.div`
 `;
 
 const BurnSymbolTypo = styled.div`
-    color: var(--Green-500, #02E191);
-    font-family: "General Sans Variable";
+    color: var(--Green-500, #02e191);
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -79,12 +78,12 @@ const DOTTED_DIVIDER = styled.img`
 
 const CoinStack2Icon = styled.img`
     width: 24px;
-    height: 24px;    
+    height: 24px;
 `;
 
 const UpdatedBalanceLabelTypo = styled.div`
     color: var(--Gray-700, #999);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -92,8 +91,8 @@ const UpdatedBalanceLabelTypo = styled.div`
 `;
 
 const UpdatedBalanceTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -101,8 +100,8 @@ const UpdatedBalanceTypo = styled.div`
 `;
 
 const UpdatedSymbolTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -168,7 +167,7 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
     const onClickBurn = () => {
         const message = {
             amount: getUTokenAmountFromToken(_burnAmount, decimals)
-        }
+        };
 
         ModalActions.handleData({
             module: '/cw20/burnToken',
@@ -178,15 +177,17 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
             }
         });
         ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({ callback: () => {
-            _setIsFetched(true);
-            _setBurnAmount("0");
-        }});
+        ModalActions.handleSetCallback({
+            callback: () => {
+                _setIsFetched(true);
+                _setBurnAmount('0');
+            }
+        });
     };
 
     const isEnableButton = useMemo(() => {
-        if (addressAmount === "" || addressAmount === "0") return false;
-        if (_burnAmount === "" || _burnAmount === "0") return false;
+        if (addressAmount === '' || addressAmount === '0') return false;
+        if (_burnAmount === '' || _burnAmount === '0') return false;
 
         return true;
     }, [addressAmount, _burnAmount]);
@@ -207,7 +208,7 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
                 <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
                 <ItemWrap>
                     <ItemLeftWrap>
-                        <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'}/>
+                        <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
                         <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
@@ -222,7 +223,7 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
                 </ExecuteButton>
             </ButtonWrap>
         </Container>
-    )
+    );
 };
 
 export default BurnPreview;

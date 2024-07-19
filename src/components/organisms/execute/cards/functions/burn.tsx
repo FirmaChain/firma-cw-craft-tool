@@ -1,10 +1,10 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
-import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from "./styles";
-import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from "@/utils/balance";
-import InputTextWithLabel from "@/components/atoms/input/inputTextWithLabel";
-import { useEffect, useState } from "react";
-import { useContractContext } from "../../context/contractContext";
+import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
+import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { useEffect, useState } from 'react';
+import { useContractContext } from '../../context/contractContext';
+import LabelInput2 from '@/components/atoms/input/labelInput2';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -19,7 +19,7 @@ const WalletBalanceWrap = styled.div`
 
 const WalletBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -33,7 +33,7 @@ interface IProps {
 
 const Burn = ({ decimals, addressAmount }: IProps) => {
     const { _isFetched, _setBurnAmount } = useContractContext();
-    const [inputBurnAmount, setInputBurnAmount] = useState<string>("");
+    const [inputBurnAmount, setInputBurnAmount] = useState<string>('');
 
     const handleBurnAmount = (value: string) => {
         const truncateDecimals = (value: string) => {
@@ -50,20 +50,23 @@ const Burn = ({ decimals, addressAmount }: IProps) => {
         if (!isValidFormat) {
             return;
         }
-    
+
         const truncatedValue = truncateDecimals(value);
         const convertBurnAmount = getUTokenAmountFromToken(truncatedValue, decimals);
-        const burnAmount = compareStringNumbers(addressAmount, convertBurnAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(addressAmount, decimals);
+        const burnAmount =
+            compareStringNumbers(addressAmount, convertBurnAmount) === 1
+                ? truncatedValue
+                : getTokenAmountFromUToken(addressAmount, decimals);
 
         setInputBurnAmount(burnAmount);
         _setBurnAmount(burnAmount);
     };
-    
+
     useEffect(() => {
-        setInputBurnAmount("");
-        _setBurnAmount("0");
+        setInputBurnAmount('');
+        _setBurnAmount('0');
     }, [_isFetched]);
-    
+
     return (
         <Container>
             <HeaderWrap>
@@ -73,19 +76,18 @@ const Burn = ({ decimals, addressAmount }: IProps) => {
                 </TitleWrap>
             </HeaderWrap>
             <ContentWrap>
-                <InputTextWithLabel
-                    placeHolderLeft={"0"}
-                    label={"Burn Amount"}
-                    value={inputBurnAmount}
-                    onChange={handleBurnAmount}
+                <LabelInput2
+                    labelProps={{ label: 'Burn Amount' }}
+                    inputProps={{ value: inputBurnAmount, formId: 'BURN_AMOUNT', onChange: handleBurnAmount, placeHolder: '0' }}
                 />
+
                 <WalletBalanceWrap>
                     <WalletBalanceTypo>Balance :</WalletBalanceTypo>
                     <WalletBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(addressAmount, decimals))}</WalletBalanceTypo>
                 </WalletBalanceWrap>
             </ContentWrap>
         </Container>
-    )
+    );
 };
 
 export default Burn;

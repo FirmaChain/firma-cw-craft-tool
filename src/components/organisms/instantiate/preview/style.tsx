@@ -8,8 +8,6 @@ export const PreviewWrapper = styled.div`
 
     overflow: hidden;
 
-    // width: calc(100% - 96px);
-    // max-width: calc(736px - 96px);
     height: 100%;
     padding: 48px;
     display: flex;

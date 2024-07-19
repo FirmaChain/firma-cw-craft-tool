@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { rootState } from '@/redux/reducers';
 import { ModalActions } from '@/redux/actions';
-import { Modal } from '@/components/modal/index';
+import Modal from '@/components/modal';
 import Icons from '@/components/atoms/icons';
 import {
     TxCofirmTitleTypoWrapper,

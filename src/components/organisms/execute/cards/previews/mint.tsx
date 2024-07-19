@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ModalActions } from '@/redux/actions';
 
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '../../../../atoms/icons/pngIcons';
-import ArrowToggleButton from '../../../../atoms/buttons/arrowToggleButton';
+import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import {
     addStringAmount,
     compareStringNumbers,
@@ -25,7 +25,6 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    width: calc(100% - 88px);
     height: auto;
     padding: 32px 44px;
     border-radius: 24px;
@@ -89,7 +88,6 @@ const TokeInfoMintSymbolTypo = styled.div`
 `;
 
 const WalletListWrap = styled.div`
-    width: calc(100% - 64px);
     height: auto;
     padding: 24px 32px;
     display: flex;
@@ -268,10 +266,12 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
             }
         });
         ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({ callback: () => {
-            _setWalletList([]);
-            _setIsFetched(true);
-        }});
+        ModalActions.handleSetCallback({
+            callback: () => {
+                _setWalletList([]);
+                _setIsFetched(true);
+            }
+        });
     };
 
     return (

@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 import ColorButton from '@/components/atoms/buttons/colorButton';
-import { ModalActions } from '@/redux/actions';
 import { useModalStore } from '@/hooks/useModal';
 
 const Container = styled.div`
-    width: calc(100% - 160px);
+    width: 100%;
     display: flex;
     padding: 80px;
     justify-content: center;

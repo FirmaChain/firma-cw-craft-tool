@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const SummeryContainer = styled.div`
-    width: calc(100% - 48px);
     background-color: #141414;
     border-radius: 16px;
     display: flex;

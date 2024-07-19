@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
+import { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
-import { IC_COIN_STACK, IC_WALLET } from "@/components/atoms/icons/pngIcons";
-import { IWallet } from "@/interfaces/wallet";
-import { useContractContext } from "../../context/contractContext";
-import { isValidAddress, shortenAddress } from "@/utils/address";
-import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from "@/utils/balance";
-import ArrowToggleButton from "@/components/atoms/buttons/arrowToggleButton";
-import { ModalActions } from "@/redux/actions";
+import { IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IWallet } from '@/interfaces/wallet';
+import { useContractContext } from '../../context/contractContext';
+import { isValidAddress, shortenAddress } from '@/utils/address';
+import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
+import { ModalActions } from '@/redux/actions';
 
 const Container = styled.div`
     width: 100%;
@@ -18,7 +18,6 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    width: calc(100% - 88px);
     height: auto;
     display: flex;
     flex-direction: column;
@@ -44,8 +43,8 @@ const ItemLabelIcon = styled.img`
 `;
 
 const ItemLabelTypo = styled.div`
-    color: #02E191;
-    font-family: "General Sans Variable";
+    color: #02e191;
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -58,8 +57,8 @@ const ItemAmountWrap = styled.div`
 `;
 
 const ItemAmountTypo = styled.div`
-    color: var(--Green-500, #02E191);
-    font-family: "General Sans Variable";
+    color: var(--Green-500, #02e191);
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -67,8 +66,8 @@ const ItemAmountTypo = styled.div`
 `;
 
 const ItemAmountSymbolTypo = styled.div`
-    color: var(--Green-500, #02E191);
-    font-family: "General Sans Variable";
+    color: var(--Green-500, #02e191);
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -76,7 +75,6 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const WalletListWrap = styled.div`
-    width: calc(100% - 64px);
     height: auto;
     padding: 24px 32px;
     display: flex;
@@ -105,7 +103,7 @@ const WalletItemIcon = styled.img`
 
 const WalletItemAddressTypo = styled.div`
     color: var(--Gray-650, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -113,8 +111,8 @@ const WalletItemAddressTypo = styled.div`
 `;
 
 const WalletItemTokenAmount = styled.div`
-    color: var(--Gray-700, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-700, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -188,7 +186,6 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
             totalAmount = addStringAmount(totalAmount, wallet.amount);
         }
 
-
         setIsEnableButton(allAddressesValid && allAmountsValid);
         setTotalBurnBalance(getUTokenAmountFromToken(totalAmount, decimals));
     }, [_walletList, totalSupply, decimals]);
@@ -211,10 +208,12 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
             }
         });
         ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({ callback: () => {
-            _setWalletList([]);
-            _setIsFetched(true);
-        }});
+        ModalActions.handleSetCallback({
+            callback: () => {
+                _setWalletList([]);
+                _setIsFetched(true);
+            }
+        });
     };
 
     useEffect(() => {
@@ -241,11 +240,11 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                    <WalletItemAddressTypo>{value.recipient !== "" ? shortenAddress(value.recipient, 12, 12) : "Wallet Address"}</WalletItemAddressTypo>
+                                    <WalletItemAddressTypo>
+                                        {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                    </WalletItemAddressTypo>
                                 </WalletLeftItemWrap>
-                                <WalletItemTokenAmount>
-                                    {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                </WalletItemTokenAmount>
+                                <WalletItemTokenAmount>{value.amount === '' ? '0' : formatWithCommas(value.amount)}</WalletItemTokenAmount>
                             </WalletItemWrap>
                         ))}
                     </WalletListWrap>
@@ -257,7 +256,7 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
                 </ExecuteButton>
             </ButtonWrap>
         </Container>
-    )
+    );
 };
 
 export default BurnFromPreview;

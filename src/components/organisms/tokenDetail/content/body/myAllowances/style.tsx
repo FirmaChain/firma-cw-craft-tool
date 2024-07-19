@@ -48,8 +48,3 @@ export const ItemLabel = styled.div`
     line-height: 22px;
     white-space: pre-wrap;
 `;
-
-export const ItemValue = styled.div`
-    width: calc(100% - 48px);
-    padding: 20px 24px;
-`;

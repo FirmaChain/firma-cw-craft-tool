@@ -1,9 +1,7 @@
 import IconButton from '@/components/atoms/buttons/iconButton';
-import { Button } from '@mui/material';
 import { styled } from 'styled-components';
 
 export const TitleContainer = styled.div`
-    width: calc(100% - 80px);
     display: flex;
     padding: 28px 40px;
     flex-direction: row;
@@ -75,6 +73,12 @@ export const TokenNameTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
 `;
 
 export const TotalSupplyWrapper = styled.div`
