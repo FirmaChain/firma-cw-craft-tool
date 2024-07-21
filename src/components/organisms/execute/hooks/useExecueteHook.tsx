@@ -4,7 +4,6 @@ import { useSnackbar } from 'notistack';
 import { Expires, FirmaSDK } from '@firmachain/firma-js';
 
 import { rootState } from '@/redux/reducers';
-import { NETWORKS } from '@/constants/common';
 import { CRAFT_CONFIGS } from '@/config';
 
 export interface ITokenInfoState {
@@ -43,14 +42,11 @@ interface IAllowanceBalanceState {
 const useExecuteHook = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const { network } = useSelector((state: rootState) => state.global);
+    const network = useSelector((state: rootState) => state.global.network);
 
-    const firmaSDK = useCallback(() => {
-        const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-
-        const _firmaSDK = new FirmaSDK(craftConfig.FIRMACHAIN_CONFIG);
-        return _firmaSDK;
-    }, [network]);
+    const MAINNET_SDK = new FirmaSDK(CRAFT_CONFIGS.MAINNET.FIRMACHAIN_CONFIG);
+    const TESTNET_SDK = new FirmaSDK(CRAFT_CONFIGS.TESTNET.FIRMACHAIN_CONFIG);
+    const firmaSDK = network === 'MAINNET' ? MAINNET_SDK : TESTNET_SDK;
 
     const getContractTokenInfo = useCallback(
         async (contractAddress: string, address: string) => {
@@ -78,14 +74,14 @@ const useExecuteHook = () => {
                 addressAmount: ''
             };
 
-            if (!firmaSDK()) return resultData;
+            if (!firmaSDK) return resultData;
 
             try {
-                const contractInfo = await firmaSDK().CosmWasm.getContractInfo(contractAddress);
-                const tokenInfo = await firmaSDK().Cw20.getTokenInfo(contractAddress);
-                const minterInfo = await firmaSDK().Cw20.getMinter(contractAddress);
-                const marketingInfo = await firmaSDK().Cw20.getMarketingInfo(contractAddress);
-                const balanceInfo = await firmaSDK().Cw20.getBalance(contractAddress, address);
+                const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
+                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
+                const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress);
+                const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress);
+                const balanceInfo = await firmaSDK.Cw20.getBalance(contractAddress, address);
 
                 resultData.success = true;
                 resultData.contractAddress = contractInfo.address;
@@ -121,10 +117,10 @@ const useExecuteHook = () => {
                 balance: ''
             };
 
-            if (!firmaSDK()) return resultData;
+            if (!firmaSDK) return resultData;
 
             try {
-                const balance = await firmaSDK().Cw20.getBalance(contractAddress, address);
+                const balance = await firmaSDK.Cw20.getBalance(contractAddress, address);
                 resultData.balance = balance;
             } catch (error) {
                 resultData.success = false;
@@ -148,11 +144,11 @@ const useExecuteHook = () => {
                 }
             };
 
-            if (!firmaSDK()) return resultData;
+            if (!firmaSDK) return resultData;
 
             try {
-                const allowance = await firmaSDK().Cw20.getAllowance(contractAddress, owner, spender);
-                const blockHeight = (await firmaSDK().BlockChain.getChainSyncInfo()).latest_block_height;
+                const allowance = await firmaSDK.Cw20.getAllowance(contractAddress, owner, spender);
+                const blockHeight = (await firmaSDK.BlockChain.getChainSyncInfo()).latest_block_height;
 
                 resultData.blockHeight = blockHeight;
                 resultData.data = allowance;
@@ -167,6 +163,7 @@ const useExecuteHook = () => {
     );
 
     return {
+        firmaSDK,
         getContractTokenInfo,
         getCw20Balance,
         getCw20AllowanceBalance
