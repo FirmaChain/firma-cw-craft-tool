@@ -5,6 +5,7 @@ import Icons from '../icons';
 import styled from 'styled-components';
 import commaNumber from 'comma-number';
 import IconTooltip from '../tooltip';
+import { checkImageUrl } from '@/utils/common';
 
 interface ILabelProps {
     index?: number;
@@ -40,17 +41,6 @@ const IconBackground = styled.div`
     border-radius: 6.933px;
     background: var(--Gray-450, #262626);
 `;
-
-const checkImageUrl = (url: string, onValid: () => void, onInvalid: () => void) => {
-    if (url) {
-        const img = new Image();
-        img.src = url;
-        img.onload = () => onValid();
-        img.onerror = () => onInvalid();
-    } else {
-        onValid();
-    }
-};
 
 const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inputProps: IInputProps }) => {
     const { index, label, tooltip = '', TooltipIcon = <Icons.Info width={'12px'} height={'12px'} />, labelHeight } = labelProps;

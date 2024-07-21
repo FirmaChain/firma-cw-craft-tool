@@ -18,7 +18,6 @@ const StyledInput = styled.div<{
     justify-content: center;
 
     padding: 0 24px;
-    padding-right: 10px;
     gap: 8px;
 
     background: var(--Gray-200, #1a1a1a);
@@ -47,22 +46,20 @@ const StyledInput = styled.div<{
         color: #ffffff;
         border: none;
 
-        // padding: 0 16px;
-
-        font-size: 14px;
+        font-size: 16px;
         font-style: normal;
         font-weight: 500;
-        line-height: 20px; /* 142.857% */
+        line-height: 22px; /* 142.857% */
 
         text-align: ${({ $textAlign }) => $textAlign};
 
         &::placeholder {
             color: var(--Gray-600, #707070);
             /* Body/Body2 - Md */
-            font-size: 14px;
+            font-size: 16px;
             font-style: normal;
             font-weight: 500;
-            line-height: 20px; /* 142.857% */
+            line-height: 22px; /* 142.857% */
         }
 
         outline: none;

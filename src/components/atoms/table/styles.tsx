@@ -7,6 +7,7 @@ export const DefaultTypo = styled.div`
     font-weight: 400;
     line-height: 20px;
     color: #dcdcdc;
+    width: fit-content;
 `;
 
 export const TypeCover = styled.div<{ bgColor: string }>`

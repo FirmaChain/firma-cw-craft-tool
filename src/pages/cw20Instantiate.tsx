@@ -47,7 +47,7 @@ const Cw20Instantiate = () => {
     }, []);
 
     return (
-        <Container>
+        <Container style={{ padding: '68px 96px' }}>
             <Header />
             <MainContent>
                 <Content

@@ -63,7 +63,7 @@ const Preview = ({
 
     useEffect(() => {
         const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        const cw20CodeId = cw20Mode === "BASIC" ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
+        const cw20CodeId = cw20Mode === 'BASIC' ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
 
         setCodeId(cw20CodeId);
     }, [network]);
@@ -128,7 +128,6 @@ const Preview = ({
             }
         } else {
             modal.openModal({ modalType: 'connectWallet' });
-            // ModalActions.handleConnectWallet(true);
         }
     };
 

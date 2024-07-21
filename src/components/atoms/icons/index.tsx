@@ -434,12 +434,12 @@ const Preview = (props: any) => {
 
 const Search = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" {...props}>
             <g id="search-refraction">
                 <path
                     id="Icon"
                     d="M14.0001 14L11.1001 11.1"
-                    stroke="#807E7E"
+                    stroke={props.stroke || '#807E7E'}
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -447,8 +447,8 @@ const Search = (props: any) => {
                 <path
                     id="Icon_2"
                     d="M11.9167 7.33333C11.9167 9.86464 9.86464 11.9167 7.33333 11.9167C4.80203 11.9167 2.75 9.86464 2.75 7.33333C2.75 4.80203 4.80203 2.75 7.33333 2.75C9.86464 2.75 11.9167 4.80203 11.9167 7.33333Z"
-                    fill={props.$isCheck ? '#E6E6E6' : '#807E7E'}
-                    stroke="#807E7E"
+                    fill={props.fill || props.$isCheck ? '#E6E6E6' : '#807E7E'}
+                    stroke={props.stroke || '#807E7E'}
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -785,8 +785,18 @@ const CloseIcon = (props: any) => (
             d="M14 25.375C20.2822 25.375 25.375 20.2822 25.375 14C25.375 7.71776 20.2822 2.625 14 2.625C7.71776 2.625 2.625 7.71776 2.625 14C2.625 20.2822 7.71776 25.375 14 25.375Z"
             fill={props.fill || '#474747'}
         />
-        <path d="M9.625 9.625L18.375 18.375" stroke="#807E7E" strokeWidth="1.575" strokeLinecap="round" />
-        <path d="M18.375 9.625L9.625 18.375" stroke="#807E7E" strokeWidth="1.575" strokeLinecap="round" />
+        <path
+            d="M9.625 9.625L18.375 18.375"
+            stroke={props.stroke || '#807E7E'}
+            strokeWidth={props.strokeWidth || '1.575'}
+            strokeLinecap="round"
+        />
+        <path
+            d="M18.375 9.625L9.625 18.375"
+            stroke={props.stroke || '#807E7E'}
+            strokeWidth={props.strokeWidth || '1.575'}
+            strokeLinecap="round"
+        />
     </svg>
 );
 

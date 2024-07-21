@@ -7,7 +7,7 @@ export const Container = styled.div`
     width: fit-content;
     box-sizing: border-box;
 
-    padding: 68px 96px;
+    padding: 0;
 
     display: flex;
     flex-direction: column;

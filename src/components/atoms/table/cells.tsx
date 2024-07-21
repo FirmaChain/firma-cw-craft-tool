@@ -30,23 +30,9 @@ const Hash = ({ hash, sliceLength = 10 }: { hash: string; sliceLength?: number }
 
     return (
         <DefaultTypo onClick={onClick} style={{ cursor: 'pointer', color: '#00827A', display: 'flex' }}>
-            {hash
-                .slice(0, sliceLength)
-                .split('')
-                .map((one) => (
-                    <span key={one} style={{ width: '9px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {one}
-                    </span>
-                ))}
+            {hash.slice(0, sliceLength)}
             ...
-            {hash
-                .slice(hash.length - sliceLength, hash.length)
-                .split('')
-                .map((one) => (
-                    <span key={one} style={{ width: '9px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {one}
-                    </span>
-                ))}
+            {hash.slice(hash.length - sliceLength, hash.length)}
         </DefaultTypo>
     );
 };

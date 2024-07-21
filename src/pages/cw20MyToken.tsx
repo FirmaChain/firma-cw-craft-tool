@@ -5,7 +5,7 @@ import { Container } from '@/styles/instantiate';
 
 const Cw20MyToken = () => {
     return (
-        <Container style={{ gap: '20px' }}>
+        <Container style={{ padding: '68px 96px', gap: '20px' }}>
             <Header />
             <MyTokenContent />
         </Container>
