@@ -6,8 +6,9 @@ import SearchInput2 from '@/components/atoms/input/searchInput';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import commaNumber from 'comma-number';
-import { getTokenStrFromUTokenStr } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const AllAccounts = () => {
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
@@ -29,7 +30,16 @@ const AllAccounts = () => {
         {
             id: 'Balance',
             label: 'Balance',
-            renderCell: (id, row) => commaNumber(getTokenStrFromUTokenStr(row['Balance'], decimals)),
+            renderCell: (id, row) => (
+                <Cell.Default
+                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(row['Balance'], decimals))}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
+                    {commaNumber(parseAmountWithDecimal2(row['Balance'], decimals, true))}
+                </Cell.Default>
+            ),
             width: '40%'
         }
     ];

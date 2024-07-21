@@ -18,6 +18,7 @@ import Icons from '@/components/atoms/icons';
 import { IWallet } from '@/interfaces/wallet';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import commaNumber from 'comma-number';
+import { parseAmountWithDecimal } from '@/utils/common';
 
 interface IProps {
     totalSupply: string;
@@ -41,7 +42,9 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                     <SummeryLeftText>Total Supply</SummeryLeftText>
                 </SummeryLeftWrapper>
                 <SummeryRightWrapeer>
-                    <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>{commaNumber(totalSupply)}</SummeryRightTotalSupply>
+                    <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>
+                        {commaNumber(parseAmountWithDecimal(totalSupply, '0'))}
+                    </SummeryRightTotalSupply>
                     <SummeryRightTokenSymbol>{tokenSymbol !== '' ? tokenSymbol : ''}</SummeryRightTokenSymbol>
                     <ArrowToggleButton onToggle={onClickToggleWalletList} />
                 </SummeryRightWrapeer>
@@ -66,7 +69,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                     </ItemLeftAddress>
                                 </ItemLeftWrapper>
                                 <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))}>
-                                    {commaNumber(wallet.amount) || '0'}
+                                    {commaNumber(parseAmountWithDecimal(wallet.amount, '0')) || '0'}
                                 </ItemTokenAmount>
                             </WalletListItem>
                         ))}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { SummeryAttribute, SummeryAttributeKey, SummeryAttributeValue, SummeryContainer } from './style';
 import commaNumber from 'comma-number';
+import { parseAmountWithDecimal } from '@/utils/common';
 
 interface IProps {
     totalSupply: string;
@@ -13,8 +14,7 @@ const Summery = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
         <SummeryContainer>
             <SummeryAttribute>
                 <SummeryAttributeKey>Total Amount :</SummeryAttributeKey>
-                {/* <SummeryAttributeValue>{getUTokenStrFromTokenStr(totalSupply, decimals)}</SummeryAttributeValue> */}
-                <SummeryAttributeValue>{commaNumber(totalSupply)}</SummeryAttributeValue>
+                <SummeryAttributeValue>{commaNumber(parseAmountWithDecimal(totalSupply, '0'))}</SummeryAttributeValue>
                 <SummeryAttributeValue>{tokenSymbol}</SummeryAttributeValue>
             </SummeryAttribute>
         </SummeryContainer>

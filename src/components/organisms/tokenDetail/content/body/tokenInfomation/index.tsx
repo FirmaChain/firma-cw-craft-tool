@@ -1,5 +1,6 @@
-import { getTokenStrFromUTokenStr } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
+import commaNumber from 'comma-number';
 
 import {
     SpecificItem,
@@ -13,6 +14,7 @@ import {
     TokenCardSpecific
 } from './style';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const TokenInformation = () => {
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
@@ -57,7 +59,14 @@ const TokenInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <SpecificValueTypo>{totalSupply && getTokenStrFromUTokenStr(totalSupply, decimals)}</SpecificValueTypo>
+                        <SpecificValueTypo
+                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, decimals))}
+                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                            data-tooltip-wrapper="span"
+                            data-tooltip-place="bottom"
+                        >
+                            {totalSupply && commaNumber(parseAmountWithDecimal2(totalSupply, decimals, true))}
+                        </SpecificValueTypo>
                         <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                     </SpecificValueWrapper>
                 </SpecificItem>
@@ -71,21 +80,35 @@ const TokenInformation = () => {
                         </SpecificValueWrapper>
                     </SpecificItem>
                 )}
+                {minterCap && (
+                    <SpecificItem>
+                        <SpecificLabelTypo>Minter Cap</SpecificLabelTypo>
 
-                <SpecificItem>
-                    <SpecificLabelTypo>Minter Cap</SpecificLabelTypo>
-                    {minterCap !== undefined && minterCap !== '' && (
                         <SpecificValueWrapper>
-                            <SpecificValueTypo>{getTokenStrFromUTokenStr(minterCap, decimals)}</SpecificValueTypo>
+                            <SpecificValueTypo
+                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(minterCap, decimals))}
+                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                data-tooltip-wrapper="span"
+                                data-tooltip-place="bottom"
+                            >
+                                {minterCap === '' ? '0' : commaNumber(parseAmountWithDecimal2(minterCap, decimals, true))}
+                            </SpecificValueTypo>
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                         </SpecificValueWrapper>
-                    )}
-                </SpecificItem>
+                    </SpecificItem>
+                )}
 
                 <SpecificItem>
                     <SpecificLabelTypo>My Balance</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <SpecificValueTypo>{addressBalance && getTokenStrFromUTokenStr(addressBalance, decimals)}</SpecificValueTypo>
+                        <SpecificValueTypo
+                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(addressBalance, decimals))}
+                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                            data-tooltip-wrapper="span"
+                            data-tooltip-place="bottom"
+                        >
+                            {addressBalance && commaNumber(parseAmountWithDecimal2(addressBalance, decimals, true))}
+                        </SpecificValueTypo>
                         <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                     </SpecificValueWrapper>
                 </SpecificItem>
