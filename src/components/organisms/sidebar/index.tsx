@@ -22,7 +22,6 @@ import {
 } from './style';
 import CwSwitch from './cwSwitch';
 import { CW_TYPE, NETWORK_TYPE } from '@/constants/common';
-import LineDivider from '@/components/atoms/divider/lineDivider';
 import Icons from '@/components/atoms/icons';
 import { MenuItemText } from './style';
 import ColorButton from '@/components/atoms/buttons/colorButton';
@@ -34,6 +33,7 @@ import { copyToClipboard, shortenAddress } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
+import Divider from '@/components/atoms/divider';
 
 const SOCIAL_LIST = [
     { Icon: <Icons.Medium width={'100%'} height={'100%'} />, socialLink: 'https://medium.com/firmachain' },
@@ -126,7 +126,7 @@ const Sidebar = () => {
                                 />
                                 <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/execute'}>Execute</MenuItemText>
                             </MenuItem>
-                            <LineDivider />
+                            <Divider $direction="horizontal" $color="var(--Gray-450, #313131)" />
                             <MenuItem onClick={(e) => onClickMenu(e, '/search')}>
                                 <Icons.Search
                                     $isCheck={'/' + location.pathname.split('/')[1] === '/search'}
@@ -175,7 +175,7 @@ const Sidebar = () => {
                             <ExternalLinkButton onClick={onClickExternalLink}>Block Explorer</ExternalLinkButton>
                             <ExternalLinkButton>Contact Us</ExternalLinkButton>
                         </ExternalLinkWrapper>
-                        <LineDivider />
+                        <Divider $direction="horizontal" $color={'#383838'} />
                         <SocialWrapper>
                             {SOCIAL_LIST.map((value, index) => (
                                 <SocialIconButton key={index} onClick={(e) => onClickSocialLink(e, value.socialLink)}>

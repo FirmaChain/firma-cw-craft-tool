@@ -17,11 +17,12 @@ import {
 import TotalSupply from './totalSupply';
 import { IWallet } from '@/interfaces/wallet';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { HalfDottedDivider } from '@/components/atoms/divider/dottedDivider';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import IconTooltip from '@/components/atoms/tooltip';
 import commaNumber from 'comma-number';
+import Divider from '@/components/atoms/divider';
+import { parseAmountWithDecimal } from '@/utils/common';
 
 interface IProps {
     minterble: boolean;
@@ -74,8 +75,7 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                             </HeaderLeftWrapper>
                             <HeaderRightWrapper>
                                 <HeaderMinterCapAmount $disabled={!Boolean(Number(minterCap))}>
-                                    {commaNumber(minterCap) || 0}
-                                    {/* {minterCap !== '' ? getUTokenStrFromTokenStr(minterCap, decimals) : '0'} */}
+                                    {commaNumber(parseAmountWithDecimal(minterCap, '0')) || 0}
                                 </HeaderMinterCapAmount>
                                 <HeaderMinterCapTokenSymbol>{tokenSymbol !== '' ? tokenSymbol : ''}</HeaderMinterCapTokenSymbol>
                                 {!isBasic && <ArrowToggleButton onToggle={onClickToggleMinterDetail} />}
@@ -85,21 +85,19 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                             <DetailWrapper>
                                 <DetailLeftWrapper>
                                     <Icons.Wallet width={'20px'} height={'20px'} />
-                                    {/* <DetailAddressText>{minterAddress !== '' ? minterAddress : '-'}</DetailAddressText> */}
                                     <DetailAddressText $disabled={!Boolean(currentMinterAddress)}>
                                         {currentMinterAddress || 'Wallet Address'}
                                     </DetailAddressText>
                                 </DetailLeftWrapper>
                                 <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))}>
-                                    {commaNumber(minterCap) || 0}
-                                    {/* {minterCap !== '' ? getUTokenStrFromTokenStr(minterCap, decimals) : '0'} */}
+                                    {commaNumber(parseAmountWithDecimal(minterCap, '0')) || 0}
                                 </DetailMinterCapAmount>
                             </DetailWrapper>
                         ) : (
                             <></>
                         )}
                     </MinterCapWrapper>
-                    <HalfDottedDivider />
+                    <Divider $direction="horizontal" $color="#383838" $variant="dash" />
                 </>
             )}
             <TotalSupply totalSupply={totalSupply} tokenSymbol={tokenSymbol} walletList={walletList} decimals={decimals} />

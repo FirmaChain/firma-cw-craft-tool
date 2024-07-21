@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { FullDottedDivider } from '@/components/atoms/divider/dottedDivider';
 import {
     BalanceAmountTypo,
     BalanceAmountWrapper,
@@ -14,12 +13,15 @@ import {
 import Allowances from './allowances';
 import useTokenDetail from '@/hooks/useTokenDetail';
 import { rootState } from '@/redux/reducers';
-import { getTokenStrFromUTokenStr, isValidAddress } from '@/utils/common';
+import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import styled from 'styled-components';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
+import Divider from '@/components/atoms/divider';
+import commaNumber from 'comma-number';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const SearchButton = styled(IconButton)`
     //? outside
@@ -124,11 +126,19 @@ const WalletSearch = () => {
                     }}
                 />
             </div>
-            <FullDottedDivider />
+            <Divider $direction="horizontal" $color="#383838" $variant="dash" />
+
             <BalanceWrapper>
                 <BalanceLabelTypo>Balances</BalanceLabelTypo>
                 <BalanceAmountWrapper>
-                    <BalanceAmountTypo>{balanceAmount === '' ? '0' : getTokenStrFromUTokenStr(balanceAmount, decimals)}</BalanceAmountTypo>
+                    <BalanceAmountTypo
+                        data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, decimals))}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                    >
+                        {commaNumber(parseAmountWithDecimal2(balanceAmount, decimals, true))}
+                    </BalanceAmountTypo>
                     <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
                 </BalanceAmountWrapper>
             </BalanceWrapper>

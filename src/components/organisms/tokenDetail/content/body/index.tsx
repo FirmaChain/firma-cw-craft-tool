@@ -4,19 +4,19 @@ import TokenInformation from './tokenInfomation';
 import MyAllowances from './myAllowances';
 import AllAccounts from './allAccounts';
 import Transactions from './transactions';
-import LineDivider from '@/components/atoms/divider/lineDivider';
+import Divider from '@/components/atoms/divider';
 
 const ContentBody = () => {
     return (
         <ContentBodyContainer>
             <TokenInformation />
-            <LineDivider />
+            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
             <AdditionalInformation />
-            <LineDivider />
+            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
             <MyAllowances />
-            <LineDivider />
+            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
             <AllAccounts />
-            <LineDivider />
+            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
             <Transactions />
         </ContentBodyContainer>
     );

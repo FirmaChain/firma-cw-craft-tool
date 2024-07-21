@@ -4,6 +4,7 @@ import Minterble from './minterble';
 import { AddWalletWrapper, IconBackground, TextGroupWrapper, TitleDescription, TitleText, TitleWrapper } from './style';
 import Summery from './summery';
 import WalletList from '@/components/atoms/walletList';
+import Divider from '@/components/atoms/divider';
 
 interface IProps {
     walletCount: number;
@@ -51,8 +52,10 @@ const AddWallet = ({
                 addressPlaceholder={'Input Wallet Address'}
                 amountTitle={'Amount'}
             />
-            {/* <HalfDottedDivider /> */}
-            <div style={{ width: '100%', borderTop: '1px dashed #383838', margin: '32px 0' }} />
+            <div style={{ width: '100%', padding: '32px 0' }}>
+                <Divider $direction="horizontal" $color="#383838" $variant="dash" />
+            </div>
+
             <Minterble
                 decimals={decimals}
                 onChangeMinterble={onChangeMinterble}
