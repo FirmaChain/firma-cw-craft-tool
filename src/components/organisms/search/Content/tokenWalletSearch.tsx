@@ -1,0 +1,151 @@
+import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
+import { CardContainer, CardTitle, SearchButton, SectionContainer, WalletBalance } from './style';
+import Divider from '@/components/atoms/divider';
+import StyledTable, { IColumn } from '@/components/atoms/table';
+import IconButton from '@/components/atoms/buttons/iconButton';
+import Icons from '@/components/atoms/icons';
+import { useEffect, useState } from 'react';
+import { isValidAddress, parseAmountWithDecimal2, parseExpires } from '@/utils/common';
+import useTokenDetail from '@/hooks/useTokenDetail';
+import useSearchStore from '../searchStore';
+import Cell from '@/components/atoms/table/cells';
+import commaNumber from 'comma-number';
+import { TOOLTIP_ID } from '@/constants/tooltip';
+
+const EndAdornment = ({
+    keyword,
+    disableSearch = false,
+    onClickSearch,
+    onClickClear
+}: {
+    keyword: string;
+    disableSearch?: boolean;
+    onClickSearch: () => void;
+    onClickClear: () => void;
+}) => {
+    return (
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
+            {keyword && (
+                <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
+                    <Icons.XCircle width={'32px'} height={'32px'} />
+                </IconButton>
+            )}
+            <SearchButton disabled={keyword === '' || disableSearch} onClick={onClickSearch}>
+                <span className="button-text">Search</span>
+            </SearchButton>
+        </div>
+    );
+};
+
+const TokenWalletSearch = () => {
+    const contractAddress = useSearchStore((v) => v.contractInfo?.address);
+    const symbol = useSearchStore((state) => state.tokenInfo?.symbol);
+    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || '';
+
+    //? Search keyword (wallet address)
+    const [keyword, setKeyword] = useState<string>('');
+    //? Search result
+    const [balanceAmount, setBalanceAmount] = useState<string>('');
+    const [allAllowances, setAllAllowances] = useState<any[]>([]);
+    const [allReceives, setAllReceives] = useState<any[]>([]);
+
+    const { getWalletSearch } = useTokenDetail();
+
+    const getAddressInfo = async () => {
+        const searchResult = await getWalletSearch(contractAddress, keyword);
+
+        if (searchResult) {
+            setBalanceAmount(searchResult.balanceAmount);
+            setAllAllowances(searchResult.allAllowances);
+            setAllReceives(searchResult.allSpenders);
+        }
+    };
+
+    useEffect(() => {
+        //? Reset inforamtion when contract changed
+        //? May be useless [if all component un-mounted] when contract change
+        setKeyword('');
+        setBalanceAmount('');
+        setAllAllowances([]);
+        setAllReceives([]);
+    }, [contractAddress]);
+
+    const columns: IColumn[] = [
+        { id: 'Receiver', label: 'Receiver', renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />, width: '55%' },
+        {
+            id: 'Amount',
+            label: 'Amount',
+            renderCell: (id, row) => (
+                <Cell.Default
+                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(row[id], String(decimals)))}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
+                    {commaNumber(parseAmountWithDecimal2(row[id], String(decimals), true))}
+                </Cell.Default>
+            ),
+
+            width: '20%'
+        },
+        { id: 'Expires', label: 'Expires', renderCell: (id, row) => parseExpires(JSON.stringify(row['Expires'])), width: '25%' }
+    ];
+
+    return (
+        <CardContainer>
+            <CardTitle className="card-title">Wallet Address Search</CardTitle>
+            <SearchInputWithButton2
+                value={keyword}
+                placeHolder={'Search Wallet Address'}
+                onChange={(v) => setKeyword(v)}
+                adornment={{
+                    end: (
+                        <EndAdornment
+                            keyword={keyword}
+                            disableSearch={!isValidAddress(keyword)}
+                            onClickSearch={getAddressInfo}
+                            onClickClear={() => setKeyword('')}
+                        />
+                    )
+                }}
+            />
+            <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+            <SectionContainer className="section-horizontal">
+                <div className="box-row">
+                    <div className="section-title" style={{ minWidth: '224px' }}>
+                        Balance
+                    </div>
+                    {balanceAmount && (
+                        <WalletBalance
+                            className="balance-box"
+                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals)))}
+                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                            data-tooltip-wrapper="span"
+                            data-tooltip-place="bottom"
+                        >
+                            <div className="balance-amount">
+                                {commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals), true))}
+                            </div>
+                            <div className="balance-symbol">{symbol}</div>
+                        </WalletBalance>
+                    )}
+                </div>
+            </SectionContainer>
+            <SectionContainer className="section-vertical">
+                <div className="section-title">Allowance</div>
+                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '24px' }}>
+                    <div className="table-box">
+                        <div className="table-title">Allowances to others</div>
+                        <StyledTable columns={columns} rows={allAllowances} />
+                    </div>
+                    <div className="table-box">
+                        <div className="table-title">Received Allowances</div>
+                        <StyledTable columns={columns} rows={allReceives} />
+                    </div>
+                </div>
+            </SectionContainer>
+        </CardContainer>
+    );
+};
+
+export default TokenWalletSearch;
