@@ -1,11 +1,11 @@
-# firma-craft
+# firma-cw-craft-tool
 
 ![firma-craft-title](https://github.com/user-attachments/assets/4f437b58-d129-47bd-83d5-f2ddf447f2d6)
 
 <br/>
 
 ## Project Overview
-Firma Craft is a desktop application designed to help manage tokens based on the CW20 and CW721 standards, allowing users to easily issue their own tokens and NFTs. With an intuitive interface, it allows users to create and manage tokens and NFTs without a deep understanding of complex blockchain technology.
+Firma CW craft tool is a desktop application designed to help manage tokens based on the CW20 and CW721 standards, allowing users to easily issue their own tokens and NFTs. With an intuitive interface, it allows users to create and manage tokens and NFTs without a deep understanding of complex blockchain technology.
 
 <br/>
 
@@ -42,8 +42,8 @@ This section explains how to set up and run the project locally.
 Clone the project repository and install the required dependencies.
 
 ```bash
-git clone https://github.com/FirmaChain/firma-craft.git
-cd firma-craft
+git clone https://github.com/FirmaChain/firma-cw-craft-tool.git
+cd firma-cw-craft-tool
 npm install
 ```
 
