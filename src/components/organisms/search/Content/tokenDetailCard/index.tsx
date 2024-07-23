@@ -18,8 +18,11 @@ import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import commaNumber from 'comma-number';
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import { NETWORKS } from '@/constants/common';
 
 const TokenInfo = () => {
+    const network = useSelector((v: rootState) => v.global.network);
+    
     const contractAddress = useSearchStore((state) => state.contractInfo?.address);
     const minterAddress = useSearchStore((state) => state.minterInfo?.minter);
     const tokenName = useSearchStore((state) => state.tokenInfo?.name);
@@ -29,6 +32,9 @@ const TokenInfo = () => {
     const totalSupply = useSearchStore((state) => state.tokenInfo?.total_supply);
     const minterCap = useSearchStore((state) => state.minterInfo?.cap);
     const userBalance = useSearchStore((state) => state.userBalance);
+    const codeId = useSearchStore((state) => state.contractInfo?.contract_info.code_id);
+    const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID ? true : false;
 
     return (
         <SectionContainer>
@@ -60,16 +66,18 @@ const TokenInfo = () => {
                         <div className="white-typo">{decimals}</div>
                     </div>
                 </div>
-                <div className="box-row" style={{ height: '28px' }}>
-                    <div className="box-title">Label</div>
-                    {label && (
-                        <div className="box-value">
-                            <div className="label">
-                                <div className="label-typo">{label}</div>
+                {!isBasic &&
+                    <div className="box-row" style={{ height: '28px' }}>
+                        <div className="box-title">Label</div>
+                        {label && (
+                            <div className="box-value">
+                                <div className="label">
+                                    <div className="label-typo">{label}</div>
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </div>
+                }
                 <div className="box-row">
                     <div className="box-title">Total Supply</div>
                     {totalSupply && (
@@ -87,7 +95,7 @@ const TokenInfo = () => {
                         </div>
                     )}
                 </div>
-                {minterAddress && (
+                {!isBasic && minterAddress && (
                     <div className="box-row">
                         <div className="box-title">Minter Address</div>
                         <div className="box-value">
@@ -142,6 +150,9 @@ const MoreInfo = () => {
     const marketingProj = useSearchStore((v) => v.marketingInfo?.project);
     const contractHistory = useSearchStore((v) => v.contractHistory);
     const contractAddress = useSearchStore((v) => v.contractInfo?.address);
+    const codeId = useSearchStore((v) => v.contractInfo?.contract_info.code_id);
+    const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID ? true : false;
 
     const metadata = contractHistory === null ? '' : contractHistory[0];
 
@@ -162,41 +173,45 @@ const MoreInfo = () => {
 
             <div className="information-box">
                 <div className="box-row" style={{ alignItems: 'flex-start' }}>
-                    <div className="box-title">Marketing Logo</div>
+                    {isBasic ? <div className="box-title">Token Logo</div> : <div className="box-title">Marketing Logo</div>}
                     <div className="box-value">
                         <TokenLogo src={tokenLogo} size="90px" />
                     </div>
                 </div>
                 <div className="box-row">
-                    <div className="box-title">Marketing Description</div>
+                    {isBasic ? <div className="box-title">Token Description</div> : <div className="box-title">Marketing Description</div>}
                     <div className="box-value">
                         <div className="white-typo">{marketingDesc}</div>
                     </div>
                 </div>
-                <div className="box-row">
-                    <div className="box-title">Marketing Address</div>
-                    <div className="box-value">
-                        <div className="white-typo">{marketingAddr}</div>
-                    </div>
-                </div>
-                <div className="box-row">
-                    <div className="box-title">Marketing Project</div>
-                    <div className="box-value">
-                        <div className="white-typo">{marketingProj}</div>
-                    </div>
-                </div>
-                <div className="box-row" style={{ alignItems: 'flex-start' }}>
-                    <div className="box-title">Metadata</div>
-                    <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                        <IconButton style={{ padding: 0, display: 'flex', alignItems: 'center', gap: '4px' }} onClick={goContractPage}>
-                            <span className="white-typo" style={{ color: 'var(--Green-700, #02A288)' }}>
-                                View Metadata
-                            </span>
-                            <img src={IC_NAVIGATION} alt="navigation" style={{ width: '20px', height: '20px' }} />
-                        </IconButton>
-                        <JsonViewer data={metadata} />
-                    </div>
-                </div>
+                {!isBasic && (
+                    <>
+                        <div className="box-row">
+                            <div className="box-title">Marketing Address</div>
+                            <div className="box-value">
+                                <div className="white-typo">{marketingAddr}</div>
+                            </div>
+                        </div>
+                        <div className="box-row">
+                            <div className="box-title">Marketing Project</div>
+                            <div className="box-value">
+                                <div className="white-typo">{marketingProj}</div>
+                            </div>
+                        </div>
+                        <div className="box-row" style={{ alignItems: 'flex-start' }}>
+                            <div className="box-title">Metadata</div>
+                            <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
+                                <IconButton style={{ padding: 0, display: 'flex', alignItems: 'center', gap: '4px' }} onClick={goContractPage}>
+                                    <span className="white-typo" style={{ color: 'var(--Green-700, #02A288)' }}>
+                                        View Metadata
+                                    </span>
+                                    <img src={IC_NAVIGATION} alt="navigation" style={{ width: '20px', height: '20px' }} />
+                                </IconButton>
+                                <JsonViewer data={metadata} />
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </SectionContainer>
     );
