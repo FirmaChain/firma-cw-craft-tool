@@ -44,10 +44,11 @@ const AdditionalInformation = () => {
     const [blockExplorerLink, setBlockExplorerLink] = useState<string>('');
 
     const isBasic = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return codeId === craftConfig.CW20.BASIC_CODE_ID;
-        
-    }, [network]);
+        if (codeId) {
+            const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+            return codeId === craftConfig.CW20.BASIC_CODE_ID;
+        }
+    }, [network, codeId]);
 
     useEffect(() => {
         const link = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;

@@ -18,6 +18,8 @@ import DecreaseAllowance from './functions/decreaseAllowance';
 import TransferFrom from './functions/transferFrom';
 import UpdateMinter from './functions/updateMinter';
 import ExecuteSelect from '@/components/atoms/select/executeSelect';
+import { NETWORKS } from '@/constants/common';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     min-width: 736px;
@@ -141,7 +143,6 @@ export interface IMenuItem {
 }
 
 const basicMenuItems: IMenuItem[] = [
-    // { value: 'select', label: 'Select' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
     { value: 'increaseAllowance', label: 'Increase Allowance' },
@@ -151,7 +152,6 @@ const basicMenuItems: IMenuItem[] = [
 ];
 
 const minterMenuItems: IMenuItem[] = [
-    // { value: 'select', label: 'Select' },
     { value: 'mint', label: 'Mint' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
@@ -163,7 +163,6 @@ const minterMenuItems: IMenuItem[] = [
 ];
 
 const marketingMenuItems: IMenuItem[] = [
-    // { value: 'select', label: 'Select' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
     { value: 'increaseAllowance', label: 'Increase Allowance' },
@@ -175,7 +174,6 @@ const marketingMenuItems: IMenuItem[] = [
 ];
 
 const allOwnerMenuItems: IMenuItem[] = [
-    // { value: 'select', label: 'Select' },
     { value: 'mint', label: 'Mint' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
@@ -194,16 +192,19 @@ interface IProps {
 
 const TokenInfo = ({ tokenInfoState }: IProps) => {
     const { address } = useSelector((state: rootState) => state.wallet);
+    const { network } = useSelector((state: rootState) => state.global);
 
-    const { _setSelectMenu } = useContractContext();
+    const { _selectMenu, _setSelectMenu } = useContractContext();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
     const [selectMenu, setSelectMenu] = useState<IMenuItem>({ value: 'select', label: 'Select' });
 
     const ContractTypeLabel = useMemo(() => {
-        return BASIC_LABEL === tokenInfoState.label ? 'BASIC' : 'ADVANCED';
-    }, [tokenInfoState.label]);
+        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+
+        return tokenInfoState.codeId === craftConfig.CW20.BASIC_CODE_ID ? 'BASIC' : 'ADVANCED';
+    }, [tokenInfoState.codeId, tokenInfoState.label]);
 
     useEffect(() => {
         if (tokenInfoState.marketingLogoUrl) {
@@ -224,21 +225,17 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
         let ruleMenus: IMenuItem[] = [];
 
         if (tokenInfoState.minter !== null) {
-            console.log(`minter: ${tokenInfoState.minter.minter}`);
-            console.log(`marketing: ${tokenInfoState.marketingAddress}`);
             if (tokenInfoState.minter.minter === address && tokenInfoState.marketingAddress === address) {
-                console.log(1);
                 ruleMenus = [...allOwnerMenuItems];
             } else if (tokenInfoState.minter.minter === address && tokenInfoState.marketingAddress !== address) {
-                console.log(2);
                 ruleMenus = [...minterMenuItems];
             } else if (tokenInfoState.minter.minter !== address && tokenInfoState.marketingAddress === address) {
-                console.log(3);
                 ruleMenus = [...marketingMenuItems];
             } else {
                 ruleMenus = [...basicMenuItems];
             }
         } else {
+            if (tokenInfoState.codeId)
             if (tokenInfoState.marketingAddress === address) {
                 ruleMenus = [...marketingMenuItems];
             } else {
@@ -295,10 +292,10 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                 minWidth="214px"
             />
             {/* <CustomSelectInput menus={ownerMenus} onChangeMenu={handleChangeMenu} /> */}
-            {selectMenu.value !== 'select' && (
+            {_selectMenu.value !== 'select' && (
                 <Fragment>
                     <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
-                    {selectMenu.value === 'mint' && (
+                    {_selectMenu.value === 'mint' && (
                         <Mint
                             totalSupply={tokenInfoState.totalSupply}
                             minterCap={tokenInfoState.minter.cap}
@@ -306,26 +303,26 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                             decimals={tokenInfoState.decimals}
                         />
                     )}
-                    {selectMenu.value === 'burn' && (
+                    {_selectMenu.value === 'burn' && (
                         <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />
                     )}
-                    {selectMenu.value === 'burnFrom' && (
+                    {_selectMenu.value === 'burnFrom' && (
                         <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
                     )}
-                    {selectMenu.value === 'transfer' && (
+                    {_selectMenu.value === 'transfer' && (
                         <Transfer
                             decimals={tokenInfoState.decimals}
                             tokenSymbol={tokenInfoState.tokenSymbol}
                             addressAmount={tokenInfoState.addressAmount}
                         />
                     )}
-                    {selectMenu.value === 'increaseAllowance' && (
+                    {_selectMenu.value === 'increaseAllowance' && (
                         <IncreaseAllowance decimals={tokenInfoState.decimals} userBalance={tokenInfoState.addressAmount} />
                     )}
-                    {selectMenu.value === 'decreaseAllowance' && (
+                    {_selectMenu.value === 'decreaseAllowance' && (
                         <DecreaseAllowance decimals={tokenInfoState.decimals} userBalance={tokenInfoState.addressAmount} />
                     )}
-                    {selectMenu.value === 'updateMarketing' && (
+                    {_selectMenu.value === 'updateMarketing' && (
                         <UpdateMarketing
                             label={tokenInfoState.label}
                             marketingDescription={tokenInfoState.marketingDescription}
@@ -333,10 +330,10 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                             marketingProject={tokenInfoState.marketingProject}
                         />
                     )}
-                    {selectMenu.value === 'transferFrom' && (
+                    {_selectMenu.value === 'transferFrom' && (
                         <TransferFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
                     )}
-                    {selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
+                    {_selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
                 </Fragment>
             )}
         </Container>

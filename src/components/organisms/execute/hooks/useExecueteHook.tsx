@@ -10,6 +10,7 @@ export interface ITokenInfoState {
     success: boolean;
 
     contractAddress: string;
+    codeId: string;
     label: string;
 
     tokenName: string;
@@ -54,6 +55,7 @@ const useExecuteHook = () => {
                 success: false,
 
                 contractAddress: '',
+                codeId: '',
                 label: '',
 
                 tokenName: '',
@@ -85,6 +87,7 @@ const useExecuteHook = () => {
 
                 resultData.success = true;
                 resultData.contractAddress = contractInfo.address;
+                resultData.codeId = contractInfo.contract_info.code_id;
                 resultData.label = contractInfo.contract_info.label;
 
                 resultData.tokenName = tokenInfo.name;

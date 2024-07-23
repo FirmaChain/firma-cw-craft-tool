@@ -14,7 +14,7 @@ const useApollo = () => {
 
     useEffect(() => {
         const initialize = () => {
-            const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+            const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
             const uri = craftConfig.GRAPHQL_CONFIG.URI;
 
             const httpLink = createHttpLink({ uri: uri });

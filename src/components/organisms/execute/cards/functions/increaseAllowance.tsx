@@ -141,7 +141,7 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
         let expireValue = "";
-        if (_allowanceInfo.type === "at_hieght") {
+        if (_allowanceInfo.type === "at_time") {
             expireValue = addNanoSeconds(value);
         } else if (_allowanceInfo.type === "at_height") {
             expireValue = value;

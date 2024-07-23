@@ -33,8 +33,8 @@ const TokenInfo = () => {
     const minterCap = useSearchStore((state) => state.minterInfo?.cap);
     const userBalance = useSearchStore((state) => state.userBalance);
     const codeId = useSearchStore((state) => state.contractInfo?.contract_info.code_id);
-    const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID ? true : false;
+    const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID;
 
     return (
         <SectionContainer>
@@ -152,7 +152,7 @@ const MoreInfo = () => {
     const contractAddress = useSearchStore((v) => v.contractInfo?.address);
     const codeId = useSearchStore((v) => v.contractInfo?.contract_info.code_id);
     const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID ? true : false;
+    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID;
 
     const metadata = contractHistory === null ? '' : contractHistory[0];
 

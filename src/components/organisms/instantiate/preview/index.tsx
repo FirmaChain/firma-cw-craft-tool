@@ -60,7 +60,7 @@ const Preview = ({
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const codeId = useMemo(() => {
-        const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         const cw20CodeId = cw20Mode === 'BASIC' ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
 
         return cw20CodeId;

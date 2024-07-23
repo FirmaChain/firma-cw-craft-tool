@@ -233,6 +233,7 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
                 never: {}
             };
         }
+        
         ModalActions.handleData({
             module: '/cw20/increaseAllowance',
             params: {
@@ -260,7 +261,7 @@ const IncreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
 
     const isEnableButton = useMemo(() => {
         if (!addressExist || _allowanceInfo.amount === '') return false;
-        if (_allowanceInfo.expire === '' || _allowanceInfo.type === '') return false;
+        if (_allowanceInfo.type !== 'never' && (_allowanceInfo.expire === '' || _allowanceInfo.type === '')) return false;
 
         return true;
     }, [addressExist, _allowanceInfo.amount, _allowanceInfo.expire, _allowanceInfo.type, _allowanceInfo.address]);

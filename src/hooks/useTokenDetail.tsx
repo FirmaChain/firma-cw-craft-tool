@@ -57,7 +57,7 @@ const useTokenDetail = () => {
 
     useEffect(() => {
         const initializeFirmaSDK = () => {
-            const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+            const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
 
             const newFirmaSDK = new FirmaSDK(craftConfig.FIRMACHAIN_CONFIG);
             setFirmaSDK(newFirmaSDK);
