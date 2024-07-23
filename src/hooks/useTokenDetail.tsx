@@ -26,6 +26,7 @@ export interface IAccounts {
 
 export interface ITokenDetailState {
     label: string;
+    codeId: string;
     decimals: string;
     tokenName: string;
     tokenSymbol: string;
@@ -68,6 +69,7 @@ const useTokenDetail = () => {
         async (contractAddress: string, address: string) => {
             const resultData: ITokenDetailState = {
                 label: '',
+                codeId: '',
                 decimals: '',
                 tokenName: '',
                 tokenSymbol: '',
@@ -99,7 +101,8 @@ const useTokenDetail = () => {
                 const firstHistory = (await firmaSDK.CosmWasm.getContractHistory(contractAddress))[0];
 
                 resultData.label = contractInfo.contract_info.label;
-
+                resultData.codeId = contractInfo.contract_info.code_id;
+                
                 resultData.decimals = tokenInfo.decimals.toString();
                 resultData.tokenName = tokenInfo.name;
                 resultData.totalSupply = tokenInfo.total_supply;
@@ -130,11 +133,9 @@ const useTokenDetail = () => {
                 const convertAllSpenders = [];
 
                 if (allSpenders.length > 0) {
-                    const parseAllSpenders = JSON.parse(JSON.stringify(allSpenders)).allowances;
-
-                    for (const spenders of parseAllSpenders) {
+                    for (const spenders of allSpenders) {
                         convertAllSpenders.push({
-                            Receiver: spenders.owner,
+                            Receiver: spenders["owner"],
                             Amount: spenders.allowance,
                             Expires: spenders.expires
                         });
