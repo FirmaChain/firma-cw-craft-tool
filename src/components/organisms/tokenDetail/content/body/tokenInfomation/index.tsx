@@ -38,7 +38,7 @@ const TokenInformation = () => {
     const isBasic = useMemo(() => {
         const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         return codeId === craftConfig.CW20.BASIC_CODE_ID;
-    }, [network]);
+    }, [network, codeId]);
 
     return (
         <TokenCard>
