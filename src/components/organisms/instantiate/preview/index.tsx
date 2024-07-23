@@ -59,14 +59,12 @@ const Preview = ({
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const [codeId, setCodeId] = useState<string>('');
-
-    useEffect(() => {
+    const codeId = useMemo(() => {
         const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         const cw20CodeId = cw20Mode === 'BASIC' ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
 
-        setCodeId(cw20CodeId);
-    }, [network]);
+        return cw20CodeId;
+    }, [network, cw20Mode]);
 
     const handleInstantiate = () => {
         if (isInit) {
