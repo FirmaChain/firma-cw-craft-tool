@@ -15,9 +15,17 @@ import {
 } from './style';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
 
 const TokenInformation = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+    
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
+    const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
+
     const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName) || '';
     const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol) || '';
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
@@ -26,6 +34,11 @@ const TokenInformation = () => {
     const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply) || '';
     const minterAddress = useTokenDetailStore((state) => state.tokenDetail?.minterAddress) || '';
     const minterCap = useTokenDetailStore((state) => state.tokenDetail?.minterCap);
+
+    const isBasic = useMemo(() => {
+        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return codeId === craftConfig.CW20.BASIC_CODE_ID;
+    }, [network]);
 
     return (
         <TokenCard>
@@ -51,10 +64,10 @@ const TokenInformation = () => {
                     <SpecificValueTypo>{decimals}</SpecificValueTypo>
                 </SpecificItem>
 
-                <SpecificItem style={{ height: '28px' }}>
+                {!isBasic && <SpecificItem style={{ height: '28px' }}>
                     <SpecificLabelTypo>Label</SpecificLabelTypo>
                     {label && <SpecificValueCover>{label}</SpecificValueCover>}
-                </SpecificItem>
+                </SpecificItem>}
 
                 <SpecificItem>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
@@ -71,7 +84,7 @@ const TokenInformation = () => {
                     </SpecificValueWrapper>
                 </SpecificItem>
 
-                {minterAddress && (
+                {!isBasic && minterAddress && (
                     <SpecificItem>
                         <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
                         <SpecificValueWrapper>

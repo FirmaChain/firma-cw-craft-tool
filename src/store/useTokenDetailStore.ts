@@ -5,6 +5,7 @@ import { immer } from 'zustand/middleware/immer';
 
 interface _ITokenDetailState extends ITokenDetailState {
     contractAddress: string;
+    codeId: string;
 }
 
 interface FormProps {

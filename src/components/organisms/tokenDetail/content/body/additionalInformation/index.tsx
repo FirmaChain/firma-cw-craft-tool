@@ -33,6 +33,7 @@ const AdditionalInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
 
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
+    const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
     const marketingLogo = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl) || '';
     const marketingDescription = useTokenDetailStore((state) => state.tokenDetail?.marketingDescription) || '';
     const marketingAddress = useTokenDetailStore((state) => state.tokenDetail?.marketing) || '';
@@ -43,9 +44,10 @@ const AdditionalInformation = () => {
     const [blockExplorerLink, setBlockExplorerLink] = useState<string>('');
 
     const isBasic = useMemo(() => {
-        if (!marketingLogo && !marketingDescription && !marketingProject) return true;
-        return marketingLogo === 'null' && marketingDescription === 'null' && marketingProject === 'null';
-    }, [marketingDescription, marketingLogo, marketingProject]);
+        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return codeId === craftConfig.CW20.BASIC_CODE_ID;
+        
+    }, [network]);
 
     useEffect(() => {
         const link = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
