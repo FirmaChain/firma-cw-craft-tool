@@ -5,6 +5,11 @@ import styled from 'styled-components';
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
 import { useContractContext } from '../../context/contractContext';
 import { formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -154,7 +159,11 @@ interface IProps {
 }
 
 const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
-    const { _contract, _burnAmount, _setIsFetched, _setBurnAmount } = useContractContext();
+    const { network } = useSelector((state: rootState) => state.global);
+
+    const { _contract, _burnAmount } = useContractContext();
+
+    const modal = useModalStore();
 
     const updatedBalance = useMemo(() => {
         let amount = '0';
@@ -165,23 +174,37 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
     }, [addressAmount, _burnAmount]);
 
     const onClickBurn = () => {
-        const message = {
-            amount: getUTokenAmountFromToken(_burnAmount, decimals)
+        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+
+        const feeAmount = craftConfig.DEFAULT_FEE;
+        const amount = getUTokenAmountFromToken(_burnAmount, decimals);
+
+        const params = {
+            header: {
+                title: "Burn",
+            },
+            content: {
+                symbol: tokenSymbol,
+                decimals: decimals,
+                balance: addressAmount,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Total Burn Amount",
+                        value: amount,
+                        type: "amount"
+                    }
+                ]
+            },
+            contract: _contract,
+            msg: {
+                amount
+            }
         };
 
-        ModalActions.handleData({
-            module: '/cw20/burnToken',
-            params: {
-                contract: _contract,
-                msg: message
-            }
-        });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setIsFetched(true);
-                _setBurnAmount('0');
-            }
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/burnToken" id={id} params={params} />
         });
     };
 

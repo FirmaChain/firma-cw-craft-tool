@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { ModalHeader, ModalInner, ModalOverlay, ModalWrapper } from './style';
+import { CloseIcon, ModalHeader, ModalInner, ModalOverlay, ModalWrapper } from './style';
 import Portal from './portal';
 import Icons from '../atoms/icons';
 import IconButton from '../atoms/buttons/iconButton';
+import { IC_CLOSE } from '../atoms/icons/pngIcons';
 
 interface IProps {
     width: string;
@@ -47,7 +48,7 @@ const Modal = ({ width, visible, closable, onClose, maskClosable = true, childre
                     {closable && (
                         <ModalHeader>
                             <IconButton style={{ padding: 0 }} onClick={closeModal}>
-                                <Icons.Close width={'24px'} height={'24px'} />
+                                <CloseIcon src={IC_CLOSE} alt={"QRCode Modal Close Icon"} />
                             </IconButton>
                         </ModalHeader>
                     )}

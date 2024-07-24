@@ -11,6 +11,8 @@ import VariableInput2 from '@/components/atoms/input/variableInput2';
 import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import useFormStore from '@/store/formStore';
 import { addNanoSeconds } from '@/utils/time';
+import ExpirationModal from '@/components/organisms/modal/expirationModal';
+import { useModalStore } from '@/hooks/useModal';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -72,6 +74,8 @@ interface IProps {
 
 const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
     const { _allowanceInfo, _isFetched, _setAllowanceInfo } = useContractContext();
+    
+    const modal = useModalStore();
     
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
@@ -149,6 +153,13 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
 
         _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: _allowanceInfo.type, expire: expireValue });
     };
+
+    const handleAllowanceDate = () => {
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <ExpirationModal id={id} setExpirationDate={(value) => console.log(value)} />
+        });
+    };
     
     return (
         <Container>
@@ -183,7 +194,8 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
                                 minWidth: '212px',
                                 gap: '8px'
                             }}
-                        >
+      
+      >
                             <LabelInput2
                                 labelProps={{ label: 'Increase Amount' }}
                                 inputProps={{
@@ -234,8 +246,9 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
                     }
                     type={expirationType === ExpirationType.Time ? 'date' : 'number'}
                     onChange={handleChangeExpireValue}
-                    readOnly={expirationType === ExpirationType.Forever}
+                    readOnly={expirationType !== ExpirationType.Height}
                     decimal={0}
+                    onClickDate={handleAllowanceDate}
                 />
             </div>
         </Container>

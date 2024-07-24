@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { QRContainer, TimerTypo } from './style';
+import { QRContainer, TimerTypo, TimerWrap, TxTimerTypo } from './style';
 import ConnectQR from '@/components/atoms/connectQR/index2';
 import { CRAFT_CONFIGS } from '@/config';
 import { rootState } from '@/redux/reducers';
 import useAPI from '@/hooks/useAPI';
-import { IC_RESET } from '@/components/atoms/icons/pngIcons';
+import { IC_RESET, IC_RESET_WHITE } from '@/components/atoms/icons/pngIcons';
 
 interface IProps {
+    qrSize?: number;
+    isTxModal?: boolean;
     module: string;
     onSuccess: (requestData: Object) => void;
     onFailed: (requestData: Object) => void;
@@ -16,7 +18,7 @@ interface IProps {
     signer?: string;
 }
 
-const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IProps) => {
+const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFailed, params = {}, signer = '' }: IProps) => {
     const { network } = useSelector((state: rootState) => state.global);
     const { checkRequest, generateRequestQR } = useAPI();
 
@@ -71,10 +73,12 @@ const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IP
         });
     };
 
+    console.log(isTxModal);
+
     return (
         <QRContainer>
             <ConnectQR
-                qrSize={198}
+                qrSize={qrSize}
                 qrcode={qrcode}
                 expireDate={expireDate}
                 isActive={activeQR}
@@ -90,35 +94,52 @@ const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IP
                 }}
             />
             {/* {qrcode !== '' && ( */}
-            <div
+            {/* <div
                 style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '4px',
-                    minWidth: '70px',
-                    height: '30px',
-                    padding: '0 12px',
+                    minWidth: !isTxModal ? '70px' : '70px',
+                    height: '40px',
+                    padding: '12px 22px !important',
                     borderRadius: '32px',
-                    background: 'var(--Green-500, #02E191)',
+                    background: !isTxModal ? 'var(--Green-500, #02E191)' : 'var(--Gray-500, #383838)',
                     userSelect: 'none',
                     cursor: 'pointer'
                 }}
                 onClick={() => qrcode !== '' && refreshRequestQR()}
-            >
+            > */}
+            <TimerWrap $isTxModal={isTxModal} onClick={() => qrcode !== '' && refreshRequestQR()}>
                 {qrcode !== '' && (
                     <>
-                        <div style={{ display: 'flex', flexDirection: 'row' }}>
-                            {timerText.split('').map((typo, idx) => (
-                                <TimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
-                                    {typo}
-                                </TimerTypo>
-                            ))}
-                        </div>
-                        <img src={IC_RESET} alt="reset" style={{ width: '16px', height: '16px' }} />
+                        {!isTxModal ? (
+                            <>
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    {timerText.split('').map((typo, idx) => (
+                                        <TimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
+                                            {typo}
+                                        </TimerTypo>
+                                    ))}
+                                </div>
+                                <img src={IC_RESET} alt="reset" style={{ width: '16px', height: '16px' }} />
+                            </>
+                        ) : (
+                            <>
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    {timerText.split('').map((typo, idx) => (
+                                        <TxTimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
+                                            {typo}
+                                        </TxTimerTypo>
+                                    ))}
+                                </div>
+                                <img src={IC_RESET_WHITE} alt="reset" style={{ width: '12px', height: '12px' }} />
+                            </>
+                        )
+                    }
                     </>
                 )}
-            </div>
+            </TimerWrap>
             {/* )} */}
         </QRContainer>
     );

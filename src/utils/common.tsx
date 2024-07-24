@@ -7,7 +7,7 @@ export const addCommasToNumberString = (numberString: string): string => {
 };
 
 export const validateSymbol = (symbol: string): boolean => {
-    const symbolRegex = /^[a-zA-Z\-]{3,12}$/;
+    const symbolRegex = /^[a-zA-Z]{3,12}$/;
     if (!symbolRegex.test(symbol)) {
         return false;
     }

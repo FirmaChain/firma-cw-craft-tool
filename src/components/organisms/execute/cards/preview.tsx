@@ -12,6 +12,7 @@ import IncreaseAllowancePreview from './previews/increaseAllowance';
 import TransferFromPreview from './previews/transferFrom';
 import UpdateMinter from './previews/updateMinter';
 import DecreaseAllowancePreview from './previews/decreaseAllowance';
+import UpdateLogo from './previews/updateLogo';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     min-width: 736px;
@@ -104,6 +105,7 @@ const Preview = ({ tokenInfoState }: IProps) => {
 
             {_selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
 
+            {_selectMenu.value === 'updateLogo' && <UpdateLogo marketingLogoUrl={tokenInfoState.marketingLogoUrl} />}
             {/* TransferFromPreview */}
         </Container>
     );

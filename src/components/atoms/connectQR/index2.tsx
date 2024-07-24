@@ -14,8 +14,6 @@ export const scaleAnim = keyframes`
 `;
 
 export const QRWrapper = styled.div<{ $isLoading: boolean }>`
-    width: 198px;
-    height: 198px;
     padding: 12px;
     ${(props) => (props.$isLoading ? '' : 'background-color: white;')}
     border-radius: 8px;
@@ -81,11 +79,13 @@ const ConnectQR = ({ qrSize, qrcode, expireDate, isActive, setTimerText, onExpir
     return (
         <QRWrapper $isLoading={qrcode === ''}>
             {qrcode === '' ? (
-                <div style={{ width: '222px', height: '222px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <GridLoader loading={true} color={'#3550DEcc'} />
                 </div>
             ) : (
-                <QRCode value={`${qrcode}`} size={qrSize} quietZone={0} logoImage={''} logoWidth={40} logoHeight={40} />
+                <div style={{ background: '#FFF', display: 'flex', justifyContent: 'center', borderRadius: '12px' }}>
+                    <QRCode value={`${qrcode}`} size={qrSize} quietZone={0} logoImage={''} logoWidth={40} logoHeight={40} />
+                </div>
             )}
         </QRWrapper>
     );

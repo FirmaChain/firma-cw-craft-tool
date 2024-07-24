@@ -20,6 +20,7 @@ import UpdateMinter from './functions/updateMinter';
 import ExecuteSelect from '@/components/atoms/select/executeSelect';
 import { NETWORKS } from '@/constants/common';
 import { CRAFT_CONFIGS } from '@/config';
+import UpdateLogo from './functions/updateLogo';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     min-width: 736px;
@@ -334,6 +335,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
                         <TransferFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
                     )}
                     {_selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
+                    {_selectMenu.value === 'updateLogo' && <UpdateLogo marketingLogoUrl={tokenInfoState.marketingLogoUrl}/>}
                 </Fragment>
             )}
         </Container>

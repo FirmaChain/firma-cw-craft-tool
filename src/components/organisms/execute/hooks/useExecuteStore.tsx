@@ -18,6 +18,9 @@ interface FormProps {
     minterAddress: string;
     setMinterAddress: (v: string) => void;
 
+    marketingLogoUrl: string;
+    setMarketingLogoUrl: (v: string) => void;
+
     clearForm: () => void;
 }
 
@@ -34,6 +37,11 @@ const useExecuteStore = create<FormProps>()(
         setMinterAddress: (data) =>
             set((state) => {
                 state.minterAddress = data;
+            }),
+        marketingLogoUrl: '',
+        setMarketingLogoUrl: (data) =>
+            set((state) => {
+                state.marketingLogoUrl = data;
             }),
         clearForm: () =>
             set((state) => {

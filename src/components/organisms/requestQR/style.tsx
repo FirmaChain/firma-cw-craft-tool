@@ -41,3 +41,25 @@ export const TimerTypo = styled.div`
     line-height: 110%;
     font-variant-numeric: tabular-nums;
 `;
+
+export const TxTimerTypo = styled.div`
+    color: var(--Gray-800, #DCDCDC);
+    font-family: "General Sans Variable";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 138.462% */
+`;
+
+export const TimerWrap = styled.div<{ $isTxModal: boolean }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: ${({ $isTxModal }) => ($isTxModal === false ? '70px': '70px')};
+    padding: 4px 12px !important;
+    border-radius: 32px;
+    background-color: ${({ $isTxModal }) => ($isTxModal === false? '#02E191' : '#383838')};
+    user-select: none;
+    cursor: pointer;
+`;

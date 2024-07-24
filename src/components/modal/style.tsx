@@ -29,11 +29,11 @@ export const ModalInner = styled.div<{ width: string }>`
     width: ${(props) => props.width || '600px'};
     background-color: #262626;
     max-width: 100%;
-    padding: 12px;
+    padding: 28px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 28px;
 `;
 
 export const ModalHeader = styled.div`
@@ -41,14 +41,7 @@ export const ModalHeader = styled.div`
     justify-content: flex-end;
 `;
 
-export const CloseButton = styled.button`
-    position: relative;
-    width: 20px;
-    height: 20px;
-    top: 0px;
-    right: 0px;
-    display: inline-block;
-    cursor: pointer;
-    background-image: url('${({ theme }) => theme.images.ic_close}');
-    background-size: contain;
+export const CloseIcon = styled.img`
+    width: 24px;
+    height: 24px;
 `;

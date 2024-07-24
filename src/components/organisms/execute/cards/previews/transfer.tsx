@@ -13,6 +13,8 @@ import { useContractContext } from '../../context/contractContext';
 import { shortenAddress } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
 import { ModalActions } from '@/redux/actions';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -209,6 +211,8 @@ interface IProps {
 const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
     const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
 
+    const modal = useModalStore();
+
     const [totalTransferAmount, setTotalTransferAmount] = useState<string>('0');
     const [updatedAmount, setUpdatedAmount] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
@@ -242,27 +246,47 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
 
     const onClickTransfer = () => {
         const convertWalletList = [];
-
+        let totalTransferAmount = "0";
+        let feeAmount = _walletList.length * 15000;
+        
         for (const wallet of _walletList) {
+            const amount = getUTokenAmountFromToken(wallet.amount, decimals);
             convertWalletList.push({
                 recipient: wallet.recipient,
-                amount: getUTokenAmountFromToken(wallet.amount, decimals)
+                amount: amount
             });
+            totalTransferAmount = addStringAmount(totalTransferAmount, amount);
         }
 
-        ModalActions.handleData({
-            module: '/cw20/transfer',
-            params: {
-                contract: _contract,
-                msg: convertWalletList
-            }
-        });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setWalletList([]);
-                _setIsFetched(true);
-            }
+        const params = {
+            header: {
+                title: "Transfer",
+            },
+            content: {
+                symbol: tokenSymbol,
+                decimals: decimals,
+                balance: addressAmount,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Total Transfer Amount",
+                        value: totalTransferAmount,
+                        type: "amount"
+                    },
+                    {
+                        label: "Total Wallet Count",
+                        value: convertWalletList.length,
+                        type: "wallet"
+                    }
+                ]
+            },
+            contract: _contract,
+            msg: convertWalletList
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/transfer" id={id} params={params} />
         });
     };
 

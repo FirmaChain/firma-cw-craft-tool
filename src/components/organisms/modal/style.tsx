@@ -1,18 +1,196 @@
 import styled from 'styled-components';
 
+export const ModalTitleWrap = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+`;
+
+export const ModalTitleTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; 
+`;
+
+export const ModalTitleDescTypo = styled.div`
+    color: var(--Gray-650, #707070);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+    white-space: pre-line;
+`;
+
+export const QrCodeWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+`;
+
+export const ModalContentBlackCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 24px;
+    border-radius: 8px;
+    background: var(--Gray-200, #1A1A1A);
+`;
+
+export const ItemWrap = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+export const ItemValueWrap = styled.div`
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const ItemAmountLabel = styled.div`
+    color: #02E191;
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px; /* 138.462% */
+`;
+
+export const ItemAmountValue = styled.div`
+    color: #02E191;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ItemAmountSymbol = styled.div`
+    color: #02E191;
+    font-family: "General Sans Variable";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 14px; /* 116.667% */
+`;
+
+export const ItemLabel = styled.div`
+    color: var(--Gray-650, #707070);
+    font-family: "General Sans Variable";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px; /* 138.462% */
+`;
+
+export const ItemValue = styled.div`
+    color: var(--Gray-700, #807E7E);
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ItemWalletIcon = styled.img`
+    width: 16px;
+    height: 16px;
+`;
+
+export const ModalContentGrayCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px;
+    gap: 2px;
+    justify-content: space-between;
+    border-radius: 8px;
+    background: var(--Gray-450, #313131);
+`;
+
+export const FeeLabel = styled.div`
+    color: var(--Gray-650, #707070);
+    font-family: "General Sans Variable";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px; /* 138.462% */
+`;
+
+export const FeeAmount = styled.div`
+    color: var(--Gray-750, #999);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const FCTSymbolIcon = styled.img`
+    width: 16px;
+    height: 16px;
+`;
+
+export const MyBalanceWrap = styled.div`
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const MyBalanceValue = styled.div`
+    color: var(--Gray-750, #999);
+    text-align: right;
+    font-family: "General Sans Variable";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px; /* 116.667% */
+`;
+
+export const FCTSymbolMiniIcon = styled.img`
+    width: 12px;
+    height: 12px;
+`;
+
 export const ModalTitle = styled.div`
     width: 100%;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 40px;
-    display: flex;
-    font-size: 24px;
-    color: white;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; 
 `;
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const ModalContent = styled.div`
     width: 100%;
@@ -130,7 +308,6 @@ export const TxConfirmButtonWrapper = styled.div`
 
 export const ModalBase = styled.div`
     position: relative;
-
     display: flex;
     padding: 48px 24px 24px 24px;
     flex-direction: column;
@@ -139,7 +316,7 @@ export const ModalBase = styled.div`
 
     border-radius: 16px;
     background: var(--Gray-350, #262626);
-    overflow: hidden;
+    gap: 28px;
 `;
 
 export const TxResultTypo = styled.div`
@@ -204,4 +381,39 @@ export const StepDesc = styled.div`
     line-height: 18px; /* 138.462% */
 
     white-space: break-spaces;
+`;
+
+export const ModalContentWrap = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+`;
+
+export const ModalButtonWrap = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+`;
+
+export const ModalCancelButton = styled.div`
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+    border-radius: 6px;
+    background: var(--Gray-450, #313131);
+    cursor: pointer;
+`;
+
+export const ModalCancelTypo = styled.div`
+    color: var(--Gray-750, #999);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
 `;

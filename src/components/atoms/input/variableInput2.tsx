@@ -115,6 +115,7 @@ interface InputProps {
     textAlign?: 'left' | 'center' | 'right'; //
     readOnly?: boolean; //
     disabled?: boolean;
+    onClickDate?: () => void;
 }
 
 const VariableInput2 = ({
@@ -130,7 +131,8 @@ const VariableInput2 = ({
     disabled = false,
     decimal = 6,
     maxValue,
-    regex
+    regex,
+    onClickDate
 }: InputProps) => {
     const key = useId();
     const [isFocus, setIsFocus] = useState(false);
@@ -213,14 +215,17 @@ const VariableInput2 = ({
                     </div>
                 )}
                 {type === 'date' && (
-                    <div style={{ marginRight: '16px' }}>
-                        <DatePicker
+                    <div style={{ marginRight: '10px' }}>
+                        <button style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClickDate}>
+                            <img src={IC_CALENDAR} alt="date-picker" style={{ width: '24px', height: '24px', cursor: 'pointer' }} />
+                        </button>
+                        {/* <DatePicker
                             selected={value ? new Date(Number(value)) : new Date()}
                             shouldCloseOnSelect
                             onChange={handleDateChange}
                             showTimeSelect
-                            customInput={<img src={IC_CALENDAR} alt="date-picker" style={{ width: '24px', cursor: 'pointer' }} />}
-                        />
+                            customInput={}
+                        /> */}
                     </div>
                 )}
             </StyledInput>
