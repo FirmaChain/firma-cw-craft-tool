@@ -3,8 +3,8 @@ import { FirmaConfig } from "@firmachain/firma-js";
 export const CRAFT_CONFIGS = {
   MAINNET: {
     FIRMACHAIN_CONFIG: FirmaConfig.MainNetConfig,
-    LEDGER_FEE: 30000,
-    LEDGER_GAS: 300000,
+    DEFAULT_FEE: 30000,
+    DEFAULT_GAS: 300000,
     IS_DEFAULT_GAS: false,
     CRAFT_SERVER_URI: '',
     GRAPHQL_CONFIG: {
@@ -19,8 +19,8 @@ export const CRAFT_CONFIGS = {
   },
   TESTNET: {
     FIRMACHAIN_CONFIG: FirmaConfig.TestNetConfig,
-    LEDGER_FEE: 30000,
-    LEDGER_GAS: 300000,
+    DEFAULT_FEE: 30000,
+    DEFAULT_GAS: 300000,
     IS_DEFAULT_GAS: false,
     CRAFT_SERVER_URI: '',
     GRAPHQL_CONFIG: {

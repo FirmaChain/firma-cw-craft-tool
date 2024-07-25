@@ -12,11 +12,13 @@ import { useSnackbar } from 'notistack';
 const useMyToken = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const { network, cw20Mode } = useSelector((state: rootState) => state.global);
+    const { network } = useSelector((state: rootState) => state.global);
     const { address } = useSelector((state: rootState) => state.wallet);
 
     const [firmaSDK, setFirmaSDK] = useState<FirmaSDK | null>(null);
-    const [codeId, setCodeId] = useState<string>('0');
+    
+    const [basicCodeId, setBasicCodeId] = useState<string>('0');
+    const [advancedCodeId, setAdvancedCodeId] = useState<string>('0');
 
     useEffect(() => {
         const initializeFirmaSDK = () => {
@@ -25,8 +27,8 @@ const useMyToken = () => {
             const newFirmaSDK = new FirmaSDK(craftConfig.FIRMACHAIN_CONFIG);
             setFirmaSDK(newFirmaSDK);
 
-            const codeId = cw20Mode === "BASIC" ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
-            setCodeId(codeId);
+            setBasicCodeId(craftConfig.CW20.BASIC_CODE_ID);
+            setAdvancedCodeId(craftConfig.CW20.ADVANCED_CODE_ID);
         };
         initializeFirmaSDK();
     }, [network]);
@@ -35,26 +37,34 @@ const useMyToken = () => {
         if (!firmaSDK) return [];
 
         try {
-            let contracts = await firmaSDK.CosmWasm.getContractListFromCodeId(codeId);
+            const codeIds = [basicCodeId, advancedCodeId];
 
-            const myContracts = [];
+            const contractListsPromises = codeIds.map(codeId => 
+                firmaSDK.CosmWasm.getContractListFromCodeId(codeId)
+            );
 
-            for (const contract of contracts) {
-                const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contract);
-                if (contractInfo.contract_info.admin === address) {
-                    myContracts.push(contractInfo.address);
-                }
-            }
+            const contractLists = await Promise.all(contractListsPromises);
+            const allContracts = contractLists.flat();
+
+            const contractInfoPromises = allContracts.map(contract => 
+                firmaSDK.CosmWasm.getContractInfo(contract)
+            );
+
+            const contractInfos = await Promise.all(contractInfoPromises);
+
+            const myContracts = contractInfos
+                .filter(contractInfo => contractInfo.contract_info.admin === address)
+                .map(contractInfo => contractInfo.address);
 
             return myContracts;
         } catch (error) {
-            enqueueSnackbar(`failed get "CW20" contract list`, {
+            enqueueSnackbar(`failed get "CW20 BASIC" contract list`, {
                 variant: 'error',
                 autoHideDuration: 2000
             });
             return [];
         }
-    }, [firmaSDK, codeId, enqueueSnackbar]);
+    }, [firmaSDK, basicCodeId, enqueueSnackbar]);
 
     const getCW20ContractInfo = useCallback(
         async (contractAddress: string) => {
