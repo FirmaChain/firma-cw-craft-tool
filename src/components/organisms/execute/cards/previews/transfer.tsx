@@ -203,12 +203,13 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 interface IProps {
+    fctAmount: string;
     addressAmount: string;
     tokenSymbol: string;
     decimals: string;
 }
 
-const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
+const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IProps) => {
     const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
 
     const modal = useModalStore();
@@ -218,7 +219,7 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const calculateTotalBurnBalance = useCallback(() => {
+    const calculateTotalBalance = useCallback(() => {
         let calcTransferAmount = '0';
         let allAddressesValid = true;
         let allAmountsValid = true;
@@ -241,12 +242,12 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
     }, [_walletList, addressAmount, decimals]);
 
     useEffect(() => {
-        calculateTotalBurnBalance();
-    }, [_walletList, calculateTotalBurnBalance]);
+        calculateTotalBalance();
+    }, [_walletList, calculateTotalBalance]);
 
     const onClickTransfer = () => {
         const convertWalletList = [];
-        let totalTransferAmount = "0";
+        let totalAmount = "0";
         let feeAmount = _walletList.length * 15000;
         
         for (const wallet of _walletList) {
@@ -255,7 +256,7 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
                 recipient: wallet.recipient,
                 amount: amount
             });
-            totalTransferAmount = addStringAmount(totalTransferAmount, amount);
+            totalAmount = addStringAmount(totalAmount, amount);
         }
 
         const params = {
@@ -265,7 +266,7 @@ const TransferPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
             content: {
                 symbol: tokenSymbol,
                 decimals: decimals,
-                balance: addressAmount,
+                balance: fctAmount,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {

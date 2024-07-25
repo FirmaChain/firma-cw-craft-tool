@@ -6,6 +6,12 @@ import { BASIC_LABEL } from '@/constants/cw20Types';
 import { useEffect, useMemo } from 'react';
 import React from 'react';
 import { ModalActions } from '@/redux/actions';
+import { useModalStore } from '@/hooks/useModal';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
+import { shortenAddress } from '@/utils/common';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -123,37 +129,95 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 interface IProps {
+    fctAmount: string;
+    codeId: string;
     label: string;
     marketingDescription: string;
     marketingAddress: string;
     marketingProject: string;
 }
 
-const UpdateMarketingPreview = ({ label, marketingDescription, marketingAddress, marketingProject }: IProps) => {
-    const { _contract, _marketingDescription, _marketingAddress, _marketingProject, _setIsFetched } = useContractContext();
+const UpdateMarketingPreview = ({ fctAmount, codeId, label, marketingDescription, marketingAddress, marketingProject }: IProps) => {
+    const { network } = useSelector((state: rootState) => state.global);
 
-    useEffect(() => {
-        console.log(_marketingDescription);
-    }, [_marketingDescription]);
+    const { _contract, _marketingDescription, _marketingAddress, _marketingProject, _setIsFetched } = useContractContext();
+    
+    const modal = useModalStore();
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     const onClickUpdateMarketing = () => {
-        ModalActions.handleData({
-            module: '/cw20/updateMarketing',
-            params: {
-                contract: _contract,
-                msg: {
-                    project: _marketingProject,
-                    marketing: _marketingAddress,
-                    description: _marketingDescription
+        const feeAmount = craftConfig.DEFAULT_FEE;
+
+        let contentList = [];
+
+        if (codeId === craftConfig.CW20.BASIC_CODE_ID) {
+            contentList.push({
+                label: "Marketing Desc",
+                value: shortenAddress(_marketingDescription, 15, 15),
+                type: "wallet"
+            });
+        } else {
+            contentList = [
+                {
+                    label: "Marketing Desc",
+                    value: _marketingDescription.length >= 35 ? shortenAddress(_marketingDescription, 15, 15) : _marketingDescription,
+                    type: "wallet"
+                },
+                {
+                    label: "Marketing Address",
+                    value: _marketingAddress.length >= 35 ? shortenAddress(_marketingAddress, 15, 15) : _marketingAddress,
+                    type: "wallet"
+                },
+                {
+                    label: "Marketing Project",
+                    value: _marketingProject.length >= 35 ? shortenAddress(_marketingProject, 15, 15) : _marketingProject,
+                    type: "wallet"
                 }
+            ]
+        }
+        const params = {
+            header: {
+                title: "Update Logo",
+            },
+            content: {
+                balance: fctAmount,
+                feeAmount: feeAmount.toString(),
+                list: contentList
+            },
+            contract: _contract,
+            msg: {
+                project: _marketingProject,
+                marketing: _marketingAddress,
+                description: _marketingDescription
             }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/updateMarketing" id={id} params={params} />
         });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setIsFetched(true);
-            }
-        });
+
+        // ModalActions.handleData({
+        //     module: '/cw20/updateMarketing',
+        //     params: {
+        //         contract: _contract,
+        //         msg: {
+        //             project: _marketingProject,
+        //             marketing: _marketingAddress,
+        //             description: _marketingDescription
+        //         }
+        //     }
+        // });
+        // ModalActions.handleQrConfirm(true);
+        // ModalActions.handleSetCallback({
+        //     callback: () => {
+        //         _setIsFetched(true);
+        //     }
+        // });
     };
 
     const isEnableButton = useMemo(() => {

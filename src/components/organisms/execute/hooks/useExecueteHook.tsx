@@ -29,6 +29,7 @@ export interface ITokenInfoState {
     marketingAddress: string;
 
     addressAmount: string;
+    fctAmount: string;
 }
 
 interface IAllowanceBalanceState {
@@ -73,7 +74,8 @@ const useExecuteHook = () => {
                 marketingProject: '',
                 marketingAddress: '',
 
-                addressAmount: ''
+                addressAmount: '',
+                fctAmount: '',
             };
 
             if (!firmaSDK) return resultData;
@@ -84,6 +86,7 @@ const useExecuteHook = () => {
                 const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress);
                 const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress);
                 const balanceInfo = await firmaSDK.Cw20.getBalance(contractAddress, address);
+                const fctBalanceInfo = await firmaSDK.Bank.getBalance(address);
 
                 resultData.success = true;
                 resultData.contractAddress = contractInfo.address;
@@ -104,6 +107,7 @@ const useExecuteHook = () => {
                 resultData.marketingProject = marketingInfo.project;
 
                 resultData.addressAmount = balanceInfo;
+                resultData.fctAmount = fctBalanceInfo;
             } catch (error) {
                 resultData.success = false;
             } finally {

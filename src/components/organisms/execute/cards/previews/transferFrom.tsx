@@ -9,6 +9,8 @@ import { getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
 import { ModalActions } from '@/redux/actions';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -164,6 +166,8 @@ interface IProps {
 const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
     const { _contract, _setIsFetched } = useContractContext();
 
+    const modal = useModalStore();
+
     const transferList = useExecuteStore((state) => state.transferList);
     const setTransferList = useExecuteStore((state) => state.setTransferList);
 
@@ -183,29 +187,65 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
 
     const onClickTransfer = () => {
         const convertTransferList = [];
+        let totalAmount = "0";
+        let feeAmount = transferList.length * 15000;
 
         for (const transfer of transferList) {
+            const amount = getUTokenAmountFromToken(transfer.toAmount, decimals);
             convertTransferList.push({
                 owner: transfer.fromAddress,
-                amount: getUTokenAmountFromToken(transfer.toAmount, decimals),
+                amount: amount,
                 recipient: transfer.toAddress
             });
+            totalAmount = addStringAmount(totalAmount, amount);
         }
 
-        ModalActions.handleData({
-            module: '/cw20/transferFrom',
-            params: {
-                contract: _contract,
-                msg: convertTransferList
-            }
+        const params = {
+            header: {
+                title: "Transfer From",
+            },
+            content: {
+                symbol: tokenSymbol,
+                decimals: decimals,
+                balance: addressAmount,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Total Transfer Amount",
+                        value: totalAmount,
+                        type: "amount"
+                    },
+                    {
+                        label: "Total Wallet Count",
+                        value: convertTransferList.length,
+                        type: "wallet"
+                    }
+                ]
+            },
+            contract: _contract,
+            msg: convertTransferList
+        };
+
+        console.log(convertTransferList);
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/transferFrom" id={id} params={params} />
         });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                setTransferList([]);
-                _setIsFetched(true);
-            }
-        });
+
+        // ModalActions.handleData({
+        //     module: '/cw20/transferFrom',
+        //     params: {
+        //         contract: _contract,
+        //         msg: convertTransferList
+        //     }
+        // });
+        // ModalActions.handleQrConfirm(true);
+        // ModalActions.handleSetCallback({
+        //     callback: () => {
+        //         setTransferList([]);
+        //         _setIsFetched(true);
+        //     }
+        // });
     };
 
     return (

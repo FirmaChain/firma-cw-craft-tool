@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
 import { useContractContext } from '../../context/contractContext';
-import { formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
+import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { useSelector } from 'react-redux';
@@ -153,12 +153,13 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 interface IProps {
+    fctAmount: string;
     tokenSymbol: string;
     addressAmount: string;
     decimals: string;
 }
 
-const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
+const BurnPreview = ({ fctAmount, tokenSymbol, addressAmount, decimals }: IProps) => {
     const { network } = useSelector((state: rootState) => state.global);
 
     const { _contract, _burnAmount } = useContractContext();
@@ -168,14 +169,17 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
     const updatedBalance = useMemo(() => {
         let amount = '0';
 
-        amount = subtractStringAmount(getTokenAmountFromUToken(addressAmount, decimals), _burnAmount);
+        amount = subtractStringAmount(getTokenAmountFromUToken(addressAmount, "6"), _burnAmount);
 
         return amount;
     }, [addressAmount, _burnAmount]);
 
-    const onClickBurn = () => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
+    const onClickBurn = () => {
         const feeAmount = craftConfig.DEFAULT_FEE;
         const amount = getUTokenAmountFromToken(_burnAmount, decimals);
 
@@ -186,7 +190,7 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
             content: {
                 symbol: tokenSymbol,
                 decimals: decimals,
-                balance: addressAmount,
+                balance: fctAmount,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
@@ -209,6 +213,7 @@ const BurnPreview = ({ tokenSymbol, addressAmount, decimals }: IProps) => {
     };
 
     const isEnableButton = useMemo(() => {
+        if (compareStringNumbers(fctAmount, craftConfig.DEFAULT_FEE.toString()) !== 1) return false;
         if (addressAmount === '' || addressAmount === '0') return false;
         if (_burnAmount === '' || _burnAmount === '0') return false;
 

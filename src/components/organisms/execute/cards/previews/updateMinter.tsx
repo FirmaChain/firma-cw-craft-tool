@@ -7,6 +7,12 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ModalActions } from '@/redux/actions';
 import { useContractContext } from '../../context/contractContext';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useModalStore } from '@/hooks/useModal';
+import { CRAFT_CONFIGS } from '@/config';
+import { shortenAddress } from '@/utils/common';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -101,8 +107,13 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     -webkit-box-orient: vertical;
 `;
 
-const UpdateMinter = ({ minterAddress }: { minterAddress: string }) => {
+const UpdateMinter = ({ fctAmount, minterAddress }: { fctAmount: string, minterAddress: string }) => {
+    const { network } = useSelector((state: rootState) => state.global);
+    
     const { _contract, _setIsFetched, _setSelectMenu } = useContractContext();
+
+    const modal = useModalStore();
+    
     const _minterAddress = useExecuteStore((state) => state.minterAddress);
 
     const errorMessage = useMemo(() => {
@@ -112,22 +123,38 @@ const UpdateMinter = ({ minterAddress }: { minterAddress: string }) => {
         return '';
     }, [_minterAddress, minterAddress]);
 
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
+
     const onClickUpdateMinter = () => {
-        ModalActions.handleData({
-            module: '/cw20/updateMinter',
-            params: {
-                contract: _contract,
-                msg: {
-                    new_minter: _minterAddress
-                }
+        const feeAmount = craftConfig.DEFAULT_FEE;
+
+        const params = {
+            header: {
+                title: "Update Minter",
+            },
+            content: {
+                balance: fctAmount,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Minter",
+                        value: shortenAddress(_minterAddress, 15, 15),
+                        type: "wallet"
+                    }
+                ]
+            },
+            contract: _contract,
+            msg: {
+                new_minter: _minterAddress
             }
-        });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setIsFetched(true);
-                _setSelectMenu({ label: 'Select', value: 'select' });
-            }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/updateMinter" id={id} params={params} />
         });
     };
 

@@ -6,9 +6,11 @@ import { useSelector } from "react-redux";
 import { FCTSymbolIcon, FCTSymbolMiniIcon, FeeAmount, FeeLabel, ItemValueWrap, ItemWrap, ModalBase, ModalCancelButton, ModalCancelTypo, ModalContent, ModalContentBlackCard, ModalContentGrayCard, ModalContentWrap, ModalTitle, ModalTitleDescTypo, ModalTitleTypo, ModalTitleWrap, MyBalanceValue, MyBalanceWrap, QrCodeWrap } from "../style";
 import React, { useState } from "react";
 import { useModalStore } from "@/hooks/useModal";
-import { AmountItem, WalletItem } from "..";
+import { AmountItem, UrlItem, WalletItem } from "..";
 import { IC_CLOSE, IC_FIRMACHAIN } from "@/components/atoms/icons/pngIcons";
 import RequestQR from "@/components/organisms/requestQR/index2";
+import { formatWithCommas, getTokenAmountFromUToken } from "@/utils/balance";
+import { FirmaUtil } from "@firmachain/firma-js";
 
 interface SuccessData {
     addedAt: string;
@@ -94,7 +96,7 @@ const QRCodeModal = ({
                                     )
                                 } else if (elem.type === "wallet") {
                                     return (
-                                        <WalletItem label={elem.label} count={elem.value} />
+                                        <UrlItem label={elem.label} logo={elem.value} />
                                     )
                                 }
                             })}
@@ -103,7 +105,7 @@ const QRCodeModal = ({
                             <ItemWrap>
                                 <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
                                 <ItemValueWrap>
-                                    <FeeAmount>{params.content.feeAmount}</FeeAmount>
+                                    <FeeAmount>{formatWithCommas(FirmaUtil.getFCTStringFromUFCT(params.content.feeAmount))}</FeeAmount>
                                     <FCTSymbolIcon src={IC_FIRMACHAIN} alt={"FCT Symbol Icon"} />
                                 </ItemValueWrap>
                             </ItemWrap>
@@ -111,7 +113,7 @@ const QRCodeModal = ({
                                 <FeeLabel>{"(FCT)"}</FeeLabel>
                                 <MyBalanceWrap>
                                     <MyBalanceValue>{`(My Balance :`}</MyBalanceValue>
-                                    <MyBalanceValue>{params.content.balance}</MyBalanceValue>
+                                    <MyBalanceValue>{formatWithCommas(getTokenAmountFromUToken(params.content.balance, "6"))}</MyBalanceValue>
                                     <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={"FCT Symbol Mini Icon"} />
                                     <MyBalanceValue style={{ marginLeft: "-4px" }}>{`)`}</MyBalanceValue>
                                 </MyBalanceWrap>

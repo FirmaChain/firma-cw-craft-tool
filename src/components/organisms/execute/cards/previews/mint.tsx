@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ModalActions } from '@/redux/actions';
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
@@ -15,6 +14,8 @@ import {
 import { IWallet } from '@/interfaces/wallet';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import { useContractContext } from '../../context/contractContext';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -209,20 +210,24 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 interface IProps {
+    fctAmount: string;
+    addressAmount: string;
     minterCap: string;
     totalSupply: string;
     decimals: string;
     tokenSymbol: string;
 }
 
-const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {
+const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {
     const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
+
+    const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [totalMintBalance, setTotalMintBalance] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
-    const calculateTotalMintBalance = useCallback(() => {
+    const calculateTotalBalance = useCallback(() => {
         let totalAmount = '0';
         let allAddressesValid = true;
         let allAmountsValid = true;
@@ -245,33 +250,67 @@ const MintPreview = ({ minterCap, totalSupply, decimals, tokenSymbol }: IProps) 
     }, [_walletList, minterCap, totalSupply, decimals]);
 
     useEffect(() => {
-        calculateTotalMintBalance();
-    }, [_walletList, calculateTotalMintBalance]);
+        calculateTotalBalance();
+    }, [_walletList, calculateTotalBalance]);
 
     const onClickMint = () => {
         const convertWalletList: IWallet[] = [];
+        let totalAmount = "0";
+        let feeAmount = _walletList.length * 15000;
 
         for (const wallet of _walletList) {
+            const amount = getUTokenAmountFromToken(wallet.amount, decimals);
             convertWalletList.push({
                 recipient: wallet.recipient,
-                amount: getUTokenAmountFromToken(wallet.amount, decimals)
+                amount: amount
             });
+            totalAmount = addStringAmount(totalAmount, amount);
         }
 
-        ModalActions.handleData({
-            module: '/cw20/mintToken',
-            params: {
-                contract: _contract,
-                msg: convertWalletList
-            }
+        const params = {
+            header: {
+                title: "Mint",
+            },
+            content: {
+                symbol: tokenSymbol,
+                decimals: decimals,
+                balance: fctAmount,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Total Mint Amount",
+                        value: totalMintBalance,
+                        type: "amount"
+                    },
+                    {
+                        label: "Total Wallet Count",
+                        value: convertWalletList.length,
+                        type: "wallet"
+                    }
+                ]
+            },
+            contract: _contract,
+            msg: convertWalletList
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/mintToken" id={id} params={params} />
         });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setWalletList([]);
-                _setIsFetched(true);
-            }
-        });
+        // ModalActions.handleData({
+        //     module: '/cw20/mintToken',
+        //     params: {
+        //         contract: _contract,
+        //         msg: convertWalletList
+        //     }
+        // });
+        // ModalActions.handleQrConfirm(true);
+        // ModalActions.handleSetCallback({
+        //     callback: () => {
+        //         _setWalletList([]);
+        //         _setIsFetched(true);
+        //     }
+        // });
     };
 
     return (

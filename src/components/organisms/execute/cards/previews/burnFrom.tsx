@@ -8,6 +8,8 @@ import { isValidAddress, shortenAddress } from '@/utils/address';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { ModalActions } from '@/redux/actions';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -159,13 +161,17 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 interface IProps {
+    fctAmount: string;
+    addressAmount: string;
     totalSupply: string;
     tokenSymbol: string;
     decimals: string;
 }
 
-const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
-    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
+const BurnFromPreview = ({ fctAmount, addressAmount, totalSupply, tokenSymbol, decimals }: IProps) => {
+    const { _contract, _walletList, _setWalletList } = useContractContext();
+
+    const modal = useModalStore();
 
     const [totalBurnBalance, setTotalBurnBalance] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
@@ -192,28 +198,62 @@ const BurnFromPreview = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
 
     const onClickBurn = () => {
         const convertWalletList = [];
+        let totalAmount = "0";
+        let feeAmount = _walletList.length * 15000;
 
         for (const wallet of _walletList) {
+            const amount = getUTokenAmountFromToken(wallet.amount, decimals);
             convertWalletList.push({
                 owner: wallet.recipient,
-                amount: getUTokenAmountFromToken(wallet.amount, decimals)
+                amount: amount
             });
+            totalAmount = addStringAmount(totalAmount, amount);
         }
 
-        ModalActions.handleData({
-            module: '/cw20/burnFrom',
-            params: {
-                contract: _contract,
-                msg: convertWalletList
-            }
+        const params = {
+            header: {
+                title: "Burn From",
+            },
+            content: {
+                symbol: tokenSymbol,
+                decimals: decimals,
+                balance: fctAmount,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Total Burn Amount",
+                        value: totalAmount,
+                        type: "amount"
+                    },
+                    {
+                        label: "Total Wallet Count",
+                        value: convertWalletList.length,
+                        type: "wallet"
+                    }
+                ]
+            },
+            contract: _contract,
+            msg: convertWalletList
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/burnFrom" id={id} params={params} />
         });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setWalletList([]);
-                _setIsFetched(true);
-            }
-        });
+        // ModalActions.handleData({
+        //     module: '/cw20/burnFrom',
+        //     params: {
+        //         contract: _contract,
+        //         msg: convertWalletList
+        //     }
+        // });
+        // ModalActions.handleQrConfirm(true);
+        // ModalActions.handleSetCallback({
+        //     callback: () => {
+        //         _setWalletList([]);
+        //         _setIsFetched(true);
+        //     }
+        // });
     };
 
     useEffect(() => {

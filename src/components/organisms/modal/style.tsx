@@ -41,7 +41,7 @@ export const ModalContentBlackCard = styled.div`
     gap: 10px;
     padding: 20px 24px;
     border-radius: 8px;
-    background: var(--Gray-200, #1A1A1A);
+    background: var(--Gray-200, #141414);
 `;
 
 export const ItemWrap = styled.div`
@@ -58,16 +58,6 @@ export const ItemValueWrap = styled.div`
     justify-content: center;
 `;
 
-export const ItemAmountLabel = styled.div`
-    color: #02E191;
-    text-align: center;
-    font-family: "General Sans Variable";
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px; /* 138.462% */
-`;
-
 export const ItemAmountValue = styled.div`
     color: #02E191;
     font-family: "General Sans Variable";
@@ -78,7 +68,7 @@ export const ItemAmountValue = styled.div`
 `;
 
 export const ItemAmountSymbol = styled.div`
-    color: #02E191;
+    color: var(--Gray-600, #5A5A5A);
     font-family: "General Sans Variable";
     font-size: 12px;
     font-style: normal;
@@ -87,7 +77,8 @@ export const ItemAmountSymbol = styled.div`
 `;
 
 export const ItemLabel = styled.div`
-    color: var(--Gray-650, #707070);
+    color: var(--Gray-700, #807E7E);
+    text-align: center;
     font-family: "General Sans Variable";
     font-size: 13px;
     font-style: normal;
@@ -96,12 +87,13 @@ export const ItemLabel = styled.div`
 `;
 
 export const ItemValue = styled.div`
-    color: var(--Gray-700, #807E7E);
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    text-align: right;
     font-family: "General Sans Variable";
-    font-size: 14px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 142.857% */
+    line-height: 18px; /* 138.462% */
 `;
 
 export const ItemWalletIcon = styled.img`
@@ -116,7 +108,7 @@ export const ModalContentGrayCard = styled.div`
     gap: 2px;
     justify-content: space-between;
     border-radius: 8px;
-    background: var(--Gray-450, #313131);
+    background: var(--Gray-200, #1A1A1A);
 `;
 
 export const FeeLabel = styled.div`

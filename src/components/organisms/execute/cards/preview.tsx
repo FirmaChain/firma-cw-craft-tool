@@ -51,6 +51,8 @@ const Preview = ({ tokenInfoState }: IProps) => {
             {(_selectMenu.value === 'select' || _selectMenu.value === '') && <DefaultView />}
             {_selectMenu.value === 'mint' && (
                 <MintPreview
+                    fctAmount={tokenInfoState.fctAmount}
+                    addressAmount={tokenInfoState.addressAmount}
                     minterCap={tokenInfoState.minter.cap}
                     totalSupply={tokenInfoState.totalSupply}
                     decimals={tokenInfoState.decimals}
@@ -59,13 +61,16 @@ const Preview = ({ tokenInfoState }: IProps) => {
             )}
             {_selectMenu.value === 'burn' && (
                 <BurnPreview
-                    tokenSymbol={tokenInfoState.tokenSymbol}
+                    fctAmount={tokenInfoState.fctAmount}
                     addressAmount={tokenInfoState.addressAmount}
+                    tokenSymbol={tokenInfoState.tokenSymbol}
                     decimals={tokenInfoState.decimals}
                 />
             )}
             {_selectMenu.value === 'burnFrom' && (
                 <BurnFromPreview
+                    fctAmount={tokenInfoState.fctAmount}
+                    addressAmount={tokenInfoState.addressAmount}
                     totalSupply={tokenInfoState.totalSupply}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
@@ -73,6 +78,7 @@ const Preview = ({ tokenInfoState }: IProps) => {
             )}
             {_selectMenu.value === 'transfer' && (
                 <TransferPreview
+                    fctAmount={tokenInfoState.fctAmount}
                     addressAmount={tokenInfoState.addressAmount}
                     decimals={tokenInfoState.decimals}
                     tokenSymbol={tokenInfoState.tokenSymbol}
@@ -80,6 +86,8 @@ const Preview = ({ tokenInfoState }: IProps) => {
             )}
             {_selectMenu.value === 'updateMarketing' && (
                 <UpdateMarketingPreview
+                    fctAmount={tokenInfoState.fctAmount}
+                    codeId={tokenInfoState.codeId}
                     label={tokenInfoState.label}
                     marketingDescription={tokenInfoState.marketingDescription}
                     marketingAddress={tokenInfoState.marketingAddress}
@@ -103,9 +111,13 @@ const Preview = ({ tokenInfoState }: IProps) => {
                 />
             )}
 
-            {_selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
+            {_selectMenu.value === 'updateMinter' && (
+                <UpdateMinter fctAmount={tokenInfoState.fctAmount} minterAddress={tokenInfoState.minter.minter} />
+            )}
 
-            {_selectMenu.value === 'updateLogo' && <UpdateLogo marketingLogoUrl={tokenInfoState.marketingLogoUrl} />}
+            {_selectMenu.value === 'updateLogo' && (
+                <UpdateLogo fctAmount={tokenInfoState.fctAmount} marketingLogoUrl={tokenInfoState.marketingLogoUrl} />
+            )}
             {/* TransferFromPreview */}
         </Container>
     );

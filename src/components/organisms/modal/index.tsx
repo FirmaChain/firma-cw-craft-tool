@@ -1,6 +1,6 @@
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import QRCodeModal from './cw20/qrcodeModal';
-import { ItemAmountLabel, ItemAmountSymbol, ItemAmountValue, ItemLabel, ItemValue, ItemValueWrap, ItemWalletIcon, ItemWrap } from './style';
+import { ItemAmountSymbol, ItemAmountValue, ItemLabel, ItemValue, ItemValueWrap, ItemWalletIcon, ItemWrap } from './style';
 import { IC_WALLET } from '@/components/atoms/icons/pngIcons';
 
 interface IAmountProps {
@@ -13,7 +13,7 @@ interface IAmountProps {
 export const AmountItem = ({ label, decimals, amount, symbol }: IAmountProps) => {
     return (
         <ItemWrap>
-            <ItemAmountLabel>{label}</ItemAmountLabel>
+            <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
                 <ItemAmountValue>{formatWithCommas(getTokenAmountFromUToken(amount, decimals))}</ItemAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
@@ -34,6 +34,22 @@ export const WalletItem = ({ label, count }: IWalletProps) => {
             <ItemValueWrap>
                 <ItemValue>{count}</ItemValue>
                 <ItemWalletIcon src={IC_WALLET}/>
+            </ItemValueWrap>
+        </ItemWrap>
+    )
+};
+
+interface IUrlProps {
+    label: string;
+    logo: string;
+}
+
+export const UrlItem = ({ label, logo }: IUrlProps) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ItemValue>{logo}</ItemValue>
             </ItemValueWrap>
         </ItemWrap>
     )

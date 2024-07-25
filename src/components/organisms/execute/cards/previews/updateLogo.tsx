@@ -8,6 +8,13 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ModalActions } from '@/redux/actions';
 import { useContractContext } from '../../context/contractContext';
 import Icons from '@/components/atoms/icons';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
+import { getUTokenAmountFromToken } from '@/utils/balance';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
+import { shortenAddress } from '@/utils/address';
 
 const Container = styled.div`
     width: 100%;
@@ -122,8 +129,12 @@ const LinkIcon = styled.img`
     height: 24px;
 `;
 
-const UpdateLogo = ({ marketingLogoUrl }: { marketingLogoUrl: string }) => {
+const UpdateLogo = ({ fctAmount, marketingLogoUrl }: { fctAmount: string, marketingLogoUrl: string }) => {
+    const { network } = useSelector((state: rootState) => state.global);
+    
     const { _contract, _setIsFetched, _setSelectMenu } = useContractContext();
+    
+    const modal = useModalStore();
 
     const _marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
 
@@ -134,6 +145,11 @@ const UpdateLogo = ({ marketingLogoUrl }: { marketingLogoUrl: string }) => {
         if (_marketingLogoUrl === marketingLogoUrl) return 'Same logo as before';
         return '';
     }, [_marketingLogoUrl, marketingLogoUrl]);
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     useEffect(() => {
         if (marketingLogoUrl) {
@@ -151,22 +167,50 @@ const UpdateLogo = ({ marketingLogoUrl }: { marketingLogoUrl: string }) => {
     }, [marketingLogoUrl]);
     
     const onClickUpdateLogo = () => {
-        ModalActions.handleData({
-            module: '/cw20/uploadLogo',
-            params: {
-                contract: _contract,
-                msg: {
-                    url: _marketingLogoUrl
-                }
+        const feeAmount = craftConfig.DEFAULT_FEE;
+
+        const params = {
+            header: {
+                title: "Update Logo",
+            },
+            content: {
+                balance: fctAmount,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Marketing Logo",
+                        value: shortenAddress(_marketingLogoUrl, 15, 15),
+                        type: "wallet"
+                    }
+                ]
+            },
+            contract: _contract,
+            msg: {
+                url: _marketingLogoUrl
             }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/uploadLogo" id={id} params={params} />
         });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setIsFetched(true);
-                _setSelectMenu({ label: 'Select', value: 'select' });
-            }
-        });
+
+        // ModalActions.handleData({
+        //     module: '/cw20/uploadLogo',
+        //     params: {
+        //         contract: _contract,
+        //         msg: {
+        //             url: _marketingLogoUrl
+        //         }
+        //     }
+        // });
+        // ModalActions.handleQrConfirm(true);
+        // ModalActions.handleSetCallback({
+        //     callback: () => {
+        //         _setIsFetched(true);
+        //         _setSelectMenu({ label: 'Select', value: 'select' });
+        //     }
+        // });
     };
 
     const RenderTokenLogo = useCallback(() => {
