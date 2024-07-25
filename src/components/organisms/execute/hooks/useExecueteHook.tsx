@@ -97,10 +97,10 @@ const useExecuteHook = () => {
                 resultData.tokenSymbol = tokenInfo.symbol;
                 resultData.decimals = tokenInfo.decimals.toString();
                 resultData.totalSupply = tokenInfo.total_supply;
-
-                resultData.minter.minter = minterInfo.minter;
-                resultData.minter.cap = minterInfo.cap;
-
+                
+                resultData.minter.minter = minterInfo && minterInfo.minter;
+                resultData.minter.cap = minterInfo && minterInfo.cap;
+                
                 resultData.marketingLogoUrl = marketingInfo.logo?.url || '';
                 resultData.marketingDescription = marketingInfo.description;
                 resultData.marketingAddress = marketingInfo.marketing;
