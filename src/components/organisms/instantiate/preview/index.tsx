@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import { IWallet } from '@/interfaces/wallet';
@@ -9,50 +9,36 @@ import Submit from './submit';
 import { ModalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
 import { compareAmounts, compareStringsAsNumbers, getApplyDecimalsAmount, isValidAddress, validateSymbol } from '@/utils/common';
-import { NETWORKS } from '@/constants/common';
 import { CRAFT_CONFIGS } from '@/config';
 import { BASIC_LABEL } from '@/constants/cw20Types';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import InstantitateModal from '../../modal/instantitateModal';
+import useInstantiateStore from '../instaniateStore';
 
 interface IProps {
     isBasic: boolean;
-    tokenLogoUrl: string;
-    tokenName: string;
-    tokenSymbol: string;
-    tokenDescription: string;
-    minterble: boolean;
-    minterCap: string;
-    minterAddress: string;
-    totalSupply: string;
-    walletList: IWallet[];
-    decimals: string;
-    label: string;
-    marketingAddress: string;
-    marketingProject: string;
 }
 
-const Preview = ({
-    isBasic,
-    tokenLogoUrl,
-    tokenName,
-    tokenSymbol,
-    tokenDescription,
-    minterble,
-    minterCap,
-    minterAddress,
-    walletList,
-    totalSupply,
-    decimals,
-    label,
-    marketingAddress,
-    marketingProject
-}: IProps) => {
+const Preview = ({ isBasic }: IProps) => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
     const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+
+    const tokenName = useInstantiateStore((v) => v.tokenName);
+    const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
+    const tokenLogoUrl = useInstantiateStore((v) => v.tokenLogoUrl);
+    const tokenDescription = useInstantiateStore((v) => v.tokenDescription);
+    const decimals = useInstantiateStore((v) => v.decimals);
+    const label = useInstantiateStore((v) => v.label);
+    const marketingAddress = useInstantiateStore((v) => v.marketingAddress);
+    const marketingProject = useInstantiateStore((v) => v.marketingProject);
+    const minterble = useInstantiateStore((v) => v.minterble);
+    const minterCap = useInstantiateStore((v) => v.minterCap);
+    const minterAddress = useInstantiateStore((v) => v.minterAddress);
+    const walletList = useInstantiateStore((v) => v.walletList);
+    const totalSupply = useInstantiateStore((v) => v.totalSupply);
 
     const modal = useModalStore();
 
@@ -202,7 +188,7 @@ const Preview = ({
     }, [decimals, isBasic, isInit, label, minterAddress, minterCap, minterble, tokenName, tokenSymbol, totalSupply, walletList]);
 
     useEffect(() => {
-        if (minterble && Number(totalSupply) > 0 && compareAmounts(minterCap, totalSupply)) {
+        if (minterCap !== '' && Number(totalSupply) > 0 && compareAmounts(minterCap, totalSupply)) {
             setFormError({
                 id: 'minterCap',
                 type: 'INSUFFICIENT_MINTER_CAP',
@@ -214,7 +200,7 @@ const Preview = ({
                 type: 'INSUFFICIENT_MINTER_CAP'
             });
         }
-    }, [minterCap, totalSupply, minterble]);
+    }, [minterCap]);
 
     return (
         <PreviewWrapper>

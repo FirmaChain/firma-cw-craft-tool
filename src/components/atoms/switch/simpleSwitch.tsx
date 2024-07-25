@@ -71,7 +71,7 @@ const SimpleSwitch = ({ checked, onChange }: IProps) => {
 
     return (
         <Switch2>
-            <input type="checkbox" value={String(checked)} onChange={handleClickSwitch} />
+            <input type="checkbox" checked={checked} onChange={handleClickSwitch} />
             <span className="slider round"></span>
         </Switch2>
     );

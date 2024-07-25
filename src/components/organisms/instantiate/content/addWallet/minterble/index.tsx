@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { FirmaUtil } from '@firmachain/firma-js';
 
@@ -9,30 +9,28 @@ import { rootState } from '@/redux/reducers';
 import { MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
 import LabelInput2 from '@/components/atoms/input/labelInput2';
 import useFormStore from '@/store/formStore';
+import useInstantiateStore from '../../../instaniateStore';
 
 interface IProps {
     decimals: string;
-    onChangeMinterble: (value: boolean) => void;
-    onChangeMinterCap: (value: string) => void;
-    onChangeMinterAddress: (value: string) => void;
 }
 
-const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMinterAddress }: IProps) => {
+const Minterble = ({ decimals }: IProps) => {
     const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const [isMinterble, setIsMinterble] = useState<boolean>(false);
-    const [minterCap, setMinterCap] = useState<string>('');
-    const [minterAddress, setMinterAddress] = useState<string>('');
+    const minterble = useInstantiateStore((v) => v.minterble);
+    const minterCap = useInstantiateStore((v) => v.minterCap);
+    const minterAddress = useInstantiateStore((v) => v.minterAddress);
 
     const CAP_TOOLTIP_TEXT = `Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.\nYou can mint more tokens by subtracting\nthe Total Supply from the Minter Cap.`;
     const ADDRESS_TOOLTIP_TEXT =
         'If you enter a wallet address, the Minter Cap will be applied\nto that wallet. But if you do not enter a wallet address,\nthe Minter Cap will be applied to your own wallet';
 
     const handleMinterble = (value: boolean) => {
-        setIsMinterble(value);
-        onChangeMinterble(value);
+        useInstantiateStore.getState().setMinterble(value); // setIsMinterble(value);
+
         GlobalActions.handleCw20Minterble(value);
 
         if (!value) {
@@ -42,8 +40,7 @@ const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMin
     };
 
     const handleMinterAddress = (value: string) => {
-        setMinterAddress(value);
-        onChangeMinterAddress(value);
+        useInstantiateStore.getState().setMinterAddress(value); // setMinterAddress(value);
 
         if (validateAddress(value) || value === '') clearFormError({ id: 'minterAddress', type: 'ADDRESS_VALIDATION' });
         else {
@@ -56,8 +53,7 @@ const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMin
     };
 
     const handleMinterCap = (value: string) => {
-        setMinterCap(value);
-        onChangeMinterCap(value);
+        useInstantiateStore.getState().setMinterCap(value); // setMinterCap(value);
     };
 
     const validateAddress = (value: string): boolean => {
@@ -70,19 +66,19 @@ const Minterble = ({ decimals, onChangeMinterble, onChangeMinterCap, onChangeMin
             clearFormError({ id: 'minterAddress' });
         }
 
-        if (!isMinterble) {
+        if (!minterble) {
             handleMinterCap('');
             clearFormError({ id: 'minterCap' });
         }
-    }, [cw20Mode, isMinterble]);
+    }, [cw20Mode, minterble]);
 
     return (
         <MinterbleWrapper>
             <MinterbleOption>
                 <MinterbleText>Additional Instantiation</MinterbleText>
-                <SimpleSwitch checked={isMinterble} onChange={handleMinterble} />
+                <SimpleSwitch checked={minterble} onChange={handleMinterble} />
             </MinterbleOption>
-            {isMinterble && (
+            {minterble && (
                 <Fragment>
                     {cw20Mode === 'ADVANCED' && (
                         <LabelInput2

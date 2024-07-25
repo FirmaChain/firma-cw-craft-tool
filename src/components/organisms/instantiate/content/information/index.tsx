@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
     IconBackground,
     InformationBody,
@@ -13,54 +13,39 @@ import Icons from '@/components/atoms/icons';
 import LabelInput2 from '@/components/atoms/input/labelInput2';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
+import useInstantiateStore from '../../instaniateStore';
 
 interface IProps {
     isBasic: boolean;
-    // Basic Options
-    onChangeTokenName: (value: string) => void;
-    onChangeTokenSymbol: (value: string) => void;
-    onChangeTokenLogoUrl: (value: string) => void;
-    onChangeTokenDescription: (value: string) => void;
-    // Advanced Options
-    onChangeDecimals: (value: string) => void;
-    onChangeLabel: (value: string) => void;
-    onChangeMarketingAddress: (value: string) => void;
-    onChangeMarketingProject: (value: string) => void;
 }
 
-const Information = ({
-    isBasic,
-    onChangeTokenName,
-    onChangeTokenSymbol,
-    onChangeTokenLogoUrl,
-    onChangeTokenDescription,
-    // Advanced Options
-    onChangeDecimals,
-    onChangeLabel,
-    onChangeMarketingAddress,
-    onChangeMarketingProject
-}: IProps) => {
+const Information = ({ isBasic }: IProps) => {
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const [tokenName, setTokenName] = useState<string>('');
-    const [tokenSymbol, setTokenSymbol] = useState<string>('');
-    const [tokenLogoUrl, setTokenLogoUrl] = useState<string>('');
-    const [tokenDescription, setTokenDescription] = useState<string>('');
-    const [decimals, setDecimals] = useState<string>('');
-    const [label, setLabel] = useState<string>('');
-    const [marketingAddress, setMarketingAddress] = useState<string>('');
-    const [marketingProject, setMarketingProject] = useState<string>('');
+    const tokenName = useInstantiateStore((v) => v.tokenName);
+    const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
+    const tokenLogoUrl = useInstantiateStore((v) => v.tokenLogoUrl);
+    const tokenDescription = useInstantiateStore((v) => v.tokenDescription);
+    const decimals = useInstantiateStore((v) => v.decimals);
+    const label = useInstantiateStore((v) => v.label);
+    const marketingAddress = useInstantiateStore((v) => v.marketingAddress);
+    const marketingProject = useInstantiateStore((v) => v.marketingProject);
+    const setTokenName = useInstantiateStore((v) => v.setTokenName);
+    const setTokenSymbol = useInstantiateStore((v) => v.setTokenSymbol);
+    const setTokenLogoUrl = useInstantiateStore((v) => v.setTokenLogoUrl);
+    const setTokenDescription = useInstantiateStore((v) => v.setTokenDescription);
+    const setDecimals = useInstantiateStore((v) => v.setDecimals);
+    const setLabel = useInstantiateStore((v) => v.setLabel);
+    const setMarketingAddress = useInstantiateStore((v) => v.setMarketingAddress);
+    const setMarketingProject = useInstantiateStore((v) => v.setMarketingProject);
 
     const handleTokenName = (value: string) => {
         setTokenName(value);
-        onChangeTokenName(value);
     };
 
     const handleTokenSymbol = (value: string) => {
-        // tokenSymbol
         setTokenSymbol(value);
-        onChangeTokenSymbol(value);
 
         if (/^[a-zA-Z]+$/.test(value) || value.length === 0) {
             clearFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH' });
@@ -77,31 +62,25 @@ const Information = ({
 
     const handleTokenLogoUrl = (value: string) => {
         setTokenLogoUrl(value);
-        onChangeTokenLogoUrl(value);
     };
 
     const handleDescription = (value: string) => {
         setTokenDescription(value);
-        onChangeTokenDescription(value);
     };
     const handleDecimals = (value: string) => {
         if (Number(value) < 0) {
             setDecimals('0');
-            onChangeDecimals('0');
         } else {
             setDecimals(value);
-            onChangeDecimals(value);
         }
     };
 
     const handleLabel = (value: string) => {
         setLabel(value);
-        onChangeLabel(value);
     };
 
     const handleMarketingAddress = (value: string) => {
         setMarketingAddress(value);
-        onChangeMarketingAddress(value);
 
         if (FirmaUtil.isValidAddress(value) || value === '') {
             clearFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS' });
@@ -112,7 +91,6 @@ const Information = ({
 
     const handleMarketingProject = (value: string) => {
         setMarketingProject(value);
-        onChangeMarketingProject(value);
     };
 
     useEffect(() => {

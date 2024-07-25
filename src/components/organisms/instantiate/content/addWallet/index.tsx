@@ -1,32 +1,21 @@
-import { IWallet } from '@/interfaces/wallet';
 import Icons from '@/components/atoms/icons';
 import Minterble from './minterble';
 import { AddWalletWrapper, IconBackground, TextGroupWrapper, TitleDescription, TitleText, TitleWrapper } from './style';
 import Summery from './summery';
-import WalletList from '@/components/atoms/walletList';
 import Divider from '@/components/atoms/divider';
+import useInstantiateStore from '../../instaniateStore';
+import FormWalletList from '@/components/atoms/walletList/formWalletList';
 
-interface IProps {
-    walletCount: number;
-    totalSupply: string;
-    tokenSymbol: string;
-    decimals: string;
-    onChangeWalletList: (walletList: IWallet[]) => void;
-    onChangeMinterble: (value: boolean) => void;
-    onChangeMinterCap: (value: string) => void;
-    onChangeMinterAddress: (value: string) => void;
-}
+const AddWallet = () => {
+    const walletList = useInstantiateStore((v) => v.walletList);
+    const totalSupply = useInstantiateStore((v) => v.totalSupply);
+    const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
+    const decimals = useInstantiateStore((v) => v.decimals);
+    const setWalletList = useInstantiateStore((v) => v.setWalletList);
+    const setMinterble = useInstantiateStore((v) => v.setMinterble);
+    const setMinterCap = useInstantiateStore((v) => v.setMinterCap);
+    const setMinterAddress = useInstantiateStore((v) => v.setMinterAddress);
 
-const AddWallet = ({
-    walletCount,
-    totalSupply,
-    tokenSymbol,
-    decimals,
-    onChangeWalletList,
-    onChangeMinterble,
-    onChangeMinterCap,
-    onChangeMinterAddress
-}: IProps) => {
     return (
         <AddWalletWrapper>
             <TitleWrapper>
@@ -45,9 +34,10 @@ const AddWallet = ({
 
             <div style={{ paddingBottom: '40px' }} />
 
-            <WalletList
+            <FormWalletList
+                walletList={walletList}
                 decimals={decimals}
-                onChangeWalletList={onChangeWalletList}
+                setWalletList={setWalletList}
                 addressTitle={'Recipient Address'}
                 addressPlaceholder={'Input Wallet Address'}
                 amountTitle={'Amount'}
@@ -56,12 +46,7 @@ const AddWallet = ({
                 <Divider $direction="horizontal" $color="#383838" $variant="dash" />
             </div>
 
-            <Minterble
-                decimals={decimals}
-                onChangeMinterble={onChangeMinterble}
-                onChangeMinterCap={onChangeMinterCap}
-                onChangeMinterAddress={onChangeMinterAddress}
-            />
+            <Minterble decimals={decimals} />
         </AddWalletWrapper>
     );
 };
