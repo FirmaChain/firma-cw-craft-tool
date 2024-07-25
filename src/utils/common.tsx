@@ -301,14 +301,40 @@ export function compareAmounts(maxAmount: string, totalAmount: string): boolean 
 
 export const copyToClipboard = async (text: string): Promise<void | string> => {
     if (!navigator.clipboard) {
-        return 'Clipboard API is not available';
-    }
+        //? If clipboard api is not provided (http or some reasons)
+        console.log('Clipboard not available. Trying alternative');
 
-    try {
-        await navigator.clipboard.writeText(text);
-    } catch (error) {
-        console.error('Failed to copy text to clipboard', error);
-        return 'Failed to copy text to clipboard';
+        try {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+
+            //? Make hidden textarea to copy text
+            textArea.style.position = 'fixed';
+            textArea.style.top = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Fallback: Copying text command was ' + msg);
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+
+            document.body.removeChild(textArea);
+        } catch (error) {
+            console.log('Alternative copy method failed', error);
+            return 'Failed to copy text to clipboard';
+        }
+    } else {
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (error) {
+            console.error('Failed to copy text to clipboard', error);
+            return 'Failed to copy text to clipboard';
+        }
     }
 };
 
