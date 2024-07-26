@@ -1,17 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import { IC_LINK_FILL, IC_REFRESH, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IC_LINK_FILL } from '@/components/atoms/icons/pngIcons';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { ModalActions } from '@/redux/actions';
-import { useContractContext } from '../../context/contractContext';
 import Icons from '@/components/atoms/icons';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { getUTokenAmountFromToken } from '@/utils/balance';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { shortenAddress } from '@/utils/address';
@@ -129,22 +126,19 @@ const LinkIcon = styled.img`
     height: 24px;
 `;
 
-const UpdateLogo = ({ fctAmount, marketingLogoUrl }: { fctAmount: string, marketingLogoUrl: string }) => {
+const UpdateLogo = () => {
+    const { contractAddress, fctBalance, marketingInfo, marketingLogoUrl, } = useExecuteStore.getState();
     const { network } = useSelector((state: rootState) => state.global);
     
-    const { _contract, _setIsFetched, _setSelectMenu } = useContractContext();
-    
     const modal = useModalStore();
-
-    const _marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
     const errorMessage = useMemo(() => {
-        if (_marketingLogoUrl === '') return 'Please input url';
-        if (_marketingLogoUrl === marketingLogoUrl) return 'Same logo as before';
+        if (marketingLogoUrl === '') return 'Please input url';
+        if (marketingLogoUrl === marketingInfo.logo.url) return 'Same logo as before';
         return '';
-    }, [_marketingLogoUrl, marketingLogoUrl]);
+    }, [marketingInfo, marketingLogoUrl]);
 
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
@@ -174,43 +168,26 @@ const UpdateLogo = ({ fctAmount, marketingLogoUrl }: { fctAmount: string, market
                 title: "Update Logo",
             },
             content: {
-                balance: fctAmount,
+                balance: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
                         label: "Marketing Logo",
-                        value: shortenAddress(_marketingLogoUrl, 15, 15),
+                        value: shortenAddress(marketingLogoUrl, 15, 15),
                         type: "wallet"
                     }
                 ]
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: {
-                url: _marketingLogoUrl
+                url: marketingLogoUrl
             }
         };
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/uploadLogo" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal module="/cw20/uploadLogo" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
         });
-
-        // ModalActions.handleData({
-        //     module: '/cw20/uploadLogo',
-        //     params: {
-        //         contract: _contract,
-        //         msg: {
-        //             url: _marketingLogoUrl
-        //         }
-        //     }
-        // });
-        // ModalActions.handleQrConfirm(true);
-        // ModalActions.handleSetCallback({
-        //     callback: () => {
-        //         _setIsFetched(true);
-        //         _setSelectMenu({ label: 'Select', value: 'select' });
-        //     }
-        // });
     };
 
     const RenderTokenLogo = useCallback(() => {

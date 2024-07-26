@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from "./styles";
 import WalletList from "@/components/atoms/walletList";
 import { IWallet } from "@/interfaces/wallet";
-import { useState } from "react";
-import { useContractContext } from "../../context/contractContext";
+import useExecuteStore from "../../hooks/useExecuteStore";
 
 const ContentWrap = styled.div`
     display: flex;
@@ -45,16 +44,11 @@ const SummerySymbolTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-interface IProps {
-    decimals: string;
-    tokenSymbol: string;
-}
-
-const BurnFrom = ({ decimals, tokenSymbol }: IProps) => {
-    const { _setWalletList } = useContractContext();
+const BurnFrom = () => {
+    const { tokenInfo, setBurnFromList } = useExecuteStore.getState();
 
     const handleWalletList = (value: IWallet[]) => {
-        _setWalletList(value);
+        setBurnFromList(value);
     };
 
     return (
@@ -68,12 +62,12 @@ const BurnFrom = ({ decimals, tokenSymbol }: IProps) => {
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
                         <SummeryAmountTypo></SummeryAmountTypo>
-                        <SummerySymbolTypo>{tokenSymbol}</SummerySymbolTypo>
+                        <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                 </SummeryCard>
             </HeaderWrap>
             <WalletList
-                decimals={decimals}
+                decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={"Owner Address"}
                 addressPlaceholder={"Input Wallet Address"}

@@ -5,6 +5,7 @@ import { Expires, FirmaSDK } from '@firmachain/firma-js';
 
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
+import useExecuteStore from './useExecuteStore';
 
 export interface ITokenInfoState {
     success: boolean;
@@ -45,6 +46,7 @@ const useExecuteHook = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const network = useSelector((state: rootState) => state.global.network);
+    const userAddress = useSelector((state: rootState) => state.wallet.address);
 
     const MAINNET_SDK = new FirmaSDK(CRAFT_CONFIGS.MAINNET.FIRMACHAIN_CONFIG);
     const TESTNET_SDK = new FirmaSDK(CRAFT_CONFIGS.TESTNET.FIRMACHAIN_CONFIG);

@@ -8,9 +8,9 @@ import { getTokenStrFromUTokenStr } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput2 from '@/components/atoms/input/variableInput2';
 import useFormStore from '@/store/formStore';
-import { useContractContext } from '../../context/contractContext';
 import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { addNanoSeconds } from '@/utils/time';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -58,14 +58,9 @@ enum ExpirationType {
     Forever = 'Forever'
 }
 
-interface IProps {
-    decimals: string;
-    userBalance: string;
-}
+const DecreaseAllowance = () => {
+    const { allowanceInfo, setAllowanceInfo, cw20Balance, tokenInfo } = useExecuteStore.getState();
 
-const DecreaseAllowance = ({ decimals, userBalance }: IProps) => {
-    const { _allowanceInfo, _isFetched, _setAllowanceInfo } = useContractContext();
-    
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
     
@@ -76,30 +71,23 @@ const DecreaseAllowance = ({ decimals, userBalance }: IProps) => {
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
 
-    useEffect(() => {
-        setAddress('');
-        setAmount('');
-        setExpirationType(ExpirationType.Height);
-        setExpInputValue('');
-    }, [_isFetched]);
-
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
 
         setAddress(value);
-        _setAllowanceInfo({ address: value, amount: _allowanceInfo.amount, type: _allowanceInfo.type, expire: _allowanceInfo.expire });
+        setAllowanceInfo({ address: value, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: allowanceInfo.expire });
     };
 
     const handleChangeAmount = (value: string) => {
         const truncateDecimals = (value: string) => {
-            const decimalPlaces = parseInt(decimals, 10);
+            const decimalPlaces = tokenInfo.decimals;
             const fractionalPart = value.split('.')[1];
 
             if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
                 return value;
             }
-            return userBalance;
+            return cw20Balance;
         };
 
         const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
@@ -108,11 +96,11 @@ const DecreaseAllowance = ({ decimals, userBalance }: IProps) => {
         }
     
         const truncatedValue = truncateDecimals(value);
-        const convertDecreaseAmount = getUTokenAmountFromToken(truncatedValue, decimals);
-        const decreaseAmount = compareStringNumbers(userBalance, convertDecreaseAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(userBalance, decimals);
+        const convertDecreaseAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
+        const decreaseAmount = compareStringNumbers(cw20Balance, convertDecreaseAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAmount(decreaseAmount);
-        _setAllowanceInfo({ address: _allowanceInfo.address, amount: getUTokenAmountFromToken(value, decimals), type: _allowanceInfo.type, expire: _allowanceInfo.expire });
+        setAllowanceInfo({ address: allowanceInfo.address, amount: getUTokenAmountFromToken(value, tokenInfo.decimals.toString()), type: allowanceInfo.type, expire: allowanceInfo.expire });
     };
 
     const handleChangeExpireType = (value: ExpirationType) => {
@@ -127,20 +115,20 @@ const DecreaseAllowance = ({ decimals, userBalance }: IProps) => {
                 case "Forever": expireType = "never";       break;
             }
     
-            _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: expireType, expire: "" });
+            setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: expireType, expire: "" });
         }
     };
     
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
         let expireValue = "";
-        if (_allowanceInfo.type === "at_hieght") {
+        if (allowanceInfo.type === "at_hieght") {
             expireValue = addNanoSeconds(value);
-        } else if (_allowanceInfo.type === "at_height") {
+        } else if (allowanceInfo.type === "at_height") {
             expireValue = value;
         }
 
-        _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: _allowanceInfo.type, expire: expireValue });
+        setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: expireValue });
     };
 
     return (
@@ -185,14 +173,14 @@ const DecreaseAllowance = ({ decimals, userBalance }: IProps) => {
                                     onChange: handleChangeAmount,
                                     placeHolder: '0',
                                     type: 'number',
-                                    decimal: decimals ? Number(decimals) : 6,
+                                    decimal: tokenInfo.decimals ? tokenInfo.decimals : 6,
                                     // emptyErrorMessage: 'Please input mint amount',
                                     textAlign: 'right',
-                                    maxValue: Number(getTokenStrFromUTokenStr(userBalance, decimals))
+                                    maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString()))
                                 }}
                             />
 
-                            <UserBalanceTypo>Balance: {getTokenStrFromUTokenStr(userBalance, decimals)}</UserBalanceTypo>
+                            <UserBalanceTypo>Balance: {getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())}</UserBalanceTypo>
                         </div>
                     </div>
                 </div>

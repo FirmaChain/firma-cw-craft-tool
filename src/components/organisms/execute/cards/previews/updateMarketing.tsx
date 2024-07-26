@@ -1,17 +1,15 @@
-import { IC_LINK_FILL, IC_TALK, IC_WALLET_FILL } from '@/components/atoms/icons/pngIcons';
+import { useMemo } from 'react';
 import styled from 'styled-components';
-import { useContractContext } from '../../context/contractContext';
 import { Fragment } from 'react/jsx-runtime';
-import { BASIC_LABEL } from '@/constants/cw20Types';
-import { useEffect, useMemo } from 'react';
-import React from 'react';
-import { ModalActions } from '@/redux/actions';
+
+import { IC_LINK_FILL, IC_TALK, IC_WALLET_FILL } from '@/components/atoms/icons/pngIcons';
 import { useModalStore } from '@/hooks/useModal';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { shortenAddress } from '@/utils/common';
 import { QRCodeModal } from '@/components/organisms/modal';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const Container = styled.div`
     width: 100%;
@@ -128,20 +126,11 @@ const ExecuteButtonTypo = styled.div`
     line-height: 20px; /* 125% */
 `;
 
-interface IProps {
-    fctAmount: string;
-    codeId: string;
-    label: string;
-    marketingDescription: string;
-    marketingAddress: string;
-    marketingProject: string;
-}
-
-const UpdateMarketingPreview = ({ fctAmount, codeId, label, marketingDescription, marketingAddress, marketingProject }: IProps) => {
+const UpdateMarketingPreview = () => {
     const { network } = useSelector((state: rootState) => state.global);
 
-    const { _contract, _marketingDescription, _marketingAddress, _marketingProject, _setIsFetched } = useContractContext();
-    
+    const { contractAddress, fctBalance, contractInfo, marketingInfo, marketingDescription, marketingAddress, marketingProject } = useExecuteStore.getState();
+
     const modal = useModalStore();
 
     const craftConfig = useMemo(() => {
@@ -149,87 +138,74 @@ const UpdateMarketingPreview = ({ fctAmount, codeId, label, marketingDescription
         return config;
     }, [network]);
 
+    const isBasic = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return contractInfo.contract_info.code_id === config.CW20.BASIC_CODE_ID;
+    }, [contractInfo, network]);
+
     const onClickUpdateMarketing = () => {
         const feeAmount = craftConfig.DEFAULT_FEE;
 
         let contentList = [];
 
-        if (codeId === craftConfig.CW20.BASIC_CODE_ID) {
+        if (contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID) {
             contentList.push({
                 label: "Marketing Desc",
-                value: shortenAddress(_marketingDescription, 15, 15),
+                value: shortenAddress(marketingDescription, 15, 15),
                 type: "wallet"
             });
         } else {
             contentList = [
                 {
                     label: "Marketing Desc",
-                    value: _marketingDescription.length >= 35 ? shortenAddress(_marketingDescription, 15, 15) : _marketingDescription,
+                    value: marketingDescription.length >= 35 ? shortenAddress(marketingDescription, 15, 15) : marketingDescription,
                     type: "wallet"
                 },
                 {
                     label: "Marketing Address",
-                    value: _marketingAddress.length >= 35 ? shortenAddress(_marketingAddress, 15, 15) : _marketingAddress,
+                    value: marketingAddress.length >= 35 ? shortenAddress(marketingAddress, 15, 15) : marketingAddress,
                     type: "wallet"
                 },
                 {
                     label: "Marketing Project",
-                    value: _marketingProject.length >= 35 ? shortenAddress(_marketingProject, 15, 15) : _marketingProject,
+                    value: marketingProject.length >= 35 ? shortenAddress(marketingProject, 15, 15) : marketingProject,
                     type: "wallet"
                 }
             ]
         }
         const params = {
             header: {
-                title: "Update Logo",
+                title: "Update Marketing",
             },
             content: {
-                balance: fctAmount,
+                balance: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: contentList
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: {
-                project: _marketingProject,
-                marketing: _marketingAddress,
-                description: _marketingDescription
+                project: marketingProject,
+                marketing: marketingAddress,
+                description: marketingDescription
             }
         };
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/updateMarketing" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal module="/cw20/updateMarketing" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
         });
-
-        // ModalActions.handleData({
-        //     module: '/cw20/updateMarketing',
-        //     params: {
-        //         contract: _contract,
-        //         msg: {
-        //             project: _marketingProject,
-        //             marketing: _marketingAddress,
-        //             description: _marketingDescription
-        //         }
-        //     }
-        // });
-        // ModalActions.handleQrConfirm(true);
-        // ModalActions.handleSetCallback({
-        //     callback: () => {
-        //         _setIsFetched(true);
-        //     }
-        // });
     };
 
     const isEnableButton = useMemo(() => {
         if (
-            _marketingDescription !== marketingDescription ||
-            _marketingAddress !== marketingAddress ||
-            _marketingProject !== marketingProject
+            marketingInfo.description !== marketingDescription ||
+            marketingInfo.marketing !== marketingAddress ||
+            marketingInfo.project !== marketingProject
         )
             return true;
 
         return false;
-    }, [_marketingDescription, _marketingAddress, _marketingProject]);
+    }, [marketingInfo, marketingDescription, marketingAddress, marketingProject]);
 
     return (
         <Container>
@@ -239,26 +215,26 @@ const UpdateMarketingPreview = ({ fctAmount, codeId, label, marketingDescription
                         <MarketingIcon src={IC_TALK}></MarketingIcon>
                         <ItemLabelTypo>Marketing Desc</ItemLabelTypo>
                     </ItemLabelWrap>
-                    {_marketingDescription !== '' && <ItemValueForDescTypo>{_marketingDescription}</ItemValueForDescTypo>}
-                    {_marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>}
+                    {marketingDescription !== '' && <ItemValueForDescTypo>{marketingDescription}</ItemValueForDescTypo>}
+                    {marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>}
                 </ItemWrap>
-                {label !== BASIC_LABEL && (
+                {!isBasic && (
                     <Fragment>
                         <ItemWrap>
                             <ItemLabelWrap>
                                 <MarketingIcon src={IC_WALLET_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Address</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {_marketingAddress !== '' && <ItemValueTypo>{_marketingAddress}</ItemValueTypo>}
-                            {_marketingAddress === '' && <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>}
+                            {marketingAddress !== '' && <ItemValueTypo>{marketingAddress}</ItemValueTypo>}
+                            {marketingAddress === '' && <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>}
                         </ItemWrap>
                         <ItemWrap>
                             <ItemLabelWrap>
                                 <MarketingIcon src={IC_LINK_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Project</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {_marketingProject !== '' && <ItemValueTypo>{_marketingProject}</ItemValueTypo>}
-                            {_marketingProject === '' && <ItemDefaultTypo>Project Url</ItemDefaultTypo>}
+                            {marketingProject !== '' && <ItemValueTypo>{marketingProject}</ItemValueTypo>}
+                            {marketingProject === '' && <ItemDefaultTypo>Project Url</ItemDefaultTypo>}
                         </ItemWrap>
                     </Fragment>
                 )}

@@ -5,11 +5,17 @@ import commaNumber from 'comma-number';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { formatWithCommas, getTokenAmountFromUToken, subtractStringAmount } from '@/utils/balance';
-import { useContractContext } from '../../context/contractContext';
 import { isValidAddress } from '@/utils/address';
 import { ModalActions } from '@/redux/actions';
 import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteHook from '../../hooks/useExecueteHook';
+import useExecuteStore from '../../hooks/useExecuteStore';
+import useExecuteActions from '../../action';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -184,89 +190,103 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
-interface IProps {
-    tokenSymbol: string;
-    decimals: string;
-}
+const DecreaseAllowancePreview = () => {
+    const { contractAddress, fctBalance, allowanceInfo, tokenInfo } = useExecuteStore.getState();
+    const { network } = useSelector((state: rootState) => state.global);
+    
+    const modal = useModalStore();
 
-const DecreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
-    const { _contract, _allowanceInfo, _isFetched, _setIsFetched, _setAllowanceInfo } = useContractContext();
     const { getCw20Balance } = useExecuteHook();
 
     const [updatedAmount, setUpdatedAmount] = useState<string>('0');
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
+
     const fetchTokenInfo = useCallback(async () => {
         try {
             if (addressExist) {
-                const result = await getCw20Balance(_contract, _allowanceInfo.address);
+                const result = await getCw20Balance(contractAddress, allowanceInfo.address);
                 const targetBalance = result.success === true ? result.balance : '0';
 
-                setUpdatedAmount(subtractStringAmount(targetBalance, _allowanceInfo.amount));
+                setUpdatedAmount(subtractStringAmount(targetBalance, allowanceInfo.amount));
             }
         } catch (error) {
             console.log(error);
         }
-    }, [_contract, _allowanceInfo.address, _allowanceInfo.amount]);
+    }, [contractAddress, allowanceInfo]);
 
     const addressExist = useMemo(() => {
-        return isValidAddress(_allowanceInfo.address);
-    }, [_allowanceInfo.address]);
-
-    useEffect(() => {
-        if (addressExist) {
-            fetchTokenInfo();
-            _setIsFetched(false);
-        }
-    }, [_contract, _allowanceInfo, _isFetched]);
+        return isValidAddress(allowanceInfo.address);
+    }, [allowanceInfo.address]);
 
     const onClickDecreaseAllowance = () => {
         let expires = {};
-        if (_allowanceInfo.type === 'at_height') {
+        if (allowanceInfo.type === 'at_height') {
             expires = {
-                at_height: parseInt(_allowanceInfo.expire)
+                at_height: parseInt(allowanceInfo.expire)
             };
-        } else if (_allowanceInfo.type === 'at_time') {
+        } else if (allowanceInfo.type === 'at_time') {
             expires = {
-                at_time: _allowanceInfo.expire.toString()
+                at_time: allowanceInfo.expire.toString()
             };
         } else {
             expires = {
                 never: {}
             };
         }
-        ModalActions.handleData({
-            module: '/cw20/decreaseAllowance',
-            params: {
-                contract: _contract,
-                msg: {
-                    amount: _allowanceInfo.amount,
-                    expires: expires,
-                    spender: _allowanceInfo.address
-                }
+
+        const feeAmount = craftConfig.DEFAULT_FEE;
+
+        const params = {
+            header: {
+                title: "Decrease Allowance",
+            },
+            content: {
+                balance: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: "Decrease Allowance Amount",
+                        value: allowanceInfo.amount,
+                        type: "amount"
+                    },
+                    {
+                        label: "Recipient Address",
+                        value: allowanceInfo.address,
+                        type: "wallet"
+                    },
+                    {
+                        label: "Expiration",
+                        value: allowanceInfo.expire,
+                        type: allowanceInfo.type === "at_height" ? "block" : allowanceInfo.type === "at_time" ? "time" : "never"
+                    }
+                ]
+            },
+            contract: contractAddress,
+            msg: {
+                amount: allowanceInfo.amount,
+                expires: expires,
+                spender: allowanceInfo.address
             }
-        });
-        ModalActions.handleQrConfirm(true);
-        ModalActions.handleSetCallback({
-            callback: () => {
-                _setAllowanceInfo({
-                    address: '',
-                    amount: '',
-                    expire: '',
-                    type: ''
-                });
-                _setIsFetched(true);
-            }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <QRCodeModal module="/cw20/uploadLogo" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
         });
     };
 
     const isEnableButton = useMemo(() => {
-        if (!addressExist || _allowanceInfo.amount === '') return false;
-        if (_allowanceInfo.type === 'never') return true;
-        if (_allowanceInfo.expire === '' || _allowanceInfo.type === '') return false;
+        if (!addressExist || allowanceInfo.amount === '') return false;
+        if (allowanceInfo.type === 'never') return true;
+        if (allowanceInfo.expire === '' || allowanceInfo.type === '') return false;
 
         return true;
-    }, [addressExist, _allowanceInfo.amount, _allowanceInfo.expire, _allowanceInfo.type, _allowanceInfo.address]);
+    }, [addressExist, allowanceInfo.amount, allowanceInfo.expire, allowanceInfo.type, allowanceInfo.address]);
 
     return (
         <Container>
@@ -277,8 +297,8 @@ const DecreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
                         <ItemLabelTypo>Decrease Allowance Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(_allowanceInfo.amount, decimals))}</ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenSymbol}</ItemAmountSymbolTypo>
+                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(allowanceInfo.amount, tokenInfo.decimals.toString()))}</ItemAmountTypo>
+                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
@@ -313,8 +333,8 @@ const DecreaseAllowancePreview = ({ tokenSymbol, decimals }: IProps) => {
                         <IconTooltip size="14px" tooltip="UPDATED_ALLOANCE_TOOLTIP" />
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(updatedAmount, decimals))}</UpdatedBalanceTypo>
-                        <UpdatedSymbolTypo>{tokenSymbol}</UpdatedSymbolTypo>
+                        <UpdatedBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}</UpdatedBalanceTypo>
+                        <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>
             </ContentWrap>

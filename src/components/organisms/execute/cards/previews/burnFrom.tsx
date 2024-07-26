@@ -2,14 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { IWallet } from '@/interfaces/wallet';
-import { useContractContext } from '../../context/contractContext';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { ModalActions } from '@/redux/actions';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const Container = styled.div`
     width: 100%;
@@ -160,16 +158,8 @@ const ExecuteButtonTypo = styled.div`
     line-height: 20px; /* 125% */
 `;
 
-interface IProps {
-    fctAmount: string;
-    addressAmount: string;
-    totalSupply: string;
-    tokenSymbol: string;
-    decimals: string;
-}
-
-const BurnFromPreview = ({ fctAmount, addressAmount, totalSupply, tokenSymbol, decimals }: IProps) => {
-    const { _contract, _walletList, _setWalletList } = useContractContext();
+const BurnFromPreview = () => {
+    const { contractAddress, fctBalance, cw20Balance, burnFromList, tokenInfo } = useExecuteStore.getState();
 
     const modal = useModalStore();
 
@@ -182,7 +172,7 @@ const BurnFromPreview = ({ fctAmount, addressAmount, totalSupply, tokenSymbol, d
         let allAddressesValid = true;
         let allAmountsValid = true;
 
-        for (const wallet of _walletList) {
+        for (const wallet of burnFromList) {
             if (!isValidAddress(wallet.recipient)) {
                 allAddressesValid = false;
             }
@@ -193,16 +183,16 @@ const BurnFromPreview = ({ fctAmount, addressAmount, totalSupply, tokenSymbol, d
         }
 
         setIsEnableButton(allAddressesValid && allAmountsValid);
-        setTotalBurnBalance(getUTokenAmountFromToken(totalAmount, decimals));
-    }, [_walletList, totalSupply, decimals]);
+        setTotalBurnBalance(getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString()));
+    }, [burnFromList, tokenInfo]);
 
     const onClickBurn = () => {
         const convertWalletList = [];
         let totalAmount = "0";
-        let feeAmount = _walletList.length * 15000;
+        let feeAmount = burnFromList.length * 15000;
 
-        for (const wallet of _walletList) {
-            const amount = getUTokenAmountFromToken(wallet.amount, decimals);
+        for (const wallet of burnFromList) {
+            const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
             convertWalletList.push({
                 owner: wallet.recipient,
                 amount: amount
@@ -215,9 +205,9 @@ const BurnFromPreview = ({ fctAmount, addressAmount, totalSupply, tokenSymbol, d
                 title: "Burn From",
             },
             content: {
-                symbol: tokenSymbol,
-                decimals: decimals,
-                balance: fctAmount,
+                symbol: tokenInfo.symbol,
+                decimals: tokenInfo.decimals.toString(),
+                balance: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
@@ -232,33 +222,19 @@ const BurnFromPreview = ({ fctAmount, addressAmount, totalSupply, tokenSymbol, d
                     }
                 ]
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: convertWalletList
         };
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/burnFrom" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal module="/cw20/burnFrom" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
         });
-        // ModalActions.handleData({
-        //     module: '/cw20/burnFrom',
-        //     params: {
-        //         contract: _contract,
-        //         msg: convertWalletList
-        //     }
-        // });
-        // ModalActions.handleQrConfirm(true);
-        // ModalActions.handleSetCallback({
-        //     callback: () => {
-        //         _setWalletList([]);
-        //         _setIsFetched(true);
-        //     }
-        // });
     };
 
     useEffect(() => {
         calculateTotalBurnBalance();
-    }, [_walletList, calculateTotalBurnBalance]);
+    }, [burnFromList, calculateTotalBurnBalance]);
 
     return (
         <Container>
@@ -269,14 +245,14 @@ const BurnFromPreview = ({ fctAmount, addressAmount, totalSupply, tokenSymbol, d
                         <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, decimals))}</ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenSymbol}</ItemAmountSymbolTypo>
+                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}</ItemAmountTypo>
+                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
                     <WalletListWrap>
-                        {_walletList.map((value, index) => (
+                        {burnFromList.map((value, index) => (
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />

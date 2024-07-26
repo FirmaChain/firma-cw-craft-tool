@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import { useContractContext } from '../context/contractContext';
 import MintPreview from './previews/mint';
 import { ITokenInfoState } from '../hooks/useExecueteHook';
 import DefaultView from './previews/default';
@@ -13,6 +12,7 @@ import TransferFromPreview from './previews/transferFrom';
 import UpdateMinter from './previews/updateMinter';
 import DecreaseAllowancePreview from './previews/decreaseAllowance';
 import UpdateLogo from './previews/updateLogo';
+import useExecuteStore from '../hooks/useExecuteStore';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     min-width: 736px;
@@ -38,88 +38,27 @@ const TitleTypo = styled.div`
     line-height: 22px;
 `;
 
-interface IProps {
-    tokenInfoState: ITokenInfoState;
-}
+const Preview = () => {
+    const { selectMenu } = useExecuteStore();
 
-const Preview = ({ tokenInfoState }: IProps) => {
-    const { _selectMenu } = useContractContext();
-
+    console.log("selectMenu", selectMenu);
     return (
-        <Container $isSelectMenu={!(_selectMenu.value === 'select' || _selectMenu.value === '')}>
-            <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
-            {(_selectMenu.value === 'select' || _selectMenu.value === '') && <DefaultView />}
-            {_selectMenu.value === 'mint' && (
-                <MintPreview
-                    fctAmount={tokenInfoState.fctAmount}
-                    addressAmount={tokenInfoState.addressAmount}
-                    minterCap={tokenInfoState.minter.cap}
-                    totalSupply={tokenInfoState.totalSupply}
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                />
-            )}
-            {_selectMenu.value === 'burn' && (
-                <BurnPreview
-                    fctAmount={tokenInfoState.fctAmount}
-                    addressAmount={tokenInfoState.addressAmount}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                    decimals={tokenInfoState.decimals}
-                />
-            )}
-            {_selectMenu.value === 'burnFrom' && (
-                <BurnFromPreview
-                    fctAmount={tokenInfoState.fctAmount}
-                    addressAmount={tokenInfoState.addressAmount}
-                    totalSupply={tokenInfoState.totalSupply}
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                />
-            )}
-            {_selectMenu.value === 'transfer' && (
-                <TransferPreview
-                    fctAmount={tokenInfoState.fctAmount}
-                    addressAmount={tokenInfoState.addressAmount}
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                />
-            )}
-            {_selectMenu.value === 'updateMarketing' && (
-                <UpdateMarketingPreview
-                    fctAmount={tokenInfoState.fctAmount}
-                    codeId={tokenInfoState.codeId}
-                    label={tokenInfoState.label}
-                    marketingDescription={tokenInfoState.marketingDescription}
-                    marketingAddress={tokenInfoState.marketingAddress}
-                    marketingProject={tokenInfoState.marketingProject}
-                />
-            )}
-
-            {_selectMenu.value === 'increaseAllowance' && (
-                <IncreaseAllowancePreview decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
-            )}
-
-            {_selectMenu.value === 'decreaseAllowance' && (
-                <DecreaseAllowancePreview decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
-            )}
-
-            {_selectMenu.value === 'transferFrom' && (
-                <TransferFromPreview
-                    addressAmount={tokenInfoState.addressAmount}
-                    decimals={tokenInfoState.decimals}
-                    tokenSymbol={tokenInfoState.tokenSymbol}
-                />
-            )}
-
-            {_selectMenu.value === 'updateMinter' && (
-                <UpdateMinter fctAmount={tokenInfoState.fctAmount} minterAddress={tokenInfoState.minter.minter} />
-            )}
-
-            {_selectMenu.value === 'updateLogo' && (
-                <UpdateLogo fctAmount={tokenInfoState.fctAmount} marketingLogoUrl={tokenInfoState.marketingLogoUrl} />
-            )}
-            {/* TransferFromPreview */}
-        </Container>
+        <>
+            {selectMenu && <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
+                <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
+                {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
+                {selectMenu.value === 'mint' && <MintPreview />}
+                {selectMenu.value === 'burn' && <BurnPreview />}
+                {selectMenu.value === 'burnFrom' && <BurnFromPreview />}
+                {selectMenu.value === 'transfer' && <TransferPreview />}
+                {selectMenu.value === 'transferFrom' && <TransferFromPreview />}
+                {selectMenu.value === 'updateMarketing' && <UpdateMarketingPreview />}
+                {selectMenu.value === 'increaseAllowance' && <IncreaseAllowancePreview />}
+                {selectMenu.value === 'decreaseAllowance' && <DecreaseAllowancePreview />}
+                {selectMenu.value === 'updateMinter' && <UpdateMinter />}
+                {selectMenu.value === 'updateLogo' && <UpdateLogo />}
+            </Container>}
+        </>
     );
 };
 

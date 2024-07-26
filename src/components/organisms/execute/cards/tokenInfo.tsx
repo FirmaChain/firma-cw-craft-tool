@@ -3,10 +3,7 @@ import styled from 'styled-components';
 
 import Icons from '@/components/atoms/icons';
 import { IC_DOTTED_DIVIDER, IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
-import { BASIC_LABEL } from '@/constants/cw20Types';
 import Mint from './functions/mint';
-import { useContractContext } from '../context/contractContext';
-import { ITokenInfoState } from '../hooks/useExecueteHook';
 import Burn from './functions/burn';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -18,9 +15,9 @@ import DecreaseAllowance from './functions/decreaseAllowance';
 import TransferFrom from './functions/transferFrom';
 import UpdateMinter from './functions/updateMinter';
 import ExecuteSelect from '@/components/atoms/select/executeSelect';
-import { NETWORKS } from '@/constants/common';
 import { CRAFT_CONFIGS } from '@/config';
 import UpdateLogo from './functions/updateLogo';
+import useExecuteStore from '../hooks/useExecuteStore';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     min-width: 736px;
@@ -187,32 +184,38 @@ const allOwnerMenuItems: IMenuItem[] = [
     { value: 'updateMarketing', label: 'Update Marketing' }
 ];
 
-interface IProps {
-    tokenInfoState: ITokenInfoState;
-}
-
-const TokenInfo = ({ tokenInfoState }: IProps) => {
+const TokenInfo = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
     const { network } = useSelector((state: rootState) => state.global);
 
-    const { _selectMenu, _setSelectMenu } = useContractContext();
+    const {
+        contractAddress,
+        selectMenu,
+        contractInfo,
+        minterInfo,
+        marketingInfo,
+        tokenInfo,
+        setSelectMenu
+    } = useExecuteStore();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
-    const [selectMenu, setSelectMenu] = useState<IMenuItem>({ value: 'select', label: 'Select' });
 
     const ContractTypeLabel = useMemo(() => {
         const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
 
-        return tokenInfoState.codeId === craftConfig.CW20.BASIC_CODE_ID ? 'BASIC' : 'ADVANCED';
-    }, [tokenInfoState.codeId, tokenInfoState.label]);
+        if (contractInfo)
+            return contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID ? 'BASIC' : 'ADVANCED';
+
+        return true;
+    }, [contractInfo]);
 
     useEffect(() => {
-        if (tokenInfoState.marketingLogoUrl) {
+        if (marketingInfo && marketingInfo.logo) {
             const img = new Image();
-            img.src = tokenInfoState.marketingLogoUrl;
+            img.src = marketingInfo.logo.url;
             img.onload = () => {
-                setValidTokenLogoUrl(tokenInfoState.marketingLogoUrl);
+                setValidTokenLogoUrl(marketingInfo.logo.url);
             };
             img.onerror = () => {
                 setValidTokenLogoUrl('');
@@ -220,24 +223,23 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
         } else {
             setValidTokenLogoUrl('');
         }
-    }, [tokenInfoState.marketingLogoUrl]);
+    }, [marketingInfo]);
 
     useEffect(() => {
         let ruleMenus: IMenuItem[] = [];
 
-        if (tokenInfoState.minter !== null) {
-            if (tokenInfoState.minter.minter === address && tokenInfoState.marketingAddress === address) {
+        if (minterInfo !== null && marketingInfo !== null) {
+            if (minterInfo.minter === address && marketingInfo.marketing === address) {
                 ruleMenus = [...allOwnerMenuItems];
-            } else if (tokenInfoState.minter.minter === address && tokenInfoState.marketingAddress !== address) {
+            } else if (minterInfo.minter === address && marketingInfo.marketing !== address) {
                 ruleMenus = [...minterMenuItems];
-            } else if (tokenInfoState.minter.minter !== address && tokenInfoState.marketingAddress === address) {
+            } else if (minterInfo.minter !== address && marketingInfo.marketing === address) {
                 ruleMenus = [...marketingMenuItems];
             } else {
                 ruleMenus = [...basicMenuItems];
             }
         } else {
-            if (tokenInfoState.codeId)
-            if (tokenInfoState.marketingAddress === address) {
+            if (marketingInfo !== null && marketingInfo.marketing === address) {
                 ruleMenus = [...marketingMenuItems];
             } else {
                 ruleMenus = [...basicMenuItems];
@@ -245,7 +247,7 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
         }
 
         setOwnerMenus(ruleMenus);
-    }, [tokenInfoState.marketingAddress, tokenInfoState.minter]);
+    }, [contractAddress, minterInfo, marketingInfo]);
 
     const RenderTokenLogo = useCallback(() => {
         const isValid = !Boolean(validTokenLogoUrl === '');
@@ -261,84 +263,55 @@ const TokenInfo = ({ tokenInfoState }: IProps) => {
     }, [validTokenLogoUrl]);
 
     const handleChangeMenu = (menu: string) => {
-        const _selectedMenu = ownerMenus.find((item) => item.value === menu);
+        const _selectMenu = ownerMenus.find((item) => item.value === menu);
 
-        _setSelectMenu(_selectedMenu);
-        setSelectMenu(_selectedMenu);
+        console.log(selectMenu);
+        setSelectMenu(_selectMenu);
     };
 
     return (
-        <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
-            <TokenInfoWrap>
-                <TitleTypo>{'TOKEN INFO'}</TitleTypo>
-                <TokenBox>
-                    <RenderTokenLogo />
-                    <TokenInfoBox>
-                        <TokenTitleWrap>
-                            <TokenSymbolTypo>{tokenInfoState.tokenSymbol}</TokenSymbolTypo>
-                            <ValidShieldIcon src={IC_VALID_SHIELD} alt={'Firmachain Valid Contract'} />
-                            <ContractTypeLabelWrap>
-                                <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
-                            </ContractTypeLabelWrap>
-                        </TokenTitleWrap>
-                        <TokenNameTypo>{tokenInfoState.tokenName}</TokenNameTypo>
-                    </TokenInfoBox>
-                </TokenBox>
-            </TokenInfoWrap>
-            <ExecuteSelect
-                value={selectMenu.value}
-                placeHolder="Select"
-                options={ownerMenus}
-                onChange={handleChangeMenu}
-                minWidth="214px"
-            />
-            {/* <CustomSelectInput menus={ownerMenus} onChangeMenu={handleChangeMenu} /> */}
-            {_selectMenu.value !== 'select' && (
-                <Fragment>
-                    <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
-                    {_selectMenu.value === 'mint' && (
-                        <Mint
-                            totalSupply={tokenInfoState.totalSupply}
-                            minterCap={tokenInfoState.minter.cap}
-                            tokenSymbol={tokenInfoState.tokenSymbol}
-                            decimals={tokenInfoState.decimals}
-                        />
-                    )}
-                    {_selectMenu.value === 'burn' && (
-                        <Burn decimals={tokenInfoState.decimals} addressAmount={tokenInfoState.addressAmount} />
-                    )}
-                    {_selectMenu.value === 'burnFrom' && (
-                        <BurnFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
-                    )}
-                    {_selectMenu.value === 'transfer' && (
-                        <Transfer
-                            decimals={tokenInfoState.decimals}
-                            tokenSymbol={tokenInfoState.tokenSymbol}
-                            addressAmount={tokenInfoState.addressAmount}
-                        />
-                    )}
-                    {_selectMenu.value === 'increaseAllowance' && (
-                        <IncreaseAllowance decimals={tokenInfoState.decimals} userBalance={tokenInfoState.addressAmount} />
-                    )}
-                    {_selectMenu.value === 'decreaseAllowance' && (
-                        <DecreaseAllowance decimals={tokenInfoState.decimals} userBalance={tokenInfoState.addressAmount} />
-                    )}
-                    {_selectMenu.value === 'updateMarketing' && (
-                        <UpdateMarketing
-                            label={tokenInfoState.label}
-                            marketingDescription={tokenInfoState.marketingDescription}
-                            marketingAddress={tokenInfoState.marketingAddress}
-                            marketingProject={tokenInfoState.marketingProject}
-                        />
-                    )}
-                    {_selectMenu.value === 'transferFrom' && (
-                        <TransferFrom decimals={tokenInfoState.decimals} tokenSymbol={tokenInfoState.tokenSymbol} />
-                    )}
-                    {_selectMenu.value === 'updateMinter' && <UpdateMinter minterAddress={tokenInfoState.minter.minter} />}
-                    {_selectMenu.value === 'updateLogo' && <UpdateLogo marketingLogoUrl={tokenInfoState.marketingLogoUrl}/>}
-                </Fragment>
-            )}
-        </Container>
+        <>
+            {selectMenu && <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
+                <TokenInfoWrap>
+                    <TitleTypo>{'TOKEN INFO'}</TitleTypo>
+                    <TokenBox>
+                        <RenderTokenLogo />
+                        <TokenInfoBox>
+                            <TokenTitleWrap>
+                                <TokenSymbolTypo>{tokenInfo?.symbol}</TokenSymbolTypo>
+                                <ValidShieldIcon src={IC_VALID_SHIELD} alt={'Firmachain Valid Contract'} />
+                                <ContractTypeLabelWrap>
+                                    <ContractTypeTypo>{contractAddress && ContractTypeLabel}</ContractTypeTypo>
+                                </ContractTypeLabelWrap>
+                            </TokenTitleWrap>
+                            <TokenNameTypo>{tokenInfo?.name}</TokenNameTypo>
+                        </TokenInfoBox>
+                    </TokenBox>
+                </TokenInfoWrap>
+                <ExecuteSelect
+                    value={selectMenu?.value}
+                    placeHolder="Select"
+                    options={ownerMenus}
+                    onChange={handleChangeMenu}
+                    minWidth="214px"
+                />
+                {selectMenu?.value !== 'select' && (
+                    <Fragment>
+                        <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                        {selectMenu?.value === 'mint' && <Mint />}
+                        {selectMenu?.value === 'burn' && <Burn />}
+                        {selectMenu?.value === 'burnFrom' && <BurnFrom />}
+                        {selectMenu?.value === 'transfer' && <Transfer />}
+                        {selectMenu?.value === 'transferFrom' && <TransferFrom />}
+                        {selectMenu?.value === 'increaseAllowance' && <IncreaseAllowance />}
+                        {selectMenu?.value === 'decreaseAllowance' && <DecreaseAllowance />}
+                        {selectMenu?.value === 'updateMarketing' && <UpdateMarketing />}
+                        {selectMenu?.value === 'updateMinter' && <UpdateMinter />}
+                        {selectMenu?.value === 'updateLogo' && <UpdateLogo />}
+                    </Fragment>
+                )}
+            </Container>}
+        </>
     );
 };
 

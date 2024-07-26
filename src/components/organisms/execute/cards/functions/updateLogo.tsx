@@ -1,5 +1,5 @@
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import LabelInput2 from '@/components/atoms/input/labelInput2';
 import useFormStore from '@/store/formStore';
@@ -7,9 +7,9 @@ import useFormStore from '@/store/formStore';
 const LOGO_URL_INPUT_FORM_ID = 'EXECUTE_UPDATE_LOGO_URL';
 const LOGO_URL_ERROR_TYPE = 'INVALID_ADDRESS';
 
-const UpdateLogo = ({ marketingLogoUrl }: { marketingLogoUrl: string }) => {
-    const _marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
-    const setMarketingLogoUrl = useExecuteStore((state) => state.setMarketingLogoUrl);
+const UpdateLogo = () => {
+    const { marketingLogoUrl, setMarketingLogoUrl } = useExecuteStore.getState();
+
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
@@ -37,7 +37,7 @@ const UpdateLogo = ({ marketingLogoUrl }: { marketingLogoUrl: string }) => {
                 labelProps={{ label: 'Marketing Logo (Token Logo Link)' }}
                 inputProps={{
                     formId: LOGO_URL_ERROR_TYPE,
-                    value: _marketingLogoUrl,
+                    value: marketingLogoUrl,
                     onChange: onChangeMarketingLogoUrl,
                     placeHolder: 'ex) https://example.thisismy.token.jpg'
                 }}

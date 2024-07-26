@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import { useContractContext } from '../../context/contractContext';
 import WalletList from '@/components/atoms/walletList';
 import {
     addStringAmount,
@@ -14,6 +13,7 @@ import {
 } from '@/utils/balance';
 import { IWallet } from '@/interfaces/wallet';
 import IconTooltip from '@/components/atoms/tooltip';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -62,33 +62,26 @@ const DOTTED_DIVIDER = styled.img`
     height: auto;
 `;
 
-interface IProps {
-    totalSupply: string;
-    minterCap: string;
-    tokenSymbol: string;
-    decimals: string;
-}
-
-const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
-    const { _setWalletList } = useContractContext();
+const Mint = () => {
+    const { minterInfo, tokenInfo, setMinterList } = useExecuteStore.getState();
 
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
     const mintableAmount = useMemo(() => {
-        return subtractStringAmount(minterCap, totalSupply);
-    }, [totalSupply]);
+        return subtractStringAmount(minterInfo.cap, tokenInfo.total_supply);
+    }, [minterInfo, tokenInfo]);
 
     const totalMintAmount = useMemo(() => {
         let addAmount = '0';
         for (const wallet of addWalletList) {
-            addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, decimals), addAmount);
+            addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString()), addAmount);
         }
         return addAmount;
     }, [addWalletList]);
 
     const handleWalletList = (value: IWallet[]) => {
         setAddWalletList(value);
-        _setWalletList(value);
+        setMinterList(value);
     };
 
     return (
@@ -102,15 +95,15 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
                     <TotalMintWrap>
                         <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
                         <TotalMintSupplyBalance>
-                            {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, decimals))}
+                            {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
                         </TotalMintSupplyBalance>
-                        <TotalMintSupplyBalance>{tokenSymbol}</TotalMintSupplyBalance>
+                        <TotalMintSupplyBalance>{tokenInfo.symbol}</TotalMintSupplyBalance>
                     </TotalMintWrap>
                     <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
                     <TotalMintWrap>
                         <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                        <TotalMintSubBalance>{formatWithCommas(getTokenAmountFromUToken(mintableAmount, decimals))}</TotalMintSubBalance>
-                        <TotalMintSubBalance>{tokenSymbol}</TotalMintSubBalance>
+                        <TotalMintSubBalance>{formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}</TotalMintSubBalance>
+                        <TotalMintSubBalance>{tokenInfo.symbol}</TotalMintSubBalance>
                         <IconTooltip
                             size="14px"
                             tooltip={'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.'}
@@ -119,7 +112,7 @@ const Mint = ({ totalSupply, minterCap, tokenSymbol, decimals }: IProps) => {
                 </SummeryCard>
             </HeaderWrap>
             <WalletList
-                decimals={decimals}
+                decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={'Recipient Address'}
                 addressPlaceholder={'Input Wallet Address'}

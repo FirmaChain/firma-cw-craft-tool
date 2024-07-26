@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
-import { useContractContext } from '../../context/contractContext';
 import LabelInput2 from '@/components/atoms/input/labelInput2';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { getTokenStrFromUTokenStr } from '@/utils/common';
@@ -13,6 +12,7 @@ import useFormStore from '@/store/formStore';
 import { addNanoSeconds } from '@/utils/time';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
 import { useModalStore } from '@/hooks/useModal';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -67,14 +67,9 @@ enum ExpirationType {
     Forever = 'Forever'
 }
 
-interface IProps {
-    decimals: string;
-    userBalance: string;
-}
+const IncreaseAllowance = () => {
+    const { allowanceInfo, setAllowanceInfo, tokenInfo, cw20Balance } = useExecuteStore.getState();
 
-const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
-    const { _allowanceInfo, _isFetched, _setAllowanceInfo } = useContractContext();
-    
     const modal = useModalStore();
     
     const setFormError = useFormStore((state) => state.setFormError);
@@ -87,30 +82,23 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
 
-    useEffect(() => {
-        setAddress('');
-        setAmount('');
-        setExpirationType(ExpirationType.Height);
-        setExpInputValue('');
-    }, [_isFetched]);
-
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
 
         setAddress(value);
-        _setAllowanceInfo({ address: value, amount: _allowanceInfo.amount, type: _allowanceInfo.type, expire: _allowanceInfo.expire });
+        setAllowanceInfo({ address: value, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: allowanceInfo.expire });
     };
 
     const handleChangeAmount = (value: string) => {
         const truncateDecimals = (value: string) => {
-            const decimalPlaces = parseInt(decimals, 10);
+            const decimalPlaces = parseInt(tokenInfo.decimals.toString(), 10);
             const fractionalPart = value.split('.')[1];
 
             if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
                 return value;
             }
-            return userBalance;
+            return cw20Balance;
         };
 
         const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
@@ -119,11 +107,11 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
         }
     
         const truncatedValue = truncateDecimals(value);
-        const convertIncreaseAmount = getUTokenAmountFromToken(truncatedValue, decimals);
-        const increaseAmount = compareStringNumbers(userBalance, convertIncreaseAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(userBalance, decimals);
+        const convertIncreaseAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
+        const increaseAmount = compareStringNumbers(cw20Balance, convertIncreaseAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAmount(increaseAmount);
-        _setAllowanceInfo({ address: _allowanceInfo.address, amount: getUTokenAmountFromToken(increaseAmount, decimals), type: _allowanceInfo.type, expire: _allowanceInfo.expire });
+        setAllowanceInfo({ address: allowanceInfo.address, amount: getUTokenAmountFromToken(increaseAmount, tokenInfo.decimals.toString()), type: allowanceInfo.type, expire: allowanceInfo.expire });
     };
 
     const handleChangeExpireType = (value: ExpirationType) => {
@@ -138,20 +126,20 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
                 case "Forever": expireType = "never";       break;
             }
     
-            _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: expireType, expire: "" });
+            setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: expireType, expire: "" });
         }
     };
     
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
         let expireValue = "";
-        if (_allowanceInfo.type === "at_time") {
+        if (allowanceInfo.type === "at_time") {
             expireValue = addNanoSeconds(value);
-        } else if (_allowanceInfo.type === "at_height") {
+        } else if (allowanceInfo.type === "at_height") {
             expireValue = value;
         }
 
-        _setAllowanceInfo({ address: _allowanceInfo.address, amount: _allowanceInfo.amount, type: _allowanceInfo.type, expire: expireValue });
+        setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: expireValue });
     };
 
     const handleAllowanceDate = () => {
@@ -181,7 +169,6 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
                                     value: address,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address'
-                                    // emptyErrorMessage: 'Please input firmachain wallet address'
                                 }}
                             />
                         </div>
@@ -204,14 +191,14 @@ const IncreaseAllowance = ({ decimals, userBalance }: IProps) => {
                                     onChange: handleChangeAmount,
                                     placeHolder: '0',
                                     type: 'number',
-                                    decimal: decimals ? Number(decimals) : 6,
+                                    decimal: tokenInfo.decimals ? Number(tokenInfo.decimals) : 6,
                                     // emptyErrorMessage: 'Please input mint amount',
                                     textAlign: 'right',
-                                    maxValue: Number(getTokenStrFromUTokenStr(userBalance, decimals))
+                                    maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString()))
                                 }}
                             />
 
-                            <UserBalanceTypo>Balance: {getTokenStrFromUTokenStr(userBalance, decimals)}</UserBalanceTypo>
+                            <UserBalanceTypo>Balance: {getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())}</UserBalanceTypo>
                         </div>
                     </div>
                 </div>

@@ -73,8 +73,6 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
         });
     };
 
-    console.log(isTxModal);
-
     return (
         <QRContainer>
             <ConnectQR
@@ -93,25 +91,8 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
                     onTickCheckRequest();
                 }}
             />
-            {/* {qrcode !== '' && ( */}
-            {/* <div
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '4px',
-                    minWidth: !isTxModal ? '70px' : '70px',
-                    height: '40px',
-                    padding: '12px 22px !important',
-                    borderRadius: '32px',
-                    background: !isTxModal ? 'var(--Green-500, #02E191)' : 'var(--Gray-500, #383838)',
-                    userSelect: 'none',
-                    cursor: 'pointer'
-                }}
-                onClick={() => qrcode !== '' && refreshRequestQR()}
-            > */}
             <TimerWrap $isTxModal={isTxModal} onClick={() => qrcode !== '' && refreshRequestQR()}>
-                {qrcode !== '' && (
+                {qrcode !== '00:00' && (
                     <>
                         {!isTxModal ? (
                             <>

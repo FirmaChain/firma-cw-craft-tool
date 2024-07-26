@@ -13,9 +13,9 @@ import {
 } from '@/utils/balance';
 import { IWallet } from '@/interfaces/wallet';
 import { isValidAddress, shortenAddress } from '@/utils/address';
-import { useContractContext } from '../../context/contractContext';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const Container = styled.div`
     width: 100%;
@@ -209,17 +209,8 @@ const ExecuteButtonTypo = styled.div`
     line-height: 20px; /* 125% */
 `;
 
-interface IProps {
-    fctAmount: string;
-    addressAmount: string;
-    minterCap: string;
-    totalSupply: string;
-    decimals: string;
-    tokenSymbol: string;
-}
-
-const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimals, tokenSymbol }: IProps) => {
-    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
+const MintPreview = () => {
+    const { contractAddress, fctBalance, mintingList, minterInfo, tokenInfo } = useExecuteStore.getState();
 
     const modal = useModalStore();
 
@@ -232,7 +223,7 @@ const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimal
         let allAddressesValid = true;
         let allAmountsValid = true;
 
-        for (const wallet of _walletList) {
+        for (const wallet of mintingList) {
             if (!isValidAddress(wallet.recipient)) {
                 allAddressesValid = false;
             }
@@ -242,24 +233,24 @@ const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimal
             totalAmount = addStringAmount(totalAmount, wallet.amount);
         }
 
-        const possibleMintAmount = subtractStringAmount(minterCap, totalSupply);
-        const compare = compareStringNumbers(getUTokenAmountFromToken(totalAmount, decimals), possibleMintAmount);
+        const possibleMintAmount = subtractStringAmount(minterInfo ? minterInfo.cap : '0', tokenInfo.total_supply);
+        const compare = compareStringNumbers(getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString()), possibleMintAmount);
 
         setIsEnableButton(allAddressesValid && allAmountsValid && compare !== 1);
-        setTotalMintBalance(getUTokenAmountFromToken(totalAmount, decimals));
-    }, [_walletList, minterCap, totalSupply, decimals]);
+        setTotalMintBalance(getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString()));
+    }, [mintingList, tokenInfo, minterInfo]);
 
     useEffect(() => {
         calculateTotalBalance();
-    }, [_walletList, calculateTotalBalance]);
+    }, [mintingList, calculateTotalBalance]);
 
     const onClickMint = () => {
         const convertWalletList: IWallet[] = [];
         let totalAmount = "0";
-        let feeAmount = _walletList.length * 15000;
+        let feeAmount = mintingList.length * 15000;
 
-        for (const wallet of _walletList) {
-            const amount = getUTokenAmountFromToken(wallet.amount, decimals);
+        for (const wallet of mintingList) {
+            const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
             convertWalletList.push({
                 recipient: wallet.recipient,
                 amount: amount
@@ -272,9 +263,10 @@ const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimal
                 title: "Mint",
             },
             content: {
-                symbol: tokenSymbol,
-                decimals: decimals,
-                balance: fctAmount,
+                symbol: tokenInfo.symbol,
+                decimals: tokenInfo.decimals.toString(),
+                balance: totalMintBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
@@ -289,28 +281,14 @@ const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimal
                     }
                 ]
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: convertWalletList
         };
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/mintToken" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal module="/cw20/mintToken" id={id} params={params} onClickConfirm={() => { console.log(111); }}/>
         });
-        // ModalActions.handleData({
-        //     module: '/cw20/mintToken',
-        //     params: {
-        //         contract: _contract,
-        //         msg: convertWalletList
-        //     }
-        // });
-        // ModalActions.handleQrConfirm(true);
-        // ModalActions.handleSetCallback({
-        //     callback: () => {
-        //         _setWalletList([]);
-        //         _setIsFetched(true);
-        //     }
-        // });
     };
 
     return (
@@ -324,15 +302,15 @@ const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimal
                         </TokenInfoLeft>
                         <TokenInfoRightWrap>
                             <TokenInfoMintAmountTypo>
-                                {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, decimals))}
+                                {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
                             </TokenInfoMintAmountTypo>
-                            <TokeInfoMintSymbolTypo>{tokenSymbol}</TokeInfoMintSymbolTypo>
+                            <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
                             <ArrowToggleButton onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>
                     {isOpen && (
                         <WalletListWrap>
-                            {_walletList.map((value, index) => (
+                            {mintingList.map((value, index) => (
                                 <WalletItemWrap key={index}>
                                     <WalletLeftItemWrap>
                                         <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
@@ -355,8 +333,8 @@ const MintPreview = ({ fctAmount, addressAmount, minterCap, totalSupply, decimal
                     </TokenInfoLeft>
                     <TokenInfoRightWrap>
                         <TotalSupplyWrap>
-                            <TotalSupplyAmount>{formatWithCommas(getTokenAmountFromUToken(totalSupply, decimals))}</TotalSupplyAmount>
-                            <TotalSupplySymbol>{tokenSymbol}</TotalSupplySymbol>
+                            <TotalSupplyAmount>{formatWithCommas(getTokenAmountFromUToken(tokenInfo.total_supply, tokenInfo.decimals.toString()))}</TotalSupplyAmount>
+                            <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
                         </TotalSupplyWrap>
                     </TokenInfoRightWrap>
                 </TokenInfoWrap>

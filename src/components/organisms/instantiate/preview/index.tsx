@@ -10,7 +10,6 @@ import { ModalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
 import { compareAmounts, compareStringsAsNumbers, getApplyDecimalsAmount, isValidAddress, validateSymbol } from '@/utils/common';
 import { CRAFT_CONFIGS } from '@/config';
-import { BASIC_LABEL } from '@/constants/cw20Types';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import InstantitateModal from '../../modal/instantitateModal';
@@ -93,7 +92,7 @@ const Preview = ({ isBasic }: IProps) => {
                 const params = {
                     admin: address,
                     codeId: codeId,
-                    label: label === '' ? BASIC_LABEL : label,
+                    label: label,
                     msg: JSON.stringify(messageData)
                 };
 

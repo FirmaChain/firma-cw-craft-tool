@@ -87,16 +87,15 @@ export const ItemLabel = styled.div`
 `;
 
 export const ItemValue = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    text-align: right;
+    color: var(--Gray-700, #807E7E);
     font-family: "General Sans Variable";
-    font-size: 13px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 18px; /* 138.462% */
+    line-height: 20px; /* 142.857% */
 `;
 
-export const ItemWalletIcon = styled.img`
+export const ItemIcon = styled.img`
     width: 16px;
     height: 16px;
 `;
@@ -407,5 +406,170 @@ export const ModalCancelTypo = styled.div`
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ResultsHeader = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+`;
+
+export const ResultsSuccessIcon = styled.img`
+    width: 56px;
+    height: 56px;
+`;
+
+export const ResultsTitleWrap = styled.div`
+    display: flex;
+    gap: 8px;
+`;
+
+export const ResultsTitleExecuteTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    font-family: "General Sans Variable";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 109.091% */
+`;
+
+export const ResultsTitleSuccessTypo = styled.div`
+    color: var(--Status-Success, var(--Primary-Base-White, #57D962));
+    font-family: "General Sans Variable";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+`;
+
+export const ResultsTitleMessage = styled.div`
+    color: var(--Gray-650, #707070);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ResultsContentWrap = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+`;
+
+export const ResultsContentSummeryWrap = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px 24px 24px;
+    border-radius: 8px 8px 0px 0px;
+    border-bottom: 1px dashed var(--Gray-400, #2C2C2C);
+    background: var(--Gray-150, #141414);
+`;
+
+export const ResultsItemWrap = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+`;
+
+export const ResultsItemLabel = styled.div`
+    color: var(--Gray-700, #807E7E);
+    font-family: "General Sans Variable";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px; /* 138.462% */
+`;
+
+export const ResultsItemValueWrap = styled.div`
+    display: flex;
+    gap: 6px;
+`;
+
+export const ResultsItemValue = styled.div`
+    color: #E6E6E6;
+    font-family: "General Sans Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 122.222% */
+`;
+
+export const ResultsItemSymbol = styled.div`
+    color: var(--Gray-600, #5A5A5A);
+    font-family: "General Sans Variable";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 14px; /* 116.667% */
+`;
+
+export const ResultsContentHashWrap = styled.div`
+    padding: 20px 16px 24px 24px;
+    border-radius: 0px 0px 8px 8px;
+    background: var(--Gray-150, #141414);
+`;
+
+export const ItemHashValue = styled.div`
+    color: var(--Green-700, #02A288);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 138.462% */
+`;
+
+export const ResultsButtonWrap = styled.div`
+    width: 100%;
+    display: flex;
+    gap: 12px;
+`;
+
+export const ResultsConfirmButton = styled.div`
+    display: flex;
+    padding: 10px 0px;
+    justify-content: center;
+    align-items: center;
+    flex: 1 0 0;border-radius: 6px;
+    background: var(--Gray-450, #313131);
+    cursor: pointer;
+`;
+
+export const ResultsConfirmButtonTypo = styled.div`
+    color: var(--Gray-750, #999);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ResultsGoToMyMintetedTokenButton = styled.div`
+    display: flex;
+    padding: 10px 0px;
+    justify-content: center;
+    align-items: center;
+    flex: 1 0 0;
+    border-radius: 6px;
+    background: var(--Green-500, #02E191);
+    cursor: pointer;
+`;
+
+export const ResultsGoToMyMintetedTokenButtonTypo = styled.div`
+    color: var(--Gray-200, #1A1A1A);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
     line-height: 20px; /* 142.857% */
 `;

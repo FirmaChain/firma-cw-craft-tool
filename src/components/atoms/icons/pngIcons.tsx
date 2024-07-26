@@ -28,8 +28,9 @@ export const IC_ARROW_WITH_TAIL = PUBLIC_URL + 'ic_arrow_with_tail.png';
 export const IC_REFRESH = PUBLIC_URL + 'ic_refresh.png';
 export const IC_FIRMACHAIN = PUBLIC_URL + 'ic_firmachain.png';
 export const IC_ROUND_ARROW_DOWN = PUBLIC_URL + 'ic_round_arrow_down.png';
-
 export const IMG_LANDING_BG = '/assets/image/img_landing_bg.png';
 export const IMG_LANDING_INSTANTIATE = '/assets/image/img_landing_instantiate.png';
 export const IMG_LANDING_QUERY = '/assets/image/img_landing_query.png';
 export const IMG_LANDING_EXECUTE = '/assets/image/img_landing_execute.png';
+export const IC_CIRCLE_FAIL = PUBLIC_URL + 'ic_circle_fail.png';
+export const IC_FIRMACHAIN_QRCODE = PUBLIC_URL + 'ic_firmachain_qrcode.png';

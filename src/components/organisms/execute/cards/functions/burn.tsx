@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
-import { useEffect, useState } from 'react';
-import { useContractContext } from '../../context/contractContext';
 import LabelInput2 from '@/components/atoms/input/labelInput2';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -26,24 +26,20 @@ const WalletBalanceTypo = styled.div`
     line-height: 14px; /* 116.667% */
 `;
 
-interface IProps {
-    decimals: string;
-    addressAmount: string;
-}
+const Burn = () => {
+    const { tokenInfo, cw20Balance, setBurnAmount } = useExecuteStore.getState();
 
-const Burn = ({ decimals, addressAmount }: IProps) => {
-    const { _isFetched, _setBurnAmount } = useContractContext();
     const [inputBurnAmount, setInputBurnAmount] = useState<string>('');
 
     const handleBurnAmount = (value: string) => {
         const truncateDecimals = (value: string) => {
-            const decimalPlaces = parseInt(decimals, 10);
+            const decimalPlaces = tokenInfo.decimals;
             const fractionalPart = value.split('.')[1];
 
             if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
                 return value;
             }
-            return addressAmount;
+            return cw20Balance;
         };
 
         const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
@@ -52,20 +48,15 @@ const Burn = ({ decimals, addressAmount }: IProps) => {
         }
 
         const truncatedValue = truncateDecimals(value);
-        const convertBurnAmount = getUTokenAmountFromToken(truncatedValue, decimals);
+        const convertBurnAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
         const burnAmount =
-            compareStringNumbers(addressAmount, convertBurnAmount) === 1
+            compareStringNumbers(cw20Balance, convertBurnAmount) === 1
                 ? truncatedValue
-                : getTokenAmountFromUToken(addressAmount, decimals);
+                : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setInputBurnAmount(burnAmount);
-        _setBurnAmount(burnAmount);
+        setBurnAmount(burnAmount);
     };
-
-    useEffect(() => {
-        setInputBurnAmount('');
-        _setBurnAmount('0');
-    }, [_isFetched]);
 
     return (
         <Container>
@@ -83,7 +74,7 @@ const Burn = ({ decimals, addressAmount }: IProps) => {
 
                 <WalletBalanceWrap>
                     <WalletBalanceTypo>Balance :</WalletBalanceTypo>
-                    <WalletBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(addressAmount, decimals))}</WalletBalanceTypo>
+                    <WalletBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}</WalletBalanceTypo>
                 </WalletBalanceWrap>
             </ContentWrap>
         </Container>

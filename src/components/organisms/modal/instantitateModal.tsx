@@ -21,6 +21,8 @@ import RequestQR from '../requestQR/index2';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import useInstantiateStore from '../instantiate/instaniateStore';
+import useFormStore from '@/store/formStore';
 
 interface SuccessData {
     addedAt: string;
@@ -128,6 +130,8 @@ const InstantitateModal = ({
                             onSuccess={(requestData: any) => {
                                 setResult(requestData);
                                 setStatus('success');
+                                useInstantiateStore.getState().clearForm();
+                                useFormStore.getState().clearForm();
                             }}
                             onFailed={(requestData: any) => {
                                 // onCloseModal();

@@ -3,6 +3,7 @@ import { QRCode } from 'react-qrcode-logo';
 import GridLoader from 'react-spinners/GridLoader';
 
 import styled, { keyframes, css } from 'styled-components';
+import { IC_FIRMACHAIN_QRCODE } from '../icons/pngIcons';
 
 export const scaleAnim = keyframes`
   0% {
@@ -79,12 +80,12 @@ const ConnectQR = ({ qrSize, qrcode, expireDate, isActive, setTimerText, onExpir
     return (
         <QRWrapper $isLoading={qrcode === ''}>
             {qrcode === '' ? (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <GridLoader loading={true} color={'#3550DEcc'} />
+                <div style={{ width: '144px', height: '144px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <GridLoader style={{ width: '100%', height: 'auto' }} loading={true} color={'#02E191'} />
                 </div>
             ) : (
                 <div style={{ background: '#FFF', display: 'flex', justifyContent: 'center', borderRadius: '12px' }}>
-                    <QRCode value={`${qrcode}`} size={qrSize} quietZone={0} logoImage={''} logoWidth={40} logoHeight={40} />
+                    <QRCode value={`${qrcode}`} size={qrSize} quietZone={0} logoImage={IC_FIRMACHAIN_QRCODE} logoWidth={40} logoHeight={40} />
                 </div>
             )}
         </QRWrapper>

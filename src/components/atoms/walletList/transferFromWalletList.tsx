@@ -19,7 +19,6 @@ import { useSnackbar } from 'notistack';
 import TransferFromWalletInput from '../input/transferFromWalletInput';
 
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
-import { useContractContext } from '@/components/organisms/execute/context/contractContext';
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import { isValidAddress } from '@/utils/address';
 import { isAtHeight, isAtTime, isNever } from '@/utils/allowance';
@@ -27,6 +26,7 @@ import { compareStringNumbers } from '@/utils/balance';
 import { getCurrentUTCTimeStamp, removeNanoSeconds } from '@/utils/time';
 
 interface IProps {
+    contractAddress: string;
     decimals: string;
     maxWalletCount?: number;
     addressTitle: string;
@@ -40,9 +40,8 @@ const generateId = () => {
     return v4();
 };
 
-const TransferFromWalletList = ({ decimals, maxWalletCount = 20, transferList, setTransferList }: IProps) => {
+const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20, transferList, setTransferList }: IProps) => {
     const { enqueueSnackbar } = useSnackbar();
-    const { _contract } = useContractContext();
     const { getCw20Balance, getCw20AllowanceBalance } = useExecuteHook();
 
     const [validity, setValidity] = useState<boolean[]>([true]);
@@ -65,7 +64,7 @@ const TransferFromWalletList = ({ decimals, maxWalletCount = 20, transferList, s
                     
                     if (isValidAddress(transferList[updateIndex].fromAddress)) {
     
-                        const response = await getCw20Balance(_contract, transferList[updateIndex].fromAddress);
+                        const response = await getCw20Balance(contractAddress, transferList[updateIndex].fromAddress);
                         if (response.success === true) {
                             newTransfer.fromAmount = response.balance;
                             _walletList[updateIndex] = newTransfer;
@@ -85,7 +84,7 @@ const TransferFromWalletList = ({ decimals, maxWalletCount = 20, transferList, s
         }
 
         fetchData();
-    }, [_contract, transferList[updateIndex] && transferList[updateIndex].fromAddress]);
+    }, [contractAddress, transferList[updateIndex] && transferList[updateIndex].fromAddress]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -103,7 +102,7 @@ const TransferFromWalletList = ({ decimals, maxWalletCount = 20, transferList, s
                     };
 
                     console.log('FIRST NEW TRANSFER', newTransfer);
-                    const { success, blockHeight, data } = await getCw20AllowanceBalance(_contract, transferList[updateIndex].fromAddress, transferList[updateIndex].toAddress);
+                    const { success, blockHeight, data } = await getCw20AllowanceBalance(contractAddress, transferList[updateIndex].fromAddress, transferList[updateIndex].toAddress);
                     console.log('SUCCESS', success);
                     if (success === true) {
                         const { allowance, expires} = data;
@@ -148,7 +147,7 @@ const TransferFromWalletList = ({ decimals, maxWalletCount = 20, transferList, s
         }
 
         fetchData();
-    }, [_contract, transferList[updateIndex] && transferList[updateIndex].fromAddress, transferList[updateIndex] && transferList[updateIndex].toAddress]);
+    }, [contractAddress, transferList[updateIndex] && transferList[updateIndex].fromAddress, transferList[updateIndex] && transferList[updateIndex].toAddress]);
 
     const handleAddWallet = () => {
         if (transferList.length < maxWalletCount) {

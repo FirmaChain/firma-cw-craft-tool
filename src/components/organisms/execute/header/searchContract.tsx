@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import Icons from '@/components/atoms/icons';
-import { useContractContext } from '../context/contractContext';
 import { isValidAddress } from '@/utils/common';
 import { enqueueSnackbar } from 'notistack';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import styled from 'styled-components';
+import useExecuteStore from '../hooks/useExecuteStore';
+import useExecuteActions from '../action';
+import { rootState } from '@/redux/reducers';
+import { useSelector } from 'react-redux';
 
 const SearchButton = styled(IconButton)`
     //? outside
@@ -61,14 +64,23 @@ const EndAdornment = ({
 };
 
 const SearchContract = () => {
-    const [keyword, setKeyword] = useState<string>('');
+    const { address } = useSelector((state: rootState) => state.wallet);
 
-    const { _setContract } = useContractContext();
+    const { setContractAddress } = useExecuteStore();
+    const { setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, getCw20Balance, getFctBalance } = useExecuteActions();
+
+    const [keyword, setKeyword] = useState<string>('');
 
     const onClickSearch = () => {
         const valid = isValidAddress(keyword);
         if (valid) {
-            _setContract(keyword);
+            setContractAddress(keyword);
+            setContractInfo(keyword);
+            setTokenInfo(keyword);
+            setMarketingInfo(keyword);
+            setMinterInfo(keyword);
+            getCw20Balance(keyword, address);
+            getFctBalance(address);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
                 variant: 'error',
@@ -79,7 +91,7 @@ const SearchContract = () => {
 
     const onClickClear = () => {
         setKeyword('');
-        _setContract('');
+        setContractAddress(null);
     };
 
     return (

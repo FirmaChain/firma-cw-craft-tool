@@ -1,13 +1,13 @@
-import { IC_REFRESH, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { FirmaUtil } from '@firmachain/firma-js';
 import styled from 'styled-components';
+
+import { IC_REFRESH, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import { useMemo } from 'react';
-import { FirmaUtil } from '@firmachain/firma-js';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { ModalActions } from '@/redux/actions';
-import { useContractContext } from '../../context/contractContext';
-import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
@@ -107,21 +107,19 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     -webkit-box-orient: vertical;
 `;
 
-const UpdateMinter = ({ fctAmount, minterAddress }: { fctAmount: string, minterAddress: string }) => {
-    const { network } = useSelector((state: rootState) => state.global);
+const UpdateMinter = () => {
+    const { contractAddress, fctBalance, minterInfo, minterAddress } = useExecuteStore.getState();
     
-    const { _contract, _setIsFetched, _setSelectMenu } = useContractContext();
+    const { network } = useSelector((state: rootState) => state.global);
 
     const modal = useModalStore();
-    
-    const _minterAddress = useExecuteStore((state) => state.minterAddress);
 
     const errorMessage = useMemo(() => {
-        if (_minterAddress === '') return 'Please input address';
-        if (!FirmaUtil.isValidAddress(_minterAddress)) return 'Invalid address';
-        if (_minterAddress === minterAddress) return 'Same address as before';
+        if (minterAddress === '') return 'Please input address';
+        if (!FirmaUtil.isValidAddress(minterAddress)) return 'Invalid address';
+        if (minterAddress === minterInfo.minter) return 'Same address as before';
         return '';
-    }, [_minterAddress, minterAddress]);
+    }, [minterAddress, minterAddress]);
 
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
@@ -136,25 +134,30 @@ const UpdateMinter = ({ fctAmount, minterAddress }: { fctAmount: string, minterA
                 title: "Update Minter",
             },
             content: {
-                balance: fctAmount,
+                balance: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
                         label: "Minter",
-                        value: shortenAddress(_minterAddress, 15, 15),
+                        value: shortenAddress(minterAddress, 15, 15),
                         type: "wallet"
                     }
                 ]
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: {
-                new_minter: _minterAddress
+                new_minter: minterAddress
             }
         };
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/updateMinter" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal
+                module="/cw20/updateMinter"
+                id={id}
+                params={params}
+                onClickConfirm={() => { console.log(111); } }
+            />
         });
     };
 
@@ -168,7 +171,7 @@ const UpdateMinter = ({ fctAmount, minterAddress }: { fctAmount: string, minterA
                 <AccordionBox>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                         <img src={IC_WALLET} alt="wallet" style={{ width: '20px' }} />
-                        <AccordionTypo $disabled={!Boolean(_minterAddress)}>{_minterAddress || 'Wallet Address'}</AccordionTypo>
+                        <AccordionTypo $disabled={!Boolean(minterAddress)}>{minterAddress || 'Wallet Address'}</AccordionTypo>
                     </div>
                 </AccordionBox>
             </ContentWrap>

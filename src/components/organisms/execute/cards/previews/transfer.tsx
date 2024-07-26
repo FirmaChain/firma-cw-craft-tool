@@ -9,12 +9,11 @@ import {
 } from '@/utils/balance';
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useContractContext } from '../../context/contractContext';
 import { shortenAddress } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
-import { ModalActions } from '@/redux/actions';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const Container = styled.div`
     width: 100%;
@@ -202,15 +201,8 @@ const ExecuteButtonTypo = styled.div`
     line-height: 20px; /* 125% */
 `;
 
-interface IProps {
-    fctAmount: string;
-    addressAmount: string;
-    tokenSymbol: string;
-    decimals: string;
-}
-
-const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IProps) => {
-    const { _contract, _walletList, _setIsFetched, _setWalletList } = useContractContext();
+const TransferPreview = () => {
+    const { contractAddress, fctBalance, cw20Balance, transferList, tokenInfo } = useExecuteStore.getState();
 
     const modal = useModalStore();
 
@@ -224,7 +216,7 @@ const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IP
         let allAddressesValid = true;
         let allAmountsValid = true;
 
-        for (const wallet of _walletList) {
+        for (const wallet of transferList) {
             if (!isValidAddress(wallet.recipient)) {
                 allAddressesValid = false;
             }
@@ -234,24 +226,24 @@ const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IP
             calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
         }
 
-        const remainAmount = subtractStringAmount(addressAmount, getUTokenAmountFromToken(calcTransferAmount, decimals));
+        const remainAmount = subtractStringAmount(cw20Balance, getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
         setUpdatedAmount(remainAmount);
 
         setIsEnableButton(allAddressesValid && allAmountsValid);
-        setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, decimals));
-    }, [_walletList, addressAmount, decimals]);
+        setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
+    }, [transferList, cw20Balance, tokenInfo]);
 
     useEffect(() => {
         calculateTotalBalance();
-    }, [_walletList, calculateTotalBalance]);
+    }, [transferList, calculateTotalBalance]);
 
     const onClickTransfer = () => {
         const convertWalletList = [];
         let totalAmount = "0";
-        let feeAmount = _walletList.length * 15000;
+        let feeAmount = transferList.length * 15000;
         
-        for (const wallet of _walletList) {
-            const amount = getUTokenAmountFromToken(wallet.amount, decimals);
+        for (const wallet of transferList) {
+            const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
             convertWalletList.push({
                 recipient: wallet.recipient,
                 amount: amount
@@ -264,9 +256,9 @@ const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IP
                 title: "Transfer",
             },
             content: {
-                symbol: tokenSymbol,
-                decimals: decimals,
-                balance: fctAmount,
+                symbol: tokenInfo.symbol,
+                decimals: tokenInfo.decimals.toString(),
+                balance: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
@@ -281,13 +273,13 @@ const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IP
                     }
                 ]
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: convertWalletList
         };
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/transfer" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal module="/cw20/transfer" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
         });
     };
 
@@ -300,14 +292,14 @@ const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IP
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, decimals))}</ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenSymbol}</ItemAmountSymbolTypo>
+                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}</ItemAmountTypo>
+                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
                     <WalletListWrap>
-                        {_walletList.map((value, index) => (
+                        {transferList.map((value, index) => (
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
@@ -327,8 +319,8 @@ const TransferPreview = ({ fctAmount, addressAmount, tokenSymbol, decimals }: IP
                         <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(updatedAmount, decimals))}</UpdatedBalanceTypo>
-                        <UpdatedSymbolTypo>{tokenSymbol}</UpdatedSymbolTypo>
+                        <UpdatedBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}</UpdatedBalanceTypo>
+                        <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>
             </ContentWrap>

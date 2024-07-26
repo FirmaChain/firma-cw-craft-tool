@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
-import { ModalActions } from '@/redux/actions';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import { useContractContext } from '../../context/contractContext';
-import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
+import { rootState } from '@/redux/reducers';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
+
+import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
+import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const Container = styled.div`
     width: 100%;
@@ -152,27 +152,20 @@ const ExecuteButtonTypo = styled.div`
     line-height: 20px; /* 125% */
 `;
 
-interface IProps {
-    fctAmount: string;
-    tokenSymbol: string;
-    addressAmount: string;
-    decimals: string;
-}
+const BurnPreview = () => {
+    const { contractAddress, fctBalance, cw20Balance, burnAmount, tokenInfo } = useExecuteStore.getState();
 
-const BurnPreview = ({ fctAmount, tokenSymbol, addressAmount, decimals }: IProps) => {
     const { network } = useSelector((state: rootState) => state.global);
-
-    const { _contract, _burnAmount } = useContractContext();
 
     const modal = useModalStore();
 
     const updatedBalance = useMemo(() => {
         let amount = '0';
 
-        amount = subtractStringAmount(getTokenAmountFromUToken(addressAmount, "6"), _burnAmount);
+        amount = subtractStringAmount(getTokenAmountFromUToken(cw20Balance, "6"), burnAmount);
 
         return amount;
-    }, [addressAmount, _burnAmount]);
+    }, [cw20Balance, burnAmount]);
 
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
@@ -181,16 +174,16 @@ const BurnPreview = ({ fctAmount, tokenSymbol, addressAmount, decimals }: IProps
 
     const onClickBurn = () => {
         const feeAmount = craftConfig.DEFAULT_FEE;
-        const amount = getUTokenAmountFromToken(_burnAmount, decimals);
+        const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
 
         const params = {
             header: {
                 title: "Burn",
             },
             content: {
-                symbol: tokenSymbol,
-                decimals: decimals,
-                balance: fctAmount,
+                symbol: tokenInfo.symbol,
+                decimals: tokenInfo.decimals.toString(),
+                balance: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
@@ -200,7 +193,7 @@ const BurnPreview = ({ fctAmount, tokenSymbol, addressAmount, decimals }: IProps
                     }
                 ]
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: {
                 amount
             }
@@ -208,17 +201,17 @@ const BurnPreview = ({ fctAmount, tokenSymbol, addressAmount, decimals }: IProps
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/burnToken" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal module="/cw20/burnToken" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
         });
     };
 
     const isEnableButton = useMemo(() => {
-        if (compareStringNumbers(fctAmount, craftConfig.DEFAULT_FEE.toString()) !== 1) return false;
-        if (addressAmount === '' || addressAmount === '0') return false;
-        if (_burnAmount === '' || _burnAmount === '0') return false;
+        if (compareStringNumbers(fctBalance, craftConfig.DEFAULT_FEE.toString()) !== 1) return false;
+        if (cw20Balance === '' || cw20Balance === '0') return false;
+        if (burnAmount === '' || burnAmount === '0') return false;
 
         return true;
-    }, [addressAmount, _burnAmount]);
+    }, [cw20Balance, burnAmount]);
 
     return (
         <Container>
@@ -229,8 +222,8 @@ const BurnPreview = ({ fctAmount, tokenSymbol, addressAmount, decimals }: IProps
                         <BurnInfoTitleTypo>Total Burn Amount</BurnInfoTitleTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <BurnAmountTypo>{formatWithCommas(_burnAmount)}</BurnAmountTypo>
-                        <BurnSymbolTypo>{tokenSymbol}</BurnSymbolTypo>
+                        <BurnAmountTypo>{formatWithCommas(burnAmount)}</BurnAmountTypo>
+                        <BurnSymbolTypo>{tokenInfo.symbol}</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
                 <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
@@ -241,7 +234,7 @@ const BurnPreview = ({ fctAmount, tokenSymbol, addressAmount, decimals }: IProps
                     </ItemLeftWrap>
                     <ItemRightWrap>
                         <UpdatedBalanceTypo>{updatedBalance}</UpdatedBalanceTypo>
-                        <UpdatedSymbolTypo>{tokenSymbol}</UpdatedSymbolTypo>
+                        <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
             </ContentWrap>

@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_ARROW_WITH_TAIL, IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { addStringAmount, formatWithCommas, getUTokenAmountFromToken } from '@/utils/balance';
-import { useContractContext } from '../../context/contractContext';
 import { getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
 import { ModalActions } from '@/redux/actions';
 import IconButton from '@/components/atoms/buttons/iconButton';
@@ -157,25 +156,16 @@ const FromToAddressLine = ({ from, to, amount, decimal }: { from?: string; to?: 
     );
 };
 
-interface IProps {
-    addressAmount: string;
-    tokenSymbol: string;
-    decimals: string;
-}
-
-const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
-    const { _contract, _setIsFetched } = useContractContext();
+const TransferFromPreview = () => {
+    const { contractAddress, fctBalance, cw20Balance, transferFromList, setTransferFromList, tokenInfo} = useExecuteStore.getState();
 
     const modal = useModalStore();
-
-    const transferList = useExecuteStore((state) => state.transferList);
-    const setTransferList = useExecuteStore((state) => state.setTransferList);
 
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const totalTransferAmount = useMemo(() => {
-        const amounts = transferList.map((info) => getUTokenStrFromTokenStr(info.toAmount, decimals));
+        const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
 
         let totalAmount = '0';
         for (const amount of amounts) {
@@ -183,15 +173,15 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
         }
 
         return totalAmount;
-    }, [transferList]);
+    }, [transferFromList]);
 
     const onClickTransfer = () => {
         const convertTransferList = [];
         let totalAmount = "0";
-        let feeAmount = transferList.length * 15000;
+        let feeAmount = transferFromList.length * 15000;
 
-        for (const transfer of transferList) {
-            const amount = getUTokenAmountFromToken(transfer.toAmount, decimals);
+        for (const transfer of transferFromList) {
+            const amount = getUTokenAmountFromToken(transfer.toAmount, tokenInfo.decimals.toString());
             convertTransferList.push({
                 owner: transfer.fromAddress,
                 amount: amount,
@@ -205,9 +195,9 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
                 title: "Transfer From",
             },
             content: {
-                symbol: tokenSymbol,
-                decimals: decimals,
-                balance: addressAmount,
+                symbol: tokenInfo.symbol,
+                decimals: tokenInfo.decimals.toString(),
+                balance: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
@@ -222,30 +212,14 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
                     }
                 ]
             },
-            contract: _contract,
+            contract: contractAddress,
             msg: convertTransferList
         };
 
-        console.log(convertTransferList);
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/transferFrom" id={id} params={params} />
+            _component: ({ id }) => <QRCodeModal module="/cw20/transferFrom" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
         });
-
-        // ModalActions.handleData({
-        //     module: '/cw20/transferFrom',
-        //     params: {
-        //         contract: _contract,
-        //         msg: convertTransferList
-        //     }
-        // });
-        // ModalActions.handleQrConfirm(true);
-        // ModalActions.handleSetCallback({
-        //     callback: () => {
-        //         setTransferList([]);
-        //         _setIsFetched(true);
-        //     }
-        // });
     };
 
     return (
@@ -258,14 +232,14 @@ const TransferFromPreview = ({ addressAmount, tokenSymbol, decimals }: IProps) =
                     </ItemLabelWrap>
                     <ItemAmountWrap>
                         <ItemAmountTypo>{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenSymbol}</ItemAmountSymbolTypo>
+                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
                     <AccordionBox>
-                        {transferList.map((info) => (
-                            <FromToAddressLine from={info.fromAddress} to={info.toAddress} amount={info.toAmount} decimal={decimals} />
+                        {transferFromList.map((info) => (
+                            <FromToAddressLine from={info.fromAddress} to={info.toAddress} amount={info.toAmount} decimal={tokenInfo.decimals.toString()} />
                         ))}
                     </AccordionBox>
                 )}

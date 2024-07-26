@@ -39,11 +39,6 @@ const SummerySymbolTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-interface IProps {
-    decimals: string;
-    tokenSymbol: string;
-}
-
 export interface ITransferFrom {
     fromAddress: string;
     fromAmount: string;
@@ -53,15 +48,14 @@ export interface ITransferFrom {
     id: string;
 }
 
-const TransferFrom = ({ decimals, tokenSymbol }: IProps) => {
-    const transferList = useExecuteStore((state) => state.transferList);
-    const setTransferList = useExecuteStore((state) => state.setTransferList);
+const TransferFrom = () => {
+    const { contractAddress, transferFromList, setTransferFromList, tokenInfo } = useExecuteStore.getState();
 
     const totalTransferAmount = useMemo(() => {
-        const amounts = transferList.map((info) => getUTokenStrFromTokenStr(info.toAmount, decimals));
+        const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
 
         return addDecimals(...amounts);
-    }, [transferList]);
+    }, [transferFromList]);
 
     useEffect(() => {
         return () => useExecuteStore.getState().clearForm();
@@ -78,14 +72,15 @@ const TransferFrom = ({ decimals, tokenSymbol }: IProps) => {
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Transfer Amount :</SummeryLabelTypo>
                         <SummeryAmountTypo>{totalTransferAmount}</SummeryAmountTypo>
-                        <SummerySymbolTypo>{tokenSymbol}</SummerySymbolTypo>
+                        <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                 </SummeryCard>
             </HeaderWrap>
             <TransferFromWalletList
-                decimals={decimals}
-                transferList={transferList}
-                setTransferList={(newList) => setTransferList(newList)}
+                contractAddress={contractAddress}
+                decimals={tokenInfo.decimals.toString()}
+                transferList={transferFromList}
+                setTransferList={(newList) => setTransferFromList(newList)}
                 addressTitle={'Owner Address'}
                 addressPlaceholder={'Input Wallet Address'}
                 amountTitle={'Amount'}

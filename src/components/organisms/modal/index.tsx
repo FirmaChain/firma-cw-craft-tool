@@ -1,7 +1,8 @@
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import QRCodeModal from './cw20/qrcodeModal';
-import { ItemAmountSymbol, ItemAmountValue, ItemLabel, ItemValue, ItemValueWrap, ItemWalletIcon, ItemWrap } from './style';
-import { IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { ItemAmountSymbol, ItemAmountValue, ItemHashValue, ItemLabel, ItemValue, ItemValueWrap, ItemIcon, ItemWrap } from './style';
+import { IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { shortenAddress } from '@/utils/address';
 
 interface IAmountProps {
     label: string;
@@ -33,7 +34,7 @@ export const WalletItem = ({ label, count }: IWalletProps) => {
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
                 <ItemValue>{count}</ItemValue>
-                <ItemWalletIcon src={IC_WALLET}/>
+                <ItemIcon src={IC_WALLET} alt={"Modal Wallet Icon"}/>
             </ItemValueWrap>
         </ItemWrap>
     )
@@ -67,6 +68,23 @@ export const BalanceItem = () => {
 
 };
 
+interface IProps {
+    label: string;
+    hash: string;
+    onClickHash: (hash: string) => void;
+}
+
+export const TransactionItem = ({ label, hash, onClickHash }: IProps                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap onClick={() => onClickHash(hash)}>
+                <ItemHashValue>{shortenAddress(hash, 12, 12)}</ItemHashValue>
+                <ItemIcon src={IC_NAVIGATION} alt={"Modal Transaction Hash Icon"}/>
+            </ItemValueWrap>
+        </ItemWrap>
+    )
+}
 export {
     QRCodeModal
 }

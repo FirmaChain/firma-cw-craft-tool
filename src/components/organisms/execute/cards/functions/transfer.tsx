@@ -3,10 +3,10 @@ import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import { useContractContext } from '../../context/contractContext';
 import WalletList from '@/components/atoms/walletList';
 import { IWallet } from '@/interfaces/wallet';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import useExecuteStore from '../../hooks/useExecuteStore';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -54,28 +54,22 @@ const MyWalletAmountTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-interface IProps {
-    addressAmount: string;
-    tokenSymbol: string;
-    decimals: string;
-}
-
-const Transfer = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
-    const { _setWalletList } = useContractContext();
+const Transfer = () => {
+    const { tokenInfo, cw20Balance, setTransferList } = useExecuteStore.getState();
 
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
     const totalTransferAmount = useMemo(() => {
         let addAmount = '0';
         for (const wallet of addWalletList) {
-            addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, decimals), addAmount);
+            addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString()), addAmount);
         }
         return addAmount;
     }, [addWalletList]);
 
     const handleWalletList = (value: IWallet[]) => {
         setAddWalletList(value);
-        _setWalletList(value);
+        setTransferList(value);
     };
 
     return (
@@ -89,20 +83,20 @@ const Transfer = ({ addressAmount, tokenSymbol, decimals }: IProps) => {
                     <ItemWrap>
                         <TotalTransferLabelTypo>Total Transfer Amount :</TotalTransferLabelTypo>
                         <TotalTransferAmountTypo>
-                            {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, decimals))}
+                            {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
                         </TotalTransferAmountTypo>
-                        <TotalTransferAmountTypo>{tokenSymbol}</TotalTransferAmountTypo>
+                        <TotalTransferAmountTypo>{tokenInfo.symbol}</TotalTransferAmountTypo>
                     </ItemWrap>
                     <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
                     <ItemWrap>
                         <MyWalletLabelTypo>My Wallet Balance :</MyWalletLabelTypo>
-                        <MyWalletAmountTypo>{formatWithCommas(getTokenAmountFromUToken(addressAmount, decimals))}</MyWalletAmountTypo>
-                        <MyWalletAmountTypo>{tokenSymbol}</MyWalletAmountTypo>
+                        <MyWalletAmountTypo>{formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}</MyWalletAmountTypo>
+                        <MyWalletAmountTypo>{tokenInfo.symbol}</MyWalletAmountTypo>
                     </ItemWrap>
                 </SummeryCard>
             </HeaderWrap>
             <WalletList
-                decimals={decimals}
+                decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={'Recipient Address'}
                 addressPlaceholder={'Input Wallet Address'}

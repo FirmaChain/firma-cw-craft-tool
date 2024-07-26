@@ -1,13 +1,16 @@
+import { Fragment, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from "./styles";
 import LabelInput2 from "@/components/atoms/input/labelInput2";
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { BASIC_LABEL } from "@/constants/cw20Types";
-import { useContractContext } from "../../context/contractContext";
 import { FirmaUtil } from "@firmachain/firma-js";
 import useFormStore from "@/store/formStore";
 import React from "react";
+import useExecuteStore from "../../hooks/useExecuteStore";
+import { useSelector } from "react-redux";
+import { rootState } from "@/redux/reducers";
+import { CRAFT_CONFIGS } from "@/config";
+import { NETWORKS } from "@/constants/common";
 
 const ContentWrap = styled.div`
     display: flex;
@@ -15,49 +18,35 @@ const ContentWrap = styled.div`
     gap: 24px;
 `;
 
-interface IProps {
-    label: string;
-    marketingDescription: string;
-    marketingAddress: string;
-    marketingProject: string;
-};
+const UpdateMarketing = () => {
+    const { network } = useSelector((state: rootState) => state.global);
+    const { address } = useSelector((state: rootState) => state.wallet);
 
-const UpdateMarketing = ({ label, marketingDescription, marketingAddress, marketingProject }: IProps) => {
-    const { _setMarketingDescription, _setMarketingAddress, _setMarketingProject } = useContractContext();
+    const {
+        contractInfo,
+        marketingInfo,
+
+        marketingDescription,
+        marketingAddress,
+        marketingProject,
+        setMarketingDescription,
+        setMarketingAddress,
+        setMarketingProject
+    } = useExecuteStore.getState();
     
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
 
-    const [inputDescription, setInputDescription] = useState<string>(marketingDescription);
-    const [inputAddress, setInputAddress] = useState<string>(marketingAddress);
-    const [inputProject, setInputProject] = useState<string>(marketingProject);
-
-    useEffect(() => {
-        setInputDescription(marketingDescription);
-        setInputAddress(marketingAddress);
-        setInputProject(marketingProject);
-        
-        _setMarketingDescription(marketingDescription);
-        _setMarketingAddress(marketingAddress);
-        _setMarketingProject(marketingProject);
-    }, [marketingDescription, marketingAddress, marketingProject]);
-
-    const handleDescription = (value: string) => {
-        setInputDescription(value);
-        _setMarketingDescription(value);
-    };
+    const isBasic = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return contractInfo.contract_info.code_id === config.CW20.BASIC_CODE_ID;
+    }, [contractInfo, network]);
 
     const handleAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
 
-        setInputAddress(value);
-        _setMarketingAddress(value);
-    };
-
-    const handleProject = (value: string) => {
-        setInputProject(value);
-        _setMarketingProject(value);
+        setMarketingAddress(value);
     };
 
     return (
@@ -74,20 +63,20 @@ const UpdateMarketing = ({ label, marketingDescription, marketingAddress, market
                         label: "Marketing Description (Token Description)"
                     }}
                     inputProps={{
-                        value: inputDescription,
+                        value: marketingDescription,
                         formId: "input description",
                         placeHolder: "This is token Description",
-                        onChange: handleDescription
+                        onChange: setMarketingDescription
                     }}
                 />
-                {label !== BASIC_LABEL && (
+                {!isBasic && address === marketingAddress && (
                     <Fragment>
                         <LabelInput2
                             labelProps={{
                                 label: "Marketing Address (Optional)"
                             }}
                             inputProps={{
-                                value: inputAddress,
+                                value: marketingAddress,
                                 formId: "input address",
                                 placeHolder: "Input Wallet Address",
                                 onChange: handleAddress
@@ -98,10 +87,10 @@ const UpdateMarketing = ({ label, marketingDescription, marketingAddress, market
                                 label: "Marketing Project (Optional)"
                             }}
                             inputProps={{
-                                value: inputProject,
+                                value: marketingProject,
                                 formId: "input project",
                                 placeHolder: "ex) http://firmachain.org",
-                                onChange: handleProject
+                                onChange: setMarketingProject
                             }}
                         />
                     </Fragment>
