@@ -21,7 +21,7 @@ export const SwitchButton = styled('div').withConfig({ shouldForwardProp: should
     $position: 'left' | 'right';
 }>`
     // color: ${({ $isActive: isActive, $position: position }) => (isActive ? (position === 'left' ? '#2C2C2C' : '#00BF7A') : '#E6E6E6')};
-    font-weight: ${({ $isActive: isActive }) => (isActive ? 600 : 400)};
+    // font-weight: ${({ $isActive: isActive }) => (isActive ? 600 : 400)};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -29,6 +29,8 @@ export const SwitchButton = styled('div').withConfig({ shouldForwardProp: should
     width: 50%;
     cursor: pointer;
     z-index: 1;
+
+    position: relative;
 `;
 
 export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp })<{ $position: 'left' | 'right' }>`
@@ -55,11 +57,21 @@ export const SwitchLabel = styled.div`
     transition: all 0.2s;
 `;
 
-export const BasicTypo = styled(SwitchLabel)<{ $active?: boolean }>`
+export const BasicTypo = styled.div<{ $active?: boolean }>`
     color: ${({ $active }) => ($active ? 'var(--Gray-400, #2C2C2C)' : 'var(--Gray-700, #807e7e)')};
+
+    font-size: 16px;
+    font-style: normal;
+    line-height: 22px;
+    font-weight: ${({ $active }) => ($active ? '600' : '400')};
 `;
 
-export const AdvancedTypo = styled(SwitchLabel)<{ $active?: boolean }>`
+export const AdvancedTypo = styled.div<{ $active?: boolean }>`
+    font-size: 16px;
+    font-style: normal;
+    line-height: 22px;
+    font-weight: ${({ $active }) => ($active ? '600' : '400')};
+
     ${({ $active }) =>
         $active
             ? `background: linear-gradient(90deg, #00BF7A 0%, #0E9AB0 100%);

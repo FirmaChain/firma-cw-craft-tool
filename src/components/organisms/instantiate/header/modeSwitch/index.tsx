@@ -15,14 +15,27 @@ const ModeSwitch = ({ leftMenu, rightMenu, onChangeMenu }: IProps) => {
         onChangeMenu(value);
     };
 
+    const isLeft = selectMenu === leftMenu;
+    const isRight = selectMenu === rightMenu;
+
     return (
         <SwitchContainer>
-            <ActiveIndicator $position={selectMenu === leftMenu ? 'left' : 'right'} />
-            <SwitchButton $isActive={selectMenu === leftMenu} $position="left" onClick={() => handleChangeMode(leftMenu)}>
-                <BasicTypo $active={selectMenu === leftMenu}>BASIC</BasicTypo>
+            <ActiveIndicator $position={isLeft ? 'left' : 'right'} />
+            <SwitchButton $isActive={isLeft} $position="left" onClick={() => handleChangeMode(leftMenu)}>
+                <BasicTypo style={{ zIndex: 1, transition: 'opacity 0.3s', opacity: isLeft ? 0 : 1 }} $active={false}>
+                    BASIC
+                </BasicTypo>
+                <BasicTypo style={{ position: 'absolute', transition: 'opacity 0.1s', opacity: isLeft ? 1 : 0 }} $active={true}>
+                    BASIC
+                </BasicTypo>
             </SwitchButton>
-            <SwitchButton $isActive={selectMenu === rightMenu} $position="right" onClick={() => handleChangeMode(rightMenu)}>
-                <AdvancedTypo $active={selectMenu === rightMenu}>ADVANCED</AdvancedTypo>
+            <SwitchButton $isActive={isRight} $position="right" onClick={() => handleChangeMode(rightMenu)}>
+                <AdvancedTypo style={{ zIndex: 1, transition: 'opacity 0.3s', opacity: isRight ? 0 : 1 }} $active={false}>
+                    ADVANCED
+                </AdvancedTypo>
+                <AdvancedTypo style={{ position: 'absolute', transition: 'opacity 0.1s', opacity: isRight ? 1 : 0 }} $active={true}>
+                    ADVANCED
+                </AdvancedTypo>
             </SwitchButton>
         </SwitchContainer>
     );
