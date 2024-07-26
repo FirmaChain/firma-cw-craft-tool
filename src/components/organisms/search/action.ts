@@ -7,22 +7,40 @@ import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
+import { useEffect } from 'react';
+import { GlobalActions } from '@/redux/actions';
 
 const useSearchActions = () => {
     const { firmaSDK, getCw20Balance } = useExecuteHook();
     const { client } = useApollo();
     const userAddress = useSelector((state: rootState) => state.wallet.address);
     const { enqueueSnackbar } = useSnackbar();
+    const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
+
+    useEffect(() => {
+        //? update balance info when wallet connected, or changed
+        const contractAddress = useSearchStore.getState().contractInfo?.address;
+        if (contractAddress) updateMyBalance(contractAddress);
+    }, [userAddress]);
+
+    const updateMyBalance = async (contractAddress: string) => {
+        const userBalance = await firmaSDK.Cw20.getBalance(contractAddress, userAddress);
+        useSearchStore.getState().setUserBalance(userBalance);
+    };
 
     const searchTokenInfo = async (keyword: string) => {
+        if (globalLoading) return null;
+
         useSearchStore.getState().clearSearchInfo();
+        GlobalActions.handleGlobalLoading(true);
 
         try {
+            if (userAddress) updateMyBalance(keyword);
+
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
             const tokenInfo = await firmaSDK.Cw20.getTokenInfo(keyword);
             const minterInfo = await firmaSDK.Cw20.getMinter(keyword);
             const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(keyword);
-            const userBalance = await firmaSDK.Cw20.getBalance(keyword, userAddress);
             const contractHistory = await firmaSDK.CosmWasm.getContractHistory(keyword);
             const allAccounts = await getAllAccounts(keyword);
             const allTransactions = await getAllTransactinos(keyword);
@@ -31,7 +49,6 @@ const useSearchActions = () => {
             useSearchStore.getState().setTokenInfo(tokenInfo);
             useSearchStore.getState().setMinterInfo(minterInfo);
             useSearchStore.getState().setMarketingInfo(marketingInfo);
-            useSearchStore.getState().setUserBalance(userBalance);
             useSearchStore.getState().setContractHistory(contractHistory);
             useSearchStore.getState().setAllAccounts(allAccounts);
             useSearchStore.getState().setAllTransactions(allTransactions);
@@ -39,6 +56,8 @@ const useSearchActions = () => {
             console.log('error', error);
             enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
             useSearchStore.getState().clearSearchInfo();
+        } finally {
+            GlobalActions.handleGlobalLoading(false);
         }
     };
 
@@ -80,7 +99,7 @@ const useSearchActions = () => {
         return result;
     };
 
-    return { searchTokenInfo };
+    return { searchTokenInfo, updateMyBalance };
 };
 
 export default useSearchActions;

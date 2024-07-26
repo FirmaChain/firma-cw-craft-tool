@@ -82,11 +82,20 @@ export const SpecificValueTypo = styled.div<{ $disabled?: boolean }>`
     font-weight: 500;
     line-height: 22px;
 
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    word-break: break-word;
+    // display: -webkit-box;
+    // overflow: hidden;
+    // -webkit-line-clamp: 1;
+    // -webkit-box-orient: vertical;
+    // word-break: break-word;
+`;
+
+export const LessTypo = styled.span`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
 `;
 
 export const SpecificMetadataWrapper = styled.div`

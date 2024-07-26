@@ -1,18 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import SortSelect from './sortSelect';
 import { ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
 import ConnectWallet from './connectWallet';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useMyToken from '@/hooks/useMyToken';
-import NoToken from './noToken';
+
 import MyMintedTokenList from './mintedTokenList';
+import { GlobalActions } from '@/redux/actions';
+// import NetworkSelect from '@/components/atoms/select/networkSelect';
+
+// const menuItems = [
+//     { value: '0', label: 'Newest' },
+//     { value: '1', label: 'Oldest' },
+//     { value: '2', label: 'Most Popular' },
+//     { value: '4', label: 'Alphabetical' }
+// ];
 
 const MyTokenContent = () => {
-    const { isInit } = useSelector((state: rootState) => state.wallet);
+    const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
-    const [selectSort, setSelectSort] = useState<number>(0);
-    const [contractList, setContractList] = useState<string[]>([]);
+    // const [selectSort, setSelectSort] = useState<number>(0);
+    const [contractList, setContractList] = useState<null | string[]>(null);
 
     const { getCW20ContractList } = useMyToken();
 
@@ -23,6 +31,7 @@ const MyTokenContent = () => {
 
     useEffect(() => {
         if (isInit) {
+            GlobalActions.handleGlobalLoading(true);
             fetchTokenList();
         }
     }, [isInit, fetchTokenList]);
@@ -30,15 +39,19 @@ const MyTokenContent = () => {
     return (
         <ContentWrapper>
             <ContentControlWrapper>
-                <SortSelect onChange={setSelectSort} />
-                {contractList.length > 0 && (
-                    <ContentInfoWrapper>
-                        <ContractCountTypo>{contractList.length}</ContractCountTypo>
-                        <TokenTypo>Tokens</TokenTypo>
-                    </ContentInfoWrapper>
-                )}
+                {/* <NetworkSelect
+                    value={selectSort.toString()}
+                    onChange={(v) => setSelectSort(Number(v))}
+                    options={menuItems}
+                    minWidth="182px"
+                /> */}
+
+                <ContentInfoWrapper style={{ opacity: contractList !== null && contractList?.length > 0 ? 1 : 0 }}>
+                    <ContractCountTypo>{contractList?.length}</ContractCountTypo>
+                    <TokenTypo>Tokens</TokenTypo>
+                </ContentInfoWrapper>
             </ContentControlWrapper>
-            {!isInit ? <ConnectWallet /> : contractList.length === 0 ? <NoToken /> : <MyMintedTokenList contractList={contractList} />}
+            {!isInit ? <ConnectWallet /> : <MyMintedTokenList contractList={contractList} />}
         </ContentWrapper>
     );
 };

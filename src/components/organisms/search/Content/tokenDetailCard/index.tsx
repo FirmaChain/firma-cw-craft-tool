@@ -4,12 +4,12 @@ import useSearchStore from '../../searchStore';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import { IC_NAVIGATION } from '@/components/atoms/icons/pngIcons';
+import { IC_NAVIGATION, IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import JsonViewer from '@/components/atoms/viewer/jsonViewer';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SearchInput2 from '@/components/atoms/input/searchInput';
 import Icons from '@/components/atoms/icons';
 import StyledTable, { IColumn } from '@/components/atoms/table';
@@ -17,12 +17,18 @@ import Cell from '@/components/atoms/table/cells';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import commaNumber from 'comma-number';
-import { formatDistanceToNow, parseISO } from 'date-fns';
 import { NETWORKS } from '@/constants/common';
+import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/preview/dashboard/tokenInfo/style';
+import Skeleton from '@/components/atoms/skeleton';
+
+const isFalsy = (value?: string) => {
+    return value === '' || value.toLowerCase() === 'null' || !Boolean(value);
+};
 
 const TokenInfo = () => {
     const network = useSelector((v: rootState) => v.global.network);
-    
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
+
     const contractAddress = useSearchStore((state) => state.contractInfo?.address);
     const minterAddress = useSearchStore((state) => state.minterInfo?.minter);
     const tokenName = useSearchStore((state) => state.tokenInfo?.name);
@@ -66,7 +72,7 @@ const TokenInfo = () => {
                         <div className="white-typo">{decimals}</div>
                     </div>
                 </div>
-                {!isBasic &&
+                {!isBasic && (
                     <div className="box-row" style={{ height: '28px' }}>
                         <div className="box-title">Label</div>
                         {label && (
@@ -77,7 +83,7 @@ const TokenInfo = () => {
                             </div>
                         )}
                     </div>
-                }
+                )}
                 <div className="box-row">
                     <div className="box-title">Total Supply</div>
                     {totalSupply && (
@@ -122,21 +128,27 @@ const TokenInfo = () => {
                         </div>
                     </div>
                 )}
-                <div className="box-row">
-                    <div className="box-title">My Balance</div>
-                    <div className="box-value">
-                        <div
-                            className="white-typo"
-                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(userBalance, String(decimals)))}
-                            data-tooltip-id={TOOLTIP_ID.COMMON}
-                            data-tooltip-wrapper="span"
-                            data-tooltip-place="bottom"
-                        >
-                            {commaNumber(parseAmountWithDecimal2(userBalance, String(decimals), true))}
-                        </div>
-                        <div className="gray-typo">{symbol}</div>
+                {userAddress && (
+                    <div className="box-row">
+                        <div className="box-title">My Balance</div>
+                        {userBalance ? (
+                            <div className="box-value">
+                                <div
+                                    className="white-typo"
+                                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(userBalance, String(decimals)))}
+                                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                                    data-tooltip-wrapper="span"
+                                    data-tooltip-place="bottom"
+                                >
+                                    {commaNumber(parseAmountWithDecimal2(userBalance, String(decimals), true))}
+                                </div>
+                                <div className="gray-typo">{symbol}</div>
+                            </div>
+                        ) : (
+                            <Skeleton width="100px" height="22px" />
+                        )}
                     </div>
-                </div>
+                )}
             </div>
         </SectionContainer>
     );
@@ -162,10 +174,24 @@ const MoreInfo = () => {
         window.open(`${blockExplorerLink}/accounts/${contractAddress}`);
     };
 
-    //? Optional values (hide unfilled values of not)
-    // const HIDE_DESC = !marketingDesc || marketingDesc.toLowerCase() === 'null';
-    // const HIDE_ADDR = !marketingAddr || marketingAddr.toLowerCase() === 'null';
-    // const HIDE_PROJ = !marketingProj || marketingDesc.toLowerCase() === 'null';
+    const descRef = useRef<HTMLDivElement>();
+    const [needClamp, setNeedClamp] = useState(false);
+    const [isClamped, setIsClamped] = useState(true);
+
+    const openClamp = () => setIsClamped(false);
+    const closeClamp = () => setIsClamped(true);
+
+    useEffect(() => {
+        const height = descRef.current?.clientHeight;
+
+        if (height > 66) {
+            if (!needClamp) setNeedClamp(true);
+        } else {
+            //? height < 66px
+            if (needClamp) setNeedClamp(false);
+            setIsClamped(true);
+        }
+    }, [marketingDesc]);
 
     return (
         <SectionContainer>
@@ -178,10 +204,87 @@ const MoreInfo = () => {
                         <TokenLogo src={tokenLogo} size="90px" />
                     </div>
                 </div>
-                <div className="box-row">
-                    {isBasic ? <div className="box-title">Token Description</div> : <div className="box-title">Marketing Description</div>}
+                <div className="box-row" style={{ alignItems: 'flex-start' }}>
+                    <div className="box-title">{isBasic ? 'Token' : 'Marketing'} Description</div>
                     <div className="box-value">
-                        <div className="white-typo">{marketingDesc}</div>
+                        {isFalsy(marketingDesc) ? (
+                            <div className="disabled-typo">{isBasic ? 'Token' : 'Marketing'} Description</div>
+                        ) : (
+                            <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
+                                {/* //? hidden description typo for more/less button */}
+                                <div
+                                    className="whitle-typo"
+                                    ref={descRef}
+                                    style={{
+                                        zIndex: -1,
+                                        position: 'absolute',
+                                        opacity: 0,
+                                        maxHeight: '70px',
+                                        overflow: 'hidden',
+                                        wordBreak: 'break-all'
+                                    }}
+                                >
+                                    {marketingDesc === '' ? 'Description' : marketingDesc}
+                                </div>
+                                <div
+                                    style={{
+                                        maxHeight: isClamped ? '66px' : 'unset',
+                                        overflow: isClamped ? 'hidden' : 'visible'
+                                    }}
+                                >
+                                    <div className="white-typo">
+                                        <span>{marketingDesc || 'Description'} </span>
+
+                                        {needClamp && !isClamped && (
+                                            <span
+                                                style={{
+                                                    background: 'var(--200, #1e1e1e)',
+                                                    padding: 0,
+                                                    cursor: 'pointer',
+                                                    whiteSpace: 'pre'
+                                                }}
+                                                onClick={closeClamp}
+                                            >
+                                                <TokenDescriptionClampTypo>less</TokenDescriptionClampTypo>
+                                                <img
+                                                    src={IC_ROUND_ARROW_UP}
+                                                    alt="arrow"
+                                                    style={{ width: '16px', height: '16px', transform: 'translateY(2px)' }}
+                                                />
+                                            </span>
+                                        )}
+                                    </div>
+                                    {needClamp && isClamped && (
+                                        <span
+                                            style={{
+                                                width: 'fit-content',
+                                                height: '20px',
+                                                position: 'absolute',
+                                                right: 0,
+                                                bottom: 0,
+                                                background: 'var(--200, #1e1e1e)',
+                                                padding: 0,
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                cursor: 'pointer'
+                                            }}
+                                            onClick={openClamp}
+                                        >
+                                            <TokenDescriptionClampTypo>
+                                                <span>... </span>more
+                                            </TokenDescriptionClampTypo>
+                                            <img
+                                                src={IC_ROUND_ARROW_UP}
+                                                alt="arrow"
+                                                style={{ width: '16px', height: '16px', transform: 'rotate(180deg)' }}
+                                            />
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                            // <div className="white-typo">{marketingDesc}</div>
+                        )}
                     </div>
                 </div>
                 {!isBasic && (
@@ -189,19 +292,30 @@ const MoreInfo = () => {
                         <div className="box-row">
                             <div className="box-title">Marketing Address</div>
                             <div className="box-value">
-                                <div className="white-typo">{marketingAddr}</div>
+                                {isFalsy(marketingAddr) ? (
+                                    <div className="disabled-typo">{isBasic ? 'Token' : 'Marketing'} Address</div>
+                                ) : (
+                                    <div className="white-typo">{marketingAddr}</div>
+                                )}
                             </div>
                         </div>
                         <div className="box-row">
                             <div className="box-title">Marketing Project</div>
                             <div className="box-value">
-                                <div className="white-typo">{marketingProj}</div>
+                                {isFalsy(marketingProj) ? (
+                                    <div className="disabled-typo">{isBasic ? 'Token' : 'Marketing'} Project</div>
+                                ) : (
+                                    <div className="white-typo">{marketingProj}</div>
+                                )}
                             </div>
                         </div>
                         <div className="box-row" style={{ alignItems: 'flex-start' }}>
                             <div className="box-title">Metadata</div>
                             <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                                <IconButton style={{ padding: 0, display: 'flex', alignItems: 'center', gap: '4px' }} onClick={goContractPage}>
+                                <IconButton
+                                    style={{ padding: 0, display: 'flex', alignItems: 'center', gap: '4px' }}
+                                    onClick={goContractPage}
+                                >
                                     <span className="white-typo" style={{ color: 'var(--Green-700, #02A288)' }}>
                                         View Metadata
                                     </span>
@@ -220,6 +334,7 @@ const MoreInfo = () => {
 const AllAccounts = () => {
     const allAccounts = useSearchStore((v) => v.allAccounts);
     const decimals = useSearchStore((v) => v.tokenInfo?.decimals) || '0';
+    const symbol = useSearchStore((v) => v.tokenInfo?.symbol);
 
     const [keyword, setKeyword] = useState<string>('');
 
@@ -233,17 +348,7 @@ const AllAccounts = () => {
         {
             id: 'balance',
             label: 'Balance',
-            renderCell: (id, row) => (
-                <Cell.Default
-                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(row[id], String(decimals)))}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
-                >
-                    {commaNumber(parseAmountWithDecimal2(row[id], String(decimals), true))}
-                </Cell.Default>
-            ),
-
+            renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
             width: '40%'
         }
     ];
@@ -286,9 +391,7 @@ const Transactions = () => {
         {
             id: 'timestamp',
             label: 'Time',
-            renderCell: (id, row) => (
-                <Cell.Default>{formatDistanceToNow(parseISO(row[id]), { addSuffix: true }).replace('about ', '')}</Cell.Default>
-            ),
+            renderCell: (id, row) => <Cell.TimeAgo timestamp={row[id]} />,
             minWidth: '120px'
         }
     ];
@@ -300,7 +403,7 @@ const Transactions = () => {
                 <span className="section-title-desc">The lastest 15 records</span>
             </div>
 
-            <StyledTable columns={columns} rows={allTransactions} />
+            <StyledTable columns={columns} rows={allTransactions} rowsPerPage={15} disablePagination />
         </SectionContainer>
     );
 };

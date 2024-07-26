@@ -112,7 +112,7 @@ const Sidebar = () => {
                         <MenuListWrapper>
                             <MenuItem onClick={(e) => onClickMenu(e, '/instantiate')}>
                                 <Icons.PlusCircle
-                                    $selected={'/' + location.pathname.split('/')[1] === '/instantiate'}
+                                    fill={'/' + location.pathname.split('/')[1] === '/instantiate' ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
@@ -120,7 +120,7 @@ const Sidebar = () => {
                             </MenuItem>
                             <MenuItem onClick={(e) => onClickMenu(e, '/execute')}>
                                 <Icons.Setting
-                                    $isCheck={'/' + location.pathname.split('/')[1] === '/execute'}
+                                    fill={'/' + location.pathname.split('/')[1] === '/execute' ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
@@ -129,7 +129,8 @@ const Sidebar = () => {
                             <Divider $direction="horizontal" $color="var(--Gray-450, #313131)" />
                             <MenuItem onClick={(e) => onClickMenu(e, '/search')}>
                                 <Icons.Search
-                                    $isCheck={'/' + location.pathname.split('/')[1] === '/search'}
+                                    fill={'/' + location.pathname.split('/')[1] === '/search' ? '#e6e6e6' : '#807E7E'}
+                                    stroke={'/' + location.pathname.split('/')[1] === '/search' ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
@@ -137,7 +138,7 @@ const Sidebar = () => {
                             </MenuItem>
                             <MenuItem onClick={(e) => onClickMenu(e, '/mytoken')}>
                                 <Icons.Coins
-                                    $isCheck={'/' + location.pathname.split('/')[1] === '/mytoken'}
+                                    fill={'/' + location.pathname.split('/')[1] === '/mytoken' ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />

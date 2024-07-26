@@ -5,6 +5,7 @@ export const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
+    height: 100%;
 `;
 
 export const ContentControlWrapper = styled.div`

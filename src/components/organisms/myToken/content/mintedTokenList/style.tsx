@@ -3,9 +3,12 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
+    display: flex;
+    position: relative;
 `;
 
 export const ItemWrapper = styled(IconButton)`
@@ -130,7 +133,6 @@ export const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
 `;
 
 export const PaginationButton = styled(IconButton)`
@@ -149,6 +151,11 @@ export const CurrentPageNumber = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
-    margin-left: 12px;
-    margin-right: 12px;
+`;
+
+export const TokenCardBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
 `;

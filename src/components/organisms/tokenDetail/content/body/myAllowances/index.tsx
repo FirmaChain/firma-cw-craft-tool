@@ -12,15 +12,14 @@ import Icons from '@/components/atoms/icons';
 import SearchInput2 from '@/components/atoms/input/searchInput';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import commaNumber from 'comma-number';
-import { parseAmountWithDecimal2, parseExpires } from '@/utils/common';
+import { parseExpires } from '@/utils/common';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const MyAllowances = () => {
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
-    const allowances = useTokenDetailStore((state) => state.tokenDetail?.allAllowances) || [];
-    const spenders = useTokenDetailStore((state) => state.tokenDetail?.allSpenders) || [];
+    const allowances = useTokenDetailStore((state) => state.tokenDetail?.allAllowances);
+    const spenders = useTokenDetailStore((state) => state.tokenDetail?.allSpenders);
+    const symbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
 
     const [keyword, setKeyword] = useState<string>('');
 
@@ -48,16 +47,7 @@ const MyAllowances = () => {
         {
             id: 'Amount',
             label: 'Amount',
-            renderCell: (id, row) => (
-                <Cell.Default
-                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(row['Amount'], decimals))}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
-                >
-                    {commaNumber(parseAmountWithDecimal2(row['Amount'], decimals, true))}
-                </Cell.Default>
-            ),
+            renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
             width: '20%'
         },
         {
@@ -86,13 +76,13 @@ const MyAllowances = () => {
             <AllowanceWrapper>
                 <AllowanceContentWrapper>
                     <ItemLabel>Allowances to others</ItemLabel>
-                    <StyledTable columns={columns} rows={allowancesList} />
+                    <StyledTable columns={columns} rows={allowancesList || []} isLoading={!allowancesList} />
                 </AllowanceContentWrapper>
             </AllowanceWrapper>
             <AllowanceWrapper>
                 <AllowanceContentWrapper>
                     <ItemLabel>Received Allowances</ItemLabel>
-                    <StyledTable columns={columns} rows={receiverList} />
+                    <StyledTable columns={columns} rows={receiverList || []} isLoading={!receiverList} />
                 </AllowanceContentWrapper>
             </AllowanceWrapper>
         </AllowanceCard>

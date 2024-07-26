@@ -113,6 +113,17 @@ export const SectionContainer = styled.div`
         font-style: normal;
         font-weight: 500;
         line-height: 22px; /* 137.5% */
+
+        word-break: break-all;
+    }
+
+    .disabled-typo {
+        color: var(--Gray-500, #383838);
+        font-family: 'General Sans Variable';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 22px;
     }
 
     .label {
@@ -237,4 +248,15 @@ export const SearchButton = styled(IconButton)`
         font-weight: 600;
         line-height: 20px;
     }
+`;
+
+export const TokenDescriptionClampTypo = styled.span`
+    color: var(--Gray-750, #dcdcdc);
+
+    /* Body/Body2 - Semibd */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
 `;

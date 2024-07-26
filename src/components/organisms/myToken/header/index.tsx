@@ -14,7 +14,7 @@ const Header = () => {
     return (
         <HeaderWrapper>
             <HeaderTitle>My Minted Tokens</HeaderTitle>
-            <SearchInput2
+            {/* <SearchInput2
                 placeHolder={'Search Token Name, Token Symbols'}
                 value={searchValue}
                 onChange={onChangeSearchValue}
@@ -22,7 +22,7 @@ const Header = () => {
                     end: <Icons.Search width={'16px'} height={'16px'} />
                 }}
                 maxWidth="352px"
-            />
+            /> */}
         </HeaderWrapper>
     );
 };

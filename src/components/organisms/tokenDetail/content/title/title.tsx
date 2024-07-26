@@ -17,12 +17,13 @@ import {
 } from './style';
 import Icons from '@/components/atoms/icons';
 import { useNavigate } from 'react-router-dom';
-import { IC_APPROVED } from '@/components/atoms/icons/pngIcons';
+// import { IC_APPROVED } from '@/components/atoms/icons/pngIcons';
 import commaNumber from 'comma-number';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Divider from '@/components/atoms/divider';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import Skeleton from '@/components/atoms/skeleton';
 
 const Title = () => {
     const tokenUrl = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl);
@@ -30,22 +31,29 @@ const Title = () => {
     const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName);
     const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply);
     const tokenDecimal = useTokenDetailStore((state) => state.tokenDetail?.decimals);
+    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
 
     const navigatge = useNavigate();
+    const [imgLoading, setImgLoading] = useState(true);
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
     useEffect(() => {
+        setImgLoading(true);
+
         if (tokenUrl) {
             const img = new Image();
             img.src = tokenUrl;
             img.onload = () => {
                 setValidTokenLogoUrl(tokenUrl);
+                setImgLoading(false);
             };
             img.onerror = () => {
                 setValidTokenLogoUrl('');
+                setImgLoading(false);
             };
         } else {
             setValidTokenLogoUrl('');
+            setImgLoading(false);
         }
     }, [tokenUrl]);
 
@@ -57,7 +65,9 @@ const Title = () => {
         <TitleContainer>
             <TitleWrapper>
                 <TitleLogoImage>
-                    {validTokenLogoUrl === '' ? (
+                    {imgLoading ? (
+                        <Skeleton width="72px" height="72px" borderRadius="50%" />
+                    ) : validTokenLogoUrl === '' ? (
                         <IconBackground>
                             <Icons.Picture width={'34px'} height={'34px'} />
                         </IconBackground>
@@ -72,14 +82,14 @@ const Title = () => {
                 <TokenInfoWrapper>
                     <TokenInfo style={{ height: '24px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-                            <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo>
+                            {tokenSymbol ? <TokenSymbolTypo>{tokenSymbol}</TokenSymbolTypo> : <Skeleton />}
 
-                            <img src={IC_APPROVED} alt="approved" style={{ width: '24px' }} />
+                            {/* <img src={IC_APPROVED} alt="approved" style={{ width: '24px' }} /> */}
                         </div>
 
                         <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />
 
-                        <TokenNameTypo>{tokenName}</TokenNameTypo>
+                        {tokenName ? <TokenNameTypo>{tokenName}</TokenNameTypo> : <Skeleton width="50px" />}
                     </TokenInfo>
 
                     <div style={{ padding: '12px 0 8px' }}>
@@ -89,7 +99,7 @@ const Title = () => {
                     <TotalSupplyWrapper style={{ height: '22px' }}>
                         <TotalSupplyTypo>Total Supply : </TotalSupplyTypo>
 
-                        {tokenSymbol && (
+                        {tokenSymbol ? (
                             <TotalSupplySymbolTypo
                                 data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, tokenDecimal))}
                                 data-tooltip-id={TOOLTIP_ID.COMMON}
@@ -100,11 +110,13 @@ const Title = () => {
 
                                 {tokenSymbol}
                             </TotalSupplySymbolTypo>
+                        ) : (
+                            <Skeleton width="200px" height="22px" />
                         )}
                     </TotalSupplyWrapper>
                 </TokenInfoWrapper>
             </TitleWrapper>
-            <GoToExecuteButton onClick={onClickExecute}>
+            <GoToExecuteButton disabled={!contractAddress} onClick={onClickExecute}>
                 <GoToButtonTypo>Go to excute</GoToButtonTypo>
                 <GoToButtonTypo>→</GoToButtonTypo>
             </GoToExecuteButton>

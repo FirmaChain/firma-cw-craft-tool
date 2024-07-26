@@ -39,7 +39,6 @@ interface FormProps {
 const useSearchStore = create<FormProps>()(
     immer((set) => ({
         keyword: '',
-
         setKeyword: (data) => {
             set((state) => {
                 state.keyword = data;

@@ -6,6 +6,8 @@ import useSearchStore from '../searchStore';
 import React from 'react';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useSearchActions from '../action';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const EndAdornment = ({
     keyword,
@@ -32,7 +34,12 @@ const EndAdornment = ({
             )}
 
             <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
-                <Icons.Search width="28px" height="28px" fill={disableSearch ? '' : '#E6E6E6'} stroke={disableSearch ? '' : '#E6E6E6'} />
+                <Icons.Search
+                    width="28px"
+                    height="28px"
+                    fill={disableSearch ? '#807E7E' : '#E6E6E6'}
+                    stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
+                />
             </IconButton>
         </div>
     );
@@ -58,7 +65,7 @@ const Header = () => {
                                 keyword={keyword}
                                 clearKeyword={() => setKeyword('')}
                                 onClickSearch={() => searchTokenInfo(keyword)}
-                                disableSearch={!FirmaUtil.isValidAddress(keyword)}
+                                disableSearch={!FirmaUtil.isValidAddress(keyword) || keyword.length <= 44}
                             />
                         )
                     }}

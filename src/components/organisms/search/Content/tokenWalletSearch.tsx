@@ -11,6 +11,7 @@ import useSearchStore from '../searchStore';
 import Cell from '@/components/atoms/table/cells';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import Skeleton from '@/components/atoms/skeleton';
 
 const EndAdornment = ({
     keyword,
@@ -45,13 +46,17 @@ const TokenWalletSearch = () => {
     //? Search keyword (wallet address)
     const [keyword, setKeyword] = useState<string>('');
     //? Search result
-    const [balanceAmount, setBalanceAmount] = useState<string>('');
-    const [allAllowances, setAllAllowances] = useState<any[]>([]);
-    const [allReceives, setAllReceives] = useState<any[]>([]);
+    const [balanceAmount, setBalanceAmount] = useState<string | null>('');
+    const [allAllowances, setAllAllowances] = useState<any[] | null>([]);
+    const [allReceives, setAllReceives] = useState<any[] | null>([]);
 
     const { getWalletSearch } = useTokenDetail();
 
     const getAddressInfo = async () => {
+        setBalanceAmount(null);
+        setAllAllowances(null);
+        setAllReceives(null);
+
         const searchResult = await getWalletSearch(contractAddress, keyword);
 
         if (searchResult) {
@@ -75,17 +80,7 @@ const TokenWalletSearch = () => {
         {
             id: 'Amount',
             label: 'Amount',
-            renderCell: (id, row) => (
-                <Cell.Default
-                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(row[id], String(decimals)))}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
-                >
-                    {commaNumber(parseAmountWithDecimal2(row[id], String(decimals), true))}
-                </Cell.Default>
-            ),
-
+            renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
             width: '20%'
         },
         { id: 'Expires', label: 'Expires', renderCell: (id, row) => parseExpires(JSON.stringify(row['Expires'])), width: '25%' }
@@ -115,19 +110,23 @@ const TokenWalletSearch = () => {
                     <div className="section-title" style={{ minWidth: '224px' }}>
                         Balance
                     </div>
-                    {balanceAmount && (
-                        <WalletBalance
-                            className="balance-box"
-                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals)))}
-                            data-tooltip-id={TOOLTIP_ID.COMMON}
-                            data-tooltip-wrapper="span"
-                            data-tooltip-place="bottom"
-                        >
-                            <div className="balance-amount">
-                                {commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals), true))}
-                            </div>
-                            <div className="balance-symbol">{symbol}</div>
-                        </WalletBalance>
+                    {balanceAmount === null ? (
+                        <Skeleton width="100px" height="22px" />
+                    ) : (
+                        balanceAmount && (
+                            <WalletBalance
+                                className="balance-box"
+                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals)))}
+                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                data-tooltip-wrapper="span"
+                                data-tooltip-place="bottom"
+                            >
+                                <div className="balance-amount">
+                                    {commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals), true))}
+                                </div>
+                                <div className="balance-symbol">{symbol}</div>
+                            </WalletBalance>
+                        )
                     )}
                 </div>
             </SectionContainer>
@@ -136,11 +135,11 @@ const TokenWalletSearch = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '24px' }}>
                     <div className="table-box">
                         <div className="table-title">Allowances to others</div>
-                        <StyledTable columns={columns} rows={allAllowances} />
+                        <StyledTable columns={columns} rows={allAllowances || []} isLoading={!allAllowances} />
                     </div>
                     <div className="table-box">
                         <div className="table-title">Received Allowances</div>
-                        <StyledTable columns={columns} rows={allReceives} />
+                        <StyledTable columns={columns} rows={allReceives || []} isLoading={!allReceives} />
                     </div>
                 </div>
             </SectionContainer>

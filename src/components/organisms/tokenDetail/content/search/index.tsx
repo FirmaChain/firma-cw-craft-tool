@@ -22,6 +22,7 @@ import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Divider from '@/components/atoms/divider';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import Skeleton from '@/components/atoms/skeleton';
 
 const SearchButton = styled(IconButton)`
     //? outside
@@ -85,8 +86,9 @@ const WalletSearch = () => {
 
     const { getWalletSearch } = useTokenDetail();
 
+    const [isLoading, setIsLoading] = useState(false);
     const [searchAddress, setSearchAddress] = useState<string>('');
-    const [balanceAmount, setBalanceAmount] = useState<string>('');
+    const [balanceAmount, setBalanceAmount] = useState<string | null>(null);
     const [allAllowances, setAllAllowances] = useState<any[]>([]);
     const [allReceives, setAllReceives] = useState<any[]>([]);
 
@@ -95,14 +97,16 @@ const WalletSearch = () => {
     };
 
     const fetchWalletSearch = useCallback(async () => {
-        if (isInit) {
+        if (!isLoading && isInit) {
+            setIsLoading(true);
+
             const searchResult = await getWalletSearch(contractAddress, searchAddress);
 
-            if (searchResult) {
-                setBalanceAmount(searchResult.balanceAmount);
-                setAllAllowances(searchResult.allAllowances);
-                setAllReceives(searchResult.allSpenders);
-            }
+            setBalanceAmount(searchResult.balanceAmount);
+            setAllAllowances(searchResult.allAllowances);
+            setAllReceives(searchResult.allSpenders);
+
+            setIsLoading(false);
         }
     }, [getWalletSearch, isInit, searchAddress]);
 
@@ -130,19 +134,25 @@ const WalletSearch = () => {
 
             <BalanceWrapper>
                 <BalanceLabelTypo>Balances</BalanceLabelTypo>
-                <BalanceAmountWrapper>
-                    <BalanceAmountTypo
-                        data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, decimals))}
-                        data-tooltip-id={TOOLTIP_ID.COMMON}
-                        data-tooltip-wrapper="span"
-                        data-tooltip-place="bottom"
-                    >
-                        {commaNumber(parseAmountWithDecimal2(balanceAmount, decimals, true))}
-                    </BalanceAmountTypo>
-                    <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
-                </BalanceAmountWrapper>
+                {!isLoading ? (
+                    balanceAmount !== null && (
+                        <BalanceAmountWrapper>
+                            <BalanceAmountTypo
+                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, decimals))}
+                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                data-tooltip-wrapper="span"
+                                data-tooltip-place="bottom"
+                            >
+                                {commaNumber(parseAmountWithDecimal2(balanceAmount, decimals, true))}
+                            </BalanceAmountTypo>
+                            <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
+                        </BalanceAmountWrapper>
+                    )
+                ) : (
+                    <Skeleton width="100px" height="22px" />
+                )}
             </BalanceWrapper>
-            <Allowances searchAllowances={allAllowances} searchReceivers={allReceives} />
+            <Allowances searchAllowances={allAllowances} searchReceivers={allReceives} isLoading={isLoading} />
         </WalletSearchWrapper>
     );
 };

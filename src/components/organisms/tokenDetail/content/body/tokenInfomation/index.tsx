@@ -19,17 +19,18 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
+import Skeleton from '@/components/atoms/skeleton';
 
 const TokenInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
-    
+
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
     const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
 
     const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName) || '';
     const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol) || '';
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
-    const label = useTokenDetailStore((state) => state.tokenDetail?.label) || '';
+    const label = useTokenDetailStore((state) => state.tokenDetail?.label);
     const addressBalance = useTokenDetailStore((state) => state.tokenDetail?.addressBalance) || '';
     const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply) || '';
     const minterAddress = useTokenDetailStore((state) => state.tokenDetail?.minterAddress) || '';
@@ -47,41 +48,57 @@ const TokenInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Address</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <SpecificValueTypo>{contractAddress}</SpecificValueTypo>
-                        <CopyIconButton text={contractAddress} width={'22px'} height={'22px'} />
+                        {contractAddress ? (
+                            <>
+                                <SpecificValueTypo>{contractAddress}</SpecificValueTypo>
+                                <CopyIconButton text={contractAddress} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <Skeleton width="200px" height="22px" />
+                        )}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Token Name</SpecificLabelTypo>
-                    <SpecificValueTypo>{tokenName}</SpecificValueTypo>
+                    {tokenName ? <SpecificValueTypo>{tokenName}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Token Symbol</SpecificLabelTypo>
-                    <SpecificValueTypo>{tokenSymbol}</SpecificValueTypo>
+                    {tokenSymbol ? <SpecificValueTypo>{tokenSymbol}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Decimals</SpecificLabelTypo>
-                    <SpecificValueTypo>{decimals}</SpecificValueTypo>
+                    {decimals ? <SpecificValueTypo>{decimals}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
                 </SpecificItem>
 
-                {!isBasic && <SpecificItem style={{ height: '28px' }}>
-                    <SpecificLabelTypo>Label</SpecificLabelTypo>
-                    {label && <SpecificValueCover>{label}</SpecificValueCover>}
-                </SpecificItem>}
+                {!isBasic && (
+                    <SpecificItem style={{ height: '28px' }}>
+                        <SpecificLabelTypo>Label</SpecificLabelTypo>
+                        {typeof label === 'string' ? (
+                            <SpecificValueCover>{label}</SpecificValueCover>
+                        ) : (
+                            <Skeleton width="100px" height="22px" />
+                        )}
+                    </SpecificItem>
+                )}
 
                 <SpecificItem>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
-                    <SpecificValueWrapper>
-                        <SpecificValueTypo
-                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, decimals))}
-                            data-tooltip-id={TOOLTIP_ID.COMMON}
-                            data-tooltip-wrapper="span"
-                            data-tooltip-place="bottom"
-                        >
-                            {totalSupply && commaNumber(parseAmountWithDecimal2(totalSupply, decimals, true))}
-                        </SpecificValueTypo>
-                        <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
-                    </SpecificValueWrapper>
+                    {totalSupply ? (
+                        <SpecificValueWrapper>
+                            <SpecificValueTypo
+                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, decimals))}
+                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                data-tooltip-wrapper="span"
+                                data-tooltip-place="bottom"
+                            >
+                                {totalSupply && commaNumber(parseAmountWithDecimal2(totalSupply, decimals, true))}
+                            </SpecificValueTypo>
+                            <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
+                        </SpecificValueWrapper>
+                    ) : (
+                        <Skeleton width="100px" height="22px" />
+                    )}
                 </SpecificItem>
 
                 {!isBasic && minterAddress && (
@@ -113,17 +130,21 @@ const TokenInformation = () => {
 
                 <SpecificItem>
                     <SpecificLabelTypo>My Balance</SpecificLabelTypo>
-                    <SpecificValueWrapper>
-                        <SpecificValueTypo
-                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(addressBalance, decimals))}
-                            data-tooltip-id={TOOLTIP_ID.COMMON}
-                            data-tooltip-wrapper="span"
-                            data-tooltip-place="bottom"
-                        >
-                            {addressBalance && commaNumber(parseAmountWithDecimal2(addressBalance, decimals, true))}
-                        </SpecificValueTypo>
-                        <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
-                    </SpecificValueWrapper>
+                    {addressBalance ? (
+                        <SpecificValueWrapper>
+                            <SpecificValueTypo
+                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(addressBalance, decimals))}
+                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                data-tooltip-wrapper="span"
+                                data-tooltip-place="bottom"
+                            >
+                                {addressBalance && commaNumber(parseAmountWithDecimal2(addressBalance, decimals, true))}
+                            </SpecificValueTypo>
+                            <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
+                        </SpecificValueWrapper>
+                    ) : (
+                        <Skeleton width="100px" height="22px" />
+                    )}
                 </SpecificItem>
             </TokenCardSpecific>
         </TokenCard>

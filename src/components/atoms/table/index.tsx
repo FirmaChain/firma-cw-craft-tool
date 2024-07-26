@@ -1,102 +1,22 @@
-import styled from 'styled-components';
 import Icons from '../icons';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Cell from './cells';
-import IconButton from '../buttons/iconButton';
-
-const TableContainer = styled.div`
-    box-sizing: border-box;
-    background: var(--Gray-150, #141414);
-    padding: 20px 24px;
-    border-radius: 8px;
-
-    width: 100%;
-    height: 100%;
-`;
-
-const Table = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-`;
-
-const TableHead = styled.thead``;
-
-const TableRow = styled.tr`
-    box-sizing: border-box;
-    border: unset;
-    padding: 0;
-`;
-
-const HeaderCell = styled.th`
-    border-bottom: 1px solid #383838;
-    padding: 0;
-    padding-bottom: 8px;
-    text-align: left;
-    color: var(--Gray-700, #807e7e);
-    font-family: 'General Sans Variable';
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 18px;
-`;
-
-const TableCell = styled.td`
-    padding: 0;
-    border: unset;
-    box-sizing: border-box;
-    vertical-align: middle;
-`;
-
-const TableInnerCell = styled.div`
-    display: inline;
-    box-sizing: border-box;
-`;
-
-const TableBody = styled.tbody`
-    box-sizing: border-box;
-    border: unset;
-    padding: 0;
-`;
-
-const PaginationContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-`;
-
-const PaginationButton = styled(IconButton)`
-    display: flex;
-    padding: 0;
-    align-items: center;
-
-    color: white;
-`;
-
-const NoDataWrapper = styled.div`
-    width: 100%;
-    padding: 36px 0px 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--Gray-750, #dcdcdc);
-    font-family: 'General Sans Variable';
-    font-size: 14px;
-
-    font-weight: 400;
-    line-height: 20px;
-`;
-
-const CurrentPageNumber = styled.div`
-    color: var(--Green-500, #02e191);
-    font-family: 'General Sans Variable';
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 20px;
-    margin-left: 12px;
-    margin-right: 12px;
-`;
+import {
+    CurrentPageNumber,
+    HeaderCell,
+    LoadingBox,
+    NoDataTypo,
+    PaginationButton,
+    PaginationContainer,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableInnerCell,
+    TableRow
+} from './styles';
+import { BarLoader } from 'react-spinners';
 
 export interface IColumn {
     id: string;
@@ -112,15 +32,15 @@ const rowHeight = '40px';
 const StyledTable = ({
     columns,
     rows,
-    rowsPerPage = 5
-    // emptyBox,
-    // isLoading
+    rowsPerPage = 5,
+    isLoading,
+    disablePagination
 }: {
     columns: IColumn[];
     rows: Record<string, any>[];
     rowsPerPage?: number;
-    // emptyBox?: React.ReactElement;
-    // isLoading?: boolean;
+    isLoading?: boolean;
+    disablePagination?: boolean;
 }) => {
     const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -133,6 +53,20 @@ const StyledTable = ({
     const handleClick = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };
+
+    const pageList = useMemo(() => {
+        if (rows !== null) {
+            const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+            if (totalPages <= 1) return [1];
+
+            if (currentPage <= 1) return [1, 2, 3].filter((page) => page <= totalPages);
+
+            if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
+
+            return [currentPage - 1, currentPage, currentPage + 1].filter((page) => page <= totalPages);
+        } else return [];
+    }, [rows, currentPage, rowsPerPage]);
 
     return (
         <TableContainer className="hide-scrollbar">
@@ -147,7 +81,7 @@ const StyledTable = ({
                             ))}
                         </TableRow>
                     </TableHead>
-                    {rows.length >= 0 && (
+                    {!isLoading && rows.length >= 0 && (
                         <TableBody>
                             {currentPageRows.map((row, rowIndex) => (
                                 <TableRow key={rowIndex}>
@@ -178,29 +112,57 @@ const StyledTable = ({
                 </Table>
             </div>
 
-            {rows.length === 0 && <NoDataWrapper>There is no data</NoDataWrapper>}
+            {isLoading ? (
+                <LoadingBox>
+                    <BarLoader color="#EFEFEF" />
+                </LoadingBox>
+            ) : (
+                <>
+                    {rows.length === 0 && (
+                        <LoadingBox>
+                            <NoDataTypo className="select-none">There is no data</NoDataTypo>
+                        </LoadingBox>
+                    )}
 
-            {rows.length !== 0 && (
-                <PaginationContainer style={{ justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
-                    <PaginationButton onClick={() => handleClick(1)} disabled={currentPage === 1}>
-                        <Icons.LeftDoubleArrow width={'20px'} height={'20px'} $isCheck={currentPage !== 1} />
-                    </PaginationButton>
-                    <PaginationButton onClick={() => handleClick(currentPage - 1)} disabled={currentPage === 1}>
-                        <Icons.PrevPage width={'20px'} height={'20px'} $isCheck={currentPage !== 1} />
-                    </PaginationButton>
-                    <CurrentPageNumber>{currentPage}</CurrentPageNumber>
-                    <PaginationButton onClick={() => handleClick(currentPage + 1)} disabled={currentPage === totalPages}>
-                        <Icons.PrevPage
-                            width={'20px'}
-                            height={'20px'}
-                            style={{ transform: 'rotate(180deg)' }}
-                            $isCheck={currentPage !== totalPages}
-                        />
-                    </PaginationButton>
-                    <PaginationButton onClick={() => handleClick(totalPages)} disabled={currentPage === totalPages}>
-                        <Icons.RightDoubleArrow width={'20px'} height={'20px'} $isCheck={currentPage !== totalPages} />
-                    </PaginationButton>
-                </PaginationContainer>
+                    {!disablePagination && rows.length !== 0 && (
+                        <PaginationContainer style={{ justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
+                            <PaginationButton onClick={() => handleClick(1)} disabled={currentPage === 1}>
+                                <Icons.LeftDoubleArrow width={'20px'} height={'20px'} stroke={currentPage !== 1 ? '#FFFFFF' : '#707070'} />
+                            </PaginationButton>
+                            <PaginationButton onClick={() => handleClick(currentPage - 1)} disabled={currentPage === 1}>
+                                <Icons.PrevPage width={'20px'} height={'20px'} stroke={currentPage !== 1 ? '#FFFFFF' : '#707070'} />
+                            </PaginationButton>
+
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', padding: '0 12px' }}>
+                                {pageList.map((v) => (
+                                    <CurrentPageNumber
+                                        key={`pagination_pageindex_${v}`}
+                                        style={{ color: v === currentPage ? 'var(--Green-500, #02e191)' : '#FFF' }}
+                                        onClick={() => setCurrentPage(v)}
+                                        className="select-none pointer"
+                                    >
+                                        {v}
+                                    </CurrentPageNumber>
+                                ))}
+                            </div>
+                            <PaginationButton onClick={() => handleClick(currentPage + 1)} disabled={currentPage === totalPages}>
+                                <Icons.PrevPage
+                                    width={'20px'}
+                                    height={'20px'}
+                                    style={{ transform: 'rotate(180deg)' }}
+                                    stroke={currentPage !== totalPages ? '#FFFFFF' : '#707070'}
+                                />
+                            </PaginationButton>
+                            <PaginationButton onClick={() => handleClick(totalPages)} disabled={currentPage === totalPages}>
+                                <Icons.RightDoubleArrow
+                                    width={'20px'}
+                                    height={'20px'}
+                                    stroke={currentPage !== totalPages ? '#FFFFFF' : '#707070'}
+                                />
+                            </PaginationButton>
+                        </PaginationContainer>
+                    )}
+                </>
             )}
         </TableContainer>
     );

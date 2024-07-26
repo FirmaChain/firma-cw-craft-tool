@@ -1,11 +1,10 @@
 import { CradHeaderWrapper, HeaderSubTitleTypo, HeaderTitleTypo, TransactionContent, TransactionsCard } from './style';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import { formatDistanceToNow, parseISO } from 'date-fns';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 
 const Transactions = () => {
-    const transactions = useTokenDetailStore((state) => state.transactions) || [];
+    const transactions = useTokenDetailStore((state) => state.transactions);
 
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },
@@ -21,9 +20,7 @@ const Transactions = () => {
         {
             id: 'timestamp',
             label: 'Time',
-            renderCell: (id, row) => (
-                <Cell.Default>{formatDistanceToNow(parseISO(row[id]), { addSuffix: true }).replace('about ', '')}</Cell.Default>
-            ),
+            renderCell: (id, row) => <Cell.TimeAgo timestamp={row[id]} />,
             minWidth: '120px'
         }
     ];
@@ -35,7 +32,7 @@ const Transactions = () => {
                 <HeaderSubTitleTypo>The lastest 15 records</HeaderSubTitleTypo>
             </CradHeaderWrapper>
             <TransactionContent>
-                <StyledTable columns={columns} rows={transactions} rowsPerPage={15} />
+                <StyledTable columns={columns} rows={transactions || []} rowsPerPage={15} isLoading={!transactions} disablePagination />
             </TransactionContent>
         </TransactionsCard>
     );

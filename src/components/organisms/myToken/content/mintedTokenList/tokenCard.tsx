@@ -92,7 +92,7 @@ const MintedTokenCard = ({
                     <TotalSupplyTypo>{totalSupplyTypo}</TotalSupplyTypo>
                     <SupplySymbolTypo>{tokenSymbol}</SupplySymbolTypo>
                 </SupplyWrapper>
-                <Icons.RightArrow width={'20px'} height={'20px'} $isCheck={true} />
+                <Icons.RightArrow width={'20px'} height={'20px'} stroke={'#FFFFFF'} />
             </ItemRight>
         </ItemWrapper>
     );

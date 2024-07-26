@@ -5,14 +5,12 @@ import Icons from '@/components/atoms/icons';
 import SearchInput2 from '@/components/atoms/input/searchInput';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import commaNumber from 'comma-number';
-import { parseAmountWithDecimal2 } from '@/utils/common';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const AllAccounts = () => {
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
-    const accounts = useTokenDetailStore((state) => state.tokenDetail?.allAccounts) || [];
+    const accounts = useTokenDetailStore((state) => state.tokenDetail?.allAccounts);
+    const symbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
 
     const [keyword, setKeyword] = useState<string>('');
 
@@ -30,16 +28,7 @@ const AllAccounts = () => {
         {
             id: 'Balance',
             label: 'Balance',
-            renderCell: (id, row) => (
-                <Cell.Default
-                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(row['Balance'], decimals))}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
-                >
-                    {commaNumber(parseAmountWithDecimal2(row['Balance'], decimals, true))}
-                </Cell.Default>
-            ),
+            renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
             width: '40%'
         }
     ];
@@ -67,7 +56,7 @@ const AllAccounts = () => {
                 />
             </AllAccountsCardWrapper>
             <AllAccountsContentWrapper>
-                <StyledTable columns={columns} rows={rows} />
+                <StyledTable columns={columns} rows={rows || []} isLoading={!accounts} />
             </AllAccountsContentWrapper>
         </AllAccountsCard>
     );
