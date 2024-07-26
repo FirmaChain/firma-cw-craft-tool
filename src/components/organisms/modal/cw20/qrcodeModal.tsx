@@ -1,11 +1,11 @@
 import { rootState } from "@/redux/reducers";
 import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
-import { ResultsContentHashWrap, ResultsContentSummeryWrap, ResultsContentWrap, ResultsHeader, ResultsSuccessIcon, ResultsTitleExecuteTypo, ResultsTitleMessage, ResultsTitleSuccessTypo, ResultsTitleWrap, FCTSymbolIcon, FCTSymbolMiniIcon, FeeAmount, FeeLabel, ItemValueWrap, ItemWrap, ModalBase, ModalCancelButton, ModalCancelTypo, ModalContentBlackCard, ModalContentGrayCard, ModalContentWrap, ModalTitleDescTypo, ModalTitleTypo, ModalTitleWrap, MyBalanceValue, MyBalanceWrap, QrCodeWrap, ResultsButtonWrap, ResultsConfirmButton, ResultsConfirmButtonTypo, ResultsGoToMyMintetedTokenButton, ResultsGoToMyMintetedTokenButtonTypo } from "../style";
+import { ResultsContentHashWrap, ResultsContentSummeryWrap, ResultsContentWrap, ResultsHeader, ResultsSuccessIcon, ResultsTitleExecuteTypo, ResultsTitleMessage, ResultsTitleSuccessTypo, ResultsTitleWrap, FCTSymbolIcon, FCTSymbolMiniIcon, FeeAmount, FeeLabel, ItemValueWrap, ItemWrap, ModalBase, ModalCancelButton, ModalCancelTypo, ModalContentBlackCard, ModalContentGrayCard, ModalContentWrap, ModalTitleDescTypo, ModalTitleTypo, ModalTitleWrap, MyBalanceValue, MyBalanceWrap, QrCodeWrap, ResultsButtonWrap, ResultsConfirmButton, ResultsConfirmButtonTypo, ResultsGoToMyMintetedTokenButton, ResultsGoToMyMintetedTokenButtonTypo, ResultsTitleFailedTypo } from "../style";
 import React, { useState } from "react";
 import { useModalStore } from "@/hooks/useModal";
 import { AmountItem, TransactionItem, UrlItem, WalletItem } from "..";
-import { IC_CEHCK_ROUND, IC_CLOSE, IC_FIRMACHAIN } from "@/components/atoms/icons/pngIcons";
+import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from "@/components/atoms/icons/pngIcons";
 import RequestQR from "@/components/organisms/requestQR/index2";
 import { formatWithCommas, getTokenAmountFromUToken } from "@/utils/balance";
 import { FirmaUtil } from "@firmachain/firma-js";
@@ -88,10 +88,10 @@ const QRCodeModal = ({
                                     setStatus('success');
                                 }}
                                 onFailed={(requestData: any) => {
-                                    // onCloseModal();
+                                    setResult(requestData);
                                     setStatus('failure');
-                                    setError({ message: 'Failed to instantiate' });
-                                    enqueueSnackbar('Failed to instantiate', {
+                                    setError({ message: `Failed to ${params.header.title}` });
+                                    enqueueSnackbar(`Failed to ${params.header.title}`, {
                                         variant: 'error',
                                         autoHideDuration: 2000
                                     });
@@ -194,6 +194,22 @@ const QRCodeModal = ({
             )}
             {status === "failure" && (
                 <>
+                    <ResultsHeader>
+                        <ResultsSuccessIcon src={IC_CIRCLE_FAIL} alt={"Modal Results"}/>
+                        <ResultsTitleWrap>
+                            <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
+                            <ResultsTitleFailedTypo>Failed</ResultsTitleFailedTypo>
+                        </ResultsTitleWrap>
+                        <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage>
+                    </ResultsHeader>
+                    <ResultsContentWrap>
+                        <ResultsContentSummeryWrap>
+                            
+                        </ResultsContentSummeryWrap>
+                        <ResultsContentHashWrap>
+                            <TransactionItem label={"Transaction Hash"} hash={getTransactionHash(result.signData)} onClickHash={(hash) => onClickTransactionHash(hash)}/>
+                        </ResultsContentHashWrap>
+                    </ResultsContentWrap>
                 </>
             )}
         </ModalBase>

@@ -444,6 +444,15 @@ export const ResultsTitleSuccessTypo = styled.div`
     line-height: 24px;
 `;
 
+export const ResultsTitleFailedTypo = styled.div`
+    color: var(--Status-Alert, var(--Primary-Base-White, #E55250));
+    font-family: "General Sans Variable";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+`;
+
 export const ResultsTitleMessage = styled.div`
     color: var(--Gray-650, #707070);
     text-align: center;

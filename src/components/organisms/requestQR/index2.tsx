@@ -7,6 +7,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import { rootState } from '@/redux/reducers';
 import useAPI from '@/hooks/useAPI';
 import { IC_RESET, IC_RESET_WHITE } from '@/components/atoms/icons/pngIcons';
+import { getTransactionStatusCode } from '@/utils/transaction';
 
 interface IProps {
     qrSize?: number;
@@ -65,7 +66,13 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
         checkRequest(craftServerURI, requestKey).then((requestData) => {
             if (requestData.status === '1') {
                 setActiveQR(false);
-                onSuccess(requestData);
+
+                const code = getTransactionStatusCode(requestData.signData);
+                if (code === 0) {
+                    onSuccess(requestData);
+                } else {
+                    onFailed(requestData);
+                }
             } else if (requestData.status === '-2') {
                 setActiveQR(false);
                 onFailed(requestData);
