@@ -24,6 +24,8 @@ import { isValidAddress } from '@/utils/address';
 import { isAtHeight, isAtTime, isNever } from '@/utils/allowance';
 import { compareStringNumbers } from '@/utils/balance';
 import { getCurrentUTCTimeStamp, removeNanoSeconds } from '@/utils/time';
+import { useModalStore } from '@/hooks/useModal';
+import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 
 interface IProps {
     contractAddress: string;
@@ -43,6 +45,7 @@ const generateId = () => {
 const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20, transferList, setTransferList }: IProps) => {
     const { enqueueSnackbar } = useSnackbar();
     const { getCw20Balance, getCw20AllowanceBalance } = useExecuteHook();
+    const modal = useModalStore();
 
     const [validity, setValidity] = useState<boolean[]>([true]);
     const [updateIndex, setUpdateIndex] = useState<number>(0);
@@ -61,27 +64,26 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                         allowanceAmount: transferList[updateIndex].allowanceAmount,
                         id: transferList[updateIndex].id
                     };
-                    
+
                     if (isValidAddress(transferList[updateIndex].fromAddress)) {
-    
                         const response = await getCw20Balance(contractAddress, transferList[updateIndex].fromAddress);
                         if (response.success === true) {
                             newTransfer.fromAmount = response.balance;
                             _walletList[updateIndex] = newTransfer;
-    
+
                             setTransferList(_walletList);
                         }
                     } else {
-                        newTransfer.fromAmount = "0";
+                        newTransfer.fromAmount = '0';
                         _walletList[updateIndex] = newTransfer;
-    
+
                         setTransferList(_walletList);
                     }
                 }
             } catch (error) {
                 console.log(error);
             }
-        }
+        };
 
         fetchData();
     }, [contractAddress, transferList[updateIndex] && transferList[updateIndex].fromAddress]);
@@ -102,10 +104,14 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                     };
 
                     console.log('FIRST NEW TRANSFER', newTransfer);
-                    const { success, blockHeight, data } = await getCw20AllowanceBalance(contractAddress, transferList[updateIndex].fromAddress, transferList[updateIndex].toAddress);
+                    const { success, blockHeight, data } = await getCw20AllowanceBalance(
+                        contractAddress,
+                        transferList[updateIndex].fromAddress,
+                        transferList[updateIndex].toAddress
+                    );
                     console.log('SUCCESS', success);
                     if (success === true) {
-                        const { allowance, expires} = data;
+                        const { allowance, expires } = data;
 
                         console.log('EXPIRES', expires);
                         if (isAtHeight(expires)) {
@@ -113,13 +119,13 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                             if (compareHeight === 1) {
                                 newTransfer.allowanceAmount = allowance;
                             } else {
-                                newTransfer.allowanceAmount = "0";
+                                newTransfer.allowanceAmount = '0';
                             }
                         } else if (isAtTime(expires)) {
                             const allowanceTime = removeNanoSeconds(expires.at_time);
-                            const timeStamp = getCurrentUTCTimeStamp()
+                            const timeStamp = getCurrentUTCTimeStamp();
                             const compareTime = compareStringNumbers(allowanceTime, timeStamp);
-                            
+
                             console.log('COMPARE TIME', compareTime);
 
                             if (compareTime === 1) {
@@ -128,7 +134,7 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                                 console.log('NEW TRANSFER', newTransfer[updateIndex]);
                                 newTransfer.allowanceAmount = allowance;
                             } else {
-                                newTransfer.allowanceAmount = "0";
+                                newTransfer.allowanceAmount = '0';
                             }
                             console.log(`NEW TRANSFER`, newTransfer);
                         } else if (isNever(expires)) {
@@ -144,14 +150,21 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
             } catch (error) {
                 console.log(error);
             }
-        }
+        };
 
         fetchData();
-    }, [contractAddress, transferList[updateIndex] && transferList[updateIndex].fromAddress, transferList[updateIndex] && transferList[updateIndex].toAddress]);
+    }, [
+        contractAddress,
+        transferList[updateIndex] && transferList[updateIndex].fromAddress,
+        transferList[updateIndex] && transferList[updateIndex].toAddress
+    ]);
 
     const handleAddWallet = () => {
         if (transferList.length < maxWalletCount) {
-            setTransferList([...transferList, { fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: generateId() }]);
+            setTransferList([
+                ...transferList,
+                { fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: generateId() }
+            ]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
                 variant: 'info',
@@ -179,8 +192,20 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
     };
 
     const handleDeleteAll = () => {
-        setTransferList([{ fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: generateId() }]);
-        setValidity([true]);
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <DeleteAllModal
+                    id={id}
+                    onConfirm={() => {
+                        setTransferList([
+                            { fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: generateId() }
+                        ]);
+                        setValidity([true]);
+                    }}
+                />
+            )
+        });
     };
 
     return (
@@ -199,23 +224,24 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
             </WalletListSummery>
             {transferList.map((wallet, index) => {
                 return (
-                <TransferFromWalletInput
-                    key={index}
-                    index={index + 1}
-                    transferFromInfo={wallet}
-                    onChange={handleWalleInfoChange}
-                    onRemoveClick={() => handleRemoveWallet(index)}
-                    isLast={index === transferList.length - 1}
-                    isValid={validity[index]}
-                    decimals={decimals}
-                    inputId={wallet.id}
-                    // onChangeAddress={(value) => handleChange(index, 'recipient', value)}
-                    // onChangeAmount={(value) => handleChange(index, 'amount', value)}
-                    // addressTitle={addressTitle}
-                    // addressPlaceholder={addressPlaceholder}
-                    // amountTitle={amountTitle}
-                />
-            )})}
+                    <TransferFromWalletInput
+                        key={index}
+                        index={index + 1}
+                        transferFromInfo={wallet}
+                        onChange={handleWalleInfoChange}
+                        onRemoveClick={() => handleRemoveWallet(index)}
+                        isLast={index === transferList.length - 1}
+                        isValid={validity[index]}
+                        decimals={decimals}
+                        inputId={wallet.id}
+                        // onChangeAddress={(value) => handleChange(index, 'recipient', value)}
+                        // onChangeAmount={(value) => handleChange(index, 'amount', value)}
+                        // addressTitle={addressTitle}
+                        // addressPlaceholder={addressPlaceholder}
+                        // amountTitle={amountTitle}
+                    />
+                );
+            })}
             <AddWalletWrapper disabled={transferList.length === 20} onClick={handleAddWallet}>
                 <Icons.Add width={'16px'} height={'16px'} />
                 <AddWalletTypo>

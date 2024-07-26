@@ -19,6 +19,8 @@ import InputAddressAmount from '../input/inputAddressAmount';
 import Icons from '../icons';
 import { useSnackbar } from 'notistack';
 import { IWalletWithID } from '@/components/organisms/instantiate/instaniateStore';
+import { useModalStore } from '@/hooks/useModal';
+import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 
 interface IProps {
     walletList: IWalletWithID[];
@@ -41,6 +43,7 @@ const FormWalletList = ({
     addressPlaceholder,
     amountTitle
 }: IProps) => {
+    const modal = useModalStore();
     const { enqueueSnackbar } = useSnackbar();
 
     const handleAddWallet = () => {
@@ -68,7 +71,10 @@ const FormWalletList = ({
     };
 
     const handleDeleteAll = () => {
-        setWalletList([INIT_WALLET_INFO]);
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <DeleteAllModal id={id} onConfirm={() => setWalletList([INIT_WALLET_INFO])} />
+        });
     };
 
     return (

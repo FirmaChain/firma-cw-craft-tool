@@ -19,6 +19,8 @@ import { IWallet } from '@/interfaces/wallet';
 import InputAddressAmount from '../input/inputAddressAmount';
 import Icons from '../icons';
 import { useSnackbar } from 'notistack';
+import { useModalStore } from '@/hooks/useModal';
+import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 
 interface IProps {
     decimals: string;
@@ -39,6 +41,7 @@ const generateId = () => {
 
 const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, addressTitle, addressPlaceholder, amountTitle }: IProps) => {
     const { enqueueSnackbar } = useSnackbar();
+    const modal = useModalStore();
 
     const [walletList, setWalletList] = useState<IWalletWithID[]>([{ recipient: '', amount: '', id: generateId() }]);
     const [validity, setValidity] = useState<boolean[]>([true]);
@@ -88,8 +91,18 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
     };
 
     const handleDeleteAll = () => {
-        setWalletList([{ recipient: '', amount: '', id: generateId() }]);
-        setValidity([true]);
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <DeleteAllModal
+                    id={id}
+                    onConfirm={() => {
+                        setWalletList([{ recipient: '', amount: '', id: generateId() }]);
+                        setValidity([true]);
+                    }}
+                />
+            )
+        });
     };
 
     return (
