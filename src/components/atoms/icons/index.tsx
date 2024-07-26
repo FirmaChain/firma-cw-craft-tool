@@ -820,7 +820,7 @@ const Calendar = (props: any) => (
             stroke={props.stroke || 'white'}
             strokeWidth="1.33333"
             strokeLinecap="round"
-            stroke-linejoin="round"
+            strokeLinejoin="round"
         />
     </svg>
 );
@@ -971,37 +971,37 @@ const CW721 = (props: any) => {
                 <path
                     d="M5.12793 17.641V10.3438L9.48296 17.641V10.3438"
                     stroke={props.style?.stroke || props.stroke || '#02E191'}
-                    stroke-width="1.63636"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.63636"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
                 <path
                     d="M19.2842 10.3438H23.6392"
                     stroke={props.style?.stroke || props.stroke || '#02E191'}
-                    stroke-width="1.63636"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.63636"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
                 <path
                     d="M21.4629 10.3438V17.641"
                     stroke={props.style?.stroke || props.stroke || '#02E191'}
-                    stroke-width="1.63636"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.63636"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
                 <path
                     d="M16.6092 10.3438H12.5264V17.641"
                     stroke={props.style?.stroke || props.stroke || '#02E191'}
-                    stroke-width="1.63636"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.63636"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
                 <path
                     d="M12.5264 13.9961H16.0648"
                     stroke={props.style?.stroke || props.stroke || '#02E191'}
-                    stroke-width="1.63636"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.63636"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                 />
             </g>
         </svg>

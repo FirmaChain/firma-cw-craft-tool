@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import DatePicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
 import ExpirationSelect from '../select/expirationSelect';
 import Icons from '../icons';
@@ -174,9 +173,9 @@ function toTimestamp(dateObj, hours, minutes, seconds) {
     return updatedDate.getTime().toString();
 }
 
-const DateInputBox = React.forwardRef(({ open, onClickOpen, date }: { open: boolean; onClickOpen: () => void; date: Date }) => {
+const DateInputBox = React.forwardRef(({ open, onClickOpen, date }: { open: boolean; onClickOpen: () => void; date: Date }, ref: any) => {
     return (
-        <DateWrap className="pointer" onClick={onClickOpen} $open={open}>
+        <DateWrap className="pointer" onClick={onClickOpen} $open={open} ref={ref}>
             <Icons.Calendar />
             <div className="typo">{format(date, 'yyyy.MM.dd')}</div>
         </DateWrap>

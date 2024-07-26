@@ -18,7 +18,7 @@ export const ContentScreen = styled.div`
     flex-direction: column;
     gap: 20px;
 
-    padding: 60px;
+    padding: 60px 120px;
 `;
 
 export const ContentBox = styled.div`
@@ -34,7 +34,7 @@ export const ContentBox = styled.div`
     background: rgba(18, 18, 18, 0.8);
     backdrop-filter: blur(3px);
 
-    margin-bottom: 39px;
+    margin-bottom: 90px;
 `;
 
 export const TitleBox = styled.div`
