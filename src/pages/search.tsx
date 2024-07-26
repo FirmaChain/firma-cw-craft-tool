@@ -13,7 +13,7 @@ const SearchPage = () => {
     return (
         <Container>
             <Header />
-            <Divider $color={'var(--Gray-300, #222)'} $direction={'horizontal'} />
+            {/* <Divider $color={'var(--Gray-300, #222)'} $direction={'horizontal'} /> */}
             <Content />
         </Container>
     );

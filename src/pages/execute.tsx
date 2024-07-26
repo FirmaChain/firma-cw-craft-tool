@@ -6,7 +6,7 @@ import { ContractProvider } from '@/components/organisms/execute/context/contrac
 const Execute = () => {
     return (
         <ContractProvider>
-            <Container style={{ padding: '68px 96px' }}>
+            <Container>
                 <Header />
                 <Contents />
             </Container>

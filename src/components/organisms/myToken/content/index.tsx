@@ -34,6 +34,10 @@ const MyTokenContent = () => {
             GlobalActions.handleGlobalLoading(true);
             fetchTokenList();
         }
+
+        return () => {
+            GlobalActions.handleGlobalLoading(false);
+        }
     }, [isInit, fetchTokenList]);
 
     return (

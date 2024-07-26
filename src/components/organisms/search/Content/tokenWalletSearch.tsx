@@ -93,6 +93,7 @@ const TokenWalletSearch = () => {
                 value={keyword}
                 placeHolder={'Search Wallet Address'}
                 onChange={(v) => setKeyword(v)}
+                onClickEvent={getAddressInfo}
                 adornment={{
                     end: (
                         <EndAdornment

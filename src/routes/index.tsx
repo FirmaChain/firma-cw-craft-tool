@@ -22,6 +22,7 @@ const routes: any[] = [
 ];
 
 const AppRoutes = () => {
+
     return (
         <Routes>
             {routes.map((route, index) => {

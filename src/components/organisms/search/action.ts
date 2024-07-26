@@ -7,7 +7,7 @@ import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
 
 const useSearchActions = () => {
@@ -16,6 +16,7 @@ const useSearchActions = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
     const { enqueueSnackbar } = useSnackbar();
     const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
+    const previousKeywordRef = useRef<string | null>(null);
 
     useEffect(() => {
         //? update balance info when wallet connected, or changed
@@ -23,12 +24,20 @@ const useSearchActions = () => {
         if (contractAddress) updateMyBalance(contractAddress);
     }, [userAddress]);
 
+    useEffect(() => {
+        useSearchStore.getState().clearSearchInfo();
+        return () => {
+            GlobalActions.handleGlobalLoading(false);
+        }
+    }, [])
+
     const updateMyBalance = async (contractAddress: string) => {
         const userBalance = await firmaSDK.Cw20.getBalance(contractAddress, userAddress);
         useSearchStore.getState().setUserBalance(userBalance);
     };
 
     const searchTokenInfo = async (keyword: string) => {
+        if (previousKeywordRef.current === keyword) return;
         if (globalLoading) return null;
 
         useSearchStore.getState().clearSearchInfo();
@@ -52,6 +61,8 @@ const useSearchActions = () => {
             useSearchStore.getState().setContractHistory(contractHistory);
             useSearchStore.getState().setAllAccounts(allAccounts);
             useSearchStore.getState().setAllTransactions(allTransactions);
+
+            previousKeywordRef.current = keyword;
         } catch (error) {
             console.log('error', error);
             enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });

@@ -51,6 +51,8 @@ const Header = () => {
 
     const { searchTokenInfo } = useSearchActions();
 
+    const disableSearch = Boolean(!FirmaUtil.isValidAddress(keyword) || keyword.length <= 44);
+
     return (
         <HeaderWrap>
             <HeaderBox>
@@ -59,13 +61,14 @@ const Header = () => {
                     value={keyword}
                     placeHolder={'Input contract address'}
                     onChange={(v) => setKeyword(v)}
+                    onClickEvent={disableSearch ? () => null : () => searchTokenInfo(keyword)}
                     adornment={{
                         end: (
                             <EndAdornment
                                 keyword={keyword}
                                 clearKeyword={() => setKeyword('')}
                                 onClickSearch={() => searchTokenInfo(keyword)}
-                                disableSearch={!FirmaUtil.isValidAddress(keyword) || keyword.length <= 44}
+                                disableSearch={disableSearch}
                             />
                         )
                     }}

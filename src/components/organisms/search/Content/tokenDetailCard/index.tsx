@@ -21,8 +21,8 @@ import { NETWORKS } from '@/constants/common';
 import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/preview/dashboard/tokenInfo/style';
 import Skeleton from '@/components/atoms/skeleton';
 
-const isFalsy = (value?: string) => {
-    return value === '' || value.toLowerCase() === 'null' || !Boolean(value);
+const isFalsy = (value?: string | null) => {
+    return !Boolean(value) || value === '' || value.toLowerCase() === 'null';
 };
 
 const TokenInfo = () => {
@@ -208,12 +208,12 @@ const MoreInfo = () => {
                     <div className="box-title">{isBasic ? 'Token' : 'Marketing'} Description</div>
                     <div className="box-value">
                         {isFalsy(marketingDesc) ? (
-                            <div className="disabled-typo">{isBasic ? 'Token' : 'Marketing'} Description</div>
+                            <div className="white-typo">{'-'}</div>
                         ) : (
                             <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
                                 {/* //? hidden description typo for more/less button */}
                                 <div
-                                    className="whitle-typo"
+                                    className="white-typo"
                                     ref={descRef}
                                     style={{
                                         zIndex: -1,
@@ -224,7 +224,7 @@ const MoreInfo = () => {
                                         wordBreak: 'break-all'
                                     }}
                                 >
-                                    {marketingDesc === '' ? 'Description' : marketingDesc}
+                                    {marketingDesc === '' ? '-' : marketingDesc}
                                 </div>
                                 <div
                                     style={{
@@ -293,7 +293,7 @@ const MoreInfo = () => {
                             <div className="box-title">Marketing Address</div>
                             <div className="box-value">
                                 {isFalsy(marketingAddr) ? (
-                                    <div className="disabled-typo">{isBasic ? 'Token' : 'Marketing'} Address</div>
+                                    <div className="white-typo">{'-'}</div>
                                 ) : (
                                     <div className="white-typo">{marketingAddr}</div>
                                 )}
@@ -303,7 +303,7 @@ const MoreInfo = () => {
                             <div className="box-title">Marketing Project</div>
                             <div className="box-value">
                                 {isFalsy(marketingProj) ? (
-                                    <div className="disabled-typo">{isBasic ? 'Token' : 'Marketing'} Project</div>
+                                    <div className="white-typo">{'-'}</div>
                                 ) : (
                                     <div className="white-typo">{marketingProj}</div>
                                 )}
@@ -312,15 +312,10 @@ const MoreInfo = () => {
                         <div className="box-row" style={{ alignItems: 'flex-start' }}>
                             <div className="box-title">Metadata</div>
                             <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                                <IconButton
-                                    style={{ padding: 0, display: 'flex', alignItems: 'center', gap: '4px' }}
-                                    onClick={goContractPage}
-                                >
-                                    <span className="white-typo" style={{ color: 'var(--Green-700, #02A288)' }}>
-                                        View Metadata
-                                    </span>
-                                    <img src={IC_NAVIGATION} alt="navigation" style={{ width: '20px', height: '20px' }} />
-                                </IconButton>
+                                <div className='box-row' style={{ gap: '4px' }}>
+                                    <span className="white-typo" style={{ color: '#999999' }}>{'Copy Metadata'}</span>
+                                    <CopyIconButton width="22px" height="22px" text={JSON.stringify(metadata)} />
+                                </div>
                                 <JsonViewer data={metadata} />
                             </div>
                         </div>

@@ -6,7 +6,9 @@ export const HeaderWrapper = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 40px;
+    padding: 68px 96px 36px;
+    gap: 44px;
+    border-bottom: 1px solid #222;
 `;
 
 export const HeaderTitle = styled.div`

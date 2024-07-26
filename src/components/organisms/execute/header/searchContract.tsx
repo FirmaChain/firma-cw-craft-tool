@@ -56,7 +56,7 @@ const EndAdornment = ({
             <SearchButton disabled={keyword === '' || disableSearch} onClick={onClickSearch}>
                 <span className="button-text">Search</span>
             </SearchButton>
-        </div>
+        </div >
     );
 };
 
@@ -87,6 +87,7 @@ const SearchContract = () => {
             placeHolder={'Search CW20 contract address'}
             value={keyword}
             onChange={(v) => setKeyword(v)}
+            onClickEvent={onClickSearch}
             adornment={{
                 end: (
                     <EndAdornment

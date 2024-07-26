@@ -118,6 +118,7 @@ const WalletSearch = () => {
                     value={searchAddress}
                     placeHolder={'Input Wallet Address'}
                     onChange={setSearchAddress}
+                    onClickEvent={onClickSearch}
                     adornment={{
                         end: (
                             <EndAdornment

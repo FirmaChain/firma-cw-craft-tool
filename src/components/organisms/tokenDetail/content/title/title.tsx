@@ -117,7 +117,7 @@ const Title = () => {
                 </TokenInfoWrapper>
             </TitleWrapper>
             <GoToExecuteButton disabled={!contractAddress} onClick={onClickExecute}>
-                <GoToButtonTypo>Go to excute</GoToButtonTypo>
+                <GoToButtonTypo>Go to execute</GoToButtonTypo>
                 <GoToButtonTypo>→</GoToButtonTypo>
             </GoToExecuteButton>
         </TitleContainer>

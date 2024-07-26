@@ -5,7 +5,6 @@ import TokenInfo from '../cards/tokenInfo';
 import Preview from '../cards/preview';
 import { useContractContext } from '../context/contractContext';
 
-import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
 import useExecuteHook, { ITokenInfoState } from '../hooks/useExecueteHook';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -16,7 +15,7 @@ const Container = styled.div`
     align-items: flex-start;
     justify-content: center;
     gap: 32px;
-    padding-bottom: 19px;
+    padding: 36px 96px 115px;
 `;
 
 const DimBox = styled.div`
