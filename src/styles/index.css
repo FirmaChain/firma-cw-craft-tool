@@ -186,3 +186,11 @@ a:active {
   min-width: unset;
   width: fit-content;
 }
+
+.select-none {
+  user-select: none;
+}
+
+.pointer {
+  cursor: pointer;
+}

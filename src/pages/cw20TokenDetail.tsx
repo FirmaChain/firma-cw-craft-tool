@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { rootState } from '../redux/reducers';
 import { Header, TokenDetailContent } from '../components/organisms/tokenDetail';
@@ -22,18 +22,9 @@ const Cw20TokenDetail = () => {
 
     const { client } = useApollo();
 
-    const fetchTokenList = useCallback(async () => {
-        if (isInit) {
+    const getRequiredInfo = async () => {
+        if (isInit && client) {
             const tokenDetail = await getTokenDetail(contractAddress, address);
-
-            if (tokenDetail) {
-                setTokenDetail({ ...tokenDetail, contractAddress });
-            }
-        }
-    }, [getTokenDetail, isInit]);
-
-    const fetchTransactionList = useCallback(async () => {
-        if (client) {
             const { messagesByAddress } = await getTransactionsByAddress(client, contractAddress, 15);
 
             const result: ITransaction[] = [];
@@ -52,17 +43,14 @@ const Cw20TokenDetail = () => {
                 });
             }
 
+            setTokenDetail({ ...tokenDetail, contractAddress });
             setTransactions(result);
         }
-    }, [client]);
+    };
 
     useEffect(() => {
-        fetchTokenList();
-    }, [fetchTokenList]);
-
-    useEffect(() => {
-        fetchTransactionList();
-    }, [client, fetchTransactionList]);
+        getRequiredInfo();
+    }, [client, isInit]);
 
     useEffect(() => {
         return () => useTokenDetailStore.getState().clearForm();

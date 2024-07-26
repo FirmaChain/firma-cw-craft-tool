@@ -124,9 +124,9 @@ const RowsPerPageSelect = ({
                     setOpen(false);
                 }}
                 components={{
-                    Control: ({ children, ...rest }) => {
+                    Control: ({ children }) => {
                         return (
-                            <Container {...rest} onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth}>
+                            <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth}>
                                 <span className="typo">{selected.label || placeHolder}</span>
                                 <svg
                                     width="12"

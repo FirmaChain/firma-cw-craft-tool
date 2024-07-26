@@ -44,26 +44,29 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string }>`
     align-items: center;
     justify-content: space-between;
 
-    padding: 11px 12px 11px 16px;
+    background: var(--200, #1e1e1e);
+
+    padding: 7px 10px 7px 14px;
     border-radius: 6px;
     border: 1px solid;
     ${({ $open }) => ($open ? 'border-color: #FFFFFF !important;' : 'border-color: var(--Gray-500, #383838);')}
 
     ${({ $minWidth }) => $minWidth && `min-width: ${$minWidth};`}
 
-    gap: 10px;
+    gap: 6px;
 
     cursor: pointer;
 
     .typo {
-        ${({ $open }) => ($open ? 'color: #FFFFFF !important;' : 'color: var(--Gray-750, #999);')}
+        // ${({ $open }) => ($open ? 'color: #FFFFFF !important;' : 'color: var(--Gray-750, #999);')}
+        color: #ffffff;
 
         /* Body/Body2 - Md */
         font-family: 'General Sans Variable';
-        font-size: 16px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 500;
-        line-height: 22px; /* 142.857% */
+        line-height: 20px; /* 142.857% */
     }
 
     .open-indicater-stroke {
@@ -93,7 +96,7 @@ const BGBox = styled.div`
     background: transparent;
 `;
 
-const ExecuteSelect = ({
+const ExpirationSelect = ({
     value,
     placeHolder = 'Select input',
     options,
@@ -153,4 +156,4 @@ const ExecuteSelect = ({
     );
 };
 
-export default ExecuteSelect;
+export default ExpirationSelect;

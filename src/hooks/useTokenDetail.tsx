@@ -38,7 +38,7 @@ export interface ITokenDetailState {
     marketing: string;
     marketingProject: string;
     addressBalance: string;
-    allAllowances: IAllowances[];
+    allAllowances: IAllowances[] | null;
     allSpenders: ISpenders[];
     allAccounts: IAccounts[];
     metadata: string;
@@ -81,7 +81,7 @@ const useTokenDetail = () => {
                 marketing: '',
                 marketingProject: '',
                 addressBalance: '',
-                allAllowances: [],
+                allAllowances: null,
                 allSpenders: [],
                 allAccounts: [],
                 metadata: ''
@@ -102,7 +102,7 @@ const useTokenDetail = () => {
 
                 resultData.label = contractInfo.contract_info.label;
                 resultData.codeId = contractInfo.contract_info.code_id;
-                
+
                 resultData.decimals = tokenInfo.decimals.toString();
                 resultData.tokenName = tokenInfo.name;
                 resultData.totalSupply = tokenInfo.total_supply;
@@ -135,7 +135,7 @@ const useTokenDetail = () => {
                 if (allSpenders.length > 0) {
                     for (const spenders of allSpenders) {
                         convertAllSpenders.push({
-                            Receiver: spenders["owner"],
+                            Receiver: spenders['owner'],
                             Amount: spenders.allowance,
                             Expires: spenders.expires
                         });

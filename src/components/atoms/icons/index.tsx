@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 const Amount = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
@@ -91,8 +93,8 @@ const Coins = (props: any) => {
                 <path
                     id="Icon"
                     d="M10 11C12.7614 11 15 8.76143 15 6C15 3.23858 12.7614 1 10 1C7.23858 1 5 3.23858 5 6C5 8.76143 7.23858 11 10 11Z"
-                    fill={props.$isCheck ? '#E6E6E6' : '#807E7E'}
-                    stroke="#313131"
+                    fill={props?.fill || '#807E7E'}
+                    stroke={props?.stroke || '#313131'}
                     strokeWidth="1.33333"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -100,8 +102,8 @@ const Coins = (props: any) => {
                 <path
                     id="Icon_2"
                     d="M6 15C8.76142 15 11 12.7614 11 10C11 7.23858 8.76142 5 6 5C3.23858 5 1 7.23858 1 10C1 12.7614 3.23858 15 6 15Z"
-                    fill={props.$isCheck ? '#E6E6E6' : '#807E7E'}
-                    stroke="#313131"
+                    fill={props?.fill || '#807E7E'}
+                    stroke={props?.stroke || '#313131'}
                     strokeWidth="1.33333"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -390,7 +392,7 @@ const PlusCircle = (props: any) => {
                 <path
                     id="Icon"
                     d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
-                    fill={props.$selected ? '#E6E6E6' : '#807E7E'}
+                    fill={props.fill || '#807E7E'}
                 />
                 <path
                     id="Icon_2"
@@ -433,11 +435,15 @@ const Preview = (props: any) => {
 };
 
 const Search = (props: any) => {
+    const gId = useId();
+    const pathId1 = useId();
+    const pathId2 = useId();
+
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" {...props}>
-            <g id="search-refraction">
+            <g id={gId}>
                 <path
-                    id="Icon"
+                    id={pathId1}
                     d="M14.0001 14L11.1001 11.1"
                     stroke={props.stroke || '#807E7E'}
                     strokeWidth="1.5"
@@ -445,9 +451,9 @@ const Search = (props: any) => {
                     strokeLinejoin="round"
                 />
                 <path
-                    id="Icon_2"
+                    id={pathId2}
                     d="M11.9167 7.33333C11.9167 9.86464 9.86464 11.9167 7.33333 11.9167C4.80203 11.9167 2.75 9.86464 2.75 7.33333C2.75 4.80203 4.80203 2.75 7.33333 2.75C9.86464 2.75 11.9167 4.80203 11.9167 7.33333Z"
-                    fill={props.fill || props.$isCheck ? '#E6E6E6' : '#807E7E'}
+                    fill={props.fill || '#807E7E'}
                     stroke={props.stroke || '#807E7E'}
                     strokeWidth="1.5"
                     strokeLinecap="round"
@@ -468,7 +474,7 @@ const Setting = (props: any) => {
                         fillRule="evenodd"
                         clipRule="evenodd"
                         d="M13.3068 9.00034C13.5327 9.12036 13.707 9.30986 13.8296 9.49937C14.0685 9.891 14.0491 10.3711 13.8167 10.7943L13.3649 11.5523C13.126 11.9566 12.6806 12.2093 12.2222 12.2093C11.9963 12.2093 11.7445 12.1461 11.538 12.0197C11.3701 11.9124 11.1765 11.8745 10.9699 11.8745C10.3308 11.8745 9.79499 12.3988 9.77562 13.0241C9.77562 13.7505 9.18172 14.319 8.43935 14.319H7.5614C6.81257 14.319 6.21867 13.7505 6.21867 13.0241C6.20576 12.3988 5.66996 11.8745 5.03087 11.8745C4.81784 11.8745 4.62418 11.9124 4.46279 12.0197C4.25622 12.1461 3.998 12.2093 3.77851 12.2093C3.31372 12.2093 2.86829 11.9566 2.62944 11.5523L2.18402 10.7943C1.94516 10.3837 1.93225 9.891 2.17111 9.49937C2.27439 9.30986 2.46806 9.12036 2.68754 9.00034C2.86829 8.91191 2.98449 8.76662 3.09423 8.59607C3.41701 8.05283 3.22334 7.33904 2.67463 7.01688C2.03554 6.65683 1.82897 5.8546 2.19693 5.22924L2.62944 4.48387C3.00386 3.85851 3.80433 3.63742 4.44988 4.00379C5.0115 4.307 5.74097 4.10486 6.0702 3.56794C6.17348 3.39107 6.23158 3.20157 6.21867 3.01206C6.20576 2.76571 6.27677 2.53199 6.39942 2.34249C6.63828 1.95085 7.07079 1.69818 7.54204 1.68555H8.45226C8.92996 1.68555 9.36247 1.95085 9.60133 2.34249C9.71752 2.53199 9.79499 2.76571 9.77562 3.01206C9.76271 3.20157 9.82081 3.39107 9.9241 3.56794C10.2533 4.10486 10.9828 4.307 11.5509 4.00379C12.19 3.63742 12.9969 3.85851 13.3649 4.48387L13.7974 5.22924C14.1718 5.8546 13.9652 6.65683 13.3197 7.01688C12.771 7.33904 12.5773 8.05283 12.9065 8.59607C13.0098 8.76662 13.126 8.91191 13.3068 9.00034ZM6.17385 8.00799C6.17385 8.99972 6.99369 9.78931 8.0072 9.78931C9.0207 9.78931 9.82118 8.99972 9.82118 8.00799C9.82118 7.01626 9.0207 6.22035 8.0072 6.22035C6.99369 6.22035 6.17385 7.01626 6.17385 8.00799Z"
-                        fill={props.$isCheck ? '#E6E6E6' : '#807E7E'}
+                        fill={props.fill || '#807E7E'}
                     />
                 </g>
             </g>
@@ -568,7 +574,8 @@ const RightArrow = (props: any) => {
                 <path
                     id="Icon"
                     d="M9 4L17 12L9 20"
-                    stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                    // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                    stroke={props.stroke || '#707070'}
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -583,7 +590,8 @@ const PrevPage = (props: any) => {
         <svg width={props.width || '20'} height={props.height || '20'} viewBox="0 0 20 20" fill="none" {...props}>
             <path
                 d="M12.334 6L8.33398 9.99999L12.334 14"
-                stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                stroke={props.stroke || '#707070'}
                 strokeWidth={props.strokeWidth || '1.2'}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -599,7 +607,8 @@ const LeftArrow = (props: any) => {
                 <path
                     id="Icon"
                     d="M15 4L7 12L15 20"
-                    stroke={props.stroke || props.$isCheck ? '#FFFFFF' : '#707070'}
+                    // stroke={props.stroke || props.$isCheck ? '#FFFFFF' : '#707070'}
+                    stroke={props.stroke || '#707070'}
                     strokeWidth={props.strokeWidth || '2'}
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -647,14 +656,16 @@ const LeftDoubleArrow = (props: any) => {
         <svg width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
             <path
                 d="M14.332 14L10.332 10L14.332 6.00002"
-                stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
             <path
                 d="M10.3301 14L6.33008 10L10.3301 6.00002"
-                stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -668,14 +679,16 @@ const RightDoubleArrow = (props: any) => {
         <svg width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
             <path
                 d="M6.33594 6L10.3359 9.99999L6.33594 14"
-                stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
             <path
                 d="M10.3359 6L14.3359 9.99999L10.3359 14"
-                stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
+                stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -800,6 +813,18 @@ const CloseIcon = (props: any) => (
     </svg>
 );
 
+const Calendar = (props: any) => (
+    <svg width={props.width || '16'} height={props.height || '16'} viewBox="0 0 16 16" fill="none" {...props}>
+        <path
+            d="M14 6.66683H2M10.6667 1.3335V4.00016M5.33333 1.3335V4.00016M5.2 14.6668H10.8C11.9201 14.6668 12.4802 14.6668 12.908 14.4488C13.2843 14.2571 13.5903 13.9511 13.782 13.5748C14 13.147 14 12.5869 14 11.4668V5.86683C14 4.74672 14 4.18667 13.782 3.75885C13.5903 3.38252 13.2843 3.07656 12.908 2.88482C12.4802 2.66683 11.9201 2.66683 10.8 2.66683H5.2C4.0799 2.66683 3.51984 2.66683 3.09202 2.88482C2.71569 3.07656 2.40973 3.38252 2.21799 3.75885C2 4.18667 2 4.74672 2 5.86683V11.4668C2 12.5869 2 13.147 2.21799 13.5748C2.40973 13.9511 2.71569 14.2571 3.09202 14.4488C3.51984 14.6668 4.0799 14.6668 5.2 14.6668Z"
+            stroke={props.stroke || 'white'}
+            stroke-width="1.33333"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+    </svg>
+);
+
 const Icons = {
     Amount,
     CoinStack1,
@@ -839,7 +864,8 @@ const Icons = {
     SnackbarSuccess,
     SnackbarWarn,
     SnackbarError,
-    CloseIcon
+    CloseIcon,
+    Calendar
 };
 
 export default Icons;

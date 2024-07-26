@@ -44,6 +44,8 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string }>`
     align-items: center;
     justify-content: space-between;
 
+    background: var(--200, #1e1e1e);
+
     padding: 7px 16px;
     border-radius: 6px;
     border: 1px solid;
@@ -124,10 +126,10 @@ const NetworkSelect = ({
                     setOpen(false);
                 }}
                 components={{
-                    Control: ({ children, ...rest }) => {
+                    Control: ({ children }) => {
                         return (
                             <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth}>
-                                <span className="typo">{selected.label || placeHolder}</span>
+                                <span className="typo">{selected?.label || placeHolder}</span>
                                 <svg
                                     width="20"
                                     height="20"
