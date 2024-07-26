@@ -7,6 +7,8 @@ export interface IGlobalStateProps {
     cw: CW_TYPE;
     cw20Mode: CW20_MODE_TYPE;
     cw20Minterble: boolean;
+
+    globalLoading: boolean;
 }
 
 export const HANDLE_NETWORK = 'HANDLE_NETWORK';
@@ -14,13 +16,15 @@ export const HANDLE_CW = 'HANDLE_CW';
 export const HANDLE_MENU = 'HANDLE_MENU';
 export const HANDLE_CW20_MODE = 'HANDLE_CW20_MODE';
 export const HANDLE_CW20_MINTERBLE = 'HANDLE_CW20_MINTERBLE';
+const HANDLE_GLOBAL_LOADING = 'HANDLE_GLOBAL_LOADING';
 
 export const initialState: IGlobalStateProps = {
     network: 'TESTNET',
     menu: 'INSTANTAITE',
     cw: 'CW20',
     cw20Mode: 'BASIC',
-    cw20Minterble: false
+    cw20Minterble: false,
+    globalLoading: false
 };
 
 export const ACTION_CREATORS = {
@@ -28,7 +32,8 @@ export const ACTION_CREATORS = {
     HANDLE_MENU: createAction<MENU_TYPE>(HANDLE_MENU),
     HANDLE_CW: createAction<CW_TYPE>(HANDLE_CW),
     HANDLE_CW20_MODE: createAction<CW20_MODE_TYPE>(HANDLE_CW20_MODE),
-    HANDLE_CW20_MINTERBLE: createAction<boolean>(HANDLE_CW20_MINTERBLE)
+    HANDLE_CW20_MINTERBLE: createAction<boolean>(HANDLE_CW20_MINTERBLE),
+    HANDLE_GLOBAL_LOADING: createAction<boolean>(HANDLE_GLOBAL_LOADING)
 };
 
 export const ACTIONS = {
@@ -36,7 +41,8 @@ export const ACTIONS = {
     handleCw: ACTION_CREATORS.HANDLE_CW,
     handleMenu: ACTION_CREATORS.HANDLE_MENU,
     handleCw20Mode: ACTION_CREATORS.HANDLE_CW20_MODE,
-    handleCw20Minterble: ACTION_CREATORS.HANDLE_CW20_MINTERBLE
+    handleCw20Minterble: ACTION_CREATORS.HANDLE_CW20_MINTERBLE,
+    handleGlobalLoading: ACTION_CREATORS.HANDLE_GLOBAL_LOADING
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -58,6 +64,10 @@ const reducer = createReducer(initialState, (builder) => {
 
     builder.addCase(ACTION_CREATORS.HANDLE_CW20_MINTERBLE, (state, { payload }) => {
         state.cw20Minterble = payload;
+    });
+
+    builder.addCase(ACTION_CREATORS.HANDLE_GLOBAL_LOADING, (state, { payload }) => {
+        state.globalLoading = payload;
     });
 });
 

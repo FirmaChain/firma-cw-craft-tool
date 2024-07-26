@@ -12,6 +12,8 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 22px;
+
+    z-index: 1;
 `;
 
 export const MainContent = styled.div`
