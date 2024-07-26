@@ -276,7 +276,7 @@ const Picture = (props: any) => {
 const Info = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 14 14" fill="none">
-            <g id="Iconly/Bold/Info Circle">
+            <g>
                 <g id="Info Circle">
                     <g id="Info Circle_2">
                         <path
@@ -818,12 +818,195 @@ const Calendar = (props: any) => (
         <path
             d="M14 6.66683H2M10.6667 1.3335V4.00016M5.33333 1.3335V4.00016M5.2 14.6668H10.8C11.9201 14.6668 12.4802 14.6668 12.908 14.4488C13.2843 14.2571 13.5903 13.9511 13.782 13.5748C14 13.147 14 12.5869 14 11.4668V5.86683C14 4.74672 14 4.18667 13.782 3.75885C13.5903 3.38252 13.2843 3.07656 12.908 2.88482C12.4802 2.66683 11.9201 2.66683 10.8 2.66683H5.2C4.0799 2.66683 3.51984 2.66683 3.09202 2.88482C2.71569 3.07656 2.40973 3.38252 2.21799 3.75885C2 4.18667 2 4.74672 2 5.86683V11.4668C2 12.5869 2 13.147 2.21799 13.5748C2.40973 13.9511 2.71569 14.2571 3.09202 14.4488C3.51984 14.6668 4.0799 14.6668 5.2 14.6668Z"
             stroke={props.stroke || 'white'}
-            stroke-width="1.33333"
-            stroke-linecap="round"
+            strokeWidth="1.33333"
+            strokeLinecap="round"
             stroke-linejoin="round"
         />
     </svg>
 );
+
+const Tooltip = (props: any) => (
+    <svg width={props.width || '16'} height={props.height || '16'} viewBox="0 0 17 16" fill="none" {...props}>
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M16.1665 7.99827C16.1665 12.2292 12.7319 15.6645 8.50022 15.6645C4.26079 15.6645 0.833984 12.2294 0.833984 7.99827C0.833985 3.76561 4.26075 0.332031 8.50022 0.332031C12.7319 0.332032 16.1665 3.76582 16.1665 7.99827ZM8.50024 12.267C9.06857 12.267 9.53755 11.7967 9.53755 11.2297V7.69385C9.53755 7.11979 9.06311 6.66454 8.50024 6.66454C7.93241 6.66454 7.47093 7.12471 7.47093 7.69385L7.47093 11.2297C7.47093 11.7917 7.92699 12.267 8.50024 12.267ZM8.50019 5.98683C9.06827 5.98683 9.5295 5.5256 9.5295 4.95751C9.5295 4.3919 9.07073 3.92021 8.49219 3.92021C7.91918 3.92021 7.46288 4.3944 7.46288 4.95751C7.46288 5.52808 7.9266 5.98682 8.50019 5.98683Z"
+            fill={props.fill || '#707070'}
+        />
+    </svg>
+);
+
+const CW20 = (props: any) => {
+    const id = useId();
+
+    return (
+        <svg width={props.width || '30'} height={props.height || '30'} viewBox="0 0 31 30" fill="none" {...props}>
+            <g clipPath={id}>
+                <path
+                    d="M0.986557 14.9927C0.986557 6.94248 7.51279 0.416245 15.563 0.416245C23.6136 0.416245 30.1399 6.94204 30.1399 14.9927C30.1399 23.0433 23.6132 29.5696 15.563 29.5696C7.5128 29.5696 0.986557 23.0429 0.986557 14.9927Z"
+                    fill="#222222"
+                />
+                <path
+                    d="M0.986557 14.9927C0.986557 6.94248 7.51279 0.416245 15.563 0.416245C23.6136 0.416245 30.1399 6.94204 30.1399 14.9927C30.1399 23.0433 23.6132 29.5696 15.563 29.5696C7.5128 29.5696 0.986557 23.0429 0.986557 14.9927Z"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="0.30124"
+                />
+                <path
+                    d="M0.986557 14.9927C0.986557 6.94248 7.51279 0.416245 15.563 0.416245C23.6136 0.416245 30.1399 6.94204 30.1399 14.9927C30.1399 23.0433 23.6132 29.5696 15.563 29.5696C7.5128 29.5696 0.986557 23.0429 0.986557 14.9927Z"
+                    stroke="black"
+                    strokeOpacity="0.2"
+                    strokeWidth="0.30124"
+                />
+                <path
+                    d="M18.2629 11.8846C18.0129 11.4231 17.1129 10.5 15.5129 10.5C13.5129 10.5 11.9629 12.3 11.9629 14.55V15.45C11.9629 17.3538 13.5129 19.5 15.5129 19.5C17.1129 19.5 18.0129 18.5769 18.2629 18.1154"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.62"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M18.2629 11.8846C18.0129 11.4231 17.1129 10.5 15.5129 10.5C13.5129 10.5 11.9629 12.3 11.9629 14.55V15.45C11.9629 17.3538 13.5129 19.5 15.5129 19.5C17.1129 19.5 18.0129 18.5769 18.2629 18.1154"
+                    stroke="black"
+                    strokeOpacity="0.2"
+                    strokeWidth="1.62"
+                    strokeLinecap="round"
+                />
+                <circle
+                    cx="15.5621"
+                    cy="14.9957"
+                    r="9.94091"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.39091"
+                />
+                <circle cx="15.5621" cy="14.9957" r="9.94091" stroke="black" strokeOpacity="0.2" strokeWidth="1.39091" />
+                <path
+                    d="M15.5645 0.273438V2.31889V4.36435"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M15.5645 0.273438V2.31889V4.36435"
+                    stroke="black"
+                    strokeOpacity="0.2"
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M28.4961 8L26.5026 9.15093L24.5092 10.3019"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M28.4961 8L26.5026 9.15093L24.5092 10.3019"
+                    stroke="black"
+                    strokeOpacity="0.2"
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M28.8594 22.9062L26.4857 21.5358L24.1119 20.1653"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M28.8594 22.9062L26.4857 21.5358L24.1119 20.1653"
+                    stroke="black"
+                    strokeOpacity="0.2"
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M15.5664 30.5469V28.0923V25.6378"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path d="M15.5664 30.5469V28.0923V25.6378" stroke="black" strokeOpacity="0.2" strokeWidth="1.39091" strokeLinecap="round" />
+                <path
+                    d="M2.54492 22.6797L4.5445 21.5252L6.54407 20.3708"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M2.54492 22.6797L4.5445 21.5252L6.54407 20.3708"
+                    stroke="black"
+                    strokeOpacity="0.2"
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M2.67969 7.49219L4.7561 8.691L6.83251 9.88982"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+                <path
+                    d="M2.67969 7.49219L4.7561 8.691L6.83251 9.88982"
+                    stroke="black"
+                    strokeOpacity="0.2"
+                    strokeWidth="1.39091"
+                    strokeLinecap="round"
+                />
+            </g>
+            <defs>
+                <clipPath id={id}>
+                    <rect width="29.4545" height="29.4545" fill="white" transform="translate(0.835938 0.265625)" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+const CW721 = (props: any) => {
+    return (
+        <svg width={props.width || '28'} height={props.height || '28'} viewBox="0 0 28 28" fill="none" {...props}>
+            <path
+                d="M14 0C6.26806 0 0 6.26768 0 14.0002C0 21.7328 6.26806 28 14 28C21.7319 28 28 21.7323 28 14.0002C28 6.26817 21.7319 0 14 0Z"
+                fill="#313131"
+            />
+            <g opacity="0.4">
+                <path
+                    d="M5.12793 17.641V10.3438L9.48296 17.641V10.3438"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    stroke-width="1.63636"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                <path
+                    d="M19.2842 10.3438H23.6392"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    stroke-width="1.63636"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                <path
+                    d="M21.4629 10.3438V17.641"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    stroke-width="1.63636"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                <path
+                    d="M16.6092 10.3438H12.5264V17.641"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    stroke-width="1.63636"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+                <path
+                    d="M12.5264 13.9961H16.0648"
+                    stroke={props.style?.stroke || props.stroke || '#02E191'}
+                    stroke-width="1.63636"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+            </g>
+        </svg>
+    );
+};
 
 const Icons = {
     Amount,
@@ -865,7 +1048,10 @@ const Icons = {
     SnackbarWarn,
     SnackbarError,
     CloseIcon,
-    Calendar
+    Calendar,
+    Tooltip,
+    CW20,
+    CW721
 };
 
 export default Icons;

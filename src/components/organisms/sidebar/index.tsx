@@ -94,6 +94,8 @@ const Sidebar = () => {
         else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
     };
 
+    if (location.pathname === '/') return <></>;
+
     return (
         <div style={{ minWidth: '224px', height: '100vh' }}>
             <DrawerStyled>

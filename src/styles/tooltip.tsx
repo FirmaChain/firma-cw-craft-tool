@@ -20,4 +20,26 @@ const DefaultTooltip = styled(Tooltip)`
     white-space: pre;
 `;
 
+export const LightTooltip = styled(Tooltip)`
+    //? outside
+    border-radius: 5px !important;
+    padding: 8px 12px !important;
+
+    //? inside
+    background: #e6e6e6 !important;
+    text-align: center;
+    opacity: 1 !important;
+
+    //? text
+    color: var(--Gray-200, #1a1a1a) !important;
+
+    /* Body/Body2 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 14px !important;
+
+    font-weight: 500;
+    line-height: 20px !important; /* 142.857% */
+    white-space: pre;
+`;
+
 export default DefaultTooltip;

@@ -4,7 +4,7 @@ import Icons from '../icons';
 const IconTooltip = ({
     size = '12px',
     tooltip = '',
-    TooltipIcon = <Icons.Info width={'12px'} height={'12px'} />
+    TooltipIcon = <Icons.Tooltip width={size} height={size} />
 }: {
     size?: string;
     tooltip?: string;

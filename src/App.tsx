@@ -7,7 +7,7 @@ import { rootState } from './redux/reducers';
 import QrConfirmModal from './components/organisms/modal/qrConfirmModal';
 import TxConfirmModal from './components/organisms/modal/txConfirmModal';
 import { TOOLTIP_ID } from './constants/tooltip';
-import DefaultTooltip from './styles/tooltip';
+import DefaultTooltip, { LightTooltip } from './styles/tooltip';
 import './styles/index.css';
 import './styles/font.css';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -26,6 +26,7 @@ const App = () => {
                 {txConfirm && <TxConfirmModal />}
                 <DefaultTooltip id={TOOLTIP_ID.COMMON} place="bottom" style={{ cursor: 'default', zIndex: 100 }} />
                 <DefaultTooltip id={TOOLTIP_ID.CLICKABLE} place="bottom" style={{ cursor: 'default', zIndex: 100 }} clickable />
+                <LightTooltip id={TOOLTIP_ID.LIGHT} place="bottom" style={{ cursor: 'default', zIndex: 100 }} />
             </ThemeProvider>
         </BrowserRouter>
     );

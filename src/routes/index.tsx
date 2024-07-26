@@ -6,6 +6,7 @@ import Cw20Mytoken from '../pages/cw20MyToken';
 import Cw20TokenDetail from '../pages/cw20TokenDetail';
 import Execute from '../pages/execute';
 import { SearchPage } from '@/pages';
+import LandingPage from '@/pages/landing';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
     path,
@@ -14,6 +15,7 @@ const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) =
 });
 
 const routes: any[] = [
+    routeByAuth('/', <LandingPage />, false),
     routeByAuth('/instantiate', <Cw20Instantiate />, false),
     routeByAuth('/execute', <Execute />, false),
     routeByAuth('/search', <SearchPage />, false),
@@ -22,13 +24,12 @@ const routes: any[] = [
 ];
 
 const AppRoutes = () => {
-
     return (
         <Routes>
             {routes.map((route, index) => {
                 return <Route key={index} path={route.path} element={route.element} />;
             })}
-            <Route path="*" element={<Navigate to="/instantiate" />} />
+            <Route path="*" element={<Navigate to="/" />} />
         </Routes>
     );
 };
