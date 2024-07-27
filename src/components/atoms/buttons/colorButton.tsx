@@ -25,8 +25,7 @@ const StyledButton = styled(IconButton)<{
     border: `${$buttonBorder} !important`,
     borderRadius: '8px',
     '&:hover': {
-        backgroundColor: `${$buttonColor} !important`,
-        opacity: 0.8
+        backgroundColor: `${$buttonColor} !important`
     },
     textAlign: 'center'
 }));

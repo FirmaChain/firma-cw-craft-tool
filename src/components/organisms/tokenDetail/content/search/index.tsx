@@ -63,6 +63,8 @@ const EndAdornment = ({
     onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
+    const _disableSearch = keyword === '' || disableSearch;
+
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
@@ -70,9 +72,17 @@ const EndAdornment = ({
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
-            <SearchButton disabled={keyword === '' || disableSearch} onClick={onClickSearch}>
+            {/* <SearchButton disabled={keyword === '' || disableSearch} onClick={onClickSearch}>
                 <span className="button-text">Search</span>
-            </SearchButton>
+            </SearchButton> */}
+            <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
+                <Icons.Search
+                    width="32px"
+                    height="32px"
+                    fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
+                    stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
+                />
+            </IconButton>
         </div>
     );
 };

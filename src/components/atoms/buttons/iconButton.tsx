@@ -9,11 +9,11 @@ const IconButton = styled('button')(({ disabled = false }: { disabled?: boolean 
         : {
               cursor: 'pointer',
               '&:hover': {
-                  filter: 'brightness(1.1)'
+                  filter: 'brightness(0.85)'
               },
 
               '&:active': {
-                  filter: 'brightness(1.3)'
+                  filter: 'brightness(0.7)'
               }
           };
 
