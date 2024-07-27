@@ -26,6 +26,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { IC_NAVIGATION, IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Skeleton from '@/components/atoms/skeleton';
+import { openLink } from '@/utils/common';
 
 const isFalsy = (value?: string) => {
     return value === '' || value.toLowerCase() === 'null' || !Boolean(value);
@@ -73,7 +74,7 @@ const AdditionalInformation = () => {
     }, [marketingLogo]);
 
     const onClickViewMetadata = () => {
-        window.open(`${blockExplorerLink}/accounts/${contractAddress}`);
+        openLink(`${blockExplorerLink}/accounts/${contractAddress}`);
     };
 
     const descRef = useRef<HTMLDivElement>();

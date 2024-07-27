@@ -29,7 +29,7 @@ import { rootState } from '@/redux/reducers';
 import { GlobalActions } from '@/redux/actions';
 import NetworkMenu from './network';
 import { CRAFT_CONFIGS } from '@/config';
-import { copyToClipboard, shortenAddress } from '@/utils/common';
+import { copyToClipboard, openLink, shortenAddress } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
@@ -77,13 +77,13 @@ const Sidebar = () => {
     };
 
     const onClickExternalLink = () => {
-        window.open(blockExplorerLink);
+        openLink(blockExplorerLink);
     };
 
     const onClickSocialLink = (e: any, socialLink: string) => {
         if (socialLink !== '') {
             e.preventDefault();
-            window.open(socialLink);
+            openLink(socialLink);
         }
     };
 

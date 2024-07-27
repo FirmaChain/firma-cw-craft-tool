@@ -6,7 +6,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import commaNumber from 'comma-number';
 import Icons from '../icons';
 import { DefaultTypo, TokenAmountSymbolTypo, TypeCover, TypeTypo, WalletAddressWrap } from './styles';
-import { parseAmountWithDecimal2 } from '@/utils/common';
+import { openLink, parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 
@@ -14,7 +14,7 @@ const WalletAddress = ({ address, sliceLength }: { address: string; sliceLength?
     const network = useSelector((state: rootState) => state.global.network);
     const explorerUrl = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
 
-    const onClick = () => window.open(`${explorerUrl}/accounts/${address}`);
+    const onClick = () => openLink(`${explorerUrl}/accounts/${address}`);
 
     return (
         <WalletAddressWrap>
@@ -42,7 +42,7 @@ const Hash = ({ hash, sliceLength = 10 }: { hash: string; sliceLength?: number }
     const network = useSelector((state: rootState) => state.global.network);
     const explorerUrl = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
 
-    const onClick = () => window.open(`${explorerUrl}/transactions/${hash}`);
+    const onClick = () => openLink(`${explorerUrl}/transactions/${hash}`);
 
     return (
         <DefaultTypo onClick={onClick} style={{ cursor: 'pointer', color: '#00827A', display: 'flex' }}>
@@ -58,7 +58,7 @@ const BlockHeight = ({ block, sliceLength = 12 }: { block: string; sliceLength?:
     const network = useSelector((state: rootState) => state.global.network);
     const explorerUrl = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
 
-    const onClick = () => window.open(`${explorerUrl}/blocks/${block}`);
+    const onClick = () => openLink(`${explorerUrl}/blocks/${block}`);
     return (
         <DefaultTypo onClick={onClick} style={{ cursor: 'pointer', color: '#00827A' }}>
             {commaNumber(block)}

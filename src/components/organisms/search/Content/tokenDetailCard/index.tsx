@@ -14,7 +14,7 @@ import SearchInput2 from '@/components/atoms/input/searchInput';
 import Icons from '@/components/atoms/icons';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import { parseAmountWithDecimal2 } from '@/utils/common';
+import { openLink, parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import commaNumber from 'comma-number';
 import { NETWORKS } from '@/constants/common';
@@ -171,7 +171,7 @@ const MoreInfo = () => {
     const blockExplorerLink = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
 
     const goContractPage = () => {
-        window.open(`${blockExplorerLink}/accounts/${contractAddress}`);
+        openLink(`${blockExplorerLink}/accounts/${contractAddress}`);
     };
 
     const descRef = useRef<HTMLDivElement>();
@@ -312,8 +312,10 @@ const MoreInfo = () => {
                         <div className="box-row" style={{ alignItems: 'flex-start' }}>
                             <div className="box-title">Metadata</div>
                             <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                                <div className='box-row' style={{ gap: '4px' }}>
-                                    <span className="white-typo" style={{ color: '#999999' }}>{'Copy Metadata'}</span>
+                                <div className="box-row" style={{ gap: '4px' }}>
+                                    <span className="white-typo" style={{ color: '#999999' }}>
+                                        {'Copy Metadata'}
+                                    </span>
                                     <CopyIconButton width="22px" height="22px" text={JSON.stringify(metadata)} />
                                 </div>
                                 <JsonViewer data={metadata} />
