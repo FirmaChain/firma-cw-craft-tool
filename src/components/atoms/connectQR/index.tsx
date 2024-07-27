@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { QRCode } from 'react-qrcode-logo';
-import GridLoader from 'react-spinners/GridLoader';
+import { PuffLoader } from 'react-spinners';
 
 import styled, { keyframes, css } from 'styled-components';
+import { IC_FIRMACHAIN_QRCODE } from '../icons/pngIcons';
 
 export const scaleAnim = keyframes`
   0% {
@@ -14,8 +15,6 @@ export const scaleAnim = keyframes`
 `;
 
 export const QRWrapper = styled.div<{ $isLoading: boolean }>`
-    width: 140px;
-    height: 140px;
     padding: 12px;
     ${(props) => (props.$isLoading ? '' : 'background-color: white;')}
     border-radius: 8px;
@@ -81,9 +80,20 @@ const ConnectQR = ({ qrSize, qrcode, expireDate, isActive, setTimerText, onExpir
     return (
         <QRWrapper $isLoading={qrcode === ''}>
             {qrcode === '' ? (
-                <GridLoader loading={true} color={'#3550DEcc'} />
+                <div style={{ width: qrSize, height: qrSize, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <PuffLoader loading={true} color={'#FFFFFF'} />
+                </div>
             ) : (
-                <QRCode value={`${qrcode}`} size={qrSize} quietZone={0} logoImage={''} logoWidth={40} logoHeight={40} />
+                <div style={{ background: '#FFF', display: 'flex', justifyContent: 'center', borderRadius: '12px' }}>
+                    <QRCode
+                        value={`${qrcode}`}
+                        size={qrSize}
+                        quietZone={0}
+                        logoImage={IC_FIRMACHAIN_QRCODE}
+                        logoWidth={40}
+                        logoHeight={40}
+                    />
+                </div>
             )}
         </QRWrapper>
     );

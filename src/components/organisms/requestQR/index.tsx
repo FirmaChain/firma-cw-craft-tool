@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { QRContainer, QRTimerText, RefreshIconButton } from './style';
+import { QRContainer, TimerTypo, TimerWrap, TxTimerTypo } from './style';
 import ConnectQR from '@/components/atoms/connectQR';
 import { CRAFT_CONFIGS } from '@/config';
 import { rootState } from '@/redux/reducers';
-import useAPI from '@/components/../hooks/useAPI';
-import Icons from '@/components/atoms/icons';
+import useAPI from '@/hooks/useAPI';
+import { IC_RESET, IC_RESET_WHITE } from '@/components/atoms/icons/pngIcons';
+import { getTransactionStatusCode } from '@/utils/transaction';
 
 interface IProps {
+    qrSize?: number;
+    isTxModal?: boolean;
     module: string;
     onSuccess: (requestData: Object) => void;
     onFailed: (requestData: Object) => void;
@@ -16,10 +19,9 @@ interface IProps {
     signer?: string;
 }
 
-const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IProps) => {
-    const { network } = useSelector((state: rootState) => state.global);
+const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFailed, params = {}, signer = '' }: IProps) => {
+    const network = useSelector((state: rootState) => state.global.network);
     const { checkRequest, generateRequestQR } = useAPI();
-    // const [craftServerURI, setCraftServerURI] = useState<string>(CRAFT_CONFIGS.MAINNET.CRAFT_SERVER_URI);
 
     const [requestKey, setRequestKey] = useState('');
     const [qrcode, setQrcode] = useState('');
@@ -61,21 +63,35 @@ const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IP
     };
 
     const onTickCheckRequest = async () => {
-        checkRequest(craftServerURI, requestKey).then((requestData) => {
-            if (requestData.status === '1') {
+        const requestData = await checkRequest(craftServerURI, requestKey);
+
+        try {
+            if (requestData?.status === '1') {
                 setActiveQR(false);
-                onSuccess(requestData);
+
+                if (requestData?.type === 'LOGIN') {
+                    onSuccess(requestData);
+                } else {
+                    const code = getTransactionStatusCode(requestData.signData);
+                    if (code === 0) {
+                        onSuccess(requestData);
+                    } else {
+                        onFailed(requestData);
+                    }
+                }
             } else if (requestData.status === '-2') {
                 setActiveQR(false);
                 onFailed(requestData);
             }
-        });
+        } catch (error) {
+            onFailed(requestData);
+        }
     };
 
     return (
-        <QRContainer>
+        <QRContainer style={{ gap: module === '/login' ? '24px' : '16px' }}>
             <ConnectQR
-                qrSize={140}
+                qrSize={qrSize}
                 qrcode={qrcode}
                 expireDate={expireDate}
                 isActive={activeQR}
@@ -90,13 +106,35 @@ const RequestQR = ({ module, onSuccess, onFailed, params = {}, signer = '' }: IP
                     onTickCheckRequest();
                 }}
             />
-            {qrcode !== '' && (
-                <QRTimerText onClick={() => refreshRequestQR()}>
-                    {timerText}
-                    <Icons.Edit />
-                    {/* <RefreshIconButton /> */}
-                </QRTimerText>
-            )}
+            <TimerWrap $isTxModal={isTxModal} onClick={() => qrcode !== '' && refreshRequestQR()}>
+                {qrcode !== '00:00' && (
+                    <>
+                        {!isTxModal ? (
+                            <>
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    {timerText.split('').map((typo, idx) => (
+                                        <TimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
+                                            {typo}
+                                        </TimerTypo>
+                                    ))}
+                                </div>
+                                <img src={IC_RESET} alt="reset" style={{ width: '16px', height: '16px' }} />
+                            </>
+                        ) : (
+                            <>
+                                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                    {timerText.split('').map((typo, idx) => (
+                                        <TxTimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
+                                            {typo}
+                                        </TxTimerTypo>
+                                    ))}
+                                </div>
+                                <img src={IC_RESET_WHITE} alt="reset" style={{ width: '12px', height: '12px' }} />
+                            </>
+                        )}
+                    </>
+                )}
+            </TimerWrap>
         </QRContainer>
     );
 };

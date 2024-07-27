@@ -4,7 +4,7 @@ import Icons from '@/components/atoms/icons';
 import { ModalBase } from './style';
 import { useModalStore } from '@/hooks/useModal';
 import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_FIRMA_LOGO, IC_NAVIGATION } from '@/components/atoms/icons/pngIcons';
-import RequestQR from '../requestQR/index2';
+import RequestQR from '../requestQR';
 import { useSnackbar } from 'notistack';
 import useInstantiateStore from '../instantiate/instaniateStore';
 import useFormStore from '@/store/formStore';

@@ -1,17 +1,54 @@
-import { rootState } from "@/redux/reducers";
-import { useSnackbar } from "notistack";
-import { useSelector } from "react-redux";
-import { ResultsContentHashWrap, ResultsContentSummeryWrap, ResultsContentWrap, ResultsHeader, ResultsSuccessIcon, ResultsTitleExecuteTypo, ResultsTitleMessage, ResultsTitleSuccessTypo, ResultsTitleWrap, FCTSymbolIcon, FCTSymbolMiniIcon, FeeAmount, FeeLabel, ItemValueWrap, ItemWrap, ModalBase, ModalCancelButton, ModalCancelTypo, ModalContentBlackCard, ModalContentGrayCard, ModalContentWrap, ModalTitleDescTypo, ModalTitleTypo, ModalTitleWrap, MyBalanceValue, MyBalanceWrap, QrCodeWrap, ResultsButtonWrap, ResultsConfirmButton, ResultsConfirmButtonTypo, ResultsGoToMyMintetedTokenButton, ResultsGoToMyMintetedTokenButtonTypo, ResultsTitleFailedTypo } from "../style";
-import React, { useState } from "react";
-import { useModalStore } from "@/hooks/useModal";
-import { AmountItem, TransactionItem, UrlItem, WalletItem } from "..";
-import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from "@/components/atoms/icons/pngIcons";
-import RequestQR from "@/components/organisms/requestQR/index2";
-import { formatWithCommas, getTokenAmountFromUToken } from "@/utils/balance";
-import { FirmaUtil } from "@firmachain/firma-js";
-import { getTransactionHash } from "@/utils/transaction";
-import { useNavigate } from "react-router-dom";
-import { CRAFT_CONFIGS } from "@/config";
+import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
+import { useSelector } from 'react-redux';
+import {
+    ResultsContentHashWrap,
+    ResultsContentSummeryWrap,
+    ResultsContentWrap,
+    ResultsHeader,
+    ResultIcon,
+    ResultsTitleExecuteTypo,
+    ResultsTitleMessage,
+    ResultsTitleSuccessTypo,
+    ResultsTitleWrap,
+    FCTSymbolIcon,
+    FCTSymbolMiniIcon,
+    FeeAmount,
+    FeeLabel,
+    ItemValueWrap,
+    ItemWrap,
+    ModalBase,
+    ModalCancelButton,
+    ModalCancelTypo,
+    ModalContentBlackCard,
+    ModalContentGrayCard,
+    ModalContentWrap,
+    ModalTitleDescTypo,
+    ModalTitleTypo,
+    ModalTitleWrap,
+    MyBalanceValue,
+    MyBalanceWrap,
+    QrCodeWrap,
+    ResultsButtonWrap,
+    ResultsConfirmButton,
+    ResultsConfirmButtonTypo,
+    ResultsGoToMyMintetedTokenButton,
+    ResultsGoToMyMintetedTokenButtonTypo,
+    ResultsTitleFailedTypo,
+    ResultFailedTypo,
+    ResultFailedDesc
+} from '../style';
+import React, { useState } from 'react';
+import { useModalStore } from '@/hooks/useModal';
+import { AmountItem, ExpirationItem, ResultAmountItem, TransactionItem, UrlItem, WalletAdress, WalletItem } from '..';
+import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
+import RequestQR from '@/components/organisms/requestQR';
+import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
+import { FirmaUtil } from '@firmachain/firma-js';
+import { getTransactionHash } from '@/utils/transaction';
+import { useNavigate } from 'react-router-dom';
+import { CRAFT_CONFIGS } from '@/config';
+import Divider from '@/components/atoms/divider';
 
 interface SuccessData {
     addedAt: string;
@@ -23,21 +60,40 @@ interface SuccessData {
     type: string;
 }
 
+interface ModalParameters {
+    header: {
+        title: string;
+    };
+    content: {
+        decimals?: string;
+        symbol?: string;
+        fctAmount?: string;
+        feeAmount?: string;
+        list?: {
+            label: string;
+            value: string;
+            type: string;
+        }[];
+    };
+    contract: string;
+    msg: Record<string, any>;
+}
+
 const QRCodeModal = ({
     id,
     module,
     params,
-    onClickConfirm,
+    onClickConfirm
 }: {
     id: string;
     module: string;
-    params: any;
+    params: ModalParameters;
     onClickConfirm: () => void;
 }) => {
     const navigate = useNavigate();
-    
+
     const { enqueueSnackbar } = useSnackbar();
-    
+
     const network = useSelector((v: rootState) => v.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -53,29 +109,24 @@ const QRCodeModal = ({
 
     const onClickTransactionHash = (hash: string) => {
         const blockExplorerLink = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-        window.open(`${blockExplorerLink}/transactions/${hash}`)
+        window.open(`${blockExplorerLink}/transactions/${hash}`);
     };
 
     return (
-        <ModalBase
-            style={{
-                // width: status === 'success' || status === 'failure' ? '544px' : 'fit-content',
-                width: '544px',
-                padding: status === 'success' || status === 'failure' ? '48px 24px 24px' : '48px 24px 24px'
-            }}
-        //  width={'534px'} visible={true} closable={true} onClose={onCloseModal}
-        >
+        <ModalBase style={{ width: '544px', padding: '52px 28px 36px', gap: 0 }}>
             <img
                 src={IC_CLOSE}
                 alt="close"
                 onClick={onCloseModal}
-                style={{ width: '24px', height: '24px', position: 'absolute', right: 12, top: 12, cursor: 'pointer' }}
+                style={{ width: '24px', height: '24px', position: 'absolute', right: 24, top: 24, cursor: 'pointer' }}
             />
-            {status === "init" && (
+            {status === 'init' && (
                 <>
                     <ModalTitleWrap>
-                        <ModalTitleTypo>{params.header.title}</ModalTitleTypo>
-                        <ModalTitleDescTypo>{'Scan the QR code\nwith your mobile Firma Station for transaction.'}</ModalTitleDescTypo>
+                        <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
+                        <ModalTitleDescTypo style={{ marginBottom: '24px' }}>
+                            {'Scan the QR code\nwith your mobile Firma Station for transaction.'}
+                        </ModalTitleDescTypo>
                         <QrCodeWrap>
                             <RequestQR
                                 qrSize={144}
@@ -99,21 +150,26 @@ const QRCodeModal = ({
                             />
                         </QrCodeWrap>
                     </ModalTitleWrap>
-                    <ModalContentWrap>
+                    <ModalContentWrap style={{ marginBottom: '36px' }}>
                         <ModalContentBlackCard>
-                            {params.content.list.map((elem) => {
-                                if (elem.type === "amount") {
+                            {params.content.list.map((el) => {
+                                if (el.type === 'amount') {
                                     return (
-                                        <AmountItem label={elem.label} decimals={params.content.decimals} amount={elem.value} symbol={params.content.symbol} />
-                                    )
-                                } else if (elem.type === "wallet") {
-                                    return (
-                                        <WalletItem label={elem.label} count={elem.value} />
-                                    )
-                                } else if (elem.type === "url") {
-                                    return (
-                                        <UrlItem label={elem.label} logo={elem.value} />
-                                    )
+                                        <AmountItem
+                                            label={el.label}
+                                            decimals={params.content.decimals}
+                                            amount={el.value}
+                                            symbol={params.content.symbol}
+                                        />
+                                    );
+                                } else if (el.type === 'wallet') {
+                                    return <WalletAdress label={el.label} address={el.value} />;
+                                } else if (el.type === 'url') {
+                                    return <UrlItem label={el.label} logo={el.value} />;
+                                } else if (el.type === 'wallet-count') {
+                                    return <WalletItem label={el.label} count={el.value} />;
+                                } else if (['at_time', 'at_height', 'never'].includes(el.type)) {
+                                    return <ExpirationItem value={el.value} type={el.type} />;
                                 }
                             })}
                         </ModalContentBlackCard>
@@ -121,33 +177,36 @@ const QRCodeModal = ({
                             <ItemWrap>
                                 <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
                                 <ItemValueWrap>
-                                    <FeeAmount>{formatWithCommas(FirmaUtil.getFCTStringFromUFCT(params.content.feeAmount))}</FeeAmount>
-                                    <FCTSymbolIcon src={IC_FIRMACHAIN} alt={"FCT Symbol Icon"} />
+                                    <FeeAmount>{FirmaUtil.getFCTStringFromUFCT(Number(params.content.feeAmount))}</FeeAmount>
+                                    <FCTSymbolIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Icon'} />
                                 </ItemValueWrap>
                             </ItemWrap>
                             <ItemWrap>
-                                <FeeLabel>{"(FCT)"}</FeeLabel>
+                                <FeeLabel>{'(FCT)'}</FeeLabel>
                                 <MyBalanceWrap>
                                     <MyBalanceValue>{`(My Balance :`}</MyBalanceValue>
-                                    <MyBalanceValue>{formatWithCommas(getTokenAmountFromUToken(params.content.fctAmount, "6"))}</MyBalanceValue>
-                                    <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={"FCT Symbol Mini Icon"} />
-                                    <MyBalanceValue style={{ marginLeft: "-4px" }}>{`)`}</MyBalanceValue>
+                                    <MyBalanceValue>
+                                        {formatWithCommas(getTokenAmountFromUToken(params.content.fctAmount, '6'))}
+                                    </MyBalanceValue>
+                                    <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Mini Icon'} />
+                                    <MyBalanceValue style={{ marginLeft: '-4px' }}>{`)`}</MyBalanceValue>
                                 </MyBalanceWrap>
                             </ItemWrap>
                         </ModalContentGrayCard>
                     </ModalContentWrap>
-                    <ModalCancelButton onClick={() => {
+                    <ModalCancelButton
+                        onClick={() => {
                             onCloseModal();
-                        }
-                    }>
+                        }}
+                    >
                         <ModalCancelTypo>Cancel</ModalCancelTypo>
                     </ModalCancelButton>
                 </>
             )}
-            {status === "success" && (
-                <>
+            {status === 'success' && (
+                <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center' }}>
                     <ResultsHeader>
-                        <ResultsSuccessIcon src={IC_CEHCK_ROUND} alt={"Modal Results"}/>
+                        <ResultIcon src={IC_CEHCK_ROUND} alt={'Modal Results'} />
                         <ResultsTitleWrap>
                             <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                             <ResultsTitleSuccessTypo>Success</ResultsTitleSuccessTypo>
@@ -156,64 +215,98 @@ const QRCodeModal = ({
                     </ResultsHeader>
                     <ResultsContentWrap>
                         <ResultsContentSummeryWrap>
-                            {params.content.list.map((elem) => {
-                                if (elem.type === "amount") {
+                            {params.content.list.map((el) => {
+                                if (el.type === 'amount') {
                                     return (
-                                        <AmountItem label={elem.label} decimals={params.content.decimals} amount={elem.value} symbol={params.content.symbol} />
-                                    )
-                                } else if (elem.type === "wallet") {
-                                    return (
-                                        <WalletItem label={elem.label} count={elem.value} />
-                                    )
-                                } else if (elem.type === "url") {
-                                    return (
-                                        <UrlItem label={elem.label} logo={elem.value} />
-                                    )
+                                        <ResultAmountItem
+                                            label={el.label}
+                                            decimals={params.content.decimals}
+                                            amount={el.value}
+                                            symbol={params.content.symbol}
+                                        />
+                                    );
+                                } else if (el.type === 'wallet') {
+                                    return <WalletAdress label={el.label} address={el.value} />;
+                                } else if (el.type === 'url') {
+                                    return <UrlItem label={el.label} logo={el.value} />;
+                                } else if (el.type === 'wallet-count') {
+                                    return <WalletItem label={el.label} count={el.value} />;
+                                } else if (['at_time', 'at_height', 'never'].includes(el.type)) {
+                                    return <ExpirationItem value={el.value} type={el.type} />;
                                 }
                             })}
                         </ResultsContentSummeryWrap>
+                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
                         <ResultsContentHashWrap>
-                            <TransactionItem label={"Transaction Hash"} hash={getTransactionHash(result.signData)} onClickHash={(hash) => onClickTransactionHash(hash)}/>
+                            <TransactionItem
+                                label={'Transaction Hash'}
+                                hash={getTransactionHash(result.signData)}
+                                onClickHash={(hash) => onClickTransactionHash(hash)}
+                            />
                         </ResultsContentHashWrap>
                     </ResultsContentWrap>
                     <ResultsButtonWrap>
-                        <ResultsConfirmButton onClick={() => {
-                            onCloseModal();
-                            onClickConfirm();
-                        }}>
+                        <ResultsConfirmButton
+                            onClick={() => {
+                                onCloseModal();
+                                onClickConfirm();
+                            }}
+                        >
                             <ResultsConfirmButtonTypo>Confirm</ResultsConfirmButtonTypo>
                         </ResultsConfirmButton>
-                        <ResultsGoToMyMintetedTokenButton onClick={() => {
-                            navigate(`/mytoken/detail/${params.contract}`);
-                            onCloseModal();
-                        }}>
+                        <ResultsGoToMyMintetedTokenButton
+                            onClick={() => {
+                                navigate(`/mytoken/detail/${params.contract}`);
+                                onCloseModal();
+                            }}
+                        >
                             <ResultsGoToMyMintetedTokenButtonTypo>Go to My Minted Tokens</ResultsGoToMyMintetedTokenButtonTypo>
                         </ResultsGoToMyMintetedTokenButton>
                     </ResultsButtonWrap>
-                </>
+                </div>
             )}
-            {status === "failure" && (
-                <>
+            {status === 'failure' && (
+                <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center' }}>
                     <ResultsHeader>
-                        <ResultsSuccessIcon src={IC_CIRCLE_FAIL} alt={"Modal Results"}/>
+                        <ResultIcon src={IC_CIRCLE_FAIL} alt={'Modal Results'} />
                         <ResultsTitleWrap>
                             <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                             <ResultsTitleFailedTypo>Failed</ResultsTitleFailedTypo>
                         </ResultsTitleWrap>
-                        <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage>
+                        {/* <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage> */}
                     </ResultsHeader>
                     <ResultsContentWrap>
                         <ResultsContentSummeryWrap>
-                            
+                            <ResultFailedTypo>{`${params.header.title} has been Failed.`}</ResultFailedTypo>
+                            <ResultFailedDesc>Please try again later.</ResultFailedDesc>
                         </ResultsContentSummeryWrap>
-                        <ResultsContentHashWrap>
-                            <TransactionItem label={"Transaction Hash"} hash={getTransactionHash(result.signData)} onClickHash={(hash) => onClickTransactionHash(hash)}/>
-                        </ResultsContentHashWrap>
+                        {result?.signData && (
+                            <>
+                                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                <ResultsContentHashWrap>
+                                    <TransactionItem
+                                        label={'Transaction Hash'}
+                                        hash={getTransactionHash(result?.signData)}
+                                        onClickHash={(hash) => onClickTransactionHash(hash)}
+                                    />
+                                </ResultsContentHashWrap>
+                            </>
+                        )}
                     </ResultsContentWrap>
-                </>
+
+                    <ResultsConfirmButton
+                        style={{ width: '100%' }}
+                        onClick={() => {
+                            onCloseModal();
+                            onClickConfirm();
+                        }}
+                    >
+                        <ResultsConfirmButtonTypo>Confirm</ResultsConfirmButtonTypo>
+                    </ResultsConfirmButton>
+                </div>
             )}
         </ModalBase>
-    )
-}
+    );
+};
 
 export default React.memo(QRCodeModal);

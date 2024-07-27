@@ -5,7 +5,7 @@ import { FirmaUtil } from '@firmachain/firma-js';
 
 import { WalletActions } from '@/redux/actions';
 import { ModalBase, SignDesc, SignTitle, StepDesc, StepIcon } from './style';
-import RequestQR from '../requestQR/index2';
+import RequestQR from '../requestQR';
 import { IC_CLOSE, IC_FIRMA_LOGO, IC_ROUND_ARROW_UP, IC_SCAN } from '@/components/atoms/icons/pngIcons';
 import { useModalStore } from '@/hooks/useModal';
 
@@ -18,12 +18,12 @@ const WalletConnectModal = ({ id }: { id: string }) => {
     };
 
     return (
-        <ModalBase style={{ width: '544px', padding: '48px 0 0', userSelect: 'none' }}>
+        <ModalBase style={{ width: '544px', padding: '0', userSelect: 'none', gap: 0, overflow: 'hidden' }}>
             <img
                 src={IC_CLOSE}
                 alt="close"
                 onClick={onCloseModal}
-                style={{ width: '24px', height: '24px', position: 'absolute', right: 12, top: 12, cursor: 'pointer' }}
+                style={{ width: '24px', height: '24px', position: 'absolute', right: 24, top: 24, cursor: 'pointer' }}
             />
             <div
                 style={{
@@ -32,7 +32,7 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    paddingBottom: '40px'
+                    padding: '56px 75px 32px'
                 }}
             >
                 <div

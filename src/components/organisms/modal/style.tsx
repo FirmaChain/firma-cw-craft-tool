@@ -1,27 +1,28 @@
+import IconButton from '@/components/atoms/buttons/iconButton';
 import styled from 'styled-components';
 
 export const ModalTitleWrap = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    // gap: 16px;
     justify-content: center;
 `;
 
 export const ModalTitleTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 22px;
     font-style: normal;
     font-weight: 600;
-    line-height: 24px; 
+    line-height: 24px;
 `;
 
 export const ModalTitleDescTypo = styled.div`
     color: var(--Gray-650, #707070);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -32,7 +33,8 @@ export const ModalTitleDescTypo = styled.div`
 export const QrCodeWrap = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    // gap: 16px;
+    margin-bottom: 28px;
 `;
 
 export const ModalContentBlackCard = styled.div`
@@ -59,17 +61,30 @@ export const ItemValueWrap = styled.div`
 `;
 
 export const ItemAmountValue = styled.div`
-    color: #02E191;
-    font-family: "General Sans Variable";
-    font-size: 14px;
+    color: #02e191;
+
+    /* Heading/H5 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 18px;
     font-style: normal;
     font-weight: 600;
-    line-height: 20px; /* 142.857% */
+    line-height: 22px; /* 122.222% */
+`;
+
+export const ResultItemAmountTypo = styled.div`
+    color: #e6e6e6;
+
+    /* Heading/H5 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 122.222% */
 `;
 
 export const ItemAmountSymbol = styled.div`
-    color: var(--Gray-600, #5A5A5A);
-    font-family: "General Sans Variable";
+    color: var(--Gray-600, #5a5a5a);
+    font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
@@ -77,9 +92,9 @@ export const ItemAmountSymbol = styled.div`
 `;
 
 export const ItemLabel = styled.div`
-    color: var(--Gray-700, #807E7E);
+    color: var(--Gray-700, #807e7e);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -87,8 +102,8 @@ export const ItemLabel = styled.div`
 `;
 
 export const ItemValue = styled.div`
-    color: var(--Gray-700, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-700, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -107,12 +122,12 @@ export const ModalContentGrayCard = styled.div`
     gap: 2px;
     justify-content: space-between;
     border-radius: 8px;
-    background: var(--Gray-200, #1A1A1A);
+    background: var(--Gray-200, #1a1a1a);
 `;
 
 export const FeeLabel = styled.div`
     color: var(--Gray-650, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -122,7 +137,7 @@ export const FeeLabel = styled.div`
 export const FeeAmount = styled.div`
     color: var(--Gray-750, #999);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -144,7 +159,7 @@ export const MyBalanceWrap = styled.div`
 export const MyBalanceValue = styled.div`
     color: var(--Gray-750, #999);
     text-align: right;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -162,26 +177,14 @@ export const ModalTitle = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 22px;
     font-style: normal;
     font-weight: 600;
-    line-height: 24px; 
+    line-height: 24px;
 `;
-
-
-
-
-
-
-
-
-
-
-
-
 
 export const ModalContent = styled.div`
     width: 100%;
@@ -378,7 +381,7 @@ export const ModalContentWrap = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 `;
 
 export const ModalButtonWrap = styled.div`
@@ -387,7 +390,7 @@ export const ModalButtonWrap = styled.div`
     justify-content: space-between;
 `;
 
-export const ModalCancelButton = styled.div`
+export const ModalCancelButton = styled(IconButton)`
     width: 100%;
     height: auto;
     display: flex;
@@ -402,7 +405,7 @@ export const ModalCancelButton = styled.div`
 export const ModalCancelTypo = styled.div`
     color: var(--Gray-750, #999);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -413,12 +416,16 @@ export const ResultsHeader = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    // gap: 14px;
+
+    margin-bottom: 28px;
 `;
 
-export const ResultsSuccessIcon = styled.img`
+export const ResultIcon = styled.img`
     width: 56px;
     height: 56px;
+
+    margin-bottom: 16px;
 `;
 
 export const ResultsTitleWrap = styled.div`
@@ -427,8 +434,8 @@ export const ResultsTitleWrap = styled.div`
 `;
 
 export const ResultsTitleExecuteTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 22px;
     font-style: normal;
     font-weight: 600;
@@ -436,8 +443,8 @@ export const ResultsTitleExecuteTypo = styled.div`
 `;
 
 export const ResultsTitleSuccessTypo = styled.div`
-    color: var(--Status-Success, var(--Primary-Base-White, #57D962));
-    font-family: "General Sans Variable";
+    color: var(--Status-Success, var(--Primary-Base-White, #57d962));
+    font-family: 'General Sans Variable';
     font-size: 22px;
     font-style: normal;
     font-weight: 600;
@@ -445,8 +452,8 @@ export const ResultsTitleSuccessTypo = styled.div`
 `;
 
 export const ResultsTitleFailedTypo = styled.div`
-    color: var(--Status-Alert, var(--Primary-Base-White, #E55250));
-    font-family: "General Sans Variable";
+    color: var(--Status-Alert, var(--Primary-Base-White, #e55250));
+    font-family: 'General Sans Variable';
     font-size: 22px;
     font-style: normal;
     font-weight: 600;
@@ -456,17 +463,48 @@ export const ResultsTitleFailedTypo = styled.div`
 export const ResultsTitleMessage = styled.div`
     color: var(--Gray-650, #707070);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
+
+    margin-top: 14px;
 `;
 
 export const ResultsContentWrap = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    margin-bottom: 36px;
+
+    border-radius: 8px;
+    background: var(--Gray-150, #141414);
+`;
+
+export const ResultFailedTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    text-align: center;
+
+    /* Body/Body2 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ResultFailedDesc = styled.div`
+    color: var(--Gray-700, #807e7e);
+    text-align: center;
+
+    /* Body/Body2 - Rg */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
 `;
 
 export const ResultsContentSummeryWrap = styled.div`
@@ -476,10 +514,10 @@ export const ResultsContentSummeryWrap = styled.div`
     justify-content: center;
     align-items: center;
     gap: 10px;
-    padding: 20px 16px 24px 24px;
-    border-radius: 8px 8px 0px 0px;
-    border-bottom: 1px dashed var(--Gray-400, #2C2C2C);
-    background: var(--Gray-150, #141414);
+    padding: 20px 24px 16px 24px;
+    // border-radius: 8px 8px 0px 0px;
+    // border-bottom: 1px dashed var(--Gray-400, #2c2c2c);
+    // background: var(--Gray-150, #141414);
 `;
 
 export const ResultsItemWrap = styled.div`
@@ -489,8 +527,8 @@ export const ResultsItemWrap = styled.div`
 `;
 
 export const ResultsItemLabel = styled.div`
-    color: var(--Gray-700, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-700, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
@@ -503,8 +541,8 @@ export const ResultsItemValueWrap = styled.div`
 `;
 
 export const ResultsItemValue = styled.div`
-    color: #E6E6E6;
-    font-family: "General Sans Variable";
+    color: #e6e6e6;
+    font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -512,8 +550,8 @@ export const ResultsItemValue = styled.div`
 `;
 
 export const ResultsItemSymbol = styled.div`
-    color: var(--Gray-600, #5A5A5A);
-    font-family: "General Sans Variable";
+    color: var(--Gray-600, #5a5a5a);
+    font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
@@ -521,15 +559,15 @@ export const ResultsItemSymbol = styled.div`
 `;
 
 export const ResultsContentHashWrap = styled.div`
-    padding: 20px 16px 24px 24px;
-    border-radius: 0px 0px 8px 8px;
-    background: var(--Gray-150, #141414);
+    padding: 16px 24px 20px 24px;
+    // border-radius: 0px 0px 8px 8px;
+    // background: var(--Gray-150, #141414);
 `;
 
 export const ItemHashValue = styled.div`
-    color: var(--Green-700, #02A288);
+    color: var(--Green-700, #02a288);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
@@ -542,12 +580,13 @@ export const ResultsButtonWrap = styled.div`
     gap: 12px;
 `;
 
-export const ResultsConfirmButton = styled.div`
+export const ResultsConfirmButton = styled(IconButton)`
     display: flex;
     padding: 10px 0px;
     justify-content: center;
     align-items: center;
-    flex: 1 0 0;border-radius: 6px;
+    flex: 1 0 0;
+    border-radius: 6px;
     background: var(--Gray-450, #313131);
     cursor: pointer;
 `;
@@ -555,30 +594,70 @@ export const ResultsConfirmButton = styled.div`
 export const ResultsConfirmButtonTypo = styled.div`
     color: var(--Gray-750, #999);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
 `;
 
-export const ResultsGoToMyMintetedTokenButton = styled.div`
+export const ResultsGoToMyMintetedTokenButton = styled(IconButton)`
     display: flex;
     padding: 10px 0px;
     justify-content: center;
     align-items: center;
     flex: 1 0 0;
     border-radius: 6px;
-    background: var(--Green-500, #02E191);
+    background: var(--Green-500, #02e191);
     cursor: pointer;
 `;
 
 export const ResultsGoToMyMintetedTokenButtonTypo = styled.div`
-    color: var(--Gray-200, #1A1A1A);
+    color: var(--Gray-200, #1a1a1a);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: 20px; /* 142.857% */
+`;
+
+export const ExpirationTypo = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .main-text {
+        color: var(--Gray-900, var(--Primary-Base-White, #fff));
+
+        /* Body/Body3 - Md */
+        font-family: 'General Sans Variable';
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px; /* 138.462% */
+    }
+
+    .sub-text {
+        color: var(--Gray-600, #5a5a5a);
+
+        /* Body/Body4 - Md */
+        font-family: 'General Sans Variable';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 14px; /* 116.667% */
+    }
+`;
+
+export const ItemUrlTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    text-align: right;
+
+    /* Body/Body3 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 138.462% */
 `;

@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 
 export const QRContainer = styled.div`
-    // width: 100%;
-    // height: 208px;
-    // margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 16px;
 `;
 
 export const QRTimerText = styled.div`
@@ -43,8 +40,8 @@ export const TimerTypo = styled.div`
 `;
 
 export const TxTimerTypo = styled.div`
-    color: var(--Gray-800, #DCDCDC);
-    font-family: "General Sans Variable";
+    color: var(--Gray-800, #dcdcdc);
+    font-family: 'General Sans Variable';
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
@@ -52,14 +49,16 @@ export const TxTimerTypo = styled.div`
 `;
 
 export const TimerWrap = styled.div<{ $isTxModal: boolean }>`
+    width: 90px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    min-width: ${({ $isTxModal }) => ($isTxModal === false ? '70px': '70px')};
+    min-width: ${({ $isTxModal }) => ($isTxModal === false ? '70px' : '70px')};
     padding: 4px 12px !important;
     border-radius: 32px;
-    background-color: ${({ $isTxModal }) => ($isTxModal === false? '#02E191' : '#383838')};
+    background-color: ${({ $isTxModal }) => ($isTxModal === false ? '#02E191' : '#383838')};
     user-select: none;
     cursor: pointer;
 `;
