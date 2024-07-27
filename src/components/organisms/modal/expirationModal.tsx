@@ -128,6 +128,11 @@ const ExpirationModal = ({ id, setExpirationDate }: { id: string; setExpirationD
         closeModal(id);
     };
 
+    const onClickOK = () => {
+        setExpirationDate(targetTimestamp);
+        closeModal(id);
+    };
+
     return (
         <ModalBase
             style={{
@@ -151,7 +156,7 @@ const ExpirationModal = ({ id, setExpirationDate }: { id: string; setExpirationD
                 <CancelBtn onClick={onCloseModal}>
                     <div className="typo">Cancel</div>
                 </CancelBtn>
-                <ConfirmBtn onClick={() => setExpirationDate(targetTimestamp)}>
+                <ConfirmBtn onClick={onClickOK}>
                     <div className="typo">Set</div>
                 </ConfirmBtn>
             </ButtonWrapper>
