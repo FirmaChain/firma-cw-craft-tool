@@ -13,6 +13,7 @@ const Cw20Instantiate = () => {
     const walletList = useInstantiateStore((v) => v.walletList);
 
     const clearForm = useFormStore((state) => state.clearForm);
+    const clearInput = useInstantiateStore((v) => v.clearForm);
 
     const isBasic = cw20Mode === 'BASIC';
 
@@ -27,6 +28,7 @@ const Cw20Instantiate = () => {
         return () => {
             GlobalActions.handleCw20Mode('BASIC');
             clearForm();
+            clearInput();
         };
     }, []);
 

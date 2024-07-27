@@ -12,8 +12,8 @@ import { compareAmounts, compareStringsAsNumbers, getApplyDecimalsAmount, isVali
 import { CRAFT_CONFIGS } from '@/config';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
-import InstantitateModal from '../../modal/instantitateModal';
 import useInstantiateStore from '../instaniateStore';
+import InstantitateModal from '../../modal/instantitateModal';
 
 interface IProps {
     isBasic: boolean;
@@ -92,7 +92,7 @@ const Preview = ({ isBasic }: IProps) => {
                 const params = {
                     admin: address,
                     codeId: codeId,
-                    label: label,
+                    label: isBasic ? 'CW20' : label,
                     msg: JSON.stringify(messageData)
                 };
 

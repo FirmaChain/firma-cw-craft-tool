@@ -728,8 +728,8 @@ const Add = (props: any) => {
 const Close = (props: any) => {
     return (
         <svg width={props.width} height={props.height} viewBox="0 0 24 24" fill="none">
-            <path d="M4 4L20 20" stroke="#807E7E" />
-            <path d="M20 4L4 20" stroke="#807E7E" />
+            <path d="M4 4L20 20" stroke="#807E7E" strokeWidth={props.strokeWidth || '1'} />
+            <path d="M20 4L4 20" stroke="#807E7E" strokeWidth={props.strokeWidth || '1'} />
         </svg>
     );
 };

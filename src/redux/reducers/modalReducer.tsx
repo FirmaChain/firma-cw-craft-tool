@@ -3,8 +3,6 @@ import { createAction, createReducer } from '@reduxjs/toolkit';
 export interface IModalStateProps {
     connectWallet: boolean;
     data: any;
-    qrConfirm: boolean;
-    txConfirm: boolean;
     callback?: () => void;
 }
 
@@ -18,9 +16,7 @@ export const HANDLE_CLEAR_CALLBACK = 'HANDLE_CLEAR_CALLBACK';
 const initiateState: IModalStateProps = {
     connectWallet: false,
     data: {},
-    qrConfirm: false,
-    txConfirm: false,
-    callback: undefined,
+    callback: undefined
 };
 
 export const ACTION_CREATORS = {
@@ -29,7 +25,7 @@ export const ACTION_CREATORS = {
     HANDLE_QR_CONFIRM: createAction<boolean>(HANDLE_QR_CONFIRM),
     HANDLE_TX_CONFIRM: createAction<boolean>(HANDLE_TX_CONFIRM),
     HANDLE_SET_CALLBACK: createAction<{ callback: () => void }>(HANDLE_SET_CALLBACK),
-    HANDLE_CLEAR_CALLBACK: createAction(HANDLE_CLEAR_CALLBACK),
+    HANDLE_CLEAR_CALLBACK: createAction(HANDLE_CLEAR_CALLBACK)
 };
 
 export const ACTIONS = {
@@ -38,7 +34,7 @@ export const ACTIONS = {
     handleQrConfirm: ACTION_CREATORS.HANDLE_QR_CONFIRM,
     handleTxConfirm: ACTION_CREATORS.HANDLE_TX_CONFIRM,
     handleSetCallback: ACTION_CREATORS.HANDLE_SET_CALLBACK,
-    handleClearCallback: ACTION_CREATORS.HANDLE_CLEAR_CALLBACK,
+    handleClearCallback: ACTION_CREATORS.HANDLE_CLEAR_CALLBACK
 };
 
 const reducer = createReducer(initiateState, (builder) => {
@@ -48,14 +44,6 @@ const reducer = createReducer(initiateState, (builder) => {
 
     builder.addCase(ACTION_CREATORS.HANDLE_MODAL_DATA, (state, { payload }) => {
         state.data = payload;
-    });
-
-    builder.addCase(ACTION_CREATORS.HANDLE_QR_CONFIRM, (state, { payload }) => {
-        state.qrConfirm = payload;
-    });
-
-    builder.addCase(ACTION_CREATORS.HANDLE_TX_CONFIRM, (state, { payload }) => {
-        state.txConfirm = payload;
     });
 
     builder.addCase(ACTION_CREATORS.HANDLE_SET_CALLBACK, (state, { payload }) => {

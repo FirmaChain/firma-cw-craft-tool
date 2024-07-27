@@ -4,7 +4,6 @@ import { create } from 'zustand';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { useKeyPress } from 'react-use';
-import Portal from '@/components/modal/portal';
 import { ModalOverlay } from '@/components/modal/style';
 import WalletConnectModal from '@/components/organisms/modal/walletConnectModal';
 
@@ -153,7 +152,7 @@ const Modal: React.FC<ModalProps> = ({
     });
 
     return (
-        <Portal elementId="modal-root">
+        <div style={{ position: 'fixed', width: '100vw', height: '100vh', left: 0, top: 0 }}>
             <ModalOverlay />
             <div
                 onClick={handleClickBackdrop}
@@ -177,6 +176,6 @@ const Modal: React.FC<ModalProps> = ({
                     <></>
                 )}
             </div>
-        </Portal>
+        </div>
     );
 };
