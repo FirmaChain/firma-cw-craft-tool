@@ -20,7 +20,7 @@ interface IProps {
 }
 
 const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFailed, params = {}, signer = '' }: IProps) => {
-    const { network } = useSelector((state: rootState) => state.global);
+    const network = useSelector((state: rootState) => state.global.network);
     const { checkRequest, generateRequestQR } = useAPI();
 
     const [requestKey, setRequestKey] = useState('');
@@ -63,21 +63,29 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
     };
 
     const onTickCheckRequest = async () => {
-        checkRequest(craftServerURI, requestKey).then((requestData) => {
-            if (requestData.status === '1') {
+        const requestData = await checkRequest(craftServerURI, requestKey);
+
+        try {
+            if (requestData?.status === '1') {
                 setActiveQR(false);
 
-                const code = getTransactionStatusCode(requestData.signData);
-                if (code === 0) {
+                if (requestData?.type === 'LOGIN') {
                     onSuccess(requestData);
                 } else {
-                    onFailed(requestData);
+                    const code = getTransactionStatusCode(requestData.signData);
+                    if (code === 0) {
+                        onSuccess(requestData);
+                    } else {
+                        onFailed(requestData);
+                    }
                 }
             } else if (requestData.status === '-2') {
                 setActiveQR(false);
                 onFailed(requestData);
             }
-        });
+        } catch (error) {
+            onFailed(requestData);
+        }
     };
 
     return (
@@ -123,12 +131,10 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
                                 </div>
                                 <img src={IC_RESET_WHITE} alt="reset" style={{ width: '12px', height: '12px' }} />
                             </>
-                        )
-                    }
+                        )}
                     </>
                 )}
             </TimerWrap>
-            {/* )} */}
         </QRContainer>
     );
 };
