@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
-import LabelInput2 from './labelInput2';
+import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { FirmaUtil } from '@firmachain/firma-js';
 
@@ -71,7 +71,7 @@ const InputAddressAmount = ({
             <div style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
                 {/* Wallet Address */}
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '420px', gap: '8px' }}>
-                    <LabelInput2
+                    <LabelInput
                         labelProps={{ index, label: addressTitle }}
                         inputProps={{
                             formId: `${id}_ADDRESS`,
@@ -122,7 +122,7 @@ const InputAddressAmount = ({
                         <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{amountTitle}</div>
                     </div>
                     <VariableInput value={amount} onChange={handleAmount} placeHolder={'0'} textAlign="right" /> */}
-                    <LabelInput2
+                    <LabelInput
                         labelProps={{ label: amountTitle }}
                         inputProps={{
                             formId: `${id}_AMOUNT`,

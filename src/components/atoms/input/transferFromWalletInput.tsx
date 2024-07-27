@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
-import LabelInput2 from './labelInput2';
+import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
 import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
@@ -81,7 +81,7 @@ const TransferFromWalletInput = ({
                 break;
 
             case transferAmountId:
-                if (isValidAddress(_data.toAddress)){
+                if (isValidAddress(_data.toAddress)) {
                     const compare = compareStringNumbers(getUTokenAmountFromToken(value, decimals), _data.allowanceAmount);
                     if (compare === 1) {
                         _data.toAmount = getTokenAmountFromUToken(_data.allowanceAmount, decimals);
@@ -115,7 +115,7 @@ const TransferFromWalletInput = ({
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '420px', gap: '8px' }}>
-                            <LabelInput2
+                            <LabelInput
                                 labelProps={{ index, label: 'Owner Address' }}
                                 inputProps={{
                                     formId: fromAddressId,
@@ -127,7 +127,7 @@ const TransferFromWalletInput = ({
                         </div>
                         {/* Wallet Amount */}
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '164px', gap: '8px' }}>
-                            <LabelInput2
+                            <LabelInput
                                 labelProps={{ label: 'Balance' }}
                                 inputProps={{
                                     formId: fromBalanceId,
@@ -148,7 +148,7 @@ const TransferFromWalletInput = ({
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '420px', gap: '8px' }}>
-                            <LabelInput2
+                            <LabelInput
                                 labelProps={{ index, label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: toAddressId,
@@ -161,7 +161,7 @@ const TransferFromWalletInput = ({
                         </div>
                         {/* Wallet Amount */}
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '164px', gap: '4px' }}>
-                            <LabelInput2
+                            <LabelInput
                                 labelProps={{ label: 'Amount' }}
                                 inputProps={{
                                     formId: transferAmountId,

@@ -118,7 +118,7 @@ interface InputProps {
     onClickDate?: () => void;
 }
 
-const VariableInput2 = ({
+const VariableInput = ({
     value,
     type = 'string',
     onChange,
@@ -216,7 +216,10 @@ const VariableInput2 = ({
                 )}
                 {type === 'date' && (
                     <div style={{ marginRight: '10px' }}>
-                        <button style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClickDate}>
+                        <button
+                            style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            onClick={onClickDate}
+                        >
                             <img src={IC_CALENDAR} alt="date-picker" style={{ width: '24px', height: '24px', cursor: 'pointer' }} />
                         </button>
                         {/* <DatePicker
@@ -238,4 +241,4 @@ const VariableInput2 = ({
     );
 };
 
-export default VariableInput2;
+export default VariableInput;

@@ -10,7 +10,7 @@ import {
     TokenNameSymbol
 } from './style';
 import Icons from '@/components/atoms/icons';
-import LabelInput2 from '@/components/atoms/input/labelInput2';
+import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../instaniateStore';
@@ -126,7 +126,7 @@ const Information = ({ isBasic }: IProps) => {
             </TitleWrapper>
             <InformationBody>
                 <TokenNameSymbol>
-                    <LabelInput2
+                    <LabelInput
                         labelProps={{ label: 'Token Name' }}
                         inputProps={{
                             value: tokenName,
@@ -139,7 +139,7 @@ const Information = ({ isBasic }: IProps) => {
                         }}
                     />
 
-                    <LabelInput2
+                    <LabelInput
                         labelProps={{ label: 'Token Symbol' }}
                         inputProps={{
                             value: tokenSymbol,
@@ -154,7 +154,7 @@ const Information = ({ isBasic }: IProps) => {
                 </TokenNameSymbol>
                 {!isBasic && (
                     <>
-                        <LabelInput2
+                        <LabelInput
                             labelProps={{ label: 'Decimals' }}
                             inputProps={{
                                 value: decimals,
@@ -169,7 +169,7 @@ const Information = ({ isBasic }: IProps) => {
                             }}
                         />
 
-                        <LabelInput2
+                        <LabelInput
                             labelProps={{ label: 'Label' }}
                             inputProps={{
                                 value: label,
@@ -182,7 +182,7 @@ const Information = ({ isBasic }: IProps) => {
                     </>
                 )}
 
-                <LabelInput2
+                <LabelInput
                     labelProps={{ label: isBasic ? 'Token Image Link (Optional)' : 'Marketing Logo (Optional)' }}
                     inputProps={{
                         value: tokenLogoUrl,
@@ -193,7 +193,7 @@ const Information = ({ isBasic }: IProps) => {
                     }}
                 />
 
-                <LabelInput2
+                <LabelInput
                     labelProps={{ label: isBasic ? 'Token Description (Optional)' : 'Marketing Description (Optional)' }}
                     inputProps={{
                         value: tokenDescription,
@@ -204,7 +204,7 @@ const Information = ({ isBasic }: IProps) => {
                 />
                 {!isBasic && (
                     <>
-                        <LabelInput2
+                        <LabelInput
                             labelProps={{ label: 'Marketing Address (Optional)' }}
                             inputProps={{
                                 value: marketingAddress,
@@ -214,7 +214,7 @@ const Information = ({ isBasic }: IProps) => {
                             }}
                         />
 
-                        <LabelInput2
+                        <LabelInput
                             labelProps={{ label: 'Marketing Project (Optional)' }}
                             inputProps={{
                                 value: marketingProject,

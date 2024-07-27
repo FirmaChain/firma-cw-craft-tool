@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import VariableInput2 from './variableInput2';
+import VariableInput from './variableInput';
 import useFormStore from '@/store/formStore';
 import Icons from '../icons';
 import styled from 'styled-components';
@@ -42,7 +42,7 @@ const IconBackground = styled.div`
     background: var(--Gray-450, #262626);
 `;
 
-const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inputProps: IInputProps }) => {
+const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; inputProps: IInputProps }) => {
     const { index, label, tooltip = '', TooltipIcon = <Icons.Info width={'12px'} height={'12px'} />, labelHeight } = labelProps;
     const {
         value,
@@ -166,7 +166,7 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
                 </div>
             )}
 
-            <VariableInput2
+            <VariableInput
                 value={type === 'number' ? commaNumber(value) : value}
                 type={type}
                 onChange={handleChange}
@@ -184,4 +184,4 @@ const LabelInput2 = ({ labelProps, inputProps }: { labelProps: ILabelProps; inpu
     );
 };
 
-export default LabelInput2;
+export default LabelInput;

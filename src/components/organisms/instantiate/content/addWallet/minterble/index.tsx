@@ -7,7 +7,7 @@ import { GlobalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
 
 import { MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
-import LabelInput2 from '@/components/atoms/input/labelInput2';
+import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../../instaniateStore';
 
@@ -81,7 +81,7 @@ const Minterble = ({ decimals }: IProps) => {
             {minterble && (
                 <Fragment>
                     {cw20Mode === 'ADVANCED' && (
-                        <LabelInput2
+                        <LabelInput
                             labelProps={{ label: 'Minter Address', tooltip: ADDRESS_TOOLTIP_TEXT }}
                             inputProps={{
                                 value: minterAddress,
@@ -93,7 +93,7 @@ const Minterble = ({ decimals }: IProps) => {
                         />
                     )}
 
-                    <LabelInput2
+                    <LabelInput
                         labelProps={{ label: 'Minter Cap', tooltip: cw20Mode === 'BASIC' ? CAP_TOOLTIP_TEXT : '' }}
                         inputProps={{
                             value: minterCap,
