@@ -10,6 +10,7 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -52,6 +53,8 @@ const ItemLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    opacity: 0.8;
 `;
 
 const ItemAmountWrap = styled.div`
@@ -157,7 +160,12 @@ const FromToAddressLine = ({ from, to, amount, decimal }: { from?: string; to?: 
 };
 
 const TransferFromPreview = () => {
-    const { contractAddress, fctBalance, cw20Balance, transferFromList, setTransferFromList, tokenInfo} = useExecuteStore.getState();
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    const transferFromList = useExecuteStore((state) => state.transferFromList);
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    // const cw20Balance = useExecuteStore((state) => state.cw20Balance);
+    // const setTransferFromList = useExecuteStore((state) => state.setTransferFromList);
 
     const modal = useModalStore();
 
@@ -177,7 +185,7 @@ const TransferFromPreview = () => {
 
     const onClickTransfer = () => {
         const convertTransferList = [];
-        let totalAmount = "0";
+        let totalAmount = '0';
         let feeAmount = transferFromList.length * 15000;
 
         for (const transfer of transferFromList) {
@@ -192,23 +200,23 @@ const TransferFromPreview = () => {
 
         const params = {
             header: {
-                title: "Transfer From",
+                title: 'Transfer From'
             },
             content: {
                 symbol: tokenInfo.symbol,
                 decimals: tokenInfo.decimals.toString(),
-                balance: fctBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
-                        label: "Total Transfer Amount",
+                        label: 'Total Transfer Amount',
                         value: totalAmount,
-                        type: "amount"
+                        type: 'amount'
                     },
                     {
-                        label: "Total Wallet Count",
-                        value: convertTransferList.length,
-                        type: "wallet"
+                        label: 'Total Wallet Count',
+                        value: convertTransferList.length.toString(),
+                        type: 'wallet-count'
                     }
                 ]
             },
@@ -218,7 +226,16 @@ const TransferFromPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/transferFrom" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/transferFrom"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
     };
 
@@ -239,15 +256,23 @@ const TransferFromPreview = () => {
                 {isOpen && (
                     <AccordionBox>
                         {transferFromList.map((info) => (
-                            <FromToAddressLine from={info.fromAddress} to={info.toAddress} amount={info.toAmount} decimal={tokenInfo.decimals.toString()} />
+                            <FromToAddressLine
+                                from={info.fromAddress}
+                                to={info.toAddress}
+                                amount={info.toAmount}
+                                decimal={tokenInfo.decimals.toString()}
+                            />
                         ))}
                     </AccordionBox>
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton onClick={onClickTransfer}>
+                <GreenButton disabled onClick={onClickTransfer}>
+                    <div className="button-text">Transfer</div>
+                </GreenButton>
+                {/* <ExecuteButton onClick={onClickTransfer}>
                     <ExecuteButtonTypo>Transfer</ExecuteButtonTypo>
-                </ExecuteButton>
+                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

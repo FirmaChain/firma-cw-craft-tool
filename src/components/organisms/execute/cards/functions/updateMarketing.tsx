@@ -1,16 +1,16 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
+import { Fragment, useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
 
-import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from "./styles";
-import LabelInput2 from "@/components/atoms/input/labelInput2";
-import { FirmaUtil } from "@firmachain/firma-js";
-import useFormStore from "@/store/formStore";
-import React from "react";
-import useExecuteStore from "../../hooks/useExecuteStore";
-import { useSelector } from "react-redux";
-import { rootState } from "@/redux/reducers";
-import { CRAFT_CONFIGS } from "@/config";
-import { NETWORKS } from "@/constants/common";
+import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
+import LabelInput from '@/components/atoms/input/labelInput';
+import { FirmaUtil } from '@firmachain/firma-js';
+import useFormStore from '@/store/formStore';
+import React from 'react';
+import useExecuteStore from '../../hooks/useExecuteStore';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
+import { NETWORKS } from '@/constants/common';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -19,21 +19,17 @@ const ContentWrap = styled.div`
 `;
 
 const UpdateMarketing = () => {
-    const { network } = useSelector((state: rootState) => state.global);
-    const { address } = useSelector((state: rootState) => state.wallet);
+    const network = useSelector((state: rootState) => state.global.network);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
-    const {
-        contractInfo,
-        marketingInfo,
+    const contractInfo = useExecuteStore((state) => state.contractInfo);
+    const marketingDescription = useExecuteStore((state) => state.marketingDescription) || '';
+    const marketingAddress = useExecuteStore((state) => state.marketingAddress) || '';
+    const marketingProject = useExecuteStore((state) => state.marketingProject) || '';
+    const setMarketingDescription = useExecuteStore((state) => state.setMarketingDescription);
+    const setMarketingAddress = useExecuteStore((state) => state.setMarketingAddress);
+    const setMarketingProject = useExecuteStore((state) => state.setMarketingProject);
 
-        marketingDescription,
-        marketingAddress,
-        marketingProject,
-        setMarketingDescription,
-        setMarketingAddress,
-        setMarketingProject
-    } = useExecuteStore.getState();
-    
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
 
@@ -58,38 +54,38 @@ const UpdateMarketing = () => {
                 </TitleWrap>
             </HeaderWrap>
             <ContentWrap>
-                <LabelInput2
+                <LabelInput
                     labelProps={{
-                        label: "Marketing Description (Token Description)"
+                        label: 'Marketing Description (Token Description)'
                     }}
                     inputProps={{
                         value: marketingDescription,
-                        formId: "input description",
-                        placeHolder: "This is token Description",
+                        formId: 'input description',
+                        placeHolder: 'This is token Description',
                         onChange: setMarketingDescription
                     }}
                 />
                 {!isBasic && address === marketingAddress && (
                     <Fragment>
-                        <LabelInput2
+                        <LabelInput
                             labelProps={{
-                                label: "Marketing Address (Optional)"
+                                label: 'Marketing Address (Optional)'
                             }}
                             inputProps={{
                                 value: marketingAddress,
-                                formId: "input address",
-                                placeHolder: "Input Wallet Address",
+                                formId: 'input address',
+                                placeHolder: 'Input Wallet Address',
                                 onChange: handleAddress
                             }}
                         />
-                        <LabelInput2
+                        <LabelInput
                             labelProps={{
-                                label: "Marketing Project (Optional)"
+                                label: 'Marketing Project (Optional)'
                             }}
                             inputProps={{
                                 value: marketingProject,
-                                formId: "input project",
-                                placeHolder: "ex) http://firmachain.org",
+                                formId: 'input project',
+                                placeHolder: 'ex) http://firmachain.org',
                                 onChange: setMarketingProject
                             }}
                         />

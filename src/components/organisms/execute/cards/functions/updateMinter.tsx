@@ -1,7 +1,7 @@
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
 import { useEffect } from 'react';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import LabelInput2 from '@/components/atoms/input/labelInput2';
+import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 
@@ -9,7 +9,8 @@ const MINTER_INPUT_FORM_ID = 'EXECUTE_UPDATE_MINTER';
 const MINTER_ERROR_TYPE = 'INVALID_ADDRESS';
 
 const UpdateMinter = () => {
-    const { minterAddress, setMinterAddress } = useExecuteStore.getState();
+    const minterAddress = useExecuteStore((state) => state.minterAddress);
+    const setMinterAddress = useExecuteStore((state) => state.setMinterAddress);
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
@@ -40,7 +41,7 @@ const UpdateMinter = () => {
                     <HeaderDescTypo>Change the address that has permission to mint new tokens</HeaderDescTypo>
                 </TitleWrap>
             </HeaderWrap>
-            <LabelInput2
+            <LabelInput
                 labelProps={{ label: 'Minter Address' }}
                 inputProps={{
                     formId: MINTER_INPUT_FORM_ID,

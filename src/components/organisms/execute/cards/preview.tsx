@@ -41,23 +41,24 @@ const TitleTypo = styled.div`
 const Preview = () => {
     const { selectMenu } = useExecuteStore();
 
-    console.log("selectMenu", selectMenu);
     return (
         <>
-            {selectMenu && <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
-                <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
-                {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
-                {selectMenu.value === 'mint' && <MintPreview />}
-                {selectMenu.value === 'burn' && <BurnPreview />}
-                {selectMenu.value === 'burnFrom' && <BurnFromPreview />}
-                {selectMenu.value === 'transfer' && <TransferPreview />}
-                {selectMenu.value === 'transferFrom' && <TransferFromPreview />}
-                {selectMenu.value === 'updateMarketing' && <UpdateMarketingPreview />}
-                {selectMenu.value === 'increaseAllowance' && <IncreaseAllowancePreview />}
-                {selectMenu.value === 'decreaseAllowance' && <DecreaseAllowancePreview />}
-                {selectMenu.value === 'updateMinter' && <UpdateMinter />}
-                {selectMenu.value === 'updateLogo' && <UpdateLogo />}
-            </Container>}
+            {selectMenu && (
+                <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
+                    <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
+                    {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
+                    {selectMenu.value === 'mint' && <MintPreview />}
+                    {selectMenu.value === 'burn' && <BurnPreview />}
+                    {selectMenu.value === 'burnFrom' && <BurnFromPreview />}
+                    {selectMenu.value === 'transfer' && <TransferPreview />}
+                    {selectMenu.value === 'transferFrom' && <TransferFromPreview />}
+                    {selectMenu.value === 'updateMarketing' && <UpdateMarketingPreview />}
+                    {selectMenu.value === 'increaseAllowance' && <IncreaseAllowancePreview />}
+                    {selectMenu.value === 'decreaseAllowance' && <DecreaseAllowancePreview />}
+                    {selectMenu.value === 'updateMinter' && <UpdateMinter />}
+                    {selectMenu.value === 'updateLogo' && <UpdateLogo />}
+                </Container>
+            )}
         </>
     );
 };

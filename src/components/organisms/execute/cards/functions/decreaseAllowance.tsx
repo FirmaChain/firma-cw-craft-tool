@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { FirmaUtil } from '@firmachain/firma-js';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
-import LabelInput2 from '@/components/atoms/input/labelInput2';
+import LabelInput from '@/components/atoms/input/labelInput';
 import { getTokenStrFromUTokenStr } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import VariableInput2 from '@/components/atoms/input/variableInput2';
+import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
 import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { addNanoSeconds } from '@/utils/time';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import ExpirationModal from '@/components/organisms/modal/expirationModal';
+import { useModalStore } from '@/hooks/useModal';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -59,11 +61,16 @@ enum ExpirationType {
 }
 
 const DecreaseAllowance = () => {
-    const { allowanceInfo, setAllowanceInfo, cw20Balance, tokenInfo } = useExecuteStore.getState();
+    const allowanceInfo = useExecuteStore((v) => v.allowanceInfo);
+    const setAllowanceInfo = useExecuteStore((v) => v.setAllowanceInfo);
+    const cw20Balance = useExecuteStore((v) => v.cw20Balance);
+    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
+
+    const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
-    
+
     const inputId = 'DECREASE_ALLOWANCE';
 
     const [address, setAddress] = useState('');
@@ -94,41 +101,62 @@ const DecreaseAllowance = () => {
         if (!isValidFormat) {
             return;
         }
-    
+
         const truncatedValue = truncateDecimals(value);
         const convertDecreaseAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
-        const decreaseAmount = compareStringNumbers(cw20Balance, convertDecreaseAmount) === 1 ? truncatedValue : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
+        const decreaseAmount =
+            compareStringNumbers(cw20Balance, convertDecreaseAmount) === 1
+                ? truncatedValue
+                : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAmount(decreaseAmount);
-        setAllowanceInfo({ address: allowanceInfo.address, amount: getUTokenAmountFromToken(value, tokenInfo.decimals.toString()), type: allowanceInfo.type, expire: allowanceInfo.expire });
+        setAllowanceInfo({
+            address: allowanceInfo.address,
+            amount: getUTokenAmountFromToken(value, tokenInfo.decimals.toString()),
+            type: allowanceInfo.type,
+            expire: allowanceInfo.expire
+        });
     };
 
     const handleChangeExpireType = (value: ExpirationType) => {
         if (value !== expirationType) {
             setExpInputValue('');
             setExpirationType(value);
-    
-            let expireType = "";
+
+            let expireType = '';
             switch (value) {
-                case "Time":    expireType = "at_time";     break;
-                case "Height":  expireType = "at_height";   break;
-                case "Forever": expireType = "never";       break;
+                case 'Time':
+                    expireType = 'at_time';
+                    break;
+                case 'Height':
+                    expireType = 'at_height';
+                    break;
+                case 'Forever':
+                    expireType = 'never';
+                    break;
             }
-    
-            setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: expireType, expire: "" });
+
+            setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: expireType, expire: '' });
         }
     };
-    
+
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
-        let expireValue = "";
-        if (allowanceInfo.type === "at_hieght") {
+        let expireValue = '';
+        if (allowanceInfo.type === 'at_time') {
             expireValue = addNanoSeconds(value);
-        } else if (allowanceInfo.type === "at_height") {
+        } else if (allowanceInfo.type === 'at_height') {
             expireValue = value;
         }
 
         setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: expireValue });
+    };
+
+    const handleAllowanceDate = () => {
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <ExpirationModal id={id} setExpirationDate={(value) => handleChangeExpireValue(value)} />
+        });
     };
 
     return (
@@ -144,7 +172,7 @@ const DecreaseAllowance = () => {
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', width: '100%' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', gap: '8px' }}>
-                            <LabelInput2
+                            <LabelInput
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
@@ -165,7 +193,7 @@ const DecreaseAllowance = () => {
                                 gap: '8px'
                             }}
                         >
-                            <LabelInput2
+                            <LabelInput
                                 labelProps={{ label: 'Decrease Amount' }}
                                 inputProps={{
                                     formId: `${inputId}_AMOUNT`,
@@ -180,7 +208,9 @@ const DecreaseAllowance = () => {
                                 }}
                             />
 
-                            <UserBalanceTypo>Balance: {getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())}</UserBalanceTypo>
+                            <UserBalanceTypo>
+                                Balance: {getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())}
+                            </UserBalanceTypo>
                         </div>
                     </div>
                 </div>
@@ -204,7 +234,7 @@ const DecreaseAllowance = () => {
                         ))}
                     </div>
                 </div>
-                <VariableInput2
+                <VariableInput
                     value={expInputValue}
                     placeHolder={
                         expirationType === ExpirationType.Height
@@ -217,6 +247,7 @@ const DecreaseAllowance = () => {
                     onChange={handleChangeExpireValue}
                     readOnly={expirationType === ExpirationType.Forever}
                     decimal={0}
+                    onClickDate={handleAllowanceDate}
                 />
             </div>
         </Container>

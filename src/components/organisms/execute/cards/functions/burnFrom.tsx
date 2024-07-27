@@ -1,9 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from "./styles";
-import WalletList from "@/components/atoms/walletList";
-import { IWallet } from "@/interfaces/wallet";
-import useExecuteStore from "../../hooks/useExecuteStore";
+import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
+import WalletList from '@/components/atoms/walletList';
+import { IWallet } from '@/interfaces/wallet';
+import useExecuteStore from '../../hooks/useExecuteStore';
+import { useMemo } from 'react';
+import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -18,8 +20,8 @@ const SummeryWrap = styled.div`
 `;
 
 const SummeryLabelTypo = styled.div`
-    color: var(--Gray-700, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-700, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -27,8 +29,8 @@ const SummeryLabelTypo = styled.div`
 `;
 
 const SummeryAmountTypo = styled.div`
-    color: var(--Gray-850, #E6E6E6);
-    font-family: "General Sans Variable";
+    color: var(--Gray-850, #e6e6e6);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -36,8 +38,8 @@ const SummeryAmountTypo = styled.div`
 `;
 
 const SummerySymbolTypo = styled.div`
-    color: var(--Gray-850, #E6E6E6);
-    font-family: "General Sans Variable";
+    color: var(--Gray-850, #e6e6e6);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -45,11 +47,23 @@ const SummerySymbolTypo = styled.div`
 `;
 
 const BurnFrom = () => {
-    const { tokenInfo, setBurnFromList } = useExecuteStore.getState();
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
+    const burnFromList = useExecuteStore((state) => state.burnFromList);
 
     const handleWalletList = (value: IWallet[]) => {
         setBurnFromList(value);
     };
+
+    const totalBurnAmont = useMemo(() => {
+        let totalAmount = '0';
+
+        for (const wallet of burnFromList) {
+            totalAmount = addStringAmount(totalAmount, wallet.amount);
+        }
+
+        return getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString());
+    }, [burnFromList, tokenInfo]);
 
     return (
         <Container>
@@ -61,7 +75,9 @@ const BurnFrom = () => {
                 <SummeryCard>
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo></SummeryAmountTypo>
+                        <SummeryAmountTypo>
+                            {formatWithCommas(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
+                        </SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                 </SummeryCard>
@@ -69,12 +85,12 @@ const BurnFrom = () => {
             <WalletList
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
-                addressTitle={"Owner Address"}
-                addressPlaceholder={"Input Wallet Address"}
-                amountTitle={"Burn Amount"}
+                addressTitle={'Owner Address'}
+                addressPlaceholder={'Input Wallet Address'}
+                amountTitle={'Burn Amount'}
             />
         </Container>
-    )
+    );
 };
 
 export default BurnFrom;

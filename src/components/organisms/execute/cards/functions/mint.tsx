@@ -63,7 +63,9 @@ const DOTTED_DIVIDER = styled.img`
 `;
 
 const Mint = () => {
-    const { minterInfo, tokenInfo, setMinterList } = useExecuteStore.getState();
+    const minterInfo = useExecuteStore((state) => state.minterInfo);
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const setMinterList = useExecuteStore((state) => state.setMinterList);
 
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
@@ -102,7 +104,9 @@ const Mint = () => {
                     <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
                     <TotalMintWrap>
                         <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                        <TotalMintSubBalance>{formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}</TotalMintSubBalance>
+                        <TotalMintSubBalance>
+                            {formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}
+                        </TotalMintSubBalance>
                         <TotalMintSubBalance>{tokenInfo.symbol}</TotalMintSubBalance>
                         <IconTooltip
                             size="14px"

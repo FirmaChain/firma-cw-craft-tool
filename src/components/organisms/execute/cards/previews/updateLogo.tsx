@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { IC_LINK_FILL } from '@/components/atoms/icons/pngIcons';
@@ -11,7 +11,8 @@ import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
-import { shortenAddress } from '@/utils/address';
+import Divider from '@/components/atoms/divider';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -25,15 +26,15 @@ const ContentWrap = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
 `;
 
 const ContentHeaderWrap = styled.div`
     width: 100%;
     height: auto;
-    padding: 32px 44px;
-    border-top-right-radius: 24px;
-    border-top-left-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
+    padding: 28px 44px;
 `;
 
 const ContentBodyWrap = styled.div`
@@ -42,9 +43,6 @@ const ContentBodyWrap = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 32px 44px;
-    border-bottom-left-radius: 24px;
-    border-bottom-right-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
 `;
 
 const ItemLabelWrap = styled.div`
@@ -55,6 +53,7 @@ const ItemLabelWrap = styled.div`
 
 const ItemLabelTypo = styled.div`
     color: #02e191;
+    opacity: 0.8;
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
@@ -64,8 +63,8 @@ const ItemLabelTypo = styled.div`
 
 const ItemValueTypo = styled.div`
     width: 338px;
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -110,8 +109,8 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 const ImageWrap = styled.div`
-    width: 72px;
-    height: 72px;
+    width: 90px;
+    height: 90px;
     flex-shrink: 0;
     border-radius: 100%;
     display: flex;
@@ -126,10 +125,26 @@ const LinkIcon = styled.img`
     height: 24px;
 `;
 
+const RenderTokenLogo = ({ url }: { url: string }) => {
+    const isValid = !Boolean(url === '');
+    return (
+        <ImageWrap style={{ background: isValid ? 'transparent' : '#262626' }}>
+            {isValid ? (
+                <img src={url} alt="token-logo" style={{ width: '72px', height: '72px' }} />
+            ) : (
+                <Icons.Picture width={'34px'} height={'34px'} />
+            )}
+        </ImageWrap>
+    );
+};
+
 const UpdateLogo = () => {
-    const { contractAddress, fctBalance, marketingInfo, marketingLogoUrl, } = useExecuteStore.getState();
-    const { network } = useSelector((state: rootState) => state.global);
-    
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
+    const marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
+    const network = useSelector((state: rootState) => state.global.network);
+
     const modal = useModalStore();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
@@ -159,22 +174,22 @@ const UpdateLogo = () => {
             setValidTokenLogoUrl('');
         }
     }, [marketingLogoUrl]);
-    
+
     const onClickUpdateLogo = () => {
         const feeAmount = craftConfig.DEFAULT_FEE;
 
         const params = {
             header: {
-                title: "Update Logo",
+                title: 'Update Logo'
             },
             content: {
-                balance: fctBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
-                        label: "Marketing Logo",
-                        value: shortenAddress(marketingLogoUrl, 15, 15),
-                        type: "wallet"
+                        label: 'Marketing Logo',
+                        value: marketingLogoUrl,
+                        type: 'url'
                     }
                 ]
             },
@@ -186,48 +201,41 @@ const UpdateLogo = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/uploadLogo" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/uploadLogo"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
     };
 
-    const RenderTokenLogo = useCallback(() => {
-        const isValid = !Boolean(validTokenLogoUrl === '');
-        return (
-            <ImageWrap style={{ background: isValid ? 'transparent' : '#262626' }}>
-                {isValid ? (
-                    <img src={validTokenLogoUrl} style={{ width: '72px', height: '72px' }} />
-                ) : (
-                    <Icons.Picture width={'34px'} height={'34px'} />
-                )}
-            </ImageWrap>
-        );
-    }, [validTokenLogoUrl]);
-    
     return (
         <Container>
             <ContentWrap>
                 <ContentHeaderWrap>
-                    <RenderTokenLogo />
+                    <RenderTokenLogo url={validTokenLogoUrl} />
                 </ContentHeaderWrap>
+                <Divider $direction={'horizontal'} $color="var(--Gray-550, #444)" />
                 <ContentBodyWrap>
                     <ItemLabelWrap>
-                        <LinkIcon src={IC_LINK_FILL} alt={"Update Marketing Logo"} />
+                        <LinkIcon src={IC_LINK_FILL} alt={'Update Marketing Logo'} />
                         <ItemLabelTypo>Marketing Logo</ItemLabelTypo>
                     </ItemLabelWrap>
-                    <ItemValueTypo>{validTokenLogoUrl}</ItemValueTypo>
+                    <ItemValueTypo>{marketingLogoUrl}</ItemValueTypo>
                 </ContentBodyWrap>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton
-                    disabled={!marketingLogoUrl || Boolean(errorMessage)}
-                    onClick={onClickUpdateLogo}
-                    data-tooltip-content={errorMessage}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
-                >
+                <GreenButton disabled={!marketingLogoUrl || Boolean(errorMessage)} onClick={onClickUpdateLogo}>
+                    <div className="button-text">Update Logo</div>
+                </GreenButton>
+                {/* <ExecuteButton disabled={!marketingLogoUrl || Boolean(errorMessage)} onClick={onClickUpdateLogo}>
                     <ExecuteButtonTypo>Update Logo</ExecuteButtonTypo>
-                </ExecuteButton>
+                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

@@ -5,7 +5,7 @@ import ConnectWallet from './connectWallet';
 import SearchContract from './searchContract';
 
 const Header = () => {
-    const { isInit } = useSelector((state: rootState) => state.wallet);
+    const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
     return (
         <HeaderWrapper>

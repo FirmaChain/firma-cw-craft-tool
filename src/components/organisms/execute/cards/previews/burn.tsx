@@ -8,8 +8,17 @@ import { QRCodeModal } from '@/components/organisms/modal';
 import { CRAFT_CONFIGS } from '@/config';
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
+import {
+    compareStringNumbers,
+    formatWithCommas,
+    getTokenAmountFromUToken,
+    getUTokenAmountFromToken,
+    subtractStringAmount
+} from '@/utils/balance';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import IconTooltip from '@/components/atoms/tooltip';
+import Divider from '@/components/atoms/divider';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -37,6 +46,7 @@ const ItemWrap = styled.div`
 const ItemLeftWrap = styled.div`
     display: flex;
     gap: 16px;
+    align-items: center;
 `;
 
 const CoinStackIcon = styled.img`
@@ -51,6 +61,8 @@ const BurnInfoTitleTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    opacity: 0.8;
 `;
 
 const ItemRightWrap = styled.div`
@@ -153,16 +165,20 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 const BurnPreview = () => {
-    const { contractAddress, fctBalance, cw20Balance, burnAmount, tokenInfo } = useExecuteStore.getState();
+    const contractAddress = useExecuteStore((v) => v.contractAddress);
+    const fctBalance = useExecuteStore((v) => v.fctBalance);
+    const cw20Balance = useExecuteStore((v) => v.cw20Balance);
+    const burnAmount = useExecuteStore((v) => v.burnAmount) || '0';
+    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
 
-    const { network } = useSelector((state: rootState) => state.global);
+    const network = useSelector((state: rootState) => state.global.network);
 
     const modal = useModalStore();
 
     const updatedBalance = useMemo(() => {
         let amount = '0';
 
-        amount = subtractStringAmount(getTokenAmountFromUToken(cw20Balance, "6"), burnAmount);
+        amount = subtractStringAmount(getTokenAmountFromUToken(cw20Balance, '6'), burnAmount);
 
         return amount;
     }, [cw20Balance, burnAmount]);
@@ -178,18 +194,18 @@ const BurnPreview = () => {
 
         const params = {
             header: {
-                title: "Burn",
+                title: 'Burn'
             },
             content: {
                 symbol: tokenInfo.symbol,
                 decimals: tokenInfo.decimals.toString(),
-                balance: fctBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
-                        label: "Total Burn Amount",
+                        label: 'Total Burn Amount',
                         value: amount,
-                        type: "amount"
+                        type: 'amount'
                     }
                 ]
             },
@@ -201,14 +217,23 @@ const BurnPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/burnToken" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/burnToken"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
     };
 
     const isEnableButton = useMemo(() => {
         if (compareStringNumbers(fctBalance, craftConfig.DEFAULT_FEE.toString()) !== 1) return false;
         if (cw20Balance === '' || cw20Balance === '0') return false;
-        if (burnAmount === '' || burnAmount === '0') return false;
+        if (burnAmount === '' || burnAmount === '0' || Number(burnAmount) === 0) return false;
 
         return true;
     }, [cw20Balance, burnAmount]);
@@ -226,22 +251,28 @@ const BurnPreview = () => {
                         <BurnSymbolTypo>{tokenInfo.symbol}</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
-                <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <ItemWrap>
                     <ItemLeftWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
-                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                            <IconTooltip size="14px" />
+                        </div>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <UpdatedBalanceTypo>{updatedBalance}</UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo>{formatWithCommas(updatedBalance)}</UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton $isEnable={isEnableButton} onClick={onClickBurn}>
+                <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>
+                    <div className="button-text">Burn</div>
+                </GreenButton>
+                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickBurn}>
                     <ExecuteButtonTypo>Burn</ExecuteButtonTypo>
-                </ExecuteButton>
+                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

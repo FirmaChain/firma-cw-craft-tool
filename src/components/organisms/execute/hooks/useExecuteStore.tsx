@@ -71,7 +71,9 @@ interface FormProps {
 
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
 const INIT_TRANSFER_LIST: IWallet[] = [{ recipient: '', amount: '' }];
-const INIT_TRANSFER_FROM_LIST: ITransferInfo[] = [{ fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: v4() }];
+const INIT_TRANSFER_FROM_LIST: ITransferInfo[] = [
+    { fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: v4() }
+];
 
 const useExecuteStore = create<FormProps>()(
     immer((set) => ({
@@ -82,12 +84,30 @@ const useExecuteStore = create<FormProps>()(
         cw20Balance: null,
         fctBalance: null,
 
-        setContractInfo: (data) => set((state) => { state.contractInfo = data; } ),
-        setTokenInfo: (data) => set((state) => { state.tokenInfo = data; } ),
-        setMinterInfo: (data) => set((state) => { state.minterInfo = data; } ),
-        setMarketingInfo: (data) => set((state) => { state.marketingInfo = data; } ),
-        setCw20Balance: (data) => set((state) => { state.cw20Balance = data; } ),
-        setFctBalance: (data) => set((state) => { state.fctBalance = data; } ),
+        setContractInfo: (data) =>
+            set((state) => {
+                state.contractInfo = data;
+            }),
+        setTokenInfo: (data) =>
+            set((state) => {
+                state.tokenInfo = data;
+            }),
+        setMinterInfo: (data) =>
+            set((state) => {
+                state.minterInfo = data;
+            }),
+        setMarketingInfo: (data) =>
+            set((state) => {
+                state.marketingInfo = data;
+            }),
+        setCw20Balance: (data) =>
+            set((state) => {
+                state.cw20Balance = data;
+            }),
+        setFctBalance: (data) =>
+            set((state) => {
+                state.fctBalance = data;
+            }),
 
         contractAddress: null,
         selectMenu: INIT_SELECT_MENU,
@@ -96,30 +116,75 @@ const useExecuteStore = create<FormProps>()(
         burnFromList: [],
         transferList: INIT_TRANSFER_LIST,
         transferFromList: INIT_TRANSFER_FROM_LIST,
-        allowanceInfo: null,
+        allowanceInfo: {
+            address: '',
+            amount: '',
+            type: '',
+            expire: ''
+        },
         marketingDescription: null,
         marketingAddress: null,
         marketingProject: null,
         minterAddress: null,
         marketingLogoUrl: '',
 
-        setContractAddress: (data) => set((state) => { state.contractAddress = data; } ),
-        setSelectMenu: (data) => set((state) => { state.selectMenu = data; }),
-        setMinterList: (data) => set((state) => { state.mintingList = data; }),
-        setBurnAmount: (data) => set((state) => { state.burnAmount = data; }),
-        setBurnFromList: (data) => set((state) => { state.burnFromList = data; }),
-        setTransferList: (data) => set((state) => { state.transferList = data; }),
-        setTransferFromList: (data) => set((state) => { state.transferFromList = data; }),
-        setAllowanceInfo: (data) => set((state) => { state.allowanceInfo = data; }),
-        setMarketingDescription: (data) => set((state) => { state.marketingDescription = data; }),
-        setMarketingAddress: (data) => set((state) => { state.marketingDescription = data; }),
-        setMarketingProject: (data) => set((state) => { state.marketingProject = data; }),
-        setMinterAddress: (data) => set((state) => {state.minterAddress = data; }),
-        setMarketingLogoUrl: (data) => set((state) => {state.marketingLogoUrl = data; }),
+        setContractAddress: (data) =>
+            set((state) => {
+                state.contractAddress = data;
+            }),
+        setSelectMenu: (data) =>
+            set((state) => {
+                state.selectMenu = data;
+            }),
+        setMinterList: (data) =>
+            set((state) => {
+                state.mintingList = data;
+            }),
+        setBurnAmount: (data) =>
+            set((state) => {
+                state.burnAmount = data;
+            }),
+        setBurnFromList: (data) =>
+            set((state) => {
+                state.burnFromList = data;
+            }),
+        setTransferList: (data) =>
+            set((state) => {
+                state.transferList = data;
+            }),
+        setTransferFromList: (data) =>
+            set((state) => {
+                state.transferFromList = data;
+            }),
+        setAllowanceInfo: (data) =>
+            set((state) => {
+                state.allowanceInfo = data;
+            }),
+        setMarketingDescription: (data) =>
+            set((state) => {
+                state.marketingDescription = data;
+            }),
+        setMarketingAddress: (data) =>
+            set((state) => {
+                state.marketingDescription = data;
+            }),
+        setMarketingProject: (data) =>
+            set((state) => {
+                state.marketingProject = data;
+            }),
+        setMinterAddress: (data) =>
+            set((state) => {
+                state.minterAddress = data;
+            }),
+        setMarketingLogoUrl: (data) =>
+            set((state) => {
+                state.marketingLogoUrl = data;
+            }),
 
-        clearForm: () => set((state) => {
-            state.transferList = INIT_TRANSFER_LIST;
-        })
+        clearForm: () =>
+            set((state) => {
+                state.transferList = INIT_TRANSFER_LIST;
+            })
     }))
 );
 

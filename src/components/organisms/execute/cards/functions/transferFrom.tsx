@@ -49,7 +49,10 @@ export interface ITransferFrom {
 }
 
 const TransferFrom = () => {
-    const { contractAddress, transferFromList, setTransferFromList, tokenInfo } = useExecuteStore.getState();
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const transferFromList = useExecuteStore((state) => state.transferFromList);
+    const setTransferFromList = useExecuteStore((state) => state.setTransferFromList);
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
 
     const totalTransferAmount = useMemo(() => {
         const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));

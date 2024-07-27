@@ -6,15 +6,18 @@ import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import { isValidAddress, shortenAddress } from '@/utils/address';
-import { ModalActions } from '@/redux/actions';
+
 import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteHook from '../../hooks/useExecueteHook';
-import useExecuteStore from '../../hooks/useExecuteStore';
+import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { QRCodeModal } from '@/components/organisms/modal';
+import Divider from '@/components/atoms/divider';
+import { format } from 'date-fns';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -57,6 +60,8 @@ const ItemLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    opacity: 0.8;
 `;
 
 const ItemAmountWrap = styled.div`
@@ -187,10 +192,29 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
+const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo }) => {
+    if (allowanceInfo.type === 'never') return <AccordionTypo $disabled={false}>Forever</AccordionTypo>;
+    if (!allowanceInfo.expire) return <AccordionTypo $disabled={true}>Expiration</AccordionTypo>;
+    if (allowanceInfo.type === 'at_height')
+        return <AccordionTypo $disabled={false}>{formatWithCommas(allowanceInfo.expire)} Block</AccordionTypo>;
+    if (allowanceInfo.type === 'at_time')
+        return (
+            <AccordionTypo $disabled={false}>
+                {format(new Date(Math.floor(Number(allowanceInfo.expire) / 1000000)), 'yyyy-MM-dd HH:mm:ss')}
+            </AccordionTypo>
+        );
+
+    return <></>;
+};
+
 const IncreaseAllowancePreview = () => {
-    const { contractAddress, fctBalance, allowanceInfo, tokenInfo } = useExecuteStore.getState();
-    const { network } = useSelector((state: rootState) => state.global);
-    
+    const contractAddress = useExecuteStore((v) => v.contractAddress);
+    const fctBalance = useExecuteStore((v) => v.fctBalance);
+    const allowanceInfo = useExecuteStore((v) => v.allowanceInfo);
+    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
+
+    const network = useSelector((state: rootState) => state.global.network);
+
     const modal = useModalStore();
 
     const { getCw20Balance } = useExecuteHook();
@@ -241,31 +265,33 @@ const IncreaseAllowancePreview = () => {
                 never: {}
             };
         }
-        
+
         const feeAmount = craftConfig.DEFAULT_FEE;
 
         const params = {
             header: {
-                title: "Increase Allowance",
+                title: 'Increase Allowance'
             },
             content: {
-                balance: fctBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
+                decimals: tokenInfo.decimals.toString(),
+                symbol: tokenInfo.symbol,
                 list: [
                     {
-                        label: "Increase Allowance Amount",
+                        label: 'Increase Allowance Amount',
                         value: allowanceInfo.amount,
-                        type: "amount"
+                        type: 'amount'
                     },
                     {
-                        label: "Recipient Address",
+                        label: 'Recipient Address',
                         value: allowanceInfo.address,
-                        type: "wallet"
+                        type: 'wallet'
                     },
                     {
-                        label: "Expiration",
+                        label: 'Expiration',
                         value: allowanceInfo.expire,
-                        type: allowanceInfo.type === "at_height" ? "block" : allowanceInfo.type === "at_time" ? "time" : "never"
+                        type: allowanceInfo.type
                     }
                 ]
             },
@@ -279,20 +305,17 @@ const IncreaseAllowancePreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/uploadLogo" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/increaseAllowance"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
-
-        // ModalActions.handleData({
-        //     module: '/cw20/increaseAllowance',
-        //     params: {
-        //         contract: contractAddress,
-        //         msg: {
-        //             amount: allowanceInfo.amount,
-        //             expires: expires,
-        //             spender: allowanceInfo.address
-        //         }
-        //     }
-        // });
     };
 
     const isEnableButton = useMemo(() => {
@@ -311,7 +334,9 @@ const IncreaseAllowancePreview = () => {
                         <ItemLabelTypo>Increase Allowance Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(allowanceInfo.amount, tokenInfo.decimals.toString()))}</ItemAmountTypo>
+                        <ItemAmountTypo>
+                            {formatWithCommas(getTokenAmountFromUToken(allowanceInfo.amount, tokenInfo.decimals.toString()))}
+                        </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
@@ -329,35 +354,45 @@ const IncreaseAllowancePreview = () => {
                                     justifyContent: 'space-between'
                                 }}
                             >
-                                <AccordionTypo $disabled={true}>
+                                <AccordionTypo $disabled={!allowanceInfo.address}>
                                     {allowanceInfo.address === '' ? 'Wallet Address' : shortenAddress(allowanceInfo.address, 16, 16)}
                                 </AccordionTypo>
-                                <AccordionTypo $disabled={true}>{commaNumber(0)}</AccordionTypo>
+                                <AccordionTypo $disabled={!Number(allowanceInfo.amount)}>
+                                    {formatWithCommas(getTokenAmountFromUToken(allowanceInfo.amount, tokenInfo.decimals.toString()))}
+                                </AccordionTypo>
                             </div>
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
-                            <AccordionTypo $disabled={true}>Expiration</AccordionTypo>
+                            <ExpirationBox allowanceInfo={allowanceInfo} />
+                            {/* <AccordionTypo $disabled={true}>Expiration</AccordionTypo> */}
                         </AccordionRow>
                     </AccordionBox>
                 )}
-                <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <ItemWrap>
                     <ItemLabelWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
-                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                        <IconTooltip size="14px" tooltip="UPDATED_ALLOANCE_TOOLTIP" />
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                            <IconTooltip size="14px" />
+                        </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}</UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo>
+                            {formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
+                        </UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton $isEnable={isEnableButton} onClick={onClickIncreaseAllowance}>
+                <GreenButton disabled={!isEnableButton} onClick={onClickIncreaseAllowance}>
+                    <div className="button-text">Increase Allowance</div>
+                </GreenButton>
+                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickIncreaseAllowance}>
                     <ExecuteButtonTypo>Increase Allowance</ExecuteButtonTypo>
-                </ExecuteButton>
+                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

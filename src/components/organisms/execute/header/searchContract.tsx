@@ -49,6 +49,8 @@ const EndAdornment = ({
     onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
+    const _disableSearch = keyword === '' || keyword.length <= 44 || disableSearch;
+
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
@@ -56,15 +58,23 @@ const EndAdornment = ({
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
-            <SearchButton disabled={keyword === '' || disableSearch} onClick={onClickSearch}>
+            {/* <SearchButton disabled={keyword === '' || keyword.length <= 44 || disableSearch} onClick={onClickSearch}>
                 <span className="button-text">Search</span>
-            </SearchButton>
-        </div >
+            </SearchButton> */}
+            <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
+                <Icons.Search
+                    width="32px"
+                    height="32px"
+                    fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
+                    stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
+                />
+            </IconButton>
+        </div>
     );
 };
 
 const SearchContract = () => {
-    const { address } = useSelector((state: rootState) => state.wallet);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
     const { setContractAddress } = useExecuteStore();
     const { setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, getCw20Balance, getFctBalance } = useExecuteActions();

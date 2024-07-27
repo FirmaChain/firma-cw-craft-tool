@@ -29,23 +29,15 @@ const DimBox = styled.div`
 const Contents = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
 
-    const ContractExist = useMemo(() => {
-        return Boolean(contractAddress);
-    }, [contractAddress]);
-
-    return (
-        <Fragment>
-            {ContractExist ? (
-                <Container>
-                    <Fragment>
-                        <TokenInfo />
-                        <Preview />
-                    </Fragment>
-                </Container>
-            ) : (
-                <DimBox>{/* <img src={FIRMA_DIM_LOGO} alt={'Firmachain'} style={{ width: '480px', height: '480px' }} /> */}</DimBox>
-            )}
-        </Fragment>
+    return contractAddress ? (
+        <Container>
+            <Fragment>
+                <TokenInfo />
+                <Preview />
+            </Fragment>
+        </Container>
+    ) : (
+        <DimBox>{/* <img src={FIRMA_DIM_LOGO} alt={'Firmachain'} style={{ width: '480px', height: '480px' }} /> */}</DimBox>
     );
 };
 

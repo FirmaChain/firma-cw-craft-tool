@@ -14,6 +14,9 @@ import { isValidAddress } from '@/utils/address';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import Divider from '@/components/atoms/divider';
+import IconTooltip from '@/components/atoms/tooltip';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -41,6 +44,7 @@ const ItemWrap = styled.div`
 const ItemLabelWrap = styled.div`
     display: flex;
     gap: 16px;
+    align-items: center;
 `;
 
 const ItemLabelIcon = styled.img`
@@ -55,6 +59,8 @@ const ItemLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    opacity: 0.8;
 `;
 
 const ItemAmountWrap = styled.div`
@@ -107,8 +113,8 @@ const WalletItemIcon = styled.img`
     height: 20px;
 `;
 
-const WalletItemAddressTypo = styled.div`
-    color: var(--Gray-650, #707070);
+const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #707070)')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -116,8 +122,8 @@ const WalletItemAddressTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-const WalletItemTokenAmount = styled.div`
-    color: var(--Gray-700, #807e7e);
+const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? '#383838' : '#807E7E')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -202,7 +208,11 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 const TransferPreview = () => {
-    const { contractAddress, fctBalance, cw20Balance, transferList, tokenInfo } = useExecuteStore.getState();
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    const cw20Balance = useExecuteStore((state) => state.cw20Balance);
+    const transferList = useExecuteStore((state) => state.transferList);
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
 
     const modal = useModalStore();
 
@@ -239,9 +249,9 @@ const TransferPreview = () => {
 
     const onClickTransfer = () => {
         const convertWalletList = [];
-        let totalAmount = "0";
+        let totalAmount = '0';
         let feeAmount = transferList.length * 15000;
-        
+
         for (const wallet of transferList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
             convertWalletList.push({
@@ -253,23 +263,23 @@ const TransferPreview = () => {
 
         const params = {
             header: {
-                title: "Transfer",
+                title: 'Transfer'
             },
             content: {
                 symbol: tokenInfo.symbol,
                 decimals: tokenInfo.decimals.toString(),
-                balance: fctBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
-                        label: "Total Transfer Amount",
+                        label: 'Total Transfer Amount',
                         value: totalTransferAmount,
-                        type: "amount"
+                        type: 'amount'
                     },
                     {
-                        label: "Total Wallet Count",
-                        value: convertWalletList.length,
-                        type: "wallet"
+                        label: 'Total Wallet Count',
+                        value: convertWalletList.length.toString(),
+                        type: 'wallet-count'
                     }
                 ]
             },
@@ -279,7 +289,16 @@ const TransferPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/transfer" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/transfer"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
     };
 
@@ -292,7 +311,9 @@ const TransferPreview = () => {
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}</ItemAmountTypo>
+                        <ItemAmountTypo>
+                            {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
+                        </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
@@ -303,31 +324,41 @@ const TransferPreview = () => {
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                    <WalletItemAddressTypo>
+                                    <WalletItemAddressTypo $disabled={!value.recipient}>
                                         {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                     </WalletItemAddressTypo>
                                 </WalletLeftItemWrap>
-                                <WalletItemTokenAmount>{value.amount === '' ? '0' : formatWithCommas(value.amount)}</WalletItemTokenAmount>
+                                <WalletItemTokenAmount $disabled={!Number(value.amount)}>
+                                    {value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                </WalletItemTokenAmount>
                             </WalletItemWrap>
                         ))}
                     </WalletListWrap>
                 )}
-                <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <ItemWrap>
                     <ItemLabelWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
-                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                            <IconTooltip size="14px" />
+                        </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}</UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo>
+                            {formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
+                        </UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton $isEnable={isEnableButton} onClick={onClickTransfer}>
+                <GreenButton disabled={isEnableButton} onClick={onClickTransfer}>
+                    <div className="button-text">Transfer</div>
+                </GreenButton>
+                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickTransfer}>
                     <ExecuteButtonTypo>Transfer</ExecuteButtonTypo>
-                </ExecuteButton>
+                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

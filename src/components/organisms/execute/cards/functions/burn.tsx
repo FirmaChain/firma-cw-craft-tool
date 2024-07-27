@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
-import LabelInput2 from '@/components/atoms/input/labelInput2';
+import LabelInput from '@/components/atoms/input/labelInput';
 import useExecuteStore from '../../hooks/useExecuteStore';
 
 const ContentWrap = styled.div`
@@ -27,7 +27,9 @@ const WalletBalanceTypo = styled.div`
 `;
 
 const Burn = () => {
-    const { tokenInfo, cw20Balance, setBurnAmount } = useExecuteStore.getState();
+    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
+    const cw20Balance = useExecuteStore((v) => v.cw20Balance);
+    const setBurnAmount = useExecuteStore((v) => v.setBurnAmount);
 
     const [inputBurnAmount, setInputBurnAmount] = useState<string>('');
 
@@ -67,14 +69,23 @@ const Burn = () => {
                 </TitleWrap>
             </HeaderWrap>
             <ContentWrap>
-                <LabelInput2
+                <LabelInput
                     labelProps={{ label: 'Burn Amount' }}
-                    inputProps={{ value: inputBurnAmount, formId: 'BURN_AMOUNT', onChange: handleBurnAmount, placeHolder: '0' }}
+                    inputProps={{
+                        value: inputBurnAmount,
+                        formId: 'BURN_AMOUNT',
+                        type: 'number',
+                        onChange: handleBurnAmount,
+                        placeHolder: '0',
+                        decimal: tokenInfo.decimals
+                    }}
                 />
 
                 <WalletBalanceWrap>
                     <WalletBalanceTypo>Balance :</WalletBalanceTypo>
-                    <WalletBalanceTypo>{formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}</WalletBalanceTypo>
+                    <WalletBalanceTypo>
+                        {formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}
+                    </WalletBalanceTypo>
                 </WalletBalanceWrap>
             </ContentWrap>
         </Container>

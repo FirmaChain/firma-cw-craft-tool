@@ -55,7 +55,9 @@ const MyWalletAmountTypo = styled.div`
 `;
 
 const Transfer = () => {
-    const { tokenInfo, cw20Balance, setTransferList } = useExecuteStore.getState();
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const cw20Balance = useExecuteStore((state) => state.cw20Balance);
+    const setTransferList = useExecuteStore((state) => state.setTransferList);
 
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
@@ -90,7 +92,9 @@ const Transfer = () => {
                     <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
                     <ItemWrap>
                         <MyWalletLabelTypo>My Wallet Balance :</MyWalletLabelTypo>
-                        <MyWalletAmountTypo>{formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}</MyWalletAmountTypo>
+                        <MyWalletAmountTypo>
+                            {formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}
+                        </MyWalletAmountTypo>
                         <MyWalletAmountTypo>{tokenInfo.symbol}</MyWalletAmountTypo>
                     </ItemWrap>
                 </SummeryCard>

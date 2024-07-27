@@ -7,9 +7,9 @@ import { useModalStore } from '@/hooks/useModal';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { shortenAddress } from '@/utils/common';
 import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -37,6 +37,7 @@ const ItemWrap = styled.div`
 const ItemLabelWrap = styled.div`
     display: flex;
     gap: 16px;
+    align-items: center;
 `;
 
 const MarketingIcon = styled.img`
@@ -52,6 +53,8 @@ const ItemLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    opacity: 0.8;
 `;
 
 const ItemValueForDescTypo = styled.div`
@@ -127,9 +130,15 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 const UpdateMarketingPreview = () => {
-    const { network } = useSelector((state: rootState) => state.global);
+    const network = useSelector((state: rootState) => state.global.network);
 
-    const { contractAddress, fctBalance, contractInfo, marketingInfo, marketingDescription, marketingAddress, marketingProject } = useExecuteStore.getState();
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    const contractInfo = useExecuteStore((state) => state.contractInfo);
+    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
+    const marketingDescription = useExecuteStore((state) => state.marketingDescription);
+    const marketingAddress = useExecuteStore((state) => state.marketingAddress);
+    const marketingProject = useExecuteStore((state) => state.marketingProject);
 
     const modal = useModalStore();
 
@@ -150,35 +159,36 @@ const UpdateMarketingPreview = () => {
 
         if (contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID) {
             contentList.push({
-                label: "Marketing Desc",
-                value: shortenAddress(marketingDescription, 15, 15),
-                type: "wallet"
+                label: 'Marketing Desc',
+                value: marketingDescription,
+                type: 'url'
             });
         } else {
             contentList = [
                 {
-                    label: "Marketing Desc",
-                    value: marketingDescription.length >= 35 ? shortenAddress(marketingDescription, 15, 15) : marketingDescription,
-                    type: "wallet"
+                    label: 'Marketing Desc',
+                    value: marketingDescription,
+                    type: 'url'
                 },
                 {
-                    label: "Marketing Address",
-                    value: marketingAddress.length >= 35 ? shortenAddress(marketingAddress, 15, 15) : marketingAddress,
-                    type: "wallet"
+                    label: 'Marketing Address',
+                    value: marketingAddress,
+                    type: 'url'
                 },
                 {
-                    label: "Marketing Project",
-                    value: marketingProject.length >= 35 ? shortenAddress(marketingProject, 15, 15) : marketingProject,
-                    type: "wallet"
+                    label: 'Marketing Project',
+                    value: marketingProject,
+                    type: 'url'
                 }
-            ]
+            ];
         }
+
         const params = {
             header: {
-                title: "Update Marketing",
+                title: 'Update Marketing'
             },
             content: {
-                balance: fctBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: contentList
             },
@@ -192,7 +202,16 @@ const UpdateMarketingPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/updateMarketing" id={id} params={params} onClickConfirm={() => { console.log(111); }} />
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/updateMarketing"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
     };
 
@@ -240,9 +259,12 @@ const UpdateMarketingPreview = () => {
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton $isEnable={isEnableButton} onClick={onClickUpdateMarketing}>
+                <GreenButton disabled={!isEnableButton} onClick={onClickUpdateMarketing}>
+                    <div className="button-text">Update Marketing</div>
+                </GreenButton>
+                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickUpdateMarketing}>
                     <ExecuteButtonTypo>Update Marketing</ExecuteButtonTypo>
-                </ExecuteButton>
+                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

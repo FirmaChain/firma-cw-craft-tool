@@ -13,6 +13,7 @@ import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
 import { shortenAddress } from '@/utils/common';
 import { QRCodeModal } from '@/components/organisms/modal';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -45,6 +46,8 @@ const ItemLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    opacity: 0.8;
 `;
 
 const AccordionBox = styled.div`
@@ -108,9 +111,12 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const UpdateMinter = () => {
-    const { contractAddress, fctBalance, minterInfo, minterAddress } = useExecuteStore.getState();
-    
-    const { network } = useSelector((state: rootState) => state.global);
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    const minterInfo = useExecuteStore((state) => state.minterInfo);
+    const minterAddress = useExecuteStore((state) => state.minterAddress);
+
+    const network = useSelector((state: rootState) => state.global.network);
 
     const modal = useModalStore();
 
@@ -131,16 +137,16 @@ const UpdateMinter = () => {
 
         const params = {
             header: {
-                title: "Update Minter",
+                title: 'Update Minter'
             },
             content: {
-                balance: fctBalance,
+                fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
-                        label: "Minter",
+                        label: 'Minter',
                         value: shortenAddress(minterAddress, 15, 15),
-                        type: "wallet"
+                        type: 'wallet'
                     }
                 ]
             },
@@ -152,12 +158,16 @@ const UpdateMinter = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal
-                module="/cw20/updateMinter"
-                id={id}
-                params={params}
-                onClickConfirm={() => { console.log(111); } }
-            />
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/updateMinter"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
     };
 
@@ -176,16 +186,12 @@ const UpdateMinter = () => {
                 </AccordionBox>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton
-                    disabled={!minterAddress || Boolean(errorMessage)}
-                    onClick={onClickUpdateMinter}
-                    data-tooltip-content={errorMessage}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
-                >
+                <GreenButton disabled={!minterAddress || Boolean(errorMessage)} onClick={onClickUpdateMinter}>
+                    <div className="button-text">Update Minter</div>
+                </GreenButton>
+                {/* <ExecuteButton disabled={!minterAddress || Boolean(errorMessage)} onClick={onClickUpdateMinter}>
                     <ExecuteButtonTypo>Update Minter</ExecuteButtonTypo>
-                </ExecuteButton>
+                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

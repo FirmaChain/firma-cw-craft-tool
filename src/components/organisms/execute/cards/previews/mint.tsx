@@ -16,6 +16,9 @@ import { isValidAddress, shortenAddress } from '@/utils/address';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import Divider from '@/components/atoms/divider';
+import IconTooltip from '@/components/atoms/tooltip';
+import GreenButton from '@/components/atoms/buttons/greenButton';
 
 const Container = styled.div`
     width: 100%;
@@ -26,10 +29,14 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     height: auto;
     padding: 32px 44px;
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
+    gap: 24px;
 `;
 
 const TokenInfoWrap = styled.div`
@@ -49,6 +56,7 @@ const TokenInfoLeft = styled.div`
     display: flex;
     flex-direction: row;
     gap: 16px;
+    align-items: center;
 `;
 
 const TokenInfoIcon = styled.img`
@@ -63,6 +71,7 @@ const TokenInfoTitleTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+    opacity: 0.8;
 `;
 
 const TokenInfoRightWrap = styled.div`
@@ -115,8 +124,8 @@ const WalletItemIcon = styled.img`
     height: 20px;
 `;
 
-const WalletItemAddressTypo = styled.div`
-    color: var(--Gray-500, #383838);
+const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? '#383838' : '#707070')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -124,8 +133,8 @@ const WalletItemAddressTypo = styled.div`
     line-height: 20px;
 `;
 
-const WalletItemTokenAmount = styled.div`
-    color: var(--Gray-500, #383838);
+const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? '#383838' : '#807E7E')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -210,7 +219,11 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 const MintPreview = () => {
-    const { contractAddress, fctBalance, mintingList, minterInfo, tokenInfo } = useExecuteStore.getState();
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    const mintingList = useExecuteStore((state) => state.mintingList);
+    const minterInfo = useExecuteStore((state) => state.minterInfo);
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
 
     const modal = useModalStore();
 
@@ -246,7 +259,7 @@ const MintPreview = () => {
 
     const onClickMint = () => {
         const convertWalletList: IWallet[] = [];
-        let totalAmount = "0";
+        let totalAmount = '0';
         let feeAmount = mintingList.length * 15000;
 
         for (const wallet of mintingList) {
@@ -260,7 +273,7 @@ const MintPreview = () => {
 
         const params = {
             header: {
-                title: "Mint",
+                title: 'Mint'
             },
             content: {
                 symbol: tokenInfo.symbol,
@@ -270,14 +283,14 @@ const MintPreview = () => {
                 feeAmount: feeAmount.toString(),
                 list: [
                     {
-                        label: "Total Mint Amount",
+                        label: 'Total Mint Amount',
                         value: totalMintBalance,
-                        type: "amount"
+                        type: 'amount'
                     },
                     {
-                        label: "Total Wallet Count",
-                        value: convertWalletList.length,
-                        type: "wallet"
+                        label: 'Total Wallet Count',
+                        value: convertWalletList.length.toString(),
+                        type: 'wallet'
                     }
                 ]
             },
@@ -287,7 +300,16 @@ const MintPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <QRCodeModal module="/cw20/mintToken" id={id} params={params} onClickConfirm={() => { console.log(111); }}/>
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw20/mintToken"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        console.log(111);
+                    }}
+                />
+            )
         });
     };
 
@@ -314,9 +336,11 @@ const MintPreview = () => {
                                 <WalletItemWrap key={index}>
                                     <WalletLeftItemWrap>
                                         <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                        <WalletItemAddressTypo>{shortenAddress(value.recipient, 12, 12)}</WalletItemAddressTypo>
+                                        <WalletItemAddressTypo $disabled={!value.recipient}>
+                                            {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                        </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
-                                    <WalletItemTokenAmount>
+                                    <WalletItemTokenAmount $disabled={!Number(value.amount)}>
                                         {value.amount === '' ? '0' : formatWithCommas(value.amount)}
                                     </WalletItemTokenAmount>
                                 </WalletItemWrap>
@@ -324,25 +348,29 @@ const MintPreview = () => {
                         </WalletListWrap>
                     )}
                 </TokenTitleWrap>
-                <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <TokenInfoWrap>
                     <TokenInfoLeft>
                         <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
-                        <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
-                        {/* TODO TOOLTIP ICON */}
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
+                            <IconTooltip size="14px" />
+                        </div>
                     </TokenInfoLeft>
                     <TokenInfoRightWrap>
                         <TotalSupplyWrap>
-                            <TotalSupplyAmount>{formatWithCommas(getTokenAmountFromUToken(tokenInfo.total_supply, tokenInfo.decimals.toString()))}</TotalSupplyAmount>
+                            <TotalSupplyAmount>
+                                {formatWithCommas(getTokenAmountFromUToken(tokenInfo.total_supply, tokenInfo.decimals.toString()))}
+                            </TotalSupplyAmount>
                             <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
                         </TotalSupplyWrap>
                     </TokenInfoRightWrap>
                 </TokenInfoWrap>
             </ContentWrap>
             <ButtonWrap>
-                <ExecuteButton $isEnable={isEnableButton} onClick={onClickMint}>
-                    <ExecuteButtonTypo>Mint</ExecuteButtonTypo>
-                </ExecuteButton>
+                <GreenButton disabled={!isEnableButton} onClick={onClickMint}>
+                    <div className="button-text">Mint</div>
+                </GreenButton>
             </ButtonWrap>
         </Container>
     );
