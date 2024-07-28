@@ -136,6 +136,7 @@ const TransferFromPreview = () => {
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
     const clearTransferFrom = useExecuteStore((state) => state.clearTransferFrom);
 

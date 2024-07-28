@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
@@ -6,7 +6,6 @@ import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components
 import { formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import IconTooltip from '@/components/atoms/tooltip';
-import useExecuteHook from '../../hooks/useExecueteHook';
 import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -178,6 +177,7 @@ const DecreaseAllowancePreview = () => {
     const allowanceInfo = useExecuteStore((state) => state.allowanceInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const allowance = useExecuteStore((state) => state.allowance);
+    
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
     const clearAllowance = useExecuteStore((v) => v.clearAllowance);
     const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
@@ -333,6 +333,7 @@ const DecreaseAllowancePreview = () => {
                                 <AccordionTypo $disabled={allowance === null ? false : !Number(allowance.amount)}>
                                     {formatWithCommas(allowance === null ? "0" : allowance.amount )}
                                 </AccordionTypo>
+
                             </div>
                         </AccordionRow>
                         <AccordionRow>

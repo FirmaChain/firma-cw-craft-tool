@@ -49,7 +49,15 @@ const SummerySymbolTypo = styled.div`
 const BurnFrom = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const burnFromList = useExecuteStore((state) => state.burnFromList);
+    const isFetched = useExecuteStore((v) => v.isFetched);
     const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
+    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
+
+    useEffect(() => {
+        if (isFetched) {
+            setIsFetched(false);
+        }
+    }, [isFetched]);
 
     const handleWalletList = (value: IWallet[]) => {
         setBurnFromList(value);

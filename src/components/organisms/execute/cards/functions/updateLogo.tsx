@@ -20,7 +20,7 @@ const UpdateLogo = () => {
             setMarketingLogoUrl(marketingInfo?.logo.url || "");
         }
     }, [marketingInfo]);
-
+    
     const onChangeMarketingLogoUrl = (v: string) => {
         console.log(v);
         setMarketingLogoUrl(v);

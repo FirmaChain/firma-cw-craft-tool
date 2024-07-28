@@ -209,6 +209,8 @@ const TransferPreview = () => {
             calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
         }
 
+        console.log("allAddressesValid", allAddressesValid);
+        console.log("allAmountsValid", allAmountsValid);
         const remainAmount = subtractStringAmount(cw20Balance, getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
         setUpdatedAmount(remainAmount);
 
