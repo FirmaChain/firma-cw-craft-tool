@@ -190,18 +190,17 @@ const TokenInfo = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
 
-    const { contractAddress, selectMenu, contractInfo, minterInfo, marketingInfo, tokenInfo, setSelectMenu } = useExecuteStore();
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const selectMenu = useExecuteStore((state) => state.selectMenu);
+    const contractInfo = useExecuteStore((state) => state.contractInfo);
+    const minterInfo = useExecuteStore((state) => state.minterInfo);
+    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
+    const clearForm = useExecuteStore((state) => state.clearForm);
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
-
-    const ContractTypeLabel = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-
-        if (contractInfo) return contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID ? 'BASIC' : 'ADVANCED';
-
-        return false;
-    }, [contractInfo, network]);
 
     useEffect(() => {
         if (marketingInfo && marketingInfo.logo) {
@@ -217,6 +216,14 @@ const TokenInfo = () => {
             setValidTokenLogoUrl('');
         }
     }, [marketingInfo]);
+
+    const ContractTypeLabel = useMemo(() => {
+        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+
+        if (contractInfo) return contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID ? 'BASIC' : 'ADVANCED';
+
+        return false;
+    }, [contractInfo, network]);
 
     useEffect(() => {
         let ruleMenus: IMenuItem[] = [];

@@ -31,7 +31,12 @@ const DimBox = styled.div`
 const Contents = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const clearForm = useExecuteStore((state) => state.clearForm);
     const { setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, setCw20Balance, setFctBalance } = useExecuteActions();
+
+    useEffect(() => {
+        clearForm();
+    }, []);
 
     useEffect(() => {
         if (isValidAddress(contractAddress) && isValidAddress(address)) {

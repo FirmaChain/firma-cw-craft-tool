@@ -80,6 +80,8 @@ interface FormProps {
     clearLogoUrl: () => void;
     clearMarketing: () => void;
     clearAllowanceInfo: () => void;
+
+    clearForm: () => void;
 }
 
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
@@ -240,7 +242,34 @@ const useExecuteStore = create<FormProps>()(
         clearAllowanceInfo: () =>
             set((state) => {
                 state.allowanceInfo = null;
+            }),
+
+        clearForm: () => {
+            set((state) => {
+                state.contractInfo = null;
+                state.tokenInfo = null;
+                state.minterInfo = null;
+                state.marketingInfo = null;
+                state.cw20Balance = null;
+                state.fctBalance = null;
+                state.allowance = null;
+
+                state.isFetched = false;
+                state.contractAddress = null;
+                state.selectMenu = INIT_SELECT_MENU;
+                state.mintingList = [];
+                state.burnAmount = null;
+                state.burnFromList = [];
+                state.allowance = null;
+                state.transferList = INIT_TRANSFER_LIST;
+                state.transferFromList = INIT_TRANSFER_FROM_LIST;
+                state.marketingDescription = null;
+                state.marketingAddress = null;
+                state.marketingProject = null;
+                state.minterAddress = null;
+                state.marketingLogoUrl = null;
             })
+        }
     }))
 );
 

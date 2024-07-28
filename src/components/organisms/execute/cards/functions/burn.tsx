@@ -5,6 +5,7 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } fro
 import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -82,7 +83,7 @@ const Burn = () => {
                 <WalletBalanceWrap>
                     <WalletBalanceTypo>Balance :</WalletBalanceTypo>
                     <WalletBalanceTypo>
-                        {formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}
+                        {parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}
                     </WalletBalanceTypo>
                 </WalletBalanceWrap>
             </ContentWrap>

@@ -6,6 +6,7 @@ import { IWallet } from '@/interfaces/wallet';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useEffect, useMemo } from 'react';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -84,7 +85,7 @@ const BurnFrom = () => {
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
                         <SummeryAmountTypo>
-                            {formatWithCommas(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
+                            {parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)}
                         </SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>

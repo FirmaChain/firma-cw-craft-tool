@@ -153,10 +153,11 @@ const QRCodeModal = ({
                     </ModalTitleWrap>
                     <ModalContentWrap style={{ marginBottom: '36px' }}>
                         <ModalContentBlackCard>
-                            {params.content.list.map((el) => {
+                            {params.content.list.map((el, index) => {
                                 if (el.type === 'amount') {
                                     return (
                                         <AmountItem
+                                            key={index}
                                             label={el.label}
                                             decimals={params.content.decimals}
                                             amount={el.value}
@@ -216,10 +217,11 @@ const QRCodeModal = ({
                     </ResultsHeader>
                     <ResultsContentWrap>
                         <ResultsContentSummeryWrap>
-                            {params.content.list.map((el) => {
+                            {params.content.list.map((el, index) => {
                                 if (el.type === 'amount') {
                                     return (
                                         <ResultAmountItem
+                                            key={index}
                                             label={el.label}
                                             decimals={params.content.decimals}
                                             amount={el.value}

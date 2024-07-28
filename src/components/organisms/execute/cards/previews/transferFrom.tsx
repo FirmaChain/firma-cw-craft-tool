@@ -228,8 +228,9 @@ const TransferFromPreview = () => {
                 </ItemWrap>
                 {isOpen && (
                     <AccordionBox>
-                        {transferFromList.map((info) => (
+                        {transferFromList.map((info, index) => (
                             <FromToAddressLine
+                                key={index}
                                 from={info.fromAddress}
                                 to={info.toAddress}
                                 amount={info.toAmount}

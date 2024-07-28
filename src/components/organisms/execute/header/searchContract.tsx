@@ -76,12 +76,14 @@ const EndAdornment = ({
 const SearchContract = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
-    const { setContractAddress } = useExecuteStore();
+    const setContractAddress = useExecuteStore((state) => state.setContractAddress);
+    const clearForm = useExecuteStore((state) => state.clearForm);
 
     const [keyword, setKeyword] = useState<string>('');
 
     const onClickSearch = () => {
         const valid = isValidAddress(keyword);
+        clearForm();
         if (valid) {
             setContractAddress(keyword);
         } else {
