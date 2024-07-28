@@ -23,9 +23,10 @@ const UpdateMarketing = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractInfo = useExecuteStore((state) => state.contractInfo);
-    const marketingDescription = useExecuteStore((state) => state.marketingDescription) || '';
-    const marketingAddress = useExecuteStore((state) => state.marketingAddress) || '';
-    const marketingProject = useExecuteStore((state) => state.marketingProject) || '';
+    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
+    const marketingDescription = useExecuteStore((state) => state.marketingDescription);
+    const marketingAddress = useExecuteStore((state) => state.marketingAddress);
+    const marketingProject = useExecuteStore((state) => state.marketingProject);
     const setMarketingDescription = useExecuteStore((state) => state.setMarketingDescription);
     const setMarketingAddress = useExecuteStore((state) => state.setMarketingAddress);
     const setMarketingProject = useExecuteStore((state) => state.setMarketingProject);
@@ -45,6 +46,12 @@ const UpdateMarketing = () => {
         setMarketingAddress(value);
     };
 
+    useEffect(() => {}, []);
+
+    const currentDesc = marketingDescription === null ? marketingInfo?.description || '' : marketingDescription;
+    const currentAddr = marketingAddress === null ? marketingInfo?.marketing || '' : marketingAddress;
+    const currentProj = marketingProject === null ? marketingInfo?.project || '' : marketingProject;
+
     return (
         <Container>
             <HeaderWrap>
@@ -59,20 +66,21 @@ const UpdateMarketing = () => {
                         label: 'Marketing Description (Token Description)'
                     }}
                     inputProps={{
-                        value: marketingDescription,
+                        value: currentDesc,
                         formId: 'input description',
                         placeHolder: 'This is token Description',
-                        onChange: setMarketingDescription
+                        onChange: setMarketingDescription,
+                        maxLength: 100
                     }}
                 />
-                {!isBasic && address === marketingAddress && (
+                {!isBasic && address === marketingInfo?.marketing && (
                     <Fragment>
                         <LabelInput
                             labelProps={{
                                 label: 'Marketing Address (Optional)'
                             }}
                             inputProps={{
-                                value: marketingAddress,
+                                value: currentAddr,
                                 formId: 'input address',
                                 placeHolder: 'Input Wallet Address',
                                 onChange: handleAddress
@@ -83,7 +91,7 @@ const UpdateMarketing = () => {
                                 label: 'Marketing Project (Optional)'
                             }}
                             inputProps={{
-                                value: marketingProject,
+                                value: currentProj,
                                 formId: 'input project',
                                 placeHolder: 'ex) http://firmachain.org',
                                 onChange: setMarketingProject

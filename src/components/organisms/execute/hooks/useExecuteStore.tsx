@@ -166,7 +166,7 @@ const useExecuteStore = create<FormProps>()(
             }),
         setMarketingAddress: (data) =>
             set((state) => {
-                state.marketingDescription = data;
+                state.marketingAddress = data;
             }),
         setMarketingProject: (data) =>
             set((state) => {

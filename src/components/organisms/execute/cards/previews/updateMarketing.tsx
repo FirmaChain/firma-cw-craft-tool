@@ -10,6 +10,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import { isValidAddress } from '@/utils/common';
 
 const Container = styled.div`
     width: 100%;
@@ -32,6 +33,7 @@ const ContentWrap = styled.div`
 const ItemWrap = styled.div`
     display: flex;
     gap: 32px;
+    align-items: flex-start;
 `;
 
 const ItemLabelWrap = styled.div`
@@ -98,37 +100,6 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const ExecuteButton = styled.button<{ $isEnable: boolean }>`
-    width: 220px !important;
-    height: 48px;
-    border-radius: 8px;
-    background: ${(props) => (props.$isEnable ? '#02E191' : '#707070')};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: ${(props) => (props.$isEnable ? 'pointer' : 'inherit')};
-    pointer-events: ${(props) => (props.$isEnable ? 'auto' : 'none')};
-    border: none;
-    outline: none;
-    transition:
-        background 0.1s,
-        transform 0.1s;
-
-    &:active {
-        transform: scale(0.99);
-    }
-`;
-
-const ExecuteButtonTypo = styled.div`
-    color: var(--Gray-100, #121212);
-    text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px; /* 125% */
-`;
-
 const UpdateMarketingPreview = () => {
     const network = useSelector((state: rootState) => state.global.network);
 
@@ -152,6 +123,10 @@ const UpdateMarketingPreview = () => {
         return contractInfo.contract_info.code_id === config.CW20.BASIC_CODE_ID;
     }, [contractInfo, network]);
 
+    const finalDesc = marketingDescription === null ? marketingInfo?.description : marketingDescription;
+    const finalAddress = marketingAddress === null ? marketingInfo?.marketing : marketingAddress;
+    const finalProejct = marketingProject === null ? marketingInfo?.project : marketingProject;
+
     const onClickUpdateMarketing = () => {
         const feeAmount = craftConfig.DEFAULT_FEE;
 
@@ -160,24 +135,24 @@ const UpdateMarketingPreview = () => {
         if (contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID) {
             contentList.push({
                 label: 'Marketing Desc',
-                value: marketingDescription,
+                value: finalDesc,
                 type: 'url'
             });
         } else {
             contentList = [
                 {
                     label: 'Marketing Desc',
-                    value: marketingDescription,
+                    value: finalDesc,
                     type: 'url'
                 },
                 {
                     label: 'Marketing Address',
-                    value: marketingAddress,
+                    value: finalAddress,
                     type: 'url'
                 },
                 {
                     label: 'Marketing Project',
-                    value: marketingProject,
+                    value: finalProejct,
                     type: 'url'
                 }
             ];
@@ -194,9 +169,9 @@ const UpdateMarketingPreview = () => {
             },
             contract: contractAddress,
             msg: {
-                project: marketingProject,
-                marketing: marketingAddress,
-                description: marketingDescription
+                project: isBasic ? '' : finalProejct,
+                marketing: finalAddress,
+                description: finalDesc
             }
         };
 
@@ -216,14 +191,15 @@ const UpdateMarketingPreview = () => {
     };
 
     const isEnableButton = useMemo(() => {
-        if (
-            marketingInfo.description !== marketingDescription ||
-            marketingInfo.marketing !== marketingAddress ||
-            marketingInfo.project !== marketingProject
-        )
-            return true;
+        return isValidAddress(finalAddress) || finalAddress === '';
+        // if (
+        //     marketingInfo.description !== marketingDescription ||
+        //     marketingInfo.marketing !== marketingAddress ||
+        //     marketingInfo.project !== marketingProject
+        // )
+        //     return true;
 
-        return false;
+        // return false;
     }, [marketingInfo, marketingDescription, marketingAddress, marketingProject]);
 
     return (
@@ -234,8 +210,11 @@ const UpdateMarketingPreview = () => {
                         <MarketingIcon src={IC_TALK}></MarketingIcon>
                         <ItemLabelTypo>Marketing Desc</ItemLabelTypo>
                     </ItemLabelWrap>
-                    {marketingDescription !== '' && <ItemValueForDescTypo>{marketingDescription}</ItemValueForDescTypo>}
-                    {marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>}
+                    {marketingDescription !== '' ? (
+                        <ItemValueForDescTypo>{finalDesc}</ItemValueForDescTypo>
+                    ) : (
+                        marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>
+                    )}
                 </ItemWrap>
                 {!isBasic && (
                     <Fragment>
@@ -244,16 +223,22 @@ const UpdateMarketingPreview = () => {
                                 <MarketingIcon src={IC_WALLET_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Address</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {marketingAddress !== '' && <ItemValueTypo>{marketingAddress}</ItemValueTypo>}
-                            {marketingAddress === '' && <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>}
+                            {marketingAddress !== '' ? (
+                                <ItemValueTypo>{finalAddress}</ItemValueTypo>
+                            ) : (
+                                <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>
+                            )}
                         </ItemWrap>
                         <ItemWrap>
                             <ItemLabelWrap>
                                 <MarketingIcon src={IC_LINK_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Project</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {marketingProject !== '' && <ItemValueTypo>{marketingProject}</ItemValueTypo>}
-                            {marketingProject === '' && <ItemDefaultTypo>Project Url</ItemDefaultTypo>}
+                            {marketingProject !== '' ? (
+                                <ItemValueTypo>{finalProejct}</ItemValueTypo>
+                            ) : (
+                                <ItemDefaultTypo>Project Url</ItemDefaultTypo>
+                            )}
                         </ItemWrap>
                     </Fragment>
                 )}
@@ -262,9 +247,6 @@ const UpdateMarketingPreview = () => {
                 <GreenButton disabled={!isEnableButton} onClick={onClickUpdateMarketing}>
                     <div className="button-text">Update Marketing</div>
                 </GreenButton>
-                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickUpdateMarketing}>
-                    <ExecuteButtonTypo>Update Marketing</ExecuteButtonTypo>
-                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );
