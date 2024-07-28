@@ -140,7 +140,7 @@ const Information = ({ isBasic }: IProps) => {
                     />
 
                     <LabelInput
-                        labelProps={{ label: 'Token Symbol' }}
+                        labelProps={{ label: 'Token Symbol', subText: 'Minimum 3 charactes' }}
                         inputProps={{
                             value: tokenSymbol,
                             formId: 'tokenSymbol',

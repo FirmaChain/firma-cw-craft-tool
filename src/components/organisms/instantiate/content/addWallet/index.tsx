@@ -28,11 +28,7 @@ const AddWallet = () => {
                 </TextGroupWrapper>
             </TitleWrapper>
 
-            <div style={{ paddingBottom: '20px' }} />
-
             <Summery totalSupply={totalSupply} tokenSymbol={tokenSymbol} decimals={decimals} />
-
-            <div style={{ paddingBottom: '40px' }} />
 
             <FormWalletList
                 walletList={walletList}

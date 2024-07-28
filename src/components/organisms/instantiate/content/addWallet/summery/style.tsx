@@ -5,6 +5,8 @@ export const SummeryContainer = styled.div`
     border-radius: 16px;
     display: flex;
     padding: 16px 24px;
+
+    margin-bottom: 40px;
 `;
 
 export const SummeryAttribute = styled.div`

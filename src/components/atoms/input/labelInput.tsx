@@ -10,6 +10,7 @@ import { checkImageUrl } from '@/utils/common';
 interface ILabelProps {
     index?: number;
     label: string;
+    subText?: string;
     tooltip?: string; //? tooltip message | if not provided, tooltip icon will be visible if provided.
     TooltipIcon?: string | JSX.Element; //? custom tooltip img url or react element;
     labelHeight?: string;
@@ -42,8 +43,19 @@ const IconBackground = styled.div`
     background: var(--Gray-450, #262626);
 `;
 
+const LabelSubText = styled.div`
+    color: var(--Gray-600, #5a5a5a);
+
+    /* Body/Body4 */
+    font-family: 'General Sans Variable';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px; /* 116.667% */
+`;
+
 const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; inputProps: IInputProps }) => {
-    const { index, label, tooltip = '', TooltipIcon = <Icons.Info width={'12px'} height={'12px'} />, labelHeight } = labelProps;
+    const { index, label, subText, tooltip = '', TooltipIcon = <Icons.Info width={'12px'} height={'12px'} />, labelHeight } = labelProps;
     const {
         value,
         formId,
@@ -121,8 +133,9 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                     <div
                         style={{
                             display: 'flex',
-                            width: '24px',
-                            height: '24px',
+                            minWidth: '24px',
+                            maxWidth: '24px',
+                            height: '18px',
                             borderRadius: '6px',
                             background: '#313131',
                             fontSize: '12px',
@@ -134,8 +147,12 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                         {index}
                     </div>
                 )}
-                <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{label}</div>
+                <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC', whiteSpace: 'pre' }}>{label}</div>
                 {typeof tooltip === 'string' && tooltip.length > 0 && <IconTooltip tooltip={tooltip} TooltipIcon={TooltipIcon} />}
+
+                <div style={{ width: '100%', textAlign: 'right' }}>
+                    <LabelSubText>{subText}</LabelSubText>
+                </div>
             </div>
 
             {imgPreview && (

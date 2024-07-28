@@ -10,6 +10,8 @@ export const TitleWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 16px;
+
+    margin-bottom: 20px;
 `;
 
 export const IconBackground = styled.div`

@@ -43,10 +43,12 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                     <SummeryLeftText>Supply Amount</SummeryLeftText>
                 </SummeryLeftWrapper>
                 <SummeryRightWrapeer>
-                    <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>
-                        {commaNumber(parseAmountWithDecimal(totalSupply, '0'))}
-                    </SummeryRightTotalSupply>
-                    <SummeryRightTokenSymbol>{tokenSymbol !== '' ? tokenSymbol : ''}</SummeryRightTokenSymbol>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                        <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>
+                            {commaNumber(parseAmountWithDecimal(totalSupply, '0'))}
+                        </SummeryRightTotalSupply>
+                        {tokenSymbol && Number(totalSupply) > 0 && <SummeryRightTokenSymbol>{tokenSymbol}</SummeryRightTokenSymbol>}
+                    </div>
                     <ArrowToggleButton onToggle={onClickToggleWalletList} />
                 </SummeryRightWrapeer>
             </TotalSupplySummery>

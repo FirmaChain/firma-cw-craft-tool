@@ -53,6 +53,8 @@ const Dashboard = ({
 }: IProps) => {
     const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
 
+    const showAdvancedInfo = Boolean(cw20Mode === 'ADVANCED' && (label || decimals || marketingAddress || marketingProject));
+
     return (
         <DashboardWrapper>
             <TitleWrapper>
@@ -78,7 +80,7 @@ const Dashboard = ({
                         tokenSymbol={tokenSymbol}
                         tokenDescription={tokenDescription}
                     />
-                    {cw20Mode === 'ADVANCED' && (
+                    {showAdvancedInfo && (
                         <Marketing
                             label={label}
                             decimals={decimals}

@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    min-width: 100%;
     min-height: 100vh;
 
-    width: fit-content;
+    width: 100%;
+    overflow: hidden;
     box-sizing: border-box;
 
     padding: 0;
@@ -29,4 +29,4 @@ export const Box = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
     gap: 32px;
     max-width: 1600px;
-`
+`;

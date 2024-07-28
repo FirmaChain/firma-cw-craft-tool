@@ -15,7 +15,7 @@ export const TotalSupplySummery = styled.div`
 export const SummeryLeftWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    gap: 17px;
+    gap: 16px;
 `;
 
 export const SummeryLeftText = styled.div`
@@ -33,14 +33,14 @@ export const SummeryLeftText = styled.div`
 export const SummeryRightWrapeer = styled.div`
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: 12px;
 `;
 
 export const SummeryRightTotalSupply = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-900, var(--Primary-Base-White, #02e191))')};
     // var(--Gray-900, var(--Primary-Base-White, #02e191));
     font-family: 'General Sans Variable';
-    font-size: 16px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 600;
     line-height: 22px;

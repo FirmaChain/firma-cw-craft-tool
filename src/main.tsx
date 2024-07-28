@@ -13,7 +13,7 @@ const MainContainer = styled.div`
 const RightContainer = styled.div`
     width: 100%;
     height: 100vh;
-    overflow: scroll;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 

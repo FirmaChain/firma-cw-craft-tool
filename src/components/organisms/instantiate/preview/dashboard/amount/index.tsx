@@ -70,14 +70,14 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                 <Icons.CoinStack2 width={'24px'} height={'24px'} />
                                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                                     <HeaderMinterCapText>Minter Cap</HeaderMinterCapText>
-                                    <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} />
+                                    <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} TooltipIcon={<Icons.Alert />} />
                                 </div>
                             </HeaderLeftWrapper>
                             <HeaderRightWrapper>
                                 <HeaderMinterCapAmount $disabled={!Boolean(Number(minterCap))}>
                                     {commaNumber(parseAmountWithDecimal(minterCap, '0')) || 0}
                                 </HeaderMinterCapAmount>
-                                <HeaderMinterCapTokenSymbol>{tokenSymbol !== '' ? tokenSymbol : ''}</HeaderMinterCapTokenSymbol>
+                                {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
                                 {!isBasic && <ArrowToggleButton onToggle={onClickToggleMinterDetail} />}
                             </HeaderRightWrapper>
                         </MinterCapHeaderWrapper>

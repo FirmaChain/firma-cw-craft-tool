@@ -46,13 +46,14 @@ export const HeaderRightWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 8px;
+    align-items: center;
 `;
 
 export const HeaderMinterCapAmount = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Primary-Base-White, #fff)')};
     // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
-    font-size: 16px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 600;
     line-height: 22px;
