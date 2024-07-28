@@ -20,6 +20,7 @@ import commaNumber from 'comma-number';
 import { NETWORKS } from '@/constants/common';
 import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/preview/dashboard/tokenInfo/style';
 import Skeleton from '@/components/atoms/skeleton';
+import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 
 const isFalsy = (value?: string | null) => {
     return !Boolean(value) || value === '' || value.toLowerCase() === 'null';
@@ -312,12 +313,7 @@ const MoreInfo = () => {
                         <div className="box-row" style={{ alignItems: 'flex-start' }}>
                             <div className="box-title">Metadata</div>
                             <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                                <div className="box-row" style={{ gap: '4px' }}>
-                                    <span className="white-typo" style={{ color: '#999999' }}>
-                                        {'Copy Metadata'}
-                                    </span>
-                                    <CopyIconButton width="22px" height="22px" text={JSON.stringify(metadata)} />
-                                </div>
+                                <CopyMetadata metaData={metadata} />
                                 <JsonViewer data={metadata} />
                             </div>
                         </div>

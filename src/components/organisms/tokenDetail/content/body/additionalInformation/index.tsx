@@ -27,9 +27,10 @@ import { IC_NAVIGATION, IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIc
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Skeleton from '@/components/atoms/skeleton';
 import { openLink } from '@/utils/common';
+import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 
 const isFalsy = (value?: string) => {
-    return value === '' || value.toLowerCase() === 'null' || !Boolean(value);
+    return !Boolean(value) || value === '' || value.toLowerCase() === 'null';
 };
 
 const AdditionalInformation = () => {
@@ -129,7 +130,7 @@ const AdditionalInformation = () => {
                     {typeof marketingDescription === 'string' ? (
                         <div className="box-value">
                             {isFalsy(marketingDescription) ? (
-                                <SpecificValueTypo $disabled>{isBasic ? 'Token' : 'Marketing'} Description</SpecificValueTypo>
+                                <SpecificValueTypo>{'-'}</SpecificValueTypo>
                             ) : (
                                 <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
                                     {/* //? hidden description typo for more/less button */}
@@ -215,10 +216,10 @@ const AdditionalInformation = () => {
                             <SpecificLabelTypo>Marketing Address</SpecificLabelTypo>
                             {typeof marketingAddress === 'string' ? (
                                 <SpecificMetadataValueWrapper>
-                                    <SpecificValueTypo $disabled={isFalsy(marketingAddress)}>
-                                        {isFalsy(marketingAddress) ? 'Marketing Address' : marketingAddress}
+                                    <SpecificValueTypo>
+                                        {isFalsy(marketingAddress) ? '-' : marketingAddress}
                                     </SpecificValueTypo>
-                                    {marketingAddress !== 'null' && (
+                                    {isFalsy(marketingAddress) === false && (
                                         <CopyIconButton text={marketingAddress} width={'20px'} height={'20px'} />
                                     )}
                                 </SpecificMetadataValueWrapper>
@@ -230,8 +231,8 @@ const AdditionalInformation = () => {
                         <SpecificItem>
                             <SpecificLabelTypo>Marketing Project</SpecificLabelTypo>
                             {typeof marketingProject === 'string' ? (
-                                <SpecificValueTypo $disabled={isFalsy(marketingProject)}>
-                                    {isFalsy(marketingProject) ? 'Marketing Project' : marketingProject}
+                                <SpecificValueTypo>
+                                    {isFalsy(marketingProject) ? '-' : marketingProject}
                                 </SpecificValueTypo>
                             ) : (
                                 <Skeleton width="100px" height="22px" />
@@ -241,14 +242,7 @@ const AdditionalInformation = () => {
                             <SpecificLabelTypo>Metadata</SpecificLabelTypo>
                             {metadata ? (
                                 <SpecificMetadataWrapper>
-                                    <SpecificMetadataValueWrapper
-                                        style={{ width: 'fit-content', cursor: 'pointer' }}
-                                        onClick={onClickViewMetadata}
-                                    >
-                                        <SpecificMetadataTypo>View Metadata</SpecificMetadataTypo>
-
-                                        <img src={IC_NAVIGATION} alt="navigation" style={{ width: '20px', height: '20px' }} />
-                                    </SpecificMetadataValueWrapper>
+                                    <CopyMetadata metaData={metadata} />
                                     {metadata !== '' ? <JsonViewer data={JSON.parse(metadata)} /> : <></>}
                                 </SpecificMetadataWrapper>
                             ) : (
