@@ -35,15 +35,11 @@ interface IWalletWithID extends IWallet {
     id: string;
 }
 
-const generateId = () => {
-    return v4();
-};
-
 const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, addressTitle, addressPlaceholder, amountTitle }: IProps) => {
     const { enqueueSnackbar } = useSnackbar();
     const modal = useModalStore();
 
-    const [walletList, setWalletList] = useState<IWalletWithID[]>([{ recipient: '', amount: '', id: generateId() }]);
+    const [walletList, setWalletList] = useState<IWalletWithID[]>([{ recipient: '', amount: '', id: v4() }]);
     const [validity, setValidity] = useState<boolean[]>([true]);
 
     useEffect(() => {
@@ -56,7 +52,7 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
 
     const handleAddWallet = () => {
         if (walletList.length < maxWalletCount) {
-            setWalletList([...walletList, { recipient: '', amount: '', id: generateId() }]);
+            setWalletList([...walletList, { recipient: '', amount: '', id: v4() }]);
             setValidity([...validity, true]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
@@ -97,7 +93,7 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
                 <DeleteAllModal
                     id={id}
                     onConfirm={() => {
-                        setWalletList([{ recipient: '', amount: '', id: generateId() }]);
+                        setWalletList([{ recipient: '', amount: '', id: v4() }]);
                         setValidity([true]);
                     }}
                 />

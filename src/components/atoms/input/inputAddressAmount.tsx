@@ -43,16 +43,11 @@ const InputAddressAmount = ({
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
-        onChangeAddress(value);
+        onChangeAddress(value.replace(/[^a-zA-Z0-9]/g, ''));
     };
 
     const handleAmount = (value: string) => {
         onChangeAmount(value);
-
-        // const regex = new RegExp(`^\\d*\\.?\\d{0,${decimals}}$`);
-        // if (regex.test(value)) {
-        //     onChangeAmount(value);
-        // }
     };
 
     const handleRemoveWallet = () => {
@@ -81,47 +76,9 @@ const InputAddressAmount = ({
                             emptyErrorMessage: 'Please input wallet address.'
                         }}
                     />
-                    {/* <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' }}>
-                        <div
-                            style={{
-                                display: 'flex',
-                                width: '24px',
-                                height: '24px',
-                                borderRadius: '6px',
-                                background: '#313131',
-                                fontSize: '12px',
-                                color: '#999',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}
-                        >
-                            {index}
-                        </div>
-                        <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{addressTitle}</div>
-                    
-                    </div>
-                    <VariableInput
-                        value={address}
-                        onChange={handleAddress}
-                        placeHolder={addressPlaceholder}
-                        // Input wallet Address
-                        errorMessage={!isValid ? ['Input valid wallet address'] : []}
-                    /> */}
                 </div>
                 {/* Wallet Amount */}
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '164px', gap: '8px' }}>
-                    {/* <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'flex-start',
-                            minHeight: '24px'
-                        }}
-                    >
-                        <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC' }}>{amountTitle}</div>
-                    </div>
-                    <VariableInput value={amount} onChange={handleAmount} placeHolder={'0'} textAlign="right" /> */}
                     <LabelInput
                         labelProps={{ label: amountTitle }}
                         inputProps={{

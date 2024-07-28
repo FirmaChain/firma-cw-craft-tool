@@ -32,8 +32,6 @@ interface IProps {
     amountTitle: string;
 }
 
-const INIT_WALLET_INFO: IWalletWithID = { recipient: '', amount: '', id: v4() };
-
 const FormWalletList = ({
     walletList,
     decimals,
@@ -48,7 +46,7 @@ const FormWalletList = ({
 
     const handleAddWallet = () => {
         if (walletList.length < maxWalletCount) {
-            setWalletList([...walletList, INIT_WALLET_INFO]);
+            setWalletList([...walletList, { recipient: '', amount: '', id: v4() }]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
                 variant: 'info',
@@ -73,7 +71,7 @@ const FormWalletList = ({
     const handleDeleteAll = () => {
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <DeleteAllModal id={id} onConfirm={() => setWalletList([INIT_WALLET_INFO])} />
+            _component: ({ id }) => <DeleteAllModal id={id} onConfirm={() => setWalletList([{ recipient: '', amount: '', id: v4() }])} />
         });
     };
 
