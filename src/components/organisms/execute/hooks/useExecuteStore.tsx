@@ -39,6 +39,8 @@ interface FormProps {
     setFctBalance: (v: string) => void;
     setAllowanceInfo: (v: Cw20Allowance) => void;
 
+    clearInfo: () => void;
+
     // Input(User) Side Datas
     isFetched: boolean;
     contractAddress: string | null;
@@ -128,7 +130,16 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.allowanceInfo = data;
             }),
-
+        clearInfo: () =>
+            set((state) => {
+                state.contractInfo = null;
+                state.tokenInfo = null;
+                state.minterInfo = null;
+                state.marketingInfo = null;
+                state.cw20Balance = null;
+                state.fctBalance = null;
+                state.allowanceInfo = null;
+            }),
         isFetched: false,
         contractAddress: null,
         selectMenu: INIT_SELECT_MENU,

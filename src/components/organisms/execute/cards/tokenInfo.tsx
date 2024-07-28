@@ -283,7 +283,7 @@ const TokenInfo = () => {
                                         <Skeleton width="120px" height="24px" />
                                     )}
                                     {/* <ValidShieldIcon src={IC_VALID_SHIELD} alt={'Firmachain Valid Contract'} /> */}
-                                    {contractAddress && ContractTypeLabel && (
+                                    {ContractTypeLabel && (
                                         <ContractTypeLabelWrap>
                                             <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
                                         </ContractTypeLabelWrap>

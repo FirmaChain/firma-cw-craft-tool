@@ -60,12 +60,12 @@ const Contents = () => {
     useEffect(() => {
         if (isValidAddress(contractAddress) && isValidAddress(address)) {
             checkExist();
+        } else {
+            setExistContract(false);
         }
     }, [contractAddress, address]);
 
     useEffect(() => {
-        console.log(Boolean(existContract));
-
         if (contractAddress !== null && Boolean(existContract) === true) {
             setContractInfo(contractAddress);
             setTokenInfo(contractAddress);

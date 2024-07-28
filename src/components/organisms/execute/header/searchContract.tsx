@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icons from '@/components/atoms/icons';
 import { isValidAddress } from '@/utils/common';
 import { enqueueSnackbar } from 'notistack';
@@ -77,11 +77,19 @@ interface ISearchContractProps {
 const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const setContractAddress = useExecuteStore((state) => state.setContractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
+    const clearInfo = useExecuteStore((state) => state.clearInfo);
 
+    const previousKeywordRef = useRef<string | null>(null);
     const [keyword, setKeyword] = useState<string>(contractAddress);
 
+    useEffect(() => {
+        previousKeywordRef.current = keyword;
+    }, [contractAddress])
+
     const onClickSearch = () => {
+        if (previousKeywordRef.current === keyword) return;
         const valid = isValidAddress(keyword);
+        clearInfo();
         clearForm();
         if (valid) {
             setContractAddress(keyword);
@@ -91,6 +99,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                 autoHideDuration: 2000
             });
         }
+        previousKeywordRef.current = keyword;
     };
 
     const onClickClear = () => {
