@@ -661,3 +661,23 @@ export const ItemUrlTypo = styled.div`
     font-weight: 500;
     line-height: 18px; /* 138.462% */
 `;
+
+export const FailedTransactionTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const FailedTransactionDescTypo = styled.div`
+    color: var(--Gray-700, #807E7E);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+`;

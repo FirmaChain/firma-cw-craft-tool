@@ -19,6 +19,7 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import IconTooltip from '@/components/atoms/tooltip';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useExecuteActions from '../../action';
 
 const Container = styled.div`
     width: 100%;
@@ -133,45 +134,17 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const ExecuteButton = styled.button<{ $isEnable: boolean }>`
-    width: 220px !important;
-    height: 48px;
-    border-radius: 8px;
-    background: ${(props) => (props.$isEnable ? '#02E191' : '#707070')};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: ${(props) => (props.$isEnable ? 'pointer' : 'inherit')};
-    pointer-events: ${(props) => (props.$isEnable ? 'auto' : 'none')};
-    border: none;
-    outline: none;
-    transition:
-        background 0.1s,
-        transform 0.1s;
-
-    &:active {
-        transform: scale(0.99);
-    }
-`;
-
-const ExecuteButtonTypo = styled.div`
-    color: var(--Gray-100, #121212);
-    text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px; /* 125% */
-`;
-
 const BurnPreview = () => {
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
     const cw20Balance = useExecuteStore((v) => v.cw20Balance);
     const burnAmount = useExecuteStore((v) => v.burnAmount) || '0';
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
+    const clearBurn = useExecuteStore((v) => v.clearBurn);
+    const { setCw20Balance } = useExecuteActions();
 
     const network = useSelector((state: rootState) => state.global.network);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
     const modal = useModalStore();
 
@@ -223,7 +196,8 @@ const BurnPreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        clearBurn();
+                        setCw20Balance(contractAddress, address);
                     }}
                 />
             )
@@ -232,6 +206,7 @@ const BurnPreview = () => {
 
     const isEnableButton = useMemo(() => {
         if (compareStringNumbers(fctBalance, craftConfig.DEFAULT_FEE.toString()) !== 1) return false;
+
         if (cw20Balance === '' || cw20Balance === '0') return false;
         if (burnAmount === '' || burnAmount === '0' || Number(burnAmount) === 0) return false;
 
@@ -247,7 +222,7 @@ const BurnPreview = () => {
                         <BurnInfoTitleTypo>Total Burn Amount</BurnInfoTitleTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <BurnAmountTypo>{formatWithCommas(burnAmount)}</BurnAmountTypo>
+                        <BurnAmountTypo>{formatWithCommas(burnAmount !== null ? burnAmount : "0")}</BurnAmountTypo>
                         <BurnSymbolTypo>{tokenInfo.symbol}</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
@@ -270,9 +245,6 @@ const BurnPreview = () => {
                 <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>
                     <div className="button-text">Burn</div>
                 </GreenButton>
-                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickBurn}>
-                    <ExecuteButtonTypo>Burn</ExecuteButtonTypo>
-                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

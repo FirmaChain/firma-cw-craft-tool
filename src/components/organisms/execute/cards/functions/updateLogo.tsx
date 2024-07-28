@@ -14,7 +14,8 @@ const UpdateLogo = () => {
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const onChangeMarketingLogoUrl = (v) => {
+    const onChangeMarketingLogoUrl = (v: string) => {
+        console.log(v);
         setMarketingLogoUrl(v);
     };
 
@@ -38,7 +39,7 @@ const UpdateLogo = () => {
                 labelProps={{ label: 'Marketing Logo (Token Logo Link)' }}
                 inputProps={{
                     formId: LOGO_URL_ERROR_TYPE,
-                    value: marketingLogoUrl,
+                    value: marketingLogoUrl === null ? "" : marketingLogoUrl,
                     onChange: onChangeMarketingLogoUrl,
                     placeHolder: 'ex) https://example.thisismy.token.jpg'
                 }}

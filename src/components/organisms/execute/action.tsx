@@ -59,7 +59,7 @@ const useExecuteActions = () => {
         }
     };
 
-    const getCw20Balance = async (contractAddress: string, address: string) => {
+    const setCw20Balance = async (contractAddress: string, address: string) => {
         try {
             const cw20Balance = await firmaSDK.Cw20.getBalance(contractAddress, address);
             useExecuteStore.getState().setCw20Balance(cw20Balance);
@@ -72,7 +72,7 @@ const useExecuteActions = () => {
         }
     };
 
-    const getFctBalance = async (address: string) => {
+    const setFctBalance = async (address: string) => {
         try {
             const fctBalance = await firmaSDK.Bank.getBalance(address);
             useExecuteStore.getState().setFctBalance(fctBalance);
@@ -85,13 +85,26 @@ const useExecuteActions = () => {
         }
     };
 
+    const setAllowanceInfo = async (contractAddress: string, owner: string, spender: string, ) => {
+        try {
+            const allowanceInfo = await firmaSDK.Cw20.getAllowance(contractAddress, owner, spender);
+            useExecuteStore.getState().setAllowanceInfo(allowanceInfo);
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({
+                variant: 'error',
+                message: 'Error occured while fetching getAllowanceInfo'
+            });
+        }
+    };
     return {
         setContractInfo,
         setTokenInfo,
         setMinterInfo,
         setMarketingInfo,
-        getCw20Balance,
-        getFctBalance
+        setCw20Balance,
+        setFctBalance,
+        setAllowanceInfo,
     }
 };
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
@@ -36,7 +36,7 @@ const InputTitle = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
+const ExpirationTypButton = styled(IconButton) <{ $selected?: boolean }>`
     width: 152px;
     height: 36px;
     border-radius: 8px;
@@ -50,7 +50,7 @@ const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
 
     span {
         color: ${({ $selected }) =>
-            $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
+        $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
 
         /* Body/Body2 - Bd */
         font-family: 'General Sans Variable';
@@ -68,11 +68,12 @@ enum ExpirationType {
 }
 
 const IncreaseAllowance = () => {
-    const allowanceInfo = useExecuteStore((state) => state.allowanceInfo);
-    const setAllowanceInfo = useExecuteStore((state) => state.setAllowanceInfo);
+    const isFetched = useExecuteStore((state) => state.isFetched);
+    const allowance = useExecuteStore((state) => state.allowance);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
-
+    const setAllowance = useExecuteStore((state) => state.setAllowance);
+    
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -80,17 +81,27 @@ const IncreaseAllowance = () => {
 
     const inputId = 'INCREASE_ALLOWANCE';
 
-    const [address, setAddress] = useState('');
-    const [amount, setAmount] = useState('');
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
 
-    const handleChangeAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-        else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
+    useEffect(() => {
+        setExpirationType(ExpirationType.Height);
+        setExpInputValue('');
+    }, [isFetched]);
 
-        setAddress(value);
-        setAllowanceInfo({ address: value, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: allowanceInfo.expire });
+    const handleChangeAddress = (value: string) => {
+        if (FirmaUtil.isValidAddress(value) || value === '') {
+            clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        } else {
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+        }
+        
+        setAllowance({
+            address: value,
+            amount: allowance?.amount,
+            type: !allowance?.type ? "at_height" : allowance.type,
+            expire: allowance?.expire
+        });
     };
 
     const handleChangeAmount = (value: string) => {
@@ -116,12 +127,11 @@ const IncreaseAllowance = () => {
                 ? truncatedValue
                 : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
-        setAmount(increaseAmount);
-        setAllowanceInfo({
-            address: allowanceInfo.address,
-            amount: getUTokenAmountFromToken(increaseAmount, tokenInfo.decimals.toString()),
-            type: allowanceInfo.type,
-            expire: allowanceInfo.expire
+        setAllowance({
+            address: allowance === null ? "" : allowance?.address,
+            amount: increaseAmount,
+            type: allowance === null ? "" : !allowance.type ? "at_height": allowance.type,
+            expire: allowance === null ? "" : allowance.expire
         });
     };
 
@@ -143,26 +153,38 @@ const IncreaseAllowance = () => {
                     break;
             }
 
-            setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: expireType, expire: '' });
+            setAllowance({
+                address: allowance === null ? "" : !allowance.address ? "" : allowance.address,
+                amount: allowance === null ? "" : !allowance.amount ? "" : allowance.amount,
+                type: expireType,
+                expire: ""
+            });
         }
     };
 
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
+        
         let expireValue = '';
-        if (allowanceInfo.type === 'at_time') {
+        if (allowance.type === 'at_time') {
             expireValue = addNanoSeconds(value);
-        } else if (allowanceInfo.type === 'at_height') {
+        } else if (allowance.type === 'at_height') {
             expireValue = value;
         }
 
-        setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: expireValue });
+        setAllowance({
+            address: allowance === null ? "" : allowance?.address,
+            amount: allowance === null ? "" : allowance?.amount,
+            type: allowance === null ? "" : allowance?.type,
+            expire: expireValue
+        });
     };
 
     const handleAllowanceDate = () => {
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => <ExpirationModal id={id} setExpirationDate={(value) => handleChangeExpireValue(value)} />
+
         });
     };
 
@@ -183,9 +205,10 @@ const IncreaseAllowance = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: address,
+                                    value: allowance === null || allowance === undefined ? "" : !allowance?.address ? "" : allowance?.address,
                                     onChange: handleChangeAddress,
-                                    placeHolder: 'Input Wallet Address'
+                                    placeHolder: 'Input Wallet Address',
+                                    emptyErrorMessage: 'Please input firmachain wallet address'
                                 }}
                             />
                         </div>
@@ -200,14 +223,15 @@ const IncreaseAllowance = () => {
                             }}
                         >
                             <LabelInput
+
                                 labelProps={{ label: 'Increase Amount' }}
                                 inputProps={{
                                     formId: `${inputId}_AMOUNT`,
-                                    value: amount,
+                                    value: allowance === null || allowance === undefined ? "0" : !allowance?.amount ? "" : allowance?.amount,
                                     onChange: handleChangeAmount,
                                     placeHolder: '0',
                                     type: 'number',
-                                    decimal: tokenInfo.decimals ? Number(tokenInfo.decimals) : 6,
+                                    decimal: tokenInfo?.decimals,
                                     // emptyErrorMessage: 'Please input mint amount',
                                     textAlign: 'right',
                                     maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString()))
@@ -246,8 +270,8 @@ const IncreaseAllowance = () => {
                         expirationType === ExpirationType.Height
                             ? 'ex) 7216240'
                             : expirationType === ExpirationType.Time
-                              ? 'ex) MM-DD-YYYY  HH:MM:SS'
-                              : 'Forever'
+                                ? 'ex) MM-DD-YYYY  HH:MM:SS'
+                                : 'Forever'
                     }
                     type={expirationType === ExpirationType.Time ? 'date' : 'number'}
                     onChange={handleChangeExpireValue}

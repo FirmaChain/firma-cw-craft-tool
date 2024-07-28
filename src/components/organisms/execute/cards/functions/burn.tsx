@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
@@ -29,9 +29,8 @@ const WalletBalanceTypo = styled.div`
 const Burn = () => {
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
     const cw20Balance = useExecuteStore((v) => v.cw20Balance);
+    const burnAmount = useExecuteStore((v) => v.burnAmount);
     const setBurnAmount = useExecuteStore((v) => v.setBurnAmount);
-
-    const [inputBurnAmount, setInputBurnAmount] = useState<string>('');
 
     const handleBurnAmount = (value: string) => {
         const truncateDecimals = (value: string) => {
@@ -56,7 +55,6 @@ const Burn = () => {
                 ? truncatedValue
                 : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
-        setInputBurnAmount(burnAmount);
         setBurnAmount(burnAmount);
     };
 
@@ -72,7 +70,7 @@ const Burn = () => {
                 <LabelInput
                     labelProps={{ label: 'Burn Amount' }}
                     inputProps={{
-                        value: inputBurnAmount,
+                        value: burnAmount === null ? "" : burnAmount,
                         formId: 'BURN_AMOUNT',
                         type: 'number',
                         onChange: handleBurnAmount,

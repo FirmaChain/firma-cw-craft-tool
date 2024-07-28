@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { v4 } from 'uuid';
-import { ContractInfo, Cw20MarketingInfo, Cw20Minter, Cw20TokenInfo } from '@firmachain/firma-js';
+import { ContractInfo, Cw20Allowance, Cw20MarketingInfo, Cw20Minter, Cw20TokenInfo } from '@firmachain/firma-js';
 import { IWallet } from '@/interfaces/wallet';
 import { IMenuItem } from '../cards/tokenInfo';
 
@@ -29,6 +29,7 @@ interface FormProps {
     marketingInfo: Cw20MarketingInfo | null;
     cw20Balance: string | null;
     fctBalance: string | null;
+    allowanceInfo: Cw20Allowance | null;
 
     setContractInfo: (v: ContractInfo) => void;
     setTokenInfo: (v: Cw20TokenInfo) => void;
@@ -36,30 +37,33 @@ interface FormProps {
     setMarketingInfo: (v: Cw20MarketingInfo) => void;
     setCw20Balance: (v: string) => void;
     setFctBalance: (v: string) => void;
+    setAllowanceInfo: (v: Cw20Allowance) => void;
 
     // Input(User) Side Datas
+    isFetched: boolean;
     contractAddress: string | null;
     selectMenu: IMenuItem | null;
     mintingList: IWallet[] | null;
     burnAmount: string | null;
     burnFromList: IWallet[] | null;
+    allowance: IAllowanceInfo | null;
     transferList: IWallet[] | null;
     transferFromList: ITransferInfo[] | null;
-    allowanceInfo: IAllowanceInfo | null;
     marketingDescription: string | null;
     marketingAddress: string | null;
     marketingProject: string | null;
     minterAddress: string | null;
-    marketingLogoUrl: string;
+    marketingLogoUrl: string | null;
 
+    setIsFetched: (v: boolean) => void;
     setContractAddress: (v: string) => void;
     setSelectMenu: (v: IMenuItem) => void;
     setMinterList: (newList: IWallet[]) => void;
     setBurnAmount: (v: string) => void;
     setBurnFromList: (burnList: IWallet[]) => void;
+    setAllowance: (allowanceInfo: IAllowanceInfo) => void;
     setTransferList: (transferList: IWallet[]) => void;
     setTransferFromList: (transferFromList: ITransferInfo[]) => void;
-    setAllowanceInfo: (allowanceInfo: IAllowanceInfo) => void;
     setMarketingDescription: (v: string) => void;
     setMarketingAddress: (v: string) => void;
     setMarketingProject: (v: string) => void;
@@ -67,6 +71,16 @@ interface FormProps {
     setMarketingLogoUrl: (v: string) => void;
 
     clearForm: () => void;
+    clearMinterList: () => void;
+    clearBurn: () => void;
+    clearBurnFrom: () => void;
+    clearAllowance: () => void;
+    clearTransfer: () => void;
+    clearTransferFrom: () => void;
+    clearMinter: () => void;
+    clearLogoUrl: () => void;
+    clearMarketing: () => void;
+    clearAllowanceInfo: () => void;
 }
 
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
@@ -83,6 +97,7 @@ const useExecuteStore = create<FormProps>()(
         marketingInfo: null,
         cw20Balance: null,
         fctBalance: null,
+        allowanceInfo: null,
 
         setContractInfo: (data) =>
             set((state) => {
@@ -108,26 +123,30 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.fctBalance = data;
             }),
+        setAllowanceInfo: (data) =>
+            set((state) => {
+                state.allowanceInfo = data;
+            }),
 
+        isFetched: false,
         contractAddress: null,
         selectMenu: INIT_SELECT_MENU,
         mintingList: [],
         burnAmount: null,
         burnFromList: [],
+        allowance: null,
         transferList: INIT_TRANSFER_LIST,
         transferFromList: INIT_TRANSFER_FROM_LIST,
-        allowanceInfo: {
-            address: '',
-            amount: '',
-            type: '',
-            expire: ''
-        },
         marketingDescription: null,
         marketingAddress: null,
         marketingProject: null,
         minterAddress: null,
-        marketingLogoUrl: '',
+        marketingLogoUrl: null,
 
+        setIsFetched: (data) =>
+            set((state) => {
+                state.isFetched = data;
+            }),
         setContractAddress: (data) =>
             set((state) => {
                 state.contractAddress = data;
@@ -148,6 +167,10 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.burnFromList = data;
             }),
+        setAllowance: (data) =>
+            set((state) => {
+                state.allowance = data;
+            }),
         setTransferList: (data) =>
             set((state) => {
                 state.transferList = data;
@@ -155,10 +178,6 @@ const useExecuteStore = create<FormProps>()(
         setTransferFromList: (data) =>
             set((state) => {
                 state.transferFromList = data;
-            }),
-        setAllowanceInfo: (data) =>
-            set((state) => {
-                state.allowanceInfo = data;
             }),
         setMarketingDescription: (data) =>
             set((state) => {
@@ -184,6 +203,59 @@ const useExecuteStore = create<FormProps>()(
         clearForm: () =>
             set((state) => {
                 state.transferList = INIT_TRANSFER_LIST;
+                state.selectMenu = INIT_SELECT_MENU;
+                state.mintingList = [];
+                state.burnAmount = null;
+                state.burnFromList = [];
+                state.transferList = INIT_TRANSFER_LIST;
+                state.transferFromList = INIT_TRANSFER_FROM_LIST;
+                state.minterAddress = null;
+                state.marketingLogoUrl = null;
+                state.marketingDescription = null;
+                state.marketingAddress = null;
+                state.marketingProject = null;
+            }),
+        clearMinterList: () =>
+            set((state) => {
+                state.mintingList = [];
+            }),
+        clearBurn: () =>
+            set((state) => {
+                state.burnAmount = null;
+            }),
+        clearBurnFrom: () =>
+            set((state) => {
+                state.burnFromList = [];
+            }),
+        clearAllowance: () =>
+            set((state) => {
+                state.allowance = null;
+            }),
+        clearTransfer: () =>
+            set((state) => {
+                state.transferList = INIT_TRANSFER_LIST;
+            }),
+        clearTransferFrom: () =>
+            set((state) => {
+                state.transferFromList = INIT_TRANSFER_FROM_LIST;
+            }),
+        clearMinter: () =>
+            set((state) => {
+                state.minterAddress = null;
+            }),
+        clearLogoUrl: () =>
+            set((state) => {
+                state.marketingLogoUrl = null;
+            }),
+        clearMarketing: () =>
+            set((state) => {
+                state.marketingDescription = null;
+                state.marketingAddress = null;
+                state.marketingProject = null;
+            }),
+        clearAllowanceInfo: () =>
+            set((state) => {
+                state.allowanceInfo = null;
             })
     }))
 );

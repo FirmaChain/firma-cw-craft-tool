@@ -165,9 +165,10 @@ const ExecuteButtonTypo = styled.div`
 const BurnFromPreview = () => {
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
-    const cw20Balance = useExecuteStore((v) => v.cw20Balance);
     const burnFromList = useExecuteStore((v) => v.burnFromList);
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
+    const clearBurnFrom = useExecuteStore((v) => v.clearBurnFrom);
+    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
 
     const modal = useModalStore();
 
@@ -242,7 +243,8 @@ const BurnFromPreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        setIsFetched(true);
+                        clearBurnFrom();
                     }}
                 />
             )

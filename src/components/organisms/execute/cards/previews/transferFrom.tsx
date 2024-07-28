@@ -164,8 +164,6 @@ const TransferFromPreview = () => {
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    // const cw20Balance = useExecuteStore((state) => state.cw20Balance);
-    // const setTransferFromList = useExecuteStore((state) => state.setTransferFromList);
 
     const modal = useModalStore();
 
@@ -267,7 +265,7 @@ const TransferFromPreview = () => {
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled onClick={onClickTransfer}>
+                <GreenButton disabled={false} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>
                 </GreenButton>
                 {/* <ExecuteButton onClick={onClickTransfer}>

@@ -4,7 +4,7 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, Ti
 import WalletList from '@/components/atoms/walletList';
 import { IWallet } from '@/interfaces/wallet';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 
 const ContentWrap = styled.div`
@@ -48,8 +48,16 @@ const SummerySymbolTypo = styled.div`
 
 const BurnFrom = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
     const burnFromList = useExecuteStore((state) => state.burnFromList);
+    const isFetched = useExecuteStore((v) => v.isFetched);
+    const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
+    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
+
+    useEffect(() => {
+        if (isFetched) {
+            setIsFetched(false);
+        }
+    }, [isFetched]);
 
     const handleWalletList = (value: IWallet[]) => {
         setBurnFromList(value);

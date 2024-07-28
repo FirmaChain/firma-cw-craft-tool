@@ -195,15 +195,18 @@ const UpdateLogo = () => {
             },
             contract: contractAddress,
             msg: {
-                url: marketingLogoUrl
+                upload_logo: {
+                    url: marketingLogoUrl
+                }
             }
         };
 
+        console.log(marketingLogoUrl);
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => (
                 <QRCodeModal
-                    module="/cw20/uploadLogo"
+                    module="/cw20/updateLogo"
                     id={id}
                     params={params}
                     onClickConfirm={() => {

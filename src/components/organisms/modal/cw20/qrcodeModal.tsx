@@ -135,6 +135,7 @@ const QRCodeModal = ({
                                 params={params}
                                 signer={address}
                                 onSuccess={(requestData: any) => {
+                                    console.log("requestData: ", requestData);
                                     setResult(requestData);
                                     setStatus('success');
                                 }}
@@ -298,7 +299,6 @@ const QRCodeModal = ({
                         style={{ width: '100%' }}
                         onClick={() => {
                             onCloseModal();
-                            onClickConfirm();
                         }}
                     >
                         <ResultsConfirmButtonTypo>Confirm</ResultsConfirmButtonTypo>

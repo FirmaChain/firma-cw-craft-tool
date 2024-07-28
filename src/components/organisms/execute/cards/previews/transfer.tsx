@@ -230,12 +230,15 @@ const TransferPreview = () => {
             if (!isValidAddress(wallet.recipient)) {
                 allAddressesValid = false;
             }
-            if (!wallet.amount || wallet.amount.trim() === '') {
+            if (!wallet.amount || wallet.amount === '') {
+                console.log(wallet.amount);
                 allAmountsValid = false;
             }
             calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
         }
 
+        console.log("allAddressesValid", allAddressesValid);
+        console.log("allAmountsValid", allAmountsValid);
         const remainAmount = subtractStringAmount(cw20Balance, getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
         setUpdatedAmount(remainAmount);
 
@@ -353,7 +356,7 @@ const TransferPreview = () => {
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled={isEnableButton} onClick={onClickTransfer}>
+                <GreenButton disabled={!isEnableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>
                 </GreenButton>
                 {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickTransfer}>

@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import commaNumber from 'comma-number';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { formatWithCommas, getTokenAmountFromUToken, subtractStringAmount } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
-import { ModalActions } from '@/redux/actions';
 import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteHook from '../../hooks/useExecueteHook';
 import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
-import useExecuteActions from '../../action';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
@@ -215,6 +212,7 @@ const DecreaseAllowancePreview = () => {
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const allowanceInfo = useExecuteStore((state) => state.allowanceInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const allowance = useExecuteStore((state) => state.allowance);
 
     const network = useSelector((state: rootState) => state.global.network);
 
@@ -233,29 +231,29 @@ const DecreaseAllowancePreview = () => {
     const fetchTokenInfo = useCallback(async () => {
         try {
             if (addressExist) {
-                const result = await getCw20Balance(contractAddress, allowanceInfo.address);
+                const result = await getCw20Balance(contractAddress, allowance.address);
                 const targetBalance = result.success === true ? result.balance : '0';
 
-                setUpdatedAmount(subtractStringAmount(targetBalance, allowanceInfo.amount));
+                setUpdatedAmount(subtractStringAmount(targetBalance, allowance.amount));
             }
         } catch (error) {
             console.log(error);
         }
-    }, [contractAddress, allowanceInfo]);
+    }, [contractAddress, allowance]);
 
     const addressExist = useMemo(() => {
-        return isValidAddress(allowanceInfo.address);
-    }, [allowanceInfo.address]);
+        return isValidAddress(allowance.address);
+    }, [allowance.address]);
 
     const onClickDecreaseAllowance = () => {
         let expires = {};
-        if (allowanceInfo.type === 'at_height') {
+        if (allowance.type === 'at_height') {
             expires = {
-                at_height: parseInt(allowanceInfo.expire)
+                at_height: parseInt(allowance.expire)
             };
-        } else if (allowanceInfo.type === 'at_time') {
+        } else if (allowance.type === 'at_time') {
             expires = {
-                at_time: allowanceInfo.expire.toString()
+                at_time: allowance.expire.toString()
             };
         } else {
             expires = {
@@ -277,26 +275,26 @@ const DecreaseAllowancePreview = () => {
                 list: [
                     {
                         label: 'Decrease Allowance Amount',
-                        value: allowanceInfo.amount,
+                        value: allowance.amount,
                         type: 'amount'
                     },
                     {
                         label: 'Recipient Address',
-                        value: allowanceInfo.address,
+                        value: allowance.address,
                         type: 'wallet'
                     },
                     {
                         label: 'Expiration',
-                        value: allowanceInfo.expire,
-                        type: allowanceInfo.type
+                        value: allowance.expire,
+                        type: allowance.type
                     }
                 ]
             },
             contract: contractAddress,
             msg: {
-                amount: allowanceInfo.amount,
+                amount: allowance.amount,
                 expires: expires,
-                spender: allowanceInfo.address
+                spender: allowance.address
             }
         };
 
@@ -316,12 +314,15 @@ const DecreaseAllowancePreview = () => {
     };
 
     const isEnableButton = useMemo(() => {
-        if (!addressExist || allowanceInfo.amount === '') return false;
-        if (allowanceInfo.type === 'never') return true;
-        if (allowanceInfo.expire === '' || allowanceInfo.type === '') return false;
-
+        console.log(allowance);
+        if (!addressExist || allowance.amount === '') return false;
+        console.log(2222);
+        if (allowance.type === 'never') return true;
+        console.log(1111);
+        if (!allowance.expire || allowance.type === '') return false;
+        console.log("allowance.expire", allowance.expire);
         return true;
-    }, [addressExist, allowanceInfo.amount, allowanceInfo.expire, allowanceInfo.type, allowanceInfo.address]);
+    }, [addressExist, allowance.amount, allowance.expire, allowance.type, allowance.address]);
 
     return (
         <Container>
@@ -333,7 +334,7 @@ const DecreaseAllowancePreview = () => {
                     </ItemLabelWrap>
                     <ItemAmountWrap>
                         <ItemAmountTypo>
-                            {formatWithCommas(getTokenAmountFromUToken(allowanceInfo.amount, tokenInfo.decimals.toString()))}
+                            {formatWithCommas(getTokenAmountFromUToken(allowanceInfo.allowance, tokenInfo.decimals.toString()))}
                         </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
@@ -352,17 +353,17 @@ const DecreaseAllowancePreview = () => {
                                     justifyContent: 'space-between'
                                 }}
                             >
-                                <AccordionTypo $disabled={!allowanceInfo.address}>
+                                {/* <AccordionTypo $disabled={!allowanceInfo.address}>
                                     {allowanceInfo.address || 'Wallet Address'}
-                                </AccordionTypo>
-                                <AccordionTypo $disabled={!Number(allowanceInfo.amount)}>
+                                </AccordionTypo> */}
+                                {/* <AccordionTypo $disabled={!Number(allowanceInfo.amount)}>
                                     {formatWithCommas(getTokenAmountFromUToken(allowanceInfo.amount, tokenInfo.decimals.toString()))}
-                                </AccordionTypo>
+                                </AccordionTypo> */}
                             </div>
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
-                            <ExpirationBox allowanceInfo={allowanceInfo} />
+                            {/* <ExpirationBox allowanceInfo={allowanceInfo} /> */}
                         </AccordionRow>
                     </AccordionBox>
                 )}

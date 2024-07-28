@@ -77,7 +77,7 @@ const SearchContract = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const { setContractAddress } = useExecuteStore();
-    const { setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, getCw20Balance, getFctBalance } = useExecuteActions();
+    const { setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, setCw20Balance, setFctBalance } = useExecuteActions();
 
     const [keyword, setKeyword] = useState<string>('');
 
@@ -89,8 +89,8 @@ const SearchContract = () => {
             setTokenInfo(keyword);
             setMarketingInfo(keyword);
             setMinterInfo(keyword);
-            getCw20Balance(keyword, address);
-            getFctBalance(address);
+            setCw20Balance(keyword, address);
+            setFctBalance(address);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
                 variant: 'error',

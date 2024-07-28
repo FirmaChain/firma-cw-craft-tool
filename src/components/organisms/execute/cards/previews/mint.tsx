@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import {
     addStringAmount,
@@ -19,6 +19,7 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useExecuteActions from '../../action';
 
 const Container = styled.div`
     width: 100%;
@@ -142,11 +143,6 @@ const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
-const DOTTED_DIVIDER = styled.img`
-    width: 100%;
-    height: auto;
-`;
-
 const TokenInfoSubTitleTypo = styled.div`
     color: var(--Gray-700, #999);
     font-family: 'General Sans Variable';
@@ -187,43 +183,15 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const ExecuteButton = styled.button<{ $isEnable: boolean }>`
-    width: 220px !important;
-    height: 48px;
-    border-radius: 8px;
-    background: ${(props) => (props.$isEnable ? '#02E191' : '#707070')};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: ${(props) => (props.$isEnable ? 'pointer' : 'inherit')};
-    pointer-events: ${(props) => (props.$isEnable ? 'auto' : 'none')};
-    border: none;
-    outline: none;
-    transition:
-        background 0.1s,
-        transform 0.1s;
-
-    &:active {
-        transform: scale(0.99);
-    }
-`;
-
-const ExecuteButtonTypo = styled.div`
-    color: var(--Gray-100, #121212);
-    text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px; /* 125% */
-`;
-
 const MintPreview = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const mintingList = useExecuteStore((state) => state.mintingList);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const isFetched = useExecuteStore((state) => state.setIsFetched);
+    const clearMinterList = useExecuteStore((state) => state.clearMinterList);
+    const { setMinterInfo, setTokenInfo } = useExecuteActions();
 
     const modal = useModalStore();
 
@@ -278,7 +246,6 @@ const MintPreview = () => {
             content: {
                 symbol: tokenInfo.symbol,
                 decimals: tokenInfo.decimals.toString(),
-                balance: totalMintBalance,
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
@@ -306,7 +273,10 @@ const MintPreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        isFetched(true);
+                        clearMinterList();
+                        setMinterInfo(contractAddress);
+                        setTokenInfo(contractAddress);
                     }}
                 />
             )

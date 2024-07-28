@@ -21,6 +21,7 @@ import Icons from '../icons';
 import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
+import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 
 interface IProps {
     decimals: string;
@@ -36,6 +37,8 @@ interface IWalletWithID extends IWallet {
 }
 
 const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, addressTitle, addressPlaceholder, amountTitle }: IProps) => {
+    const isFetched = useExecuteStore((state) => state.isFetched);
+
     const { enqueueSnackbar } = useSnackbar();
     const modal = useModalStore();
 
@@ -49,6 +52,13 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
 
         onChangeWalletList(walletList.map(({ id, ...rest }) => rest));
     }, [walletList]);
+
+    useEffect(() => {
+        if (isFetched) {
+            setWalletList([{ recipient: '', amount: '', id: v4() }]);
+            setValidity([true]);
+        }
+    }, [isFetched]);
 
     const handleAddWallet = () => {
         if (walletList.length < maxWalletCount) {

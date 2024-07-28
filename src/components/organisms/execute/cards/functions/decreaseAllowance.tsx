@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FirmaUtil } from '@firmachain/firma-js';
 
@@ -61,10 +61,11 @@ enum ExpirationType {
 }
 
 const DecreaseAllowance = () => {
-    const allowanceInfo = useExecuteStore((v) => v.allowanceInfo);
-    const setAllowanceInfo = useExecuteStore((v) => v.setAllowanceInfo);
-    const cw20Balance = useExecuteStore((v) => v.cw20Balance);
-    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
+    const isFetched = useExecuteStore((state) => state.isFetched);
+    const allowance = useExecuteStore((state) => state.allowance);
+    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const cw20Balance = useExecuteStore((state) => state.cw20Balance);
+    const setAllowance = useExecuteStore((state) => state.setAllowance);
 
     const modal = useModalStore();
 
@@ -73,17 +74,24 @@ const DecreaseAllowance = () => {
 
     const inputId = 'DECREASE_ALLOWANCE';
 
-    const [address, setAddress] = useState('');
-    const [amount, setAmount] = useState('');
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
+
+    useEffect(() => {
+        setExpirationType(ExpirationType.Height);
+        setExpInputValue('');
+    }, [isFetched]);
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
-        setAddress(value);
-        setAllowanceInfo({ address: value, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: allowanceInfo.expire });
+        setAllowance({
+            address: value,
+            amount: allowance?.amount,
+            type: !allowance?.type ? "at_height" : allowance.type,
+            expire: allowance?.expire
+        });
     };
 
     const handleChangeAmount = (value: string) => {
@@ -109,12 +117,11 @@ const DecreaseAllowance = () => {
                 ? truncatedValue
                 : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
-        setAmount(decreaseAmount);
-        setAllowanceInfo({
-            address: allowanceInfo.address,
-            amount: getUTokenAmountFromToken(value, tokenInfo.decimals.toString()),
-            type: allowanceInfo.type,
-            expire: allowanceInfo.expire
+        setAllowance({
+            address: allowance === null ? "" : allowance?.address,
+            amount: decreaseAmount,
+            type: allowance === null ? "" : !allowance.type ? "at_height": allowance.type,
+            expire: allowance === null ? "" : allowance.expire
         });
     };
 
@@ -135,21 +142,32 @@ const DecreaseAllowance = () => {
                     expireType = 'never';
                     break;
             }
-
-            setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: expireType, expire: '' });
+    
+            setAllowance({
+                address: allowance === null ? "" : !allowance.address ? "" : allowance.address,
+                amount: allowance === null ? "" : !allowance.amount ? "" : allowance.amount,
+                type: expireType,
+                expire: ""
+            });
         }
     };
 
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
-        let expireValue = '';
-        if (allowanceInfo.type === 'at_time') {
+
+        let expireValue = "";
+        if (allowance.type === "at_hieght") {
             expireValue = addNanoSeconds(value);
-        } else if (allowanceInfo.type === 'at_height') {
+        } else if (allowance.type === "at_height") {
             expireValue = value;
         }
 
-        setAllowanceInfo({ address: allowanceInfo.address, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: expireValue });
+        setAllowance({
+            address: allowance === null ? "" : allowance?.address,
+            amount: allowance === null ? "" : allowance?.amount,
+            type: allowance === null ? "" : allowance?.type,
+            expire: expireValue
+        });
     };
 
     const handleAllowanceDate = () => {
@@ -176,7 +194,7 @@ const DecreaseAllowance = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: address,
+                                    value: allowance === null || allowance === undefined ? "" : !allowance?.address ? "" : allowance?.address,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address'
                                     // emptyErrorMessage: 'Please input firmachain wallet address'
@@ -197,7 +215,7 @@ const DecreaseAllowance = () => {
                                 labelProps={{ label: 'Decrease Amount' }}
                                 inputProps={{
                                     formId: `${inputId}_AMOUNT`,
-                                    value: amount,
+                                    value: allowance === null || allowance === undefined ? "0" : !allowance?.amount ? "" : allowance?.amount,
                                     onChange: handleChangeAmount,
                                     placeHolder: '0',
                                     type: 'number',

@@ -53,7 +53,6 @@ const useMyToken = () => {
 
             const contractInfos = await Promise.all(contractInfoPromises);
 
-            console.log(contractInfos);
             const myContracts = contractInfos
                 .filter((contractInfo) => contractInfo.contract_info.admin === address)
                 .map((contractInfo) => contractInfo.address);

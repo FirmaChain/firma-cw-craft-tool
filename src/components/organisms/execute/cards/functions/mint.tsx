@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
@@ -63,9 +63,13 @@ const DOTTED_DIVIDER = styled.img`
 `;
 
 const Mint = () => {
+    const isFetched = useExecuteStore((state) => state.isFetched);
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+
     const setMinterList = useExecuteStore((state) => state.setMinterList);
+    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
 
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
@@ -81,6 +85,13 @@ const Mint = () => {
         return addAmount;
     }, [addWalletList]);
 
+    useEffect(() => {
+        if (isFetched) {
+            setAddWalletList([]);
+            setIsFetched(false);
+        }
+    }, [isFetched]);
+    
     const handleWalletList = (value: IWallet[]) => {
         setAddWalletList(value);
         setMinterList(value);
