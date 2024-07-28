@@ -18,6 +18,7 @@ const routes: any[] = [
     routeByAuth('/', <LandingPage />, false),
     routeByAuth('/instantiate', <Cw20Instantiate />, false),
     routeByAuth('/execute', <Execute />, false),
+    routeByAuth('/execute/:contractAddress', <Execute />, false),
     routeByAuth('/search', <SearchPage />, false),
     routeByAuth('/mytoken', <Cw20Mytoken />, false),
     routeByAuth('/mytoken/detail/:contractAddress', <Cw20TokenDetail />, false)

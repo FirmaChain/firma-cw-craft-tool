@@ -10,9 +10,8 @@ const Content = () => {
     const contractExist = useSearchStore((v) => v.contractExist);
     const contractAddress = useSearchStore((v) => v.contractInfo?.address);
 
-    useEffect(() => {
-        console.log(contractExist, contractAddress);
-    }, [contractExist, contractAddress])
+    console.log(contractAddress, contractExist);
+
 
     return (
         <Container>

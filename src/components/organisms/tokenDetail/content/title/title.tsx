@@ -58,7 +58,7 @@ const Title = () => {
     }, [tokenUrl]);
 
     const onClickExecute = () => {
-        navigatge('/execute');
+        navigatge(`/execute?contractAddress=${contractAddress}`);
     };
 
     return (

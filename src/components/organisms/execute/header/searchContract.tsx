@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icons from '@/components/atoms/icons';
 import { isValidAddress } from '@/utils/common';
 import { enqueueSnackbar } from 'notistack';
@@ -6,9 +6,6 @@ import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButt
 import IconButton from '@/components/atoms/buttons/iconButton';
 import styled from 'styled-components';
 import useExecuteStore from '../hooks/useExecuteStore';
-import useExecuteActions from '../action';
-import { rootState } from '@/redux/reducers';
-import { useSelector } from 'react-redux';
 
 const SearchButton = styled(IconButton)`
     //? outside
@@ -73,13 +70,15 @@ const EndAdornment = ({
     );
 };
 
-const SearchContract = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
+interface ISearchContractProps {
+    contractAddress: string;
+}
 
+const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const setContractAddress = useExecuteStore((state) => state.setContractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
 
-    const [keyword, setKeyword] = useState<string>('');
+    const [keyword, setKeyword] = useState<string>(contractAddress);
 
     const onClickSearch = () => {
         const valid = isValidAddress(keyword);
@@ -98,6 +97,12 @@ const SearchContract = () => {
         setKeyword('');
         setContractAddress(null);
     };
+
+    useEffect(() => {
+        return () => {
+            setContractAddress(null);
+        }
+    }, [])
 
     return (
         <SearchInputWithButton2

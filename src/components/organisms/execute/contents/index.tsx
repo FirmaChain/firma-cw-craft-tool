@@ -64,7 +64,9 @@ const Contents = () => {
     }, [contractAddress, address]);
 
     useEffect(() => {
-        if (Boolean(existContract)) {
+        console.log(Boolean(existContract));
+
+        if (contractAddress !== null && Boolean(existContract) === true) {
             setContractInfo(contractAddress);
             setTokenInfo(contractAddress);
             setMarketingInfo(contractAddress);

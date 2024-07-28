@@ -4,14 +4,18 @@ import { rootState } from '@/redux/reducers';
 import ConnectWallet from './connectWallet';
 import SearchContract from './searchContract';
 
-const Header = () => {
+interface IProps {
+    contractAddress: string;
+}
+
+const Header = ({ contractAddress }: IProps) => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
     return (
         <HeaderBox>
             <HeaderWrap>
                 <HeaderTitle>Execute</HeaderTitle>
-                {isInit ? <SearchContract /> : <ConnectWallet />}
+                {isInit ? <SearchContract contractAddress={contractAddress} /> : <ConnectWallet />}
             </HeaderWrap>
         </HeaderBox>
     );
