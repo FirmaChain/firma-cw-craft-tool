@@ -49,22 +49,27 @@ export const MaxWalletCountTypo = styled.div`
     line-height: 20px;
 `;
 
-export const AddWalletWrapper = styled(IconButton)`
+export const AddWalletWrapper = styled(IconButton)<{ disabled?: boolean }>`
     width: 100%;
     padding: 8px 0px;
     display: flex;
     border-radius: 8px;
-    border: 1px solid var(--Gray-600, #707070);
+    border: 1px solid;
+    border-color: ${({ disabled }) => (disabled ? 'var(--Gray-450, #313131)' : 'var(--Gray-600, #707070)')};
     align-items: center;
     justify-content: center;
     gap: 6px;
+
+    div {
+        color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-700, #999)')};
+    }
 `;
 
 export const AddWalletCountWrapper = styled.div`
     display: flex;
 `;
 
-export const AddWalletTypo = styled.div`
+export const AddWalletTypo = styled.div<{ $disabled?: boolean }>`
     color: var(--Gray-700, #999);
     font-size: 14px;
     font-style: normal;

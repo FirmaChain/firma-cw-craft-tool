@@ -63,9 +63,18 @@ const InputAddressAmount = ({
 
     return (
         <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
+            <div style={{ display: 'flex', width: '100%', flexDirection: 'row', gap: '12px' }}>
                 {/* Wallet Address */}
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '420px', gap: '8px' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
+
+                        width: '100%',
+                        gap: '8px'
+                    }}
+                >
                     <LabelInput
                         labelProps={{ index, label: addressTitle }}
                         inputProps={{
@@ -78,7 +87,16 @@ const InputAddressAmount = ({
                     />
                 </div>
                 {/* Wallet Amount */}
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '164px', gap: '8px' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
+                        width: '100%',
+                        maxWidth: '164px',
+                        gap: '8px'
+                    }}
+                >
                     <LabelInput
                         labelProps={{ label: amountTitle }}
                         inputProps={{
@@ -99,24 +117,27 @@ const InputAddressAmount = ({
                         display: 'flex',
                         flexDirection: 'column',
                         width: '32px',
-                        height: '70px',
-                        paddingBottom: '6px',
-                        justifyContent: 'flex-end'
+                        height: '100%',
+                        justifyContent: 'flex-start',
+                        gap: '8px'
                     }}
                 >
-                    <IconButton
-                        style={{
-                            width: '32px',
-                            height: '32px',
-                            padding: '0',
-                            background: 'transparent',
-                            border: 'unset',
-                            cursor: 'pointer'
-                        }}
-                        onClick={handleRemoveWallet}
-                    >
-                        <Icons.MinusCircle />
-                    </IconButton>
+                    <div style={{ width: '100%', minHeight: '20px', maxHeight: '20px' }} />
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <IconButton
+                            style={{
+                                width: '32px',
+                                height: '32px',
+                                padding: '0',
+                                background: 'transparent',
+                                border: 'unset',
+                                cursor: 'pointer'
+                            }}
+                            onClick={handleRemoveWallet}
+                        >
+                            <Icons.MinusCircle />
+                        </IconButton>
+                    </div>
                 </div>
             </div>
         </div>

@@ -108,7 +108,7 @@ const FormWalletList = ({
                 />
             ))}
             <AddWalletWrapper disabled={walletList.length === 20} onClick={handleAddWallet}>
-                <Icons.Add width={'16px'} height={'16px'} />
+                <Icons.Add width={'16px'} height={'16px'} stroke={walletList.length === 20 ? '#383838' : '#999999'} />
                 <AddWalletTypo>
                     Add (<span style={{ fontWeight: '600' }}>{walletList.length}</span>/{maxWalletCount})
                 </AddWalletTypo>
