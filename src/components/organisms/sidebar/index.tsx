@@ -74,6 +74,9 @@ const Sidebar = () => {
 
     const onClickNetworkMenu = (type: NETWORK_TYPE) => {
         GlobalActions.handleNetwork(type);
+        if (location.pathname.includes('mytoken/detail')) {
+            navigate('/mytoken');
+        }
     };
 
     const onClickExternalLink = () => {

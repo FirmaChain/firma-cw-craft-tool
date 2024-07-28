@@ -21,6 +21,7 @@ interface CW20MyTokenContextProps {
     updateContractInfo: (info: IContractInfo) => void;
     currentPage: number;
     setCurrentPage: (page: number) => void;
+    clearCW20MyTokenData: () => void;
 }
 
 const CW20MyTokenContext = createContext<CW20MyTokenContextProps | undefined>(undefined);
@@ -64,6 +65,11 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [location]);
 
+    const clearCW20MyTokenData = () => {
+        setContracts(null);
+        setCurrentPage(1);
+    }
+
     return (
         <CW20MyTokenContext.Provider
             value={{
@@ -71,7 +77,8 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
                 addContracts,
                 updateContractInfo,
                 currentPage,
-                setCurrentPage
+                setCurrentPage,
+                clearCW20MyTokenData
             }}
         >
             {children}
