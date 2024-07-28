@@ -7,6 +7,7 @@ import useMyToken from '@/hooks/useMyToken';
 
 import MyMintedTokenList from './mintedTokenList';
 import { GlobalActions } from '@/redux/actions';
+import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 // import NetworkSelect from '@/components/atoms/select/networkSelect';
 
 // const menuItems = [
@@ -19,14 +20,15 @@ import { GlobalActions } from '@/redux/actions';
 const MyTokenContent = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
+    const { contracts, addContracts } = useCW20MyTokenContext();
     // const [selectSort, setSelectSort] = useState<number>(0);
-    const [contractList, setContractList] = useState<null | string[]>(null);
+    // const [contractList, setContractList] = useState<null | string[]>(null);
 
     const { getCW20ContractList } = useMyToken();
 
     const fetchTokenList = useCallback(async () => {
         const contract = await getCW20ContractList();
-        setContractList(contract);
+        addContracts(contract);
     }, [getCW20ContractList]);
 
     useEffect(() => {
@@ -40,6 +42,14 @@ const MyTokenContent = () => {
         }
     }, [isInit, fetchTokenList]);
 
+    const TokenListByInit = useCallback(() => {
+        if (isInit) {
+            return <MyMintedTokenList />
+        } else {
+            return <ConnectWallet />
+        }
+    }, [isInit])
+
     return (
         <ContentWrapper>
             <ContentControlWrapper>
@@ -50,12 +60,12 @@ const MyTokenContent = () => {
                     minWidth="182px"
                 /> */}
 
-                <ContentInfoWrapper style={{ opacity: contractList !== null && contractList?.length > 0 ? 1 : 0 }}>
-                    <ContractCountTypo>{contractList?.length}</ContractCountTypo>
+                <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
+                    <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                     <TokenTypo>Tokens</TokenTypo>
                 </ContentInfoWrapper>
             </ContentControlWrapper>
-            {!isInit ? <ConnectWallet /> : <MyMintedTokenList contractList={contractList} />}
+            <TokenListByInit />
         </ContentWrapper>
     );
 };

@@ -9,13 +9,15 @@ import './styles/font.css';
 import 'react-tooltip/dist/react-tooltip.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import { CW20MyTokenProvider } from './context/cw20MyTokenContext';
 
 const App = () => {
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
-                <Main />
-
+                <CW20MyTokenProvider>
+                    <Main />
+                </CW20MyTokenProvider>
                 <DefaultTooltip id={TOOLTIP_ID.COMMON} place="bottom" style={{ cursor: 'default', zIndex: 1000 }} />
                 <DefaultTooltip id={TOOLTIP_ID.CLICKABLE} place="bottom" style={{ cursor: 'default', zIndex: 1000 }} clickable />
                 <LightTooltip id={TOOLTIP_ID.LIGHT} place="bottom" style={{ cursor: 'default', zIndex: 1000 }} />

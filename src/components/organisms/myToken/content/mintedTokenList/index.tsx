@@ -8,10 +8,7 @@ import Icons from '@/components/atoms/icons';
 import RowsPerPageSelect from '@/components/atoms/select/rowsPerPageSelect';
 import NoToken from '../noToken';
 import { GlobalActions } from '@/redux/actions';
-
-interface IProps {
-    contractList: string[] | null;
-}
+import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 
 interface IContractItem {
     contractAddress: string;
@@ -22,32 +19,46 @@ interface IContractItem {
     decimals: number;
 }
 
-const MyMintedTokenList = ({ contractList }: IProps) => {
+const MyMintedTokenList = () => {
     const navigate = useNavigate();
 
     const { getCW20ContractInfo } = useMyToken();
+    const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW20MyTokenContext()
 
-    const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageItems, setPageItems] = useState<IContractItem[]>([]);
-
     const [rowsPerPage, setRowsPerPage] = useState<number>(8);
 
-    const totalPages = Math.max(Math.ceil(contractList?.length / rowsPerPage), 1);
+    const totalPages = Math.max(Math.ceil(contracts?.length / rowsPerPage), 1);
 
-    useEffect(() => {
-        if (contractList !== null) {
-            const fetchItems = async () => {
-                const startIndex = (currentPage - 1) * rowsPerPage;
-                const endIndex = startIndex + rowsPerPage;
-                const currentIds = contractList.slice(startIndex, endIndex);
+    const fetchItems = async () => {
+        try {
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const currentContracts = contracts.slice(startIndex, endIndex);
 
-                const fetchedItems = await Promise.all(
-                    currentIds.map(async (contractAddress) => {
-                        const item = await getCW20ContractInfo(contractAddress);
-
-                        if (item) {
-                            return { ...item, contractAddress };
-                        } else {
+            const fetchedItems = await Promise.all(
+                currentContracts.map(async ({ contractAddress, info }) => {
+                    if (info) {
+                        return info;
+                    } else {
+                        try {
+                            GlobalActions.handleGlobalLoading(true);
+                            const item = await getCW20ContractInfo(contractAddress);
+                            if (item) {
+                                updateContractInfo(item);
+                                return { ...item, contractAddress };
+                            } else {
+                                return {
+                                    contractAddress,
+                                    tokenLogoUrl: '',
+                                    tokenSymbol: '',
+                                    tokenName: '',
+                                    totalSupply: '',
+                                    decimals: 0
+                                };
+                            }
+                        } catch (error) {
+                            console.error(`Error fetching info for contract ${contractAddress}:`, error);
                             return {
                                 contractAddress,
                                 tokenLogoUrl: '',
@@ -57,19 +68,26 @@ const MyMintedTokenList = ({ contractList }: IProps) => {
                                 decimals: 0
                             };
                         }
-                    })
-                );
+                    }
+                })
+            );
 
-                setPageItems(fetchedItems);
-                GlobalActions.handleGlobalLoading(false);
-            };
+            setPageItems(fetchedItems);
+        } catch (error) {
+            console.error('Error fetching contract items:', error);
+        } finally {
+            GlobalActions.handleGlobalLoading(false);
+        }
+    };
 
+    useEffect(() => {
+        if (contracts !== null && contracts.length > 0) {
             fetchItems();
         }
-    }, [contractList, currentPage, getCW20ContractInfo, rowsPerPage]);
+    }, [contracts, currentPage, rowsPerPage, updateContractInfo]);
 
     const handleNextPage = () => {
-        if (currentPage < Math.ceil(contractList.length / rowsPerPage)) {
+        if (currentPage < Math.ceil(contracts.length / rowsPerPage)) {
             setCurrentPage(currentPage + 1);
         }
     };
@@ -81,7 +99,7 @@ const MyMintedTokenList = ({ contractList }: IProps) => {
     };
 
     const handleChangeRowsPerPage = (rowsPerPage: number) => {
-        const newTotalPage = Math.max(Math.ceil(contractList.length / rowsPerPage), 1);
+        const newTotalPage = Math.max(Math.ceil(contracts.length / rowsPerPage), 1);
 
         setRowsPerPage(rowsPerPage);
         if (currentPage > newTotalPage) setCurrentPage(newTotalPage);
@@ -92,8 +110,8 @@ const MyMintedTokenList = ({ contractList }: IProps) => {
     };
 
     const pageList = useMemo(() => {
-        if (contractList !== null) {
-            const totalPages = Math.ceil(contractList.length / rowsPerPage);
+        if (contracts !== null) {
+            const totalPages = Math.ceil(contracts.length / rowsPerPage);
 
             if (totalPages <= 1) return [1];
 
@@ -103,11 +121,11 @@ const MyMintedTokenList = ({ contractList }: IProps) => {
 
             return [currentPage - 1, currentPage, currentPage + 1].filter((page) => page <= totalPages);
         } else return [];
-    }, [contractList, currentPage, rowsPerPage]);
+    }, [contracts, currentPage, rowsPerPage]);
 
     return (
         <Container>
-            {contractList !== null && contractList.length === 0 ? (
+            {contracts !== null && contracts.length === 0 ? (
                 <NoToken />
             ) : (
                 <>
