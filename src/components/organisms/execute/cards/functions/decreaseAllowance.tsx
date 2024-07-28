@@ -80,7 +80,7 @@ const DecreaseAllowance = () => {
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-        else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+        else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
         setAddress(value);
         setAllowanceInfo({ address: value, amount: allowanceInfo.amount, type: allowanceInfo.type, expire: allowanceInfo.expire });

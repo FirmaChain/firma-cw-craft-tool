@@ -47,7 +47,7 @@ const Minterble = ({ decimals }: IProps) => {
             setFormError({
                 id: 'minterAddress',
                 type: 'ADDRESS_VALIDATION',
-                message: 'Please input valid firmachain wallet address.'
+                message: 'This is an invalid wallet address.'
             });
         }
     };
@@ -88,7 +88,7 @@ const Minterble = ({ decimals }: IProps) => {
                                 formId: 'minterAddress',
                                 placeHolder: 'Input minter address',
                                 onChange: handleMinterAddress,
-                                emptyErrorMessage: 'Please input minter address.'
+                                emptyErrorMessage: 'Please input wallet address.'
                             }}
                         />
                     )}

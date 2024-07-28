@@ -40,7 +40,7 @@ const UpdateMarketing = () => {
 
     const handleAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
-        else setFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+        else setFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
         setMarketingAddress(value);
     };

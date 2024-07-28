@@ -85,7 +85,7 @@ const Information = ({ isBasic }: IProps) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
             clearFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS' });
         } else {
-            setFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS', message: 'Please input valid firmachain wallet address.' });
+            setFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS', message: 'This is an invalid wallet address.' });
         }
     };
 
@@ -199,7 +199,8 @@ const Information = ({ isBasic }: IProps) => {
                         value: tokenDescription,
                         formId: 'tokenDescription',
                         placeHolder: 'ex) This is my token',
-                        onChange: handleDescription
+                        onChange: handleDescription,
+                        maxLength: 100
                     }}
                 />
                 {!isBasic && (

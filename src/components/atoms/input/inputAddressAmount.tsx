@@ -41,7 +41,7 @@ const InputAddressAmount = ({
 
     const handleAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-        else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+        else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
         onChangeAddress(value);
     };
@@ -78,7 +78,7 @@ const InputAddressAmount = ({
                             value: address,
                             onChange: handleAddress,
                             placeHolder: addressPlaceholder,
-                            emptyErrorMessage: 'Please input firmachain wallet address'
+                            emptyErrorMessage: 'Please input wallet address.'
                         }}
                     />
                     {/* <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' }}>
