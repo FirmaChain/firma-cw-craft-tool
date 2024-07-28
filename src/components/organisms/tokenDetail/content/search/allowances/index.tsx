@@ -15,15 +15,27 @@ const Allowances = ({ searchAllowances, searchReceivers, isLoading }: IProps) =>
     const symbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
 
     const columns: IColumn[] = [
-        { id: 'Receiver', label: 'Receiver', renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />, width: '55%' },
+        {
+            id: 'Receiver',
+            label: 'Receiver',
+            renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />,
+            width: '55%',
+            minWidth: '450px'
+        },
         {
             id: 'Amount',
             label: 'Amount',
             renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
-
-            width: '20%'
+            width: '20%',
+            minWidth: '200px'
         },
-        { id: 'Expires', label: 'Expires', renderCell: (id, row) => parseExpires(JSON.stringify(row['Expires'])), width: '25%' }
+        {
+            id: 'Expires',
+            label: 'Expires',
+            renderCell: (id, row) => parseExpires(JSON.stringify(row['Expires'])),
+            width: '25%',
+            minWidth: '200px'
+        }
     ];
 
     return (

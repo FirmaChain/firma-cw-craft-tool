@@ -42,19 +42,22 @@ const MyAllowances = () => {
             id: 'Receiver',
             label: 'Receiver',
             renderCell: (id, row) => <Cell.WalletAddress address={row['Receiver']} />,
-            width: '50%'
+            width: '50%',
+            minWidth: '450px'
         },
         {
             id: 'Amount',
             label: 'Amount',
             renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
-            width: '20%'
+            width: '20%',
+            minWidth: '200px'
         },
         {
             id: 'Expires',
             label: 'Expires',
             renderCell: (id: string, row: any) => parseExpires(JSON.stringify(row['Expires'])),
-            width: '30%'
+            width: '30%',
+            minWidth: '200px'
         }
     ];
 

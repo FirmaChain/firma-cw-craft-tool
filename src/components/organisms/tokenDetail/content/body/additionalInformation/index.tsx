@@ -29,10 +29,6 @@ import Skeleton from '@/components/atoms/skeleton';
 import { openLink } from '@/utils/common';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 
-const isFalsy = (value?: string) => {
-    return !Boolean(value) || value === '' || value.toLowerCase() === 'null';
-};
-
 const AdditionalInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
 
@@ -129,7 +125,7 @@ const AdditionalInformation = () => {
                     <SpecificLabelTypo>{isBasic ? 'Token' : 'Marketing'} Decsription</SpecificLabelTypo>
                     {typeof marketingDescription === 'string' ? (
                         <div className="box-value">
-                            {isFalsy(marketingDescription) ? (
+                            {!marketingDescription ? (
                                 <SpecificValueTypo>{'-'}</SpecificValueTypo>
                             ) : (
                                 <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
@@ -216,10 +212,8 @@ const AdditionalInformation = () => {
                             <SpecificLabelTypo>Marketing Address</SpecificLabelTypo>
                             {typeof marketingAddress === 'string' ? (
                                 <SpecificMetadataValueWrapper>
-                                    <SpecificValueTypo>
-                                        {isFalsy(marketingAddress) ? '-' : marketingAddress}
-                                    </SpecificValueTypo>
-                                    {isFalsy(marketingAddress) === false && (
+                                    <SpecificValueTypo>{!marketingAddress ? '-' : marketingAddress}</SpecificValueTypo>
+                                    {!marketingAddress === false && (
                                         <CopyIconButton text={marketingAddress} width={'20px'} height={'20px'} />
                                     )}
                                 </SpecificMetadataValueWrapper>
@@ -231,9 +225,7 @@ const AdditionalInformation = () => {
                         <SpecificItem>
                             <SpecificLabelTypo>Marketing Project</SpecificLabelTypo>
                             {typeof marketingProject === 'string' ? (
-                                <SpecificValueTypo>
-                                    {isFalsy(marketingProject) ? '-' : marketingProject}
-                                </SpecificValueTypo>
+                                <SpecificValueTypo>{!marketingProject ? '-' : marketingProject}</SpecificValueTypo>
                             ) : (
                                 <Skeleton width="100px" height="22px" />
                             )}
@@ -241,7 +233,7 @@ const AdditionalInformation = () => {
                         <SpecificItemByStart>
                             <SpecificLabelTypo>Metadata</SpecificLabelTypo>
                             {metadata ? (
-                                <SpecificMetadataWrapper>
+                                <SpecificMetadataWrapper style={{ overflow: 'hidden' }}>
                                     <CopyMetadata metaData={metadata} />
                                     {metadata !== '' ? <JsonViewer data={JSON.parse(metadata)} /> : <></>}
                                 </SpecificMetadataWrapper>

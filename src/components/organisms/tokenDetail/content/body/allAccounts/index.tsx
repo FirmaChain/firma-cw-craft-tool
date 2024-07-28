@@ -23,13 +23,15 @@ const AllAccounts = () => {
             id: 'Wallet Address',
             label: 'Wallet Address',
             renderCell: (id, row) => <Cell.WalletAddress address={row['Wallet Address']} />,
-            width: '60%'
+            width: '60%',
+            minWidth: '450px'
         },
         {
             id: 'Balance',
             label: 'Balance',
             renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
-            width: '40%'
+            width: '40%',
+            minWidth: '200px'
         }
     ];
 

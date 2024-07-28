@@ -10,6 +10,15 @@ export const AllAccountsCardWrapper = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    @media (max-width: 1300px) {
+        flex-direction: column;
+        gap: 20px;
+
+        > div {
+            max-width: unset;
+        }
+    }
 `;
 
 export const AllAccountsCardHeaderTypo = styled.div`

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -15,7 +15,7 @@ import useTokenDetail from '@/hooks/useTokenDetail';
 import { rootState } from '@/redux/reducers';
 import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
-import styled from 'styled-components';
+
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
@@ -23,34 +23,6 @@ import Divider from '@/components/atoms/divider';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
-
-const SearchButton = styled(IconButton)`
-    //? outside
-    width: 168px;
-    height: 40px;
-    border-radius: 8px;
-    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-
-    //? inside
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 40px;
-    flex-shrink: 0;
-    background: ${({ disabled }) => (disabled ? 'var(--Gray-600, #707070)' : 'var(--Green-500, #02e191)')};
-
-    //? button text
-    .button-text {
-        color: ${({ disabled }) => (disabled ? 'var(--Gray-550, #444)' : 'var(--Gray-100, #121212)')};
-        text-align: center;
-        font-family: 'General Sans Variable';
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-    }
-`;
 
 const EndAdornment = ({
     keyword,
@@ -72,9 +44,7 @@ const EndAdornment = ({
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
-            {/* <SearchButton disabled={keyword === '' || disableSearch} onClick={onClickSearch}>
-                <span className="button-text">Search</span>
-            </SearchButton> */}
+
             <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
                 <Icons.Search
                     width="32px"
@@ -107,7 +77,7 @@ const WalletSearch = () => {
     };
 
     const fetchWalletSearch = useCallback(async () => {
-        if (!isLoading && isInit) {
+        if (!isLoading && isInit && searchAddress.length > 0 && isValidAddress(searchAddress)) {
             setIsLoading(true);
 
             const searchResult = await getWalletSearch(contractAddress, searchAddress);
@@ -133,7 +103,7 @@ const WalletSearch = () => {
                         end: (
                             <EndAdornment
                                 keyword={searchAddress}
-                                disableSearch={!isValidAddress(searchAddress)}
+                                disableSearch={!isValidAddress(searchAddress) || searchAddress === ''}
                                 onClickSearch={onClickSearch}
                                 onClickClear={() => setSearchAddress('')}
                             />

@@ -36,6 +36,7 @@ export const BalanceLabelTypo = styled.div`
 export const BalanceAmountWrapper = styled.div`
     display: flex;
     gap: 8px;
+    align-items: center;
 `;
 
 export const BalanceAmountTypo = styled.div`
