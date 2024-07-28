@@ -264,7 +264,6 @@ const TokenInfo = () => {
         console.log("menu", menu);
         const _selectMenu = ownerMenus.find((item) => item.value === menu);
 
-        console.log(_selectMenu);
         setSelectMenu(_selectMenu);
     };
 

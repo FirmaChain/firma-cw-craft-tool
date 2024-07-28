@@ -66,6 +66,7 @@ const DecreaseAllowance = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const setAllowance = useExecuteStore((state) => state.setAllowance);
+    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
 
     const modal = useModalStore();
 
@@ -80,11 +81,15 @@ const DecreaseAllowance = () => {
     useEffect(() => {
         setExpirationType(ExpirationType.Height);
         setExpInputValue('');
+        setIsFetched(false);
     }, [isFetched]);
 
     const handleChangeAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-        else setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
+        if (FirmaUtil.isValidAddress(value) || value === '') {
+            clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        } else {
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
+        }
 
         setAllowance({
             address: value,
@@ -156,7 +161,7 @@ const DecreaseAllowance = () => {
         setExpInputValue(value);
 
         let expireValue = "";
-        if (allowance.type === "at_hieght") {
+        if (allowance.type === "at_time") {
             expireValue = addNanoSeconds(value);
         } else if (allowance.type === "at_height") {
             expireValue = value;

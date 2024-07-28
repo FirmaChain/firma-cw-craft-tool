@@ -199,13 +199,10 @@ const UpdateLogo = () => {
             },
             contract: contractAddress,
             msg: {
-                upload_logo: {
-                    url: marketingLogoUrl
-                }
+                url: marketingLogoUrl
             }
         };
 
-        console.log(marketingLogoUrl);
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => (

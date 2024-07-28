@@ -73,7 +73,8 @@ const IncreaseAllowance = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const setAllowance = useExecuteStore((state) => state.setAllowance);
-    
+    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
+
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -87,6 +88,7 @@ const IncreaseAllowance = () => {
     useEffect(() => {
         setExpirationType(ExpirationType.Height);
         setExpInputValue('');
+        setIsFetched(false);
     }, [isFetched]);
 
     const handleChangeAddress = (value: string) => {

@@ -103,6 +103,7 @@ const ButtonWrap = styled.div`
 
 const UpdateMarketingPreview = () => {
     const network = useSelector((state: rootState) => state.global.network);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
@@ -150,7 +151,7 @@ const UpdateMarketingPreview = () => {
                 },
                 {
                     label: 'Marketing Address',
-                    value: finalAddress,
+                    value: finalAddress === "" ? address : finalAddress,
                     type: 'url'
                 },
                 {
@@ -173,7 +174,7 @@ const UpdateMarketingPreview = () => {
             contract: contractAddress,
             msg: {
                 project: isBasic ? '' : finalProejct,
-                marketing: finalAddress,
+                marketing: finalAddress === "" ? address : finalAddress,
                 description: finalDesc
             }
         };
@@ -195,14 +196,18 @@ const UpdateMarketingPreview = () => {
     };
 
     const isEnableButton = useMemo(() => {
-        if (!isValidAddress(marketingAddress)) return false;
-        if (
+        console.log(111);
+        if (marketingAddress === "" && marketingInfo.marketing !== address) return true;
+        console.log(222);
+        if (marketingAddress !== "" && !isValidAddress(marketingAddress)) return false;
+        console.log(333);
+        if ((marketingAddress !== "" && marketingInfo.marketing !== marketingAddress) ||
             marketingInfo.description !== marketingDescription ||
-            marketingInfo.marketing !== marketingAddress ||
             marketingInfo.project !== marketingProject
-        )
+            )
             return true;
-
+        console.log(444);
+            
         return false;
     }, [marketingInfo, marketingDescription, marketingAddress, marketingProject]);
 
