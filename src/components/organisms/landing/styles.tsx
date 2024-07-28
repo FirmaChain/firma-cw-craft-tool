@@ -97,6 +97,10 @@ export const CardWarp = styled.div`
         .gray-tooltip {
             opacity: 0;
         }
+
+        .color-tooltip {
+            opacity: 1;
+        }
     }
 `;
 
@@ -142,10 +146,17 @@ export const TooltipIconBox = styled.div`
 
     cursor: help;
 
+    will-change: opacity;
+
     .gray-tooltip {
         position: absolute;
         transition: opacity 0.3s;
         display: flex;
+    }
+
+    .color-tooltip {
+        opacity: 0;
+        transition: opacity 0.3s;
     }
 `;
 

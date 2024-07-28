@@ -82,12 +82,12 @@ export const TokenDescriptionText = styled.div<{ $disabled?: boolean }>`
 `;
 
 export const TokenDescriptionClampTypo = styled.span`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    color: var(--Gray-750, #dcdcdc);
 
-    /* Body/Body1 - Md */
+    /* Body/Body2 - Semibd */
     font-family: 'General Sans Variable';
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 22px; /* 137.5% */
+    line-height: 20px; /* 142.857% */
 `;

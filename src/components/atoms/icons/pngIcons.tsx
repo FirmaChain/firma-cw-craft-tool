@@ -34,3 +34,5 @@ export const IMG_LANDING_QUERY = '/assets/image/img_landing_query.png';
 export const IMG_LANDING_EXECUTE = '/assets/image/img_landing_execute.png';
 export const IC_CIRCLE_FAIL = PUBLIC_URL + 'ic_circle_fail.png';
 export const IC_FIRMACHAIN_QRCODE = PUBLIC_URL + 'ic_firmachain_qrcode.png';
+export const IC_TOOLTIP_16_GRAY = PUBLIC_URL + 'ic_tooltip_16px_gray.png';
+export const IC_TOOLTIP_16_50D1E5 = PUBLIC_URL + 'ic_tooltip_16px_50D1E5.png';
