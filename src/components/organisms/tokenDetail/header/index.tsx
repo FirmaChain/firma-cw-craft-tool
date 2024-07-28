@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { HeaderTitle, HeaderWrapper } from './style';
+import { HeaderBox, HeaderTitle, HeaderWrap } from './style';
 import Icons from '@/components/atoms/icons';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
@@ -15,12 +15,14 @@ const Header = () => {
     };
 
     return (
-        <HeaderWrapper>
-            <IconButton style={{ padding: 0, height: '24px' }} onClick={onClickPrev}>
-                <Icons.LeftArrow width={'24'} height={'24'} strokeWidth={'2px'} stroke={'#FFFFFF'} />
-            </IconButton>
-            {tokenName ? <HeaderTitle>{tokenName}</HeaderTitle> : <Skeleton />}
-        </HeaderWrapper>
+        <HeaderBox>
+            <HeaderWrap>
+                <IconButton style={{ padding: 0, height: '24px' }} onClick={onClickPrev}>
+                    <Icons.LeftArrow width={'24'} height={'24'} strokeWidth={'2px'} stroke={'#FFFFFF'} />
+                </IconButton>
+                {tokenName ? <HeaderTitle>{tokenName}</HeaderTitle> : <Skeleton />}
+            </HeaderWrap>
+        </HeaderBox>
     );
 };
 

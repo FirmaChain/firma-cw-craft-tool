@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
+import { ContentBox, ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
 import ConnectWallet from './connectWallet';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -51,22 +51,24 @@ const MyTokenContent = () => {
     }, [isInit])
 
     return (
-        <ContentWrapper>
-            <ContentControlWrapper>
-                {/* <NetworkSelect
+        <ContentBox>
+            <ContentWrapper>
+                <ContentControlWrapper>
+                    {/* <NetworkSelect
                     value={selectSort.toString()}
                     onChange={(v) => setSelectSort(Number(v))}
                     options={menuItems}
                     minWidth="182px"
                 /> */}
 
-                <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
-                    <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
-                    <TokenTypo>Tokens</TokenTypo>
-                </ContentInfoWrapper>
-            </ContentControlWrapper>
-            <TokenListByInit />
-        </ContentWrapper>
+                    <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
+                        <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
+                        <TokenTypo>Tokens</TokenTypo>
+                    </ContentInfoWrapper>
+                </ContentControlWrapper>
+                <TokenListByInit />
+            </ContentWrapper>
+        </ContentBox>
     );
 };
 

@@ -15,7 +15,6 @@ import UpdateLogo from './previews/updateLogo';
 import useExecuteStore from '../hooks/useExecuteStore';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
-    min-width: 736px;
     width: 100%;
     display: flex;
     height: auto;

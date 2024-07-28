@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const HeaderWrap = styled.div`
+export const HeaderBox = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -9,9 +9,9 @@ export const HeaderWrap = styled.div`
     border-bottom: 1px solid #222;
 `;
 
-export const HeaderBox = styled.div`
+export const HeaderWrap = styled.div`
     width: 100%;
-    max-width: 1504px;
+    max-width: 1600px;
     display: flex;
     flex-direction: column;
     gap: 44px;

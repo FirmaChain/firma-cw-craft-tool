@@ -21,11 +21,21 @@ interface IProps {
 }
 
 const CopyMetadata = ({ metaData }: IProps) => {
-
-    const DataExist = !Boolean(JSON.stringify(metaData) === '');
+    const isValidJSON = useMemo(() => {
+        try {
+            const jsonString = JSON.stringify(metaData);
+            if (jsonString === '') {
+                return false;
+            }
+            JSON.parse(jsonString);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }, [metaData]);
 
     return (
-        <Container style={{ display: DataExist ? 'flex' : 'none' }}>
+        <Container style={{ display: isValidJSON ? 'flex' : 'none' }}>
             <TextTypo>
                 {'Copy Metadata'}
             </TextTypo>

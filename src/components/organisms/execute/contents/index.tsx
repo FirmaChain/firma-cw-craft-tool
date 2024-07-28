@@ -1,24 +1,30 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import TokenInfo from '../cards/tokenInfo';
 import Preview from '../cards/preview';
 
-import useExecuteHook, { ITokenInfoState } from '../hooks/useExecueteHook';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { useSnackbar } from 'notistack';
 import useExecuteStore from '../hooks/useExecuteStore';
 import { isValidAddress } from '@/utils/address';
 import useExecuteActions from '../action';
 
 const Container = styled.div`
-    display: flex;
+    width: 100%;
+    display :flex;
     align-items: flex-start;
     justify-content: center;
-    gap: 32px;
     padding: 36px 96px 115px;
 `;
+
+const Box = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+    gap: 32px;
+    max-width: 1600px;
+`
 
 const DimBox = styled.div`
     flex: 1;
@@ -48,13 +54,13 @@ const Contents = () => {
             setFctBalance(address);
         }
     }, [contractAddress, address]);
-    
+
     return contractAddress ? (
         <Container>
-            <Fragment>
+            <Box>
                 <TokenInfo />
                 <Preview />
-            </Fragment>
+            </Box>
         </Container>
     ) : (
         <DimBox>{/* <img src={FIRMA_DIM_LOGO} alt={'Firmachain'} style={{ width: '480px', height: '480px' }} /> */}</DimBox>

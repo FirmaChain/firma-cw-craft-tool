@@ -2,12 +2,9 @@ import styled from 'styled-components';
 
 export const PreviewWrapper = styled.div`
     box-sizing: border-box;
-    width: 736px;
-    min-width: 736px;
+    width: 100%;
     max-height: 742px;
-
     overflow: hidden;
-
     height: 100%;
     padding: 48px;
     display: flex;

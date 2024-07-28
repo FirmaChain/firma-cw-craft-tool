@@ -17,7 +17,16 @@ export const Container = styled.div`
 `;
 
 export const MainContent = styled.div`
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    gap: 32px;
+    align-items: flex-start;
+    justify-content: center;
 `;
+
+export const Box = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+    gap: 32px;
+    max-width: 1600px;
+`

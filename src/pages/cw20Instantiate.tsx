@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Container, MainContent } from '../styles/instantiate';
+import { Box, Container, MainContent } from '../styles/instantiate';
 import { Content, Header, Preview } from '../components/organisms/instantiate';
 import { rootState } from '@/redux/reducers';
 import useFormStore from '@/store/formStore';
@@ -36,8 +36,10 @@ const Cw20Instantiate = () => {
         <Container style={{ padding: '61px 96px' }}>
             <Header />
             <MainContent>
-                <Content isBasic={isBasic} />
-                <Preview isBasic={isBasic} />
+                <Box>
+                    <Content isBasic={isBasic} />
+                    <Preview isBasic={isBasic} />
+                </Box>
             </MainContent>
         </Container>
     );

@@ -1,14 +1,20 @@
 import { styled } from 'styled-components';
 
-export const HeaderWrapper = styled.div`
+export const HeaderBox = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
     padding: 68px 96px 36px;
-    gap: 44px;
     border-bottom: 1px solid #222;
+`;
+
+export const HeaderWrap = styled.div`
+    width: 100%;
+    max-width: 1600px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
 `;
 
 export const HeaderTitle = styled.div`

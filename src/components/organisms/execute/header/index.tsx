@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { HeaderTitle, HeaderWrapper } from './style';
+import { HeaderBox, HeaderTitle, HeaderWrap } from './style';
 import { rootState } from '@/redux/reducers';
 import ConnectWallet from './connectWallet';
 import SearchContract from './searchContract';
@@ -8,10 +8,12 @@ const Header = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
     return (
-        <HeaderWrapper>
-            <HeaderTitle>Execute</HeaderTitle>
-            {isInit ? <SearchContract /> : <ConnectWallet />}
-        </HeaderWrapper>
+        <HeaderBox>
+            <HeaderWrap>
+                <HeaderTitle>Execute</HeaderTitle>
+                {isInit ? <SearchContract /> : <ConnectWallet />}
+            </HeaderWrap>
+        </HeaderBox>
     );
 };
 

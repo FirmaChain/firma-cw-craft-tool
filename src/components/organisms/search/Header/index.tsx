@@ -54,8 +54,8 @@ const Header = () => {
     const disableSearch = Boolean(!FirmaUtil.isValidAddress(keyword) || keyword.length <= 44);
 
     return (
-        <HeaderWrap>
-            <HeaderBox>
+        <HeaderBox>
+            <HeaderWrap>
                 <Title>Search</Title>
                 <SearchInputWithButton2
                     value={keyword}
@@ -73,8 +73,8 @@ const Header = () => {
                         )
                     }}
                 />
-            </HeaderBox>
-        </HeaderWrap>
+            </HeaderWrap>
+        </HeaderBox>
     );
 };
 

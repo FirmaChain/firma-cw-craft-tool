@@ -2,7 +2,6 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import Icons from '@/components/atoms/icons';
-import { IC_DOTTED_DIVIDER, IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
 import Mint from './functions/mint';
 import Burn from './functions/burn';
 import { useSelector } from 'react-redux';
@@ -22,7 +21,6 @@ import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
-    min-width: 736px;
     width: 100%;
     display: flex;
     padding: 48px;

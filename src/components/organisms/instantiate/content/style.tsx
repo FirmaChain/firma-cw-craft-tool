@@ -2,11 +2,8 @@ import styled from 'styled-components';
 
 export const ContentWrapper = styled.div`
     box-sizing: border-box;
-    width: 736px;
-    min-width: 736px;
-
+    width: 100%;
     height: 100%;
-
     padding: 48px 48px;
     display: flex;
     flex-direction: column;

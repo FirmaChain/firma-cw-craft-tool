@@ -1,4 +1,4 @@
-import { HeaderTitle, HeaderWrapper } from './style';
+import { HeaderBox, HeaderTitle, HeaderWrap } from './style';
 import { CW20_MODE, CW20_MODE_TYPE } from '@/constants/common';
 import { GlobalActions } from '@/redux/actions';
 import ModeSwitch from './modeSwitch';
@@ -17,10 +17,12 @@ const Header = () => {
     };
 
     return (
-        <HeaderWrapper>
-            <HeaderTitle>Instantitate</HeaderTitle>
-            <ModeSwitch leftMenu={CW20_MODE[0]} rightMenu={CW20_MODE[1]} onChangeMenu={onChangeMenu} />
-        </HeaderWrapper>
+        <HeaderBox>
+            <HeaderWrap>
+                <HeaderTitle>Instantitate</HeaderTitle>
+                <ModeSwitch leftMenu={CW20_MODE[0]} rightMenu={CW20_MODE[1]} onChangeMenu={onChangeMenu} />
+            </HeaderWrap>
+        </HeaderBox>
     );
 };
 
