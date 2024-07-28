@@ -28,7 +28,7 @@ const TokenNameCard = () => {
                 <TokenNameBox>
                     <div className="token-name-box">
                         <div className="token-symbol">{symbol}</div>
-                        <img src={IC_VALID_SHIELD} alt="verified-icon" style={{ width: '24px' }} />
+                        {/* <img src={IC_VALID_SHIELD} alt="verified-icon" style={{ width: '24px' }} /> */}
                     </div>
 
                     {isOwner && (

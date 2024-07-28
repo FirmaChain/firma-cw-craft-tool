@@ -3,8 +3,7 @@ import { CardContainer, SectionContainer } from '../style';
 import useSearchStore from '../../searchStore';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
-import IconButton from '@/components/atoms/buttons/iconButton';
-import { IC_NAVIGATION, IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
+import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import JsonViewer from '@/components/atoms/viewer/jsonViewer';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -21,10 +20,6 @@ import { NETWORKS } from '@/constants/common';
 import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/preview/dashboard/tokenInfo/style';
 import Skeleton from '@/components/atoms/skeleton';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
-
-const isFalsy = (value?: string | null) => {
-    return !Boolean(value) || value === '' || value.toLowerCase() === 'null';
-};
 
 const TokenInfo = () => {
     const network = useSelector((v: rootState) => v.global.network);
@@ -51,7 +46,7 @@ const TokenInfo = () => {
                 <div className="box-row">
                     <div className="box-title">Contract Address</div>
                     <div className="box-value">
-                        <div className="white-typo">{contractAddress}</div>
+                        <div className="white-typo single-line-clamp">{contractAddress}</div>
                         {contractAddress && <CopyIconButton width="22px" height="22px" text={contractAddress} />}
                     </div>
                 </div>
@@ -106,7 +101,7 @@ const TokenInfo = () => {
                     <div className="box-row">
                         <div className="box-title">Minter Address</div>
                         <div className="box-value">
-                            <div className="white-typo">{minterAddress}</div>
+                            <div className="white-typo single-line-clamp">{minterAddress}</div>
                             {minterAddress && <CopyIconButton width="22px" height="22px" text={minterAddress} />}
                         </div>
                     </div>
@@ -208,7 +203,7 @@ const MoreInfo = () => {
                 <div className="box-row" style={{ alignItems: 'flex-start' }}>
                     <div className="box-title">{isBasic ? 'Token' : 'Marketing'} Description</div>
                     <div className="box-value">
-                        {isFalsy(marketingDesc) ? (
+                        {!marketingDesc ? (
                             <div className="white-typo">{'-'}</div>
                         ) : (
                             <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
@@ -284,7 +279,6 @@ const MoreInfo = () => {
                                     )}
                                 </div>
                             </div>
-                            // <div className="white-typo">{marketingDesc}</div>
                         )}
                     </div>
                 </div>
@@ -293,7 +287,7 @@ const MoreInfo = () => {
                         <div className="box-row">
                             <div className="box-title">Marketing Address</div>
                             <div className="box-value">
-                                {isFalsy(marketingAddr) ? (
+                                {!marketingAddr ? (
                                     <div className="white-typo">{'-'}</div>
                                 ) : (
                                     <div className="white-typo">{marketingAddr}</div>
@@ -303,7 +297,7 @@ const MoreInfo = () => {
                         <div className="box-row">
                             <div className="box-title">Marketing Project</div>
                             <div className="box-value">
-                                {isFalsy(marketingProj) ? (
+                                {!marketingProj ? (
                                     <div className="white-typo">{'-'}</div>
                                 ) : (
                                     <div className="white-typo">{marketingProj}</div>
@@ -312,7 +306,10 @@ const MoreInfo = () => {
                         </div>
                         <div className="box-row" style={{ alignItems: 'flex-start' }}>
                             <div className="box-title">Metadata</div>
-                            <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
+                            <div
+                                className="box-value"
+                                style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px', overflow: 'hidden' }}
+                            >
                                 <CopyMetadata metaData={metadata} />
                                 <JsonViewer data={metadata} />
                             </div>
@@ -336,13 +333,15 @@ const AllAccounts = () => {
             id: 'address',
             label: 'Wallet Address',
             renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />,
-            width: '60%'
+            width: '60%',
+            minWidth: '450px'
         },
         {
             id: 'balance',
             label: 'Balance',
             renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
-            width: '40%'
+            width: '40%',
+            minWidth: '200px'
         }
     ];
 
@@ -372,15 +371,15 @@ const Transactions = () => {
 
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },
-        { id: 'type', label: 'Type', renderCell: (id, row) => <Cell.TransactionType type={row[id]} />, minWidth: '150px' },
-        { id: 'height', label: 'Block', renderCell: (id, row) => <Cell.BlockHeight block={row[id]} />, minWidth: '100px' },
+        { id: 'type', label: 'Type', renderCell: (id, row) => <Cell.TransactionType type={row[id]} />, minWidth: '200px' },
+        { id: 'height', label: 'Block', renderCell: (id, row) => <Cell.BlockHeight block={row[id]} />, minWidth: '120px' },
         {
             id: 'address',
             label: 'From (Wallet Address)',
             renderCell: (id, row) => <Cell.WalletAddress address={row[id]} sliceLength={10} />,
             minWidth: '250px'
         },
-        { id: 'success', label: 'Result', renderCell: (id, row) => <Cell.ResultStatus isSuccess={row[id]} />, minWidth: '100px' },
+        { id: 'success', label: 'Result', renderCell: (id, row) => <Cell.ResultStatus isSuccess={row[id]} />, minWidth: '120px' },
         {
             id: 'timestamp',
             label: 'Time',

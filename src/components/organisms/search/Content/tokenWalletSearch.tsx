@@ -63,16 +63,18 @@ const TokenWalletSearch = () => {
     const { getWalletSearch } = useTokenDetail();
 
     const getAddressInfo = async () => {
-        setBalanceAmount(null);
-        setAllAllowances(null);
-        setAllReceives(null);
+        if (keyword.length > 0 && isValidAddress(keyword)) {
+            setBalanceAmount(null);
+            setAllAllowances(null);
+            setAllReceives(null);
 
-        const searchResult = await getWalletSearch(contractAddress, keyword);
+            const searchResult = await getWalletSearch(contractAddress, keyword);
 
-        if (searchResult) {
-            setBalanceAmount(searchResult.balanceAmount);
-            setAllAllowances(searchResult.allAllowances);
-            setAllReceives(searchResult.allSpenders);
+            if (searchResult) {
+                setBalanceAmount(searchResult.balanceAmount);
+                setAllAllowances(searchResult.allAllowances);
+                setAllReceives(searchResult.allSpenders);
+            }
         }
     };
 
@@ -86,14 +88,27 @@ const TokenWalletSearch = () => {
     }, [contractAddress]);
 
     const columns: IColumn[] = [
-        { id: 'Receiver', label: 'Receiver', renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />, width: '55%' },
+        {
+            id: 'Receiver',
+            label: 'Receiver',
+            renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />,
+            width: '55%',
+            minWidth: '450px'
+        },
         {
             id: 'Amount',
             label: 'Amount',
             renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
-            width: '20%'
+            width: '20%',
+            minWidth: '200px'
         },
-        { id: 'Expires', label: 'Expires', renderCell: (id, row) => parseExpires(JSON.stringify(row['Expires'])), width: '25%' }
+        {
+            id: 'Expires',
+            label: 'Expires',
+            renderCell: (id, row) => parseExpires(JSON.stringify(row['Expires'])),
+            width: '25%',
+            minWidth: '200px'
+        }
     ];
 
     return (
