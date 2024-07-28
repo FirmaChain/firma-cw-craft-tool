@@ -104,7 +104,7 @@ export const ExternalLinkWrapper = styled.div`
     gap: 8px;
 `;
 
-export const ExternalLinkButton = styled.button`
+export const ExternalLinkButton = styled.a`
     background: none;
     border: none;
     color: #999999;
@@ -113,6 +113,7 @@ export const ExternalLinkButton = styled.button`
     line-height: 20px;
     cursor: pointer;
     transition: color 0.3s ease;
+    text-decoration: none;
 
     &:focus {
         outline: none;

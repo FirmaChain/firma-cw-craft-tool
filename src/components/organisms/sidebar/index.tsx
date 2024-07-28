@@ -179,7 +179,7 @@ const Sidebar = () => {
                         <NetworkMenu onChange={onClickNetworkMenu} />
                         <ExternalLinkWrapper>
                             <ExternalLinkButton onClick={onClickExternalLink}>Block Explorer</ExternalLinkButton>
-                            <ExternalLinkButton>Contact Us</ExternalLinkButton>
+                            <ExternalLinkButton href={'mailto:info@firmachain.org'}>Contact Us</ExternalLinkButton>
                         </ExternalLinkWrapper>
                         <Divider $direction="horizontal" $color={'#383838'} />
                         <SocialWrapper>
