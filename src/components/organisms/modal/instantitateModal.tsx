@@ -504,7 +504,7 @@ const InstantitateModal = ({
     }, [result]);
 
     const openContractAddress = () => openLink(`${explorerUrl}/accounts/${parsedData?.contractAddress}`);
-    const openHash = () => openLink(`${explorerUrl}/hash/${parsedData?.transactionHash}`);
+    const openHash = () => openLink(`${explorerUrl}/transactions/${parsedData?.transactionHash}`);
 
     const onClickGoToMyTokens = () => {
         closeModal(id);

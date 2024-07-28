@@ -82,10 +82,10 @@ const Preview = ({ isBasic }: IProps) => {
                         }
                     }),
                     marketing: {
-                        description: tokenDescription === '' ? 'null' : tokenDescription,
-                        logo: { url: tokenLogoUrl === '' ? 'null' : tokenLogoUrl },
-                        marketing: isBasic ? address : marketingAddress === '' ? address : marketingAddress,
-                        project: isBasic ? `null` : marketingProject === '' ? `null` : marketingProject
+                        description: tokenDescription || '',
+                        logo: { url: tokenLogoUrl || '' },
+                        marketing: isBasic ? address : marketingAddress || address,
+                        project: marketingProject || ''
                     }
                 };
 
