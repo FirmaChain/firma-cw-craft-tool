@@ -11,6 +11,10 @@ const CloseBtnBox = styled.div`
     justify-content: flex-end;
 `;
 
+const CloseButton = styled.div`
+    cursor: pointer;
+`
+
 const TitleBox = styled.div`
     display: flex;
     flex-direction: column;
@@ -109,7 +113,9 @@ const DeleteAllModal = ({ id, onConfirm }: { id: string; onConfirm: () => void }
     return (
         <ModalBase style={{ padding: '24px 28px 36px', width: '384px', gap: 0 }}>
             <CloseBtnBox>
-                <Icons.Close width="24px" height="24px" />
+                <CloseButton onClick={onClickCancel}>
+                    <Icons.Close width="24px" height="24px" />
+                </CloseButton>
             </CloseBtnBox>
             <TitleBox>
                 <Title>Delete All?</Title>

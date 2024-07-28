@@ -112,9 +112,9 @@ const TransferFromWalletInput = ({
         <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             <div style={{ width: '100%', height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '420px', gap: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '420px', gap: '8px' }}>
                             <LabelInput
                                 labelProps={{ index, label: 'Owner Address' }}
                                 inputProps={{
@@ -126,7 +126,7 @@ const TransferFromWalletInput = ({
                             />
                         </div>
                         {/* Wallet Amount */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '164px', gap: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '164px', gap: '8px' }}>
                             <LabelInput
                                 labelProps={{ label: 'Balance' }}
                                 inputProps={{
@@ -145,9 +145,9 @@ const TransferFromWalletInput = ({
                 </div>
 
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: '12px' }}>
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '420px', gap: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '420px', gap: '8px' }}>
                             <LabelInput
                                 labelProps={{ index, label: 'Recipient Address' }}
                                 inputProps={{
@@ -160,7 +160,7 @@ const TransferFromWalletInput = ({
                             />
                         </div>
                         {/* Wallet Amount */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '164px', gap: '4px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '164px', gap: '4px' }}>
                             <LabelInput
                                 labelProps={{ label: 'Amount' }}
                                 inputProps={{

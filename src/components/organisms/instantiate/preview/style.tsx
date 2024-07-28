@@ -5,7 +5,7 @@ export const PreviewWrapper = styled.div`
     width: 100%;
     max-height: 742px;
     overflow: hidden;
-    height: 100%;
+    height: fit-content;
     padding: 48px;
     display: flex;
     flex-direction: column;

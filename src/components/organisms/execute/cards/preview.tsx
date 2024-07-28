@@ -17,7 +17,7 @@ import useExecuteStore from '../hooks/useExecuteStore';
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
     display: flex;
-    height: auto;
+    height: fit-content;
     padding: 48px 48px 40px;
     flex-direction: column;
     justify-content: center;
