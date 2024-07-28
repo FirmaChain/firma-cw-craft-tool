@@ -38,6 +38,7 @@ interface IWalletWithID extends IWallet {
 
 const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, addressTitle, addressPlaceholder, amountTitle }: IProps) => {
     const isFetched = useExecuteStore((state) => state.isFetched);
+    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
 
     const { enqueueSnackbar } = useSnackbar();
     const modal = useModalStore();
@@ -57,6 +58,7 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
         if (isFetched) {
             setWalletList([{ recipient: '', amount: '', id: v4() }]);
             setValidity([true]);
+            setIsFetched(false);
         }
     }, [isFetched]);
 

@@ -131,37 +131,6 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const ExecuteButton = styled.button<{ $isEnable: boolean }>`
-    width: 220px !important;
-    height: 48px;
-    border-radius: 8px;
-    background: ${(props) => (props.$isEnable ? '#02E191' : '#707070')};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: ${(props) => (props.$isEnable ? 'pointer' : 'inherit')};
-    pointer-events: ${(props) => (props.$isEnable ? 'auto' : 'none')};
-    border: none;
-    outline: none;
-    transition:
-        background 0.1s,
-        transform 0.1s;
-
-    &:active {
-        transform: scale(0.99);
-    }
-`;
-
-const ExecuteButtonTypo = styled.div`
-    color: var(--Gray-100, #121212);
-    text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px; /* 125% */
-`;
-
 const BurnFromPreview = () => {
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);

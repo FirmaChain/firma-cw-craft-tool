@@ -17,6 +17,9 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useExecuteActions from '../../action';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const Container = styled.div`
     width: 100%;
@@ -131,11 +134,6 @@ const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
-const DOTTED_DIVIDER = styled.img`
-    width: 100%;
-    height: auto;
-`;
-
 const CoinStack2Icon = styled.img`
     width: 24px;
     height: 24px;
@@ -176,43 +174,18 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const ExecuteButton = styled.button<{ $isEnable: boolean }>`
-    width: 220px !important;
-    height: 48px;
-    border-radius: 8px;
-    background: ${(props) => (props.$isEnable ? '#02E191' : '#707070')};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: ${(props) => (props.$isEnable ? 'pointer' : 'inherit')};
-    pointer-events: ${(props) => (props.$isEnable ? 'auto' : 'none')};
-    border: none;
-    outline: none;
-    transition:
-        background 0.1s,
-        transform 0.1s;
-
-    &:active {
-        transform: scale(0.99);
-    }
-`;
-
-const ExecuteButtonTypo = styled.div`
-    color: var(--Gray-100, #121212);
-    text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px; /* 125% */
-`;
-
 const TransferPreview = () => {
+    const address = useSelector((state: rootState) => state.wallet.address);
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const transferList = useExecuteStore((state) => state.transferList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
+    const clearTransfer = useExecuteStore((state) => state.clearTransfer);
+
+    const { setCw20Balance } = useExecuteActions();
 
     const modal = useModalStore();
 
@@ -231,14 +204,11 @@ const TransferPreview = () => {
                 allAddressesValid = false;
             }
             if (!wallet.amount || wallet.amount === '') {
-                console.log(wallet.amount);
                 allAmountsValid = false;
             }
             calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
         }
 
-        console.log("allAddressesValid", allAddressesValid);
-        console.log("allAmountsValid", allAmountsValid);
         const remainAmount = subtractStringAmount(cw20Balance, getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
         setUpdatedAmount(remainAmount);
 
@@ -298,7 +268,9 @@ const TransferPreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        clearTransfer();
+                        setIsFetched(true);
+                        setCw20Balance(contractAddress, address);
                     }}
                 />
             )

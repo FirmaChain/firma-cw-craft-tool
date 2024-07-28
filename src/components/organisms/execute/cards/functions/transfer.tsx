@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
@@ -57,9 +57,17 @@ const MyWalletAmountTypo = styled.div`
 const Transfer = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
+    const isFetched = useExecuteStore((v) => v.isFetched);
     const setTransferList = useExecuteStore((state) => state.setTransferList);
+    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
 
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
+
+    useEffect(() => {
+        if (isFetched) {
+            setIsFetched(false);
+        }
+    }, [isFetched]);
 
     const totalTransferAmount = useMemo(() => {
         let addAmount = '0';
