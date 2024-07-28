@@ -13,6 +13,7 @@ import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useExecuteActions from '../../action';
 
 const Container = styled.div`
     width: 100%;
@@ -139,11 +140,14 @@ const RenderTokenLogo = ({ url }: { url: string }) => {
 };
 
 const UpdateLogo = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const marketingInfo = useExecuteStore((state) => state.marketingInfo);
     const marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
-    const network = useSelector((state: rootState) => state.global.network);
+    const clearLogoUrl = useExecuteStore((state) => state.clearLogoUrl);
+    const { setMarketingInfo } = useExecuteActions();
 
     const modal = useModalStore();
 
@@ -199,7 +203,6 @@ const UpdateLogo = () => {
             }
         };
 
-        console.log(marketingLogoUrl);
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => (
@@ -208,12 +211,16 @@ const UpdateLogo = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        clearLogoUrl();
+                        setMarketingInfo(contractAddress);
                     }}
                 />
             )
         });
     };
+
+    console.log("marketingInfo.logo.url", marketingInfo.logo.url);
+    console.log("marketingLogoUrl", marketingLogoUrl);
 
     return (
         <Container>
@@ -231,7 +238,7 @@ const UpdateLogo = () => {
                 </ContentBodyWrap>
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled={!marketingLogoUrl || Boolean(errorMessage)} onClick={onClickUpdateLogo}>
+                <GreenButton disabled={!marketingLogoUrl || Boolean(errorMessage) || marketingInfo.logo.url === marketingLogoUrl} onClick={onClickUpdateLogo}>
                     <div className="button-text">Update Logo</div>
                 </GreenButton>
                 {/* <ExecuteButton disabled={!marketingLogoUrl || Boolean(errorMessage)} onClick={onClickUpdateLogo}>

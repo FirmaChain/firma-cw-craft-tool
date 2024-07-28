@@ -94,9 +94,10 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                 const _walletList = [...transferList];
 
                 if (isValidAddress(transferList[updateIndex].fromAddress) && isValidAddress(transferList[updateIndex].toAddress)) {
+                    const response = await getCw20Balance(contractAddress, transferList[updateIndex].fromAddress);
                     const newTransfer: ITransferFrom = {
                         fromAddress: transferList[updateIndex].fromAddress,
-                        fromAmount: transferList[updateIndex].fromAmount,
+                        fromAmount: response.balance,
                         toAddress: transferList[updateIndex].toAddress,
                         toAmount: transferList[updateIndex].toAmount,
                         allowanceAmount: transferList[updateIndex].allowanceAmount,

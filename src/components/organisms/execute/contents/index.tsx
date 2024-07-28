@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useSnackbar } from 'notistack';
 import useExecuteStore from '../hooks/useExecuteStore';
+import { isValidAddress } from '@/utils/address';
+import useExecuteActions from '../action';
 
 const Container = styled.div`
     display: flex;
@@ -27,8 +29,21 @@ const DimBox = styled.div`
 `;
 
 const Contents = () => {
+    const address = useSelector((state: rootState) => state.wallet.address);
     const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const { setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, setCw20Balance, setFctBalance } = useExecuteActions();
 
+    useEffect(() => {
+        if (isValidAddress(contractAddress) && isValidAddress(address)) {
+            setContractInfo(contractAddress);
+            setTokenInfo(contractAddress);
+            setMarketingInfo(contractAddress);
+            setMinterInfo(contractAddress);
+            setCw20Balance(contractAddress, address);
+            setFctBalance(address);
+        }
+    }, [contractAddress, address]);
+    
     return contractAddress ? (
         <Container>
             <Fragment>

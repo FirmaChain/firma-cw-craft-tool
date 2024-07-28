@@ -11,6 +11,7 @@ import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { isValidAddress } from '@/utils/common';
+import useExecuteActions from '../../action';
 
 const Container = styled.div`
     width: 100%;
@@ -110,6 +111,8 @@ const UpdateMarketingPreview = () => {
     const marketingDescription = useExecuteStore((state) => state.marketingDescription);
     const marketingAddress = useExecuteStore((state) => state.marketingAddress);
     const marketingProject = useExecuteStore((state) => state.marketingProject);
+    const clearMarketing = useExecuteStore((state) => state.clearMarketing);
+    const { setMarketingInfo } = useExecuteActions();
 
     const modal = useModalStore();
 
@@ -183,7 +186,8 @@ const UpdateMarketingPreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        clearMarketing();
+                        setMarketingInfo(contractAddress);
                     }}
                 />
             )
@@ -191,15 +195,15 @@ const UpdateMarketingPreview = () => {
     };
 
     const isEnableButton = useMemo(() => {
-        return isValidAddress(finalAddress) || finalAddress === '';
-        // if (
-        //     marketingInfo.description !== marketingDescription ||
-        //     marketingInfo.marketing !== marketingAddress ||
-        //     marketingInfo.project !== marketingProject
-        // )
-        //     return true;
+        if (!isValidAddress(marketingAddress)) return false;
+        if (
+            marketingInfo.description !== marketingDescription ||
+            marketingInfo.marketing !== marketingAddress ||
+            marketingInfo.project !== marketingProject
+        )
+            return true;
 
-        // return false;
+        return false;
     }, [marketingInfo, marketingDescription, marketingAddress, marketingProject]);
 
     return (

@@ -256,9 +256,10 @@ const TokenInfo = () => {
     }, [validTokenLogoUrl]);
 
     const handleChangeMenu = (menu: string) => {
+        console.log("menu", menu);
         const _selectMenu = ownerMenus.find((item) => item.value === menu);
 
-        console.log(selectMenu);
+        console.log(_selectMenu);
         setSelectMenu(_selectMenu);
     };
 
@@ -295,6 +296,7 @@ const TokenInfo = () => {
                         onChange={handleChangeMenu}
                         minWidth="214px"
                     />
+                    {selectMenu?.value === 'select' && <></>}
                     {selectMenu?.value !== 'select' && (
                         <Fragment>
                             <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />

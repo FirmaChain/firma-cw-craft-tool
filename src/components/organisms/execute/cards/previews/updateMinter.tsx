@@ -14,6 +14,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import { shortenAddress } from '@/utils/common';
 import { QRCodeModal } from '@/components/organisms/modal';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useExecuteActions from '../../action';
 
 const Container = styled.div`
     width: 100%;
@@ -115,6 +116,9 @@ const UpdateMinter = () => {
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const minterAddress = useExecuteStore((state) => state.minterAddress);
+    const clearMinter = useExecuteStore((state) => state.clearMinter);
+    const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
+    const { setMinterInfo } = useExecuteActions();
 
     const network = useSelector((state: rootState) => state.global.network);
 
@@ -164,7 +168,9 @@ const UpdateMinter = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        clearMinter();
+                        setMinterInfo(contractAddress);
+                        setSelectMenu({ value: 'select', label: 'Select' });
                     }}
                 />
             )
@@ -189,9 +195,6 @@ const UpdateMinter = () => {
                 <GreenButton disabled={!minterAddress || Boolean(errorMessage)} onClick={onClickUpdateMinter}>
                     <div className="button-text">Update Minter</div>
                 </GreenButton>
-                {/* <ExecuteButton disabled={!minterAddress || Boolean(errorMessage)} onClick={onClickUpdateMinter}>
-                    <ExecuteButtonTypo>Update Minter</ExecuteButtonTypo>
-                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

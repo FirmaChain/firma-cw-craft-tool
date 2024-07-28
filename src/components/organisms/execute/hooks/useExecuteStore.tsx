@@ -70,7 +70,6 @@ interface FormProps {
     setMinterAddress: (v: string) => void;
     setMarketingLogoUrl: (v: string) => void;
 
-    clearForm: () => void;
     clearMinterList: () => void;
     clearBurn: () => void;
     clearBurnFrom: () => void;
@@ -200,21 +199,6 @@ const useExecuteStore = create<FormProps>()(
                 state.marketingLogoUrl = data;
             }),
 
-        clearForm: () =>
-            set((state) => {
-                state.transferList = INIT_TRANSFER_LIST;
-                state.selectMenu = INIT_SELECT_MENU;
-                state.mintingList = [];
-                state.burnAmount = null;
-                state.burnFromList = [];
-                state.transferList = INIT_TRANSFER_LIST;
-                state.transferFromList = INIT_TRANSFER_FROM_LIST;
-                state.minterAddress = null;
-                state.marketingLogoUrl = null;
-                state.marketingDescription = null;
-                state.marketingAddress = null;
-                state.marketingProject = null;
-            }),
         clearMinterList: () =>
             set((state) => {
                 state.mintingList = [];

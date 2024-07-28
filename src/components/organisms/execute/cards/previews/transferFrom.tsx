@@ -98,36 +98,8 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const ExecuteButton = styled(IconButton)<{ disabled?: boolean }>`
-    width: 220px !important;
-    height: 48px;
-    border-radius: 8px;
-    background: ${({ disabled }) => (!disabled ? '#02E191' : '#707070')};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    border: none;
-    outline: none;
-    transition:
-        background 0.1s,
-        transform 0.1s;
-`;
-
-const ExecuteButtonTypo = styled.div`
-    color: var(--Gray-100, #121212);
-    text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px; /* 125% */
-`;
-
 const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #707070)')};
-
-    /* Body/Body2 - Rg */
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -164,10 +136,11 @@ const TransferFromPreview = () => {
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
+    const clearTransferFrom = useExecuteStore((state) => state.clearTransferFrom);
 
     const modal = useModalStore();
 
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const totalTransferAmount = useMemo(() => {
@@ -230,7 +203,8 @@ const TransferFromPreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        console.log(111);
+                        setIsFetched(true);
+                        clearTransferFrom();
                     }}
                 />
             )

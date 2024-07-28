@@ -41,9 +41,9 @@ const TitleTypo = styled.div`
 const Preview = () => {
     const selectMenu = useExecuteStore((v) => v.selectMenu);;
 
-    console.log(selectMenu);
     return (
         <>
+            {selectMenu?.value === 'select' && <></>}
             {selectMenu && (
                 <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
                     <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>

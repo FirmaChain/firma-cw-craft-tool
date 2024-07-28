@@ -1,4 +1,4 @@
-import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
+import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import { useEffect } from 'react';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import LabelInput from '@/components/atoms/input/labelInput';
@@ -8,24 +8,23 @@ const LOGO_URL_INPUT_FORM_ID = 'EXECUTE_UPDATE_LOGO_URL';
 const LOGO_URL_ERROR_TYPE = 'INVALID_ADDRESS';
 
 const UpdateLogo = () => {
+    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
     const marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
     const setMarketingLogoUrl = useExecuteStore((state) => state.setMarketingLogoUrl);
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
+    useEffect(() => {
+        if (marketingInfo) {
+            setMarketingLogoUrl(marketingInfo?.logo.url || "");
+        }
+    }, [marketingInfo]);
+
     const onChangeMarketingLogoUrl = (v: string) => {
         console.log(v);
         setMarketingLogoUrl(v);
     };
-
-    useEffect(() => {
-        useExecuteStore.getState().setMarketingLogoUrl(marketingLogoUrl);
-        return () => {
-            useExecuteStore.getState().clearForm();
-            clearFormError({ id: LOGO_URL_INPUT_FORM_ID });
-        };
-    }, []);
 
     return (
         <Container>

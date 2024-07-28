@@ -60,10 +60,6 @@ const TransferFrom = () => {
         return addDecimals(...amounts);
     }, [transferFromList]);
 
-    useEffect(() => {
-        return () => useExecuteStore.getState().clearForm();
-    }, []);
-
     return (
         <Container>
             <HeaderWrap>

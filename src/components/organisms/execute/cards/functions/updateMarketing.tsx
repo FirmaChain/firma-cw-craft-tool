@@ -46,7 +46,13 @@ const UpdateMarketing = () => {
         setMarketingAddress(value);
     };
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        if (marketingInfo) {
+            setMarketingDescription(marketingInfo.description);
+            setMarketingAddress(marketingInfo.marketing);
+            setMarketingProject(marketingInfo.project);
+        }
+    }, [marketingInfo]);
 
     const currentDesc = marketingDescription === null ? marketingInfo?.description || '' : marketingDescription;
     const currentAddr = marketingAddress === null ? marketingInfo?.marketing || '' : marketingAddress;
