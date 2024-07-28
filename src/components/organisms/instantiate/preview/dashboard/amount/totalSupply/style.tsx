@@ -26,6 +26,8 @@ export const SummeryLeftText = styled.div`
     font-weight: 400;
     line-height: 22px;
     white-space: pre;
+
+    opacity: 0.8;
 `;
 
 export const SummeryRightWrapeer = styled.div`

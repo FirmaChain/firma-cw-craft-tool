@@ -10,7 +10,7 @@ const NoToken = () => {
         <ContentBodyWrapper>
             <NoTokenWrapper>
                 <NoTokenTypo>There is no Token.</NoTokenTypo>
-                <Link to={{ pathname: '/' }}>
+                <Link to={{ pathname: '/instantiate' }}>
                     <ColorButton
                         width={'178px'}
                         height={'40px'}

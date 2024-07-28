@@ -466,19 +466,6 @@ const InstantitateModal = ({
         closeModal(id);
     };
 
-    const onClickGoToMyTokens = () => {
-        closeModal(id);
-        navigate(`/mytoken`);
-    };
-
-    useEffect(() => {
-        const getBalance = async () => {
-            setBalance(await firmaSDK.Bank.getBalance(params.admin));
-        };
-
-        getBalance();
-    }, []);
-
     const requestData = JSON.parse(params.msg);
 
     const supplyAmount = useMemo(() => {
@@ -518,6 +505,19 @@ const InstantitateModal = ({
 
     const openContractAddress = () => openLink(`${explorerUrl}/accounts/${parsedData?.contractAddress}`);
     const openHash = () => openLink(`${explorerUrl}/hash/${parsedData?.transactionHash}`);
+
+    const onClickGoToMyTokens = () => {
+        closeModal(id);
+        navigate(`/mytoken/detail/${parsedData?.contractAddress}`);
+    };
+
+    useEffect(() => {
+        const getBalance = async () => {
+            setBalance(await firmaSDK.Bank.getBalance(params.admin));
+        };
+
+        getBalance();
+    }, []);
 
     return (
         <ModalBase style={{ width: '480px', padding: '24px 24px 36px', gap: 0 }}>

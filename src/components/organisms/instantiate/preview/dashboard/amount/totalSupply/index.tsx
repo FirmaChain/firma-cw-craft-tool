@@ -18,7 +18,8 @@ import Icons from '@/components/atoms/icons';
 import { IWallet } from '@/interfaces/wallet';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import commaNumber from 'comma-number';
-import { parseAmountWithDecimal } from '@/utils/common';
+import { parseAmountWithDecimal, shortenAddress } from '@/utils/common';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 interface IProps {
     totalSupply: string;
@@ -39,7 +40,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
             <TotalSupplySummery>
                 <SummeryLeftWrapper>
                     <Icons.CoinStack1 width={'24px'} height={'24px'} />
-                    <SummeryLeftText>Total Supply</SummeryLeftText>
+                    <SummeryLeftText>Supply Amount</SummeryLeftText>
                 </SummeryLeftWrapper>
                 <SummeryRightWrapeer>
                     <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>
@@ -64,8 +65,14 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                             <WalletListItem key={index}>
                                 <ItemLeftWrapper>
                                     <Icons.Wallet width={'20px'} height={'20px'} />
-                                    <ItemLeftAddress $disabled={!Boolean(wallet.recipient)}>
-                                        {wallet.recipient || 'Wallet Address'}
+                                    <ItemLeftAddress
+                                        $disabled={!Boolean(wallet.recipient)}
+                                        data-tooltip-content={wallet.recipient.length > 28 ? wallet.recipient : ''}
+                                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                                        data-tooltip-wrapper="span"
+                                        data-tooltip-place="bottom"
+                                    >
+                                        {shortenAddress(wallet.recipient, 20, 8) || 'Wallet Address'}
                                     </ItemLeftAddress>
                                 </ItemLeftWrapper>
                                 <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))}>

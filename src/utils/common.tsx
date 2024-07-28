@@ -218,7 +218,7 @@ export const omitKey = <T extends object, K extends keyof T>(key: K, obj: T): Om
 };
 
 export function addDecimals(...decimalStrings: string[]): string {
-    let integerSum = 0;
+    let integerSum = BigInt(0);
     let decimalSum = 0;
     let maxDecimalLength = 0;
 
@@ -231,20 +231,26 @@ export function addDecimals(...decimalStrings: string[]): string {
         if (!isNaN(Number(_integerPart))) integerPart = _integerPart;
         if (!isNaN(Number(_decimalPart))) decimalPart = _decimalPart;
 
-        const parsedInt = parseInt(integerPart, 10);
+        const parsedInt = BigInt(integerPart);
 
-        integerSum += isNaN(parsedInt) ? 0 : parsedInt;
+        integerSum += parsedInt;
 
         if (decimalPart) {
             maxDecimalLength = Math.max(maxDecimalLength, decimalPart.length);
-            decimalSum += parseInt(decimalPart, 10) * Math.pow(10, -decimalPart.length);
+            decimalSum += parseFloat('0.' + decimalPart);
         }
     }
 
-    if (decimalSum === 0) return String(integerSum);
+    const totalDecimalSum = decimalSum.toFixed(maxDecimalLength);
+    const [decimalIntegerPart, decimalFractionPart] = totalDecimalSum.split('.');
 
-    const total = (integerSum + decimalSum).toFixed(maxDecimalLength);
-    return Number(total) === 0 ? '0' : total;
+    integerSum += BigInt(decimalIntegerPart);
+
+    if (!decimalFractionPart || BigInt(decimalIntegerPart) === BigInt(0)) {
+        return integerSum.toString();
+    } else {
+        return integerSum.toString() + '.' + decimalFractionPart;
+    }
 }
 
 export function compareAmounts(maxAmount: string, totalAmount: string): boolean {
