@@ -116,7 +116,7 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                         <StepIcon>
                             <img src={IC_FIRMA_LOGO} alt="firma-logo" />
                         </StepIcon>
-                        <StepDesc>{`1. Open station\napp`}</StepDesc>
+                        <StepDesc>{`1. Station app\nopen`}</StepDesc>
                     </div>
 
                     <div

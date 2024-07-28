@@ -618,7 +618,7 @@ const InstantitateModal = ({
                             </div>
                             <div
                                 className="user-balance"
-                                data-tooltip-content={parseAmountWithDecimal2(balance, requestData?.decimals)}
+                                data-tooltip-content={parseAmountWithDecimal2(balance, '6')}
                                 data-tooltip-id={TOOLTIP_ID.COMMON}
                                 data-tooltip-wrapper="span"
                                 data-tooltip-place="bottom"

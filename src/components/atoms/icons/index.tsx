@@ -631,7 +631,7 @@ const Copy = (props: any) => {
         <svg width={props.width} height={props.height} viewBox="0 0 22 22" fill="none">
             <path
                 d="M17.4167 4H8.08333C7.92862 4 7.78025 4.06146 7.67085 4.17085C7.56146 4.28025 7.5 4.42862 7.5 4.58333V7.5H4.58333C4.42862 7.5 4.28025 7.56146 4.17085 7.67085C4.06146 7.78025 4 7.92862 4 8.08333V17.4167C4 17.5714 4.06146 17.7197 4.17085 17.8291C4.28025 17.9385 4.42862 18 4.58333 18H13.9167C14.0714 18 14.2197 17.9385 14.3291 17.8291C14.4385 17.7197 14.5 17.5714 14.5 17.4167V14.5H17.4167C17.5714 14.5 17.7197 14.4385 17.8291 14.3291C17.9385 14.2197 18 14.0714 18 13.9167V4.58333C18 4.42862 17.9385 4.28025 17.8291 4.17085C17.7197 4.06146 17.5714 4 17.4167 4ZM13.3333 16.8333H5.16667V8.66667H13.3333V16.8333ZM16.8333 13.3333H14.5V8.08333C14.5 7.92862 14.4385 7.78025 14.3291 7.67085C14.2197 7.56146 14.0714 7.5 13.9167 7.5H8.66667V5.16667H16.8333V13.3333Z"
-                fill="#999999"
+                fill={props.fill || '#999999'}
             />
         </svg>
     );
@@ -718,9 +718,9 @@ const Failed = (props: any) => {
 
 const Add = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none">
-            <path d="M8 3V13" stroke="#999999" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M13 8L3 8" stroke="#999999" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <svg width={props.width} height={props.height} viewBox="0 0 16 16" fill="none" {...props}>
+            <path d="M8 3V13" stroke={props.stroke || '#999999'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M13 8L3 8" stroke={props.stroke || '#999999'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     );
 };
@@ -1008,6 +1008,17 @@ const CW721 = (props: any) => {
     );
 };
 
+const Alert = (props: any) => (
+    <svg width={props.width || '14'} height={props.height || '14'} viewBox="0 0 14 14" fill="none">
+        <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M0.29209 6.99907C0.29209 3.29704 3.29736 0.291111 7.00005 0.291111C10.7096 0.291113 13.708 3.29685 13.708 6.99907C13.708 10.7027 10.7096 13.707 7.00005 13.707C3.29732 13.707 0.29209 10.7025 0.29209 6.99907ZM7.00003 3.26396C6.50275 3.26396 6.09239 3.67545 6.09239 4.1716L6.09239 7.26544C6.09239 7.76774 6.50753 8.16609 7.00003 8.16609C7.49688 8.16609 7.90068 7.76343 7.90068 7.26544L7.90068 4.1716C7.90068 3.6798 7.50163 3.26396 7.00003 3.26396ZM7.00008 8.75909C6.50301 8.75909 6.09943 9.16266 6.09943 9.65973C6.09943 10.1546 6.50085 10.5674 7.00708 10.5674C7.50846 10.5674 7.90772 10.1525 7.90772 9.65973C7.90772 9.16049 7.50197 8.75909 7.00008 8.75909Z"
+            fill={props.fill || '#707070'}
+        />
+    </svg>
+);
+
 const Icons = {
     Amount,
     CoinStack1,
@@ -1051,7 +1062,8 @@ const Icons = {
     Calendar,
     Tooltip,
     CW20,
-    CW721
+    CW721,
+    Alert
 };
 
 export default Icons;
