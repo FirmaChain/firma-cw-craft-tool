@@ -195,9 +195,7 @@ const UpdateLogo = () => {
             },
             contract: contractAddress,
             msg: {
-                upload_logo: {
-                    url: marketingLogoUrl
-                }
+                url: marketingLogoUrl
             }
         };
 
