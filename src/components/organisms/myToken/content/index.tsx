@@ -27,8 +27,16 @@ const MyTokenContent = () => {
     const { getCW20ContractList } = useMyToken();
 
     const fetchTokenList = useCallback(async () => {
-        const contract = await getCW20ContractList();
-        addContracts(contract);
+        try {
+            const contract = await getCW20ContractList();
+            addContracts(contract);
+            if (contract.length === 0) {
+                GlobalActions.handleGlobalLoading(false);
+            }
+        } catch (error) {
+            console.log(error);
+            GlobalActions.handleGlobalLoading(false);
+        }
     }, [getCW20ContractList]);
 
     useEffect(() => {

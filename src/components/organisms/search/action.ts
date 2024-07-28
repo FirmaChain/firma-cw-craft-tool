@@ -28,6 +28,7 @@ const useSearchActions = () => {
         useSearchStore.getState().clearSearchInfo();
         return () => {
             GlobalActions.handleGlobalLoading(false);
+            useSearchStore.getState().setContractExist(null);
         }
     }, [])
 
@@ -36,10 +37,21 @@ const useSearchActions = () => {
         useSearchStore.getState().setUserBalance(userBalance);
     };
 
-    const searchTokenInfo = async (keyword: string) => {
-        if (previousKeywordRef.current === keyword) return;
-        if (globalLoading) return null;
 
+    const checkContractExist = async (contractAddress: string) => {
+        try {
+            if (previousKeywordRef.current === contractAddress) return;
+            if (globalLoading) return null;
+            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress);
+            useSearchStore.getState().setContractExist(exist.length > 0);
+            await searchTokenInfo(contractAddress);
+        } catch (error) {
+            console.log(error);
+            useSearchStore.getState().setContractExist(false);
+        }
+    }
+
+    const searchTokenInfo = async (keyword: string) => {
         useSearchStore.getState().clearSearchInfo();
         GlobalActions.handleGlobalLoading(true);
 
@@ -110,7 +122,7 @@ const useSearchActions = () => {
         return result;
     };
 
-    return { searchTokenInfo, updateMyBalance };
+    return { searchTokenInfo, updateMyBalance, checkContractExist };
 };
 
 export default useSearchActions;

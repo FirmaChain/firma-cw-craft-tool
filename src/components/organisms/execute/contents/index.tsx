@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import TokenInfo from '../cards/tokenInfo';
@@ -26,6 +26,12 @@ const Box = styled.div`
     max-width: 1600px;
 `
 
+const NoticeText = styled.div`
+    font-size: 18px;
+    color: #999999;
+    font-weight: 500;
+`
+
 const DimBox = styled.div`
     flex: 1;
     width: 100%;
@@ -38,14 +44,27 @@ const Contents = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
-    const { setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, setCw20Balance, setFctBalance } = useExecuteActions();
+    const { checkContractExist, setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, setCw20Balance, setFctBalance } = useExecuteActions();
+
+    const [existContract, setExistContract] = useState<Boolean | null>(null);
 
     useEffect(() => {
         clearForm();
     }, []);
 
+    const checkExist = async () => {
+        const exist = await checkContractExist(contractAddress);
+        setExistContract(exist);
+    }
+
     useEffect(() => {
         if (isValidAddress(contractAddress) && isValidAddress(address)) {
+            checkExist();
+        }
+    }, [contractAddress, address]);
+
+    useEffect(() => {
+        if (Boolean(existContract)) {
             setContractInfo(contractAddress);
             setTokenInfo(contractAddress);
             setMarketingInfo(contractAddress);
@@ -53,18 +72,21 @@ const Contents = () => {
             setCw20Balance(contractAddress, address);
             setFctBalance(address);
         }
-    }, [contractAddress, address]);
+    }, [existContract, contractAddress, address])
 
-    return contractAddress ? (
-        <Container>
-            <Box>
-                <TokenInfo />
-                <Preview />
-            </Box>
-        </Container>
-    ) : (
-        <DimBox>{/* <img src={FIRMA_DIM_LOGO} alt={'Firmachain'} style={{ width: '480px', height: '480px' }} /> */}</DimBox>
-    );
+    return (
+        <Fragment>
+            {existContract === null && <DimBox />}
+            <Container>
+                {existContract === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
+                {existContract === true &&
+                    <Box>
+                        <TokenInfo />
+                        <Preview />
+                    </Box>}
+            </Container>
+        </Fragment>
+    )
 };
 
 export default Contents;

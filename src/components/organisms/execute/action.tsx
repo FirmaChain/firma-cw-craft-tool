@@ -7,6 +7,16 @@ const useExecuteActions = () => {
 
     const { enqueueSnackbar } = useSnackbar();
 
+    const checkContractExist = async (contractAddress: string) => {
+        try {
+            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress);
+            return exist.length > 0;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
     const setContractInfo = async (contractAddress: string) => {
         try {
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
@@ -85,7 +95,7 @@ const useExecuteActions = () => {
         }
     };
 
-    const setAllowanceInfo = async (contractAddress: string, owner: string, spender: string, ) => {
+    const setAllowanceInfo = async (contractAddress: string, owner: string, spender: string,) => {
         try {
             const allowanceInfo = await firmaSDK.Cw20.getAllowance(contractAddress, owner, spender);
             useExecuteStore.getState().setAllowanceInfo(allowanceInfo);
@@ -98,6 +108,7 @@ const useExecuteActions = () => {
         }
     };
     return {
+        checkContractExist,
         setContractInfo,
         setTokenInfo,
         setMinterInfo,

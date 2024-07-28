@@ -49,7 +49,7 @@ const Header = () => {
     const keyword = useSearchStore((state) => state.keyword);
     const setKeyword = useSearchStore((state) => state.setKeyword);
 
-    const { searchTokenInfo } = useSearchActions();
+    const { checkContractExist } = useSearchActions();
 
     const disableSearch = Boolean(!FirmaUtil.isValidAddress(keyword) || keyword.length <= 44);
 
@@ -61,13 +61,13 @@ const Header = () => {
                     value={keyword}
                     placeHolder={'Input contract address'}
                     onChange={(v) => setKeyword(v)}
-                    onClickEvent={disableSearch ? () => null : () => searchTokenInfo(keyword)}
+                    onClickEvent={disableSearch ? () => null : () => checkContractExist(keyword)}
                     adornment={{
                         end: (
                             <EndAdornment
                                 keyword={keyword}
                                 clearKeyword={() => setKeyword('')}
-                                onClickSearch={() => searchTokenInfo(keyword)}
+                                onClickSearch={() => checkContractExist(keyword)}
                                 disableSearch={disableSearch}
                             />
                         )

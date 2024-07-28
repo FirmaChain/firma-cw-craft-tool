@@ -7,6 +7,9 @@ interface FormProps {
     keyword: string;
     setKeyword: (v: string) => void;
 
+    contractExist: Boolean | null;
+    setContractExist: (v: Boolean | null) => void;
+
     contractInfo: ContractInfo | null;
     setContractInfo: (v: ContractInfo) => void;
 
@@ -44,7 +47,12 @@ const useSearchStore = create<FormProps>()(
                 state.keyword = data;
             });
         },
-
+        contractExist: null,
+        setContractExist: (data) => {
+            set((state) => {
+                state.contractExist = data;
+            })
+        },
         contractInfo: null,
         setContractInfo: (data) => {
             set((state) => {
