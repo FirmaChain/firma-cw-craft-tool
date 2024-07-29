@@ -200,7 +200,7 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenDescription',
                         placeHolder: 'ex) This is my token',
                         onChange: handleDescription,
-                        maxLength: 100
+                        maxLength: isBasic ? 100 : 300
                     }}
                 />
                 {!isBasic && (

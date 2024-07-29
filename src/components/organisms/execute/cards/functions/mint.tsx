@@ -6,6 +6,7 @@ import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
 import WalletList from '@/components/atoms/walletList';
 import {
     addStringAmount,
+    compareStringNumbers,
     formatWithCommas,
     getTokenAmountFromUToken,
     getUTokenAmountFromToken,

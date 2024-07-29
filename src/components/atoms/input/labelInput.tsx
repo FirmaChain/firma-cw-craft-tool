@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import VariableInput from './variableInput';
 import useFormStore from '@/store/formStore';
 import Icons from '../icons';
@@ -78,6 +78,10 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
+
+    useEffect(()=>{
+        setValidTokenLogoUrl(value);
+    },[value])
 
     const handleChange = (value: string) => {
         let inputValue = value;

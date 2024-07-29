@@ -14,6 +14,7 @@ import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
 import InstantitateModal from '../../modal/instantitateModal';
+import { addStringAmount } from '@/utils/balance';
 
 interface IProps {
     isBasic: boolean;
@@ -60,11 +61,23 @@ const Preview = ({ isBasic }: IProps) => {
 
             let convertWalletList = [];
 
+            const walletObj: { [key: string]: string } = {};
+
             for (const wallet of walletList) {
-                convertWalletList.push({
-                    address: wallet.recipient,
-                    amount: getApplyDecimalsAmount(wallet.amount, newDecimals.toString())
-                });
+                const recipient: string = wallet.recipient;
+                const convertedAmount = getApplyDecimalsAmount(wallet.amount, newDecimals.toString());
+                
+                if (walletObj[recipient]) {
+                    walletObj[recipient] = addStringAmount(walletObj[recipient], convertedAmount);
+                } else {
+                    walletObj[recipient] = convertedAmount;
+                }
+            }
+
+            for (const address in walletObj) {
+                if (walletObj.hasOwnProperty(address)) {
+                    convertWalletList.push({ address, amount: walletObj[address] });
+                }
             }
 
             const invalidMessageType = checkInstantiate(isBasic, walletList, decimalsTotalSupply, decimalsMinterCap);
@@ -115,9 +128,6 @@ const Preview = ({ isBasic }: IProps) => {
     };
 
     const checkInstantiate = (isBasic: boolean, walletList: IWallet[], totalSupply: string, minterCap: string) => {
-        const addresses = walletList.map((item) => item.recipient);
-        const uniqueAddresses = new Set(addresses);
-
         if (tokenName === '') return 'Empty Token Name';
 
         if (tokenSymbol === '') return 'Empty Token Symbol';
@@ -137,8 +147,6 @@ const Preview = ({ isBasic }: IProps) => {
             if (!isValidAddress(wallet.recipient)) return 'Is valid address in wallet list';
         }
 
-        if (walletList.length >= 1 && addresses.length !== uniqueAddresses.size) return 'Duplicated address';
-
         if (!isBasic && minterble && minterAddress === '') return 'Empty minter address';
 
         if (minterble && minterCap === '') return 'Empty minter cap amount';
@@ -150,9 +158,6 @@ const Preview = ({ isBasic }: IProps) => {
 
     const disableButton = useMemo(() => {
         if (isInit) {
-            const addresses = walletList.map((item) => item.recipient);
-            const uniqueAddresses = new Set(addresses);
-
             if (tokenName === '') return true;
 
             if (tokenSymbol === '') return true;
@@ -171,8 +176,6 @@ const Preview = ({ isBasic }: IProps) => {
                 if (wallet.amount === '') return true;
                 if (!isValidAddress(wallet.recipient)) return true;
             }
-
-            if (walletList.length >= 1 && addresses.length !== uniqueAddresses.size) return true;
 
             if (!isBasic && minterble && minterAddress === '') return true;
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
@@ -11,6 +11,7 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import { isValidAddress } from '@/utils/address';
 
 const Container = styled.div`
     width: 100%;
@@ -143,6 +144,7 @@ const TransferFromPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
     const totalTransferAmount = useMemo(() => {
         const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
@@ -153,6 +155,37 @@ const TransferFromPreview = () => {
         }
 
         return totalAmount;
+    }, [transferFromList]);
+
+    useEffect(() => {
+        let allAddressesValid = true;
+        let allAmountsValid = true;
+
+        for (const transferFrom of transferFromList) {
+            console.log("transferFrom.fromAmount", transferFrom.fromAmount);
+            if (!isValidAddress(transferFrom.fromAddress) || !isValidAddress(transferFrom.toAddress)) {
+                // console.log("isValid address");
+                allAddressesValid = false;
+            }
+            if (!transferFrom.fromAmount || transferFrom.fromAmount === '' || transferFrom.fromAmount === '0') {
+                allAmountsValid = false;
+            }
+            if (!transferFrom.toAmount || transferFrom.toAmount === '' || transferFrom.toAmount === '0') {
+                allAmountsValid = false;
+            }
+            // if (!transferFrom.allowanceAmount || transferFrom.allowanceAmount === '' || transferFrom.allowanceAmount === '0') {
+            //     allAmountsValid = false;
+            // }
+            // if (!transferFrom.fromAmount || transferFrom.fromAmount === '' || transferFrom.fromAmount === '0') {
+            //     allAmountsValid = false;
+            // }
+            // if (!transferFrom.toAmount || transferFrom.toAmount === '' || transferFrom.toAmount === '0') {
+            //     allAmountsValid = false;
+            // }
+        }
+        // console.log(transferFromList);
+
+        setIsEnableButton(allAddressesValid && allAmountsValid);
     }, [transferFromList]);
 
     const onClickTransfer = () => {
@@ -241,7 +274,7 @@ const TransferFromPreview = () => {
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled={false} onClick={onClickTransfer}>
+                <GreenButton disabled={!isEnableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>
                 </GreenButton>
                 {/* <ExecuteButton onClick={onClickTransfer}>
