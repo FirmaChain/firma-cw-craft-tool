@@ -24,8 +24,11 @@ import {
     TitleBox,
     TooltipIconBox
 } from './styles';
+import { useModalStore } from '@/hooks/useModal';
+import LoadingModal from '../modal/loadingModal';
 
 const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
+    
     return (
         <TooltipIconBox
             data-tooltip-content={tooltip}
@@ -43,11 +46,20 @@ const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
     );
 };
 
+// const 
 const CW20Btn = () => {
+    const modal = useModalStore();
+    const closeModal = useModalStore().closeModal;
     const navigate = useNavigate();
 
     const onClickExecute = () => {
-        navigate('/instantiate');
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => <LoadingModal delay={1000} callback={() => {
+                closeModal(id);
+                navigate('/instantiate');
+            }}/>
+        });
     };
 
     return (

@@ -38,18 +38,18 @@ const MainScrollbar = styled(OverlayScrollbarsComponent)`
     }
 `;
 
-const LogoBackground = styled.div`
-    position: fixed;
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+// const LogoBackground = styled.div`
+//     position: fixed;
+//     width: -webkit-fill-available;
+//     height: -webkit-fill-available;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
 
-    .logo {
-        width: 480px;
-    }
-`;
+//     .logo {
+//         width: 480px;
+//     }
+// `;
 
 const Main = () => {
     return (
@@ -60,9 +60,9 @@ const Main = () => {
                 <MainScrollbar defer>
                     <AppRoutes />
                 </MainScrollbar>
-                <LogoBackground>
+                {/* <LogoBackground>
                     <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />
-                </LogoBackground>
+                </LogoBackground> */}
                 <GlobalLoader />
             </RightContainer>
         </MainContainer>

@@ -71,7 +71,7 @@ const CloseBtnBox = styled.div`
 const ButtonWrapper = styled.div`
     width: 100%;
     display: flex;
-    flex-direciton: row;
+    flex-direction: row;
     gap: 12px;
 `;
 
