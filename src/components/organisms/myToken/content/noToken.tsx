@@ -19,7 +19,7 @@ const NoToken = () => {
                         border={'1px solid var(--Green-500, #02E191)'}
                         sx={{
                             color: 'var(--Green-500, #02E191)',
-                            fontSize: '11px',
+                            fontSize: '14px',
                             fontWeight: 600,
                             fontStyle: 'normal',
                             lineHeight: '20px'

@@ -21,7 +21,7 @@ const ModeSwitch = ({ leftMenu, rightMenu, onChangeMenu }: IProps) => {
     return (
         <SwitchContainer>
             <ActiveIndicator $position={isLeft ? 'left' : 'right'} />
-            <SwitchButton $isActive={isLeft} $position="left" onClick={() => handleChangeMode(leftMenu)}>
+            <SwitchButton style={{ width: '108px' }} $isActive={isLeft} $position="left" onClick={() => handleChangeMode(leftMenu)}>
                 <BasicTypo style={{ zIndex: 1, transition: 'opacity 0.3s', opacity: isLeft ? 0 : 1 }} $active={false}>
                     BASIC
                 </BasicTypo>
@@ -29,7 +29,7 @@ const ModeSwitch = ({ leftMenu, rightMenu, onChangeMenu }: IProps) => {
                     BASIC
                 </BasicTypo>
             </SwitchButton>
-            <SwitchButton $isActive={isRight} $position="right" onClick={() => handleChangeMode(rightMenu)}>
+            <SwitchButton style={{ width: '138px' }} $isActive={isRight} $position="right" onClick={() => handleChangeMode(rightMenu)}>
                 <AdvancedTypo style={{ zIndex: 1, transition: 'opacity 0.3s', opacity: isRight ? 0 : 1 }} $active={false}>
                     ADVANCED
                 </AdvancedTypo>

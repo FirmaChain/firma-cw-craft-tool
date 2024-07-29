@@ -16,6 +16,7 @@ import {
     MenuItem,
     MenuListWrapper,
     SidebarWrapper,
+    SocialIcon,
     SocialIconButton,
     SocialWrapper,
     SwitchWrapper
@@ -34,12 +35,13 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
 import Divider from '@/components/atoms/divider';
+import { IC_SOCIAL_FIRMACHAIN, IC_SOCIAL_MEDIUM, IC_SOCIAL_TELEGRAM, IC_SOCIAL_TWITTER } from '@/components/atoms/icons/pngIcons';
 
 const SOCIAL_LIST = [
-    { Icon: <Icons.Medium width={'100%'} height={'100%'} />, socialLink: 'https://medium.com/firmachain' },
-    { Icon: <Icons.FirmaChain width={'100%'} height={'100%'} />, socialLink: 'https://firmachain.org' },
-    { Icon: <Icons.Telegram width={'100%'} height={'100%'} />, socialLink: 'https://t.me/firmachain_announcement' },
-    { Icon: <Icons.Twitter width={'100%'} height={'100%'} />, socialLink: 'https://twitter.com/firmachain' }
+    { Icon: <SocialIcon src={IC_SOCIAL_FIRMACHAIN}/>, socialLink: 'https://firmachain.org' },
+    { Icon: <SocialIcon src={IC_SOCIAL_MEDIUM}/>, socialLink: 'https://medium.com/firmachain' },
+    { Icon: <SocialIcon src={IC_SOCIAL_TELEGRAM} />, socialLink: 'https://t.me/firmachain_announcement' },
+    { Icon: <SocialIcon src={IC_SOCIAL_TWITTER} />, socialLink: 'https://twitter.com/firmachain' }
 ];
 
 const Sidebar = () => {
@@ -74,6 +76,8 @@ const Sidebar = () => {
 
     const onClickNetworkMenu = (type: NETWORK_TYPE) => {
         GlobalActions.handleNetwork(type);
+        enqueueSnackbar({ variant: 'success', message: `${type} change completed` });
+
         if (location.pathname.includes('mytoken/detail')) {
             navigate('/mytoken');
         }
@@ -105,7 +109,7 @@ const Sidebar = () => {
                 <SidebarWrapper>
                     <FeatureWrapper>
                         <LogoWrapper>
-                            <Link to={{ pathname: '/' }}>
+                            <Link to={{ pathname: '/instantiate' }}>
                                 <Icons.FirmaCraft width={'132px'} height={'34px'} />
                             </Link>
                         </LogoWrapper>

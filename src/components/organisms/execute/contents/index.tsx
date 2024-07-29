@@ -94,12 +94,7 @@ const Contents = () => {
         <Fragment>
             {existContract === null && <DimBox />}
             <Container>
-                {/* {existContract === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>} */}
-                {existContract === false && (
-                    <LogoBackground>
-                        <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />
-                    </LogoBackground>
-                )}
+                {/* {address !== '' && existContract === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>} */}
                 {existContract === true &&
                     <Box>
                         <TokenInfo />

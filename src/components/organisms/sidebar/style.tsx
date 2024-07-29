@@ -132,6 +132,11 @@ export const SocialWrapper = styled.div`
     justify-content: center;
 `;
 
+export const SocialIcon = styled.img`
+    width: 24px;
+    height: 24px;
+`;
+
 export const SocialIconButton = styled.div`
     width: 24px;
     height: 24px;
