@@ -48,10 +48,19 @@ const EndAdornment = ({
 const Header = () => {
     const keyword = useSearchStore((state) => state.keyword);
     const setKeyword = useSearchStore((state) => state.setKeyword);
-
-    const { checkContractExist } = useSearchActions();
+    const clearAll = useSearchStore((state) => state.clearAll);
+    const clearSearchInfo = useSearchStore((state) => state.clearSearchInfo);
+    
+    const { checkContractExist, clearSearchKeywordRef } = useSearchActions();
 
     const disableSearch = Boolean(!FirmaUtil.isValidAddress(keyword) || keyword.length <= 44);
+
+    const onClickClearKeyword = () => {
+        setKeyword('');
+        clearSearchInfo();
+        clearAll();
+        clearSearchKeywordRef();
+    };
 
     return (
         <HeaderBox>
@@ -59,14 +68,14 @@ const Header = () => {
                 <Title>Search</Title>
                 <SearchInputWithButton2
                     value={keyword}
-                    placeHolder={'Input contract address'}
+                    placeHolder={'Search by full CW20 Contract Address'}
                     onChange={(v) => setKeyword(v)}
                     onClickEvent={disableSearch ? () => null : () => checkContractExist(keyword)}
                     adornment={{
                         end: (
                             <EndAdornment
                                 keyword={keyword}
-                                clearKeyword={() => setKeyword('')}
+                                clearKeyword={() => onClickClearKeyword()}
                                 onClickSearch={() => checkContractExist(keyword)}
                                 disableSearch={disableSearch}
                             />

@@ -65,7 +65,7 @@ const useMyToken = () => {
             });
             return [];
         }
-    }, [firmaSDK]);
+    }, [firmaSDK, address]);
 
     const getCW20ContractInfo = useCallback(
         async (contractAddress: string) => {

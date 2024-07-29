@@ -20,6 +20,8 @@ export const NetworkMenu = ({ onChange }: IProps) => {
     const network = useSelector((state: rootState) => state.global.network);
 
     const onChangeActiveMenu = (newTypo: NETWORK_TYPE) => {
+        if (network === newTypo) return ;
+        
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => <NetworkChangeModal id={id} params={{ network: newTypo }} onConfirm={() => onChange(newTypo)} />
