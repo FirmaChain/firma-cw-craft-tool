@@ -88,7 +88,8 @@ const Minterble = ({ decimals }: IProps) => {
                                 formId: 'minterAddress',
                                 placeHolder: 'Input minter address',
                                 onChange: handleMinterAddress,
-                                emptyErrorMessage: 'Please input wallet address.'
+                                emptyErrorMessage: 'Please input wallet address.',
+                                regex: /[^A-Za-z0-9\s]/g
                             }}
                         />
                     )}

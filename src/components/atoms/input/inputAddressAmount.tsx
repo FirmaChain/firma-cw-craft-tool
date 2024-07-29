@@ -4,6 +4,7 @@ import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { FirmaUtil } from '@firmachain/firma-js';
+import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 
 interface IProps {
     index: number;
@@ -29,6 +30,7 @@ const InputAddressAmount = ({
     onChangeAmount,
     onRemoveClick,
     isValid,
+    isLast,
     decimals,
     addressTitle,
     addressPlaceholder,
@@ -122,8 +124,7 @@ const InputAddressAmount = ({
                         gap: '8px'
                     }}
                 >
-                    <div style={{ width: '100%', minHeight: '20px', maxHeight: '20px' }} />
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', marginTop: '36px' }}>
                         <IconButton
                             style={{
                                 width: '32px',
@@ -133,9 +134,14 @@ const InputAddressAmount = ({
                                 border: 'unset',
                                 cursor: 'pointer'
                             }}
+                            disabled={index === 1 && isLast}
                             onClick={handleRemoveWallet}
                         >
-                            <Icons.MinusCircle />
+                            {index === 1 && isLast ? 
+                                <img style={{ width: '32px', height: '32px' }} src={IC_MINUS_CIRCLE_DISABLE}/>
+                            :
+                                <Icons.MinusCircle />
+                            }
                         </IconButton>
                     </div>
                 </div>

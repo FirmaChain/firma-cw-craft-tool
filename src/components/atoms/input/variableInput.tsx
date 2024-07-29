@@ -1,6 +1,5 @@
 import { useId, useRef, useState } from 'react';
 import styled from 'styled-components';
-import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 import { IC_CALENDAR } from '../icons/pngIcons';
 
@@ -162,7 +161,12 @@ const VariableInput = ({
                 if (typeof maxValue === 'number') inputValue = Number(inputValue) > maxValue ? String(maxValue) : inputValue;
             } else {
                 //? Filter input string if valid regex provided
-                if (regex) inputValue = inputValue.replace(regex, '');
+                console.log(inputValue);
+                if (regex) {
+                    console.log("REGEX", regex);
+                    inputValue = inputValue.replace(regex, '');
+                    console.log("inputValue", inputValue);
+                }
 
                 //? Slice remaining string if maxLength provided
                 if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);

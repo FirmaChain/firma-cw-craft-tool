@@ -194,9 +194,11 @@ const MyMintedTokenList = () => {
                             value={String(rowsPerPage)}
                             minWidth="55px"
                             options={[
-                                { label: '5', value: '5' },
                                 { label: '8', value: '8' },
-                                { label: '10', value: '10' }
+                                { label: '16', value: '16' },
+                                { label: '24', value: '24' },
+                                { label: '40', value: '40' },
+                                { label: '80', value: '80' }
                             ]}
                             onChange={(value) => handleChangeRowsPerPage(Number(value))}
                         />

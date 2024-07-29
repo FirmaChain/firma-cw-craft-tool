@@ -14,6 +14,7 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../instaniateStore';
+import { isValidUrl } from '@/utils/url';
 
 interface IProps {
     isBasic: boolean;
@@ -62,6 +63,12 @@ const Information = ({ isBasic }: IProps) => {
 
     const handleTokenLogoUrl = (value: string) => {
         setTokenLogoUrl(value);
+
+        // if (isValidUrl(value) || value === '') {
+        //     clearFormError({ id: 'tokenLogoUrl', type: 'VALID_URL' });
+        // } else {
+        //     setFormError({ id: 'tokenLogoUrl', type: 'VALID_URL', message: 'This is an invalid token logo url.' });
+        // }
     };
 
     const handleDescription = (value: string) => {
@@ -176,7 +183,8 @@ const Information = ({ isBasic }: IProps) => {
                                 formId: 'tokenLabel',
                                 placeHolder: 'ex) Event reward contract',
                                 onChange: handleLabel,
-                                emptyErrorMessage: 'Please input token label.'
+                                emptyErrorMessage: 'Please input token label.',
+                                regex: /[^A-Za-z0-9\s]/g
                             }}
                         />
                     </>
@@ -189,7 +197,9 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenLogoUrl',
                         placeHolder: 'ex) https://example.thisismy.token.jpg',
                         onChange: handleTokenLogoUrl,
-                        imgPreview: true
+                        emptyErrorMessage: 'Please valid token logo url.',
+                        imgPreview: true,
+                        regex: /[^A-Za-z0-9\s]/g
                     }}
                 />
 
@@ -200,7 +210,8 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenDescription',
                         placeHolder: 'ex) This is my token',
                         onChange: handleDescription,
-                        maxLength: isBasic ? 100 : 300
+                        maxLength: isBasic ? 100 : 300,
+                        regex: /[^A-Za-z0-9\s]/g
                     }}
                 />
                 {!isBasic && (
@@ -211,7 +222,8 @@ const Information = ({ isBasic }: IProps) => {
                                 value: marketingAddress,
                                 formId: 'marketingAddress',
                                 placeHolder: 'Input wallet Address',
-                                onChange: handleMarketingAddress
+                                onChange: handleMarketingAddress,
+                                regex: /[^A-Za-z0-9\s]/g
                             }}
                         />
 
@@ -221,7 +233,8 @@ const Information = ({ isBasic }: IProps) => {
                                 value: marketingProject,
                                 formId: 'marketingProject',
                                 placeHolder: 'ex) http://firmachain.org',
-                                onChange: handleMarketingProject
+                                onChange: handleMarketingProject,
+                                regex: /[^A-Za-z0-9\s]/g
                             }}
                         />
                     </>

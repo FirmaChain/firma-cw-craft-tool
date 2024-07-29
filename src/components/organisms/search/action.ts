@@ -30,7 +30,11 @@ const useSearchActions = () => {
             GlobalActions.handleGlobalLoading(false);
             useSearchStore.getState().setContractExist(null);
         }
-    }, [])
+    }, []);
+
+    const clearSearchKeywordRef = () => {
+        previousKeywordRef.current = null;
+    };
 
     const updateMyBalance = async (contractAddress: string) => {
         const userBalance = await firmaSDK.Cw20.getBalance(contractAddress, userAddress);
@@ -122,7 +126,7 @@ const useSearchActions = () => {
         return result;
     };
 
-    return { searchTokenInfo, updateMyBalance, checkContractExist };
+    return { searchTokenInfo, updateMyBalance, checkContractExist, clearSearchKeywordRef };
 };
 
 export default useSearchActions;
