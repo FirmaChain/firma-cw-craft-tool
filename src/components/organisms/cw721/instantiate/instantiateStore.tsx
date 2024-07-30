@@ -12,6 +12,8 @@ interface FormProps {
     setAdmin: (v: string) => void;
     setMinter: (v: string) => void;
     setLabel: (v: string) => void;
+    
+    clearForm: () => void;
 }
 
 const useInstantiateStore = create<FormProps>()(
@@ -47,6 +49,16 @@ const useInstantiateStore = create<FormProps>()(
                 state.label = v;
             })
         },
+        
+        clearForm: () => {
+            set((state) => {
+                state.nftName = '';
+                state.nftSymbol = '';
+                state.admin = '';
+                state.minter = '';
+                state.label = '';
+            })
+        }
     }))
 );
 

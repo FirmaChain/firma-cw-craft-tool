@@ -15,7 +15,7 @@ export const scaleAnim = keyframes`
 `;
 
 export const QRWrapper = styled.div<{ $isLoading: boolean }>`
-    padding: 12px;
+    padding: 6px;
     ${(props) => (props.$isLoading ? '' : 'background-color: white;')}
     border-radius: 8px;
     display: flex;

@@ -143,7 +143,7 @@ const QRCodeModal = ({
                                     setResult(requestData);
                                     setStatus('failure');
                                     setError({ message: `Failed to ${params.header.title}` });
-                                    enqueueSnackbar(`Failed to ${params.header.title}`, {
+                                    enqueueSnackbar(`[CW20] Failed to ${params.header.title}`, {
                                         variant: 'error',
                                         autoHideDuration: 2000
                                     });

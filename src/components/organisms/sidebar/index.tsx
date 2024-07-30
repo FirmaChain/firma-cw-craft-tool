@@ -125,13 +125,6 @@ const Sidebar = () => {
         }
     };
 
-    const onClickAddress = async () => {
-        const errorMessage = await copyToClipboard(address);
-
-        if (errorMessage) enqueueSnackbar({ variant: 'error', message: errorMessage });
-        else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
-    };
-
     if (location.pathname === '/') return <></>;
     return (
         <div style={{ minWidth: '224px', height: '100vh' }}>
@@ -181,7 +174,9 @@ const Sidebar = () => {
                                     width={'16px'}
                                     height={'16px'}
                                 />
-                                <MenuItemText selected={location.pathname.includes('/mytoken')}>My Minted Tokens</MenuItemText>
+                                <MenuItemText selected={location.pathname.includes('/mytoken')}>
+                                    {cwMode === "CW20" ? "My Minted Tokens" : "My NFT Contracts"}
+                                </MenuItemText>
                             </MenuItem>
                         </MenuListWrapper>
                         {isInit ? (

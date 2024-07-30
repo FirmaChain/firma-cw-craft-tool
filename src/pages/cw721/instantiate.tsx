@@ -6,7 +6,9 @@ import useFormStore from "@/store/formStore";
 
 import useInstantiateStore from "@/components/organisms/instantiate/instaniateStore";
 import { Container } from "@/styles/instantiate";
-import { Header } from "@/components/organisms/cw721/instantiate";
+import { Content, Header, Preview } from "@/components/organisms/cw721/instantiate";
+import React, { useEffect, useMemo } from "react";
+import { GlobalActions } from "@/redux/actions";
 
 export const MainContent = styled.div`
     width: 100%;
@@ -15,17 +17,43 @@ export const MainContent = styled.div`
     justify-content: center;
 `;
 
+export const Box = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+    gap: 32px;
+    max-width: 1600px;
+`;
+
 const CW721Instantiate = () => {
-    const cwMode = useSelector((state: rootState) => state.global.cwMode);
+    const contractMode = useSelector((state: rootState) => state.global.contractMode);
 
     const clearForm = useFormStore((state) => state.clearForm);
     const clearInput = useInstantiateStore((v) => v.clearForm);
 
+    useEffect(() => {
+        return () => {
+            GlobalActions.handleMode('BASIC');
+            clearForm();
+            clearInput();
+        };
+    }, []);
+    
+    const isBasic = useMemo(() => {
+        return contractMode === 'BASIC';
+    }, [contractMode]);
+
     return (
         <Container style={{ padding: '61px 96px' }}>
             <Header />
+            <MainContent>
+                <Box>
+                    <Content isBasic={isBasic} />
+                    <Preview />
+                </Box>
+            </MainContent>
         </Container>
     )
 }
 
-export default CW721Instantiate;
+export default React.memo(CW721Instantiate);
