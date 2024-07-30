@@ -4,36 +4,10 @@ import { isValidAddress } from '@/utils/common';
 import { enqueueSnackbar } from 'notistack';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import styled from 'styled-components';
+
 import useExecuteStore from '../hooks/useExecuteStore';
-
-const SearchButton = styled(IconButton)`
-    //? outside
-    width: 168px;
-    height: 40px;
-    border-radius: 8px;
-    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-
-    //? inside
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 40px;
-    flex-shrink: 0;
-    background: ${({ disabled }) => (disabled ? 'var(--Gray-600, #707070)' : 'var(--Green-500, #02e191)')};
-
-    //? button text
-    .button-text {
-        color: ${({ disabled }) => (disabled ? 'var(--Gray-550, #444)' : 'var(--Gray-100, #121212)')};
-        text-align: center;
-        font-family: 'General Sans Variable';
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px;
-    }
-`;
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const EndAdornment = ({
     keyword,
@@ -55,9 +29,7 @@ const EndAdornment = ({
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
-            {/* <SearchButton disabled={keyword === '' || keyword.length <= 44 || disableSearch} onClick={onClickSearch}>
-                <span className="button-text">Search</span>
-            </SearchButton> */}
+
             <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
                 <Icons.Search
                     width="32px"
@@ -78,20 +50,27 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const setContractAddress = useExecuteStore((state) => state.setContractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
     const clearInfo = useExecuteStore((state) => state.clearInfo);
+    const network = useSelector((v: rootState) => v.global.network);
+    const contractInfo = useExecuteStore((v) => v.contractInfo);
 
     const previousKeywordRef = useRef<string | null>(null);
     const [keyword, setKeyword] = useState<string>(contractAddress);
 
     useEffect(() => {
         previousKeywordRef.current = keyword;
-    }, [contractAddress])
+    }, [contractAddress]);
 
     const onClickSearch = () => {
         if (previousKeywordRef.current === keyword) return;
-        const valid = isValidAddress(keyword);
-        clearInfo();
-        clearForm();
+        const valid = isValidAddress(keyword) && keyword.length > 44;
+
         if (valid) {
+            //? fix: once search and try again with same address -> info will be gone and error occur
+            if (contractInfo?.address !== keyword) {
+                clearInfo();
+                clearForm();
+            }
+
             setContractAddress(keyword);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
@@ -110,8 +89,14 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     useEffect(() => {
         return () => {
             setContractAddress(null);
-        }
-    }, [])
+        };
+    }, []);
+
+    useEffect(() => {
+        clearInfo();
+        clearForm();
+        previousKeywordRef.current = null;
+    }, [network]);
 
     return (
         <SearchInputWithButton2

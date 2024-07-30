@@ -23,12 +23,11 @@ export const ContractWarp = styled.div`
     background: var(--Gray-350, #262626);
 `;
 
-
 export const NoticeText = styled.div`
     font-size: 18px;
     color: #999999;
     font-weight: 500;
-`
+`;
 
 export const CardContainer = styled.div`
     width: 100%;
@@ -181,6 +180,13 @@ export const SectionContainer = styled.div`
         font-style: normal;
         font-weight: 400;
         line-height: 22px; /* 137.5% */
+    }
+
+    .single-line-clamp {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
     }
 `;
 

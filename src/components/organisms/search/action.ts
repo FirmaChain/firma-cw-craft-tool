@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
-import { determineMsgTypeAndSpender } from '@/utils/common';
+import { determineMsgTypeAndSpender, isValidAddress } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
@@ -14,9 +14,17 @@ const useSearchActions = () => {
     const { firmaSDK, getCw20Balance } = useExecuteHook();
     const { client } = useApollo();
     const userAddress = useSelector((state: rootState) => state.wallet.address);
+    const network = useSelector((state: rootState) => state.global.network);
+
     const { enqueueSnackbar } = useSnackbar();
     const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
     const previousKeywordRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        //? reset cached search address & contract exist value when network change
+        previousKeywordRef.current = null;
+        useSearchStore.getState().setContractExist(null);
+    }, [network]);
 
     useEffect(() => {
         //? update balance info when wallet connected, or changed
@@ -29,7 +37,7 @@ const useSearchActions = () => {
         return () => {
             GlobalActions.handleGlobalLoading(false);
             useSearchStore.getState().setContractExist(null);
-        }
+        };
     }, []);
 
     const clearSearchKeywordRef = () => {
@@ -41,19 +49,26 @@ const useSearchActions = () => {
         useSearchStore.getState().setUserBalance(userBalance);
     };
 
-
     const checkContractExist = async (contractAddress: string) => {
         try {
             if (previousKeywordRef.current === contractAddress) return;
             if (globalLoading) return null;
+
+            if (contractAddress.length <= 44 || !isValidAddress(contractAddress)) {
+                enqueueSnackbar({ variant: 'error', message: 'Invalid contract address.' });
+                return;
+            }
+
             const exist = await firmaSDK.CosmWasm.getContractState(contractAddress);
             useSearchStore.getState().setContractExist(exist.length > 0);
             await searchTokenInfo(contractAddress);
         } catch (error) {
             console.log(error);
             useSearchStore.getState().setContractExist(false);
+        } finally {
+            previousKeywordRef.current = contractAddress;
         }
-    }
+    };
 
     const searchTokenInfo = async (keyword: string) => {
         useSearchStore.getState().clearSearchInfo();

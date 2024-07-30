@@ -4,10 +4,7 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import useSearchStore from '../searchStore';
 import React from 'react';
-import { FirmaUtil } from '@firmachain/firma-js';
 import useSearchActions from '../action';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 
 const EndAdornment = ({
     keyword,
@@ -50,16 +47,20 @@ const Header = () => {
     const setKeyword = useSearchStore((state) => state.setKeyword);
     const clearAll = useSearchStore((state) => state.clearAll);
     const clearSearchInfo = useSearchStore((state) => state.clearSearchInfo);
-    
+
     const { checkContractExist, clearSearchKeywordRef } = useSearchActions();
 
-    const disableSearch = Boolean(!FirmaUtil.isValidAddress(keyword) || keyword.length <= 44);
+    const disableSearch = keyword.length === 0;
 
     const onClickClearKeyword = () => {
         setKeyword('');
         clearSearchInfo();
         clearAll();
         clearSearchKeywordRef();
+    };
+
+    const onClickSearch = () => {
+        checkContractExist(keyword);
     };
 
     return (
@@ -70,13 +71,13 @@ const Header = () => {
                     value={keyword}
                     placeHolder={'Search by full CW20 Contract Address'}
                     onChange={(v) => setKeyword(v)}
-                    onClickEvent={disableSearch ? () => null : () => checkContractExist(keyword)}
+                    onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{
                         end: (
                             <EndAdornment
                                 keyword={keyword}
-                                clearKeyword={() => onClickClearKeyword()}
-                                onClickSearch={() => checkContractExist(keyword)}
+                                clearKeyword={onClickClearKeyword}
+                                onClickSearch={onClickSearch}
                                 disableSearch={disableSearch}
                             />
                         )
