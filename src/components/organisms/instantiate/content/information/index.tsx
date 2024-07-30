@@ -48,11 +48,11 @@ const Information = ({ isBasic }: IProps) => {
     const handleTokenSymbol = (value: string) => {
         setTokenSymbol(value);
 
-        if (/^[a-zA-Z]+$/.test(value) || value.length === 0) {
-            clearFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH' });
-        } else {
-            setFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH', message: 'Number is not included.' });
-        }
+        // if (/^[a-zA-Z]+$/.test(value) || value.length === 0) {
+        //     clearFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH' });
+        // } else {
+        //     setFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH', message: 'Number is not included.' });
+        // }
 
         if (value.length === 0 || value.length >= 3) {
             clearFormError({ id: 'tokenSymbol', type: 'MINIMAL_SYMBOL_LENGTH' });
@@ -155,7 +155,7 @@ const Information = ({ isBasic }: IProps) => {
                             maxLength: 6,
                             onChange: handleTokenSymbol,
                             emptyErrorMessage: 'Please input token symbol.',
-                            regex: /[^a-zA-Z0-9]/g
+                            regex: /[^a-zA-Z]/g
                         }}
                     />
                 </TokenNameSymbol>
@@ -197,9 +197,9 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenLogoUrl',
                         placeHolder: 'ex) https://example.thisismy.token.jpg',
                         onChange: handleTokenLogoUrl,
-                        emptyErrorMessage: 'Please valid token logo url.',
+                        emptyErrorMessage: 'Please input valid token logo url.',
                         imgPreview: true,
-                        regex: /[^A-Za-z0-9\s]/g
+                        regex: /[^a-zA-Z0-9!#$&'()*+,/:;=?@[\]_.~%-]/g
                     }}
                 />
 
