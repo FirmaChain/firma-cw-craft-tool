@@ -66,8 +66,7 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?
     cursor: pointer;
 
     .typo {
-        ${({ $open, $isDisabled }) =>
-            $isDisabled ? 'color: var(--Gray-550, #444);' : $open ? 'color: #FFFFFF !important;' : 'color: var(--Gray-750, #999);'}
+        ${({ $open, $isDisabled }) => ($isDisabled ? 'color: var(--Gray-550, #444);' : 'color: #FFFFFF !important;')}
 
         /* Body/Body2 - Md */
         font-family: 'General Sans Variable';
