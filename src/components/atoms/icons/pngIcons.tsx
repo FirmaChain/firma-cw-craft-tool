@@ -43,3 +43,5 @@ export const IC_SOCIAL_TELEGRAM = PUBLIC_URL + 'ic_social_telegram.png';
 export const IC_SOCIAL_TWITTER = PUBLIC_URL + 'ic_social_twitter.png';
 export const IC_SYMBOL_GRAY = PUBLIC_URL + 'ic_symbol_gray.png';
 export const IC_LOG_OUT = PUBLIC_URL + 'ic_log_out.png';
+export const IMG_ANDROID_STORE = '/assets/image/img_android_store.png';
+export const IMG_IOS_STORE = '/assets/image/img_ios_store.png';
