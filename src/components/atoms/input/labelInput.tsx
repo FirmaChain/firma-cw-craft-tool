@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import VariableInput from './variableInput';
 import useFormStore from '@/store/formStore';
 import Icons from '../icons';
@@ -79,9 +79,10 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
-    useEffect(()=>{
-        setValidTokenLogoUrl(value);
-    },[value])
+    useEffect(() => {
+        //? Img reset after cw20 instantiate | if value is empty -> clear validated img url
+        if (!value && imgPreview) setValidTokenLogoUrl('');
+    }, [value, imgPreview]);
 
     const handleChange = (value: string) => {
         let inputValue = value;
@@ -91,9 +92,11 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 inputValue,
                 () => {
                     setValidTokenLogoUrl(inputValue);
+                    clearFormError({ id: formId, type: 'INVALID_IMG_URL' });
                 },
                 () => {
                     setValidTokenLogoUrl('');
+                    setFormError({ id: formId, type: 'INVALID_IMG_URL', message: 'Please input valid img url' });
                 }
             );
         }
