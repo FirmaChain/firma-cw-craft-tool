@@ -182,6 +182,7 @@ const VariableInput = ({
 
     return (
         <div
+            onClick={() => type === 'date' && onClickDate && onClickDate()}
             style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -210,7 +211,7 @@ const VariableInput = ({
                     type="text"
                     onChange={handleChange}
                     placeholder={placeHolder}
-                    readOnly={readOnly}
+                    readOnly={readOnly || type === 'date'}
                 />
                 {typeof maxLength === 'number' && (
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingRight: '16px' }}>
@@ -222,7 +223,7 @@ const VariableInput = ({
                     <div style={{ marginRight: '10px' }}>
                         <button
                             style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                            onClick={onClickDate}
+                            // onClick={onClickDate}
                         >
                             <img src={IC_CALENDAR} alt="date-picker" style={{ width: '24px', height: '24px', cursor: 'pointer' }} />
                         </button>

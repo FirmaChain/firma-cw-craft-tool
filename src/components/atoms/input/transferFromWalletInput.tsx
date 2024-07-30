@@ -61,6 +61,8 @@ const TransferFromWalletInput = ({
     const toAddressId = `${id}_TO_ADDRESS`;
     const transferAmountId = `${id}_TO_AMOUNT`;
 
+    const disableRemoveBtn = index === 1;
+
     // const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
@@ -114,7 +116,7 @@ const TransferFromWalletInput = ({
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '420px', gap: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', gap: '8px' }}>
                             <LabelInput
                                 labelProps={{ index, label: 'Owner Address' }}
                                 inputProps={{
@@ -126,7 +128,16 @@ const TransferFromWalletInput = ({
                             />
                         </div>
                         {/* Wallet Amount */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '164px', gap: '8px' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                maxWidth: '164px',
+                                gap: '8px'
+                            }}
+                        >
                             <LabelInput
                                 labelProps={{ label: 'Balance' }}
                                 inputProps={{
@@ -147,7 +158,15 @@ const TransferFromWalletInput = ({
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '420px', gap: '8px' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                gap: '8px'
+                            }}
+                        >
                             <LabelInput
                                 labelProps={{ index, label: 'Recipient Address' }}
                                 inputProps={{
@@ -160,7 +179,16 @@ const TransferFromWalletInput = ({
                             />
                         </div>
                         {/* Wallet Amount */}
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', maxWidth: '164px', gap: '4px' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                maxWidth: '164px',
+                                gap: '4px'
+                            }}
+                        >
                             <LabelInput
                                 labelProps={{ label: 'Amount' }}
                                 inputProps={{
@@ -187,7 +215,7 @@ const TransferFromWalletInput = ({
                     alignItems: 'flex-start',
                     justifyContent: 'center',
                     gap: '4px',
-                    paddingTop: '28px'
+                    padding: '28px 0 16px'
                 }}
             >
                 <div
@@ -200,17 +228,17 @@ const TransferFromWalletInput = ({
                     }}
                 />
                 <IconButton
+                    disabled={disableRemoveBtn}
                     style={{
                         width: '32px',
                         height: '32px',
                         padding: '0',
                         background: 'transparent',
-                        border: 'unset',
-                        cursor: 'pointer'
+                        border: 'unset'
                     }}
                     onClick={handleRemoveWallet}
                 >
-                    <Icons.MinusCircle />
+                    <Icons.MinusCircle fill={disableRemoveBtn ? '#313131' : undefined} stroke={disableRemoveBtn ? '#1E1E1E' : undefined} />
                 </IconButton>
                 <div
                     style={{
