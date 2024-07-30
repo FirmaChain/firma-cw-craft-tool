@@ -22,14 +22,14 @@ const customStyles = {
         ...provided,
         backgroundColor: state.isSelected ? '#141414' : '#1E1E1E',
         '&:hover': {
-            backgroundColor: state.isSelected ? '#141414' : '#2b2b2b'
+            backgroundColor: state.isDisabled ? 'none' : state.isSelected ? '#141414' : '#2b2b2b'
         },
         '&:active': {
-            backgroundColor: state.isSelected ? '#141414' : '#424242'
+            backgroundColor: state.isDisabled ? 'none' : state.isSelected ? '#141414' : '#424242'
         },
         borderRadius: '6px',
         padding: '4px 8px',
-        color: state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
+        color: state.isDisabled ? '#434343' : state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
         width: '100%',
         cursor: 'pointer',
         fontSize: '14px',

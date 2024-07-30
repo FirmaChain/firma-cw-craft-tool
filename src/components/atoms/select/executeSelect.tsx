@@ -10,8 +10,7 @@ const customStyles = {
         margin: '6px 0',
         border: '1px solid var(--Gray-500, #383838)',
         zIndex: 2,
-        maxHeight: '218px',
-        overflowY: 'auto'
+        maxHeight: '218px'
     }),
     menuList: (provided) => ({
         ...provided,
@@ -29,11 +28,11 @@ const customStyles = {
             backgroundColor: state.isDisabled ? 'none' : state.isSelected ? '#141414' : '#2b2b2b'
         },
         '&:active': {
-            backgroundColor: state.isSelected ? '#141414' : '#424242'
+            backgroundColor: state.isDisabled ? 'none' : state.isSelected ? '#141414' : '#424242'
         },
         borderRadius: '6px',
         padding: '4px 8px',
-        color: state.isSelected ? '#fff' : state.isDisabled ? 'black' : 'var(--Gray-650, #707070)',
+        color: state.isDisabled ? '#434343' : state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
         width: '100%',
         cursor: state.isDisabled ? 'inherit' : 'pointer',
         fontSize: '14px',
@@ -41,7 +40,7 @@ const customStyles = {
     })
 };
 
-const Container = styled.div<{ $open?: boolean; $minWidth?: string, $isDisabled?: boolean }>`
+const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?: boolean }>`
     box-sizing: border-box;
 
     display: flex;
@@ -106,7 +105,7 @@ const ExecuteSelect = ({
 }: {
     value?: string;
     placeHolder?: string;
-    options: { label: string; value: string, isDisabled?: boolean }[];
+    options: { label: string; value: string; isDisabled?: boolean }[];
     minWidth?: string;
     onChange: (v: string) => void;
 }) => {
