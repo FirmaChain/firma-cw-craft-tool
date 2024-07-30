@@ -1,3 +1,4 @@
+import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useState } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
@@ -41,6 +42,8 @@ const customStyles = {
 };
 
 const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?: boolean }>`
+    user-select: none;
+
     box-sizing: border-box;
 
     display: flex;
@@ -50,7 +53,12 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?
     padding: 11px 12px 11px 16px;
     border-radius: 6px;
     border: 1px solid;
-    ${({ $open }) => ($open ? 'border-color: #FFFFFF !important;' : 'border-color: var(--Gray-500, #383838);')}
+    ${({ $open, $isDisabled }) =>
+        $isDisabled
+            ? 'border-color: var(--Gray-500, #383838);'
+            : $open
+              ? 'border-color: #FFFFFF !important;'
+              : 'border-color: var(--Gray-500, #383838);'}
 
     ${({ $minWidth }) => $minWidth && `min-width: ${$minWidth};`}
 
@@ -59,7 +67,8 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?
     cursor: pointer;
 
     .typo {
-        ${({ $open }) => ($open ? 'color: #FFFFFF !important;' : 'color: var(--Gray-750, #999);')}
+        ${({ $open, $isDisabled }) =>
+            $isDisabled ? 'color: var(--Gray-550, #444);' : $open ? 'color: #FFFFFF !important;' : 'color: var(--Gray-750, #999);'}
 
         /* Body/Body2 - Md */
         font-family: 'General Sans Variable';
@@ -70,7 +79,7 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?
     }
 
     .open-indicater-stroke {
-        ${({ $open }) => $open && `stroke : #ffffff !important;`}
+        ${({ $open, $isDisabled }) => ($isDisabled ? `stroke : #444444 !important` : $open && `stroke : #ffffff !important;`)}
     }
 
     &:hover {
@@ -101,13 +110,17 @@ const ExecuteSelect = ({
     placeHolder = 'Select input',
     options,
     minWidth,
-    onChange
+    onChange,
+    disabled = false,
+    disabledTooltip
 }: {
     value?: string;
     placeHolder?: string;
     options: { label: string; value: string; isDisabled?: boolean }[];
     minWidth?: string;
     onChange: (v: string) => void;
+    disabled?: boolean;
+    disabledTooltip?: string;
 }) => {
     const [open, setOpen] = useState(false);
 
@@ -115,43 +128,52 @@ const ExecuteSelect = ({
 
     return (
         <>
-            <Select
-                value={selected}
-                menuIsOpen={open}
-                menuPlacement="auto"
-                options={options}
-                styles={customStyles}
-                placeholder={placeHolder}
-                onChange={(newValue) => {
-                    console.log(newValue);
-                    onChange(newValue.value);
-                    setOpen(false);
-                }}
-                components={{
-                    Control: ({ children }) => {
-                        return (
-                            <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth}>
-                                <span className="typo">{selected?.label || placeHolder}</span>
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    style={{ transform: open ? 'rotate(180deg)' : 'unset' }}
-                                >
-                                    <path
-                                        d="M6 8L10 12L14 8"
-                                        stroke="#999999"
-                                        strokeWidth="1.6"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </Container>
-                        );
-                    }
-                }}
-            />
+            <div
+                data-tooltip-content={disabled ? disabledTooltip : ''}
+                data-tooltip-id={TOOLTIP_ID.COMMON}
+                data-tooltip-wrapper="span"
+                data-tooltip-place="bottom"
+            >
+                <Select
+                    value={selected}
+                    menuIsOpen={open}
+                    isDisabled={disabled}
+                    menuPlacement="auto"
+                    options={options}
+                    styles={customStyles}
+                    placeholder={placeHolder}
+                    onChange={(newValue) => {
+                        console.log(newValue);
+                        onChange(newValue.value);
+                        setOpen(false);
+                    }}
+                    components={{
+                        Control: ({ children }) => {
+                            return (
+                                <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth} $isDisabled={disabled}>
+                                    <span className="typo">{selected?.label || placeHolder}</span>
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        style={{ transform: open ? 'rotate(180deg)' : 'unset' }}
+                                    >
+                                        <path
+                                            className="open-indicater-stroke"
+                                            d="M6 8L10 12L14 8"
+                                            stroke="#999999"
+                                            strokeWidth="1.6"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </Container>
+                            );
+                        }
+                    }}
+                />
+            </div>
             {open && <BGBox onClick={() => setOpen(false)} />}
         </>
     );
