@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import commaNumber from 'comma-number';
 import IconTooltip from '../tooltip';
 import { checkImageUrl } from '@/utils/common';
+import TokenLogo from '../icons/TokenLogo';
 
 interface ILabelProps {
     index?: number;
@@ -92,11 +93,11 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 inputValue,
                 () => {
                     setValidTokenLogoUrl(inputValue);
-                    clearFormError({ id: formId, type: 'INVALID_IMG_URL' });
+                    // clearFormError({ id: formId, type: 'INVALID_IMG_URL' });
                 },
                 () => {
                     setValidTokenLogoUrl('');
-                    setFormError({ id: formId, type: 'INVALID_IMG_URL', message: 'Please input valid img url' });
+                    // setFormError({ id: formId, type: 'INVALID_IMG_URL', message: 'Please input valid img url' });
                 }
             );
         }
@@ -162,33 +163,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 </div>
             </div>
 
-            {imgPreview && (
-                <div
-                    style={{
-                        display: 'flex',
-                        width: '90px',
-                        height: '90px',
-                        backgroundColor: '#262626',
-                        borderRadius: '153.409px',
-                        border: '1px solid #383838',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                    }}
-                >
-                    {validTokenLogoUrl === '' ? (
-                        <IconBackground>
-                            <Icons.Picture width={'34px'} height={'34px'} />
-                        </IconBackground>
-                    ) : (
-                        <img
-                            src={validTokenLogoUrl}
-                            alt="token-logo"
-                            style={{ width: '90px', height: '90px', maxHeight: '100%', maxWidth: '100%' }}
-                        />
-                    )}
-                </div>
-            )}
+            {imgPreview && <TokenLogo size="90px" src={validTokenLogoUrl} />}
 
             <VariableInput
                 value={type === 'number' ? commaNumber(value) : value}

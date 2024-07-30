@@ -20,6 +20,7 @@ import { parseAmountWithDecimal } from '@/utils/common';
 import React from 'react';
 import { IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
 import commaNumber from 'comma-number';
+import TokenLogo from '@/components/atoms/icons/TokenLogo';
 
 interface IProps {
     tokenLogoUrl: string;
@@ -68,15 +69,8 @@ const MintedTokenCard = ({
             }}
         >
             <ItemLeft>
-                <TokenLogoImage>
-                    {validTokenLogoUrl === '' ? (
-                        <IconBackground>
-                            <Icons.Picture width={'22px'} height={'22px'} />
-                        </IconBackground>
-                    ) : (
-                        <img src={validTokenLogoUrl} alt="token-img" style={{ width: '48px', height: '48px' }} />
-                    )}
-                </TokenLogoImage>
+                <TokenLogo src={validTokenLogoUrl} size="48px" emptyPicSize="22px" />
+
                 <TokenInfoWrapper>
                     <TokenSymbolWrapper>
                         <TokenInfoSymbolTypo>{tokenSymbol}</TokenInfoSymbolTypo>

@@ -12,6 +12,7 @@ import {
 } from './style';
 import Icons from '@/components/atoms/icons';
 import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
+import TokenLogo from '@/components/atoms/icons/TokenLogo';
 
 interface IProps {
     tokenLogoUrl: string;
@@ -59,19 +60,8 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
 
     return (
         <TokenInfoWrapper>
-            <TokenInfoLogoImage>
-                {validTokenLogoUrl === '' ? (
-                    <IconBackground>
-                        <Icons.Picture width={'34px'} height={'34px'} />
-                    </IconBackground>
-                ) : (
-                    <img
-                        src={validTokenLogoUrl}
-                        style={{ width: '90px', height: '90px', maxHeight: '100%', maxWidth: '100%' }}
-                        alt="token-logo"
-                    />
-                )}
-            </TokenInfoLogoImage>
+            <TokenLogo src={validTokenLogoUrl} size="90px" />
+
             <TokenInfoDetail>
                 <DetailTitle>
                     <TokenNameText $disabled={tokenName === ''}>{tokenName || 'Name'}</TokenNameText>

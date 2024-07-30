@@ -28,6 +28,7 @@ import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Skeleton from '@/components/atoms/skeleton';
 import { openLink } from '@/utils/common';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
+import TokenLogo from '@/components/atoms/icons/TokenLogo';
 
 const AdditionalInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
@@ -100,25 +101,7 @@ const AdditionalInformation = () => {
                 <SpecificItemByStart>
                     <SpecificLabelTypo>{isBasic ? 'Token' : 'Marketing'} Logo</SpecificLabelTypo>
                     <SpecificColumnValue>
-                        <LogoImage>
-                            {validTokenLogoUrl === null ? (
-                                <Skeleton width="90px" height="90px" borderRadius="50%" />
-                            ) : validTokenLogoUrl === '' ? (
-                                <IconBackground>
-                                    <Icons.Picture width={'34px'} height={'34px'} />
-                                </IconBackground>
-                            ) : (
-                                <img
-                                    src={validTokenLogoUrl}
-                                    style={{ width: '90px', height: '90px', borderRadius: '50%' }}
-                                    alt="token-logo"
-                                    data-tooltip-content={validTokenLogoUrl ? marketingLogo : ''}
-                                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                                    data-tooltip-wrapper="span"
-                                    data-tooltip-place="bottom"
-                                />
-                            )}
-                        </LogoImage>
+                        <TokenLogo src={validTokenLogoUrl} size="90px" />
                     </SpecificColumnValue>
                 </SpecificItemByStart>
                 <SpecificItem style={{ alignItems: 'flex-start' }}>

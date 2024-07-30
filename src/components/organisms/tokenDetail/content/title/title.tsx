@@ -24,6 +24,7 @@ import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Divider from '@/components/atoms/divider';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
+import TokenLogo from '@/components/atoms/icons/TokenLogo';
 
 const Title = () => {
     const tokenUrl = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl);
@@ -64,21 +65,8 @@ const Title = () => {
     return (
         <TitleContainer>
             <TitleWrapper>
-                <TitleLogoImage>
-                    {imgLoading ? (
-                        <Skeleton width="72px" height="72px" borderRadius="50%" />
-                    ) : validTokenLogoUrl === '' ? (
-                        <IconBackground>
-                            <Icons.Picture width={'34px'} height={'34px'} />
-                        </IconBackground>
-                    ) : (
-                        <img
-                            src={validTokenLogoUrl}
-                            alt="token-img"
-                            style={{ minWidth: '72px', minHeight: '72px', maxHeight: '100%', maxWidth: '100%' }}
-                        />
-                    )}
-                </TitleLogoImage>
+                <TokenLogo src={validTokenLogoUrl} size="72px" />
+
                 <TokenInfoWrapper>
                     <TokenInfo style={{ height: '24px' }}>
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>

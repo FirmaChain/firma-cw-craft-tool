@@ -19,6 +19,7 @@ import UpdateLogo from './functions/updateLogo';
 import useExecuteStore from '../hooks/useExecuteStore';
 import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
+import TokenLogo from '@/components/atoms/icons/TokenLogo';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -151,7 +152,7 @@ const basicMenuItems: IMenuItem[] = [
 
 const advancedMenuItems: IMenuItem[] = [
     { value: 'select', label: 'Select' },
-    { value: 'mint', label: 'Mint'},
+    { value: 'mint', label: 'Mint' },
     { value: 'burn', label: 'Burn' },
     { value: 'burnFrom', label: 'Burn From' },
     { value: 'increaseAllowance', label: 'Increase Allowance' },
@@ -211,7 +212,7 @@ const TokenInfo = () => {
 
         if (contractInfo && contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID) {
             ruleMenus = [...basicMenuItems];
-            
+
             if (minterInfo && minterInfo.minter !== address) {
                 ruleMenus[1].isDisabled = true;
                 ruleMenus[9].isDisabled = true;
@@ -237,21 +238,8 @@ const TokenInfo = () => {
         setOwnerMenus(ruleMenus);
     }, [craftConfig, contractAddress, minterInfo, marketingInfo]);
 
-    const RenderTokenLogo = useCallback(() => {
-        const isValid = !Boolean(validTokenLogoUrl === '');
-        return (
-            <ImageWrap style={{ background: isValid ? 'transparent' : '#262626' }}>
-                {isValid ? (
-                    <img src={validTokenLogoUrl} style={{ width: '72px', height: '72px' }} />
-                ) : (
-                    <Icons.Picture width={'34px'} height={'34px'} />
-                )}
-            </ImageWrap>
-        );
-    }, [validTokenLogoUrl]);
-
     const handleChangeMenu = (menu: string) => {
-        console.log("menu", menu);
+        console.log('menu', menu);
         const _selectMenu = ownerMenus.find((item) => item.value === menu);
 
         setSelectMenu(_selectMenu);
@@ -264,7 +252,7 @@ const TokenInfo = () => {
                     <TokenInfoWrap>
                         <TitleTypo>{'TOKEN INFO'}</TitleTypo>
                         <TokenBox>
-                            <RenderTokenLogo />
+                            <TokenLogo src={validTokenLogoUrl} size="72px" />
                             <TokenInfoBox>
                                 <TokenTitleWrap>
                                     {tokenInfo ? (

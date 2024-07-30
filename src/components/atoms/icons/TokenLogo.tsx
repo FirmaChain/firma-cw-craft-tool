@@ -8,6 +8,7 @@ interface ITokenLogo {
     src: string; //? Img logo url
     size?: number | string; //? img size, @default 72px, pretend img is square
     tooltip?: string; //? Hover tooltip, only show up when img is valid. @default "src" value
+    emptyPicSize?: string;
 }
 
 const Container = styled.div<{ $size: string | number }>`
@@ -31,7 +32,7 @@ const Container = styled.div<{ $size: string | number }>`
     }
 `;
 
-const TokenLogo = ({ src, size = '72px', tooltip }: ITokenLogo) => {
+const TokenLogo = ({ src, size = '72px', emptyPicSize = '34px', tooltip }: ITokenLogo) => {
     const [isValid, setIsValid] = useState(false);
 
     useEffect(() => {
@@ -54,12 +55,12 @@ const TokenLogo = ({ src, size = '72px', tooltip }: ITokenLogo) => {
                     data-tooltip-id={TOOLTIP_ID.COMMON}
                     data-tooltip-wrapper="span"
                     data-tooltip-place="bottom"
-                    style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+                    style={{ width: '100%', borderRadius: '50%', objectFit: 'cover' }}
                     onError={() => setIsValid(false)}
                 />
             ) : (
                 <div className="img-placeholder">
-                    <Icons.Picture width={'34px'} height={'34px'} />
+                    <Icons.Picture width={emptyPicSize} height={emptyPicSize} />
                 </div>
             )}
         </Container>
