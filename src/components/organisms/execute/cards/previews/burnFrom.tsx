@@ -143,7 +143,7 @@ const BurnFromPreview = () => {
 
     const [totalBurnBalance, setTotalBurnBalance] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const calculateTotalBurnBalance = useCallback(() => {
         let totalAmount = '0';

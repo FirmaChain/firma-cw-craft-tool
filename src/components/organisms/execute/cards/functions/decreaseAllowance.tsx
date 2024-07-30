@@ -94,7 +94,7 @@ const DecreaseAllowance = () => {
         setAllowance({
             address: value,
             amount: allowance?.amount,
-            type: !allowance?.type ? "at_height" : allowance.type,
+            type: !allowance?.type ? 'at_height' : allowance.type,
             expire: allowance?.expire
         });
     };
@@ -123,10 +123,10 @@ const DecreaseAllowance = () => {
                 : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAllowance({
-            address: allowance === null ? "" : allowance?.address,
+            address: allowance === null ? '' : allowance?.address,
             amount: decreaseAmount,
-            type: allowance === null ? "" : !allowance.type ? "at_height": allowance.type,
-            expire: allowance === null ? "" : allowance.expire
+            type: allowance === null ? '' : !allowance.type ? 'at_height' : allowance.type,
+            expire: allowance === null ? '' : allowance.expire
         });
     };
 
@@ -147,12 +147,12 @@ const DecreaseAllowance = () => {
                     expireType = 'never';
                     break;
             }
-    
+
             setAllowance({
-                address: allowance === null ? "" : !allowance.address ? "" : allowance.address,
-                amount: allowance === null ? "" : !allowance.amount ? "" : allowance.amount,
+                address: allowance === null ? '' : !allowance.address ? '' : allowance.address,
+                amount: allowance === null ? '' : !allowance.amount ? '' : allowance.amount,
                 type: expireType,
-                expire: ""
+                expire: ''
             });
         }
     };
@@ -160,17 +160,17 @@ const DecreaseAllowance = () => {
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
 
-        let expireValue = "";
-        if (allowance.type === "at_time") {
+        let expireValue = '';
+        if (allowance.type === 'at_time') {
             expireValue = addNanoSeconds(value);
-        } else if (allowance.type === "at_height") {
+        } else if (allowance.type === 'at_height') {
             expireValue = value;
         }
 
         setAllowance({
-            address: allowance === null ? "" : allowance?.address,
-            amount: allowance === null ? "" : allowance?.amount,
-            type: allowance === null ? "" : allowance?.type,
+            address: allowance === null ? '' : allowance?.address,
+            amount: allowance === null ? '' : allowance?.amount,
+            type: allowance === null ? '' : allowance?.type,
             expire: expireValue
         });
     };
@@ -199,7 +199,8 @@ const DecreaseAllowance = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: allowance === null || allowance === undefined ? "" : !allowance?.address ? "" : allowance?.address,
+                                    value:
+                                        allowance === null || allowance === undefined ? '' : !allowance?.address ? '' : allowance?.address,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address'
                                     // emptyErrorMessage: 'Please input firmachain wallet address'
@@ -220,7 +221,8 @@ const DecreaseAllowance = () => {
                                 labelProps={{ label: 'Decrease Amount' }}
                                 inputProps={{
                                     formId: `${inputId}_AMOUNT`,
-                                    value: allowance === null || allowance === undefined ? "0" : !allowance?.amount ? "" : allowance?.amount,
+                                    value:
+                                        allowance === null || allowance === undefined ? '0' : !allowance?.amount ? '' : allowance?.amount,
                                     onChange: handleChangeAmount,
                                     placeHolder: '0',
                                     type: 'number',
@@ -264,7 +266,7 @@ const DecreaseAllowance = () => {
                             ? 'ex) 7216240'
                             : expirationType === ExpirationType.Time
                               ? 'ex) MM-DD-YYYY  HH:MM:SS'
-                              : 'Forever'
+                              : 'FOREVER'
                     }
                     type={expirationType === ExpirationType.Time ? 'date' : 'number'}
                     onChange={handleChangeExpireValue}

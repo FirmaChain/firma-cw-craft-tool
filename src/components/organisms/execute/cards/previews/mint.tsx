@@ -195,7 +195,7 @@ const MintPreview = () => {
 
     const modal = useModalStore();
 
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
     const [totalMintBalance, setTotalMintBalance] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 

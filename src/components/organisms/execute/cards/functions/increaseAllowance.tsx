@@ -36,7 +36,7 @@ const InputTitle = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-const ExpirationTypButton = styled(IconButton) <{ $selected?: boolean }>`
+const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
     width: 152px;
     height: 36px;
     border-radius: 8px;
@@ -50,7 +50,7 @@ const ExpirationTypButton = styled(IconButton) <{ $selected?: boolean }>`
 
     span {
         color: ${({ $selected }) =>
-        $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
+            $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
 
         /* Body/Body2 - Bd */
         font-family: 'General Sans Variable';
@@ -97,11 +97,11 @@ const IncreaseAllowance = () => {
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
-        
+
         setAllowance({
             address: value,
             amount: allowance?.amount,
-            type: !allowance?.type ? "at_height" : allowance.type,
+            type: !allowance?.type ? 'at_height' : allowance.type,
             expire: allowance?.expire
         });
     };
@@ -130,10 +130,10 @@ const IncreaseAllowance = () => {
                 : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAllowance({
-            address: allowance === null ? "" : allowance?.address,
+            address: allowance === null ? '' : allowance?.address,
             amount: increaseAmount,
-            type: allowance === null ? "" : !allowance.type ? "at_height": allowance.type,
-            expire: allowance === null ? "" : allowance.expire
+            type: allowance === null ? '' : !allowance.type ? 'at_height' : allowance.type,
+            expire: allowance === null ? '' : allowance.expire
         });
     };
 
@@ -156,17 +156,17 @@ const IncreaseAllowance = () => {
             }
 
             setAllowance({
-                address: allowance === null ? "" : !allowance.address ? "" : allowance.address,
-                amount: allowance === null ? "" : !allowance.amount ? "" : allowance.amount,
+                address: allowance === null ? '' : !allowance.address ? '' : allowance.address,
+                amount: allowance === null ? '' : !allowance.amount ? '' : allowance.amount,
                 type: expireType,
-                expire: ""
+                expire: ''
             });
         }
     };
 
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
-        
+
         let expireValue = '';
         if (allowance.type === 'at_time') {
             expireValue = addNanoSeconds(value);
@@ -175,9 +175,9 @@ const IncreaseAllowance = () => {
         }
 
         setAllowance({
-            address: allowance === null ? "" : allowance?.address,
-            amount: allowance === null ? "" : allowance?.amount,
-            type: allowance === null ? "" : allowance?.type,
+            address: allowance === null ? '' : allowance?.address,
+            amount: allowance === null ? '' : allowance?.amount,
+            type: allowance === null ? '' : allowance?.type,
             expire: expireValue
         });
     };
@@ -186,7 +186,6 @@ const IncreaseAllowance = () => {
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => <ExpirationModal id={id} setExpirationDate={(value) => handleChangeExpireValue(value)} />
-
         });
     };
 
@@ -207,7 +206,8 @@ const IncreaseAllowance = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: allowance === null || allowance === undefined ? "" : !allowance?.address ? "" : allowance?.address,
+                                    value:
+                                        allowance === null || allowance === undefined ? '' : !allowance?.address ? '' : allowance?.address,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
                                     emptyErrorMessage: 'Please input firmachain wallet address'
@@ -225,11 +225,11 @@ const IncreaseAllowance = () => {
                             }}
                         >
                             <LabelInput
-
                                 labelProps={{ label: 'Increase Amount' }}
                                 inputProps={{
                                     formId: `${inputId}_AMOUNT`,
-                                    value: allowance === null || allowance === undefined ? "0" : !allowance?.amount ? "" : allowance?.amount,
+                                    value:
+                                        allowance === null || allowance === undefined ? '0' : !allowance?.amount ? '' : allowance?.amount,
                                     onChange: handleChangeAmount,
                                     placeHolder: '0',
                                     type: 'number',
@@ -266,21 +266,23 @@ const IncreaseAllowance = () => {
                         ))}
                     </div>
                 </div>
-                <VariableInput
-                    value={expInputValue}
-                    placeHolder={
-                        expirationType === ExpirationType.Height
-                            ? 'ex) 7216240'
-                            : expirationType === ExpirationType.Time
-                                ? 'ex) MM-DD-YYYY  HH:MM:SS'
-                                : 'Forever'
-                    }
-                    type={expirationType === ExpirationType.Time ? 'date' : 'number'}
-                    onChange={handleChangeExpireValue}
-                    readOnly={expirationType !== ExpirationType.Height}
-                    decimal={0}
-                    onClickDate={handleAllowanceDate}
-                />
+                <div style={{ position: 'relative' }}>
+                    <VariableInput
+                        value={expInputValue}
+                        placeHolder={
+                            expirationType === ExpirationType.Height
+                                ? 'ex) 7216240'
+                                : expirationType === ExpirationType.Time
+                                  ? 'ex) MM-DD-YYYY  HH:MM:SS'
+                                  : 'FOREVER'
+                        }
+                        type={expirationType === ExpirationType.Time ? 'date' : 'number'}
+                        onChange={handleChangeExpireValue}
+                        readOnly={expirationType === ExpirationType.Forever}
+                        decimal={0}
+                        onClickDate={handleAllowanceDate}
+                    />
+                </div>
             </div>
         </Container>
     );

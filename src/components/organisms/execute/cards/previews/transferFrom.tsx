@@ -143,7 +143,7 @@ const TransferFromPreview = () => {
 
     const modal = useModalStore();
 
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
     const totalTransferAmount = useMemo(() => {
@@ -162,7 +162,7 @@ const TransferFromPreview = () => {
         let allAmountsValid = true;
 
         for (const transferFrom of transferFromList) {
-            console.log("transferFrom.fromAmount", transferFrom.fromAmount);
+            console.log('transferFrom.fromAmount', transferFrom.fromAmount);
             if (!isValidAddress(transferFrom.fromAddress) || !isValidAddress(transferFrom.toAddress)) {
                 // console.log("isValid address");
                 allAddressesValid = false;

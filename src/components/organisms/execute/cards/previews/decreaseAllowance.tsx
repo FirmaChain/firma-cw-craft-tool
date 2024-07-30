@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
+import { getTokenAmountFromUToken, getUTokenAmountFromToken, subtractStringAmount } from '@/utils/balance';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
@@ -16,6 +16,7 @@ import Divider from '@/components/atoms/divider';
 import { format } from 'date-fns';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
+import commaNumber from 'comma-number';
 
 const Container = styled.div`
     width: 100%;
@@ -156,11 +157,13 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
-const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo }) => {
+const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null }) => {
+    if (!allowanceInfo) return <AccordionTypo $disabled>Expiration</AccordionTypo>;
+
     if (allowanceInfo.type === 'never') return <AccordionTypo $disabled={false}>Forever</AccordionTypo>;
     if (!allowanceInfo.expire) return <AccordionTypo $disabled={true}>Expiration</AccordionTypo>;
     if (allowanceInfo.type === 'at_height')
-        return <AccordionTypo $disabled={false}>{formatWithCommas(allowanceInfo.expire)} Block</AccordionTypo>;
+        return <AccordionTypo $disabled={false}>{commaNumber(allowanceInfo.expire)} Block</AccordionTypo>;
     if (allowanceInfo.type === 'at_time')
         return (
             <AccordionTypo $disabled={false}>
@@ -177,7 +180,7 @@ const DecreaseAllowancePreview = () => {
     const allowanceInfo = useExecuteStore((state) => state.allowanceInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const allowance = useExecuteStore((state) => state.allowance);
-    
+
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
     const clearAllowance = useExecuteStore((v) => v.clearAllowance);
     const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
@@ -189,7 +192,7 @@ const DecreaseAllowancePreview = () => {
     const modal = useModalStore();
 
     const [updatedAmount, setUpdatedAmount] = useState<string>('0');
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
@@ -205,7 +208,7 @@ const DecreaseAllowancePreview = () => {
             if (addressExist) {
                 setAllowanceInfo(contractAddress, address, allowance?.address);
             } else {
-                setUpdatedAmount("0");
+                setUpdatedAmount('0');
             }
         } catch (error) {
             console.log(error);
@@ -213,13 +216,19 @@ const DecreaseAllowancePreview = () => {
     }, [allowance?.address]);
 
     useEffect(() => {
-        const convertAmount = getUTokenAmountFromToken(allowance === null ? "0" : !allowance.amount ? "0" : allowance?.amount, tokenInfo.decimals.toString());
-        setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? "0" : allowanceInfo?.allowance, convertAmount));
+        const convertAmount = getUTokenAmountFromToken(
+            allowance === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
+            tokenInfo.decimals.toString()
+        );
+        setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
     }, [allowance?.amount]);
 
     useEffect(() => {
-        const convertAmount = getUTokenAmountFromToken(allowanceInfo === null ? "0" : !allowance?.amount ? "0" : allowance?.amount, tokenInfo.decimals.toString());
-        setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? "0" : allowanceInfo?.allowance, convertAmount));
+        const convertAmount = getUTokenAmountFromToken(
+            allowanceInfo === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
+            tokenInfo.decimals.toString()
+        );
+        setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
     }, [allowanceInfo]);
 
     const onClickDecreaseAllowance = () => {
@@ -251,19 +260,19 @@ const DecreaseAllowancePreview = () => {
                 symbol: tokenInfo.symbol,
                 list: [
                     {
-                        label: "Decrease Allowance Amount",
+                        label: 'Decrease Allowance Amount',
                         value: getUTokenAmountFromToken(allowance.amount, tokenInfo.decimals.toString()),
-                        type: "amount"
+                        type: 'amount'
                     },
                     {
-                        label: "Recipient Address",
+                        label: 'Recipient Address',
                         value: allowance.address,
-                        type: "wallet"
+                        type: 'wallet'
                     },
                     {
-                        label: "Expiration",
+                        label: 'Expiration',
                         value: allowance.expire,
-                        type: allowance.type === "at_height" ? "block" : allowance.type === "at_time" ? "time" : "never"
+                        type: allowance.type === 'at_height' ? 'block' : allowance.type === 'at_time' ? 'time' : 'never'
                     }
                 ]
             },
@@ -295,10 +304,12 @@ const DecreaseAllowancePreview = () => {
     const isEnableButton = useMemo(() => {
         if (!addressExist || allowanceInfo === null) return false;
         if (!allowance) return false;
-        if (!allowance.type || allowance.type !== 'never' && (!allowance.expire || !allowance.type)) return false;
+        if (!allowance.type || (allowance.type !== 'never' && (!allowance.expire || !allowance.type))) return false;
 
         return true;
     }, [addressExist, allowance?.amount, allowance?.expire, allowance?.type, allowance?.address]);
+
+    console.log('allowance', allowance);
 
     return (
         <Container>
@@ -309,7 +320,7 @@ const DecreaseAllowancePreview = () => {
                         <ItemLabelTypo>Decrease Allowance Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(allowance?.amount === undefined ? "0" : allowance.amount)}</ItemAmountTypo>
+                        <ItemAmountTypo>{commaNumber(allowance?.amount === undefined ? '0' : allowance.amount)}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
@@ -327,19 +338,19 @@ const DecreaseAllowancePreview = () => {
                                     justifyContent: 'space-between'
                                 }}
                             >
-                                <AccordionTypo $disabled={allowance === null ? false : !allowance.address}>
-                                    {allowance.address === '' ? 'Wallet Address' : shortenAddress(allowance.address, 16, 16)}
+                                <AccordionTypo $disabled={!allowance || !allowance?.address}>
+                                    {allowance === null || allowance?.address === ''
+                                        ? 'Wallet Address'
+                                        : shortenAddress(allowance?.address, 16, 16)}
                                 </AccordionTypo>
-                                <AccordionTypo $disabled={allowance === null ? false : !Number(allowance.amount)}>
-                                    {formatWithCommas(allowance === null ? "0" : allowance.amount )}
+                                <AccordionTypo $disabled={allowance === null || !Number(allowance.amount)}>
+                                    {commaNumber(allowance === null ? '0' : allowance?.amount)}
                                 </AccordionTypo>
-
                             </div>
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
                             <ExpirationBox allowanceInfo={allowance} />
-                            <AccordionTypo $disabled={true}>Expiration</AccordionTypo>
                         </AccordionRow>
                     </AccordionBox>
                 )}
@@ -354,7 +365,7 @@ const DecreaseAllowancePreview = () => {
                     </ItemLabelWrap>
                     <ItemLabelWrap>
                         <UpdatedBalanceTypo>
-                            {formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
+                            {commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
                         </UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>

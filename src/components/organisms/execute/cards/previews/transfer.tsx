@@ -192,7 +192,7 @@ const TransferPreview = () => {
     const [totalTransferAmount, setTotalTransferAmount] = useState<string>('0');
     const [updatedAmount, setUpdatedAmount] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const calculateTotalBalance = useCallback(() => {
         let calcTransferAmount = '0';
@@ -209,8 +209,8 @@ const TransferPreview = () => {
             calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
         }
 
-        console.log("allAddressesValid", allAddressesValid);
-        console.log("allAmountsValid", allAmountsValid);
+        console.log('allAddressesValid', allAddressesValid);
+        console.log('allAmountsValid', allAmountsValid);
         const remainAmount = subtractStringAmount(cw20Balance, getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
         setUpdatedAmount(remainAmount);
 
