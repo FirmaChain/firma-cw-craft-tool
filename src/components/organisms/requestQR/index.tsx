@@ -112,24 +112,20 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
                         {!isTxModal ? (
                             <>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    {timerText.split('').map((typo, idx) => (
-                                        <TimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
-                                            {typo}
-                                        </TimerTypo>
-                                    ))}
+                                    {/* {timerText.split('').map((typo, idx) => ( */}
+                                    <TimerTypo /*style={{ width: '10px', textAlign: 'center' }} key={idx}*/>{timerText}</TimerTypo>
+                                    {/* ))} */}
                                 </div>
-                                <img src={IC_RESET} alt="reset" style={{ width: '16px', height: '16px' }} />
+                                <img src={IC_RESET} alt="reset" style={{ minWidth: '16px', maxWidth: '16px', height: '16px' }} />
                             </>
                         ) : (
                             <>
                                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    {timerText.split('').map((typo, idx) => (
-                                        <TxTimerTypo style={{ width: '10px', textAlign: 'center' }} key={idx}>
-                                            {typo}
-                                        </TxTimerTypo>
-                                    ))}
+                                    {/* {timerText.split('').map((typo, idx) => ( */}
+                                    <TxTimerTypo /*style={{ width: '8px', textAlign: 'center' }} key={idx}*/>{timerText}</TxTimerTypo>
+                                    {/* ))} */}
                                 </div>
-                                <img src={IC_RESET_WHITE} alt="reset" style={{ width: '12px', height: '12px' }} />
+                                <img src={IC_RESET_WHITE} alt="reset" style={{ minWidth: '12px', maxWidth: '12px', height: '12px' }} />
                             </>
                         )}
                     </>

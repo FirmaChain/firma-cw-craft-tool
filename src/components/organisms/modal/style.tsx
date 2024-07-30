@@ -346,6 +346,8 @@ export const SignDesc = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    text-align: center;
 `;
 
 export const StepIcon = styled.div`
@@ -663,9 +665,9 @@ export const ItemUrlTypo = styled.div`
 `;
 
 export const FailedTransactionTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
@@ -673,11 +675,91 @@ export const FailedTransactionTypo = styled.div`
 `;
 
 export const FailedTransactionDescTypo = styled.div`
-    color: var(--Gray-700, #807E7E);
+    color: var(--Gray-700, #807e7e);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 15px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
+`;
+
+export const StationTypo = styled.div`
+    color: var(--Gray-850, #e6e6e6);
+    text-align: center;
+
+    /* Heading/H5 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 122.222% */
+
+    .highlight {
+        color: var(--Green-500, #02e191);
+        text-decoration: underline;
+    }
+`;
+
+export const DownloadQRButton = styled(IconButton)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 143px;
+    height: 38px;
+    border-radius: 32px;
+    border: 1px solid var(--Gray-750, #999);
+
+    .typo {
+        color: var(--Gray-800, #dcdcdc);
+
+        /* Body/Body1 - Bd */
+        font-family: 'General Sans Variable';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 22px; /* 137.5% */
+    }
+`;
+
+export const MobileAppLinkBox = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 48px;
+
+    align-items: center;
+    gap: 32px;
+
+    .icons-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        jusitfy-content: space-between;
+        gap: 16px;
+    }
+
+    .help-text {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+
+        color: var(--Gray-750, #999);
+        text-align: center;
+
+        /* Heading/H5 - Bd */
+        font-family: 'General Sans Variable';
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 22px; /* 122.222% */
+
+        .highlight {
+            color: #fff;
+            text-decoration-line: underline;
+            cursor: pointer;
+        }
+    }
 `;

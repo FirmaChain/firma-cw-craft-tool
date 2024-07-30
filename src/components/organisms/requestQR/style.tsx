@@ -31,8 +31,8 @@ export const TimerTypo = styled.div`
     color: var(--Gray-100, #121212);
 
     /* Heading/H5 - Bd */
-    font-family: 'General Sans Variable';
-    font-size: 18px;
+    font-family: 'Roboto Mono' !important;
+    font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 110%;
@@ -41,15 +41,17 @@ export const TimerTypo = styled.div`
 
 export const TxTimerTypo = styled.div`
     color: var(--Gray-800, #dcdcdc);
-    font-family: 'General Sans Variable';
+    font-family: 'Roboto Mono' !important;
     font-size: 13px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 18px; /* 138.462% */
+    letter-spacing: -0.52px;
+    font-variant-numeric: tabular-nums;
 `;
 
 export const TimerWrap = styled.div<{ $isTxModal: boolean }>`
-    width: 90px;
+    width: ${({ $isTxModal }) => ($isTxModal === false ? '90px' : '80px')};
     height: 26px;
     display: flex;
     align-items: center;
