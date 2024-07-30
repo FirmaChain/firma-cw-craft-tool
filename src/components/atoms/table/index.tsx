@@ -69,7 +69,7 @@ const StyledTable = ({
     }, [rows, currentPage, rowsPerPage]);
 
     return (
-        <TableContainer className="hide-scrollbar">
+        <TableContainer>
             <div style={{ width: '100%', height: '100%', overflowX: 'scroll' }}>
                 <Table>
                     <TableHead>

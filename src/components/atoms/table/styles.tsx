@@ -51,6 +51,10 @@ export const TableContainer = styled.div`
 
     width: 100%;
     height: 100%;
+
+    & ::-webkit-scrollbar {
+        display: none;
+    }
 `;
 
 export const Table = styled.table`

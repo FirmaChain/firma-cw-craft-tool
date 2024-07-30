@@ -173,15 +173,6 @@ a:active {
   box-sizing: border-box;
 }
 
-
-
-
-.hide-scrollbar {
-  ::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 .notistack-Snackbar {
   min-width: unset;
   width: fit-content;

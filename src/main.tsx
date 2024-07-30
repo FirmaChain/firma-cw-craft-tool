@@ -56,7 +56,7 @@ const Main = () => {
         <MainContainer>
             <ModalRenderer />
             <Sidebar />
-            <RightContainer className="hide-scrollbar">
+            <RightContainer>
                 <MainScrollbar defer>
                     <AppRoutes />
                 </MainScrollbar>
