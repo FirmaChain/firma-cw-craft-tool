@@ -142,7 +142,7 @@ const VariableInput = ({
     const isError = errorMessage.length > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let inputValue = event.currentTarget.value;
+        let inputValue = event.currentTarget.value.replace(/[^a-zA-Z0-9!#$&'"`₩(){\}*^+,/:;=?@<>[\]_.~%\- |\\]/g, '');
 
         if (inputValue.length > 0) {
             if (type === 'number') {

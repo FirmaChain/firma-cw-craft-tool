@@ -25,11 +25,11 @@ const StyledInput = styled.div<{
     //? Set border color by state
     border: 1px solid
         ${({ $isFocus, $error, $readOnly }) =>
-        $error
-            ? 'var(--Status-Alert, #E55250) !important'
-            : $isFocus && !$readOnly
-                ? 'var(--Gray-550, #FFFFFF) !important'
-                : 'var(--Gray-550, #444)'};
+            $error
+                ? 'var(--Status-Alert, #E55250) !important'
+                : $isFocus && !$readOnly
+                  ? 'var(--Gray-550, #FFFFFF) !important'
+                  : 'var(--Gray-550, #444)'};
     border-radius: 12px;
     cursor: text;
     box-sizing: border-box;
@@ -85,7 +85,15 @@ interface InputProps {
     };
 }
 
-const SearchInputWithButton2 = ({ value, onChange, onClickEvent, placeHolder, textAlign = 'left', readOnly = false, adornment }: InputProps) => {
+const SearchInputWithButton2 = ({
+    value,
+    onChange,
+    onClickEvent,
+    placeHolder,
+    textAlign = 'left',
+    readOnly = false,
+    adornment
+}: InputProps) => {
     const [isFocus, setIsFocus] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>();
@@ -97,7 +105,7 @@ const SearchInputWithButton2 = ({ value, onChange, onClickEvent, placeHolder, te
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(event.currentTarget.value);
+        onChange(event.currentTarget.value.replace(/[^a-zA-Z0-9!#$&'"`₩(){\}*^+,/:;=?@<>[\]_.~%\- |\\]/g, ''));
     };
 
     return (

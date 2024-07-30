@@ -132,7 +132,7 @@ const SearchInput2 = ({
     const inputRef = useRef<HTMLInputElement>();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let inputValue = event.currentTarget.value;
+        let inputValue = event.currentTarget.value.replace(/[^a-zA-Z0-9!#$&'"`₩(){\}*^+,/:;=?@<>[\]_.~%\- |\\]/g, '');
 
         onChange(inputValue);
     };
