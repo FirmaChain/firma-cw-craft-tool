@@ -24,7 +24,8 @@ const Container = styled.div<{ $isSelectMenu: boolean }>`
     align-items: flex-start;
     gap: 24px;
     border-radius: 24px;
-    border: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191)' : '1px solid var(--Green-500, #444)')};
+    /* border: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191)' : '1px solid var(--Green-500, #444)')}; */
+    border: 1px solid var(--Green-500, #444);
     background: var(--200, #1e1e1e);
 `;
 

@@ -18,7 +18,7 @@ const StyledInput = styled.div<{
     align-items: center;
     justify-content: center;
 
-    background: var(--Gray-400, #2c2c2c);
+    background: ${({ $readOnly }) => $readOnly ? 'var(--Gray-400, #2c2c2c)' : 'var(--Gray-550, #444)'};
 
     //? Set border color by state
     border: 1px solid

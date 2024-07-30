@@ -9,35 +9,39 @@ const customStyles = {
         borderRadius: '8px',
         margin: '6px 0',
         border: '1px solid var(--Gray-500, #383838)',
-        zIndex: 2
+        zIndex: 2,
+        maxHeight: '218px',
+        overflowY: 'auto'
     }),
     menuList: (provided) => ({
         ...provided,
         padding: '8px',
         gap: '4px',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        maxHeight: '218px',
+        overflowY: 'auto'
     }),
     option: (provided, state) => ({
         ...provided,
         backgroundColor: state.isSelected ? '#141414' : '#1E1E1E',
         '&:hover': {
-            backgroundColor: state.isSelected ? '#141414' : '#2b2b2b'
+            backgroundColor: state.isDisabled ? 'none' : state.isSelected ? '#141414' : '#2b2b2b'
         },
         '&:active': {
             backgroundColor: state.isSelected ? '#141414' : '#424242'
         },
         borderRadius: '6px',
         padding: '4px 8px',
-        color: state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
+        color: state.isSelected ? '#fff' : state.isDisabled ? 'black' : 'var(--Gray-650, #707070)',
         width: '100%',
-        cursor: 'pointer',
+        cursor: state.isDisabled ? 'inherit' : 'pointer',
         fontSize: '14px',
         fontWeight: 500
     })
 };
 
-const Container = styled.div<{ $open?: boolean; $minWidth?: string }>`
+const Container = styled.div<{ $open?: boolean; $minWidth?: string, $isDisabled?: boolean }>`
     box-sizing: border-box;
 
     display: flex;
@@ -102,7 +106,7 @@ const ExecuteSelect = ({
 }: {
     value?: string;
     placeHolder?: string;
-    options: { label: string; value: string }[];
+    options: { label: string; value: string, isDisabled?: boolean }[];
     minWidth?: string;
     onChange: (v: string) => void;
 }) => {
@@ -120,6 +124,7 @@ const ExecuteSelect = ({
                 styles={customStyles}
                 placeholder={placeHolder}
                 onChange={(newValue) => {
+                    console.log(newValue);
                     onChange(newValue.value);
                     setOpen(false);
                 }}

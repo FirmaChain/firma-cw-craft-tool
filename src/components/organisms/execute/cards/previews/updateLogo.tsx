@@ -110,8 +110,8 @@ const ExecuteButtonTypo = styled.div`
 `;
 
 const ImageWrap = styled.div`
-    width: 90px;
-    height: 90px;
+    width: 72px;
+    height: 72px;
     flex-shrink: 0;
     border-radius: 100%;
     display: flex;
