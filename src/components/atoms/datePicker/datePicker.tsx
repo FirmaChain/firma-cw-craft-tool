@@ -5,6 +5,7 @@ import ExpirationSelect from '../select/expirationSelect';
 import Icons from '../icons';
 import { format, set } from 'date-fns';
 import IconButton from '../buttons/iconButton';
+import { getNextNearestDate } from '@/utils/time';
 
 const Container = styled.div`
     display: flex;
@@ -155,12 +156,14 @@ const HOURS = new Array(24).fill(null).map((_, idx) => {
     return { label: String(idx).padStart(2, '0'), value: String(idx) };
 });
 
-const MINUTES = new Array(60).fill(null).map((_, idx) => {
-    return { label: String(idx).padStart(2, '0'), value: String(idx) };
+const MINUTES = new Array(12).fill(null).map((_, idx) => {
+    const value = idx * 5;
+    return { label: String(value).padStart(2, '0'), value: String(value) };
 });
 
-const SECONDS = new Array(60).fill(null).map((_, idx) => {
-    return { label: String(idx).padStart(2, '0'), value: String(idx) };
+const SECONDS = new Array(12).fill(null).map((_, idx) => {
+    const value = idx * 5;
+    return { label: String(value).padStart(2, '0'), value: String(value) };
 });
 
 function toTimestamp(dateObj, hours, minutes, seconds) {
@@ -219,11 +222,12 @@ const CustomHeader = ({
 const ExpirationDatePicker = ({ setTargetTimestamp }: { setTargetTimestamp: (v: string) => void }) => {
     const [open, setOpen] = useState(false);
 
+    const now = getNextNearestDate();
     const [selected, setSelected] = useState({
         date: new Date(),
-        hour: HOURS[0].value,
-        min: MINUTES[0].value,
-        sec: SECONDS[0].value
+        hour: now.getHours().toString(),
+        min: now.getMinutes().toString(),
+        sec: now.getSeconds().toString()
     });
 
     const handleSelected = (id: string, value: string | Date) => {

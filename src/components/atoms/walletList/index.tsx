@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { v4 } from 'uuid';
 
@@ -62,6 +62,18 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
         }
     }, [isFetched]);
 
+    const deleteAllStatus = useMemo(() => {
+        if (walletList.length === 1) {
+            if (walletList[0].amount !== '' || walletList[0].recipient !== '') {
+                return false;
+            }
+        }
+
+        if (walletList.length <= 1) {
+            return true;
+        }
+    }, [walletList]);
+
     const handleAddWallet = () => {
         if (walletList.length < maxWalletCount) {
             setWalletList([...walletList, { recipient: '', amount: '', id: v4() }]);
@@ -123,7 +135,7 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
                         <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
                     </WalletCountWrapper>
                 </TotalWalletWrapper>
-                <DeleteAllButton disabled={walletList.length <= 1} $length={walletList.length} onClick={handleDeleteAll}>
+                <DeleteAllButton disabled={deleteAllStatus} $length={walletList.length} onClick={handleDeleteAll}>
                     <span className="button-text">Delete All</span>
                 </DeleteAllButton>
             </WalletListSummery>
