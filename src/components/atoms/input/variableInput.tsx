@@ -18,7 +18,7 @@ const StyledInput = styled.div<{
     align-items: center;
     justify-content: center;
 
-    background: ${({ $readOnly }) => $readOnly ? 'var(--Gray-400, #2c2c2c)' : 'var(--Gray-550, #444)'};
+    background: ${({ $readOnly }) => ($readOnly ? 'var(--Gray-550, #444)' : 'var(--Gray-400, #2c2c2c)')};
 
     //? Set border color by state
     border: 1px solid
@@ -163,9 +163,9 @@ const VariableInput = ({
                 //? Filter input string if valid regex provided
                 console.log(inputValue);
                 if (regex) {
-                    console.log("REGEX", regex);
+                    console.log('REGEX', regex);
                     inputValue = inputValue.replace(regex, '');
-                    console.log("inputValue", inputValue);
+                    console.log('inputValue', inputValue);
                 }
 
                 //? Slice remaining string if maxLength provided
@@ -226,20 +226,11 @@ const VariableInput = ({
                         >
                             <img src={IC_CALENDAR} alt="date-picker" style={{ width: '24px', height: '24px', cursor: 'pointer' }} />
                         </button>
-                        {/* <DatePicker
-                            selected={value ? new Date(Number(value)) : new Date()}
-                            shouldCloseOnSelect
-                            onChange={handleDateChange}
-                            showTimeSelect
-                            customInput={}
-                        /> */}
                     </div>
                 )}
             </StyledInput>
             <div style={{ paddingTop: errorMessage.length > 0 ? '4px' : 0, paddingLeft: '8px' }}>
-                {errorMessage.map((one, idx) => (
-                    <ErrorMessage key={key + '_' + idx}>{one}</ErrorMessage>
-                ))}
+                <ErrorMessage>{errorMessage[0]}</ErrorMessage>
             </div>
         </div>
     );

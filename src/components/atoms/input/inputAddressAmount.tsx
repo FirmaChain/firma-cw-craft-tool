@@ -42,10 +42,12 @@ const InputAddressAmount = ({
     const clearFromError = useFormStore((state) => state.clearFormError);
 
     const handleAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        const filtered = value.replace(/[^a-zA-Z0-9]/g, '');
+
+        if (FirmaUtil.isValidAddress(filtered) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
-        onChangeAddress(value.replace(/[^a-zA-Z0-9]/g, ''));
+        onChangeAddress(filtered);
     };
 
     const handleAmount = (value: string) => {
@@ -131,17 +133,16 @@ const InputAddressAmount = ({
                                 height: '32px',
                                 padding: '0',
                                 background: 'transparent',
-                                border: 'unset',
-                                cursor: 'pointer'
+                                border: 'unset'
                             }}
                             disabled={index === 1 && isLast}
                             onClick={handleRemoveWallet}
                         >
-                            {index === 1 && isLast ? 
-                                <img style={{ width: '32px', height: '32px' }} src={IC_MINUS_CIRCLE_DISABLE}/>
-                            :
+                            {index === 1 && isLast ? (
+                                <img style={{ width: '32px', height: '32px' }} src={IC_MINUS_CIRCLE_DISABLE} />
+                            ) : (
                                 <Icons.MinusCircle />
-                            }
+                            )}
                         </IconButton>
                     </div>
                 </div>

@@ -51,7 +51,7 @@ const useFormStore = create<FormProps>()(
                 if (!state.formError[error.id]) {
                     state.formError[error.id] = {};
                 }
-                state.formError[error.id][error.type] = error.message;
+                state.formError[error.id] = { [error.type]: error.message, ...state.formError[error.id] };
             }),
         clearFormError: (target) =>
             set((state) => {
