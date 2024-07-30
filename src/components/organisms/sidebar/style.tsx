@@ -82,6 +82,7 @@ export const AddressCard = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 4px;
 `;
 
 export const AddressText = styled.div`

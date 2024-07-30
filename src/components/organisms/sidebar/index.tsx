@@ -36,10 +36,11 @@ import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
 import Divider from '@/components/atoms/divider';
 import { IC_SOCIAL_FIRMACHAIN, IC_SOCIAL_MEDIUM, IC_SOCIAL_TELEGRAM, IC_SOCIAL_TWITTER } from '@/components/atoms/icons/pngIcons';
+import AddressBox from './addressBox';
 
 const SOCIAL_LIST = [
-    { Icon: <SocialIcon src={IC_SOCIAL_FIRMACHAIN}/>, socialLink: 'https://firmachain.org' },
-    { Icon: <SocialIcon src={IC_SOCIAL_MEDIUM}/>, socialLink: 'https://medium.com/firmachain' },
+    { Icon: <SocialIcon src={IC_SOCIAL_FIRMACHAIN} />, socialLink: 'https://firmachain.org' },
+    { Icon: <SocialIcon src={IC_SOCIAL_MEDIUM} />, socialLink: 'https://medium.com/firmachain' },
     { Icon: <SocialIcon src={IC_SOCIAL_TELEGRAM} />, socialLink: 'https://t.me/firmachain_announcement' },
     { Icon: <SocialIcon src={IC_SOCIAL_TWITTER} />, socialLink: 'https://twitter.com/firmachain' }
 ];
@@ -157,11 +158,7 @@ const Sidebar = () => {
                             </MenuItem>
                         </MenuListWrapper>
                         {isInit ? (
-                            <IconButton style={{ padding: 0 }} onClick={onClickAddress}>
-                                <AddressCard>
-                                    <AddressText>{shortenAddress(address, 10, 6)}</AddressText>
-                                </AddressCard>
-                            </IconButton>
+                            <AddressBox />
                         ) : (
                             <ColorButton
                                 width={'100%'}
