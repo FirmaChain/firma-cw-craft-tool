@@ -14,6 +14,7 @@ import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import { parseExpires } from '@/utils/common';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
+import IconButton from '@/components/atoms/buttons/iconButton';
 
 const MyAllowances = () => {
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
@@ -71,7 +72,16 @@ const MyAllowances = () => {
                     value={keyword}
                     onChange={handleSearchAddress}
                     adornment={{
-                        end: <Icons.Search width={'15px'} height={'15px'} />
+                        end: (
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                {keyword.length > 0 && (
+                                    <IconButton style={{ display: 'flex', padding: 0 }} onClick={() => setKeyword('')}>
+                                        <Icons.CloseIcon width="18px" height="18px" />
+                                    </IconButton>
+                                )}
+                                <Icons.Search width={'15px'} height={'15px'} />
+                            </div>
+                        )
                     }}
                     maxWidth="564px"
                 />

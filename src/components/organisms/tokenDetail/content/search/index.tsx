@@ -47,8 +47,8 @@ const EndAdornment = ({
 
             <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
                 <Icons.Search
-                    width="32px"
-                    height="32px"
+                    width="28px"
+                    height="28px"
                     fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
                     stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
                 />

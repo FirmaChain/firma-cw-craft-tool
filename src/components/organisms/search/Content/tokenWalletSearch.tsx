@@ -33,13 +33,11 @@ const EndAdornment = ({
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
-            {/* <SearchButton disabled={keyword === '' || disableSearch} onClick={onClickSearch}>
-                <span className="button-text">Search</span>
-            </SearchButton> */}
+
             <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
                 <Icons.Search
-                    width="32px"
-                    height="32px"
+                    width="28px"
+                    height="28px"
                     fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
                     stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
                 />

@@ -3,7 +3,7 @@ import { CardContainer, SectionContainer } from '../style';
 import useSearchStore from '../../searchStore';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
-import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
+import { IC_CLOSE, IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import JsonViewer from '@/components/atoms/viewer/jsonViewer';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -20,6 +20,7 @@ import { NETWORKS } from '@/constants/common';
 import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/preview/dashboard/tokenInfo/style';
 import Skeleton from '@/components/atoms/skeleton';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
+import IconButton from '@/components/atoms/buttons/iconButton';
 
 const TokenInfo = () => {
     const network = useSelector((v: rootState) => v.global.network);
@@ -356,7 +357,16 @@ const AllAccounts = () => {
                     value={keyword}
                     onChange={(v) => setKeyword(v)}
                     adornment={{
-                        end: <Icons.Search width={'15px'} height={'15px'} />
+                        end: (
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                {keyword.length > 0 && (
+                                    <IconButton style={{ display: 'flex', padding: 0 }} onClick={() => setKeyword('')}>
+                                        <Icons.CloseIcon width="18px" height="18px" />
+                                    </IconButton>
+                                )}
+                                <Icons.Search width={'15px'} height={'15px'} />
+                            </div>
+                        )
                     }}
                     maxWidth="564px"
                 />

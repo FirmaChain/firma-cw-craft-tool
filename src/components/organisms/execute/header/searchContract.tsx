@@ -20,8 +20,6 @@ const EndAdornment = ({
     onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
-    const _disableSearch = keyword === '' || keyword.length <= 44 || disableSearch;
-
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
@@ -30,12 +28,12 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
+            <IconButton style={{ padding: 0, display: 'flex' }} disabled={disableSearch} onClick={onClickSearch}>
                 <Icons.Search
-                    width="32px"
-                    height="32px"
-                    fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
-                    stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
+                    width="28px"
+                    height="28px"
+                    fill={disableSearch ? '#807E7E' : '#E6E6E6'}
+                    stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
                 />
             </IconButton>
         </div>
@@ -61,7 +59,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     }, [contractAddress]);
 
     const onClickSearch = () => {
-        if (previousKeywordRef.current === keyword) return;
+        if (keyword.length === 0 || previousKeywordRef.current === keyword) return;
         const valid = isValidAddress(keyword) && keyword.length > 44;
 
         if (valid) {
@@ -108,7 +106,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                 end: (
                     <EndAdornment
                         keyword={keyword}
-                        disableSearch={!isValidAddress(keyword)}
+                        disableSearch={keyword.length === 0 || !isValidAddress(keyword)}
                         onClickSearch={onClickSearch}
                         onClickClear={onClickClear}
                     />
