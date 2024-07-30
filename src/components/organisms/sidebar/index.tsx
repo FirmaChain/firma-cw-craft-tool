@@ -64,7 +64,7 @@ const Sidebar = () => {
     const onChangeSwitch = (type: CW_MODE_TYPE) => {
         GlobalActions.handleCw(type);
         switch (type) {
-            case "CW20":
+            case 'CW20':
                 if (location.pathname.includes('instantiate')) {
                     navigate(`/instantiate`);
                 } else if (location.pathname.includes('execute')) {
@@ -76,7 +76,7 @@ const Sidebar = () => {
                 }
                 break;
 
-            case "CW721":
+            case 'CW721':
                 if (location.pathname.includes('instantiate')) {
                     navigate(`/cw721/instantiate`);
                 } else if (location.pathname.includes('execute')) {
@@ -93,7 +93,7 @@ const Sidebar = () => {
     const onClickMenu = (e: any, path: string) => {
         e.preventDefault();
 
-        if (cwMode === "CW20") {
+        if (cwMode === 'CW20') {
             navigate(path);
         } else {
             navigate(`/cw721${path}`);
@@ -132,6 +132,7 @@ const Sidebar = () => {
         else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
     };
 
+    if (location.pathname === '/') return <></>;
     return (
         <div style={{ minWidth: '224px', height: '100vh' }}>
             <DrawerStyled>
@@ -180,9 +181,7 @@ const Sidebar = () => {
                                     width={'16px'}
                                     height={'16px'}
                                 />
-                                <MenuItemText selected={location.pathname.includes('/mytoken')}>
-                                    My Minted Tokens
-                                </MenuItemText>
+                                <MenuItemText selected={location.pathname.includes('/mytoken')}>My Minted Tokens</MenuItemText>
                             </MenuItem>
                         </MenuListWrapper>
                         {isInit ? (
