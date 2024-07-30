@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icons from '@/components/atoms/icons';
 import { ModalBase } from './style';
 import { useModalStore } from '@/hooks/useModal';
-import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_FIRMA_LOGO, IC_NAVIGATION } from '@/components/atoms/icons/pngIcons';
+import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_FIRMA_LOGO, IC_NAVIGATION, IC_SYMBOL_GRAY } from '@/components/atoms/icons/pngIcons';
 import RequestQR from '../requestQR';
 import { useSnackbar } from 'notistack';
 import useInstantiateStore from '../instantiate/instaniateStore';
@@ -125,7 +125,7 @@ const InfoBoxSection = styled.div`
 
     .amount-box {
         display: flex;
-        align-items: flex-end;
+        align-items: baseline;
         gap: 6px;
     }
 
@@ -179,6 +179,10 @@ const FeeBox = styled.div`
     margin-bottom: 36px;
 
     .key {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
         color: var(--Gray-650, #707070);
 
         /* Body/Body3 - Rg */
@@ -204,6 +208,7 @@ const FeeBox = styled.div`
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+        gap: 2px;
     }
 
     .fee-amount {
@@ -228,19 +233,22 @@ const FeeBox = styled.div`
     }
 
     .user-balance {
-        color: var(--Gray-750, #999);
-        text-align: right;
-
-        /* Body/Body4 - Rg */
-        font-family: 'General Sans Variable';
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 14px; /* 116.667% */
-
         display: flex;
         flex-direction: row;
         align-items: center;
+
+        text-align: right;
+
+        .typo {
+            padding-right: 4px;
+            color: var(--Gray-750, #999);
+            /* Body/Body4 - Rg */
+            font-family: 'General Sans Variable';
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 14px; /* 116.667% */
+        }
 
         .logo {
             width: 12px;
@@ -609,12 +617,13 @@ const InstantitateModal = ({
 
                     <FeeBox>
                         <div className="key">
-                            Instantiation Fee <span className="symbol">(FCT)</span>
+                            <div>Instantiation Fee</div>
+                            <div className="symbol">(FCT)</div>
                         </div>
                         <div className="fee-amount-box">
                             <div className="fee-amount">
                                 <div>0.03833</div>
-                                <img src={IC_FIRMA_LOGO} alt="firma-logo" className="logo" />
+                                <img src={IC_SYMBOL_GRAY} alt="firma-logo" className="logo" />
                             </div>
                             <div
                                 className="user-balance"
@@ -623,8 +632,13 @@ const InstantitateModal = ({
                                 data-tooltip-wrapper="span"
                                 data-tooltip-place="bottom"
                             >
-                                (My balance : {balance ? parseAmountWithDecimal2(balance, '6', true) : 'Loading'})
-                                <img src={IC_FIRMA_LOGO} alt="firma-logo" className="logo" />
+                                <span className="typo">
+                                    (My balance : {balance ? parseAmountWithDecimal2(balance, '6', true) : 'Loading'}
+                                </span>
+                                <img src={IC_SYMBOL_GRAY} alt="firma-logo" className="" style={{ width: '12px', height: '12px' }} />
+                                <span className="typo" style={{ padding: 0 }}>
+                                    )
+                                </span>
                             </div>
                         </div>
                     </FeeBox>

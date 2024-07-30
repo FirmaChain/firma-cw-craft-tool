@@ -41,3 +41,4 @@ export const IC_SOCIAL_FIRMACHAIN = PUBLIC_URL + 'ic_social_firmachain.png';
 export const IC_SOCIAL_MEDIUM = PUBLIC_URL + 'ic_social_medium.png';
 export const IC_SOCIAL_TELEGRAM = PUBLIC_URL + 'ic_social_telegram.png';
 export const IC_SOCIAL_TWITTER = PUBLIC_URL + 'ic_social_twitter.png';
+export const IC_SYMBOL_GRAY = PUBLIC_URL + 'ic_symbol_gray.png';
