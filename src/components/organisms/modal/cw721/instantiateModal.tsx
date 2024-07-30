@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import styled from 'styled-components';
 
 import { ModalBase } from '../style';
-import { IC_CEHCK_ROUND, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
+import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
 import { useModalStore } from '@/hooks/useModal';
 import RequestQR from '../../requestQR';
 import { rootState } from '@/redux/reducers';
@@ -430,7 +430,7 @@ const InstantitateModal = ({
     const { firmaSDK } = useExecuteHook();
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
-    
+
     const navigate = useNavigate();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -450,7 +450,7 @@ const InstantitateModal = ({
     }, []);
 
     useEffect(() => {
-        console.log("status", status);
+        console.log('status', status);
     }, [status]);
 
     const parsedData = useMemo(() => {
@@ -476,7 +476,7 @@ const InstantitateModal = ({
             ...rest
         };
     }, [result]);
-    
+
     const onCloseModal = () => {
         closeModal(id);
     };
@@ -610,7 +610,45 @@ const InstantitateModal = ({
                     </ResultsButtonWrap>
                 </div>
             )}
-            {status === 'failure' && <></>}
+            {status === 'failure' && (
+                <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+                    <ResultsHeader>
+                        <ResultIcon src={IC_CIRCLE_FAIL} alt={'Modal Results'} />
+                        <ResultsTitleWrap>
+                            <ResultsTitleExecuteTypo>{datas.header.title}</ResultsTitleExecuteTypo>
+                            <ResultsTitleFailedTypo>Failed</ResultsTitleFailedTypo>
+                        </ResultsTitleWrap>
+                        {/* <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage> */}
+                    </ResultsHeader>
+                    <ResultsContentWrap>
+                        <ResultsContentSummeryWrap>
+                            <ResultFailedTypo>{`${datas.header.title} has been Failed.`}</ResultFailedTypo>
+                            <ResultFailedDesc>Please try again later.</ResultFailedDesc>
+                        </ResultsContentSummeryWrap>
+                        {result?.signData && (
+                            <>
+                                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                <ResultsContentHashWrap>
+                                    <TransactionItem
+                                        label={'Transaction Hash'}
+                                        hash={getTransactionHash(result?.signData)}
+                                        onClickHash={(hash) => onClickTransactionHash(hash)}
+                                    />
+                                </ResultsContentHashWrap>
+                            </>
+                        )}
+                    </ResultsContentWrap>
+
+                    <ResultsConfirmButton
+                        style={{ width: '100%' }}
+                        onClick={() => {
+                            onCloseModal();
+                        }}
+                    >
+                        <ResultsConfirmButtonTypo>Confirm</ResultsConfirmButtonTypo>
+                    </ResultsConfirmButton>
+                </div>
+            )}
         </ModalBase>
     );
 };
