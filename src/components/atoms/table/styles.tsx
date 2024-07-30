@@ -51,6 +51,7 @@ export const TableContainer = styled.div`
 
     width: 100%;
     height: 100%;
+    min-height: 147px;
 
     & ::-webkit-scrollbar {
         display: none;

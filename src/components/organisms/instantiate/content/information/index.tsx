@@ -197,7 +197,6 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenLogoUrl',
                         placeHolder: 'ex) https://example.thisismy.token.jpg',
                         onChange: handleTokenLogoUrl,
-                        emptyErrorMessage: 'Please input valid token logo url.',
                         imgPreview: true,
                         regex: /[^a-zA-Z0-9!#$&'()*+,/:;=?@[\]_.~%-]/g
                     }}
