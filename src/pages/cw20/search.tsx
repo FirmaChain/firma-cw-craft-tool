@@ -3,7 +3,7 @@ import { Header, Content } from '@/components/organisms/search';
 import { Container } from '@/styles/instantiate';
 import useSearchStore from '@/components/organisms/search/searchStore';
 
-const SearchPage = () => {
+const CW20SearchPage = () => {
     useEffect(() => {
         return () => useSearchStore.getState().clearAll();
     }, []);
@@ -16,4 +16,4 @@ const SearchPage = () => {
     );
 };
 
-export default React.memo(SearchPage);
+export default React.memo(CW20SearchPage);

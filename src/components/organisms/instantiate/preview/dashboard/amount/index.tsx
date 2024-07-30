@@ -37,7 +37,7 @@ interface IProps {
 const CAP_TOOLTIP_TEXT = `Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.\nYou can mint more tokens by subtracting\nthe Total Supply from the Minter Cap.`;
 
 const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply, walletList, decimals }: IProps) => {
-    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+    const contractMode = useSelector((state: rootState) => state.global.contractMode);
 
     const [toggleMinterDetail, setToggleMinterDetail] = useState<boolean>(false);
 
@@ -45,7 +45,7 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
         setToggleMinterDetail(isOpen);
     };
 
-    const isBasic = cw20Mode === 'BASIC';
+    const isBasic = contractMode === 'BASIC';
 
     const currentMinterAddress = useMemo(() => {
         if (isBasic) {

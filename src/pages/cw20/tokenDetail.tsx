@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { rootState } from '../redux/reducers';
-import { Header, TokenDetailContent } from '../components/organisms/tokenDetail';
-import useTokenDetail from '../hooks/useTokenDetail';
-import useApollo from '../hooks/useApollo';
-import { getTransactionsByAddress } from '../apollo/queries';
-import { ITransaction } from '../interfaces/cw20';
-import { determineMsgTypeAndSpender } from '../utils/common';
+// import { Header, TokenDetailContent } from '../components/organisms/tokenDetail';
+import { Header, TokenDetailContent } from '@/components/organisms/tokenDetail';
 import { Container } from '@/styles/instantiate';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
+import { rootState } from '@/redux/reducers';
+import useTokenDetail from '@/hooks/useTokenDetail';
+import useApollo from '@/hooks/useApollo';
+import { getTransactionsByAddress } from '@/apollo/queries';
+import { determineMsgTypeAndSpender } from '@/utils/common';
+import { ITransaction } from '@/interfaces/cw20';
 
 const Cw20TokenDetail = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);

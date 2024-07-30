@@ -16,7 +16,7 @@ interface IProps {
 }
 
 const Minterble = ({ decimals }: IProps) => {
-    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+    const contractMode = useSelector((state: rootState) => state.global.contractMode);
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
@@ -61,7 +61,7 @@ const Minterble = ({ decimals }: IProps) => {
     };
 
     useEffect(() => {
-        if (cw20Mode === 'BASIC') {
+        if (contractMode === 'BASIC') {
             handleMinterAddress('');
             clearFormError({ id: 'minterAddress' });
         }
@@ -70,7 +70,7 @@ const Minterble = ({ decimals }: IProps) => {
             handleMinterCap('');
             clearFormError({ id: 'minterCap' });
         }
-    }, [cw20Mode, minterble]);
+    }, [contractMode, minterble]);
 
     return (
         <MinterbleWrapper>
@@ -80,7 +80,7 @@ const Minterble = ({ decimals }: IProps) => {
             </MinterbleOption>
             {minterble && (
                 <Fragment>
-                    {cw20Mode === 'ADVANCED' && (
+                    {contractMode === 'ADVANCED' && (
                         <LabelInput
                             labelProps={{ label: 'Minter Address', tooltip: ADDRESS_TOOLTIP_TEXT }}
                             inputProps={{
@@ -95,7 +95,7 @@ const Minterble = ({ decimals }: IProps) => {
                     )}
 
                     <LabelInput
-                        labelProps={{ label: 'Minter Cap', tooltip: cw20Mode === 'BASIC' ? CAP_TOOLTIP_TEXT : '' }}
+                        labelProps={{ label: 'Minter Cap', tooltip: contractMode === 'BASIC' ? CAP_TOOLTIP_TEXT : '' }}
                         inputProps={{
                             value: minterCap,
                             formId: 'minterCap',

@@ -9,7 +9,6 @@ import { rootState } from '@/redux/reducers';
 import useExecuteStore from '../hooks/useExecuteStore';
 import { isValidAddress } from '@/utils/address';
 import useExecuteActions from '../action';
-import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
 
 const Container = styled.div`
     width: 100%;
@@ -39,19 +38,6 @@ const DimBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`;
-
-const LogoBackground = styled.div`
-    position: fixed;
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .logo {
-        width: 480px;
-    }
 `;
 
 const Contents = () => {

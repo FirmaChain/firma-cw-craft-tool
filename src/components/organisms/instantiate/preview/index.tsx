@@ -24,7 +24,7 @@ const Preview = ({ isBasic }: IProps) => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
-    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+    const contractMode = useSelector((state: rootState) => state.global.contractMode);
 
     const tokenName = useInstantiateStore((v) => v.tokenName);
     const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
@@ -47,10 +47,10 @@ const Preview = ({ isBasic }: IProps) => {
 
     const codeId = useMemo(() => {
         const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        const cw20CodeId = cw20Mode === 'BASIC' ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
+        const cw20CodeId = contractMode === 'BASIC' ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
 
         return cw20CodeId;
-    }, [network, cw20Mode]);
+    }, [network, contractMode]);
 
     const handleInstantiate = () => {
         if (isInit) {

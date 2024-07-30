@@ -1,26 +1,26 @@
+import ModeSwitch from '@/components/atoms/switch/modeSwitch';
 import { HeaderBox, HeaderTitle, HeaderWrap } from './style';
-import { CW20_MODE, CW20_MODE_TYPE } from '@/constants/common';
+import { CONTRACT_MODES, CONTRACT_MODE_TYPE } from '@/constants/common';
 import { GlobalActions } from '@/redux/actions';
-import ModeSwitch from './modeSwitch';
 
 const Header = () => {
     const onChangeMenu = (value: string) => {
-        if (isCW20Mode(value)) {
-            GlobalActions.handleCw20Mode(value as CW20_MODE_TYPE);
+        if (hasMode(value)) {
+            GlobalActions.handleMode(value as CONTRACT_MODE_TYPE);
         } else {
-            console.error(`Invalid value for CW20 mode: ${value}`);
+            console.error(`Invalid value for mode: ${value}`);
         }
     };
 
-    const isCW20Mode = (value: string): value is CW20_MODE_TYPE => {
-        return CW20_MODE.includes(value as CW20_MODE_TYPE);
+    const hasMode = (value: string): value is CONTRACT_MODE_TYPE => {
+        return CONTRACT_MODES.includes(value as CONTRACT_MODE_TYPE);
     };
 
     return (
         <HeaderBox>
             <HeaderWrap>
                 <HeaderTitle>Instantitate</HeaderTitle>
-                <ModeSwitch leftMenu={CW20_MODE[0]} rightMenu={CW20_MODE[1]} onChangeMenu={onChangeMenu} />
+                <ModeSwitch leftMenu={CONTRACT_MODES[0]} rightMenu={CONTRACT_MODES[1]} onChangeMenu={onChangeMenu} />
             </HeaderWrap>
         </HeaderBox>
     );

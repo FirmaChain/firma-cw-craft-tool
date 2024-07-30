@@ -51,9 +51,9 @@ const Dashboard = ({
     marketingAddress,
     marketingProject
 }: IProps) => {
-    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+    const contractMode = useSelector((state: rootState) => state.global.contractMode);
 
-    const showAdvancedInfo = Boolean(cw20Mode === 'ADVANCED' && (label || decimals || marketingAddress || marketingProject));
+    const showAdvancedInfo = Boolean(contractMode === 'ADVANCED' && (label || decimals || marketingAddress || marketingProject));
 
     return (
         <DashboardWrapper>

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
-import { CW_TYPE } from '@/constants/common';
+import { CW_MODE_TYPE } from '@/constants/common';
 import { ActiveIndicator, SwitchButton, SwitchContainer, SwitchLabel } from './style';
 
 interface IProps {
-    onChange: (type: CW_TYPE) => void;
+    onChange: (type: CW_MODE_TYPE) => void;
 }
 
 const CwSwitch = ({ onChange }: IProps) => {
-    const [active, setActive] = useState<CW_TYPE>('CW20');
+    const [active, setActive] = useState<CW_MODE_TYPE>('CW20');
 
-    const onChangeActiveType = (value: CW_TYPE) => {
+    const onChangeActiveType = (value: CW_MODE_TYPE) => {
         setActive(value);
         onChange(value);
     };
@@ -21,10 +21,7 @@ const CwSwitch = ({ onChange }: IProps) => {
             <SwitchButton onClick={() => onChangeActiveType('CW20')}>
                 <SwitchLabel $active={active === 'CW20' ? 'true' : 'false'}>CW 20</SwitchLabel>
             </SwitchButton>
-            <SwitchButton
-                disabled
-                // onClick={() => onChangeActiveType('CW721')}
-            >
+            <SwitchButton onClick={() => onChangeActiveType('CW721')}>
                 <SwitchLabel $active={active === 'CW721' ? 'true' : 'false'}>CW 721</SwitchLabel>
             </SwitchButton>
         </SwitchContainer>

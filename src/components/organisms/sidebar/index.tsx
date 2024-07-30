@@ -22,7 +22,7 @@ import {
     SwitchWrapper
 } from './style';
 import CwSwitch from './cwSwitch';
-import { CW_TYPE, NETWORK_TYPE } from '@/constants/common';
+import { CW_MODE_TYPE, NETWORK_TYPE } from '@/constants/common';
 import Icons from '@/components/atoms/icons';
 import { MenuItemText } from './style';
 import ColorButton from '@/components/atoms/buttons/colorButton';
@@ -47,7 +47,7 @@ const SOCIAL_LIST = [
 
 const Sidebar = () => {
     const { isInit, address } = useSelector((state: rootState) => state.wallet);
-    const { network } = useSelector((state: rootState) => state.global);
+    const { network, cwMode } = useSelector((state: rootState) => state.global);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -61,13 +61,43 @@ const Sidebar = () => {
         setBlockExplorerLink(link);
     }, [network]);
 
-    const onChangeSwitch = (type: CW_TYPE) => {
+    const onChangeSwitch = (type: CW_MODE_TYPE) => {
         GlobalActions.handleCw(type);
+        switch (type) {
+            case "CW20":
+                if (location.pathname.includes('instantiate')) {
+                    navigate(`/instantiate`);
+                } else if (location.pathname.includes('execute')) {
+                    navigate(`/execute`);
+                } else if (location.pathname.includes('search')) {
+                    navigate(`/search`);
+                } else if (location.pathname.includes('mynft')) {
+                    navigate(`/mytoken`);
+                }
+                break;
+
+            case "CW721":
+                if (location.pathname.includes('instantiate')) {
+                    navigate(`/cw721/instantiate`);
+                } else if (location.pathname.includes('execute')) {
+                    navigate(`/cw721/execute`);
+                } else if (location.pathname.includes('search')) {
+                    navigate(`/cw721/search`);
+                } else if (location.pathname.includes('mytoken')) {
+                    navigate(`/cw721/mynft`);
+                }
+                break;
+        }
     };
 
     const onClickMenu = (e: any, path: string) => {
         e.preventDefault();
-        navigate(path);
+
+        if (cwMode === "CW20") {
+            navigate(path);
+        } else {
+            navigate(`/cw721${path}`);
+        }
     };
 
     const onClickConnectWallet = () => {
@@ -102,15 +132,13 @@ const Sidebar = () => {
         else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
     };
 
-    if (location.pathname === '/') return <></>;
-
     return (
         <div style={{ minWidth: '224px', height: '100vh' }}>
             <DrawerStyled>
                 <SidebarWrapper>
                     <FeatureWrapper>
                         <LogoWrapper>
-                            <Link to={{ pathname: '/instantiate' }}>
+                            <Link to={{ pathname: '/' }}>
                                 <Icons.FirmaCraft width={'132px'} height={'34px'} />
                             </Link>
                         </LogoWrapper>
@@ -122,37 +150,37 @@ const Sidebar = () => {
                         <MenuListWrapper>
                             <MenuItem onClick={(e) => onClickMenu(e, '/instantiate')}>
                                 <Icons.PlusCircle
-                                    fill={'/' + location.pathname.split('/')[1] === '/instantiate' ? '#e6e6e6' : '#807E7E'}
+                                    fill={location.pathname.includes('/instantiate') ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
-                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/instantiate'}>Instantiate</MenuItemText>
+                                <MenuItemText selected={location.pathname.includes('/instantiate')}>Instantiate</MenuItemText>
                             </MenuItem>
                             <MenuItem onClick={(e) => onClickMenu(e, '/execute')}>
                                 <Icons.Setting
-                                    fill={'/' + location.pathname.split('/')[1] === '/execute' ? '#e6e6e6' : '#807E7E'}
+                                    fill={location.pathname.includes('/execute') ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
-                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/execute'}>Execute</MenuItemText>
+                                <MenuItemText selected={location.pathname.includes('/execute')}>Execute</MenuItemText>
                             </MenuItem>
                             <Divider $direction="horizontal" $color="var(--Gray-450, #313131)" />
                             <MenuItem onClick={(e) => onClickMenu(e, '/search')}>
                                 <Icons.Search
-                                    fill={'/' + location.pathname.split('/')[1] === '/search' ? '#e6e6e6' : '#807E7E'}
-                                    stroke={'/' + location.pathname.split('/')[1] === '/search' ? '#e6e6e6' : '#807E7E'}
+                                    fill={location.pathname.includes('/search') ? '#e6e6e6' : '#807E7E'}
+                                    stroke={location.pathname.includes('/search') ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
-                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/search'}>Search</MenuItemText>
+                                <MenuItemText selected={location.pathname.includes('/search')}>Search</MenuItemText>
                             </MenuItem>
                             <MenuItem onClick={(e) => onClickMenu(e, '/mytoken')}>
                                 <Icons.Coins
-                                    fill={'/' + location.pathname.split('/')[1] === '/mytoken' ? '#e6e6e6' : '#807E7E'}
+                                    fill={location.pathname.includes('/mytoken') ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
-                                <MenuItemText selected={'/' + location.pathname.split('/')[1] === '/mytoken'}>
+                                <MenuItemText selected={location.pathname.includes('/mytoken')}>
                                     My Minted Tokens
                                 </MenuItemText>
                             </MenuItem>

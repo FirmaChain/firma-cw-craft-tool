@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom';
-import Contents from '../components/organisms/execute/contents';
-import Header from '../components/organisms/execute/header';
-import { Container } from '../styles/instantiate';
 import { useEffect } from 'react';
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+import Header from '@/components/organisms/execute/header';
+import Contents from '@/components/organisms/execute/contents';
+import { Container } from '@/styles/instantiate';
+import React from 'react';
 
-const Execute = () => {
+const CW20Execute = () => {
     const query = new URLSearchParams(useLocation().search);
     const contractAddress = query.get('contractAddress');
 
@@ -24,4 +25,4 @@ const Execute = () => {
     );
 };
 
-export default Execute;
+export default React.memo(CW20Execute);

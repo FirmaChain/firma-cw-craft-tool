@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Container, MainContent } from '../styles/instantiate';
-import { Content, Header, Preview } from '../components/organisms/instantiate';
+
+import { Box, Container, MainContent } from '../../styles/instantiate';
+import { Content, Header, Preview } from '../../components/organisms/instantiate';
 import { rootState } from '@/redux/reducers';
 import useFormStore from '@/store/formStore';
 import { addDecimals } from '@/utils/common';
@@ -9,13 +10,13 @@ import { GlobalActions } from '@/redux/actions';
 import useInstantiateStore from '@/components/organisms/instantiate/instaniateStore';
 
 const Cw20Instantiate = () => {
-    const cw20Mode = useSelector((state: rootState) => state.global.cw20Mode);
+    const contractMode = useSelector((state: rootState) => state.global.contractMode);
     const walletList = useInstantiateStore((v) => v.walletList);
 
     const clearForm = useFormStore((state) => state.clearForm);
     const clearInput = useInstantiateStore((v) => v.clearForm);
 
-    const isBasic = cw20Mode === 'BASIC';
+    const isBasic = contractMode === 'BASIC';
 
     useEffect(() => {
         const sumAmount = addDecimals(...walletList.map((one) => one.amount));
@@ -26,7 +27,7 @@ const Cw20Instantiate = () => {
 
     useEffect(() => {
         return () => {
-            GlobalActions.handleCw20Mode('BASIC');
+            GlobalActions.handleMode('BASIC');
             clearForm();
             clearInput();
         };
