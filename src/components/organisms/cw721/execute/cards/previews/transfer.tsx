@@ -1,25 +1,11 @@
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import {
-    addStringAmount,
-    formatWithCommas,
-    getTokenAmountFromUToken,
-    getUTokenAmountFromToken,
-    subtractStringAmount
-} from '@/utils/balance';
-import { useCallback, useEffect, useState } from 'react';
+import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { shortenAddress } from '@/utils/common';
-import { isValidAddress } from '@/utils/address';
-import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
-import useExecuteStore from '../../hooks/useCW721ExecuteStore';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import useExecuteActions from '../../hooks/useCW721ExecuteAction';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 
 const Container = styled.div`
     width: 100%;
@@ -177,109 +163,10 @@ const ButtonWrap = styled.div`
 `;
 
 const TransferPreview = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    // const fctBalance = useExecuteStore((state) => state.fctBalance);
-    // const cw20Balance = useExecuteStore((state) => state.cw20Balance);
-    // const transferList = useExecuteStore((state) => state.transferList);
-    // const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    // const setIsFetched = useExecuteStore((state) => state.setIsFetched);
-    // const clearTransfer = useExecuteStore((state) => state.clearTransfer);
-
-    // const { setCw20Balance } = useExecuteActions();
-
-    const modal = useModalStore();
-
-    const [totalTransferAmount, setTotalTransferAmount] = useState<string>('0');
-    const [updatedAmount, setUpdatedAmount] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    // const calculateTotalBalance = useCallback(() => {
-    //     let calcTransferAmount = '0';
-    //     let allAddressesValid = true;
-    //     let allAmountsValid = true;
-
-    //     for (const wallet of transferList) {
-    //         if (!isValidAddress(wallet.recipient)) {
-    //             allAddressesValid = false;
-    //         }
-    //         if (!wallet.amount || wallet.amount === '') {
-    //             allAmountsValid = false;
-    //         }
-    //         calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
-    //     }
-
-    //     console.log('allAddressesValid', allAddressesValid);
-    //     console.log('allAmountsValid', allAmountsValid);
-    //     const remainAmount = subtractStringAmount(cw20Balance, getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
-    //     setUpdatedAmount(remainAmount);
-
-    //     setIsEnableButton(allAddressesValid && allAmountsValid);
-    //     setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
-    // }, [transferList, cw20Balance, tokenInfo]);
-
-    // useEffect(() => {
-    //     calculateTotalBalance();
-    // }, [transferList, calculateTotalBalance]);
-
-    const onClickTransfer = () => {
-        const convertWalletList = [];
-        let totalAmount = '0';
-        // let feeAmount = transferList.length * 15000;
-
-        // for (const wallet of transferList) {
-        //     const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
-        //     convertWalletList.push({
-        //         recipient: wallet.recipient,
-        //         amount: amount
-        //     });
-        //     totalAmount = addStringAmount(totalAmount, amount);
-        // }
-
-        // const params = {
-        //     header: {
-        //         title: 'Transfer'
-        //     },
-        //     content: {
-        //         symbol: tokenInfo.symbol,
-        //         decimals: tokenInfo.decimals.toString(),
-        //         fctAmount: fctBalance,
-        //         feeAmount: feeAmount.toString(),
-        //         list: [
-        //             {
-        //                 label: 'Total Transfer Amount',
-        //                 value: totalTransferAmount,
-        //                 type: 'amount'
-        //             },
-        //             {
-        //                 label: 'Total Wallet Count',
-        //                 value: convertWalletList.length.toString(),
-        //                 type: 'wallet-count'
-        //             }
-        //         ]
-        //     },
-        //     contract: contractAddress,
-        //     msg: convertWalletList
-        // };
-
-        // modal.openModal({
-        //     modalType: 'custom',
-        //     _component: ({ id }) => (
-        //         <QRCodeModal
-        //             module="/cw20/transfer"
-        //             id={id}
-        //             params={params}
-        //             onClickConfirm={() => {
-        //                 clearTransfer();
-        //                 setIsFetched(true);
-        //                 setCw20Balance(contractAddress, address);
-        //             }}
-        //         />
-        //     )
-        // });
-    };
+    const onClickTransfer = () => {};
 
     return (
         <Container>

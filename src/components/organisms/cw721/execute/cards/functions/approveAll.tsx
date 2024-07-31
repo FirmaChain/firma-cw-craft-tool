@@ -51,7 +51,7 @@ enum ExpirationType {
     Forever = 'Forever'
 }
 
-const Approve = () => {
+const ApproveAll = () => {
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -67,13 +67,6 @@ const Approve = () => {
             clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
-        }
-    };
-
-    const handleChangeAmount = (value: string) => {
-        const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        if (!isValidFormat) {
-            return;
         }
     };
 
@@ -112,50 +105,26 @@ const Approve = () => {
         <Container>
             <HeaderWrap>
                 <TitleWrap>
-                    <HeaderTitleTypo>Approve</HeaderTitleTypo>
-                    <HeaderDescTypo>Give permission for another address to manage a specific NFT</HeaderDescTypo>
+                    <HeaderTitleTypo>Approve All</HeaderTitleTypo>
+                    <HeaderDescTypo>Give permission for another address to manage all NFTs</HeaderDescTypo>
                 </TitleWrap>
             </HeaderWrap>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
                 {/* Address / Amount Input */}
-                <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', width: '100%' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', gap: '8px' }}>
-                            <LabelInput
-                                labelProps={{ label: 'Recipient Address' }}
-                                inputProps={{
-                                    formId: `${inputId}_ADDRESS`,
-                                    value: '',
-                                    onChange: handleChangeAddress,
-                                    placeHolder: 'Input Wallet Address',
-                                    emptyErrorMessage: 'Please input firmachain wallet address'
-                                }}
-                            />
-                        </div>
 
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'flex-start',
-                                minWidth: '212px',
-                                gap: '8px'
-                            }}
-                        >
-                            <LabelInput
-                                labelProps={{ label: 'Token ID' }}
-                                inputProps={{
-                                    formId: `${inputId}_TOKEN_ID`,
-                                    value: '',
-                                    onChange: handleChangeAmount,
-                                    placeHolder: '0',
-                                    type: 'number',
-                                    textAlign: 'right'
-                                }}
-                            />
-                        </div>
-                    </div>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', gap: '8px' }}>
+                    <LabelInput
+                        labelProps={{ label: 'Recipient Address' }}
+                        inputProps={{
+                            formId: `${inputId}_ADDRESS`,
+                            value: '',
+                            onChange: handleChangeAddress,
+                            placeHolder: 'Input Wallet Address',
+                            emptyErrorMessage: 'Please input firmachain wallet address'
+                        }}
+                    />
                 </div>
+
                 {/* Expiration Input */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <InputTitle>Expiration</InputTitle>
@@ -198,4 +167,4 @@ const Approve = () => {
     );
 };
 
-export default Approve;
+export default ApproveAll;

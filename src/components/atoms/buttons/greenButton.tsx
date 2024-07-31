@@ -22,7 +22,7 @@ const GreenButton = styled.button<{ disabled?: boolean }>`
 
     //? button text
     .button-text {
-        color: ${({ disabled }) => (disabled ? 'var(--Gray-450, #313131)' : 'var(--Gray-100, #121212)')};
+        color: ${({ disabled }) => (disabled ? 'var(--Gray-450, #444)' : 'var(--Gray-100, #121212)')};
         text-align: center;
         font-family: 'General Sans Variable';
         font-size: 16px;

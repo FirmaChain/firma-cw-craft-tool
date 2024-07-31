@@ -64,13 +64,13 @@ const INIT_CONTRACT_INFO: ContractInfo = {
         label: '',
         created: {
             block_height: '',
-            tx_index: ''
+            tx_index: '',
         },
         ibc_port_id: '',
         extension: {
-            '@type': ''
-        }
-    }
+            "@type": '',
+        },
+    },
 };
 const INIT_NFT_CONTRACT_INFO: Cw721ContractInfo = { name: '', symbol: '' };
 const INIT_OWNERSHIP_INFO: CwOwnershipInfo = { owner: '', pending_owner: '', pending_expiry: { at_height: 0 }}
@@ -162,6 +162,9 @@ const useCW721ExecuteStore = create<FormProps>()(
             }),
         clearForm: () => {
             set((state) => {
+                state.contractInfo = INIT_CONTRACT_INFO;
+                state.nftContractInfo = INIT_NFT_CONTRACT_INFO;
+                
                 state.contractAddress = '';
                 state.selectMenu = INIT_SELECT_MENU;
                 state.mint = INIT_MINT;
@@ -172,7 +175,7 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.approveAll = INIT_APPROVE_ALL;
                 state.revokeAll = INIT_REVOKE_ALL;
                 state.updateOwnershipTransfer = INIT_UPDATE_OWNERSHIP_TRANSFER;
-            });
+            })
         }
     }))
 );

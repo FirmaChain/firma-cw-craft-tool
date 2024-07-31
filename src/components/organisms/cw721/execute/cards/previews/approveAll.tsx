@@ -111,7 +111,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     return <></>;
 };
 
-const ApprovePreview = () => {
+const ApproveAllPreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     return (
@@ -120,7 +120,7 @@ const ApprovePreview = () => {
                 <ItemWrap>
                     <ItemLabelWrap>
                         <ItemLabelIcon src={IC_COINS_HAND} alt={'approve-nft'} />
-                        <ItemLabelTypo>Approve NFT</ItemLabelTypo>
+                        <ItemLabelTypo>Approve All NFTs</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
                         <ArrowToggleButton onToggle={setIsOpen} />
@@ -134,10 +134,6 @@ const ApprovePreview = () => {
                             <AccordionTypo $disabled>Wallet Address</AccordionTypo>
                         </AccordionRow>
                         <AccordionRow>
-                            <img src={IC_ID_CIRCLE} alt="token-id" />
-                            <AccordionTypo $disabled>Token ID</AccordionTypo>
-                        </AccordionRow>
-                        <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
                             <ExpirationBox />
                         </AccordionRow>
@@ -146,11 +142,11 @@ const ApprovePreview = () => {
             </ContentWrap>
             <ButtonWrap>
                 <GreenButton disabled>
-                    <div className="button-text">Approve</div>
+                    <div className="button-text">Approve All</div>
                 </GreenButton>
             </ButtonWrap>
         </Container>
     );
 };
 
-export default ApprovePreview;
+export default ApproveAllPreview;

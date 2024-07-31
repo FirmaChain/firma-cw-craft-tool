@@ -15,6 +15,10 @@ import Transfer from './functions/transfer';
 import Approve from './functions/approve';
 import UpdateOwnershipRenounce from './functions/updateOwnershipRenounce';
 import UpdateOwnershipAccept from './functions/updateOwnershipAccept';
+import Revoke from './functions/revoke';
+import ApproveAll from './functions/approveAll';
+import RevokeAll from './functions/revokeAll';
+import UpdateOwnershipTransfer from './functions/updateOwnershipTransfer';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -89,7 +93,6 @@ const basicMenuItems: IMenuItem[] = [
     { value: 'approve', label: 'Approve' },
     { value: 'revoke', label: 'Revoke' },
     { value: 'approveAll', label: 'Approve All' },
-    { value: 'revoke', label: 'Revoke' },
     { value: 'revokeAll', label: 'Revoke All' },
     { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer' },
     { value: 'updateOwnershipAccept', label: 'Update Ownership Accept' },
@@ -104,7 +107,6 @@ const advancedMenuItems: IMenuItem[] = [
     { value: 'approve', label: 'Approve' },
     { value: 'revoke', label: 'Revoke' },
     { value: 'approveAll', label: 'Approve All' },
-    { value: 'revoke', label: 'Revoke' },
     { value: 'revokeAll', label: 'Revoke All' },
     { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer' },
     { value: 'updateOwnershipAccept', label: 'Update Ownership Accept' },
@@ -163,6 +165,10 @@ const CW721ContractInfo = () => {
                     {selectMenu?.value === 'burn' && <Burn />}
                     {selectMenu?.value === 'transfer' && <Transfer />}
                     {selectMenu?.value === 'approve' && <Approve />}
+                    {selectMenu?.value === 'revoke' && <Revoke />}
+                    {selectMenu?.value === 'approveAll' && <ApproveAll />}
+                    {selectMenu?.value === 'revokeAll' && <RevokeAll />}
+                    {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
                     {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
                     {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
                 </Container>

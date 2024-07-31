@@ -1,26 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
-import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import {
-    addStringAmount,
-    compareStringNumbers,
-    formatWithCommas,
-    getTokenAmountFromUToken,
-    getUTokenAmountFromToken,
-    subtractStringAmount
-} from '@/utils/balance';
-import { IWallet } from '@/interfaces/wallet';
 import IconTooltip from '@/components/atoms/tooltip';
-import useExecuteStore from '../../hooks/useCW721ExecuteStore';
 import Divider from '@/components/atoms/divider';
 import LabelInput from '@/components/atoms/input/labelInput';
 import VariableInput from '@/components/atoms/input/variableInput';
 import MintNFTInfoList from '@/components/atoms/walletList/mintNFTInfoList';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { v4 } from 'uuid';
-import { setArgs } from '@craco/craco/dist/lib/args';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -44,29 +30,6 @@ const TotalMintSupplyBalance = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 20px; /* 142.857% */
-`;
-
-const TotalMintSubLabelTypo = styled.div`
-    color: var(--Gray-550, #444);
-    font-family: 'General Sans Variable';
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
-`;
-
-const TotalMintSubBalance = styled.div`
-    color: var(--Gray-600, #707070);
-    font-family: 'General Sans Variable';
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 20px; /* 142.857% */
-`;
-
-const DOTTED_DIVIDER = styled.img`
-    width: 100%;
-    height: auto;
 `;
 
 const BodyContainer = styled.div`

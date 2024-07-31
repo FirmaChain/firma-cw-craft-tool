@@ -1,25 +1,8 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-
-import { rootState } from '@/redux/reducers';
-import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
-import { CRAFT_CONFIGS } from '@/config';
-
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import {
-    compareStringNumbers,
-    formatWithCommas,
-    getTokenAmountFromUToken,
-    getUTokenAmountFromToken,
-    subtractStringAmount
-} from '@/utils/balance';
-import useExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { IC_COIN_STACK, IC_COIN_STACK2 } from '@/components/atoms/icons/pngIcons';
 import IconTooltip from '@/components/atoms/tooltip';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import useExecuteActions from '../../hooks/useCW721ExecuteAction';
 
 const Container = styled.div`
     width: 100%;
@@ -89,11 +72,6 @@ const BurnSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const DOTTED_DIVIDER = styled.img`
-    width: 100%;
-    height: auto;
-`;
-
 const CoinStack2Icon = styled.img`
     width: 24px;
     height: 24px;
@@ -135,84 +113,6 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnPreview = () => {
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
-    // const fctBalance = useExecuteStore((v) => v.fctBalance);
-    // const cw20Balance = useExecuteStore((v) => v.cw20Balance);
-    // const burnAmount = useExecuteStore((v) => v.burnAmount) || '0';
-    // const tokenInfo = useExecuteStore((v) => v.tokenInfo);
-    // const clearBurn = useExecuteStore((v) => v.clearBurn);
-    // const { setCw20Balance } = useExecuteActions();
-
-    const network = useSelector((state: rootState) => state.global.network);
-    const address = useSelector((state: rootState) => state.wallet.address);
-
-    const modal = useModalStore();
-
-    // const updatedBalance = useMemo(() => {
-    //     let amount = '0';
-
-    //     amount = subtractStringAmount(getTokenAmountFromUToken(cw20Balance, '6'), burnAmount);
-
-    //     return amount;
-    // }, [cw20Balance, burnAmount]);
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
-    const onClickBurn = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
-        // const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
-
-        // const params = {
-        //     header: {
-        //         title: 'Burn'
-        //     },
-        //     content: {
-        //         symbol: tokenInfo.symbol,
-        //         decimals: tokenInfo.decimals.toString(),
-        //         fctAmount: fctBalance,
-        //         feeAmount: feeAmount.toString(),
-        //         list: [
-        //             {
-        //                 label: 'Total Burn Amount',
-        //                 value: amount,
-        //                 type: 'amount'
-        //             }
-        //         ]
-        //     },
-        //     contract: contractAddress,
-        //     msg: {
-        //         amount
-        //     }
-        // };
-
-        // modal.openModal({
-        //     modalType: 'custom',
-        //     _component: ({ id }) => (
-        //         <QRCodeModal
-        //             module="/cw20/burnToken"
-        //             id={id}
-        //             params={params}
-        //             onClickConfirm={() => {
-        //                 clearBurn();
-        //                 setCw20Balance(contractAddress, address);
-        //             }}
-        //         />
-        //     )
-        // });
-    };
-
-    const isEnableButton = useMemo(() => {
-        // if (compareStringNumbers(fctBalance, craftConfig.DEFAULT_FEE.toString()) !== 1) return false;
-
-        // if (cw20Balance === '' || cw20Balance === '0') return false;
-        // if (burnAmount === '' || burnAmount === '0' || Number(burnAmount) === 0) return false;
-
-        return true;
-    }, []);
-
     return (
         <Container>
             <ContentWrap>
@@ -242,7 +142,7 @@ const BurnPreview = () => {
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>
+                <GreenButton>
                     <div className="button-text">Burn</div>
                 </GreenButton>
             </ButtonWrap>

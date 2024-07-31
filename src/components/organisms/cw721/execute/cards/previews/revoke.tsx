@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { IC_CLOCK, IC_COINS_HAND, IC_ID_CIRCLE, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { format } from 'date-fns';
+import { IC_ID_CIRCLE, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import commaNumber from 'comma-number';
-import { IAllowanceInfo } from '@/components/organisms/execute/hooks/useExecuteStore';
 
 const Container = styled.div`
     width: 100%;
@@ -94,24 +92,7 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
-const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | null }) => {
-    if (!allowanceInfo) return <AccordionTypo $disabled>Expiration</AccordionTypo>;
-
-    if (allowanceInfo.type === 'never') return <AccordionTypo $disabled={false}>Forever</AccordionTypo>;
-    if (!allowanceInfo.expire) return <AccordionTypo $disabled={true}>Expiration</AccordionTypo>;
-    if (allowanceInfo.type === 'at_height')
-        return <AccordionTypo $disabled={false}>{commaNumber(allowanceInfo?.expire)} Block</AccordionTypo>;
-    if (allowanceInfo.type === 'at_time')
-        return (
-            <AccordionTypo $disabled={false}>
-                {format(new Date(Math.floor(Number(allowanceInfo.expire) / 1000000)), 'yyyy-MM-dd HH:mm:ss')}
-            </AccordionTypo>
-        );
-
-    return <></>;
-};
-
-const ApprovePreview = () => {
+const RevokePreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     return (
@@ -119,8 +100,8 @@ const ApprovePreview = () => {
             <ContentWrap>
                 <ItemWrap>
                     <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COINS_HAND} alt={'approve-nft'} />
-                        <ItemLabelTypo>Approve NFT</ItemLabelTypo>
+                        <ItemLabelIcon src="/assets/icon/ic_reverse_left.png" alt={'revoke-nft'} />
+                        <ItemLabelTypo>Revoke NFT</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
                         <ArrowToggleButton onToggle={setIsOpen} />
@@ -137,20 +118,16 @@ const ApprovePreview = () => {
                             <img src={IC_ID_CIRCLE} alt="token-id" />
                             <AccordionTypo $disabled>Token ID</AccordionTypo>
                         </AccordionRow>
-                        <AccordionRow>
-                            <img src={IC_CLOCK} alt="clock" />
-                            <ExpirationBox />
-                        </AccordionRow>
                     </AccordionBox>
                 )}
             </ContentWrap>
             <ButtonWrap>
                 <GreenButton disabled>
-                    <div className="button-text">Approve</div>
+                    <div className="button-text">Revoke</div>
                 </GreenButton>
             </ButtonWrap>
         </Container>
     );
 };
 
-export default ApprovePreview;
+export default RevokePreview;
