@@ -168,13 +168,13 @@ const Sidebar = () => {
                                 />
                                 <MenuItemText selected={location.pathname.includes('/search')}>Search</MenuItemText>
                             </MenuItem>
-                            <MenuItem onClick={(e) => onClickMenu(e, '/mytoken')}>
+                            <MenuItem onClick={(e) => onClickMenu(e, cwMode === 'CW20' ? '/mytoken' : '/mynft')}>
                                 <Icons.Coins
-                                    fill={location.pathname.includes('/mytoken') ? '#e6e6e6' : '#807E7E'}
+                                    fill={location.pathname.includes(cwMode === 'CW20' ? '/mytoken' : '/mynft') ? '#e6e6e6' : '#807E7E'}
                                     width={'16px'}
                                     height={'16px'}
                                 />
-                                <MenuItemText selected={location.pathname.includes('/mytoken')}>
+                                <MenuItemText selected={location.pathname.includes(cwMode === 'CW20' ? '/mytoken' : '/mynft')}>
                                     {cwMode === 'CW20' ? 'My Minted Tokens' : 'My NFT Contracts'}
                                 </MenuItemText>
                             </MenuItem>

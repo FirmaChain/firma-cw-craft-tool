@@ -48,3 +48,5 @@ export const IC_PREVIEW = PUBLIC_URL + 'ic_preview.png';
 export const IC_TAG = PUBLIC_URL + 'ic_tag.png';
 export const IMG_ANDROID_STORE = '/assets/image/img_android_store.png';
 export const IMG_IOS_STORE = '/assets/image/img_ios_store.png';
+
+export const IC_LABEL_TAG = PUBLIC_URL + 'ic_label_tag.png';
