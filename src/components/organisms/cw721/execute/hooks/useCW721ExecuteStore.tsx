@@ -1,4 +1,4 @@
-import { ContractInfo, Cw721ContractInfo } from '@firmachain/firma-js';
+import { ContractInfo, Cw721ContractInfo, Cw721Expires } from '@firmachain/firma-js';
 
 import {
     IExecuteApproveAll,
@@ -14,9 +14,18 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { IMenuItem } from '@/interfaces/common';
 
+interface CwOwnershipInfo {
+    owner: string;
+    pending_owner: string;
+    pending_expiry: Cw721Expires;
+}
 interface FormProps {
+    fctBalance: string;
     contractInfo: ContractInfo;
     nftContractInfo: Cw721ContractInfo;
+    ownershipInfo: CwOwnershipInfo;
+    minterInfo: string;
+    setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
 
@@ -64,6 +73,8 @@ const INIT_CONTRACT_INFO: ContractInfo = {
     }
 };
 const INIT_NFT_CONTRACT_INFO: Cw721ContractInfo = { name: '', symbol: '' };
+const INIT_OWNERSHIP_INFO: CwOwnershipInfo = { owner: '', pending_owner: '', pending_expiry: { at_height: 0 }}
+const INIT_MINTER_INFO: string = '';
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
 const INIT_MINT: IExecuteMint = { recipient: '', nftInfos: [] };
 const INIT_BURN: IExecuteBurn = { token_ids: [] };
@@ -76,8 +87,15 @@ const INIT_UPDATE_OWNERSHIP_TRANSFER: IExecuteUpdateOwnershipTransfer = { recipi
 
 const useCW721ExecuteStore = create<FormProps>()(
     immer((set) => ({
+        fctBalance: '',
         contractInfo: INIT_CONTRACT_INFO,
         nftContractInfo: INIT_NFT_CONTRACT_INFO,
+        ownershipInfo: INIT_OWNERSHIP_INFO,
+        minterInfo: INIT_MINTER_INFO,
+        setFctBalance: (data) => 
+            set((state) => {
+                state.fctBalance = data;
+            }),
         setContractInfo: (data) =>
             set((state) => {
                 state.contractInfo = data;
@@ -144,9 +162,6 @@ const useCW721ExecuteStore = create<FormProps>()(
             }),
         clearForm: () => {
             set((state) => {
-                state.contractInfo = INIT_CONTRACT_INFO;
-                state.nftContractInfo = INIT_NFT_CONTRACT_INFO;
-
                 state.contractAddress = '';
                 state.selectMenu = INIT_SELECT_MENU;
                 state.mint = INIT_MINT;

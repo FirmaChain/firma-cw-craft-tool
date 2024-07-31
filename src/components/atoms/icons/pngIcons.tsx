@@ -52,3 +52,5 @@ export const IC_LINK_GRAY = PUBLIC_URL + 'ic_link_gray.png';
 export const IC_COINS_HAND = PUBLIC_URL + 'ic_coins_hand.png';
 export const IC_ID_CIRCLE = PUBLIC_URL + 'ic_id_circle.png';
 export const IC_LABEL_TAG = PUBLIC_URL + 'ic_label_tag.png';
+export const IC_WARNING = PUBLIC_URL + 'ic_warning.png';
+export const IC_CHECK_SQUARE = PUBLIC_URL + 'ic_check_square.png';

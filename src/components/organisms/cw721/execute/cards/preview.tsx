@@ -6,6 +6,8 @@ import useExecuteStore from '../hooks/useCW721ExecuteStore';
 import BurnPreview from './previews/burn';
 import TransferPreview from './previews/transfer';
 import ApprovePreview from './previews/approve';
+import UpdateOwnershipRenounce from './previews/updateOwnershipRenounce';
+import UpdateOwnershipAccept from './previews/updateOwnershipAccept';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -45,6 +47,8 @@ const Preview = () => {
                     {selectMenu.value === 'burn' && <BurnPreview />}
                     {selectMenu.value === 'transfer' && <TransferPreview />}
                     {selectMenu.value === 'approve' && <ApprovePreview />}
+                    {selectMenu.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
+                    {selectMenu.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
                 </Container>
             )}
         </>

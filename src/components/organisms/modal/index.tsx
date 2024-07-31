@@ -1,5 +1,5 @@
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
-import QRCodeModal from './cw20/qrcodeModal';
+import QRCodeModal from './qrcodeModal';
 import {
     ItemAmountSymbol,
     ItemAmountValue,

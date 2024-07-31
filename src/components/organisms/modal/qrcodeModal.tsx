@@ -37,10 +37,10 @@ import {
     ResultsTitleFailedTypo,
     ResultFailedTypo,
     ResultFailedDesc
-} from '../style';
+} from './style';
 import React, { useState } from 'react';
 import { useModalStore } from '@/hooks/useModal';
-import { AmountItem, ExpirationItem, ResultAmountItem, TransactionItem, UrlItem, WalletAdress, WalletItem } from '..';
+import { AmountItem, ExpirationItem, ResultAmountItem, TransactionItem, UrlItem, WalletAdress, WalletItem } from '.';
 import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
 import RequestQR from '@/components/organisms/requestQR';
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';

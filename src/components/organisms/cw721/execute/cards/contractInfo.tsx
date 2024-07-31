@@ -1,20 +1,20 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import Icons from '@/components/atoms/icons';
 import { rootState } from '@/redux/reducers';
 import ExecuteSelect from '@/components/atoms/select/executeSelect';
 import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
-import TokenLogo from '@/components/atoms/icons/TokenLogo';
-
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
+
 import Mint from './functions/mint';
 import Burn from './functions/burn';
 import Transfer from './functions/transfer';
 import Approve from './functions/approve';
+import UpdateOwnershipRenounce from './functions/updateOwnershipRenounce';
+import UpdateOwnershipAccept from './functions/updateOwnershipAccept';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -163,6 +163,8 @@ const CW721ContractInfo = () => {
                     {selectMenu?.value === 'burn' && <Burn />}
                     {selectMenu?.value === 'transfer' && <Transfer />}
                     {selectMenu?.value === 'approve' && <Approve />}
+                    {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
+                    {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
                 </Container>
             )}
         </>
