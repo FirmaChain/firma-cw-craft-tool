@@ -3,7 +3,7 @@ import { ContentBox, ContentWrapper } from './style';
 import Title from './title/title';
 import WalletSearch from './search';
 
-const TokenDetailContent = () => {
+const NFTContractDetailContent = () => {
     return (
         <ContentBox>
             <ContentWrapper>
@@ -15,4 +15,4 @@ const TokenDetailContent = () => {
     );
 };
 
-export default TokenDetailContent;
+export default NFTContractDetailContent;

@@ -5,16 +5,16 @@ const opacityAnimation = keyframes`
   25%, 50% { opacity: 0; }
 `;
 
-const LoadingWrap = styled.div`
-    width: 100px;
-    heigh: 100px;
+const LoadingWrap = styled.div<{ $size: string }>`
+    width: ${({ $size }) => $size};
+    height: ${({ $size }) => $size};
     position: relative;
 
     img {
         opacity: 0.9;
         position: absolute;
-        width: 100px;
-        height: 100px;
+        width: ${({ $size }) => $size};
+        height: ${({ $size }) => $size};
 
         left: 50%;
         top: 50%;
@@ -31,9 +31,13 @@ const AnimatedImg = styled.img<{ $delay: number }>`
     animation-delay: ${({ $delay }) => $delay}s;
 `;
 
-const FirmaLoading = () => {
+interface IProps {
+    size?: string;
+}
+
+const FirmaLoading = ({ size = '100px' }: IProps) => {
     return (
-        <LoadingWrap>
+        <LoadingWrap $size={size}>
             <AnimatedImg $delay={0} src="/assets/icon/ic_firma_logo_piece_1.png" alt="" />
             <AnimatedImg $delay={0.4} src="/assets/icon/ic_firma_logo_piece_2.png" alt="" />
             <AnimatedImg $delay={0.8} src="/assets/icon/ic_firma_logo_piece_3.png" alt="" />

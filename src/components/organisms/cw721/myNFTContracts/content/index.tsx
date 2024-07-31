@@ -7,14 +7,6 @@ import MyContractList from './contractList';
 import { GlobalActions } from '@/redux/actions';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
-// import NetworkSelect from '@/components/atoms/select/networkSelect';
-
-// const menuItems = [
-//     { value: '0', label: 'Newest' },
-//     { value: '1', label: 'Oldest' },
-//     { value: '2', label: 'Most Popular' },
-//     { value: '4', label: 'Alphabetical' }
-// ];
 
 const MyNFTContent = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
@@ -58,13 +50,6 @@ const MyNFTContent = () => {
         <ContentBox>
             <ContentWrapper>
                 <ContentControlWrapper>
-                    {/* <NetworkSelect
-                    value={selectSort.toString()}
-                    onChange={(v) => setSelectSort(Number(v))}
-                    options={menuItems}
-                    minWidth="182px"
-                /> */}
-
                     <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
                         <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                         <ContracTypo>Contracts</ContracTypo>

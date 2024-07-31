@@ -93,7 +93,7 @@ const useCW721SearchActions = () => {
 
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
             const minterInfo = await firmaSDK.Cw721.getMinter(keyword);
-            const ownerInfo = await await firmaSDK.Cw721.getOwnerShip(keyword);
+            const ownerInfo = await firmaSDK.Cw721.getOwnerShip(keyword);
             const nftIdList = await firmaSDK.Cw721.getAllNftIdList(keyword);
             const recentTx = await getAllTransactinos(keyword);
 

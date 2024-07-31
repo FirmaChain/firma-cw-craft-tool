@@ -3,6 +3,7 @@ import { IContractInfo } from "@/context/cw721MyNFTContractsContext";
 import IconButton from "@/components/atoms/buttons/iconButton";
 import Icons from "@/components/atoms/icons";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled(IconButton)`
     width: 100%;
@@ -162,12 +163,11 @@ interface IProps {
 }
 
 const ContractCard = ({ data }: IProps) => {
+    const navigate = useNavigate();
+
     const DisplayNFTCount = () => {
         const totalNFTsCount = data.totalNFTs;
         const thumbnailURIs = data.nftThumbnailURI;
-
-        console.log(data.totalNFTs, thumbnailURIs);
-
 
         if (totalNFTsCount === 0) {
             return <PreviewNFTsBox><TotalNftCountTypo>{"No NFTs have been minted."}</TotalNftCountTypo></PreviewNFTsBox>
@@ -192,8 +192,12 @@ const ContractCard = ({ data }: IProps) => {
         }
     }
 
+    const handleMoveToDetail = () => {
+        navigate(`/cw721/mynft/detail/${data.contractAddress}`)
+    }
+
     return (
-        <Container>
+        <Container onClick={handleMoveToDetail}>
             <TopBox>
                 <TitleBox>
                     <SymbolBox>

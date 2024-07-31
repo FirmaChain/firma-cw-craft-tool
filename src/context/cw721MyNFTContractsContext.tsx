@@ -52,8 +52,6 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
     };
 
     const updateContractInfo = (info: IContractInfo) => {
-        console.log(info);
-
         setContracts(prevContracts =>
             prevContracts.map(contract =>
                 contract.contractAddress === info.contractAddress ? { ...contract, info } : contract

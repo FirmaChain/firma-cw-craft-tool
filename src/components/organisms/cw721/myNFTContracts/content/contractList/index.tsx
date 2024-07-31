@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { GlobalActions } from '@/redux/actions';
 import { IContractInfo, useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import { Container, CurrentPageNumber, PaginationButton, PaginationContainer, ContractCardBox } from './style';
@@ -10,8 +9,6 @@ import NoToken from '../noToken';
 import ContractCard from './contractCard';
 
 const MyContractList = () => {
-    const navigate = useNavigate();
-
     const { getCW721ContractInfo } = useMyNFTContracts();
     const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW721NFTContractsContext()
 
@@ -93,10 +90,6 @@ const MyContractList = () => {
 
         setRowsPerPage(rowsPerPage);
         if (currentPage > newTotalPage) setCurrentPage(newTotalPage);
-    };
-
-    const onClickItem = (contractAddress: string) => {
-        navigate(`/mytoken/detail/${contractAddress}`);
     };
 
     const pageList = useMemo(() => {

@@ -6,6 +6,7 @@ import { rootState } from '../redux/reducers';
 import { CRAFT_CONFIGS } from '../config';
 import { useSnackbar } from 'notistack';
 import { IContractInfo } from '@/context/cw721MyNFTContractsContext';
+import { IMG_NFT_EMPTY_THUMBNAIL } from '@/components/atoms/icons/pngIcons';
 
 const TESTNET_SDK = new FirmaSDK(CRAFT_CONFIGS.TESTNET.FIRMACHAIN_CONFIG);
 const MAINNET_SDK = new FirmaSDK(CRAFT_CONFIGS.MAINNET.FIRMACHAIN_CONFIG);
@@ -71,16 +72,20 @@ const useMyNFTContracts = () => {
                 const getAllNftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress);
 
                 const images = [];
+                const isDeploiedFromFirma = Boolean([basicCodeId, advancedCodeId].find((code) => code === contractInfoFromCW.contract_info.code_id) !== undefined);
                 for (let i = 0; i < Math.min(3, getAllNftIdList.length); i++) {
                     const id = getAllNftIdList[i];
                     try {
                         const image = await getCW721NFTImage({ contractAddress: contractAddress, tokenId: id });
-                        images.push(image);
+                        if (isDeploiedFromFirma && image === "") {
+                            images.push(IMG_NFT_EMPTY_THUMBNAIL);
+                        } else {
+                            images.push(image);
+                        }
                     } catch (error) {
                         console.error(`Failed to fetch image for NFT ID: ${id}`, error);
                     }
                 }
-
 
                 resultData.contractAddress = contractAddress;
                 resultData.name = contractInfo.name;
