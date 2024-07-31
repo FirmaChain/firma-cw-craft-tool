@@ -78,18 +78,20 @@ const useSearchActions = () => {
         GlobalActions.handleGlobalLoading(true);
 
         try {
-            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
-            if (
-                contractInfo.contract_info.code_id !== currentCodeIds.ADVANCED_CODE_ID &&
-                contractInfo.contract_info.code_id !== currentCodeIds.BASIC_CODE_ID
-            ) {
+            try {
+                //? Try to get token info
+                //? if error occurs in this stage, this contract is not cw20.
+                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(keyword);
+                useSearchStore.getState().setTokenInfo(tokenInfo);
+            } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20 contract.' });
                 return;
             }
 
             if (userAddress) updateMyBalance(keyword);
 
-            const tokenInfo = await firmaSDK.Cw20.getTokenInfo(keyword);
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
+
             const minterInfo = await firmaSDK.Cw20.getMinter(keyword);
             const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(keyword);
             const contractHistory = await firmaSDK.CosmWasm.getContractHistory(keyword);
@@ -97,7 +99,7 @@ const useSearchActions = () => {
             const allTransactions = await getAllTransactinos(keyword);
 
             useSearchStore.getState().setContractInfo(contractInfo);
-            useSearchStore.getState().setTokenInfo(tokenInfo);
+
             useSearchStore.getState().setMinterInfo(minterInfo);
             useSearchStore.getState().setMarketingInfo(marketingInfo);
             useSearchStore.getState().setContractHistory(contractHistory);

@@ -79,26 +79,24 @@ const useCW721SearchActions = () => {
         GlobalActions.handleGlobalLoading(true);
 
         try {
-            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
-
-            if (
-                contractInfo.contract_info.code_id !== currentCodeIds.ADVANCED_CODE_ID &&
-                contractInfo.contract_info.code_id !== currentCodeIds.BASIC_CODE_ID
-            ) {
+            try {
+                //? Try to get nft info
+                //? if error occurs in this stage, this contract is not cw721.
+                const nftInfo = await firmaSDK.Cw721.getContractInfo(keyword);
+                useCW721SearchStore.getState().setNftInfo(nftInfo);
+            } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721 contract.' });
                 return;
             }
 
             if (userAddress) updateMyBalance(keyword);
 
-            const nftInfo = await firmaSDK.Cw721.getContractInfo(keyword);
-
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
             const minterInfo = await firmaSDK.Cw721.getMinter(keyword);
             const ownerInfo = await await firmaSDK.Cw721.getOwnerShip(keyword);
             const nftIdList = await firmaSDK.Cw721.getAllNftIdList(keyword);
             const recentTx = await getAllTransactinos(keyword);
 
-            useCW721SearchStore.getState().setNftInfo(nftInfo);
             useCW721SearchStore.getState().setContractInfo(contractInfo);
             useCW721SearchStore.getState().setMinterInfo(minterInfo);
             useCW721SearchStore.getState().setOwnerInfo(ownerInfo);
