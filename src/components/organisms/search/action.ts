@@ -9,12 +9,15 @@ import { determineMsgTypeAndSpender, isValidAddress } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
+import { CRAFT_CONFIGS } from '@/config';
 
 const useSearchActions = () => {
     const { firmaSDK, getCw20Balance } = useExecuteHook();
     const { client } = useApollo();
     const userAddress = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
+
+    const currentCodeIds = CRAFT_CONFIGS[network].CW20;
 
     const { enqueueSnackbar } = useSnackbar();
     const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
@@ -75,9 +78,17 @@ const useSearchActions = () => {
         GlobalActions.handleGlobalLoading(true);
 
         try {
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
+            if (
+                contractInfo.contract_info.code_id !== currentCodeIds.ADVANCED_CODE_ID &&
+                contractInfo.contract_info.code_id !== currentCodeIds.BASIC_CODE_ID
+            ) {
+                enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20 contract.' });
+                return;
+            }
+
             if (userAddress) updateMyBalance(keyword);
 
-            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
             const tokenInfo = await firmaSDK.Cw20.getTokenInfo(keyword);
             const minterInfo = await firmaSDK.Cw20.getMinter(keyword);
             const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(keyword);

@@ -138,7 +138,7 @@ const Sidebar = () => {
                         </LogoWrapper>
                         {/* SWITCH */}
                         <SwitchWrapper>
-                            <CwSwitch onChange={onChangeSwitch} />
+                            <CwSwitch value={cwMode} onChange={onChangeSwitch} />
                         </SwitchWrapper>
                         {/* BUTTONS */}
                         <MenuListWrapper>
@@ -175,7 +175,7 @@ const Sidebar = () => {
                                     height={'16px'}
                                 />
                                 <MenuItemText selected={location.pathname.includes('/mytoken')}>
-                                    {cwMode === "CW20" ? "My Minted Tokens" : "My NFT Contracts"}
+                                    {cwMode === 'CW20' ? 'My Minted Tokens' : 'My NFT Contracts'}
                                 </MenuItemText>
                             </MenuItem>
                         </MenuListWrapper>

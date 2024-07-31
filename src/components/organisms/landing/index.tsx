@@ -26,9 +26,9 @@ import {
 } from './styles';
 import { useModalStore } from '@/hooks/useModal';
 import LoadingModal from '../modal/loadingModal';
+import { GlobalActions } from '@/redux/actions';
 
 const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
-    
     return (
         <TooltipIconBox
             data-tooltip-content={tooltip}
@@ -37,16 +37,13 @@ const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
             data-tooltip-place="bottom"
         >
             <img src={IC_TOOLTIP_16_GRAY} alt="" className="gray-tooltip" style={{ width: '16px', height: '16px' }} />
-            {/* <div className="gray-tooltip">
-                <Icons.Tooltip width="16px" height="16px" />
-            </div> */}
-            {/* <Icons.Tooltip width="16px" height="16px" fill="#50D1E5" /> */}
+
             <img src={IC_TOOLTIP_16_50D1E5} alt="" className="color-tooltip" style={{ width: '16px', height: '16px' }} />
         </TooltipIconBox>
     );
 };
 
-// const 
+// const
 const CW20Btn = () => {
     const modal = useModalStore();
     const closeModal = useModalStore().closeModal;
@@ -55,10 +52,16 @@ const CW20Btn = () => {
     const onClickExecute = () => {
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => <LoadingModal delay={1000} callback={() => {
-                closeModal(id);
-                navigate('/instantiate');
-            }}/>
+            _component: ({ id }) => (
+                <LoadingModal
+                    delay={1000}
+                    callback={() => {
+                        closeModal(id);
+                        GlobalActions.handleCw('CW20');
+                        navigate('/instantiate');
+                    }}
+                />
+            )
         });
     };
 
@@ -74,8 +77,28 @@ const CW20Btn = () => {
 };
 
 const CW721Btn = () => {
+    const modal = useModalStore();
+    const closeModal = useModalStore().closeModal;
+    const navigate = useNavigate();
+
+    const onClickExecute = () => {
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <LoadingModal
+                    delay={1000}
+                    callback={() => {
+                        closeModal(id);
+                        GlobalActions.handleCw('CW721');
+                        navigate('/cw721/instantiate');
+                    }}
+                />
+            )
+        });
+    };
+
     return (
-        <ContractBtnBase disabled>
+        <ContractBtnBase onClick={onClickExecute}>
             <Icons.CW721 />
             <div className="typo-box">
                 <div className="variant">NFT</div>

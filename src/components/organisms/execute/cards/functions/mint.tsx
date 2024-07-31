@@ -75,7 +75,9 @@ const Mint = () => {
     const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
     const mintableAmount = useMemo(() => {
-        return subtractStringAmount(minterInfo.cap, tokenInfo.total_supply);
+        if (!minterInfo || !tokenInfo) return '';
+
+        return subtractStringAmount(minterInfo?.cap, tokenInfo?.total_supply);
     }, [minterInfo, tokenInfo]);
 
     const totalMintAmount = useMemo(() => {
@@ -92,7 +94,7 @@ const Mint = () => {
             setIsFetched(false);
         }
     }, [isFetched]);
-    
+
     const handleWalletList = (value: IWallet[]) => {
         setAddWalletList(value);
         setMinterList(value);
