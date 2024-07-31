@@ -1,15 +1,14 @@
-import { Fragment, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { Fragment, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
 
-import TokenInfo from '../cards/tokenInfo';
-import Preview from '../cards/preview';
+import { rootState } from "@/redux/reducers";
+import { isValidAddress } from "@/utils/address";
+import { FIRMA_DIM_LOGO } from "@/components/atoms/icons/pngIcons";
 
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
-import useExecuteStore from '../hooks/useExecuteStore';
-import { isValidAddress } from '@/utils/address';
-import useExecuteActions from '../action';
-import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
+import useCW721ExecuteStore from "../hooks/useCW721ExecuteStore";
+import useCW721ExecuteAction from "../hooks/useCW721ExecuteAction";
+import CW721ContractInfo from "../cards/contractInfo";
 
 const Container = styled.div`
     width: 100%;
@@ -33,14 +32,6 @@ const NoticeText = styled.div`
     font-weight: 500;
 `;
 
-const DimBox = styled.div`
-    flex: 1;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-
 const LogoBackground = styled.div`
     position: fixed;
     width: -webkit-fill-available;
@@ -57,10 +48,16 @@ const LogoBackground = styled.div`
 const Contents = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((v: rootState) => v.global.network);
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const clearForm = useExecuteStore((state) => state.clearForm);
-    const { checkContractExist, setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, setCw20Balance, setFctBalance } =
-        useExecuteActions();
+
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+
+    const { setContractInfo, setNftContractInfo } = useCW721ExecuteAction();
+
+    const clearForm = useCW721ExecuteStore((state) => state.clearForm);
+
+    const {
+        checkContractExist
+    } = useCW721ExecuteAction();
 
     const [existContract, setExistContract] = useState<Boolean | null>(null);
 
@@ -87,11 +84,11 @@ const Contents = () => {
     useEffect(() => {
         if (contractAddress !== null && Boolean(existContract) === true) {
             setContractInfo(contractAddress);
-            setTokenInfo(contractAddress);
-            setMarketingInfo(contractAddress);
-            setMinterInfo(contractAddress);
-            setCw20Balance(contractAddress, address);
-            setFctBalance(address);
+            setNftContractInfo(contractAddress);
+            // setMarketingInfo(contractAddress);
+            // setMinterInfo(contractAddress);
+            // setCw20Balance(contractAddress, address);
+            // setFctBalance(address);
         }
     }, [existContract, contractAddress, address]);
 
@@ -100,8 +97,8 @@ const Contents = () => {
             <Container>
                 {existContract === true && (
                     <Box>
-                        <TokenInfo />
-                        <Preview />
+                        <CW721ContractInfo />
+                        {/* <Preview /> */}
                     </Box>
                 )}
                 {existContract === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
@@ -112,7 +109,7 @@ const Contents = () => {
                 )}
             </Container>
         </Fragment>
-    );
+    )
 };
 
 export default Contents;

@@ -196,7 +196,6 @@ const UpdateMarketingPreview = () => {
     };
 
     const isEnableButton = useMemo(() => {
-        console.log(111);
         if (marketingAddress === "" && marketingInfo.marketing !== address) return true;
         console.log(222);
         if (marketingAddress !== "" && !isValidAddress(marketingAddress)) return false;
