@@ -1,8 +1,7 @@
-import { useEffect } from "react";
-import { PuffLoader } from "react-spinners"
+import FirmaLoading from '@/components/atoms/globalLoader/firmaLoad';
+import { useEffect } from 'react';
 
 const LoadingModal = ({ delay, callback }: { delay: number; callback: () => void }) => {
-    
     useEffect(() => {
         const timer = setTimeout(() => {
             callback();
@@ -10,10 +9,8 @@ const LoadingModal = ({ delay, callback }: { delay: number; callback: () => void
 
         return () => clearTimeout(timer);
     }, [delay, callback]);
-    
-    return (
-        <PuffLoader loading={true} color={'#FFFFFF'} />
-    )
-}
+
+    return <FirmaLoading />;
+};
 
 export default LoadingModal;

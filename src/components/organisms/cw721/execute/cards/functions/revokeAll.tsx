@@ -2,20 +2,37 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } fro
 import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
+import { useEffect, useState } from 'react';
 
 const RevokeAll = () => {
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const inputId = 'INCREASE_ALLOWANCE';
+    const inputId = 'REVOKE_ALL';
+
+    //? Switch to zustnad
+    const [walletAddress, setWalletAddress] = useState('');
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
-            clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
+
+        setWalletAddress(value);
     };
+
+    useEffect(() => {
+        //? reset on success
+        // setIsFetched(false);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            clearFormError({ id: `${inputId}_ADDRESS` });
+        };
+    }, []);
 
     return (
         <Container>
@@ -33,7 +50,7 @@ const RevokeAll = () => {
                             labelProps={{ label: 'Recipient Address' }}
                             inputProps={{
                                 formId: `${inputId}_ADDRESS`,
-                                value: '',
+                                value: walletAddress,
                                 onChange: handleChangeAddress,
                                 placeHolder: 'Input Wallet Address',
                                 emptyErrorMessage: 'Please input firmachain wallet address'

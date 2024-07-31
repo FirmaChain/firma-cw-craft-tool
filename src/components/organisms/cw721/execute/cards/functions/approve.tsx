@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
@@ -8,6 +8,7 @@ import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
 import { useModalStore } from '@/hooks/useModal';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -55,26 +56,44 @@ const Approve = () => {
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const inputId = 'INCREASE_ALLOWANCE';
+    const inputId = 'APPROVE';
 
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
 
+    //? Switch to zustand
+    const [walletAddress, setWalletAddress] = useState('');
+    const [tokenId, setTokenId] = useState('');
+
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
-            clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
+
+        setWalletAddress(value);
     };
 
-    const handleChangeAmount = (value: string) => {
-        const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        if (!isValidFormat) {
-            return;
-        }
+    useEffect(() => {
+        //? reset on success
+        setExpirationType(ExpirationType.Height);
+        setExpInputValue('');
+
+        // setIsFetched(false);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            clearFormError({ id: `${inputId}_TOKEN_ID` });
+            clearFormError({ id: `${inputId}_ADDRESS` });
+        };
+    }, []);
+
+    const handleChangeTokenId = (value: string) => {
+        setTokenId(value);
     };
 
     const handleChangeExpireType = (value: ExpirationType) => {
@@ -117,7 +136,6 @@ const Approve = () => {
                 </TitleWrap>
             </HeaderWrap>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
-                {/* Address / Amount Input */}
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '12px', width: '100%' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', gap: '8px' }}>
@@ -125,7 +143,7 @@ const Approve = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: '',
+                                    value: walletAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
                                     emptyErrorMessage: 'Please input firmachain wallet address'
@@ -146,17 +164,18 @@ const Approve = () => {
                                 labelProps={{ label: 'Token ID' }}
                                 inputProps={{
                                     formId: `${inputId}_TOKEN_ID`,
-                                    value: '',
-                                    onChange: handleChangeAmount,
+                                    value: tokenId,
+                                    onChange: handleChangeTokenId,
                                     placeHolder: '0',
-                                    type: 'number',
-                                    textAlign: 'right'
+                                    textAlign: 'right',
+                                    regex: /[^0-9]/g,
+                                    emptyErrorMessage: 'Please input token ID'
                                 }}
                             />
                         </div>
                     </div>
                 </div>
-                {/* Expiration Input */}
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <InputTitle>Expiration</InputTitle>
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
@@ -176,6 +195,7 @@ const Approve = () => {
                         ))}
                     </div>
                 </div>
+
                 <div style={{ position: 'relative' }}>
                     <VariableInput
                         value={expInputValue}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
@@ -55,19 +55,24 @@ const UpdateOwnershipTransfer = () => {
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const inputId = 'INCREASE_ALLOWANCE';
+    const inputId = 'UPDATE_OWNERSHIP_TRANSFER';
 
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
 
+    //? Switch to zustand
+    const [walletAddress, setWalletAddress] = useState('');
+
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
-            clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
+
+        setWalletAddress(value);
     };
 
     const handleChangeExpireType = (value: ExpirationType) => {
@@ -89,6 +94,19 @@ const UpdateOwnershipTransfer = () => {
             }
         }
     };
+
+    useEffect(() => {
+        //? reset on success
+        setExpirationType(ExpirationType.Height);
+        setExpInputValue('');
+        // setIsFetched(false);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            clearFormError({ id: `${inputId}_ADDRESS` });
+        };
+    }, []);
 
     const handleChangeExpireValue = (value: string) => {
         setExpInputValue(value);
@@ -117,7 +135,7 @@ const UpdateOwnershipTransfer = () => {
                         labelProps={{ label: 'Recipient Address' }}
                         inputProps={{
                             formId: `${inputId}_ADDRESS`,
-                            value: '',
+                            value: walletAddress,
                             onChange: handleChangeAddress,
                             placeHolder: 'Input Wallet Address',
                             emptyErrorMessage: 'Please input firmachain wallet address'

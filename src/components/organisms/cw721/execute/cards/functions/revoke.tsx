@@ -2,26 +2,42 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } fro
 import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
+import { useEffect, useState } from 'react';
 
 const Revoke = () => {
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const inputId = 'INCREASE_ALLOWANCE';
+    const inputId = 'REVOKE';
+
+    //? Switch to zustand
+    const [walletAddress, setWalletAddress] = useState('');
+    const [nftId, setNFTId] = useState('');
+
+    useEffect(() => {
+        //? reset data on success
+        // setIsFetched(false);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            clearFormError({ id: `${inputId}_TOKEN_ID` });
+            clearFormError({ id: `${inputId}_ADDRESS` });
+        };
+    }, []);
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
-            clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
+
+        setWalletAddress(value);
     };
 
-    const handleChangeAmount = (value: string) => {
-        const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        if (!isValidFormat) {
-            return;
-        }
+    const handleChangeNFTId = (value: string) => {
+        setNFTId(value);
     };
 
     return (
@@ -41,7 +57,7 @@ const Revoke = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: '',
+                                    value: walletAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
                                     emptyErrorMessage: 'Please input firmachain wallet address'
@@ -62,11 +78,12 @@ const Revoke = () => {
                                 labelProps={{ label: 'Token ID' }}
                                 inputProps={{
                                     formId: `${inputId}_TOKEN_ID`,
-                                    value: '',
-                                    onChange: handleChangeAmount,
+                                    value: nftId,
+                                    onChange: handleChangeNFTId,
                                     placeHolder: '0',
-                                    type: 'number',
-                                    textAlign: 'right'
+                                    textAlign: 'right',
+                                    regex: /[^0-9]/g,
+                                    emptyErrorMessage: 'Please input token ID'
                                 }}
                             />
                         </div>
