@@ -3,7 +3,6 @@ import Sidebar from './components/organisms/sidebar';
 import AppRoutes from './routes';
 import { ModalRenderer } from './hooks/useModal';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
-import { FIRMA_DIM_LOGO } from './components/atoms/icons/pngIcons';
 import GlobalLoader from './components/atoms/globalLoader';
 
 const MainContainer = styled.div`

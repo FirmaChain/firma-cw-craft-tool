@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { CW_MODE_TYPE } from '@/constants/common';
 import { ActiveIndicator, SwitchButton, SwitchContainer, SwitchLabel } from './style';
+import useResetStoreData from '@/hooks/useResetStoreData';
+
 
 interface IProps {
     value: CW_MODE_TYPE;
@@ -9,9 +11,15 @@ interface IProps {
 }
 
 const CwSwitch = ({ value, onChange }: IProps) => {
+    const { resetForCWSwitch } = useResetStoreData()
+
     const onChangeActiveType = (value: CW_MODE_TYPE) => {
         onChange(value);
     };
+
+    useEffect(() => {
+        resetForCWSwitch();
+    }, [value])
 
     return (
         <SwitchContainer>

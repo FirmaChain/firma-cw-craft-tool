@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import {
-    IconBackground,
     ItemLeft,
     ItemRight,
     ItemWrapper,
@@ -11,7 +10,6 @@ import {
     TokenInfoNameTypo,
     TokenInfoSymbolTypo,
     TokenInfoWrapper,
-    TokenLogoImage,
     TokenSymbolWrapper,
     Divider
 } from './style';

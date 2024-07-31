@@ -10,13 +10,16 @@ import 'react-tooltip/dist/react-tooltip.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CW20MyTokenProvider } from './context/cw20MyTokenContext';
+import { CW721NFTContractsProvider } from './context/cw721MyNFTContractsContext';
 
 const App = () => {
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
                 <CW20MyTokenProvider>
-                    <Main />
+                    <CW721NFTContractsProvider>
+                        <Main />
+                    </CW721NFTContractsProvider>
                 </CW20MyTokenProvider>
                 <DefaultTooltip id={TOOLTIP_ID.COMMON} place="bottom" style={{ cursor: 'default', zIndex: 1000 }} />
                 <DefaultTooltip id={TOOLTIP_ID.CLICKABLE} place="bottom" style={{ cursor: 'default', zIndex: 1000 }} clickable />

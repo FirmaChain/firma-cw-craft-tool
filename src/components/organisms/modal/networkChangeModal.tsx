@@ -4,11 +4,7 @@ import Icons from '@/components/atoms/icons';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { useModalStore } from '@/hooks/useModal';
 import { NETWORK_TYPE } from '@/constants/common';
-import useFormStore from '@/store/formStore';
-import useInstantiateStore from '../instantiate/instaniateStore';
-import useExecuteStore from '../execute/hooks/useExecuteStore';
-import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
-import useSearchStore from '../search/searchStore';
+import useResetStoreData from '@/hooks/useResetStoreData';
 
 const CloseBtnBox = styled.div`
     width: 100%;
@@ -110,19 +106,7 @@ const NetworkChangeModal = ({ id, params, onConfirm }: {
     id: string;
     params: { network: NETWORK_TYPE }; onConfirm: () => void
 }) => {
-    // instantiate
-    const instantiateFormClear = useFormStore((state) => state.clearForm);
-    const instantiateClear = useInstantiateStore((v) => v.clearForm);
-
-    // execute
-    const executeFormClear = useExecuteStore((state) => state.clearForm);
-
-    // myTokens
-    const { clearCW20MyTokenData } = useCW20MyTokenContext();
-
-    // search
-    const searchClear = useSearchStore((state) => state.clearAll);
-
+    const { resetAll } = useResetStoreData();
 
     const targetNetwork = params.network
     const modal = useModalStore();
@@ -131,11 +115,7 @@ const NetworkChangeModal = ({ id, params, onConfirm }: {
 
     const onClickConfirm = () => {
         // clear whole data
-        instantiateFormClear();
-        instantiateClear();
-        executeFormClear();
-        clearCW20MyTokenData();
-        searchClear();
+        resetAll();
 
         onConfirm();
         modal.closeModal(id);
