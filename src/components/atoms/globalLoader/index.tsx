@@ -1,7 +1,7 @@
 import { rootState } from '@/redux/reducers';
 import { useSelector } from 'react-redux';
-import { PuffLoader } from 'react-spinners';
 import styled from 'styled-components';
+import FirmaLoading from './firmaLoad';
 
 const Wrapper = styled.div`
     position: fixed;
@@ -19,7 +19,7 @@ const GlobalLoader = () => {
 
     return globalLoading ? (
         <Wrapper>
-            <PuffLoader size="100px" color="#FFFFFF" />
+            <FirmaLoading />
         </Wrapper>
     ) : (
         <></>

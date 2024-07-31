@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { QRCode } from 'react-qrcode-logo';
-import { PuffLoader } from 'react-spinners';
+import { Grid } from 'react-loader-spinner';
 
 import styled, { keyframes, css } from 'styled-components';
 import { IC_FIRMACHAIN_QRCODE } from '../icons/pngIcons';
@@ -81,7 +81,7 @@ const ConnectQR = ({ qrSize, qrcode, expireDate, isActive, setTimerText, onExpir
         <QRWrapper $isLoading={qrcode === ''}>
             {qrcode === '' ? (
                 <div style={{ width: qrSize, height: qrSize, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <PuffLoader loading={true} color={'#FFFFFF'} />
+                    <Grid color={'#FFFFFF'} width={Math.floor(qrSize / 2)} height={Math.floor(qrSize / 2)} />
                 </div>
             ) : (
                 <div style={{ background: '#FFF', display: 'flex', justifyContent: 'center', borderRadius: '12px' }}>

@@ -402,3 +402,22 @@ export const checkImageUrl = (url: string, onValid: () => void, onInvalid: () =>
 };
 
 export const openLink = (url: string) => window.open(url, '_blank', 'noopener,noreferrer');
+
+export const hasDuplicateNumbers = (arr: string[]) => {
+    const numberSet = new Set<number>();
+
+    for (const item of arr) {
+        const num = parseFloat(item);
+
+        if (!isNaN(num)) {
+            if (numberSet.has(num)) {
+                return true;
+            }
+            numberSet.add(num);
+        } else {
+            console.warn(`"${item}" is not a valid number.`);
+        }
+    }
+
+    return false;
+};
