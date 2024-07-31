@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { IC_CLOCK, IC_COINS_HAND, IC_ID_CIRCLE, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IC_CLOCK, IC_REFRESH, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { format } from 'date-fns';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import commaNumber from 'comma-number';
@@ -111,7 +111,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     return <></>;
 };
 
-const ApprovePreview = () => {
+const UpdateOwnershipTransferPreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     return (
@@ -119,8 +119,8 @@ const ApprovePreview = () => {
             <ContentWrap>
                 <ItemWrap>
                     <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COINS_HAND} alt={'approve-nft'} />
-                        <ItemLabelTypo>Approve NFT</ItemLabelTypo>
+                        <ItemLabelIcon src={IC_REFRESH} alt={'update-ownership-transfer'} />
+                        <ItemLabelTypo>Update Ownership Transfer</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
                         <ArrowToggleButton onToggle={setIsOpen} />
@@ -134,10 +134,6 @@ const ApprovePreview = () => {
                             <AccordionTypo $disabled>Wallet Address</AccordionTypo>
                         </AccordionRow>
                         <AccordionRow>
-                            <img src={IC_ID_CIRCLE} alt="token-id" />
-                            <AccordionTypo $disabled>Token ID</AccordionTypo>
-                        </AccordionRow>
-                        <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
                             <ExpirationBox />
                         </AccordionRow>
@@ -146,11 +142,11 @@ const ApprovePreview = () => {
             </ContentWrap>
             <ButtonWrap>
                 <GreenButton disabled>
-                    <div className="button-text">Approve</div>
+                    <div className="button-text">Update Ownership Transfer</div>
                 </GreenButton>
             </ButtonWrap>
         </Container>
     );
 };
 
-export default ApprovePreview;
+export default UpdateOwnershipTransferPreview;
