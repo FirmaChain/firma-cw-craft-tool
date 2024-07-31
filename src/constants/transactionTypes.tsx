@@ -60,3 +60,63 @@ export const CW20_TRANSACTION_TYPES = [
     UPDATE_MARKETING,
     UPLOAD_LOGO
 ];
+
+//? For CW721 TX types, may be wrong
+export const TRANSFER_NFT = {
+    key: 'transfer_nft',
+    value: 'TransferNFT'
+};
+
+export const SEND_NFT = {
+    key: 'send_nft',
+    value: 'SendNFT'
+};
+
+export const APPROVE = {
+    key: 'approve',
+    value: 'Approve'
+};
+
+export const REVOKE = {
+    key: 'revoke',
+    value: 'Revoke'
+};
+
+export const APPROVE_ALL = {
+    key: 'approve_all',
+    value: 'ApproveAll'
+};
+
+export const REVOKE_ALL = {
+    key: 'revoke_all',
+    value: 'RevokeAll'
+};
+
+export const QUERY_OWNER = {
+    key: 'owner_of',
+    value: 'QueryOwner'
+};
+
+export const QUERY_TOKEN_INFO = {
+    key: 'nft_info',
+    value: 'QueryTokenInfo'
+};
+
+export const UPDATE_OWNERSHIP = {
+    key: 'update_ownership',
+    value: 'UpdateOwnership'
+};
+
+export const CW721_TRANSACTION_TYPES = [
+    MINT,
+    BURN,
+    TRANSFER_NFT,
+    SEND_NFT,
+    APPROVE,
+    REVOKE,
+    APPROVE_ALL,
+    REVOKE_ALL,
+    QUERY_OWNER,
+    QUERY_TOKEN_INFO,
+    UPDATE_OWNERSHIP
+];

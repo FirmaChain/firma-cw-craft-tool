@@ -1,5 +1,5 @@
 import { Expires, FirmaUtil } from '@firmachain/firma-js';
-import { CW20_TRANSACTION_TYPES } from '../constants/cw20Types';
+import { CW20_TRANSACTION_TYPES, CW721_TRANSACTION_TYPES } from '../constants/transactionTypes';
 import { IMsg } from '../interfaces/cw20';
 
 export const addCommasToNumberString = (numberString: string): string => {
@@ -119,7 +119,8 @@ export const shortenAddress = (address: string, startLength: number = 6, endLeng
 export const determineMsgTypeAndSpender = (messages: IMsg[]): { type: string; sender: string }[] => {
     return messages.map((item) => {
         const msgKey = Object.keys(item.msg)[0];
-        const messageType = CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey);
+        const messageType =
+            CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey) || CW721_TRANSACTION_TYPES.find((type) => type.key === msgKey);
         const sender = item.sender;
 
         return {

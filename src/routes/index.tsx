@@ -5,7 +5,7 @@ import Cw20Mytoken from '../pages/cw20/myToken';
 import LandingPage from '@/pages/landing';
 
 import { CW20Execute, CW20Instantiate, CW20SearchPage, CW20TokenDetail } from '@/pages/cw20';
-import { CW721Instantiate } from '@/pages/cw721';
+import { CW721Instantiate, CW721Search } from '@/pages/cw721';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
     path,
@@ -15,7 +15,7 @@ const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) =
 
 const routes: any[] = [
     routeByAuth('/', <LandingPage />, false),
-    
+
     routeByAuth('/instantiate', <CW20Instantiate />, false),
     routeByAuth('/execute', <CW20Execute />, false),
     routeByAuth('/execute/:contractAddress', <CW20Execute />, false),
@@ -23,10 +23,10 @@ const routes: any[] = [
     routeByAuth('/mytoken', <Cw20Mytoken />, false),
     routeByAuth('/mytoken/detail/:contractAddress', <CW20TokenDetail />, false),
 
-    routeByAuth('/cw721/instantiate', <CW721Instantiate/>, false),
+    routeByAuth('/cw721/instantiate', <CW721Instantiate />, false),
     routeByAuth('/cw721/execute', <></>, false),
     routeByAuth('/cw721/execute/:contractAddress', <></>, false),
-    routeByAuth('/cw721/search', <></>, false),
+    routeByAuth('/cw721/search', <CW721Search />, false),
     routeByAuth('/cw721/mynft', <></>, false),
     routeByAuth('/cw721/mynft/detail/:contractAddress', <></>, false)
 ];
