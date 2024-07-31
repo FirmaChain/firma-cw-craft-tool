@@ -11,6 +11,10 @@ import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
+import Mint from './functions/mint';
+import Burn from './functions/burn';
+import Transfer from './functions/transfer';
+import Approve from './functions/approve';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -54,8 +58,8 @@ const ContractBox = styled.div`
 `;
 
 const ContractSymbolTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 22px;
     font-style: normal;
     font-weight: 600;
@@ -64,7 +68,7 @@ const ContractSymbolTypo = styled.div`
 
 const ContractNameTypo = styled.div`
     color: var(--Gray-650, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -89,7 +93,7 @@ const basicMenuItems: IMenuItem[] = [
     { value: 'revokeAll', label: 'Revoke All' },
     { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer' },
     { value: 'updateOwnershipAccept', label: 'Update Ownership Accept' },
-    { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce' },
+    { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce' }
 ];
 
 const advancedMenuItems: IMenuItem[] = [
@@ -104,7 +108,7 @@ const advancedMenuItems: IMenuItem[] = [
     { value: 'revokeAll', label: 'Revoke All' },
     { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer' },
     { value: 'updateOwnershipAccept', label: 'Update Ownership Accept' },
-    { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce' },
+    { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce' }
 ];
 
 const CW721ContractInfo = () => {
@@ -155,6 +159,10 @@ const CW721ContractInfo = () => {
                             <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
                         </Fragment>
                     )}
+                    {selectMenu?.value === 'mint' && <Mint />}
+                    {selectMenu?.value === 'burn' && <Burn />}
+                    {selectMenu?.value === 'transfer' && <Transfer />}
+                    {selectMenu?.value === 'approve' && <Approve />}
                 </Container>
             )}
         </>

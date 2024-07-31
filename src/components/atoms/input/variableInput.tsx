@@ -144,6 +144,8 @@ const VariableInput = ({
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(/[^a-zA-Z0-9!#$&'"`₩(){\}*^+,/:;=?@<>[\]_.~%\- |\\]/g, '');
 
+        if (inputValue !== event.target.value) return;
+
         if (inputValue.length > 0) {
             if (type === 'number') {
                 inputValue = inputValue.replace(decimal === 0 ? /[^0-9]/g : /[^0-9.]/g, '');

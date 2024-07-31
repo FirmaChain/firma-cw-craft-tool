@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import IconButton from '../buttons/iconButton';
 
 export const WalletListWrapper = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;

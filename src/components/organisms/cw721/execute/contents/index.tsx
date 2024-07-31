@@ -1,14 +1,15 @@
-import { Fragment, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import styled from "styled-components";
+import { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
-import { rootState } from "@/redux/reducers";
-import { isValidAddress } from "@/utils/address";
-import { FIRMA_DIM_LOGO } from "@/components/atoms/icons/pngIcons";
+import { rootState } from '@/redux/reducers';
+import { isValidAddress } from '@/utils/address';
+import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
 
-import useCW721ExecuteStore from "../hooks/useCW721ExecuteStore";
-import useCW721ExecuteAction from "../hooks/useCW721ExecuteAction";
-import CW721ContractInfo from "../cards/contractInfo";
+import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
+import useCW721ExecuteAction from '../hooks/useCW721ExecuteAction';
+import CW721ContractInfo from '../cards/contractInfo';
+import Preview from '../cards/preview';
 
 const Container = styled.div`
     width: 100%;
@@ -55,9 +56,7 @@ const Contents = () => {
 
     const clearForm = useCW721ExecuteStore((state) => state.clearForm);
 
-    const {
-        checkContractExist
-    } = useCW721ExecuteAction();
+    const { checkContractExist } = useCW721ExecuteAction();
 
     const [existContract, setExistContract] = useState<Boolean | null>(null);
 
@@ -98,7 +97,7 @@ const Contents = () => {
                 {existContract === true && (
                     <Box>
                         <CW721ContractInfo />
-                        {/* <Preview /> */}
+                        <Preview />
                     </Box>
                 )}
                 {existContract === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
@@ -109,7 +108,7 @@ const Contents = () => {
                 )}
             </Container>
         </Fragment>
-    )
+    );
 };
 
 export default Contents;

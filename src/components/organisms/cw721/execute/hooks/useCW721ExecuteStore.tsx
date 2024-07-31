@@ -1,4 +1,4 @@
-import { ContractInfo, Cw721ContractInfo } from "@firmachain/firma-js";
+import { ContractInfo, Cw721ContractInfo } from '@firmachain/firma-js';
 
 import {
     IExecuteApproveAll,
@@ -9,21 +9,21 @@ import {
     IExecuteRevokeAll,
     IExecuteRevoke,
     IExecuteUpdateOwnershipTransfer
-} from "@/interfaces/cw721";
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
-import { IMenuItem } from "@/interfaces/common";
+} from '@/interfaces/cw721';
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+import { IMenuItem } from '@/interfaces/common';
 
 interface FormProps {
-    contractInfo: ContractInfo | null;
-    nftContractInfo: Cw721ContractInfo | null;
+    contractInfo: ContractInfo;
+    nftContractInfo: Cw721ContractInfo;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
 
     clearInfo: () => void;
 
-    contractAddress: string | null;
-    selectMenu: IMenuItem | null;
+    contractAddress: string;
+    selectMenu: IMenuItem;
     mint: IExecuteMint;
     burn: IExecuteBurn;
     transfer: IExecuteTransfer[];
@@ -46,12 +46,38 @@ interface FormProps {
     clearForm: () => void;
 }
 
+const INIT_CONTRACT_INFO: ContractInfo = {
+    address: '',
+    contract_info: {
+        code_id: '',
+        creator: '',
+        admin: '',
+        label: '',
+        created: {
+            block_height: '',
+            tx_index: ''
+        },
+        ibc_port_id: '',
+        extension: {
+            '@type': ''
+        }
+    }
+};
+const INIT_NFT_CONTRACT_INFO: Cw721ContractInfo = { name: '', symbol: '' };
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
+const INIT_MINT: IExecuteMint = { recipient: '', nftInfos: [] };
+const INIT_BURN: IExecuteBurn = { token_ids: [] };
+const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
+const INIT_APPORVE: IExecuteApprove = { recipient: '', token_id: '', expire: { type: '', value: '' } };
+const INIT_REVOKE: IExecuteRevoke = { recipient: '', token_id: '' };
+const INIT_APPROVE_ALL: IExecuteApproveAll = { recipient: '', expire: { type: '', value: '' } };
+const INIT_REVOKE_ALL: IExecuteRevokeAll = { recipient: '' };
+const INIT_UPDATE_OWNERSHIP_TRANSFER: IExecuteUpdateOwnershipTransfer = { recipient: '', expire: { type: '', value: '' } };
 
 const useCW721ExecuteStore = create<FormProps>()(
     immer((set) => ({
-        contractInfo: null,
-        nftContractInfo: null,
+        contractInfo: INIT_CONTRACT_INFO,
+        nftContractInfo: INIT_NFT_CONTRACT_INFO,
         setContractInfo: (data) =>
             set((state) => {
                 state.contractInfo = data;
@@ -62,19 +88,20 @@ const useCW721ExecuteStore = create<FormProps>()(
             }),
         clearInfo: () =>
             set((state) => {
-                state.contractInfo = null;
+                state.contractInfo = INIT_CONTRACT_INFO;
+                state.nftContractInfo = INIT_NFT_CONTRACT_INFO;
             }),
-            
-        contractAddress: null,
+
+        contractAddress: '',
         selectMenu: INIT_SELECT_MENU,
-        mint: null,
-        burn: null,
-        transfer: null,
-        approve: null,
-        revoke: null,
-        approveAll: null,
-        revokeAll: null,
-        updateOwnershipTransfer: null,
+        mint: INIT_MINT,
+        burn: INIT_BURN,
+        transfer: INIT_TRANSFER,
+        approve: INIT_APPORVE,
+        revoke: INIT_REVOKE,
+        approveAll: INIT_APPROVE_ALL,
+        revokeAll: INIT_REVOKE_ALL,
+        updateOwnershipTransfer: INIT_UPDATE_OWNERSHIP_TRANSFER,
         setContractAddress: (data) =>
             set((state) => {
                 state.contractAddress = data;
@@ -99,7 +126,7 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.approve = data;
             }),
-        setRevoke: (data) => 
+        setRevoke: (data) =>
             set((state) => {
                 state.revoke = data;
             }),
@@ -107,7 +134,7 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.approveAll = data;
             }),
-        setRevokeAll: (data) => 
+        setRevokeAll: (data) =>
             set((state) => {
                 state.revokeAll = data;
             }),
@@ -117,20 +144,22 @@ const useCW721ExecuteStore = create<FormProps>()(
             }),
         clearForm: () => {
             set((state) => {
-                state.contractInfo = null;
-                state.contractAddress = null;
+                state.contractInfo = INIT_CONTRACT_INFO;
+                state.nftContractInfo = INIT_NFT_CONTRACT_INFO;
+
+                state.contractAddress = '';
                 state.selectMenu = INIT_SELECT_MENU;
-                state.mint = null;
-                state.burn = null;
-                state.transfer = null;
-                state.approve = null;
-                state.revoke = null;
-                state.approveAll = null;
-                state.revokeAll = null;
-                state.updateOwnershipTransfer = null;
-            })
+                state.mint = INIT_MINT;
+                state.burn = INIT_BURN;
+                state.transfer = INIT_TRANSFER;
+                state.approve = INIT_APPORVE;
+                state.revoke = INIT_REVOKE;
+                state.approveAll = INIT_APPROVE_ALL;
+                state.revokeAll = INIT_REVOKE_ALL;
+                state.updateOwnershipTransfer = INIT_UPDATE_OWNERSHIP_TRANSFER;
+            });
         }
     }))
-)
+);
 
 export default useCW721ExecuteStore;
