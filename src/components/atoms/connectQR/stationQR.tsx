@@ -47,8 +47,7 @@ const StationQR = () => {
             </DownloadQRButton>
             <div
                 style={{
-                    width: '120px',
-                    height: '120px',
+                    padding: '6px',
                     borderRadius: '6px',
                     display: 'flex',
                     alignItems: 'center',
@@ -57,7 +56,7 @@ const StationQR = () => {
                 }}
                 ref={canvasRef}
             >
-                <QRCode value={stationUrl} size={100} quietZone={0} logoImage={IC_FIRMACHAIN_QRCODE} logoWidth={32} logoHeight={32} />
+                <QRCode value={stationUrl} size={144} quietZone={0} logoImage={IC_FIRMACHAIN_QRCODE} logoWidth={32} logoHeight={32} />
             </div>
         </div>
     );

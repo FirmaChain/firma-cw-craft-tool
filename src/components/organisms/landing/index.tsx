@@ -27,6 +27,7 @@ import {
 import { useModalStore } from '@/hooks/useModal';
 import LoadingModal from '../modal/loadingModal';
 import { GlobalActions } from '@/redux/actions';
+import { getRandomTimeInMs } from '@/utils/common';
 
 const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
     return (
@@ -54,7 +55,7 @@ const CW20Btn = () => {
             modalType: 'custom',
             _component: ({ id }) => (
                 <LoadingModal
-                    delay={1000}
+                    delay={getRandomTimeInMs(1.5, 3.8)}
                     callback={() => {
                         closeModal(id);
                         GlobalActions.handleCw('CW20');
@@ -86,7 +87,7 @@ const CW721Btn = () => {
             modalType: 'custom',
             _component: ({ id }) => (
                 <LoadingModal
-                    delay={1000}
+                    delay={getRandomTimeInMs(1.5, 3.8)}
                     callback={() => {
                         closeModal(id);
                         GlobalActions.handleCw('CW721');

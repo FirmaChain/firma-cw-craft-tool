@@ -32,6 +32,7 @@ interface IInputProps {
     maxValue?: number;
     textAlign?: 'left' | 'center' | 'right';
     readOnly?: boolean;
+    disabled?: boolean;
 }
 
 const IconBackground = styled.div`
@@ -71,7 +72,8 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
         decimal = 6,
         maxValue,
         textAlign = 'left',
-        readOnly = false
+        readOnly = false,
+        disabled = false
     } = inputProps;
 
     const errorMessage = Object.values(useFormStore((state) => state.formError[formId]) || {});
@@ -178,6 +180,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 decimal={decimal}
                 maxValue={maxValue}
                 regex={regex}
+                disabled={disabled}
             />
         </div>
     );

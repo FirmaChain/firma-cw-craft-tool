@@ -9,6 +9,7 @@ const StyledInput = styled.div<{
     $currentLength?: number;
     $textAlign?: 'left' | 'center' | 'right';
     $readOnly?: boolean;
+    $disabled?: boolean;
 }>`
     width: 100%;
     min-height: 48px;
@@ -41,7 +42,7 @@ const StyledInput = styled.div<{
         width: 100%;
         height: 100%;
         z-index: 1;
-        color: #ffffff;
+        color: ${({ $disabled, $readOnly }) => ($disabled || $readOnly ? '#707070' : '#ffffff')};
         border: none;
 
         padding: 0 16px;
@@ -204,7 +205,8 @@ const VariableInput = ({
                 $error={isError}
                 $currentLength={String(value).length}
                 $textAlign={textAlign}
-                $readOnly={readOnly || disabled}
+                $readOnly={readOnly}
+                $disabled={disabled}
                 onFocus={() => !readOnly && setIsFocus(true)}
             >
                 <input

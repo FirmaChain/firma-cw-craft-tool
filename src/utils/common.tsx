@@ -421,3 +421,12 @@ export const hasDuplicateNumbers = (arr: string[]) => {
 
     return false;
 };
+
+export const getRandomTimeInMs = (startSecond: number, endSecond: number): number => {
+    const startMs = startSecond * 1000;
+    const endMs = endSecond * 1000;
+
+    const randomMs = Math.random() * (endMs - startMs) + startMs;
+
+    return Math.floor(randomMs);
+};
