@@ -9,6 +9,7 @@ import { addStringAmount, getUTokenAmountFromToken } from '@/utils/balance';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
 import useFormStore from '@/store/formStore';
+import Cw20BurnFromInputList from '@/components/atoms/walletList/cw20BurnFromInputList';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -85,7 +86,7 @@ const BurnFrom = () => {
                     </SummeryWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <AddressAmountInput
+            <Cw20BurnFromInputList
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={'Owner Address'}

@@ -127,7 +127,7 @@ const UpdateMinter = () => {
     const errorMessage = useMemo(() => {
         if (minterAddress === '') return 'Please input address';
         if (!FirmaUtil.isValidAddress(minterAddress)) return 'Invalid address';
-        if (minterAddress === minterInfo.minter) return 'Same address as before';
+        if (minterAddress === minterInfo?.minter) return 'Same address as before';
         return '';
     }, [minterAddress, minterAddress]);
 

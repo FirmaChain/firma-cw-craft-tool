@@ -322,7 +322,7 @@ const IncreaseAllowancePreview = () => {
                             {allowance === null ? '0' : commaNumber(allowance?.amount === undefined ? '0' : allowance.amount)}
                         </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
@@ -343,7 +343,7 @@ const IncreaseAllowancePreview = () => {
                                         ? 'Wallet Address'
                                         : shortenAddress(allowance?.address || '', 16, 16)}
                                 </AccordionTypo>
-                                <AccordionTypo $disabled={allowance === null ? false : !Number(allowance.amount)}>
+                                <AccordionTypo $disabled={allowance === null || !Number(allowance.amount)}>
                                     {commaNumber(allowance === null ? '0' : allowance?.amount) || 0}
                                 </AccordionTypo>
                             </div>
@@ -360,7 +360,6 @@ const IncreaseAllowancePreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" />
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>

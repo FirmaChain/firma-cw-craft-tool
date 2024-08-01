@@ -62,7 +62,7 @@ const Approve = () => {
     const setApproveType = useCW721ExecuteStore((state) => state.setApproveType);
     const setApproveValue = useCW721ExecuteStore((state) => state.setApproveValue);
     const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
-    
+
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -145,7 +145,7 @@ const Approve = () => {
                                     value: approveRecipientAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
-                                    emptyErrorMessage: 'Please input firmachain wallet address'
+                                    emptyErrorMessage: 'Please input firmachain wallet address.'
                                 }}
                             />
                         </div>

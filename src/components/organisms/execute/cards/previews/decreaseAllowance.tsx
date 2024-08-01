@@ -322,7 +322,7 @@ const DecreaseAllowancePreview = () => {
                     <ItemAmountWrap>
                         <ItemAmountTypo>{commaNumber(allowance?.amount === undefined ? '0' : allowance.amount)}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
@@ -360,7 +360,6 @@ const DecreaseAllowancePreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" />
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>

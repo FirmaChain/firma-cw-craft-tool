@@ -104,7 +104,7 @@ const InputAddressAmount = ({
                             placeHolder: '0',
                             type: 'number',
                             decimal: decimals ? Number(decimals) : 6,
-                            emptyErrorMessage: 'Please input mint amount',
+                            emptyErrorMessage: 'Please input amount.',
                             textAlign: 'right'
                         }}
                     />

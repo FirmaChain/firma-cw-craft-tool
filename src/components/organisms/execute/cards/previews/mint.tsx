@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
@@ -293,7 +293,7 @@ const MintPreview = () => {
                                 {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
                             </TokenInfoMintAmountTypo>
                             <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
-                            <ArrowToggleButton onToggle={setIsOpen} />
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>
                     {isOpen && (
@@ -329,7 +329,12 @@ const MintPreview = () => {
                     <TokenInfoRightWrap>
                         <TotalSupplyWrap>
                             <TotalSupplyAmount>
-                                {formatWithCommas(getTokenAmountFromUToken(tokenInfo.total_supply, tokenInfo.decimals.toString()))}
+                                {formatWithCommas(
+                                    getTokenAmountFromUToken(
+                                        String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),
+                                        tokenInfo.decimals.toString()
+                                    )
+                                )}
                             </TotalSupplyAmount>
                             <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
                         </TotalSupplyWrap>

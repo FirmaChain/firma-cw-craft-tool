@@ -256,7 +256,7 @@ const TransferFromPreview = () => {
                     <ItemAmountWrap>
                         <ItemAmountTypo>{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (

@@ -237,7 +237,7 @@ const BurnFromPreview = () => {
                             {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
                         </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
@@ -262,9 +262,6 @@ const BurnFromPreview = () => {
                 <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>
                     <div className="button-text">Burn From</div>
                 </GreenButton>
-                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickBurn}>
-                    <ExecuteButtonTypo>Burn From</ExecuteButtonTypo>
-                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

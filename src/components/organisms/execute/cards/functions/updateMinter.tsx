@@ -20,7 +20,7 @@ const UpdateMinter = () => {
         if (FirmaUtil.isValidAddress(v) || v === '') {
             clearFormError({ id: MINTER_INPUT_FORM_ID, type: MINTER_ERROR_TYPE });
         } else {
-            setFormError({ id: MINTER_INPUT_FORM_ID, type: MINTER_ERROR_TYPE, message: 'Input valid firma address' });
+            setFormError({ id: MINTER_INPUT_FORM_ID, type: MINTER_ERROR_TYPE, message: 'Please input firmachain wallet address.' });
         }
 
         setMinterAddress(v);

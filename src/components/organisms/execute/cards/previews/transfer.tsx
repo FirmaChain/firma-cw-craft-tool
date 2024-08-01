@@ -292,7 +292,7 @@ const TransferPreview = () => {
                             {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
                         </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
@@ -318,7 +318,6 @@ const TransferPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" />
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
@@ -333,9 +332,6 @@ const TransferPreview = () => {
                 <GreenButton disabled={!isEnableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>
                 </GreenButton>
-                {/* <ExecuteButton $isEnable={isEnableButton} onClick={onClickTransfer}>
-                    <ExecuteButtonTypo>Transfer</ExecuteButtonTypo>
-                </ExecuteButton> */}
             </ButtonWrap>
         </Container>
     );

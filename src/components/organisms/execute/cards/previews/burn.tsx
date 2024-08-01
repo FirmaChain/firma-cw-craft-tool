@@ -222,7 +222,7 @@ const BurnPreview = () => {
                         <BurnInfoTitleTypo>Total Burn Amount</BurnInfoTitleTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <BurnAmountTypo>{formatWithCommas(burnAmount !== null ? burnAmount : "0")}</BurnAmountTypo>
+                        <BurnAmountTypo>{formatWithCommas(burnAmount !== null ? burnAmount : '0')}</BurnAmountTypo>
                         <BurnSymbolTypo>{tokenInfo.symbol}</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
@@ -232,7 +232,6 @@ const BurnPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" />
                         </div>
                     </ItemLeftWrap>
                     <ItemRightWrap>

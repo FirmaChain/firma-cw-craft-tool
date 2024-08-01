@@ -217,7 +217,7 @@ const IncreaseAllowance = () => {
                                         allowance === null || allowance === undefined ? '' : !allowance?.address ? '' : allowance?.address,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
-                                    emptyErrorMessage: 'Please input firmachain wallet address'
+                                    emptyErrorMessage: 'Please input firmachain wallet address.'
                                 }}
                             />
                         </div>

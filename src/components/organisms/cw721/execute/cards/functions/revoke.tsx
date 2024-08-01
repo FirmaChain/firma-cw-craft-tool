@@ -12,7 +12,7 @@ const Revoke = () => {
     const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
     const setRevokeTokenId = useCW721ExecuteStore((state) => state.setRevokeTokenId);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
-    
+
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
@@ -63,7 +63,7 @@ const Revoke = () => {
                                     value: revokeAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
-                                    emptyErrorMessage: 'Please input firmachain wallet address'
+                                    emptyErrorMessage: 'Please input firmachain wallet address.'
                                 }}
                             />
                         </div>

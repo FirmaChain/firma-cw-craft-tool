@@ -3,11 +3,12 @@ import IconButton from './iconButton';
 import Icons from '../icons';
 
 interface IProps {
+    open?: boolean;
     onToggle: (isOpen: boolean) => void;
 }
 
-const ArrowToggleButton = ({ onToggle }: IProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+const ArrowToggleButton = ({ open, onToggle }: IProps) => {
+    const [isOpen, setIsOpen] = useState<boolean>(open);
 
     const onClickButton = () => {
         setIsOpen(!isOpen);

@@ -139,7 +139,7 @@ const ApproveAll = () => {
                             value: walletAddress,
                             onChange: handleChangeAddress,
                             placeHolder: 'Input Wallet Address',
-                            emptyErrorMessage: 'Please input firmachain wallet address'
+                            emptyErrorMessage: 'Please input firmachain wallet address.'
                         }}
                     />
                 </div>
