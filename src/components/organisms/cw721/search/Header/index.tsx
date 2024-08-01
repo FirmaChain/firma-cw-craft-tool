@@ -3,8 +3,13 @@ import { HeaderBox, HeaderWrap, Title } from './styles';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import useCW721SearchStore from '../cw721SearchStore';
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useCW721SearchActions from '../action';
+import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import useNFTContractDetail from '@/hooks/useNFTContractDetail';
+import { GlobalActions } from '@/redux/actions';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const EndAdornment = ({
     keyword,
@@ -43,25 +48,65 @@ const EndAdornment = ({
 };
 
 const Header = () => {
-    const keyword = useCW721SearchStore((state) => state.keyword);
-    const setKeyword = useCW721SearchStore((state) => state.setKeyword);
-    const clearAll = useCW721SearchStore((state) => state.clearAll);
-    const clearSearchInfo = useCW721SearchStore((state) => state.clearSearchInfo);
-
-    const { checkContractExist, clearSearchKeywordRef } = useCW721SearchActions();
+    const { address } = useSelector((state: rootState) => state.wallet);
+    const [keyword, setKeyword] = useState<string>('');
+    const prevKeyword = useRef<string | null>(null)
 
     const disableSearch = keyword.length === 0;
 
+    const { setContractDetail, setNftsInfo, setOwnedNftsInfo, setTransactions, clearForm } = useNFTContractDetailStore();
+    const { checkExistContract, getNFTContractDetail, getNFTsInfo, getOwnedNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
+
+    const getRequiredInfo = useCallback(async () => {
+        try {
+            if (prevKeyword.current === null || prevKeyword.current !== keyword) {
+                const exist = await checkExistContract(keyword);
+
+                if (exist) {
+                    GlobalActions.handleGlobalLoading(true);
+                    const detail = await getNFTContractDetail(keyword);
+                    const nfts = await getNFTsInfo(keyword);
+                    const ownedNfts = await getOwnedNFTsInfo(keyword, address)
+                    const txData = await getNFTContractTransactions(keyword);
+
+                    setContractDetail(detail);
+                    setNftsInfo(nfts);
+                    setOwnedNftsInfo(ownedNfts);
+                    setTransactions(txData.txData);
+                } else {
+                    prevKeyword.current = null;
+                    clearForm();
+                }
+                prevKeyword.current = keyword;
+            } else {
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            GlobalActions.handleGlobalLoading(false);
+        }
+    }, [keyword, prevKeyword]);
+
     const onClickClearKeyword = () => {
         setKeyword('');
-        clearSearchInfo();
-        clearAll();
-        clearSearchKeywordRef();
+        prevKeyword.current = null;
+        clearForm();
     };
 
     const onClickSearch = () => {
-        checkContractExist(keyword);
+        getRequiredInfo();
     };
+
+    useEffect(() => {
+        return () => {
+            onClickClearKeyword();
+        }
+    }, [])
+
+    useEffect(() => {
+        onClickClearKeyword();
+    }, [address])
 
     return (
         <HeaderBox>

@@ -12,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { CW20MyTokenProvider } from './context/cw20MyTokenContext';
 import { CW721NFTContractsProvider } from './context/cw721MyNFTContractsContext';
 import { CW721NFTListProvider } from './context/cw721NFTListContext';
+import { CW721OwnedNFTListProvider } from './context/cw721OwnedNFTListContext';
 
 const App = () => {
     return (
@@ -20,7 +21,9 @@ const App = () => {
                 <CW20MyTokenProvider>
                     <CW721NFTContractsProvider>
                         <CW721NFTListProvider>
-                            <Main />
+                            <CW721OwnedNFTListProvider>
+                                <Main />
+                            </CW721OwnedNFTListProvider>
                         </CW721NFTListProvider>
                     </CW721NFTContractsProvider>
                 </CW20MyTokenProvider>

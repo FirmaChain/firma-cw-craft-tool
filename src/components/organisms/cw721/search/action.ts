@@ -95,12 +95,14 @@ const useCW721SearchActions = () => {
             const minterInfo = await firmaSDK.Cw721.getMinter(keyword);
             const ownerInfo = await firmaSDK.Cw721.getOwnerShip(keyword);
             const nftIdList = await firmaSDK.Cw721.getAllNftIdList(keyword);
+            const totalNfts = await firmaSDK.Cw721.getTotalNfts(keyword);
             const recentTx = await getAllTransactinos(keyword);
 
             useCW721SearchStore.getState().setContractInfo(contractInfo);
             useCW721SearchStore.getState().setMinterInfo(minterInfo);
             useCW721SearchStore.getState().setOwnerInfo(ownerInfo);
             useCW721SearchStore.getState().setAllNftIds(nftIdList);
+            useCW721SearchStore.getState().setTotalNfts(totalNfts);
             useCW721SearchStore.getState().setAllTransactions(recentTx);
 
             previousKeywordRef.current = keyword;

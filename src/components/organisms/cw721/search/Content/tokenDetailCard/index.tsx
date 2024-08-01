@@ -5,121 +5,158 @@ import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { useState } from 'react';
-import Icons from '@/components/atoms/icons';
+import { useMemo, useState } from 'react';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import commaNumber from 'comma-number';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { Cw721Expires } from '@firmachain/firma-js';
 import { format } from 'date-fns';
-import NftTable from '@/components/atoms/table/nftTable';
+import { CardHeaderTypo, CardSpecific, ContractCard, NFTTableContainer, SpecificItem, SpecificLabelTypo, SpecificValueBox, SpecificValueCover, SpecificValueTypo, SpecificValueWrapper, TableExpandButton } from './style';
+import NFTsTable from '../../../common/nftsTable';
+import { IC_EXPAND } from '@/components/atoms/icons/pngIcons';
+import Skeleton from '@/components/atoms/skeleton';
+import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import useNFTContractDetail from '@/hooks/useNFTContractDetail';
+import { useCW721NFTListContext } from '@/context/cw721NFTListContext';
+import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext';
 
 const TokenInfo = () => {
     const network = useSelector((v: rootState) => v.global.network);
-    const contractAddress = useCW721SearchStore((state) => state.contractInfo?.address);
-    const minter = useCW721SearchStore((v) => v?.minterInfo);
-    const nftName = useCW721SearchStore((state) => state.nftInfo?.name);
-    const nftSymbol = useCW721SearchStore((state) => state.nftInfo?.symbol);
-    const label = useCW721SearchStore((state) => state.contractInfo?.contract_info?.label);
-    const codeId = useCW721SearchStore((state) => state.contractInfo?.contract_info.code_id);
-    const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID;
+    const { address } = useSelector((state: rootState) => state.wallet);
+    const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
+    const { handleCW721NFTIdList, handleCW721OwnedNFTIdList } = useNFTContractDetail();
+    const { nfts, addNFTs, updateNFTs, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
+    const { nfts: ownedNfts, addNFTs: addOwnedNFTs, updateNFTs: updateOwnedNFTs,
+        clearCW721NFTListData: clearCW721OwnedNFTListData,
+        currentPage: currentOwnedPage, setCurrentPage: setCurrentOwnedPage } = useCW721OwnedNFTListContext();
 
-    const [showTotalSupply, setShowTotalSupply] = useState(true);
+    const contractAddress = contractDetail?.contractAddress || '';
+    const codeId = contractDetail?.codeId || '';
+    const minter = contractDetail.minter || '';
+    const contractName = contractDetail?.name || '';
+    const contractSymbol = contractDetail?.symbol || '';
+    const codeID = contractDetail?.codeId || '';
+    const label = contractDetail?.label;
+    const totalSupply = nftsInfo?.totalSupply || '0';
 
-    const [showMyNft, setShowMyNFT] = useState(true);
+    const isBasic = useMemo(() => {
+        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return codeId === craftConfig.CW20.BASIC_CODE_ID;
+    }, [network, codeId]);
+
+    const [expandTotal, setExpandTotal] = useState(true);
+    const [expandOwned, setExpandOwned] = useState(true);
+
+    const handleOwnedNFTIdList = async (contractAddress: string) => {
+        try {
+            handleCW721OwnedNFTIdList(contractAddress, address);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <SectionContainer>
-            <div className="section-title">Token Information</div>
+            <CardHeaderTypo>Contract Information</CardHeaderTypo>
 
-            <div className="information-box">
-                <div className="box-row">
-                    <div className="box-title">Contract Address</div>
-                    <div className="box-value">
-                        <div className="white-typo single-line-clamp">{contractAddress}</div>
-                        {contractAddress && <CopyIconButton width="22px" height="22px" text={contractAddress} />}
-                    </div>
-                </div>
-                <div className="box-row">
-                    <div className="box-title">Minter</div>
-                    <div className="box-value">
-                        <div className="white-typo single-line-clamp">{minter || '-'}</div>
-                        {minter && <CopyIconButton width="22px" height="22px" text={minter} />}
-                    </div>
-                </div>
-                <div className="box-row">
-                    <div className="box-title">Token Name</div>
-                    <div className="box-value">
-                        <div className="white-typo">{nftName}</div>
-                    </div>
-                </div>
-                <div className="box-row">
-                    <div className="box-title">Token Symbol</div>
-                    <div className="box-value">
-                        <div className="white-typo">{nftSymbol}</div>
-                    </div>
-                </div>
-                {!isBasic && (
-                    <div className="box-row" style={{ height: '28px' }}>
-                        <div className="box-title">Label</div>
-                        {label && (
-                            <div className="box-value">
-                                <div className="label">
-                                    <div className="label-typo">{label}</div>
-                                </div>
-                            </div>
+            <CardSpecific>
+                <SpecificItem>
+                    <SpecificLabelTypo>Contract Address</SpecificLabelTypo>
+                    <SpecificValueWrapper>
+                        {contractAddress ? (
+                            <>
+                                <SpecificValueTypo>{contractAddress}</SpecificValueTypo>
+                                <CopyIconButton text={contractAddress} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <Skeleton width="200px" height="22px" />
                         )}
-                    </div>
+                    </SpecificValueWrapper>
+                </SpecificItem>
+                <SpecificItem>
+                    <SpecificLabelTypo>Minter</SpecificLabelTypo>
+                    {minter ? <SpecificValueTypo>{minter}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                </SpecificItem>
+                <SpecificItem>
+                    <SpecificLabelTypo>Contract Name</SpecificLabelTypo>
+                    {contractName ? <SpecificValueTypo>{contractName}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                </SpecificItem>
+                <SpecificItem>
+                    <SpecificLabelTypo>Contract Symbol</SpecificLabelTypo>
+                    {contractSymbol ? <SpecificValueTypo>{contractSymbol}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                </SpecificItem>
+
+                {!isBasic && (
+                    <SpecificItem style={{ height: '28px' }}>
+                        <SpecificLabelTypo>Label</SpecificLabelTypo>
+                        {typeof label === 'string' ? (
+                            <SpecificValueCover>{label}</SpecificValueCover>
+                        ) : (
+                            <Skeleton width="100px" height="22px" />
+                        )}
+                    </SpecificItem>
                 )}
-                <div className="box-row">
-                    <div className="box-title">Code Id</div>
-                    <div className="box-value">
-                        <div className="white-typo">{codeId}</div>
-                    </div>
-                </div>
-                <div className="box-row">
-                    <div className="box-title">Total Supply</div>
-
-                    <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
+                <SpecificItem>
+                    <SpecificLabelTypo>Code ID</SpecificLabelTypo>
+                    {codeID ? <SpecificValueTypo>{codeID}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                </SpecificItem>
+                <SpecificItem style={{ alignItems: 'flex-start' }}>
+                    <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
+                    <SpecificValueBox>
                         <IconButton
-                            onClick={() => setShowTotalSupply(!showTotalSupply)}
+                            onClick={() => setExpandTotal(!expandTotal)}
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
-                            <div className="white-typo">{commaNumber(0)}</div>
-                            <div className="gray-typo">NFT</div>
-                            <Icons.PrevPage
-                                width="20px"
-                                height="20px"
-                                stroke="#FFFFFF"
-                                style={{ transform: showTotalSupply ? 'rotate(90deg)' : 'rotate(270deg)' }}
-                            />
+                            <SpecificValueWrapper>
+                                <SpecificValueTypo>
+                                    {`${totalSupply === null ? 0 : totalSupply}`}<span>{'NFT'}</span>
+                                </SpecificValueTypo>
+                            </SpecificValueWrapper>
+                            <TableExpandButton $expand={expandTotal} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
-                        {showTotalSupply && <NftTable />}
-                    </div>
-                </div>
-                <div className="box-row">
-                    <div className="box-title">My NFTs</div>
-
-                    <div className="box-value" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
+                        <NFTTableContainer $expand={expandTotal}>
+                            <NFTsTable
+                                codeId={codeId}
+                                contractAddress={contractAddress}
+                                nftsInfo={nftsInfo}
+                                nfts={nfts}
+                                currentPage={currentPage}
+                                handleNFTIdList={handleCW721NFTIdList}
+                                addNFTs={addNFTs}
+                                updateNFTs={updateNFTs}
+                                clearListData={clearCW721NFTListData}
+                                setCurrentPage={setCurrentPage} />
+                        </NFTTableContainer>
+                    </SpecificValueBox>
+                </SpecificItem>
+                <SpecificItem style={{ alignItems: 'flex-start' }}>
+                    <SpecificLabelTypo>My NFTs</SpecificLabelTypo>
+                    <SpecificValueBox>
                         <IconButton
-                            onClick={() => setShowMyNFT(!showMyNft)}
+                            onClick={() => setExpandOwned(!expandOwned)}
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
-                            <div className="white-typo">{commaNumber(0)}</div>
-                            <div className="gray-typo">NFT</div>
-                            <Icons.PrevPage
-                                width="20px"
-                                height="20px"
-                                stroke="#FFFFFF"
-                                style={{ transform: showMyNft ? 'rotate(90deg)' : 'rotate(270deg)' }}
-                            />
+                            <SpecificValueWrapper>
+                                <SpecificValueTypo><span style={{ paddingLeft: 0 }}>{'NFT'}</span></SpecificValueTypo>
+                            </SpecificValueWrapper>
+                            <TableExpandButton $expand={expandOwned} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
-                        {showMyNft && <NftTable />}
-                    </div>
-                </div>
-            </div>
+                        <NFTTableContainer $expand={expandOwned}>
+                            <NFTsTable
+                                codeId={codeId}
+                                contractAddress={contractAddress}
+                                nftsInfo={ownedNftsInfo}
+                                nfts={ownedNfts}
+                                currentPage={currentOwnedPage}
+                                handleNFTIdList={handleOwnedNFTIdList}
+                                addNFTs={addOwnedNFTs}
+                                updateNFTs={updateOwnedNFTs}
+                                clearListData={clearCW721OwnedNFTListData}
+                                setCurrentPage={setCurrentOwnedPage} />
+                        </NFTTableContainer>
+                    </SpecificValueBox>
+                </SpecificItem>
+            </CardSpecific>
         </SectionContainer>
     );
 };
@@ -141,62 +178,92 @@ const PendingExpiery = ({ expireInfo }: { expireInfo: Cw721Expires | null }) => 
     return <div></div>;
 };
 
-const OwnerInfo = () => {
-    const admin2 = useCW721SearchStore((v) => v.contractInfo?.contract_info?.admin);
-    const admin = useCW721SearchStore((v) => v.ownerInfo?.owner);
+const OwnerInformation = () => {
+    const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
 
-    const pendingOwner = useCW721SearchStore((v) => v.ownerInfo?.pending_owner);
-    const pendingExpiry = useCW721SearchStore((v) => v.ownerInfo?.pending_expiry);
+    const admin = contractInfo?.admin || null;
+    const pending_owner = contractInfo?.ownerInfo.pending_owner;
+    const pending_expiry = contractInfo?.ownerInfo.pending_expiry;
+    const minter = contractInfo?.minter;
 
-    const minter = useCW721SearchStore((v) => v.minterInfo);
+    const PendingExpiery = ({ expireInfo }: { expireInfo: Cw721Expires | null }) => {
+        if (!expireInfo) return <div></div>;
+
+        if (expireInfo['at_height'])
+            return (
+                <div className="white-typo">
+                    {expireInfo['at_height']} <div className="gray-typo">Block</div>
+                </div>
+            );
+
+        if (expireInfo['at_time']) return <div className="white-typo">{format(expireInfo['at_time'], 'yyyy-MM-dd HH:mm:ss')}</div>;
+
+        if (expireInfo['never']) return <div className="white-typo">Forever</div>;
+
+        return <div></div>;
+    };
 
     return (
-        <SectionContainer>
-            <div className="section-title">Owner Information</div>
-            <div className="information-box">
-                <div className="box-row">
-                    <div className="box-title">Admin</div>
-                    <div className="box-value">
-                        <div className="white-typo single-line-clamp">{admin || '-'}</div>
-                        {admin && <CopyIconButton width="22px" height="22px" text={admin} />}
-                    </div>
-                </div>
-            </div>
-            <div className="information-box">
-                <div className="box-row">
-                    <div className="box-title">Pending Owner</div>
+        <ContractCard>
+            <CardHeaderTypo>{'Owner Information'}</CardHeaderTypo>
+            <CardSpecific>
+                <SpecificItem>
+                    <SpecificLabelTypo>{'Admin'}</SpecificLabelTypo>
+                    <SpecificValueWrapper>
+                        {admin ? (
+                            <>
+                                <SpecificValueTypo>{admin}</SpecificValueTypo>
+                                <CopyIconButton text={admin} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <Skeleton width="200px" height="22px" />
+                        )}
+                    </SpecificValueWrapper>
+                </SpecificItem>
+                <SpecificItem>
+                    <SpecificLabelTypo>{'Pending Owner'}</SpecificLabelTypo>
+                    <SpecificValueWrapper>
+                        {pending_owner ? (
+                            <>
+                                <SpecificValueTypo>{pending_owner}</SpecificValueTypo>
+                                <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                        )}
+                    </SpecificValueWrapper>
+                </SpecificItem>
+                <SpecificItem>
+                    <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
+                    <SpecificValueWrapper>
+                        {pending_expiry ? (
+                            <PendingExpiery expireInfo={pending_expiry} />
+                        ) : (
+                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                        )}
+                    </SpecificValueWrapper>
+                </SpecificItem>
+                <SpecificItem>
+                    <SpecificLabelTypo>{'Minter'}</SpecificLabelTypo>
+                    <SpecificValueWrapper>
+                        {minter ? (
+                            <>
+                                <SpecificValueTypo>{minter}</SpecificValueTypo>
+                                <CopyIconButton text={minter} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                        )}
+                    </SpecificValueWrapper>
+                </SpecificItem>
 
-                    <div className="box-value">
-                        <div className="white-typo single-line-clamp">{pendingOwner || '-'}</div>
-                        {pendingOwner && <CopyIconButton width="22px" height="22px" text={pendingOwner} />}
-                    </div>
-                </div>
-            </div>
-            <div className="information-box">
-                <div className="box-row">
-                    <div className="box-title">Pending Expiry</div>
-
-                    <div className="box-value">
-                        {pendingExpiry ? <PendingExpiery expireInfo={pendingExpiry} /> : <div className="white-typo">-</div>}
-                    </div>
-                </div>
-            </div>
-            <div className="information-box">
-                <div className="box-row">
-                    <div className="box-title">Minter</div>
-
-                    <div className="box-value">
-                        <div className="white-typo single-line-clamp">{minter || '-'}</div>
-                        {minter && <CopyIconButton width="22px" height="22px" text={minter} />}
-                    </div>
-                </div>
-            </div>
-        </SectionContainer>
+            </CardSpecific>
+        </ContractCard>
     );
 };
 
 const Transactions = () => {
-    const allTransactions = useCW721SearchStore((v) => v.allTransactions) || [];
+    const transactions = useNFTContractDetailStore((state) => state.transactions);
 
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },
@@ -224,7 +291,7 @@ const Transactions = () => {
                 <span className="section-title-desc">The lastest 15 records</span>
             </div>
 
-            <StyledTable columns={columns} rows={allTransactions} rowsPerPage={15} disablePagination />
+            <StyledTable columns={columns} rows={transactions} rowsPerPage={15} disablePagination />
         </SectionContainer>
     );
 };
@@ -234,7 +301,7 @@ const TokenDetailCard = () => {
         <CardContainer>
             <TokenInfo />
             <Divider $direction="horizontal" $variant="dash" $color={'#383838'} />
-            <OwnerInfo />
+            <OwnerInformation />
             <Divider $direction="horizontal" $variant="dash" $color={'#383838'} />
             <Transactions />
         </CardContainer>

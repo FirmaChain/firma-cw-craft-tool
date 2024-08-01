@@ -31,6 +31,9 @@ interface FormProps {
     allNftIds: string[] | null;
     setAllNftIds: (v: string[]) => void;
 
+    totalNfts: number | null;
+    setTotalNfts: (v: number) => void;
+
     userNftIds: string[] | null;
     setUserNftIds: (v: string[]) => void;
 
@@ -94,6 +97,14 @@ const useCW721SearchStore = create<FormProps>()(
                 state.allNftIds = data;
             });
         },
+
+        totalNfts: null,
+        setTotalNfts: (data) => {
+            set((state) => {
+                state.totalNfts = data;
+            });
+        },
+
         userNftIds: null,
         setUserNftIds: (data) => {
             set((state) => {
@@ -122,6 +133,7 @@ const useCW721SearchStore = create<FormProps>()(
                 state.minterInfo = null;
                 state.ownerInfo = null;
                 state.allNftIds = null;
+                state.totalNfts = null;
                 state.userNftIds = null;
                 state.allTransactions = null;
                 state.contractHistory = null;
@@ -137,6 +149,7 @@ const useCW721SearchStore = create<FormProps>()(
                 state.minterInfo = null;
                 state.ownerInfo = null;
                 state.allNftIds = null;
+                state.totalNfts = null;
                 state.userNftIds = null;
                 state.allTransactions = null;
                 state.contractHistory = null;

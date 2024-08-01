@@ -19,18 +19,21 @@ import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
-import NFTsTable from './nftsTable';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import Icons from '@/components/atoms/icons';
 import { IC_EXPAND } from '@/components/atoms/icons/pngIcons';
+import NFTsTable from '@/components/organisms/cw721/common/nftsTable';
+import { useCW721NFTListContext } from '@/context/cw721NFTListContext';
+import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 
 const ContractInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
 
     const { contractDetail, nftsInfo } = useNFTContractDetailStore((state) => state);
+    const { handleCW721NFTIdList } = useNFTContractDetail();
+    const { nfts, addNFTs, updateNFTs, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
 
     const contractAddress = contractDetail?.contractAddress || '';
-    const codeId = contractDetail?.codeId;
+    const codeId = contractDetail?.codeId || '';
     const contractName = contractDetail?.name || '';
     const contractSymbol = contractDetail?.symbol || '';
     const codeID = contractDetail?.codeId || '';
@@ -100,7 +103,17 @@ const ContractInformation = () => {
                             <TableExpandButton $expand={expand} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
                         <NFTTableContainer $expand={expand}>
-                            <NFTsTable />
+                            <NFTsTable
+                                codeId={codeId}
+                                contractAddress={contractAddress}
+                                nftsInfo={nftsInfo}
+                                nfts={nfts}
+                                currentPage={currentPage}
+                                handleNFTIdList={handleCW721NFTIdList}
+                                addNFTs={addNFTs}
+                                updateNFTs={updateNFTs}
+                                clearListData={clearCW721NFTListData}
+                                setCurrentPage={setCurrentPage} />
                         </NFTTableContainer>
                     </SpecificValueBox>
                 </SpecificItem>
@@ -108,5 +121,6 @@ const ContractInformation = () => {
         </ContractCard>
     );
 };
+
 
 export default ContractInformation;

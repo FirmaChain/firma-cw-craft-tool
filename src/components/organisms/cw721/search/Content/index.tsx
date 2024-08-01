@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { Container, ContractWarp, NoticeText } from './style';
 import TokenNameCard from './tokenNameCard';
 import TokenDetailCard from './tokenDetailCard';
-import TokenWalletSearch from './tokenWalletSearch';
-import useCW721SearchStore from '../cw721SearchStore';
 import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
+import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import { useMemo } from 'react';
+import Search from './search';
 
 const LogoBackground = styled.div`
     position: fixed;
@@ -21,10 +22,12 @@ const LogoBackground = styled.div`
 `;
 
 const Content = () => {
-    const contractExist = useCW721SearchStore((v) => v.contractExist);
-    const contractAddress = useCW721SearchStore((v) => v.contractInfo?.address);
+    const { contractDetail, nftsInfo } = useNFTContractDetailStore()
 
-    console.log(contractAddress, contractExist);
+    const contractExist = useMemo(() => {
+        if (contractDetail === null || nftsInfo === null) return null;
+        return !Boolean(contractDetail.contractAddress === '')
+    }, [contractDetail, nftsInfo])
 
     return (
         <Container>
@@ -34,11 +37,11 @@ const Content = () => {
                 </LogoBackground>
             )}
             {contractExist === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
-            {contractExist === true && contractAddress && (
+            {contractExist === true && (
                 <ContractWarp>
                     <TokenNameCard />
                     <TokenDetailCard />
-                    <TokenWalletSearch />
+                    <Search />
                 </ContractWarp>
             )}
         </Container>

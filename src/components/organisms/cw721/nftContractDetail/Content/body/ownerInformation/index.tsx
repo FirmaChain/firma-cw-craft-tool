@@ -17,8 +17,6 @@ import { Cw721Expires } from '@firmachain/firma-js';
 import { format } from 'date-fns';
 
 const OwnerInformation = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
 
     const admin = contractInfo?.admin || null;

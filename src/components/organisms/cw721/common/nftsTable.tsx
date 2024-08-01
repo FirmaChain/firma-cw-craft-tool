@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { rootState } from "@/redux/reducers";
 import { useSelector } from "react-redux";
 import { CRAFT_CONFIGS } from "@/config";
@@ -7,7 +7,7 @@ import { INFTState, useCW721NFTListContext } from "@/context/cw721NFTListContext
 import IconButton from "@/components/atoms/buttons/iconButton";
 import FirmaLoading from "@/components/atoms/globalLoader/firmaLoad";
 import Icons from "@/components/atoms/icons";
-import useNFTContractDetail from "@/hooks/useNFTContractDetail";
+import useNFTContractDetail, { INFTsInfo } from "@/hooks/useNFTContractDetail";
 import useNFTContractDetailStore from "@/store/useNFTContractDetailStore";
 import styled from "styled-components";
 
@@ -115,18 +115,29 @@ const CurrentPageNumber = styled.div`
     line-height: 20px;
 `;
 
+interface IProps {
+    codeId: string;
+    contractAddress: string;
+    nftsInfo: INFTsInfo;
+    nfts: INFTState[];
+    currentPage: number;
+    handleNFTIdList: (address: string) => void;
+    addNFTs: (newNFTs: string[], isDeploiedFromFirma: boolean) => void;
+    updateNFTs: (newNft: INFTState) => void;
+    clearListData: () => void;
+    setCurrentPage: (page: number) => void;
+}
 
-const NFTsTable = () => {
+
+const NFTsTable = ({ codeId, contractAddress, nftsInfo, nfts, currentPage, handleNFTIdList, addNFTs, updateNFTs, clearListData, setCurrentPage }: IProps) => {
     const network = useSelector((state: rootState) => state.global.network);
-    const { handleCW721NFTIdList } = useNFTContractDetail();
-    const { contractDetail, nftsInfo } = useNFTContractDetailStore();
-    const { nfts, addNFTs, updateNFTs, fetchNFTImage, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
+    const { fetchNFTImage, } = useCW721NFTListContext();
 
     const curSDKConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
     const basicCodeId = curSDKConfig.CW721.BASIC_CODE_ID;
     const advancedCodeId = curSDKConfig.CW721.ADVANCED_CODE_ID;
-    const isDeploiedFromFirma = [basicCodeId, advancedCodeId].includes(contractDetail?.codeId.toString());
-    const contractAddress = contractDetail === null ? '' : contractDetail.contractAddress
+    const isDeploiedFromFirma = [basicCodeId, advancedCodeId].includes(codeId.toString());
+    const prevNftsLength = useRef<number | null>(null)
 
     const [pageItems, setPageItems] = useState<INFTState[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -171,18 +182,46 @@ const NFTsTable = () => {
         setIsLoading(false);
     }, [isDeploiedFromFirma, contractAddress, nftsInfo, currentPage, nfts]);
 
+    const existItemsOnPage = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentNfts = nfts.slice(startIndex, endIndex);
+
+        return currentNfts.length;
+    }, [nfts, currentPage])
+
     const totalPages = useMemo(() => {
         if (nftsInfo === null) return 0;
-        return Math.ceil(nftsInfo.totalSupply / itemsPerPage);
+        if (nftsInfo.totalSupply === 0) {
+            return Math.ceil(nftsInfo.totalNftIds.length / itemsPerPage);
+        } else {
+            return Math.ceil(nftsInfo.totalSupply / itemsPerPage);
+        }
     }, [nftsInfo])
 
+    const lastPage = useMemo(() => {
+        if (nftsInfo?.totalSupply === 0) {
+            return existItemsOnPage < itemsPerPage
+        }
+        return currentPage === totalPages
+    }, [nftsInfo, currentPage, totalPages, existItemsOnPage])
+
     const handlePageChange = useCallback((page: number) => {
-        setCurrentPage(page);
-    }, [setCurrentPage]);
+        if (existItemsOnPage <= 0) {
+            setCurrentPage(page - 1)
+        } else {
+            setCurrentPage(page);
+        }
+    }, [setCurrentPage, existItemsOnPage]);
 
     const pageList = useMemo(() => {
         if (!nftsInfo) return [];
-        const totalPages = Math.ceil(nftsInfo.totalSupply / itemsPerPage);
+        let totalPages = 0;
+        if (nftsInfo.totalSupply === 0) {
+            totalPages = Math.ceil(nftsInfo.totalNftIds.length / itemsPerPage);
+        } else {
+            totalPages = Math.ceil(nftsInfo.totalSupply / itemsPerPage);
+        }
         if (totalPages <= 1) return [1];
         if (currentPage <= 1) return [1, 2, 3].filter(page => page <= totalPages);
         if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter(page => page > 0);
@@ -198,8 +237,15 @@ const NFTsTable = () => {
         const totalFetched = nftsInfo.totalNftIds.length;
         const totalRequired = currentPage * itemsPerPage;
 
-        if (totalFetched < totalRequired && totalFetched < nftsInfo.totalSupply) {
-            handleCW721NFTIdList(contractAddress);
+        if (nftsInfo.totalSupply === 0) {
+            if (totalFetched < totalRequired && (prevNftsLength.current === null || prevNftsLength.current < nftsInfo.totalNftIds.length)) {
+                handleNFTIdList(contractAddress);
+                prevNftsLength.current = nftsInfo.totalNftIds.length;
+            }
+        } else {
+            if (totalFetched < totalRequired && totalFetched < nftsInfo.totalSupply) {
+                handleNFTIdList(contractAddress);
+            }
         }
     }, [currentPage, contractAddress, nftsInfo]);
 
@@ -215,7 +261,8 @@ const NFTsTable = () => {
 
     useEffect(() => {
         return () => {
-            clearCW721NFTListData()
+            clearListData()
+            prevNftsLength.current = null;
         }
     }, [])
 
@@ -230,7 +277,7 @@ const NFTsTable = () => {
                         {pageItems.map((nft) => {
                             return (
                                 <NFTItemBox key={nft.tokenId}>
-                                    <NFTImg src={nft.image} alt={`${contractDetail?.contractAddress}-${nft}`} />
+                                    <NFTImg src={nft.image} alt={`${contractAddress}-${nft}`} />
                                     <NFTTokenIdTypo>{nft.tokenId}</NFTTokenIdTypo>
                                 </NFTItemBox>
                             )
@@ -246,18 +293,31 @@ const NFTsTable = () => {
                 </PaginationButton>
 
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', padding: '0 12px' }}>
-                    {pageList.map((v) => (
+                    {pageList.length === 0 ?
                         <CurrentPageNumber
-                            key={`pagination_pageindex_${v}`}
-                            style={{ color: v === currentPage ? 'var(--Green-500, #02e191)' : '#FFF' }}
-                            onClick={() => setCurrentPage(v)}
+                            key={`pagination_pageindex_${currentPage}`}
+                            style={{ color: 'var(--Green-500, #02e191)' }}
+                            onClick={() => null}
                             className="select-none pointer"
                         >
-                            {v}
+                            {currentPage}
                         </CurrentPageNumber>
-                    ))}
+                        :
+                        <Fragment>
+                            {pageList.map((v) => (
+                                <CurrentPageNumber
+                                    key={`pagination_pageindex_${v}`}
+                                    style={{ color: v === currentPage ? 'var(--Green-500, #02e191)' : '#FFF' }}
+                                    onClick={() => setCurrentPage(v)}
+                                    className="select-none pointer"
+                                >
+                                    {v}
+                                </CurrentPageNumber>
+                            ))}
+                        </Fragment>
+                    }
                 </div>
-                <PaginationButton onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                <PaginationButton onClick={() => handlePageChange(currentPage + 1)} disabled={lastPage}>
                     <Icons.PrevPage
                         width={'20px'}
                         height={'20px'}

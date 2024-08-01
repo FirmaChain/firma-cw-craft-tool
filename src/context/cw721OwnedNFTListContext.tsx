@@ -8,7 +8,7 @@ export interface INFTState {
     image: string;
 }
 
-interface CW721NFTListContextProps {
+interface CW721OwnedNFTListContextProps {
     nfts: INFTState[];
     addNFTs: (newNFTs: string[], isDeploiedFromFirma: boolean) => void;
     updateNFTs: (newNft: INFTState) => void;
@@ -18,17 +18,17 @@ interface CW721NFTListContextProps {
     clearCW721NFTListData: () => void;
 }
 
-const CW721NFTListContext = createContext<CW721NFTListContextProps | undefined>(undefined);
+const CW721OwnedNFTListContext = createContext<CW721OwnedNFTListContextProps | undefined>(undefined);
 
-export const useCW721NFTListContext = () => {
-    const context = useContext(CW721NFTListContext);
+export const useCW721OwnedNFTListContext = () => {
+    const context = useContext(CW721OwnedNFTListContext);
     if (!context) {
-        throw new Error('useCW721NFTListContext must be used within a CW721NFTListProvider');
+        throw new Error('useCW721OwnedNFTListContext must be used within a CW721OwnedNFTListProvider');
     }
     return context;
 };
 
-export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
+export const CW721OwnedNFTListProvider = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
 
     const { getCW721NFTImage } = useMyNFTContracts();
@@ -91,7 +91,7 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <CW721NFTListContext.Provider
+        <CW721OwnedNFTListContext.Provider
             value={{
                 nfts,
                 addNFTs,
@@ -103,7 +103,7 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
             }}
         >
             {children}
-        </CW721NFTListContext.Provider>
+        </CW721OwnedNFTListContext.Provider>
     );
 };
 

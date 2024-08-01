@@ -11,6 +11,9 @@ interface FormProps {
     nftsInfo: INFTsInfo | null;
     setNftsInfo: (v: INFTsInfo) => void;
 
+    ownedNftsInfo: INFTsInfo | null;
+    setOwnedNftsInfo: (v: INFTsInfo) => void;
+
     transactions: ITransaction[] | null;
     setTransactions: (v: ITransaction[]) => void;
 
@@ -31,6 +34,12 @@ const useNFTContractDetailStore = create<FormProps>()(
                 state.nftsInfo = data;
             }),
 
+        ownedNftsInfo: null,
+        setOwnedNftsInfo: (data) =>
+            set((state) => {
+                state.ownedNftsInfo = data;
+            }),
+
         transactions: null,
         setTransactions: (data) =>
             set((state) => {
@@ -42,6 +51,7 @@ const useNFTContractDetailStore = create<FormProps>()(
                 state.contractDetail = null;
                 state.transactions = null;
                 state.nftsInfo = null;
+                state.ownedNftsInfo = null;
             })
     }))
 );
