@@ -61,7 +61,7 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
             } else {
                 const uniqueNewContracts = newNFTs.filter(nft => !nfts.some(c => c.tokenId === nft));
                 setNfts(prev => [
-                    ...prev,
+                    ...(Array.isArray(prev) ? prev : []),
                     ...uniqueNewContracts.map(nft => ({ tokenId: nft, image: isDeploiedFromFirma ? IMG_NFT_EMPTY_THUMBNAIL : '' }))
                 ]);
             }

@@ -1,14 +1,14 @@
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { rootState } from "@/redux/reducers";
+import { useSelector } from "react-redux";
+import { CRAFT_CONFIGS } from "@/config";
+import { IMG_NFT_EMPTY_THUMBNAIL } from "@/components/atoms/icons/pngIcons";
+import { INFTState, useCW721NFTListContext } from "@/context/cw721NFTListContext";
 import IconButton from "@/components/atoms/buttons/iconButton";
 import FirmaLoading from "@/components/atoms/globalLoader/firmaLoad";
 import Icons from "@/components/atoms/icons";
-import { IMG_NFT_EMPTY_THUMBNAIL } from "@/components/atoms/icons/pngIcons";
-import { CRAFT_CONFIGS } from "@/config";
-import { INFTState, useCW721NFTListContext } from "@/context/cw721NFTListContext";
 import useNFTContractDetail from "@/hooks/useNFTContractDetail";
-import { rootState } from "@/redux/reducers";
 import useNFTContractDetailStore from "@/store/useNFTContractDetailStore";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -39,6 +39,7 @@ const LoadingBox = styled.div`
 
 const NFTItemBox = styled.div`
     width: 100%;
+    height: fit-content;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -118,25 +119,27 @@ const CurrentPageNumber = styled.div`
 const NFTsTable = () => {
     const network = useSelector((state: rootState) => state.global.network);
     const { handleCW721NFTIdList } = useNFTContractDetail();
-    const { contractDetail } = useNFTContractDetailStore();
+    const { contractDetail, nftsInfo } = useNFTContractDetailStore();
     const { nfts, addNFTs, updateNFTs, fetchNFTImage, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
 
     const curSDKConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
     const basicCodeId = curSDKConfig.CW721.BASIC_CODE_ID;
     const advancedCodeId = curSDKConfig.CW721.ADVANCED_CODE_ID;
+    const isDeploiedFromFirma = [basicCodeId, advancedCodeId].includes(contractDetail?.codeId.toString());
+    const contractAddress = contractDetail === null ? '' : contractDetail.contractAddress
 
     const [pageItems, setPageItems] = useState<INFTState[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const itemsPerPage = 20;
 
     const NFTIds = useMemo(() => {
-        if (contractDetail === null) return [];
-        return contractDetail.totalNftIds;
-    }, [contractDetail])
+        if (nftsInfo === null) return [];
+        return nftsInfo.totalNftIds;
+    }, [nftsInfo])
 
     const fetchItems = useCallback(async () => {
-        if (!contractDetail) return;
-        const isDeploiedFromFirma = [basicCodeId, advancedCodeId].includes(contractDetail.codeId);
+        if (!nftsInfo) return;
+
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const currentNfts = nfts.slice(startIndex, endIndex);
@@ -147,7 +150,7 @@ const NFTsTable = () => {
                     return { tokenId, image };
                 } else {
                     try {
-                        const item = await fetchNFTImage(tokenId, contractDetail.contractAddress, isDeploiedFromFirma);
+                        const item = await fetchNFTImage(tokenId, contractAddress, isDeploiedFromFirma);
                         if (item) {
                             return item;
                         }
@@ -166,42 +169,39 @@ const NFTsTable = () => {
             return prevItems;
         });
         setIsLoading(false);
-    }, [contractDetail, currentPage, nfts]);
+    }, [isDeploiedFromFirma, contractAddress, nftsInfo, currentPage, nfts]);
 
     const totalPages = useMemo(() => {
-        if (contractDetail === null) return 0;
-        return Math.ceil(contractDetail.totalSupply / itemsPerPage);
-    }, [contractDetail])
+        if (nftsInfo === null) return 0;
+        return Math.ceil(nftsInfo.totalSupply / itemsPerPage);
+    }, [nftsInfo])
 
     const handlePageChange = useCallback((page: number) => {
         setCurrentPage(page);
     }, [setCurrentPage]);
 
     const pageList = useMemo(() => {
-        if (!contractDetail) return [];
-        const totalPages = Math.ceil(contractDetail.totalSupply / itemsPerPage);
+        if (!nftsInfo) return [];
+        const totalPages = Math.ceil(nftsInfo.totalSupply / itemsPerPage);
         if (totalPages <= 1) return [1];
         if (currentPage <= 1) return [1, 2, 3].filter(page => page <= totalPages);
         if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter(page => page > 0);
         return [currentPage - 1, currentPage, currentPage + 1].filter(page => page <= totalPages);
-    }, [contractDetail, currentPage, itemsPerPage]);
+    }, [nftsInfo, currentPage, itemsPerPage]);
 
     useEffect(() => {
-        if (contractDetail) {
-            const isDeploiedFromFirma = Boolean([basicCodeId, advancedCodeId].find((code) => code === contractDetail.codeId) !== undefined);
-            addNFTs(NFTIds, isDeploiedFromFirma);
-        }
-    }, [NFTIds, basicCodeId, advancedCodeId, contractDetail]);
+        addNFTs(NFTIds, isDeploiedFromFirma);
+    }, [NFTIds, isDeploiedFromFirma, nftsInfo]);
 
     useEffect(() => {
-        if (!contractDetail) return;
-        const totalFetched = contractDetail.totalNftIds.length;
+        if (!nftsInfo) return;
+        const totalFetched = nftsInfo.totalNftIds.length;
         const totalRequired = currentPage * itemsPerPage;
 
-        if (totalFetched < totalRequired && totalFetched < contractDetail.totalSupply) {
-            handleCW721NFTIdList(contractDetail.contractAddress);
+        if (totalFetched < totalRequired && totalFetched < nftsInfo.totalSupply) {
+            handleCW721NFTIdList(contractAddress);
         }
-    }, [currentPage, contractDetail]);
+    }, [currentPage, contractAddress, nftsInfo]);
 
     useEffect(() => {
         pageItems.map((nft) => {
@@ -211,7 +211,7 @@ const NFTsTable = () => {
 
     useEffect(() => {
         fetchItems();
-    }, [contractDetail, currentPage, updateNFTs]);
+    }, [updateNFTs, nftsInfo, contractAddress, currentPage]);
 
     useEffect(() => {
         return () => {
