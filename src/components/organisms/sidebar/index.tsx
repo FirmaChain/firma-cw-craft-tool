@@ -61,6 +61,14 @@ const Sidebar = () => {
         setBlockExplorerLink(link);
     }, [network]);
 
+    useEffect(() => {
+        if (location.pathname.includes('cw721')) {
+            GlobalActions.handleCw('CW721');
+        } else {
+            GlobalActions.handleCw('CW20');
+        }
+    }, [location])
+
     const onChangeSwitch = (type: CW_MODE_TYPE) => {
         GlobalActions.handleCw(type);
         switch (type) {
@@ -135,7 +143,7 @@ const Sidebar = () => {
                 <SidebarWrapper>
                     <FeatureWrapper>
                         <LogoWrapper>
-                            <Link to={{ pathname: '/' }}>
+                            <Link to={{ pathname: '/instantiate' }}>
                                 <Icons.FirmaCraft width={'132px'} height={'34px'} />
                             </Link>
                         </LogoWrapper>

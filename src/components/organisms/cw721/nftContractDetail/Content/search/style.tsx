@@ -31,7 +31,7 @@ export const CardSpecific = styled.div`
     gap: 24px;
 `;
 
-export const SearchButton = styled.div`
+export const SearchButton = styled.div<({ $disabled: boolean }) >`
     display: flex;
     width: 168px;
     padding: 10px 24px;
@@ -39,7 +39,7 @@ export const SearchButton = styled.div`
     align-items: center;
     gap: 10px;
     border-radius: 8px;
-    background: var(--Green-500, #02E191);
+    background: ${({ $disabled }) => $disabled ? `#707070` : `var(--Green-500, #02E191)`};
     color: var(--Gray-100, #121212);
     text-align: center;
     font-family: "General Sans Variable";

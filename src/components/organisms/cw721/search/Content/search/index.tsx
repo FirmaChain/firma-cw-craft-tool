@@ -54,7 +54,7 @@ const EndAdornment = ({
             )}
 
             <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
-                <SearchButton>{'Search'}</SearchButton>
+                <SearchButton $disabled={disableSearch}>{'Search'}</SearchButton>
             </IconButton>
         </div>
     );
