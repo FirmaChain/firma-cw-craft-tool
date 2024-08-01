@@ -15,6 +15,8 @@ import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import Skeleton from '@/components/atoms/skeleton';
 import { WalletActions } from '@/redux/actions';
 import { persistor } from '@/redux';
+import useResetStoreData from '@/hooks/useResetStoreData';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const BalanceBox = styled(AddressCard)`
     position: absolute;
@@ -98,8 +100,13 @@ const DisconnectBtn = styled(IconButton)`
 `;
 
 const AddressBox = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { address } = useSelector((state: rootState) => state.wallet);
+    const { cwMode } = useSelector((state: rootState) => state.global);
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const { enqueueSnackbar } = useSnackbar();
+    const { resetAll } = useResetStoreData()
 
     const { firmaSDK } = useExecuteHook();
 
@@ -118,7 +125,34 @@ const AddressBox = () => {
 
     const onClickLogout = () => {
         persistor.purge();
+        resetAll();
         WalletActions.clearStore();
+
+        switch (cwMode) {
+            case 'CW20':
+                if (location.pathname.includes('instantiate')) {
+                    navigate(`/instantiate`);
+                } else if (location.pathname.includes('execute')) {
+                    navigate(`/execute`);
+                } else if (location.pathname.includes('search')) {
+                    navigate(`/search`);
+                } else if (location.pathname.includes('mytoken')) {
+                    navigate(`/mytoken`);
+                }
+                break;
+
+            case 'CW721':
+                if (location.pathname.includes('instantiate')) {
+                    navigate(`/cw721/instantiate`);
+                } else if (location.pathname.includes('execute')) {
+                    navigate(`/cw721/execute`);
+                } else if (location.pathname.includes('search')) {
+                    navigate(`/cw721/search`);
+                } else if (location.pathname.includes('mynft')) {
+                    navigate(`/cw721/mynft`);
+                }
+                break;
+        }
     };
 
     const getBalance = async () => {

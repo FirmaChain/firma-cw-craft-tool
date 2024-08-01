@@ -30,6 +30,7 @@ export const useCW721NFTListContext = () => {
 
 export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
+
     const { getCW721NFTImage } = useMyNFTContracts();
     const [nfts, setNfts] = useState<INFTState[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);

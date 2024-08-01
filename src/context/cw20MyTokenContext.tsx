@@ -1,4 +1,6 @@
+import { rootState } from '@/redux/reducers';
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 interface IContractInfo {
@@ -36,6 +38,8 @@ export const useCW20MyTokenContext = () => {
 
 export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
+    const { address } = useSelector((state: rootState) => state.wallet);
+
     const [contracts, setContracts] = useState<IContractState[] | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -69,6 +73,10 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
         setContracts(null);
         setCurrentPage(1);
     }
+
+    useEffect(() => {
+        clearCW20MyTokenData();
+    }, [address])
 
     return (
         <CW20MyTokenContext.Provider

@@ -122,6 +122,16 @@ const Search = () => {
             </ContractCard>
             <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
             <SpecificItem>
+                <SpecificLabelTypo>{'Token ID'}</SpecificLabelTypo>
+                <SpecificValueWrapper>
+                    {isSearched ?
+                        <SpecificValueTypo>{fetchData.tokenId}</SpecificValueTypo>
+                        :
+                        <SpecificPlaceholderTypo>{'Token ID'}</SpecificPlaceholderTypo>
+                    }
+                </SpecificValueWrapper>
+            </SpecificItem>
+            <SpecificItem>
                 <SpecificLabelTypo>{'Owner'}</SpecificLabelTypo>
                 <SpecificValueWrapper>
                     {isSearched ?

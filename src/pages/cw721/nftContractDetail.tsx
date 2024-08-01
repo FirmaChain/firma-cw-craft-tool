@@ -6,11 +6,9 @@ import useApollo from '@/hooks/useApollo';
 import { Content, Header } from '@/components/organisms/cw721/nftContractDetail';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
-import { CW721NFTListProvider } from '@/context/cw721NFTListContext';
 
 const NFTContractDetail = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((state: rootState) => state.wallet.address);
     const { setContractDetail, setNftsInfo, setTransactions, clearForm } = useNFTContractDetailStore();
 
     const contractAddress = window.location.pathname.replace('/cw721/mynft/detail/', '');
@@ -42,9 +40,7 @@ const NFTContractDetail = () => {
     return (
         <Container style={{ padding: '68px 96px', gap: '40px' }}>
             <Header />
-            <CW721NFTListProvider>
-                <Content />
-            </CW721NFTListProvider>
+            <Content />
         </Container>
     );
 };

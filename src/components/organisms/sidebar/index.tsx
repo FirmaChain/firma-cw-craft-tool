@@ -71,7 +71,7 @@ const Sidebar = () => {
                     navigate(`/execute`);
                 } else if (location.pathname.includes('search')) {
                     navigate(`/search`);
-                } else if (location.pathname.includes('mynft')) {
+                } else if (location.pathname.includes('mytoken')) {
                     navigate(`/mytoken`);
                 }
                 break;
@@ -83,7 +83,7 @@ const Sidebar = () => {
                     navigate(`/cw721/execute`);
                 } else if (location.pathname.includes('search')) {
                     navigate(`/cw721/search`);
-                } else if (location.pathname.includes('mytoken')) {
+                } else if (location.pathname.includes('mynft')) {
                     navigate(`/cw721/mynft`);
                 }
                 break;
@@ -111,6 +111,9 @@ const Sidebar = () => {
 
         if (location.pathname.includes('mytoken/detail')) {
             navigate('/mytoken');
+        }
+        if (location.pathname.includes('cw721/mynft/detail')) {
+            navigate('/cw721/mynft');
         }
     };
 
