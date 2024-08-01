@@ -1,6 +1,7 @@
-import useExecuteHook from "./hooks/useExecueteHook"
-import { useSnackbar } from "notistack";
-import useExecuteStore from "./hooks/useExecuteStore";
+import useExecuteHook from './hooks/useExecueteHook';
+import { useSnackbar } from 'notistack';
+import useExecuteStore from './hooks/useExecuteStore';
+import { GlobalActions } from '@/redux/actions';
 
 const useExecuteActions = () => {
     const { firmaSDK } = useExecuteHook();
@@ -15,7 +16,7 @@ const useExecuteActions = () => {
             console.log(error);
             return false;
         }
-    }
+    };
 
     const setContractInfo = async (contractAddress: string) => {
         try {
@@ -95,7 +96,7 @@ const useExecuteActions = () => {
         }
     };
 
-    const setAllowanceInfo = async (contractAddress: string, owner: string, spender: string,) => {
+    const setAllowanceInfo = async (contractAddress: string, owner: string, spender: string) => {
         try {
             const allowanceInfo = await firmaSDK.Cw20.getAllowance(contractAddress, owner, spender);
             useExecuteStore.getState().setAllowanceInfo(allowanceInfo);
@@ -107,6 +108,42 @@ const useExecuteActions = () => {
             });
         }
     };
+
+    const searchCW20Contract = async (contractAddress: string, address: string) => {
+        //? in case of searching cw721 contract in cw20 execute page
+
+        try {
+            try {
+                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
+                useExecuteStore.getState().setTokenInfo(tokenInfo);
+            } catch (error) {
+                enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20.' });
+                useExecuteStore.getState().clearForm();
+                return;
+            }
+
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
+            useExecuteStore.getState().setContractInfo(contractInfo);
+
+            const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress);
+            useExecuteStore.getState().setMarketingInfo(marketingInfo);
+
+            const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress);
+            useExecuteStore.getState().setMinterInfo(minterInfo);
+
+            const cw20Balance = await firmaSDK.Cw20.getBalance(contractAddress, address);
+            useExecuteStore.getState().setCw20Balance(cw20Balance);
+
+            const fctBalance = await firmaSDK.Bank.getBalance(address);
+            useExecuteStore.getState().setFctBalance(fctBalance);
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
+        } finally {
+            //? close global load
+        }
+    };
+
     return {
         checkContractExist,
         setContractInfo,
@@ -116,7 +153,8 @@ const useExecuteActions = () => {
         setCw20Balance,
         setFctBalance,
         setAllowanceInfo,
-    }
+        searchCW20Contract
+    };
 };
 
 export default useExecuteActions;

@@ -59,19 +59,17 @@ const Contents = () => {
     const network = useSelector((v: rootState) => v.global.network);
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
-    const { checkContractExist, setContractInfo, setTokenInfo, setMarketingInfo, setMinterInfo, setCw20Balance, setFctBalance } =
-        useExecuteActions();
-
-    const [existContract, setExistContract] = useState<Boolean | null>(null);
+    const { checkContractExist, searchCW20Contract } = useExecuteActions();
+    const { contractExist, setContractExist, tokenInfo } = useExecuteStore();
 
     useEffect(() => {
         clearForm();
-        setExistContract(null);
+        setContractExist(null);
     }, [network]);
 
     const checkExist = async () => {
         const exist = await checkContractExist(contractAddress);
-        setExistContract(exist);
+        setContractExist(exist);
     };
 
     useEffect(() => {
@@ -79,33 +77,28 @@ const Contents = () => {
             if (isValidAddress(contractAddress) && isValidAddress(address)) {
                 checkExist();
             } else {
-                setExistContract(false);
+                setContractExist(false);
             }
         }
     }, [contractAddress, address]);
 
     useEffect(() => {
-        if (contractAddress !== null && Boolean(existContract) === true) {
-            setContractInfo(contractAddress);
-            setTokenInfo(contractAddress);
-            setMarketingInfo(contractAddress);
-            setMinterInfo(contractAddress);
-            setCw20Balance(contractAddress, address);
-            setFctBalance(address);
+        if (contractAddress !== null && Boolean(contractExist) === true) {
+            searchCW20Contract(contractAddress, address);
         }
-    }, [existContract, contractAddress, address]);
+    }, [contractExist, contractAddress, address]);
 
     return (
         <Fragment>
             <Container>
-                {existContract === true && (
+                {contractExist === true && tokenInfo && (
                     <Box>
                         <TokenInfo />
                         <Preview />
                     </Box>
                 )}
-                {existContract === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
-                {existContract === null && (
+                {contractExist === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
+                {contractExist === null && (
                     <LogoBackground>
                         <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />
                     </LogoBackground>

@@ -51,23 +51,24 @@ const Contents = () => {
     const network = useSelector((v: rootState) => v.global.network);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const contractExist = useCW721ExecuteStore((state) => state.contractExist);
+    const setContractExist = useCW721ExecuteStore((state) => state.setContractExist);
 
-    const { setContractInfo, setNftContractInfo } = useCW721ExecuteAction();
+    const { searchCW721Contract } = useCW721ExecuteAction();
 
     const clearForm = useCW721ExecuteStore((state) => state.clearForm);
+    const contractName = useCW721ExecuteStore((state) => state.nftContractInfo.name);
 
     const { checkContractExist } = useCW721ExecuteAction();
 
-    const [existContract, setExistContract] = useState<Boolean | null>(null);
-
     useEffect(() => {
         clearForm();
-        setExistContract(null);
+        setContractExist(null);
     }, [network]);
 
     const checkExist = async () => {
         const exist = await checkContractExist(contractAddress);
-        setExistContract(exist);
+        setContractExist(exist);
     };
 
     useEffect(() => {
@@ -75,33 +76,28 @@ const Contents = () => {
             if (isValidAddress(contractAddress) && isValidAddress(address)) {
                 checkExist();
             } else {
-                setExistContract(false);
+                setContractExist(false);
             }
         }
     }, [contractAddress, address]);
 
     useEffect(() => {
-        if (contractAddress !== null && Boolean(existContract) === true) {
-            setContractInfo(contractAddress);
-            setNftContractInfo(contractAddress);
-            // setMarketingInfo(contractAddress);
-            // setMinterInfo(contractAddress);
-            // setCw20Balance(contractAddress, address);
-            // setFctBalance(address);
+        if (contractAddress !== null && Boolean(contractExist) === true) {
+            searchCW721Contract(contractAddress, address);
         }
-    }, [existContract, contractAddress, address]);
+    }, [contractExist, contractAddress, address]);
 
     return (
         <Fragment>
             <Container>
-                {existContract === true && (
+                {contractExist === true && contractName && (
                     <Box>
                         <CW721ContractInfo />
                         <Preview />
                     </Box>
                 )}
-                {existContract === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
-                {existContract === null && (
+                {contractExist === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
+                {contractExist === null && (
                     <LogoBackground>
                         <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />
                     </LogoBackground>

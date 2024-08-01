@@ -22,6 +22,9 @@ export interface IAllowanceInfo {
 }
 
 interface FormProps {
+    //? Contract exist
+    contractExist: boolean | null;
+
     // Contract(Chain) Side Datas
     contractInfo: ContractInfo | null;
     tokenInfo: Cw20TokenInfo | null;
@@ -30,6 +33,8 @@ interface FormProps {
     cw20Balance: string | null;
     fctBalance: string | null;
     allowanceInfo: Cw20Allowance | null;
+
+    setContractExist: (v: boolean) => void;
 
     setContractInfo: (v: ContractInfo) => void;
     setTokenInfo: (v: Cw20TokenInfo) => void;
@@ -94,6 +99,8 @@ const INIT_TRANSFER_FROM_LIST: ITransferInfo[] = [
 
 const useExecuteStore = create<FormProps>()(
     immer((set) => ({
+        contractExist: false,
+
         contractInfo: null,
         tokenInfo: null,
         minterInfo: null,
@@ -101,6 +108,11 @@ const useExecuteStore = create<FormProps>()(
         cw20Balance: null,
         fctBalance: null,
         allowanceInfo: null,
+
+        setContractExist: (data) =>
+            set((state) => {
+                state.contractExist = data;
+            }),
 
         setContractInfo: (data) =>
             set((state) => {
@@ -257,6 +269,8 @@ const useExecuteStore = create<FormProps>()(
 
         clearForm: () => {
             set((state) => {
+                state.contractExist = null;
+
                 state.contractInfo = null;
                 state.tokenInfo = null;
                 state.minterInfo = null;
@@ -279,7 +293,7 @@ const useExecuteStore = create<FormProps>()(
                 state.marketingProject = null;
                 state.minterAddress = null;
                 state.marketingLogoUrl = null;
-            })
+            });
         }
     }))
 );
