@@ -7,9 +7,8 @@ import { INFTState, useCW721NFTListContext } from "@/context/cw721NFTListContext
 import IconButton from "@/components/atoms/buttons/iconButton";
 import FirmaLoading from "@/components/atoms/globalLoader/firmaLoad";
 import Icons from "@/components/atoms/icons";
-import useNFTContractDetail, { INFTsInfo } from "@/hooks/useNFTContractDetail";
-import useNFTContractDetailStore from "@/store/useNFTContractDetailStore";
 import styled from "styled-components";
+import { INFTsInfo } from "@/hooks/useNFTContractDetail";
 
 const Container = styled.div`
     width: 100%;   
@@ -26,6 +25,22 @@ const TableContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(10, minmax(80px, 1fr));
     gap: 16px;
+
+    @media only screen and (max-width: 1750px) {
+        grid-template-columns: repeat(8, minmax(80px, 1fr));
+    }
+
+    @media only screen and (max-width: 1550px) {
+        grid-template-columns: repeat(6, minmax(80px, 1fr));
+    }
+
+    @media only screen and (max-width: 1370px) {
+        grid-template-columns: repeat(5, minmax(80px, 1fr));
+    }
+
+    @media only screen and (max-width: 1250px) {
+        grid-template-columns: repeat(4, minmax(80px, 1fr));
+    }
 `
 
 const LoadingBox = styled.div`
@@ -38,7 +53,7 @@ const LoadingBox = styled.div`
 `
 
 const NFTItemBox = styled.div`
-    width: 100%;
+    width: fit-content;
     height: fit-content;
     display: flex;
     align-items: flex-start;

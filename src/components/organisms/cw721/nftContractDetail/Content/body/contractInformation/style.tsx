@@ -109,7 +109,7 @@ export const NFTTableContainer = styled.div<{ $expand: boolean }>`
     background: var(--Gray-150, #141414);
     transition: all 0.5s ease;
     ${({ $expand }) => $expand ? `
-        max-height: 500px;
+        max-height: 1500px;
     `: `
         max-height: 0px;
     `}
