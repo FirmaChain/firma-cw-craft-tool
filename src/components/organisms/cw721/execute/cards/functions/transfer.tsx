@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import TransferNFTInputList from '@/components/atoms/walletList/transferNFTInputList';
-import { v4 } from 'uuid';
 import Divider from '@/components/atoms/divider';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -47,11 +46,8 @@ const MyWalletAmountTypo = styled.div`
 `;
 
 const Transfer = () => {
-    const [walletList, setWalletList] = useState([{ recipient: '', tokenId: '', id: v4() }]);
-
-    useEffect(() => {
-        console.log(walletList);
-    }, [walletList]);
+    const transferInfo = useCW721ExecuteStore((v) => v.transfer);
+    const setTransfer = useCW721ExecuteStore((v) => v.setTransfer);
 
     return (
         <Container>
@@ -74,7 +70,7 @@ const Transfer = () => {
                     </ItemWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <TransferNFTInputList list={walletList} onChangeWalletList={(v) => setWalletList(v)} />
+            <TransferNFTInputList list={transferInfo} onChangeWalletList={(v) => setTransfer(v)} />
         </Container>
     );
 };

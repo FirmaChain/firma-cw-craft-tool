@@ -62,13 +62,6 @@ const TransferNFTInput = ({
         onRemoveClick();
     };
 
-    useEffect(() => {
-        return () => {
-            clearFormError({ id: `${id}_${leftTitle}` });
-            clearFormError({ id: `${id}_${leftTitle}` });
-        };
-    }, []);
-
     const disableRemoveBtn = index === 1;
 
     return (
@@ -112,7 +105,8 @@ const TransferNFTInput = ({
                             formId: `${id}_${rightTitle}`,
                             value: rightValue,
                             onChange: handleTokenId,
-                            placeHolder: rightPlaceholder
+                            placeHolder: rightPlaceholder,
+                            regex: /[^0-9,]/g
                         }}
                     />
                 </div>

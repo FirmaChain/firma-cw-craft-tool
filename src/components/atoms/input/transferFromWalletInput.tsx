@@ -101,14 +101,14 @@ const TransferFromWalletInput = ({
         onRemoveClick();
     };
 
-    useEffect(() => {
-        return () => {
-            clearFormError({ id: fromAddressId });
-            clearFormError({ id: fromBalanceId });
-            clearFormError({ id: toAddressId });
-            clearFormError({ id: transferAmountId });
-        };
-    }, []);
+    // useEffect(() => {
+    //     return () => {
+    //         clearFormError({ id: fromAddressId });
+    //         clearFormError({ id: fromBalanceId });
+    //         clearFormError({ id: toAddressId });
+    //         clearFormError({ id: transferAmountId });
+    //     };
+    // }, []);
 
     return (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>

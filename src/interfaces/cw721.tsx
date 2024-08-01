@@ -15,6 +15,7 @@ export interface IExecuteBurn {
 export interface IExecuteTransfer {
     recipient: string;
     token_ids: string[];
+    id?: string;
 }
 
 export interface IExecuteApprove {
@@ -48,5 +49,5 @@ export interface IExecuteUpdateOwnershipTransfer {
     expire: {
         type: string;
         value: string;
-    }
+    };
 }

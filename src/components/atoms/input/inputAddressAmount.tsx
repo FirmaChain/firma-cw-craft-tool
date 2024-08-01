@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId } from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
@@ -38,6 +38,7 @@ const InputAddressAmount = ({
     inputId
 }: IProps) => {
     const id = inputId;
+
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
 
@@ -57,13 +58,6 @@ const InputAddressAmount = ({
     const handleRemoveWallet = () => {
         onRemoveClick();
     };
-
-    useEffect(() => {
-        return () => {
-            clearFromError({ id: `${id}_ADDRESS` });
-            clearFromError({ id: `${id}_AMOUNT` });
-        };
-    }, []);
 
     return (
         <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>

@@ -235,11 +235,6 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                         isValid={validity[index]}
                         decimals={decimals}
                         inputId={wallet.id}
-                        // onChangeAddress={(value) => handleChange(index, 'recipient', value)}
-                        // onChangeAmount={(value) => handleChange(index, 'amount', value)}
-                        // addressTitle={addressTitle}
-                        // addressPlaceholder={addressPlaceholder}
-                        // amountTitle={amountTitle}
                     />
                 );
             })}

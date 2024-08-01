@@ -7,27 +7,32 @@ export interface IGlobalStateProps {
     cwMode: CW_MODE_TYPE;
     contractMode: CONTRACT_MODE_TYPE;
     cw20Minterble: boolean;
-
     globalLoading: boolean;
 }
 
-export const HANDLE_NETWORK = 'HANDLE_NETWORK';
-export const HANDLE_CW_MODE = 'HANDLE_CW_MODE';
-export const HANDLE_CONTRACT_MODE = 'HANDLE_CONTRACT_MODE';
-export const HANDLE_MENU = 'HANDLE_MENU';
-export const HANDLE_CW20_MINTERBLE = 'HANDLE_CW20_MINTERBLE';
+const HANDLE_NETWORK = 'HANDLE_NETWORK';
+const HANDLE_CW_MODE = 'HANDLE_CW_MODE';
+const HANDLE_CONTRACT_MODE = 'HANDLE_CONTRACT_MODE';
+const HANDLE_MENU = 'HANDLE_MENU';
+const HANDLE_CW20_MINTERBLE = 'HANDLE_CW20_MINTERBLE';
 const HANDLE_GLOBAL_LOADING = 'HANDLE_GLOBAL_LOADING';
 
-export const initialState: IGlobalStateProps = {
-    network: 'TESTNET',
+//? cw mode by current location
+const INITIAL_CW_MODE = window.location.href.toLowerCase().includes('cw721') ? 'CW721' : 'CW20';
+
+//? current network | Defaults to TESTNET to avoid human error
+const INITIAL_NETWORK = localStorage.getItem('network') === 'MAINNET' ? 'MAINNET' : 'TESTNET';
+
+const initialState: IGlobalStateProps = {
+    network: INITIAL_NETWORK,
     menu: 'INSTANTAITE',
-    cwMode: 'CW20',
+    cwMode: INITIAL_CW_MODE,
     contractMode: 'BASIC',
     cw20Minterble: false,
     globalLoading: false
 };
 
-export const ACTION_CREATORS = {
+const ACTION_CREATORS = {
     HANDLE_NETWORK: createAction<NETWORK_TYPE>(HANDLE_NETWORK),
     HANDLE_MENU: createAction<MENU_TYPE>(HANDLE_MENU),
     HANDLE_CW_MODE: createAction<CW_MODE_TYPE>(HANDLE_CW_MODE),
@@ -48,6 +53,7 @@ export const ACTIONS = {
 const reducer = createReducer(initialState, (builder) => {
     builder.addCase(ACTION_CREATORS.HANDLE_NETWORK, (state, { payload }) => {
         state.network = payload;
+        localStorage.setItem('network', payload);
     });
 
     builder.addCase(ACTION_CREATORS.HANDLE_CW_MODE, (state, { payload }) => {
