@@ -46,6 +46,10 @@ const UpdateMarketing = () => {
         setMarketingAddress(value);
     };
 
+    const currentDesc = marketingDescription === null ? marketingInfo?.description || '' : marketingDescription;
+    const currentAddr = marketingAddress === null ? marketingInfo?.marketing || '' : marketingAddress;
+    const currentProj = marketingProject === null ? marketingInfo?.project || '' : marketingProject;
+
     useEffect(() => {
         if (marketingInfo) {
             setMarketingDescription(marketingInfo.description);
@@ -54,9 +58,12 @@ const UpdateMarketing = () => {
         }
     }, [marketingInfo]);
 
-    const currentDesc = marketingDescription === null ? marketingInfo?.description || '' : marketingDescription;
-    const currentAddr = marketingAddress === null ? marketingInfo?.marketing || '' : marketingAddress;
-    const currentProj = marketingProject === null ? marketingInfo?.project || '' : marketingProject;
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearMarketing();
+        };
+    }, []);
 
     return (
         <Container>

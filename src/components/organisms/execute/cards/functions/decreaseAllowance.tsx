@@ -84,6 +84,13 @@ const DecreaseAllowance = () => {
         setIsFetched(false);
     }, [isFetched]);
 
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearAllowance();
+        };
+    }, []);
+
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
             clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });

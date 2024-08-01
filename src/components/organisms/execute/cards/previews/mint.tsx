@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
@@ -196,10 +196,9 @@ const MintPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [totalMintBalance, setTotalMintBalance] = useState<string>('0');
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
-    const calculateTotalBalance = useCallback(() => {
+    const totalMintBalance = useMemo(() => {
         let totalAmount = '0';
         let allAddressesValid = true;
         let allAmountsValid = true;
@@ -218,12 +217,9 @@ const MintPreview = () => {
         const compare = compareStringNumbers(getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString()), possibleMintAmount);
 
         setIsEnableButton(allAddressesValid && allAmountsValid && compare !== 1);
-        setTotalMintBalance(getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString()));
-    }, [mintingList, tokenInfo, minterInfo]);
 
-    useEffect(() => {
-        calculateTotalBalance();
-    }, [mintingList, calculateTotalBalance]);
+        return getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString());
+    }, [mintingList, tokenInfo, minterInfo]);
 
     const onClickMint = () => {
         const convertWalletList: IWallet[] = [];
@@ -324,7 +320,10 @@ const MintPreview = () => {
                         <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
-                            <IconTooltip size="14px" />
+                            <IconTooltip
+                                size="14px"
+                                tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
+                            />
                         </div>
                     </TokenInfoLeft>
                     <TokenInfoRightWrap>

@@ -1,18 +1,14 @@
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
-import WalletList from '@/components/atoms/walletList';
+
 import { IWallet } from '@/interfaces/wallet';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useEffect, useMemo } from 'react';
-import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { addStringAmount, getUTokenAmountFromToken } from '@/utils/balance';
 import { parseAmountWithDecimal2 } from '@/utils/common';
-
-const ContentWrap = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-`;
+import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
+import useFormStore from '@/store/formStore';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -50,15 +46,8 @@ const SummerySymbolTypo = styled.div`
 const BurnFrom = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const burnFromList = useExecuteStore((state) => state.burnFromList);
-    const isFetched = useExecuteStore((v) => v.isFetched);
-    const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
-    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
 
-    useEffect(() => {
-        if (isFetched) {
-            setIsFetched(false);
-        }
-    }, [isFetched]);
+    const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
 
     const handleWalletList = (value: IWallet[]) => {
         setBurnFromList(value);
@@ -74,6 +63,13 @@ const BurnFrom = () => {
         return getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString());
     }, [burnFromList, tokenInfo]);
 
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearBurnFrom();
+        };
+    }, []);
+
     return (
         <Container>
             <HeaderWrap>
@@ -84,19 +80,18 @@ const BurnFrom = () => {
                 <SummeryCard>
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo>
-                            {parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)}
-                        </SummeryAmountTypo>
+                        <SummeryAmountTypo>{parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)}</SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <WalletList
+            <AddressAmountInput
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={'Owner Address'}
                 addressPlaceholder={'Input Wallet Address'}
                 amountTitle={'Burn Amount'}
+                list={burnFromList}
             />
         </Container>
     );

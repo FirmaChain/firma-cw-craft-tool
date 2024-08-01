@@ -12,19 +12,23 @@ const UpdateLogo = () => {
     const marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
     const setMarketingLogoUrl = useExecuteStore((state) => state.setMarketingLogoUrl);
 
-    const setFormError = useFormStore((state) => state.setFormError);
-    const clearFormError = useFormStore((state) => state.clearFormError);
-
-    useEffect(() => {
-        if (marketingInfo) {
-            setMarketingLogoUrl(marketingInfo?.logo.url || "");
-        }
-    }, [marketingInfo]);
-    
     const onChangeMarketingLogoUrl = (v: string) => {
         console.log(v);
         setMarketingLogoUrl(v);
     };
+
+    useEffect(() => {
+        if (marketingInfo) {
+            setMarketingLogoUrl(marketingInfo?.logo.url || '');
+        }
+    }, [marketingInfo]);
+
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearLogoUrl();
+        };
+    }, []);
 
     return (
         <Container>
@@ -38,7 +42,7 @@ const UpdateLogo = () => {
                 labelProps={{ label: 'Marketing Logo (Token Logo Link)' }}
                 inputProps={{
                     formId: LOGO_URL_ERROR_TYPE,
-                    value: marketingLogoUrl === null ? "" : marketingLogoUrl,
+                    value: marketingLogoUrl === null ? '' : marketingLogoUrl,
                     onChange: onChangeMarketingLogoUrl,
                     placeHolder: 'ex) https://example.thisismy.token.jpg'
                 }}

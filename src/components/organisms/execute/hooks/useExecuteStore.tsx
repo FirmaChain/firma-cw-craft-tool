@@ -92,10 +92,11 @@ interface FormProps {
 }
 
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
-const INIT_TRANSFER_LIST: IWallet[] = [{ recipient: '', amount: '' }];
 const INIT_TRANSFER_FROM_LIST: ITransferInfo[] = [
     { fromAddress: '', fromAmount: '', toAddress: '', toAmount: '', allowanceAmount: '', id: v4() }
 ];
+
+const INIT_ADDRESS_AMOUNT: IWallet = { recipient: '', amount: '' };
 
 const useExecuteStore = create<FormProps>()(
     immer((set) => ({
@@ -155,11 +156,11 @@ const useExecuteStore = create<FormProps>()(
         isFetched: false,
         contractAddress: null,
         selectMenu: INIT_SELECT_MENU,
-        mintingList: [],
+        mintingList: [{ ...INIT_ADDRESS_AMOUNT, id: v4() }],
         burnAmount: null,
-        burnFromList: [],
+        burnFromList: [{ ...INIT_ADDRESS_AMOUNT, id: v4() }],
         allowance: null,
-        transferList: INIT_TRANSFER_LIST,
+        transferList: [{ ...INIT_ADDRESS_AMOUNT, id: v4() }],
         transferFromList: INIT_TRANSFER_FROM_LIST,
         marketingDescription: null,
         marketingAddress: null,
@@ -226,7 +227,7 @@ const useExecuteStore = create<FormProps>()(
 
         clearMinterList: () =>
             set((state) => {
-                state.mintingList = [];
+                state.mintingList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];
             }),
         clearBurn: () =>
             set((state) => {
@@ -234,7 +235,7 @@ const useExecuteStore = create<FormProps>()(
             }),
         clearBurnFrom: () =>
             set((state) => {
-                state.burnFromList = [];
+                state.burnFromList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];
             }),
         clearAllowance: () =>
             set((state) => {
@@ -242,7 +243,7 @@ const useExecuteStore = create<FormProps>()(
             }),
         clearTransfer: () =>
             set((state) => {
-                state.transferList = INIT_TRANSFER_LIST;
+                state.transferList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];
             }),
         clearTransferFrom: () =>
             set((state) => {
@@ -282,11 +283,11 @@ const useExecuteStore = create<FormProps>()(
                 state.isFetched = false;
                 state.contractAddress = null;
                 state.selectMenu = INIT_SELECT_MENU;
-                state.mintingList = [];
+                state.mintingList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];
                 state.burnAmount = null;
-                state.burnFromList = [];
+                state.burnFromList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];
                 state.allowance = null;
-                state.transferList = INIT_TRANSFER_LIST;
+                state.transferList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];
                 state.transferFromList = INIT_TRANSFER_FROM_LIST;
                 state.marketingDescription = null;
                 state.marketingAddress = null;

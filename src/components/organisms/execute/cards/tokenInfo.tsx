@@ -20,6 +20,7 @@ import useExecuteStore from '../hooks/useExecuteStore';
 import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import useFormStore from '@/store/formStore';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -207,6 +208,13 @@ const TokenInfo = () => {
         return false;
     }, [contractInfo, network]);
 
+    const handleChangeMenu = (menu: string) => {
+        console.log('menu', menu);
+        const _selectMenu = ownerMenus.find((item) => item.value === menu);
+
+        setSelectMenu(_selectMenu);
+    };
+
     useEffect(() => {
         let ruleMenus: IMenuItem[] = [];
 
@@ -237,13 +245,6 @@ const TokenInfo = () => {
 
         setOwnerMenus(ruleMenus);
     }, [craftConfig, contractAddress, minterInfo, marketingInfo]);
-
-    const handleChangeMenu = (menu: string) => {
-        console.log('menu', menu);
-        const _selectMenu = ownerMenus.find((item) => item.value === menu);
-
-        setSelectMenu(_selectMenu);
-    };
 
     return (
         <>

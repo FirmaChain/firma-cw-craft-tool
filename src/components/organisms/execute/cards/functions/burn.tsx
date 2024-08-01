@@ -6,6 +6,7 @@ import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUT
 import LabelInput from '@/components/atoms/input/labelInput';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { parseAmountWithDecimal2 } from '@/utils/common';
+import useFormStore from '@/store/formStore';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -59,6 +60,13 @@ const Burn = () => {
         setBurnAmount(burnAmount);
     };
 
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearBurn();
+        };
+    }, []);
+
     return (
         <Container>
             <HeaderWrap>
@@ -71,7 +79,7 @@ const Burn = () => {
                 <LabelInput
                     labelProps={{ label: 'Burn Amount' }}
                     inputProps={{
-                        value: burnAmount === null ? "" : burnAmount,
+                        value: burnAmount === null ? '' : burnAmount,
                         formId: 'BURN_AMOUNT',
                         type: 'number',
                         onChange: handleBurnAmount,
@@ -82,9 +90,7 @@ const Burn = () => {
 
                 <WalletBalanceWrap>
                     <WalletBalanceTypo>Balance :</WalletBalanceTypo>
-                    <WalletBalanceTypo>
-                        {parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}
-                    </WalletBalanceTypo>
+                    <WalletBalanceTypo>{parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}</WalletBalanceTypo>
                 </WalletBalanceWrap>
             </ContentWrap>
         </Container>

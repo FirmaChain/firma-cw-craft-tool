@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import TransferFromWalletList from '@/components/atoms/walletList/transferFromWalletList';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { addDecimals, getUTokenStrFromTokenStr } from '@/utils/common';
+import useFormStore from '@/store/formStore';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -59,6 +60,13 @@ const TransferFrom = () => {
 
         return addDecimals(...amounts);
     }, [transferFromList]);
+
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearTransferFrom();
+        };
+    }, []);
 
     return (
         <Container>

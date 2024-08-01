@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import WalletList from '@/components/atoms/walletList';
 import {
     addStringAmount,
     compareStringNumbers,
@@ -15,6 +14,8 @@ import {
 import { IWallet } from '@/interfaces/wallet';
 import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
+import useFormStore from '@/store/formStore';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -64,15 +65,11 @@ const DOTTED_DIVIDER = styled.img`
 `;
 
 const Mint = () => {
-    const isFetched = useExecuteStore((state) => state.isFetched);
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
 
+    const mintingList = useExecuteStore((state) => state.mintingList);
     const setMinterList = useExecuteStore((state) => state.setMinterList);
-    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
-
-    const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
 
     const mintableAmount = useMemo(() => {
         if (!minterInfo || !tokenInfo) return '';
@@ -82,23 +79,22 @@ const Mint = () => {
 
     const totalMintAmount = useMemo(() => {
         let addAmount = '0';
-        for (const wallet of addWalletList) {
+        for (const wallet of mintingList) {
             addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString()), addAmount);
         }
         return addAmount;
-    }, [addWalletList]);
-
-    useEffect(() => {
-        if (isFetched) {
-            setAddWalletList([]);
-            setIsFetched(false);
-        }
-    }, [isFetched]);
+    }, [mintingList]);
 
     const handleWalletList = (value: IWallet[]) => {
-        setAddWalletList(value);
         setMinterList(value);
     };
+
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearMinterList();
+        };
+    }, []);
 
     return (
         <Container>
@@ -122,14 +118,12 @@ const Mint = () => {
                             {formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}
                         </TotalMintSubBalance>
                         <TotalMintSubBalance>{tokenInfo.symbol}</TotalMintSubBalance>
-                        <IconTooltip
-                            size="14px"
-                            tooltip={'Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.'}
-                        />
+                        <IconTooltip size="14px" tooltip={`Additional Mintable Token Amount\n=  Minter Cap - Total Supply`} />
                     </TotalMintWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <WalletList
+            <AddressAmountInput
+                list={mintingList}
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={'Recipient Address'}

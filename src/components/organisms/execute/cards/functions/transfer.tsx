@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
-import WalletList from '@/components/atoms/walletList';
 import { IWallet } from '@/interfaces/wallet';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import useExecuteStore from '../../hooks/useExecuteStore';
+import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
+import useFormStore from '@/store/formStore';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -57,30 +57,27 @@ const MyWalletAmountTypo = styled.div`
 const Transfer = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
-    const isFetched = useExecuteStore((v) => v.isFetched);
+    const transferList = useExecuteStore((state) => state.transferList);
     const setTransferList = useExecuteStore((state) => state.setTransferList);
-    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
-
-    const [addWalletList, setAddWalletList] = useState<IWallet[]>([]);
-
-    useEffect(() => {
-        if (isFetched) {
-            setIsFetched(false);
-        }
-    }, [isFetched]);
 
     const totalTransferAmount = useMemo(() => {
         let addAmount = '0';
-        for (const wallet of addWalletList) {
+        for (const wallet of transferList) {
             addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString()), addAmount);
         }
         return addAmount;
-    }, [addWalletList]);
+    }, [transferList]);
 
     const handleWalletList = (value: IWallet[]) => {
-        setAddWalletList(value);
         setTransferList(value);
     };
+
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearTransfer();
+        };
+    }, []);
 
     return (
         <Container>
@@ -107,7 +104,8 @@ const Transfer = () => {
                     </ItemWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <WalletList
+            <AddressAmountInput
+                list={transferList}
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={'Recipient Address'}

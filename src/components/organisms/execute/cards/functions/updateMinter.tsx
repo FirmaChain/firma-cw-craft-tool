@@ -16,12 +16,6 @@ const UpdateMinter = () => {
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    useEffect(() => {
-        if (minterInfo) {
-            setMinterAddress(minterInfo?.minter || "");
-        }
-    }, [minterInfo]);
-
     const onChangeMinter = (v) => {
         if (FirmaUtil.isValidAddress(v) || v === '') {
             clearFormError({ id: MINTER_INPUT_FORM_ID, type: MINTER_ERROR_TYPE });
@@ -31,6 +25,19 @@ const UpdateMinter = () => {
 
         setMinterAddress(v);
     };
+
+    useEffect(() => {
+        if (minterInfo) {
+            setMinterAddress(minterInfo?.minter || '');
+        }
+    }, [minterInfo]);
+
+    useEffect(() => {
+        return () => {
+            useFormStore.getState().clearForm();
+            useExecuteStore.getState().clearMinter();
+        };
+    }, []);
 
     return (
         <Container>
@@ -44,7 +51,7 @@ const UpdateMinter = () => {
                 labelProps={{ label: 'Minter Address' }}
                 inputProps={{
                     formId: MINTER_INPUT_FORM_ID,
-                    value: minterAddress || "",
+                    value: minterAddress || '',
                     onChange: onChangeMinter,
                     placeHolder: 'Input Wallet Address',
                     emptyErrorMessage: 'Please input address'
