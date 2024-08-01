@@ -111,7 +111,7 @@ const Preview = ({ isBasic }: IProps) => {
                     codeId: codeId,
                     label: isBasic ? 'CW20' : label,
                     msg: JSON.stringify(messageData),
-                    type: craftConfig.CW721.TYPE
+                    type: craftConfig.CW20.TYPE
                 };
 
                 modal.openModal({

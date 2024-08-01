@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import TransferNFTInputList from '@/components/atoms/walletList/transferNFTInputList';
@@ -48,6 +48,10 @@ const MyWalletAmountTypo = styled.div`
 
 const Transfer = () => {
     const [walletList, setWalletList] = useState([{ recipient: '', tokenId: '', id: v4() }]);
+
+    useEffect(() => {
+        console.log(walletList);
+    }, [walletList]);
 
     return (
         <Container>

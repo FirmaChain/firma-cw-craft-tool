@@ -239,6 +239,8 @@ const QRCodeModal = ({
                                     return <WalletItem label={el.label} count={el.value} />;
                                 } else if (['at_time', 'at_height', 'never'].includes(el.type)) {
                                     return <ExpirationItem value={el.value} type={el.type} />;
+                                } else if (el.type === 'nft') {
+                                    return <NftItem label={el.label} value={el.value} symbol={params.content.symbol} />
                                 }
                             })}
                         </ResultsContentSummeryWrap>

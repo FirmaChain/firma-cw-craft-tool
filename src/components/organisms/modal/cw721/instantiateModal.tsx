@@ -504,7 +504,7 @@ const InstantitateModal = ({
                         <QrCodeWrap>
                             <RequestQR
                                 isTxModal
-                                qrSize={120}
+                                qrSize={144}
                                 module={module}
                                 params={params}
                                 signer={address}

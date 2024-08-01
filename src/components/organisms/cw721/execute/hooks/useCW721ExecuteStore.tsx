@@ -45,6 +45,8 @@ interface FormProps {
     mintStartTokenId: string;
     mintEndTokenId: string;
     mintList: { token_id: string, token_uri: string, id: string }[];
+    // BURN
+    burnList: string;
 
     burn: IExecuteBurn;
     transfer: IExecuteTransfer[];
@@ -55,11 +57,14 @@ interface FormProps {
     updateOwnershipTransfer: IExecuteUpdateOwnershipTransfer;
     setContractAddress: (v: string) => void;
     setSelectMenu: (v: IMenuItem) => void;
+    // MINT
     setMintRecipientAddress: (v: string) => void;
     setMintBaseURI: (v: string) => void;
     setMintStartTokenId: (v: string) => void;
     setMintEndTokenId: (v: string) => void;
     setMintList: (v: { token_id: string, token_uri: string, id: string }[]) => void;
+    // BURN
+    setBurnList: (v: string) => void;
 
     setBurn: (v: IExecuteBurn) => void;
     setTransfer: (v: IExecuteTransfer[]) => void;
@@ -71,6 +76,7 @@ interface FormProps {
 
     clearForm: () => void;
     clearMintForm: () => void;
+    clearBurnForm: () => void;
 }
 
 const INIT_CONTRACT_INFO: ContractInfo = {
@@ -147,6 +153,8 @@ const useCW721ExecuteStore = create<FormProps>()(
         mintStartTokenId: '',
         mintEndTokenId: '',
         mintList: INIT_MINT_LIST,
+        // BURN
+        burnList: '',
         burn: INIT_BURN,
         transfer: INIT_TRANSFER,
         approve: INIT_APPORVE,
@@ -183,6 +191,12 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.mintList = data;
             }),
+        // BURN
+        setBurnList: (data) =>
+            set((state) => {
+                state.burnList = data;
+            }),
+
         setBurn: (data) =>
             set((state) => {
                 state.burn = data;
@@ -243,6 +257,11 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.mintStartTokenId = '';
                 state.mintEndTokenId = '';
                 state.mintList = INIT_MINT_LIST;
+            })
+        },
+        clearBurnForm: () => {
+            set((state) => {
+                state.burnList = '';
             })
         }
     }))

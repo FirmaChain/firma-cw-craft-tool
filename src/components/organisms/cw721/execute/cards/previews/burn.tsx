@@ -3,6 +3,11 @@ import { IC_COIN_STACK, IC_COIN_STACK2 } from '@/components/atoms/icons/pngIcons
 import IconTooltip from '@/components/atoms/tooltip';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { useMemo } from 'react';
+import { subtractStringAmount } from '@/utils/balance';
+import { QRCodeModal } from '@/components/organisms/modal';
+import { useModalStore } from '@/hooks/useModal';
 
 const Container = styled.div`
     width: 100%;
@@ -113,6 +118,78 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnPreview = () => {
+    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
+    const burnList = useCW721ExecuteStore((state) => state.burnList);
+    const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
+
+    const modal = useModalStore();
+
+    const totalBurnCount = useMemo(() => {
+        if (burnList.length === 0) return 0;
+        return burnList.split(',').filter((one) => one !== '').length;
+    }, [burnList]);
+
+    const updatedBurnCount = useMemo(() => {
+        return subtractStringAmount(totalSupply, totalBurnCount.toString());
+    }, [totalSupply, totalBurnCount]);
+
+    const isEnableButton = useMemo(() => {
+        if (Number(updatedBurnCount) <= -1) return false;
+        if (totalBurnCount === 0) return false;
+
+        return true;
+    }, [updatedBurnCount, totalBurnCount]);
+
+    const onClickBurn = () => {
+        const convertList: { token_id: string }[] = [];
+        const feeAmount = burnList.length * 15000;
+
+        const token_ids = burnList.split(',');
+
+        for (const burnData of token_ids) {
+            convertList.push({
+                token_id: burnData,
+            });
+        }
+        
+        const params = {
+            header: {
+                title: 'Burn'
+            },
+            content: {
+                symbol: nftContractInfo.symbol,
+                fctAmount: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: 'Total Burn Amount',
+                        value: totalBurnCount.toString(),
+                        type: 'nft'
+                    }
+                ]
+            },
+            contract: contractAddress,
+            msg: convertList
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw721/burn"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        clearBurnForm();
+                    }}
+                />
+            )
+        });
+    };
+
     return (
         <Container>
             <ContentWrap>
@@ -122,7 +199,7 @@ const BurnPreview = () => {
                         <BurnInfoTitleTypo>Total Burn Amount</BurnInfoTitleTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <BurnAmountTypo>{0}</BurnAmountTypo>
+                        <BurnAmountTypo>{totalBurnCount}</BurnAmountTypo>
                         <BurnSymbolTypo>NFT</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
@@ -136,13 +213,13 @@ const BurnPreview = () => {
                         </div>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <UpdatedBalanceTypo>{0}</UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo>{updatedBurnCount}</UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>NFT</UpdatedSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton>
+                <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>
                     <div className="button-text">Burn</div>
                 </GreenButton>
             </ButtonWrap>

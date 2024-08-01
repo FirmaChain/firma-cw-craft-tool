@@ -174,6 +174,7 @@ const MintPreview = () => {
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
     const mintList = useCW721ExecuteStore((state) => state.mintList);
     const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
+    const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
     const modal = useModalStore();
 
@@ -243,7 +244,7 @@ const MintPreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        
+                        clearMintForm();
                     }}
                 />
             )
