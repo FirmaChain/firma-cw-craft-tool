@@ -7,7 +7,7 @@ import { INFTState, useCW721NFTListContext } from "@/context/cw721NFTListContext
 import useNFTContractDetail from "@/hooks/useNFTContractDetail";
 import { rootState } from "@/redux/reducers";
 import useNFTContractDetailStore from "@/store/useNFTContractDetailStore";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -22,6 +22,7 @@ const Container = styled.div`
 `
 
 const TableContainer = styled.div`
+    min-height: 244px;
     display: grid;
     grid-template-columns: repeat(10, minmax(80px, 1fr));
     gap: 16px;
@@ -29,7 +30,7 @@ const TableContainer = styled.div`
 
 const LoadingBox = styled.div`
     width: 100%;
-    height: 208px;
+    min-height: 244px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -75,11 +76,12 @@ const NFTTokenIdTypo = styled.div`
 `
 
 const EmptyNFTsTypo = styled.div`
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 208px;
+    min-height: 244px;
     color: var(--Gray-800, #DCDCDC);
     font-family: "General Sans Variable";
     font-size: 14px;
@@ -117,13 +119,14 @@ const NFTsTable = () => {
     const network = useSelector((state: rootState) => state.global.network);
     const { handleCW721NFTIdList } = useNFTContractDetail();
     const { contractDetail } = useNFTContractDetailStore();
-    const { nfts, addNFTs, updateNFTs, fetchNFTImage, isFetching, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
+    const { nfts, addNFTs, updateNFTs, fetchNFTImage, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
 
     const curSDKConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
     const basicCodeId = curSDKConfig.CW721.BASIC_CODE_ID;
     const advancedCodeId = curSDKConfig.CW721.ADVANCED_CODE_ID;
 
     const [pageItems, setPageItems] = useState<INFTState[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const itemsPerPage = 20;
 
     const NFTIds = useMemo(() => {
@@ -131,51 +134,64 @@ const NFTsTable = () => {
         return contractDetail.totalNftIds;
     }, [contractDetail])
 
-    useEffect(() => {
-        if (contractDetail === null) return;
-        const isDeploiedFromFirma = Boolean([basicCodeId, advancedCodeId].find((code) => code === contractDetail.codeId) !== undefined);
-        addNFTs(NFTIds, isDeploiedFromFirma)
-    }, [NFTIds, basicCodeId, advancedCodeId])
+    const fetchItems = useCallback(async () => {
+        if (!contractDetail) return;
+        const isDeploiedFromFirma = [basicCodeId, advancedCodeId].includes(contractDetail.codeId);
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentNfts = nfts.slice(startIndex, endIndex);
 
-    const fetchItems = async () => {
-        try {
-            if (contractDetail === null) return;
-            const isDeploiedFromFirma = Boolean([basicCodeId, advancedCodeId].find((code) => code === contractDetail.codeId) !== undefined);
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const currentNfts = nfts.slice(startIndex, endIndex);
-
-            const fetchedItems = await Promise.all(
-                currentNfts.map(async ({ tokenId, image }) => {
-                    if (image !== '') {
-                        return {
-                            tokenId, image
-                        };
-                    } else {
-                        try {
-                            const item = await fetchNFTImage(tokenId, contractDetail.contractAddress, isDeploiedFromFirma);
-                            if (item) {
-                                updateNFTs(item);
-                                return { ...item };
-                            } else {
-                                return { tokenId, image };
-                            }
-                        } catch (error) {
-                            return { tokenId, image };
+        const fetchedItems = await Promise.all(
+            currentNfts.map(async ({ tokenId, image }) => {
+                if (image) {
+                    return { tokenId, image };
+                } else {
+                    try {
+                        const item = await fetchNFTImage(tokenId, contractDetail.contractAddress, isDeploiedFromFirma);
+                        if (item) {
+                            return item;
                         }
+                    } catch (error) {
+                        console.error(`Error fetching image for NFT ID: ${tokenId}`, error);
                     }
-                })
-            );
-            setPageItems(fetchedItems);
-        } catch (error) {
-            console.error('Error fetching contract items:', error);
-        }
-    };
+                    return { tokenId, image: IMG_NFT_EMPTY_THUMBNAIL };
+                }
+            })
+        );
+
+        setPageItems(prevItems => {
+            if (JSON.stringify(prevItems) !== JSON.stringify(fetchedItems)) {
+                return fetchedItems;
+            }
+            return prevItems;
+        });
+        setIsLoading(false);
+    }, [contractDetail, currentPage, nfts]);
 
     const totalPages = useMemo(() => {
         if (contractDetail === null) return 0;
         return Math.ceil(contractDetail.totalSupply / itemsPerPage);
     }, [contractDetail])
+
+    const handlePageChange = useCallback((page: number) => {
+        setCurrentPage(page);
+    }, [setCurrentPage]);
+
+    const pageList = useMemo(() => {
+        if (!contractDetail) return [];
+        const totalPages = Math.ceil(contractDetail.totalSupply / itemsPerPage);
+        if (totalPages <= 1) return [1];
+        if (currentPage <= 1) return [1, 2, 3].filter(page => page <= totalPages);
+        if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter(page => page > 0);
+        return [currentPage - 1, currentPage, currentPage + 1].filter(page => page <= totalPages);
+    }, [contractDetail, currentPage, itemsPerPage]);
+
+    useEffect(() => {
+        if (contractDetail) {
+            const isDeploiedFromFirma = Boolean([basicCodeId, advancedCodeId].find((code) => code === contractDetail.codeId) !== undefined);
+            addNFTs(NFTIds, isDeploiedFromFirma);
+        }
+    }, [NFTIds, basicCodeId, advancedCodeId, contractDetail]);
 
     useEffect(() => {
         if (!contractDetail) return;
@@ -188,25 +204,14 @@ const NFTsTable = () => {
     }, [currentPage, contractDetail]);
 
     useEffect(() => {
-        if (contractDetail !== null && contractDetail.totalNftIds.length > 0) {
-            fetchItems();
-        }
-    }, [contractDetail, currentPage, itemsPerPage, updateNFTs]);
+        pageItems.map((nft) => {
+            updateNFTs(nft);
+        })
+    }, [pageItems])
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
-
-    const pageList = useMemo(() => {
-        if (contractDetail !== null) {
-            const totalPages = Math.ceil(contractDetail.totalSupply / itemsPerPage);
-            if (totalPages <= 1) return [1];
-            if (currentPage <= 1) return [1, 2, 3].filter((page) => page <= totalPages);
-            if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
-
-            return [currentPage - 1, currentPage, currentPage + 1].filter((page) => page <= totalPages);
-        } else return [];
-    }, [contractDetail, currentPage, itemsPerPage]);
+    useEffect(() => {
+        fetchItems();
+    }, [contractDetail, currentPage, updateNFTs]);
 
     useEffect(() => {
         return () => {
@@ -215,25 +220,26 @@ const NFTsTable = () => {
     }, [])
 
     return (<Container>
-        {isFetching === true && <LoadingBox><FirmaLoading size={'40px'} /></LoadingBox>}
-        {isFetching === false &&
-            <TableContainer>
-                {nfts === null ?
+        {isLoading === true && <LoadingBox><FirmaLoading size={'40px'} /></LoadingBox>}
+        {isLoading === false &&
+            <Fragment>
+                {NFTIds.length === 0 ?
                     <EmptyNFTsTypo>{'There is no data'}</EmptyNFTsTypo>
                     :
-                    pageItems.map((nft) => {
-                        return (
-                            <NFTItemBox key={nft.tokenId}>
-                                <NFTImg src={nft.image} alt={`${contractDetail?.contractAddress}-${nft}`} />
-                                <NFTTokenIdTypo>{nft.tokenId}</NFTTokenIdTypo>
-                            </NFTItemBox>
-                        )
-                    }
-                    )}
-            </TableContainer>
-
+                    <TableContainer>
+                        {pageItems.map((nft) => {
+                            return (
+                                <NFTItemBox key={nft.tokenId}>
+                                    <NFTImg src={nft.image} alt={`${contractDetail?.contractAddress}-${nft}`} />
+                                    <NFTTokenIdTypo>{nft.tokenId}</NFTTokenIdTypo>
+                                </NFTItemBox>
+                            )
+                        })}
+                    </TableContainer>
+                }
+            </Fragment>
         }
-        {nfts !== null &&
+        {nfts &&
             <PaginationContainer style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
                 <PaginationButton onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                     <Icons.PrevPage width={'20px'} height={'20px'} stroke={currentPage !== 1 ? '#FFFFFF' : '#707070'} />

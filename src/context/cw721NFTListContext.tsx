@@ -9,11 +9,10 @@ export interface INFTState {
 }
 
 interface CW721NFTListContextProps {
-    nfts: INFTState[] | null;
+    nfts: INFTState[];
     addNFTs: (newNFTs: string[], isDeploiedFromFirma: boolean) => void;
     updateNFTs: (newNft: INFTState) => void;
     fetchNFTImage: (nfts: string, contractAddress: string, isDeploiedFromFirma: boolean) => Promise<INFTState>;
-    isFetching: boolean;
     currentPage: number;
     setCurrentPage: (page: number) => void;
     clearCW721NFTListData: () => void;
@@ -32,9 +31,8 @@ export const useCW721NFTListContext = () => {
 export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
     const { getCW721NFTImage } = useMyNFTContracts();
-    const [nfts, setNfts] = useState<INFTState[] | null>(null);
+    const [nfts, setNfts] = useState<INFTState[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [isFetching, setIsFetching] = useState<boolean>(false);
 
     const fetchNFTImage = async (nft: string, contractAddress: string, isDeploiedFromFirma: boolean) => {
         let newNFT: INFTState = {
@@ -58,7 +56,6 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
 
     const addNFTs = (newNFTs: string[], isDeploiedFromFirma: boolean) => {
         try {
-            setIsFetching(true);
             if (nfts === null) {
                 setNfts(newNFTs.map(nft => ({ tokenId: nft, image: isDeploiedFromFirma ? IMG_NFT_EMPTY_THUMBNAIL : '' })))
             } else {
@@ -70,13 +67,12 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
             }
         } catch (error) {
             console.log(error);
-        } finally {
-            setIsFetching(false);
         }
     };
 
 
     const updateNFTs = (newNft: INFTState) => {
+        if (nfts === null) return;
         setNfts(prev =>
             prev.map(nft =>
                 nft.tokenId === newNft.tokenId ? { ...nft, image: newNft.image } : nft
@@ -102,7 +98,6 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
                 addNFTs,
                 updateNFTs,
                 fetchNFTImage,
-                isFetching,
                 currentPage,
                 setCurrentPage,
                 clearCW721NFTListData
