@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import IconTooltip from '@/components/atoms/tooltip';
@@ -7,6 +7,8 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import VariableInput from '@/components/atoms/input/variableInput';
 import MintNFTInfoList from '@/components/atoms/walletList/mintNFTInfoList';
 import { v4 } from 'uuid';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { IExecuteMint } from '@/interfaces/cw721';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -119,35 +121,46 @@ const Section = styled.div`
 const MINTING_PRESET_TOOLTIP = `You can input a range of Token ID numbers using\n"Start" and "End" , or specify multiple random numbers\nin the 'Token ID' field below in ‘Required Informations’.`;
 
 const Mint = () => {
-    const [baseurl, setBaseuri] = useState('');
+    const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
+    const mintBaseURI = useCW721ExecuteStore((state) => state.mintBaseURI);
+    const mintStartTokenId = useCW721ExecuteStore((state) => state.mintStartTokenId);
+    const mintEndTokenId = useCW721ExecuteStore((state) => state.mintEndTokenId);
+    const mintList = useCW721ExecuteStore((state) => state.mintList);
+    const setMintRecipientAddress = useCW721ExecuteStore((state) => state.setMintRecipientAddress);
+    const setMintBaseURI = useCW721ExecuteStore((state) => state.setMintBaseURI);
+    const setMintStartTokenId = useCW721ExecuteStore((state) => state.setMintStartTokenId);
+    const setMintEndTokenId = useCW721ExecuteStore((state) => state.setMintEndTokenId);
+    const setMintList = useCW721ExecuteStore((state) => state.setMintList);
+    const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
-    const [idRange, setIdRange] = useState({ start: '', end: '' });
+    const disableMintIntoList = mintBaseURI.length > 0;
+    const totalMintCount = useMemo(() => {
+        if (mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '') {
+            return "0";
+        }
 
-    const [recipientAddress, setRecipientAddress] = useState('');
-
-    const [mintInfo, setMintInfo] = useState<{ token_id: string; token_uri: string; id: string }[]>([
-        { token_id: '', token_uri: '', id: v4() }
-    ]);
-
-    const disableMinIntoList = baseurl.length > 0;
+        return mintList.length;
+    }, [mintList]);
 
     useEffect(() => {
-        const { start, end } = idRange;
+        clearMintForm();
+    }, []);
 
-        if (baseurl) {
-            if (start && end && !isNaN(Number(start)) && !isNaN(Number(end))) {
-                const parsedStart = parseInt(start);
+    useEffect(() => {
+        if (mintBaseURI) {
+            if (mintStartTokenId && mintEndTokenId && !isNaN(Number(mintStartTokenId)) && !isNaN(Number(mintEndTokenId))) {
+                const parsedStart = parseInt(mintStartTokenId);
 
-                setMintInfo(
-                    new Array(Number(end) - Number(start) + 1)
+                setMintList(
+                    new Array(Number(mintEndTokenId) - Number(mintStartTokenId) + 1)
                         .fill(null)
-                        .map((_, idx) => ({ token_id: (idx + parsedStart).toString(), token_uri: baseurl + (idx + parsedStart), id: v4() }))
+                        .map((_, idx) => ({ token_id: (idx + parsedStart).toString(), token_uri: mintBaseURI + (idx + parsedStart), id: v4() }))
                 );
             } else {
-                setMintInfo([{ token_id: '', token_uri: '', id: v4() }]);
+                setMintList([{ token_id: '', token_uri: '', id: v4() }]);
             }
         }
-    }, [baseurl, idRange]);
+    }, [mintBaseURI, mintStartTokenId, mintEndTokenId]);
 
     return (
         <Container>
@@ -159,7 +172,7 @@ const Mint = () => {
                 <SummeryCard>
                     <TotalMintWrap>
                         <TotalMintLabelTypo>Total Mint Count :</TotalMintLabelTypo>
-                        <TotalMintSupplyBalance>0</TotalMintSupplyBalance>
+                        <TotalMintSupplyBalance>{totalMintCount}</TotalMintSupplyBalance>
                         <TotalMintSupplyBalance>NFT</TotalMintSupplyBalance>
                     </TotalMintWrap>
                 </SummeryCard>
@@ -174,13 +187,13 @@ const Mint = () => {
                         <LabelInput
                             labelProps={{ label: 'Base URI' }}
                             inputProps={{
-                                value: baseurl,
+                                value: mintBaseURI,
                                 formId: 'BASE_URI_INPUT',
                                 placeHolder: 'Input base uri ends with ‘/’',
                                 onChange: (v) => {
-                                    setBaseuri(v);
+                                    setMintBaseURI(v);
                                     if (v.length === 0) {
-                                        setMintInfo([{ token_id: '', token_uri: '', id: v4() }]);
+                                        setMintList([{ token_id: '', token_uri: '', id: v4() }]);
                                     }
                                 }
                             }}
@@ -191,10 +204,10 @@ const Mint = () => {
                                 <div className="input-with-prefix">
                                     <span className="prefix">Start</span>
                                     <VariableInput
-                                        value={idRange.start}
+                                        value={mintStartTokenId}
                                         placeHolder={'0'}
                                         textAlign="right"
-                                        onChange={(v) => setIdRange((orig) => ({ ...orig, start: v }))}
+                                        onChange={(v) => setMintStartTokenId(v)}
                                         type="number"
                                         decimal={0}
                                         maxValue={20}
@@ -203,10 +216,10 @@ const Mint = () => {
                                 <div className="input-with-prefix">
                                     <span className="prefix">End</span>
                                     <VariableInput
-                                        value={idRange.end}
+                                        value={mintEndTokenId}
                                         placeHolder={'0'}
                                         textAlign="right"
-                                        onChange={(v) => setIdRange((orig) => ({ ...orig, end: v }))}
+                                        onChange={(v) => setMintEndTokenId(v)}
                                         type="number"
                                         decimal={0}
                                         maxValue={20}
@@ -225,20 +238,21 @@ const Mint = () => {
                         <LabelInput
                             labelProps={{ label: 'Recipient Address' }}
                             inputProps={{
-                                value: recipientAddress,
+                                value: mintRecipientAddress,
                                 formId: 'RECIPIENT_ADDRESS',
                                 placeHolder: 'Input wallet address',
-                                onChange: (v) => setRecipientAddress(v)
+                                onChange: (v) => setMintRecipientAddress(v)
                             }}
                         />
                     </div>
                     <MintNFTInfoList
-                        onChangeWalletList={(v) => setMintInfo(v)}
-                        list={mintInfo}
-                        disableInput={disableMinIntoList}
+                        onChangeWalletList={(v) => setMintList(v)}
+                        list={mintList}
+                        disableInput={disableMintIntoList}
                         onClickDeleteAll={() => {
-                            setBaseuri('');
-                            setIdRange({ start: '', end: '' });
+                            setMintBaseURI('');
+                            setMintStartTokenId('');
+                            setMintEndTokenId('');
                         }}
                     />
                 </Section>

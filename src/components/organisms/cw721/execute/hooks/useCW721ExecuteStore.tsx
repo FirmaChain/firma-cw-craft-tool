@@ -1,3 +1,6 @@
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+import { v4 } from 'uuid';
 import { ContractInfo, Cw721ContractInfo, Cw721Expires } from '@firmachain/firma-js';
 
 import {
@@ -10,8 +13,6 @@ import {
     IExecuteRevoke,
     IExecuteUpdateOwnershipTransfer
 } from '@/interfaces/cw721';
-import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 import { IMenuItem } from '@/interfaces/common';
 
 interface CwOwnershipInfo {
@@ -26,17 +27,25 @@ interface FormProps {
     fctBalance: string;
     contractInfo: ContractInfo;
     nftContractInfo: Cw721ContractInfo;
+    totalNfts: string;
     ownershipInfo: CwOwnershipInfo;
     minterInfo: string;
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
-
+    setTotalNfts: (v: string) => void;
+    
     clearInfo: () => void;
 
     contractAddress: string;
+    // Mint
     selectMenu: IMenuItem;
-    mint: IExecuteMint;
+    mintRecipientAddress: string;
+    mintBaseURI: string;
+    mintStartTokenId: string;
+    mintEndTokenId: string;
+    mintList: { token_id: string, token_uri: string, id: string }[];
+
     burn: IExecuteBurn;
     transfer: IExecuteTransfer[];
     approve: IExecuteApprove;
@@ -46,7 +55,12 @@ interface FormProps {
     updateOwnershipTransfer: IExecuteUpdateOwnershipTransfer;
     setContractAddress: (v: string) => void;
     setSelectMenu: (v: IMenuItem) => void;
-    setMint: (v: IExecuteMint) => void;
+    setMintRecipientAddress: (v: string) => void;
+    setMintBaseURI: (v: string) => void;
+    setMintStartTokenId: (v: string) => void;
+    setMintEndTokenId: (v: string) => void;
+    setMintList: (v: { token_id: string, token_uri: string, id: string }[]) => void;
+
     setBurn: (v: IExecuteBurn) => void;
     setTransfer: (v: IExecuteTransfer[]) => void;
     setApprove: (v: IExecuteApprove) => void;
@@ -56,6 +70,7 @@ interface FormProps {
     setUpdateOwnershipTransfer: (v: IExecuteUpdateOwnershipTransfer) => void;
 
     clearForm: () => void;
+    clearMintForm: () => void;
 }
 
 const INIT_CONTRACT_INFO: ContractInfo = {
@@ -79,7 +94,7 @@ const INIT_NFT_CONTRACT_INFO: Cw721ContractInfo = { name: '', symbol: '' };
 const INIT_OWNERSHIP_INFO: CwOwnershipInfo = { owner: '', pending_owner: '', pending_expiry: { at_height: 0 } };
 const INIT_MINTER_INFO: string = '';
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
-const INIT_MINT: IExecuteMint = { recipient: '', nftInfos: [] };
+const INIT_MINT_LIST: { token_id: string, token_uri: string, id: string }[] = [{ token_id: '', token_uri: '', id: v4() }];
 const INIT_BURN: IExecuteBurn = { token_ids: [] };
 const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
 const INIT_APPORVE: IExecuteApprove = { recipient: '', token_id: '', expire: { type: '', value: '' } };
@@ -99,6 +114,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         fctBalance: '',
         contractInfo: INIT_CONTRACT_INFO,
         nftContractInfo: INIT_NFT_CONTRACT_INFO,
+        totalNfts: '',
         ownershipInfo: INIT_OWNERSHIP_INFO,
         minterInfo: INIT_MINTER_INFO,
         setFctBalance: (data) =>
@@ -108,6 +124,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         setContractInfo: (data) =>
             set((state) => {
                 state.contractInfo = data;
+            }),
+        setTotalNfts: (data) =>
+            set((state) => {
+                state.totalNfts = data;
             }),
         setNftContractInfo: (data) =>
             set((state) => {
@@ -121,7 +141,12 @@ const useCW721ExecuteStore = create<FormProps>()(
 
         contractAddress: '',
         selectMenu: INIT_SELECT_MENU,
-        mint: INIT_MINT,
+        // MINT
+        mintRecipientAddress: '',
+        mintBaseURI: '',
+        mintStartTokenId: '',
+        mintEndTokenId: '',
+        mintList: INIT_MINT_LIST,
         burn: INIT_BURN,
         transfer: INIT_TRANSFER,
         approve: INIT_APPORVE,
@@ -137,9 +162,26 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.selectMenu = data;
             }),
-        setMint: (data) =>
+        // MINT
+        setMintRecipientAddress: (data) => 
             set((state) => {
-                state.mint = data;
+                state.mintRecipientAddress = data;
+            }),
+        setMintBaseURI: (data) => 
+            set((state) => {
+                state.mintBaseURI = data;
+            }),
+        setMintStartTokenId: (data) => 
+            set((state) => {
+                state.mintStartTokenId = data;
+            }),
+        setMintEndTokenId: (data) => 
+            set((state) => {
+                state.mintEndTokenId = data;
+            }),
+        setMintList: (data) => 
+            set((state) => {
+                state.mintList = data;
             }),
         setBurn: (data) =>
             set((state) => {
@@ -178,7 +220,13 @@ const useCW721ExecuteStore = create<FormProps>()(
 
                 state.contractAddress = '';
                 state.selectMenu = INIT_SELECT_MENU;
-                state.mint = INIT_MINT;
+
+                state.mintRecipientAddress = '';
+                state.mintBaseURI = '';
+                state.mintStartTokenId = '';
+                state.mintEndTokenId = '';
+                state.mintList = INIT_MINT_LIST;
+
                 state.burn = INIT_BURN;
                 state.transfer = INIT_TRANSFER;
                 state.approve = INIT_APPORVE;
@@ -186,7 +234,16 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.approveAll = INIT_APPROVE_ALL;
                 state.revokeAll = INIT_REVOKE_ALL;
                 state.updateOwnershipTransfer = INIT_UPDATE_OWNERSHIP_TRANSFER;
-            });
+            })
+        },
+        clearMintForm: () => {
+            set((state) => {
+                state.mintBaseURI = '';
+                state.mintRecipientAddress = '';
+                state.mintStartTokenId = '';
+                state.mintEndTokenId = '';
+                state.mintList = INIT_MINT_LIST;
+            })
         }
     }))
 );

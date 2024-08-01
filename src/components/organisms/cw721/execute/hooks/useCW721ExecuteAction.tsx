@@ -22,6 +22,7 @@ const useCW721ExecuteAction = () => {
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
             useCW721ExecuteStore.getState().setContractInfo(contractInfo);
         } catch (error) {
+            console.log('error - contractAddress', contractAddress);
             console.log('error', error);
             enqueueSnackbar({
                 variant: 'error',
@@ -42,6 +43,19 @@ const useCW721ExecuteAction = () => {
             });
         }
     };
+
+    const setFctBalance = async (address: string) => {
+        try {
+            const fctBalance = await firmaSDK.Bank.getBalance(address);
+            useCW721ExecuteStore.getState().setFctBalance(fctBalance);
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({
+                variant: 'error',
+                message: 'Error occured while fetching setFctBalance'
+            });
+        }
+    }
 
     const searchCW721Contract = async (contractAddress: string, address: string) => {
         //? in case of searching cw721 contract in cw20 execute page
@@ -66,12 +80,27 @@ const useCW721ExecuteAction = () => {
         }
     };
 
+    const setTotalNfts = async (contractAddress: string) => {
+        try {
+            const totalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress);
+            useCW721ExecuteStore.getState().setTotalNfts(totalNfts.toString());
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({
+                variant: 'error',
+                message: 'Error occured while fetching setNftContractInfo(CW721)'
+            });
+        }
+    }
+    
     return {
         checkContractExist,
         setContractInfo,
         setNftContractInfo,
-        searchCW721Contract
-    };
-};
+        searchCW721Contract,
+        setTotalNfts,
+        setFctBalance
+    }
+}
 
 export default useCW721ExecuteAction;

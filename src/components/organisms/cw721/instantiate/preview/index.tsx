@@ -165,7 +165,8 @@ const Preview = () => {
                 admin: contractMode === 'BASIC' ? address : admin,
                 codeId: codeId,
                 label: label,
-                msg: JSON.stringify(messageData)
+                msg: JSON.stringify(messageData),
+                type: craftConfig.CW721.TYPE
             };
 
             const datas: {

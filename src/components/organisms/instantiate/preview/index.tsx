@@ -51,6 +51,10 @@ const Preview = ({ isBasic }: IProps) => {
 
         return cw20CodeId;
     }, [network, contractMode]);
+    
+    const craftConfig = useMemo(() => {
+        return network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+    }, [network]);
 
     const handleInstantiate = () => {
         if (isInit) {
@@ -106,7 +110,8 @@ const Preview = ({ isBasic }: IProps) => {
                     admin: address,
                     codeId: codeId,
                     label: isBasic ? 'CW20' : label,
-                    msg: JSON.stringify(messageData)
+                    msg: JSON.stringify(messageData),
+                    type: craftConfig.CW721.TYPE
                 };
 
                 modal.openModal({

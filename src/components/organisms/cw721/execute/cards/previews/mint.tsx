@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_LINK_GRAY, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
@@ -6,6 +6,13 @@ import { useModalStore } from '@/hooks/useModal';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
+import { addStringAmount, getUTokenAmountFromToken } from '@/utils/balance';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { QRCodeModal } from '@/components/organisms/modal';
+import { isValidAddress } from '@/utils/address';
 
 const Container = styled.div`
     width: 100%;
@@ -114,6 +121,12 @@ const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px;
 `;
 
+const WalletItemWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`;
+
 const TokenInfoSubTitleTypo = styled.div`
     color: var(--Gray-700, #999);
     font-family: 'General Sans Variable';
@@ -155,12 +168,87 @@ const ButtonWrap = styled.div`
 `;
 
 const MintPreview = () => {
+    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
+    const mintList = useCW721ExecuteStore((state) => state.mintList);
+    const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
+
     const modal = useModalStore();
 
-    const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
-    const onClickMint = () => {};
+    const mintSupply = useMemo(() => {
+        if (mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '') {
+            return '0';
+        }
+
+        return mintList.length.toString();
+    }, [mintList]);
+
+    const isEnableButton = useMemo(() => {
+        if (!isValidAddress(mintRecipientAddress)) return false;
+        if (mintList.length > 0) {
+            for (const mintData of mintList) {
+                if (mintData.token_id === '') return false;
+                if (mintData.token_uri === '') return false;
+            }
+        }
+        return true;
+    }, [mintRecipientAddress, mintList]);
+
+    const willTotalSupply = useMemo(() => {
+        return addStringAmount(mintSupply, totalSupply);
+    }, [totalSupply, mintSupply]);
+
+    const onClickMint = () => {
+        const convertMintList: { owner: string, token_id: string, extension: {}, token_uri: string }[] = [];
+        const feeAmount = mintList.length * 15000;
+
+        for (const mintData of mintList) {
+            convertMintList.push({
+                owner: mintRecipientAddress,
+                token_id: mintData.token_id,
+                extension: {},
+                token_uri: mintData.token_uri
+            });
+        }
+        
+        const params = {
+            header: {
+                title: 'Mint'
+            },
+            content: {
+                symbol: nftContractInfo.symbol,
+                fctAmount: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: 'Total Mint Supply',
+                        value: mintList.length.toString(),
+                        type: 'nft'
+                    }
+                ]
+            },
+            contract: contractAddress,
+            msg: convertMintList
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw721/mint"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        
+                    }}
+                />
+            )
+        });
+    };
 
     return (
         <Container>
@@ -172,23 +260,34 @@ const MintPreview = () => {
                             <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
                         </TokenInfoLeft>
                         <TokenInfoRightWrap>
-                            <TokenInfoMintAmountTypo>0</TokenInfoMintAmountTypo>
+                            <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
                             <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
                             <ArrowToggleButton onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>
-                    {isOpen && (
+                    {!isOpen && (
                         <WalletListWrap>
                             <WalletLeftItemWrap>
                                 <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                <WalletItemAddressTypo $disabled={true}>Wallet Address</WalletItemAddressTypo>
+                                <WalletItemAddressTypo $disabled={mintRecipientAddress === ''}>{mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}</WalletItemAddressTypo>
                             </WalletLeftItemWrap>
                             <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-
-                            <WalletLeftItemWrap>
-                                <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                <WalletItemAddressTypo $disabled={true}>NFT Url</WalletItemAddressTypo>
-                            </WalletLeftItemWrap>
+                            <WalletItemWrap>
+                                {mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '' && (
+                                    <WalletLeftItemWrap>
+                                        <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
+                                        <WalletItemAddressTypo $disabled={true}>NFT Url</WalletItemAddressTypo>
+                                    </WalletLeftItemWrap>
+                                )}
+                                {mintList.length >= 1 && (mintList[0].token_id !== '' || mintList[0].token_uri !== '') && (
+                                    mintList.map((value, index) => (
+                                        <WalletLeftItemWrap key={index}>
+                                            <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
+                                            <WalletItemAddressTypo $disabled={false}>{value.token_uri}</WalletItemAddressTypo>
+                                        </WalletLeftItemWrap>
+                                    ))
+                                )}
+                            </WalletItemWrap>
                         </WalletListWrap>
                     )}
                 </TokenTitleWrap>
@@ -206,7 +305,7 @@ const MintPreview = () => {
                     </TokenInfoLeft>
                     <TokenInfoRightWrap>
                         <TotalSupplyWrap>
-                            <TotalSupplyAmount></TotalSupplyAmount>
+                            <TotalSupplyAmount>{willTotalSupply}</TotalSupplyAmount>
                             <TotalSupplySymbol>NFT</TotalSupplySymbol>
                         </TotalSupplyWrap>
                     </TokenInfoRightWrap>

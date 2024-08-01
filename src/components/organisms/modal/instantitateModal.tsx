@@ -453,7 +453,7 @@ const InstantitateModal = ({
 }: {
     id: string;
     module: string;
-    params: { admin: string; codeId: string; label: string; msg: string };
+    params: { admin: string; codeId: string; label: string; msg: string, type: string };
 }) => {
     const { firmaSDK } = useExecuteHook();
     const walletAddress = useSelector((state: rootState) => state.wallet.address);

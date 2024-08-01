@@ -170,4 +170,17 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
     );
 };
 
+export const NftItem = ({ label, value, symbol }: { label: string, value: string, symbol: string }) => {
+    console.log(value);
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ItemAmountValue>{value}</ItemAmountValue>
+                <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
+            </ItemValueWrap>
+        </ItemWrap>
+    )
+}
+
 export { QRCodeModal };
