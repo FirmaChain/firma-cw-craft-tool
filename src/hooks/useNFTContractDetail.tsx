@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
-import { Cw20SpenderAllowance, Cw721Expires, FirmaSDK } from '@firmachain/firma-js';
+import { Cw721Approval, Cw721Expires, FirmaSDK } from '@firmachain/firma-js';
 
 import { rootState } from '../redux/reducers';
 import { CRAFT_CONFIGS } from '../config';
@@ -27,7 +27,6 @@ export interface IAccounts {
     'Wallet Address': string;
     Balance: string;
 }
-
 export interface INFTContractInfo {
     contractAddress: string;
     admin: string;
@@ -36,17 +35,24 @@ export interface INFTContractInfo {
     codeId: string;
     name: string;
     symbol: string;
-    totalSupply: number;
-    totalNftIds: string[];
     ownerInfo: {
         owner: string | null;
         pending_owner: string | null;
         pending_expiry: Cw721Expires | null;
     }
 }
-
+export interface INFTsInfo {
+    totalSupply: number;
+    totalNftIds: string[];
+}
 export interface INFTContractTxData {
     txData: ITransaction[];
+}
+export interface ISearchData {
+    tokenId: string;
+    owner: string;
+    tokenURI: string;
+    approvals: Cw721Approval[];
 }
 
 export interface INFTContractDetailState extends INFTContractInfo { }
@@ -56,7 +62,7 @@ const useNFTContractDetail = () => {
 
     const { network } = useSelector((state: rootState) => state.global);
     const { client } = useApollo();
-    const { contractDetail, setContractDetail } = useNFTContractDetailStore();
+    const { nftsInfo, setNftsInfo } = useNFTContractDetailStore();
 
     const [firmaSDK, setFirmaSDK] = useState<FirmaSDK | null>(null);
 
@@ -70,8 +76,32 @@ const useNFTContractDetail = () => {
         initializeFirmaSDK();
     }, [network]);
 
+    const getNFTsInfo = useCallback(async (contractAddress: string) => {
+        const nftInfo: INFTsInfo = {
+            totalSupply: 0,
+            totalNftIds: []
+        }
+        if (!firmaSDK) return nftInfo;
+
+        try {
+            const totalNftsCount = await firmaSDK.Cw721.getTotalNfts(contractAddress);
+            const nftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress, 20);
+
+            nftInfo.totalSupply = totalNftsCount;
+            nftInfo.totalNftIds = nftIdList;
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar(`failed get '${contractAddress}' NFT List info`, {
+                variant: 'error',
+                autoHideDuration: 2000
+            });
+        } finally {
+            return nftInfo;
+        }
+    }, [firmaSDK])
+
     const getNFTContractDetail = useCallback(
-        async (contractAddress: string, address: string) => {
+        async (contractAddress: string) => {
             const resultData: INFTContractDetailState = {
                 contractAddress: '',
                 admin: '',
@@ -80,14 +110,11 @@ const useNFTContractDetail = () => {
                 codeId: '',
                 name: '',
                 symbol: '',
-                totalSupply: 0,
-                totalNftIds: [],
                 ownerInfo: {
                     owner: null,
                     pending_owner: null,
                     pending_expiry: null,
                 },
-
             };
 
             if (!firmaSDK) return resultData;
@@ -96,8 +123,6 @@ const useNFTContractDetail = () => {
                 const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
                 const nftInfo = await firmaSDK.Cw721.getContractInfo(contractAddress);
                 const ownerInfo = await firmaSDK.Cw721.getOwnerShip(contractAddress);
-                const totalNftsCount = await firmaSDK.Cw721.getTotalNfts(contractAddress);
-                const nftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress, 30);
                 const minter = await firmaSDK.Cw721.getMinter(contractAddress);
 
                 resultData.contractAddress = contractInfo.address;
@@ -106,8 +131,6 @@ const useNFTContractDetail = () => {
                 resultData.codeId = contractInfo.contract_info.code_id;
                 resultData.name = nftInfo.name;
                 resultData.symbol = nftInfo.symbol;
-                resultData.totalSupply = totalNftsCount;
-                resultData.totalNftIds = nftIdList;
                 resultData.ownerInfo = ownerInfo;
                 resultData.minter = minter;
             } catch (error) {
@@ -124,16 +147,15 @@ const useNFTContractDetail = () => {
         [firmaSDK]
     );
 
-
     const handleCW721NFTIdList = useCallback(async (contractAddress: string) => {
         try {
-            const nftIdList = contractDetail.totalNftIds;
-            const lastNftId = contractDetail.totalNftIds[contractDetail.totalNftIds.length - 1];
-            const result = await firmaSDK.Cw721.getAllNftIdList(contractAddress, 30, lastNftId);
+            const nftIdList = nftsInfo.totalNftIds;
+            const lastNftId = nftsInfo.totalNftIds[nftsInfo.totalNftIds.length - 1];
+            const result = await firmaSDK.Cw721.getAllNftIdList(contractAddress, 20, lastNftId);
 
             const newNftIdList = result.filter((nft) => nftIdList.some((existNft) => existNft === nft) === false);
-            setContractDetail({
-                ...contractDetail,
+            setNftsInfo({
+                ...nftsInfo,
                 totalNftIds: [...nftIdList, ...newNftIdList]
             })
         } catch (error) {
@@ -143,7 +165,7 @@ const useNFTContractDetail = () => {
                 autoHideDuration: 2000
             });
         }
-    }, [contractDetail]);
+    }, [nftsInfo]);
 
     const getAllTransactinos = async (contractAddress: string): Promise<ITransaction[]> => {
         const { messagesByAddress } = await getTransactionsByAddress(client, contractAddress, 15);
@@ -183,10 +205,38 @@ const useNFTContractDetail = () => {
         }
     }
 
+    const getNFTDataByTokenID = async (contractAddress: string, tokenId: string) => {
+        const resultData: ISearchData = {
+            tokenId: tokenId,
+            owner: "",
+            tokenURI: "",
+            approvals: []
+        };
+        try {
+            if (!firmaSDK) return resultData;
+
+            const data = await firmaSDK.Cw721.getNftData(contractAddress, tokenId);
+
+            resultData.owner = data.access.owner;
+            resultData.approvals = data.access.approvals;
+            resultData.tokenURI = data.info.token_uri;
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar(`failed get '#${tokenId}' info`, {
+                variant: 'error',
+                autoHideDuration: 2000
+            });
+        } finally {
+            return resultData;
+        }
+    }
+
     return {
         getNFTContractDetail,
+        getNFTsInfo,
         getNFTContractTransactions,
-        handleCW721NFTIdList
+        handleCW721NFTIdList,
+        getNFTDataByTokenID
     };
 };
 

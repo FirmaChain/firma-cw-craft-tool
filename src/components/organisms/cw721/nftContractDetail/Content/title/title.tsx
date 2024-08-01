@@ -20,12 +20,12 @@ import Skeleton from '@/components/atoms/skeleton';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 
 const Title = () => {
-    const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
+    const { contractDetail, nftsInfo } = useNFTContractDetailStore();
 
-    const contractAddress = contractInfo?.contractAddress || null;
-    const name = contractInfo?.name || null;
-    const symbol = contractInfo?.symbol || null;
-    const totalSupply = contractInfo?.totalSupply || 0;
+    const contractAddress = contractDetail?.contractAddress || null;
+    const name = contractDetail?.name || null;
+    const symbol = contractDetail?.symbol || null;
+    const totalSupply = nftsInfo?.totalSupply || 0;
 
     const navigatge = useNavigate();
 

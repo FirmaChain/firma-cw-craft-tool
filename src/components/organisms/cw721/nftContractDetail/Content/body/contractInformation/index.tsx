@@ -27,15 +27,15 @@ import { IC_EXPAND } from '@/components/atoms/icons/pngIcons';
 const ContractInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
 
-    const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
+    const { contractDetail, nftsInfo } = useNFTContractDetailStore((state) => state);
 
-    const contractAddress = contractInfo?.contractAddress || '';
-    const codeId = contractInfo?.codeId;
-    const contractName = contractInfo?.name || '';
-    const contractSymbol = contractInfo?.symbol || '';
-    const codeID = contractInfo?.codeId || '';
-    const label = contractInfo?.label;
-    const totalSupply = contractInfo?.totalSupply || '0';
+    const contractAddress = contractDetail?.contractAddress || '';
+    const codeId = contractDetail?.codeId;
+    const contractName = contractDetail?.name || '';
+    const contractSymbol = contractDetail?.symbol || '';
+    const codeID = contractDetail?.codeId || '';
+    const label = contractDetail?.label;
+    const totalSupply = nftsInfo?.totalSupply || '0';
 
     const [expand, setExpand] = useState(true);
 

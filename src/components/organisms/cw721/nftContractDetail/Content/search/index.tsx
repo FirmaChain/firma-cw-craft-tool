@@ -1,141 +1,160 @@
-import { useCallback, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import SearchInputWithButton2 from "@/components/atoms/input/searchInputWithButton";
+import { ContentBodyContainer, CardHeaderTypo, ContractCard, SearchButton, SpecificItem, SpecificLabelTypo, SpecificValueWrapper, SpecificValueTypo, SpecificPlaceholderTypo } from "./style";
+import { Fragment, useCallback, useRef, useState } from "react";
+import IconButton from "@/components/atoms/buttons/iconButton";
+import Icons from "@/components/atoms/icons";
+import Divider from "@/components/atoms/divider";
+import CopyIconButton from "@/components/atoms/buttons/copyIconButton";
+import useNFTContractDetailStore from "@/store/useNFTContractDetailStore";
+import useNFTContractDetail, { ISearchData } from "@/hooks/useNFTContractDetail";
+import StyledTable, { IColumn } from "@/components/atoms/table";
+import Cell from "@/components/atoms/table/cells";
+import { parseExpires } from "@/utils/common";
 
-import {
-    BalanceAmountTypo,
-    BalanceAmountWrapper,
-    BalanceLabelTypo,
-    BalanceSymbolTypo,
-    BalanceWrapper,
-    WalletSearchWrapper,
-    WalletTitleTypo
-} from './style';
-import Allowances from './allowances';
-import useTokenDetail from '@/hooks/useTokenDetail';
-import { rootState } from '@/redux/reducers';
-import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
-import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
+const columns: IColumn[] = [
+    {
+        id: 'spender',
+        label: 'Receiver',
+        renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />,
+        width: '55%',
+        minWidth: '450px'
+    },
+    {
+        id: 'Expires',
+        label: 'Expires',
+        renderCell: (id, row) => parseExpires(JSON.stringify(row['expires'])),
+        width: '25%',
+        minWidth: '200px'
+    }
+];
 
-import IconButton from '@/components/atoms/buttons/iconButton';
-import Icons from '@/components/atoms/icons';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
-import Divider from '@/components/atoms/divider';
-import commaNumber from 'comma-number';
-import { TOOLTIP_ID } from '@/constants/tooltip';
-import Skeleton from '@/components/atoms/skeleton';
 
 const EndAdornment = ({
     keyword,
-    disableSearch = false,
-    onClickSearch,
-    onClickClear
+    clearKeyword,
+    disableSearch,
+    onClickSearch
 }: {
     keyword: string;
+    clearKeyword: () => void;
     disableSearch?: boolean;
     onClickSearch: () => void;
-    onClickClear: () => void;
 }) => {
-    const _disableSearch = keyword === '' || disableSearch;
+    const disableEventBubbling = (evt) => {
+        evt.preventDefault();
+        evt.stopPropagation();
+    };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
-            {keyword && (
-                <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
-                    <Icons.XCircle width={'32px'} height={'32px'} />
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }} onClick={disableEventBubbling}>
+            {keyword.length > 0 && (
+                <IconButton style={{ display: 'flex', padding: 0 }} onClick={clearKeyword}>
+                    <Icons.CloseIcon width="32px" height="32px" strokeWidth="2.6" stroke="#1A1A1A" />
                 </IconButton>
             )}
 
-            <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
-                <Icons.Search
-                    width="28px"
-                    height="28px"
-                    fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
-                    stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
-                />
+            <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
+                <SearchButton>{'Search'}</SearchButton>
             </IconButton>
         </div>
     );
 };
 
-const WalletSearch = () => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+const Search = () => {
+    const { contractDetail } = useNFTContractDetailStore();
+    const { getNFTDataByTokenID } = useNFTContractDetail();
 
-    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
-    const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
-    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals);
+    const [keyword, setKeyword] = useState<string>('');
+    const [fetchData, setFetchData] = useState<ISearchData>({
+        tokenId: "",
+        owner: "",
+        tokenURI: "",
+        approvals: []
+    })
+    const prevData = useRef<ISearchData | null>(null);
 
-    const { getWalletSearch } = useTokenDetail();
+    const isSearched = !Boolean(prevData.current === null);
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [searchAddress, setSearchAddress] = useState<string>('');
-    const [balanceAmount, setBalanceAmount] = useState<string | null>(null);
-    const [allAllowances, setAllAllowances] = useState<any[]>([]);
-    const [allReceives, setAllReceives] = useState<any[]>([]);
+    const disableSearch = keyword.length === 0 || contractDetail === null;
 
-    const onClickSearch = () => {
-        fetchWalletSearch();
+    const onClickClearKeyword = () => {
+        setKeyword('');
     };
 
-    const fetchWalletSearch = useCallback(async () => {
-        if (!isLoading && isInit && searchAddress.length > 0 && isValidAddress(searchAddress)) {
-            setIsLoading(true);
+    const onClickSearch = useCallback(async () => {
+        try {
+            if (prevData.current !== null && prevData.current.tokenId === keyword) return;
+            if (contractDetail === null) return;
+            const result = await getNFTDataByTokenID(contractDetail.contractAddress, keyword);
 
-            const searchResult = await getWalletSearch(contractAddress, searchAddress);
+            setFetchData(result);
 
-            setBalanceAmount(searchResult.balanceAmount);
-            setAllAllowances(searchResult.allAllowances);
-            setAllReceives(searchResult.allSpenders);
-
-            setIsLoading(false);
+            if (result.owner === "") {
+                prevData.current = null;
+            } else {
+                prevData.current = result;
+            }
+        } catch (error) {
+            console.log(error);
         }
-    }, [getWalletSearch, isInit, searchAddress]);
+    }, [keyword, contractDetail, prevData]);
 
     return (
-        <WalletSearchWrapper>
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '28px' }}>
-                <WalletTitleTypo>Wallet Address Search</WalletTitleTypo>
+        <ContentBodyContainer>
+            <ContractCard>
+                <CardHeaderTypo>{'Search'}</CardHeaderTypo>
                 <SearchInputWithButton2
-                    value={searchAddress}
-                    placeHolder={'Input Wallet Address'}
-                    onChange={setSearchAddress}
-                    onClickEvent={onClickSearch}
+                    value={keyword}
+                    placeHolder={'Search by Token ID'}
+                    onChange={(v) => setKeyword(v)}
+                    onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{
                         end: (
                             <EndAdornment
-                                keyword={searchAddress}
-                                disableSearch={!isValidAddress(searchAddress) || searchAddress === ''}
+                                keyword={keyword}
+                                clearKeyword={onClickClearKeyword}
                                 onClickSearch={onClickSearch}
-                                onClickClear={() => setSearchAddress('')}
+                                disableSearch={disableSearch}
                             />
                         )
                     }}
                 />
-            </div>
-            <Divider $direction="horizontal" $color="#383838" $variant="dash" />
+            </ContractCard>
+            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
+            <SpecificItem>
+                <SpecificLabelTypo>{'Owner'}</SpecificLabelTypo>
+                <SpecificValueWrapper>
+                    {isSearched ?
+                        <Fragment>
+                            <SpecificValueTypo>{fetchData.owner}</SpecificValueTypo>
+                            <CopyIconButton text={fetchData.owner} width={'22px'} height={'22px'} />
+                        </Fragment>
+                        :
+                        <SpecificPlaceholderTypo>{'Wallet Address'}</SpecificPlaceholderTypo>
+                    }
+                </SpecificValueWrapper>
+            </SpecificItem>
+            <SpecificItem>
+                <SpecificLabelTypo>{'Token URI'}</SpecificLabelTypo>
+                <SpecificValueWrapper>
+                    {isSearched ?
+                        <Fragment>
+                            <SpecificValueTypo>{fetchData.tokenURI}</SpecificValueTypo>
+                            <CopyIconButton text={fetchData.tokenURI} width={'22px'} height={'22px'} />
+                        </Fragment>
+                        :
+                        <SpecificPlaceholderTypo>{'Token URI'}</SpecificPlaceholderTypo>
+                    }
+                </SpecificValueWrapper>
+            </SpecificItem>
+            <ContractCard>
+                <SpecificItem>
+                    <SpecificLabelTypo>{'Approvals'}</SpecificLabelTypo>
+                </SpecificItem>
+                <StyledTable columns={columns} rows={fetchData.approvals || []} rowsPerPage={15} isLoading={false} disablePagination />
+            </ContractCard>
+        </ContentBodyContainer>
+    )
+}
 
-            <BalanceWrapper>
-                <BalanceLabelTypo>Balances</BalanceLabelTypo>
-                {!isLoading ? (
-                    balanceAmount !== null && (
-                        <BalanceAmountWrapper>
-                            <BalanceAmountTypo
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, decimals))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
-                            >
-                                {commaNumber(parseAmountWithDecimal2(balanceAmount, decimals, true))}
-                            </BalanceAmountTypo>
-                            <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
-                        </BalanceAmountWrapper>
-                    )
-                ) : (
-                    <Skeleton width="100px" height="22px" />
-                )}
-            </BalanceWrapper>
-            <Allowances searchAllowances={allAllowances} searchReceivers={allReceives} isLoading={isLoading} />
-        </WalletSearchWrapper>
-    );
-};
-
-export default WalletSearch;
+export default Search;

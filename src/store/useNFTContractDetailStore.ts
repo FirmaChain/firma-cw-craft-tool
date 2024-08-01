@@ -1,4 +1,4 @@
-import { INFTContractInfo } from '@/hooks/useNFTContractDetail';
+import { INFTContractInfo, INFTsInfo } from '@/hooks/useNFTContractDetail';
 import { ITransaction } from '@/interfaces/cw20';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
@@ -7,6 +7,9 @@ import { immer } from 'zustand/middleware/immer';
 interface FormProps {
     contractDetail: INFTContractInfo | null;
     setContractDetail: (v: INFTContractInfo) => void;
+
+    nftsInfo: INFTsInfo | null;
+    setNftsInfo: (v: INFTsInfo) => void;
 
     transactions: ITransaction[] | null;
     setTransactions: (v: ITransaction[]) => void;
@@ -22,6 +25,12 @@ const useNFTContractDetailStore = create<FormProps>()(
                 state.contractDetail = data;
             }),
 
+        nftsInfo: null,
+        setNftsInfo: (data) =>
+            set((state) => {
+                state.nftsInfo = data;
+            }),
+
         transactions: null,
         setTransactions: (data) =>
             set((state) => {
@@ -32,6 +41,7 @@ const useNFTContractDetailStore = create<FormProps>()(
             set((state) => {
                 state.contractDetail = null;
                 state.transactions = null;
+                state.nftsInfo = null;
             })
     }))
 );

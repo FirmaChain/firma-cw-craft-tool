@@ -11,20 +11,22 @@ import { CW721NFTListProvider } from '@/context/cw721NFTListContext';
 const NFTContractDetail = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
-    const { setContractDetail, setTransactions, clearForm } = useNFTContractDetailStore();
+    const { setContractDetail, setNftsInfo, setTransactions, clearForm } = useNFTContractDetailStore();
 
     const contractAddress = window.location.pathname.replace('/cw721/mynft/detail/', '');
 
-    const { getNFTContractDetail, getNFTContractTransactions } = useNFTContractDetail();
+    const { getNFTContractDetail, getNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
 
     const { client } = useApollo();
 
     const getRequiredInfo = async () => {
         if (isInit && client) {
-            const detail = await getNFTContractDetail(contractAddress, address);
+            const detail = await getNFTContractDetail(contractAddress);
+            const nfts = await getNFTsInfo(contractAddress);
             const txData = await getNFTContractTransactions(contractAddress);
 
             setContractDetail(detail);
+            setNftsInfo(nfts);
             setTransactions(txData.txData);
         }
     };
