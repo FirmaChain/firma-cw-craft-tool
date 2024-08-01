@@ -60,6 +60,7 @@ const Contents = () => {
         setNftContractInfo,
         setTotalNfts,
         setFctBalance,
+        setOwnershipInfo
     } = useCW721ExecuteAction();
 
     const clearForm = useCW721ExecuteStore((state) => state.clearForm);
@@ -94,6 +95,7 @@ const Contents = () => {
             setNftContractInfo(contractAddress);
             setTotalNfts(contractAddress);
             setFctBalance(address);
+            setOwnershipInfo(contractAddress);
         }
     }, [contractExist, contractAddress, address]);
 

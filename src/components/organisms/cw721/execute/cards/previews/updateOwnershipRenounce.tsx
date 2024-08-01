@@ -46,10 +46,13 @@ const UpdateOwnershipRenouncePreview = () => {
     const WARNING_TEXT: string = 'If you renounce ownership of the NFT contract, the contract will be deleted.';
     const WARNING_MODAL_TEXT: string = 'Are you sure you want to renounce ownership of the NFT contract?\nIf you renounce ownership, the contract will be permanently deleted.';
 
+    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
     
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
     const setContractInfo = useCW721ExecuteStore((state) => state.setContractInfo);
     const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
 
@@ -59,6 +62,13 @@ const UpdateOwnershipRenouncePreview = () => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         return config;
     }, [network]);
+
+    const isEnableButton = useMemo(() => {
+        if (ownershipInfo && ownershipInfo.pending_owner === address) return true;
+        
+        // CHECK DATE & BLOCK HEIGHT
+        return false;
+    }, [ownershipInfo, address]);
 
     const onClickRenounce = () => {
         const feeAmount = craftConfig.DEFAULT_FEE;
@@ -106,10 +116,11 @@ const UpdateOwnershipRenouncePreview = () => {
             <ColorButton
                 width={'168px'}
                 height={'40px'}
-                color={'#E55250B3'}
-                text={'Connect Wallet'}
+                color={isEnableButton ? '#E55250B3' : '#707070'}
+                text={!isInit ? 'Connect Wallet' : 'Renounce'}
                 sx={{ color: '#121212', fontStyle: 'normal', fontSize: '14px', fontWeight: 600 }}
                 onClick={onClickRenounce}
+                disabled={!isEnableButton}
             />
         </Container>
     )

@@ -34,7 +34,7 @@ interface FormProps {
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
     setTotalNfts: (v: string) => void;
-    
+    setOwnershipInfo: (v: CwOwnershipInfo) => void;
     clearInfo: () => void;
 
     contractAddress: string;
@@ -160,6 +160,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         setNftContractInfo: (data) =>
             set((state) => {
                 state.nftContractInfo = data;
+            }),
+        setOwnershipInfo: (data) => 
+            set((state) => {
+                state.ownershipInfo = data;
             }),
         clearInfo: () =>
             set((state) => {

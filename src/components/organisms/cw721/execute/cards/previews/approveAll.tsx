@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COINS_HAND, IC_ID_CIRCLE, IC_WALLET } from '@/components/atoms/icons/pngIcons';
@@ -6,6 +6,14 @@ import { format } from 'date-fns';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import commaNumber from 'comma-number';
 import { IAllowanceInfo } from '@/components/organisms/execute/hooks/useExecuteStore';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { CRAFT_CONFIGS } from '@/config';
+import { isValidAddress } from '@/utils/address';
+import { addNanoSeconds } from '@/utils/time';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -95,6 +103,7 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | null }) => {
+    console.log(allowanceInfo);
     if (!allowanceInfo) return <AccordionTypo $disabled>Expiration</AccordionTypo>;
 
     if (allowanceInfo.type === 'never') return <AccordionTypo $disabled={false}>Forever</AccordionTypo>;
@@ -104,7 +113,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     if (allowanceInfo.type === 'at_time')
         return (
             <AccordionTypo $disabled={false}>
-                {format(new Date(Math.floor(Number(allowanceInfo.expire) / 1000000)), 'yyyy-MM-dd HH:mm:ss')}
+                {format(new Date(Math.floor(Number(allowanceInfo.expire))), 'yyyy-MM-dd HH:mm:ss')}
             </AccordionTypo>
         );
 
@@ -112,7 +121,107 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 };
 
 const ApproveAllPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
+    const approveType = useCW721ExecuteStore((state) => state.approveType);
+    const approveValue = useCW721ExecuteStore((state) => state.approveValue);
+    const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
+
+    const modal = useModalStore();
+    
     const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [convertType, setConvertType] = useState<string>('at_height');
+
+    useEffect(() => {
+        if (approveType === 'Time') {
+            setConvertType('at_time');
+        } else if (approveType === 'Height') {
+            setConvertType('at_height');
+        } else {
+            setConvertType('never');
+        }
+    }, [approveType, approveValue]);
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
+
+    const isEnableButton = useMemo(() => {
+        if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
+        if (approveType === '') return false;
+        if (approveType !== 'Forever' && approveValue === '') return false;
+        
+        return true;
+    }, [approveRecipientAddress, approveType, approveValue]);
+    
+    const onClickApproveAll = () => {
+        let expires = {};
+        let convertValue = '';
+
+        if (convertType === 'at_height') {
+            expires = {
+                at_height: parseInt(approveValue)
+            };
+            convertValue = approveValue;
+        } else if (convertType === 'at_time') {
+            expires = {
+                at_time: addNanoSeconds(approveValue).toString()
+            };
+            convertValue = addNanoSeconds(approveValue).toString();
+        } else {
+            expires = null;
+            convertValue = null;
+        }
+
+        const feeAmount = craftConfig.DEFAULT_FEE;
+        
+        const params = {
+            header: {
+                title: 'Approve All'
+            },
+            content: {
+                symbol: nftContractInfo.symbol,
+                fctAmount: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: 'Recipient Address',
+                        value: approveRecipientAddress,
+                        type: 'wallet'
+                    },
+                    {
+                        label: 'Expiration',
+                        value: convertValue,
+                        type: convertType
+                    }
+                ]
+            },
+            contract: contractAddress,
+            msg: {
+                expires: expires,
+                operator: approveRecipientAddress,
+            }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw721/approveAll"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        clearApproveForm();
+                    }}
+                />
+            )
+        });
+    };
 
     return (
         <Container>
@@ -130,19 +239,19 @@ const ApproveAllPreview = () => {
                     <AccordionBox>
                         <AccordionRow>
                             <img src={IC_WALLET} alt="wallet" />
-
-                            <AccordionTypo $disabled>Wallet Address</AccordionTypo>
+                            {approveRecipientAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
+                            {approveRecipientAddress !== '' && <AccordionTypo $disabled={false}>{approveRecipientAddress}</AccordionTypo>}
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
-                            <ExpirationBox />
+                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }}/>
                         </AccordionRow>
                     </AccordionBox>
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled>
-                    <div className="button-text">Approve All</div>
+                <GreenButton disabled={!isEnableButton} onClick={onClickApproveAll}>
+                    <div className="button-text">Approve</div>
                 </GreenButton>
             </ButtonWrap>
         </Container>

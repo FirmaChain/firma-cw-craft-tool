@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { useModalStore } from '@/hooks/useModal';
+import { isValidAddress } from '@/utils/address';
+import { CRAFT_CONFIGS } from '@/config';
+import { QRCodeModal } from '@/components/organisms/modal';
 
 const Container = styled.div`
     width: 100%;
@@ -93,7 +100,68 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const RevokeAllPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
+    const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+    
+    const modal = useModalStore();
+
     const [isOpen, setIsOpen] = useState<boolean>(true);
+
+    const isEnableButton = useMemo(() => {
+        if (revokeAddress === '' || !isValidAddress(revokeAddress)) return false;
+        
+        return true;
+    }, [revokeAddress]);
+    
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
+
+    const onClickRevokeAll = () => {
+        const feeAmount = craftConfig.DEFAULT_FEE;
+
+        const params = {
+            header: {
+                title: 'Revoke All'
+            },
+            content: {
+                symbol: nftContractInfo.symbol,
+                fctAmount: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: 'Recipient Address',
+                        value: revokeAddress,
+                        type: 'wallet'
+                    },
+                ]
+            },
+            contract: contractAddress,
+            msg: {
+                operator: revokeAddress,
+            }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw721/revokeAll"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        clearRevokeForm();
+                    }}
+                />
+            )
+        });
+    };
 
     return (
         <Container>
@@ -111,14 +179,14 @@ const RevokeAllPreview = () => {
                     <AccordionBox>
                         <AccordionRow>
                             <img src={IC_WALLET} alt="wallet" />
-
-                            <AccordionTypo $disabled>Wallet Address</AccordionTypo>
+                            {revokeAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
+                            {revokeAddress !== '' && <AccordionTypo $disabled={false}>{revokeAddress}</AccordionTypo>}
                         </AccordionRow>
                     </AccordionBox>
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled>
+                <GreenButton disabled={!isEnableButton} onClick={onClickRevokeAll}>
                     <div className="button-text">Revoke All</div>
                 </GreenButton>
             </ButtonWrap>

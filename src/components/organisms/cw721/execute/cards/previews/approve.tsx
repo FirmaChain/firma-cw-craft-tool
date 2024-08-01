@@ -112,7 +112,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     if (allowanceInfo.type === 'at_time')
         return (
             <AccordionTypo $disabled={false}>
-                {format(new Date(Math.floor(Number(allowanceInfo.expire) / 1000000)), 'yyyy-MM-dd HH:mm:ss')}
+                {format(new Date(Math.floor(Number(allowanceInfo.expire))), 'yyyy-MM-dd HH:mm:ss')}
             </AccordionTypo>
         );
 
@@ -256,7 +256,7 @@ const ApprovePreview = () => {
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
-                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: addNanoSeconds(approveValue) }}/>
+                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }}/>
                         </AccordionRow>
                     </AccordionBox>
                 )}

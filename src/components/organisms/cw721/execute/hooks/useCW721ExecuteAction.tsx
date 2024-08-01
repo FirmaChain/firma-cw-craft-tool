@@ -91,7 +91,20 @@ const useCW721ExecuteAction = () => {
                 message: 'Error occured while fetching setNftContractInfo(CW721)'
             });
         }
-    }
+    };
+
+    const setOwnershipInfo = async (contractAddress: string) => {
+        try {
+            const ownerShip = await firmaSDK.Cw721.getOwnerShip(contractAddress);
+            useCW721ExecuteStore.getState().setOwnershipInfo(ownerShip);
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({
+                variant: 'error',
+                message: 'Error occured while fetching setOwnership(CW721)'
+            });
+        }
+    };
     
     return {
         checkContractExist,
@@ -99,7 +112,8 @@ const useCW721ExecuteAction = () => {
         setNftContractInfo,
         searchCW721Contract,
         setTotalNfts,
-        setFctBalance
+        setFctBalance,
+        setOwnershipInfo
     }
 }
 

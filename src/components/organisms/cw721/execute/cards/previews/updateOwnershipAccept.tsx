@@ -1,7 +1,17 @@
 import { styled } from "styled-components";
 import { Container } from "../functions/styles";
-import { IC_CHECK_SQUARE, IC_ROUND_ARROW_DOWN, IC_ROUND_ARROW_UP, IC_WALLET } from "@/components/atoms/icons/pngIcons";
-import { useState } from "react";
+import { IC_CHECK_SQUARE, IC_CLOCK, IC_ROUND_ARROW_DOWN, IC_ROUND_ARROW_UP, IC_WALLET } from "@/components/atoms/icons/pngIcons";
+import { useEffect, useMemo, useState } from "react";
+import useCW721ExecuteStore from "../../hooks/useCW721ExecuteStore";
+import GreenButton from "@/components/atoms/buttons/greenButton";
+import { useSelector } from "react-redux";
+import { rootState } from "@/redux/reducers";
+import { IAllowanceInfo } from "@/components/organisms/execute/hooks/useExecuteStore";
+import commaNumber from 'comma-number';
+import { format } from 'date-fns';
+import { useModalStore } from "@/hooks/useModal";
+import { QRCodeModal } from "@/components/organisms/modal";
+import { CRAFT_CONFIGS } from "@/config";
 
 const ContentWrap = styled.div`
     display: flex;
@@ -77,12 +87,126 @@ const ContentItemValue = styled.div<{ $hasData: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
+const ButtonWrap = styled.div`
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const AccordionTypo = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #707070)')};
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+`;
+
+const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | null }) => {
+    if (!allowanceInfo) return <AccordionTypo $disabled>Expiration</AccordionTypo>;
+
+    if (allowanceInfo.type === 'never') return <AccordionTypo $disabled={false}>Forever</AccordionTypo>;
+    if (!allowanceInfo.expire) return <AccordionTypo $disabled={true}>Expiration</AccordionTypo>;
+    if (allowanceInfo.type === 'at_height')
+        return <AccordionTypo $disabled={false}>{commaNumber(allowanceInfo?.expire)} Block</AccordionTypo>;
+    if (allowanceInfo.type === 'at_time')
+        return (
+            <AccordionTypo $disabled={false}>
+                {format(new Date(Math.floor(Number(allowanceInfo.expire))), 'yyyy-MM-dd HH:mm:ss')}
+            </AccordionTypo>
+        );
+
+    return <></>;
+};
 
 const UpdateOwnershipAccept = () => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const network = useSelector((state: rootState) => state.global.network);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
-    const onClickFolding = () => {
-        setIsOpen(!isOpen);
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
+    
+    const [isOriginOwnerOpen, setIsOriginOwnerOpen] = useState<boolean>(false);
+    const [isNewOwnerOpen, setIsNewOwnerOpen] = useState<boolean>(false);
+
+    const modal = useModalStore();
+
+    useEffect(() => {
+        console.log(ownershipInfo);
+        if (ownershipInfo) {
+            if (ownershipInfo.pending_owner === null && ownershipInfo.pending_expiry === null) {
+                // NOT UPDATE TRANSFER
+            }
+        }
+    }, [ownershipInfo])
+
+    const isEnableButton = useMemo(() => {
+        if (ownershipInfo) {
+            if (ownershipInfo.pending_owner) return false;
+            if (ownershipInfo.pending_owner !== address) return false;
+        }
+        return true;
+    }, [ownershipInfo, address]);
+    
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
+
+    const onClickOriginOwnerFolding = () => {
+        setIsOriginOwnerOpen(!isOriginOwnerOpen);
+    };
+
+    const onClickNewOwnerFolding = () => {
+        setIsNewOwnerOpen(!isNewOwnerOpen);
+    };
+
+    const onClickUpdateOwnershipAccept = () => {
+        const feeAmount = craftConfig.DEFAULT_FEE;
+
+        const params = {
+            header: {
+                title: 'Update Ownership Accept'
+            },
+            content: {
+                symbol: nftContractInfo.symbol,
+                fctAmount: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: 'Sender Address',
+                        value: ownershipInfo.owner,
+                        type: 'wallet'
+                    },
+                    {
+                        label: 'Expiration',
+                        value: Object.values(ownershipInfo.pending_expiry)[0],
+                        type: Object.keys(ownershipInfo.pending_expiry)[0]
+                    }
+                ]
+            },
+            contract: contractAddress,
+            msg: {
+                key: "accept_ownership"
+            }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw721/updateOwnershipAccept"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                    }}
+                />
+            )
+        });
     };
 
     return (
@@ -90,24 +214,46 @@ const UpdateOwnershipAccept = () => {
             <ContentWrap>
                 <ContentHeader>
                     <ContentTitleWrap>
-                        <TitleIcon src={IC_CHECK_SQUARE} alt={'Update Ownership Accept Header Icon'}/>
-                        <TitleTypo>Update Ownership Info</TitleTypo>
+                        <TitleIcon src={IC_CHECK_SQUARE} alt={'Origin Ownership Accept Header Icon'}/>
+                        <TitleTypo>Origin Ownership</TitleTypo>
                     </ContentTitleWrap>
-                    <FoldingButton onClick={onClickFolding}>
-                        <FoldingIcon src={isOpen ? IC_ROUND_ARROW_DOWN : IC_ROUND_ARROW_UP} alt={'Update Ownership Accept Folding Icon'}/>
+                    <FoldingButton onClick={onClickOriginOwnerFolding}>
+                        <FoldingIcon src={isOriginOwnerOpen ? IC_ROUND_ARROW_DOWN : IC_ROUND_ARROW_UP} alt={'Origin Ownership Accept Folding Icon'}/>
                     </FoldingButton>
                 </ContentHeader>
-                <ContentBodyWrap>
+                {!isOriginOwnerOpen && <ContentBodyWrap>
                     <ContentItemWrap>
                         <ContentItemIcon src={IC_WALLET} />
-                        {/* <ContentItemValue>{}</ContentItemValue> */}
+                        <ContentItemValue $hasData>{ownershipInfo.owner}</ContentItemValue>
                     </ContentItemWrap>
+                </ContentBodyWrap>}
+                <ContentHeader>
+                    <ContentTitleWrap>
+                        <TitleIcon src={IC_CHECK_SQUARE} alt={'New Ownership Accept Header Icon'}/>
+                        <TitleTypo>New Ownership</TitleTypo>
+                    </ContentTitleWrap>
+                    <FoldingButton onClick={onClickNewOwnerFolding}>
+                        <FoldingIcon src={isNewOwnerOpen ? IC_ROUND_ARROW_DOWN : IC_ROUND_ARROW_UP} alt={'New Ownership Accept Folding Icon'}/>
+                    </FoldingButton>
+                </ContentHeader>
+                {!isNewOwnerOpen && <ContentBodyWrap>
                     <ContentItemWrap>
                         <ContentItemIcon src={IC_WALLET} />
-                        {/* <ContentItemValue>{}</ContentItemValue> */}
+                        {ownershipInfo && ownershipInfo.pending_owner === null && <ContentItemValue $hasData={false}>Not pending owner</ContentItemValue>}
+                        {ownershipInfo && ownershipInfo.pending_owner !== null && <ContentItemValue $hasData={true}>{ownershipInfo.pending_owner}</ContentItemValue>}
                     </ContentItemWrap>
-                </ContentBodyWrap>
+                    <ContentItemWrap>
+                        <ContentItemIcon src={IC_CLOCK} />
+                        {ownershipInfo && ownershipInfo.pending_expiry === null && <ContentItemValue $hasData={false}>Expiration</ContentItemValue>}
+                        {ownershipInfo && ownershipInfo.pending_expiry !== null && <ExpirationBox allowanceInfo={{ address: '', amount: '', type: Object.keys(ownershipInfo.pending_expiry)[0], expire: Object.values(ownershipInfo.pending_expiry)[0] }}/>}
+                    </ContentItemWrap>
+                </ContentBodyWrap>}
             </ContentWrap>
+            <ButtonWrap>
+                <GreenButton disabled={isEnableButton} onClick={onClickUpdateOwnershipAccept}>
+                    <div className="button-text">Update Ownership Accept</div>
+                </GreenButton>
+            </ButtonWrap>
         </Container>
     )
 };

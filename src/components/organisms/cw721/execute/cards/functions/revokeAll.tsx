@@ -3,15 +3,27 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import { useEffect, useState } from 'react';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 
 const RevokeAll = () => {
+    const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
+    const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
+    const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const inputId = 'REVOKE_ALL';
 
-    //? Switch to zustnad
-    const [walletAddress, setWalletAddress] = useState('');
+    useEffect(() => {
+        clearRevokeForm();
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            clearFormError({ id: `${inputId}_ADDRESS` });
+        };
+    }, []);
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
@@ -20,19 +32,8 @@ const RevokeAll = () => {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
 
-        setWalletAddress(value);
+        setRevokeAddress(value);
     };
-
-    useEffect(() => {
-        //? reset on success
-        // setIsFetched(false);
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            clearFormError({ id: `${inputId}_ADDRESS` });
-        };
-    }, []);
 
     return (
         <Container>
@@ -50,7 +51,7 @@ const RevokeAll = () => {
                             labelProps={{ label: 'Recipient Address' }}
                             inputProps={{
                                 formId: `${inputId}_ADDRESS`,
-                                value: walletAddress,
+                                value: revokeAddress,
                                 onChange: handleChangeAddress,
                                 placeHolder: 'Input Wallet Address',
                                 emptyErrorMessage: 'Please input firmachain wallet address.'
