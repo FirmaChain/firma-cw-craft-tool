@@ -1,11 +1,19 @@
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { shortenAddress } from '@/utils/common';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { isValidAddress } from '@/utils/address';
+import { useModalStore } from '@/hooks/useModal';
+import { QRCodeModal } from '@/components/organisms/modal';
+import { addStringAmount, subtractStringAmount } from '@/utils/balance';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 
 const Container = styled.div`
     width: 100%;
@@ -163,10 +171,112 @@ const ButtonWrap = styled.div`
 `;
 
 const TransferPreview = () => {
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
+    const address = useSelector((state: rootState) => state.wallet.address);
+
+    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const transfer = useCW721ExecuteStore((state) => state.transfer);
+    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
+    const clearTransferForm = useCW721ExecuteStore((state) => state.clearTransferForm);
+    
+    const { setMyNftList } = useCW721ExecuteAction();
+
+    const modal = useModalStore();
+
+    const [totalTransferCount, setTotalTransferCount] = useState<number>(0);
+    const [transferTargets, setTransferTargets] = useState<{ recipient: string, token_id: string}[]>([]);
+    const [isDisableButton, setIsDisableButton] = useState<boolean>(true);
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    const onClickTransfer = () => {};
+    useEffect(() => {
+        if (transfer.length === 1 && transfer[0].recipient === '' && transfer[0].token_ids.length === 1 && transfer[0].token_ids[0] === '') {
+            setTotalTransferCount(0)
+            setTransferTargets([]);
+        } else {
+            let tempTransferTargets = [];
+            let allValidAddress = false;
+            let tokenIdSet = new Set();
+
+            console.log(transfer);
+            for (const transferData of transfer) {
+                if (transferData.token_ids.length === 0) allValidAddress = true;
+
+                for (const token_id of transferData.token_ids) {
+                    if (transferData.recipient === address) {
+                        allValidAddress = true;
+                    }
+
+                    if (tokenIdSet.has(token_id)) {
+                        allValidAddress = true;
+                    } else {
+                        tokenIdSet.add(token_id);
+                    }
+
+                    tempTransferTargets.push({
+                        recipient: transferData.recipient,
+                        token_id: token_id
+                    });
+
+                    if (transferData.recipient === "" || !isValidAddress(transferData.recipient)) {
+                        allValidAddress = true;
+                    }
+
+                    if (token_id === '' || token_id === '0' || !myNftList.includes(token_id)) {
+                        allValidAddress = true;
+                    }
+                }
+            }
+
+            setIsDisableButton(allValidAddress);
+            setTotalTransferCount(tempTransferTargets.length);
+            setTransferTargets(tempTransferTargets);
+        }
+    }, [transfer]);
+
+    const onClickTransfer = () => {
+        const feeAmount = transferTargets.length * 15000;
+        
+        const params = {
+            header: {
+                title: 'Transfer'
+            },
+            content: {
+                symbol: nftContractInfo.symbol,
+                fctAmount: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: 'Total Transfer Amount',
+                        value: totalTransferCount.toString(),
+                        type: 'nft_id'
+                    },
+                    {
+                        label: 'Total Wallet Count',
+                        value: subtractStringAmount(myNftList.length.toString(), totalTransferCount.toString()),
+                        type: 'wallet'
+                    }
+                ]
+            },
+            contract: contractAddress,
+            msg: transferTargets
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw721/transfer"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        clearTransferForm();
+                        setMyNftList(contractAddress, address);
+                    }}
+                />
+            )
+        });
+    };
 
     return (
         <Container>
@@ -177,14 +287,23 @@ const TransferPreview = () => {
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{0}</ItemAmountTypo>
+                        <ItemAmountTypo>{totalTransferCount}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
                         <ArrowToggleButton onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
                     <WalletListWrap>
-                        {[{ recipient: '', amount: '' }].map((value, index) => (
+                        {transferTargets.length === 0 && (
+                            <WalletItemWrap>
+                                <WalletLeftItemWrap>
+                                    <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                    <WalletItemAddressTypo $disabled>Wallet Address</WalletItemAddressTypo>                                    
+                                </WalletLeftItemWrap>
+                                <WalletItemTokenAmount $disabled={false}>{`0 ${nftContractInfo.symbol}`}</WalletItemTokenAmount>
+                            </WalletItemWrap>
+                        )}
+                        {transferTargets.map((value, index) => (
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
@@ -192,7 +311,7 @@ const TransferPreview = () => {
                                         {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                     </WalletItemAddressTypo>
                                 </WalletLeftItemWrap>
-                                <WalletItemTokenAmount $disabled={true}>0 NFT</WalletItemTokenAmount>
+                                <WalletItemTokenAmount $disabled={false}>{`${value.token_id} ${nftContractInfo.symbol}`}</WalletItemTokenAmount>
                             </WalletItemWrap>
                         ))}
                     </WalletListWrap>
@@ -207,13 +326,13 @@ const TransferPreview = () => {
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo>0</UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo>{subtractStringAmount(myNftList.length.toString(), totalTransferCount.toString())}</UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>NFT</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled={!isEnableButton} onClick={onClickTransfer}>
+                <GreenButton disabled={isDisableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>
                 </GreenButton>
             </ButtonWrap>

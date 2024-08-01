@@ -4,14 +4,7 @@ import { v4 } from 'uuid';
 import { ContractInfo, Cw721ContractInfo, Cw721Expires } from '@firmachain/firma-js';
 
 import {
-    IExecuteApproveAll,
-    IExecuteApprove,
-    IExecuteBurn,
-    IExecuteMint,
-    IExecuteTransfer,
-    IExecuteRevokeAll,
-    IExecuteRevoke,
-    IExecuteUpdateOwnershipTransfer
+    IExecuteTransfer
 } from '@/interfaces/cw721';
 import { IMenuItem } from '@/interfaces/common';
 
@@ -20,6 +13,7 @@ interface CwOwnershipInfo {
     pending_owner: string;
     pending_expiry: Cw721Expires;
 }
+
 interface FormProps {
     contractExist: boolean | null;
     setContractExist: (v: boolean) => void;
@@ -28,12 +22,14 @@ interface FormProps {
     contractInfo: ContractInfo;
     nftContractInfo: Cw721ContractInfo;
     totalNfts: string;
+    myNftList: string[];
     ownershipInfo: CwOwnershipInfo;
     minterInfo: string;
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
     setTotalNfts: (v: string) => void;
+    setMyNftList: (v: string[]) => void;
     setOwnershipInfo: (v: CwOwnershipInfo) => void;
     clearInfo: () => void;
 
@@ -48,6 +44,7 @@ interface FormProps {
     // BURN
     burnList: string;
     // TRANSFER
+    transfer: IExecuteTransfer[];
     // APPROVE
     approveRecipientAddress: string;
     approveTokenId: string;
@@ -57,13 +54,6 @@ interface FormProps {
     revokeAddress: string;
     revokeTokenId: string;
     // APPROVE ALL
-    burn: IExecuteBurn;
-    transfer: IExecuteTransfer[];
-    approve: IExecuteApprove;
-    revoke: IExecuteRevoke;
-    approveAll: IExecuteApproveAll;
-    revokeAll: IExecuteRevokeAll;
-    updateOwnershipTransfer: IExecuteUpdateOwnershipTransfer;
     setContractAddress: (v: string) => void;
     setSelectMenu: (v: IMenuItem) => void;
     // MINT
@@ -75,7 +65,7 @@ interface FormProps {
     // BURN
     setBurnList: (v: string) => void;
     // TRANSFER
-
+    setTransfer: (v: IExecuteTransfer[]) => void;
     // APPROVE
     setApproveRecipientAddress: (v: string) => void;
     setApproveTokenId: (v: string) => void;
@@ -84,14 +74,6 @@ interface FormProps {
     // REVOKE
     setRevokeAddress: (v: string) => void;
     setRevokeTokenId: (v: string) => void;
-
-    setBurn: (v: IExecuteBurn) => void;
-    setTransfer: (v: IExecuteTransfer[]) => void;
-    setApprove: (v: IExecuteApprove) => void;
-    setRevoke: (v: IExecuteRevoke) => void;
-    setApproveAll: (v: IExecuteApproveAll) => void;
-    setRevokeAll: (v: IExecuteRevokeAll) => void;
-    setUpdateOwnershipTransfer: (v: IExecuteUpdateOwnershipTransfer) => void;
 
     clearForm: () => void;
     clearMintForm: () => void;
@@ -123,13 +105,7 @@ const INIT_OWNERSHIP_INFO: CwOwnershipInfo = { owner: '', pending_owner: '', pen
 const INIT_MINTER_INFO: string = '';
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
 const INIT_MINT_LIST: { token_id: string, token_uri: string, id: string }[] = [{ token_id: '', token_uri: '', id: v4() }];
-const INIT_BURN: IExecuteBurn = { token_ids: [] };
 const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
-const INIT_APPORVE: IExecuteApprove = { recipient: '', token_id: '', expire: { type: '', value: '' } };
-const INIT_REVOKE: IExecuteRevoke = { recipient: '', token_id: '' };
-const INIT_APPROVE_ALL: IExecuteApproveAll = { recipient: '', expire: { type: '', value: '' } };
-const INIT_REVOKE_ALL: IExecuteRevokeAll = { recipient: '' };
-const INIT_UPDATE_OWNERSHIP_TRANSFER: IExecuteUpdateOwnershipTransfer = { recipient: '', expire: { type: '', value: '' } };
 
 const useCW721ExecuteStore = create<FormProps>()(
     immer((set) => ({
@@ -143,6 +119,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         contractInfo: INIT_CONTRACT_INFO,
         nftContractInfo: INIT_NFT_CONTRACT_INFO,
         totalNfts: '',
+        myNftList: [],
         ownershipInfo: INIT_OWNERSHIP_INFO,
         minterInfo: INIT_MINTER_INFO,
         setFctBalance: (data) =>
@@ -156,6 +133,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         setTotalNfts: (data) =>
             set((state) => {
                 state.totalNfts = data;
+            }),
+        setMyNftList: (data) =>
+            set((state) => {
+                state.myNftList = data;
             }),
         setNftContractInfo: (data) =>
             set((state) => {
@@ -182,22 +163,16 @@ const useCW721ExecuteStore = create<FormProps>()(
         // BURN
         burnList: '',
         // TRANSFER
+        transfer: INIT_TRANSFER,
         // APPROVE
         approveRecipientAddress: '',
         approveTokenId: '',
-        approveType: '',
+        approveType: 'Block',
         approveValue: '',
         // REVOKE
         revokeAddress: '',
         revokeTokenId: '',
         // APPROVE ALL
-        burn: INIT_BURN,
-        transfer: INIT_TRANSFER,
-        approve: INIT_APPORVE,
-        revoke: INIT_REVOKE,
-        approveAll: INIT_APPROVE_ALL,
-        revokeAll: INIT_REVOKE_ALL,
-        updateOwnershipTransfer: INIT_UPDATE_OWNERSHIP_TRANSFER,
         setContractAddress: (data) =>
             set((state) => {
                 state.contractAddress = data;
@@ -233,6 +208,10 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.burnList = data;
             }),
         // TRANSFER
+        setTransfer: (data) =>
+            set((state) => {
+                state.transfer = data;
+            }),
         // APPROVE
         setApproveRecipientAddress: (data) =>
             set((state) => {
@@ -259,34 +238,6 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.revokeTokenId = data;
             }),
-        setBurn: (data) =>
-            set((state) => {
-                state.burn = data;
-            }),
-        setTransfer: (data) =>
-            set((state) => {
-                state.transfer = data;
-            }),
-        setApprove: (data) =>
-            set((state) => {
-                state.approve = data;
-            }),
-        setRevoke: (data) =>
-            set((state) => {
-                state.revoke = data;
-            }),
-        setApproveAll: (data) =>
-            set((state) => {
-                state.approveAll = data;
-            }),
-        setRevokeAll: (data) =>
-            set((state) => {
-                state.revokeAll = data;
-            }),
-        setUpdateOwnershipTransfer: (data) =>
-            set((state) => {
-                state.updateOwnershipTransfer = data;
-            }),
         clearForm: () => {
             set((state) => {
                 state.contractExist = null;
@@ -302,14 +253,6 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.mintStartTokenId = '';
                 state.mintEndTokenId = '';
                 state.mintList = INIT_MINT_LIST;
-
-                state.burn = INIT_BURN;
-                state.transfer = INIT_TRANSFER;
-                state.approve = INIT_APPORVE;
-                state.revoke = INIT_REVOKE;
-                state.approveAll = INIT_APPROVE_ALL;
-                state.revokeAll = INIT_REVOKE_ALL;
-                state.updateOwnershipTransfer = INIT_UPDATE_OWNERSHIP_TRANSFER;
             })
         },
         clearMintForm: () => {
@@ -328,7 +271,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         },
         clearTransferForm: () => {
             set((state) => {
-                // 
+                state.transfer = INIT_TRANSFER;
             })
         },
         clearApproveForm: () => {

@@ -106,6 +106,33 @@ const useCW721ExecuteAction = () => {
         }
     };
     
+    const setMyNftList = async (contractAddress: string, address: string) => {
+        try {
+            let completeNftList: string[] = [];
+            let startAfter: string | undefined = undefined;
+            const limit = 150;
+
+            while (true) {
+                const nftList = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress, address, limit, startAfter);
+                completeNftList = completeNftList.concat(nftList);
+
+                if (nftList.length < limit) {
+                    break;
+                }
+
+                startAfter = nftList[nftList.length - 1];
+            }
+
+            useCW721ExecuteStore.getState().setMyNftList(completeNftList);
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({
+                variant: 'error',
+                message: 'Error occured while fetching setMyNftList(CW721)'
+            });
+        }
+    };
+
     return {
         checkContractExist,
         setContractInfo,
@@ -113,7 +140,8 @@ const useCW721ExecuteAction = () => {
         searchCW721Contract,
         setTotalNfts,
         setFctBalance,
-        setOwnershipInfo
+        setOwnershipInfo,
+        setMyNftList
     }
 }
 
