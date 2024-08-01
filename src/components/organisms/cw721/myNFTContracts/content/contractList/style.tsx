@@ -7,8 +7,8 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    display: flex;
     position: relative;
+    overflow: hidden;
 `;
 
 export const IconBackground = styled.div`
@@ -45,7 +45,17 @@ export const CurrentPageNumber = styled.div`
     line-height: 20px;
 `;
 
+export const ContractCardContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: auto;
+`;
+
 export const ContractCardBox = styled.div`
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(3, minmax(300px, 1fr));
     gap: 32px;

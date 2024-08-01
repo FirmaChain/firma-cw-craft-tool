@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { GlobalActions } from '@/redux/actions';
 import { IContractInfo, useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
-import { Container, CurrentPageNumber, PaginationButton, PaginationContainer, ContractCardBox } from './style';
+import { Container, CurrentPageNumber, PaginationButton, PaginationContainer, ContractCardBox, ContractCardContainer } from './style';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import RowsPerPageSelect from '@/components/atoms/select/rowsPerPageSelect';
 import Icons from '@/components/atoms/icons';
@@ -112,11 +112,13 @@ const MyContractList = () => {
                 <NoToken />
             ) : (
                 <>
-                    <ContractCardBox>
-                        {pageItems.map((item, index) => {
-                            return <ContractCard key={`${item.contractAddress}-${index}`} data={item} />
-                        })}
-                    </ContractCardBox>
+                    <ContractCardContainer>
+                        <ContractCardBox>
+                            {pageItems.map((item, index) => {
+                                return <ContractCard key={`${item.contractAddress}-${index}`} data={item} />
+                            })}
+                        </ContractCardBox>
+                    </ContractCardContainer>
 
                     <div
                         style={{

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Container = styled(IconButton)`
     width: 100%;
+    height: fit-content;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;

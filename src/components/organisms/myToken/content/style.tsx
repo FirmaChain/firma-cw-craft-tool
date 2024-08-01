@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const ContentBox = styled.div`
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -10,10 +11,10 @@ export const ContentBox = styled.div`
 
 export const ContentWrapper = styled.div`
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 24px;
-    height: 100%;
     max-width: 1600px;
 `;
 

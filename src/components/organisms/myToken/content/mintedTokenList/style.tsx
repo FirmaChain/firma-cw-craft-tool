@@ -7,7 +7,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    display: flex;
+    overflow: hidden;
     position: relative;
 `;
 
@@ -154,8 +154,10 @@ export const CurrentPageNumber = styled.div`
 `;
 
 export const TokenCardBox = styled.div`
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    overflow: auto;
 `;

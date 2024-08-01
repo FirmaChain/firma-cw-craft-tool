@@ -2,10 +2,11 @@ import styled from 'styled-components';
 
 export const ContentBox = styled.div`
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    overflow: auto;
+    overflow: hidden;
 `
 
 export const ContentWrapper = styled.div`
@@ -15,6 +16,7 @@ export const ContentWrapper = styled.div`
     gap: 24px;
     height: 100%;
     max-width: 1600px;
+    overflow: hidden;
 `;
 
 export const ContentControlWrapper = styled.div`
