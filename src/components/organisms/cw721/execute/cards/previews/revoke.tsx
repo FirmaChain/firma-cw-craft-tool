@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_ID_CIRCLE, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { useModalStore } from '@/hooks/useModal';
+import { isValidAddress } from '@/utils/address';
+import { QRCodeModal } from '@/components/organisms/modal';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -93,7 +100,76 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const RevokePreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
+    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
+    const revokeTokenId = useCW721ExecuteStore((state) => state.revokeTokenId);
+    const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+    
+    const modal = useModalStore();
+    
     const [isOpen, setIsOpen] = useState<boolean>(true);
+
+    const isEnableButton = useMemo(() => {
+        if (revokeAddress === '' || !isValidAddress(revokeAddress)) return false;
+        if (revokeTokenId === '') return false;
+        
+        return true;
+    }, [revokeAddress, revokeTokenId]);
+    
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
+
+    const onClickRevoke = () => {
+        const feeAmount = craftConfig.DEFAULT_FEE;
+
+        const params = {
+            header: {
+                title: 'Revoke'
+            },
+            content: {
+                symbol: nftContractInfo.symbol,
+                fctAmount: fctBalance,
+                feeAmount: feeAmount.toString(),
+                list: [
+                    {
+                        label: 'Token ID',
+                        value: revokeTokenId,
+                        type: 'nft_id'
+                    },
+                    {
+                        label: 'Recipient Address',
+                        value: revokeAddress,
+                        type: 'wallet'
+                    },
+                ]
+            },
+            contract: contractAddress,
+            msg: {
+                spender: revokeAddress,
+                token_id: revokeTokenId
+            }
+        };
+
+        modal.openModal({
+            modalType: 'custom',
+            _component: ({ id }) => (
+                <QRCodeModal
+                    module="/cw721/revoke"
+                    id={id}
+                    params={params}
+                    onClickConfirm={() => {
+                        clearRevokeForm();
+                    }}
+                />
+            )
+        });
+    };
 
     return (
         <Container>
@@ -111,18 +187,19 @@ const RevokePreview = () => {
                     <AccordionBox>
                         <AccordionRow>
                             <img src={IC_WALLET} alt="wallet" />
-
-                            <AccordionTypo $disabled>Wallet Address</AccordionTypo>
+                            {revokeAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
+                            {revokeAddress !== '' && <AccordionTypo $disabled={false}>{revokeAddress}</AccordionTypo>}
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_ID_CIRCLE} alt="token-id" />
-                            <AccordionTypo $disabled>Token ID</AccordionTypo>
+                            {revokeTokenId === '' && <AccordionTypo $disabled>Token ID</AccordionTypo>}
+                            {revokeTokenId !== '' && <AccordionTypo $disabled={false}>{revokeTokenId}</AccordionTypo>}
                         </AccordionRow>
                     </AccordionBox>
                 )}
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled>
+                <GreenButton disabled={!isEnableButton} onClick={onClickRevoke}>
                     <div className="button-text">Revoke</div>
                 </GreenButton>
             </ButtonWrap>

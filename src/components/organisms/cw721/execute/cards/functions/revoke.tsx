@@ -1,22 +1,25 @@
+import { useEffect } from 'react';
+import { FirmaUtil } from '@firmachain/firma-js';
+
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
-import { useEffect, useState } from 'react';
+import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 
 const Revoke = () => {
+    const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
+    const revokeTokenId = useCW721ExecuteStore((state) => state.revokeTokenId);
+    const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
+    const setRevokeTokenId = useCW721ExecuteStore((state) => state.setRevokeTokenId);
+    const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+    
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const inputId = 'REVOKE';
 
-    //? Switch to zustand
-    const [walletAddress, setWalletAddress] = useState('');
-    const [nftId, setNFTId] = useState('');
-
     useEffect(() => {
-        //? reset data on success
-        // setIsFetched(false);
+        clearRevokeForm();
     }, []);
 
     useEffect(() => {
@@ -33,11 +36,11 @@ const Revoke = () => {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
 
-        setWalletAddress(value);
+        setRevokeAddress(value);
     };
 
     const handleChangeNFTId = (value: string) => {
-        setNFTId(value);
+        setRevokeTokenId(value);
     };
 
     return (
@@ -57,7 +60,7 @@ const Revoke = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: walletAddress,
+                                    value: revokeAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
                                     emptyErrorMessage: 'Please input firmachain wallet address'
@@ -78,7 +81,7 @@ const Revoke = () => {
                                 labelProps={{ label: 'Token ID' }}
                                 inputProps={{
                                     formId: `${inputId}_TOKEN_ID`,
-                                    value: nftId,
+                                    value: revokeTokenId,
                                     onChange: handleChangeNFTId,
                                     placeHolder: '0',
                                     textAlign: 'right',

@@ -13,7 +13,7 @@ import {
     ExpirationTypo,
     ItemUrlTypo
 } from './style';
-import { IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IC_ID_CIRCLE, IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { shortenAddress } from '@/utils/address';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { parseAmountWithDecimal2 } from '@/utils/common';
@@ -171,13 +171,24 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
 };
 
 export const NftItem = ({ label, value, symbol }: { label: string, value: string, symbol: string }) => {
-    console.log(value);
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
                 <ItemAmountValue>{value}</ItemAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
+            </ItemValueWrap>
+        </ItemWrap>
+    );
+};
+
+export const NftIdItem = ({ label, value }: { label: string, value: string }) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ItemAmountValue>{value}</ItemAmountValue>
+                <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
             </ItemValueWrap>
         </ItemWrap>
     )

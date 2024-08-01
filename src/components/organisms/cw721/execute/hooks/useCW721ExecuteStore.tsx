@@ -47,7 +47,16 @@ interface FormProps {
     mintList: { token_id: string, token_uri: string, id: string }[];
     // BURN
     burnList: string;
-
+    // TRANSFER
+    // APPROVE
+    approveRecipientAddress: string;
+    approveTokenId: string;
+    approveType: string;
+    approveValue: string;
+    // REVOKE
+    revokeAddress: string;
+    revokeTokenId: string;
+    // APPROVE ALL
     burn: IExecuteBurn;
     transfer: IExecuteTransfer[];
     approve: IExecuteApprove;
@@ -65,6 +74,16 @@ interface FormProps {
     setMintList: (v: { token_id: string, token_uri: string, id: string }[]) => void;
     // BURN
     setBurnList: (v: string) => void;
+    // TRANSFER
+
+    // APPROVE
+    setApproveRecipientAddress: (v: string) => void;
+    setApproveTokenId: (v: string) => void;
+    setApproveType: (v: string) => void;
+    setApproveValue: (v: string) => void;
+    // REVOKE
+    setRevokeAddress: (v: string) => void;
+    setRevokeTokenId: (v: string) => void;
 
     setBurn: (v: IExecuteBurn) => void;
     setTransfer: (v: IExecuteTransfer[]) => void;
@@ -77,6 +96,9 @@ interface FormProps {
     clearForm: () => void;
     clearMintForm: () => void;
     clearBurnForm: () => void;
+    clearTransferForm: () => void;
+    clearApproveForm: () => void;
+    clearRevokeForm: () => void;
 }
 
 const INIT_CONTRACT_INFO: ContractInfo = {
@@ -155,6 +177,16 @@ const useCW721ExecuteStore = create<FormProps>()(
         mintList: INIT_MINT_LIST,
         // BURN
         burnList: '',
+        // TRANSFER
+        // APPROVE
+        approveRecipientAddress: '',
+        approveTokenId: '',
+        approveType: '',
+        approveValue: '',
+        // REVOKE
+        revokeAddress: '',
+        revokeTokenId: '',
+        // APPROVE ALL
         burn: INIT_BURN,
         transfer: INIT_TRANSFER,
         approve: INIT_APPORVE,
@@ -196,7 +228,33 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.burnList = data;
             }),
-
+        // TRANSFER
+        // APPROVE
+        setApproveRecipientAddress: (data) =>
+            set((state) => {
+                state.approveRecipientAddress = data;
+            }),
+        setApproveTokenId: (data) =>
+            set((state) => {
+                state.approveTokenId = data;
+            }),
+        setApproveType: (data) =>
+            set((state) => {
+                state.approveType = data;
+            }),
+        setApproveValue: (data) =>
+            set((state) => {
+                state.approveValue = data;
+            }),
+        // REVOKE
+        setRevokeAddress: (data) =>
+            set((state) => {
+                state.revokeAddress = data;
+            }),
+        setRevokeTokenId: (data) =>
+            set((state) => {
+                state.revokeTokenId = data;
+            }),
         setBurn: (data) =>
             set((state) => {
                 state.burn = data;
@@ -263,7 +321,26 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.burnList = '';
             })
-        }
+        },
+        clearTransferForm: () => {
+            set((state) => {
+                // 
+            })
+        },
+        clearApproveForm: () => {
+            set((state) => {
+                state.approveRecipientAddress = '';
+                state.approveTokenId = '';
+                state.approveType = '';
+                state.approveValue = '';
+            })
+        },
+        clearRevokeForm: () => {
+            set((state) => {
+                state.revokeAddress = '';
+                state.revokeTokenId = '';
+            })
+        },
     }))
 );
 

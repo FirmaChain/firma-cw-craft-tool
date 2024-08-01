@@ -53,19 +53,22 @@ enum ExpirationType {
 }
 
 const Approve = () => {
+    const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
+    const approveTokenId = useCW721ExecuteStore((state) => state.approveTokenId);
+    const approveType = useCW721ExecuteStore((state) => state.approveType);
+    const approveValue = useCW721ExecuteStore((state) => state.approveValue);
+    const setApproveRecipientAddress = useCW721ExecuteStore((state) => state.setApproveRecipientAddress);
+    const setApproveTokenId = useCW721ExecuteStore((state) => state.setApproveTokenId);
+    const setApproveType = useCW721ExecuteStore((state) => state.setApproveType);
+    const setApproveValue = useCW721ExecuteStore((state) => state.setApproveValue);
+    const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
+    
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const inputId = 'APPROVE';
-
-    const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
-    const [expInputValue, setExpInputValue] = useState('');
-
-    //? Switch to zustand
-    const [walletAddress, setWalletAddress] = useState('');
-    const [tokenId, setTokenId] = useState('');
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
@@ -74,15 +77,11 @@ const Approve = () => {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
         }
 
-        setWalletAddress(value);
+        setApproveRecipientAddress(value);
     };
 
     useEffect(() => {
-        //? reset on success
-        setExpirationType(ExpirationType.Height);
-        setExpInputValue('');
-
-        // setIsFetched(false);
+        clearApproveForm();
     }, []);
 
     useEffect(() => {
@@ -93,13 +92,13 @@ const Approve = () => {
     }, []);
 
     const handleChangeTokenId = (value: string) => {
-        setTokenId(value);
+        setApproveTokenId(value);
     };
 
     const handleChangeExpireType = (value: ExpirationType) => {
-        if (value !== expirationType) {
-            setExpInputValue('');
-            setExpirationType(value);
+        if (value !== approveType) {
+            setApproveValue('');
+            setApproveType(value);
 
             let expireType = '';
             switch (value) {
@@ -117,7 +116,7 @@ const Approve = () => {
     };
 
     const handleChangeExpireValue = (value: string) => {
-        setExpInputValue(value);
+        setApproveValue(value);
     };
 
     const handleAllowanceDate = () => {
@@ -143,7 +142,7 @@ const Approve = () => {
                                 labelProps={{ label: 'Recipient Address' }}
                                 inputProps={{
                                     formId: `${inputId}_ADDRESS`,
-                                    value: walletAddress,
+                                    value: approveRecipientAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
                                     emptyErrorMessage: 'Please input firmachain wallet address'
@@ -164,7 +163,7 @@ const Approve = () => {
                                 labelProps={{ label: 'Token ID' }}
                                 inputProps={{
                                     formId: `${inputId}_TOKEN_ID`,
-                                    value: tokenId,
+                                    value: approveTokenId,
                                     onChange: handleChangeTokenId,
                                     placeHolder: '0',
                                     textAlign: 'right',
@@ -182,7 +181,7 @@ const Approve = () => {
                         {Object.values(ExpirationType).map((type) => (
                             <ExpirationTypButton
                                 key={`EXPIRATION_TYPE_${type}`}
-                                $selected={expirationType === type}
+                                $selected={approveType === type}
                                 onClick={() => {
                                     handleChangeExpireType(ExpirationType[type]);
                                 }}
@@ -198,17 +197,17 @@ const Approve = () => {
 
                 <div style={{ position: 'relative' }}>
                     <VariableInput
-                        value={expInputValue}
+                        value={approveValue}
                         placeHolder={
-                            expirationType === ExpirationType.Height
+                            approveType === ExpirationType.Height
                                 ? 'ex) 7216240'
-                                : expirationType === ExpirationType.Time
+                                : approveType === ExpirationType.Time
                                   ? 'ex) MM-DD-YYYY  HH:MM:SS'
                                   : 'FOREVER'
                         }
-                        type={expirationType === ExpirationType.Time ? 'date' : 'number'}
+                        type={approveType === ExpirationType.Time ? 'date' : 'number'}
                         onChange={handleChangeExpireValue}
-                        readOnly={expirationType === ExpirationType.Forever}
+                        readOnly={approveType === ExpirationType.Forever}
                         decimal={0}
                         onClickDate={handleAllowanceDate}
                     />
