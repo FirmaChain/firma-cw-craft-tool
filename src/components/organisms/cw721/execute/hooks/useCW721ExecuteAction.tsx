@@ -165,6 +165,19 @@ const useCW721ExecuteAction = () => {
         }
     };
 
+    const setMinter = async (contractAddress: string) => {
+        try {
+            const minter = await firmaSDK.Cw721.getMinter(contractAddress);
+            useCW721ExecuteStore.getState().setMinter(minter);
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({
+                variant: 'error',
+                message: 'Error occured while fetching setMinter(CW721)'
+            });
+        }
+    }
+
     return {
         checkContractExist,
         setContractInfo,
@@ -175,7 +188,8 @@ const useCW721ExecuteAction = () => {
         setOwnershipInfo,
         setMyNftList,
         setBlockHeight,
-        setNftApprovalInfo
+        setNftApprovalInfo,
+        setMinter
     };
 };
 

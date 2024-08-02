@@ -63,6 +63,7 @@ const Contents = () => {
         setOwnershipInfo,
         setMyNftList,
         setBlockHeight,
+        setMinter,
     } = useCW721ExecuteAction();
 
     const clearForm = useCW721ExecuteStore((state) => state.clearForm);
@@ -100,6 +101,7 @@ const Contents = () => {
             setOwnershipInfo(contractAddress);
             setMyNftList(contractAddress, address);
             setBlockHeight();
+            setMinter(contractAddress);
         }
     }, [contractExist, contractAddress, address]);
 

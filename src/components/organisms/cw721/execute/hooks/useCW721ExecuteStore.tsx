@@ -27,6 +27,7 @@ interface FormProps {
     minterInfo: string;
     blockHeight: string;
     nftApprovalInfo: Cw721Approval;
+    minter: string;
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
@@ -35,6 +36,7 @@ interface FormProps {
     setOwnershipInfo: (v: CwOwnershipInfo) => void;
     setBlockHeight: (v: string) => void;
     setNftApprovalInfo: (v: Cw721Approval) => void;
+    setMinter: (v: string) => void;
     clearInfo: () => void;
 
     contractAddress: string;
@@ -128,6 +130,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         minterInfo: INIT_MINTER_INFO,
         blockHeight: '0',
         nftApprovalInfo: INIT_NFT_APPROVAL,
+        minter: '',
         setFctBalance: (data) =>
             set((state) => {
                 state.fctBalance = data;
@@ -159,6 +162,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         setNftApprovalInfo: (data) =>
             set((state) => {
                 state.nftApprovalInfo = data;
+            }),
+        setMinter: (data) =>
+            set((state) => {
+                state.minter = data;
             }),
         clearInfo: () =>
             set((state) => {
