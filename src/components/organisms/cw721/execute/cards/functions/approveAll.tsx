@@ -80,6 +80,9 @@ const ApproveAll = () => {
 
     useEffect(() => {
         clearApproveForm();
+        Object.values(ExpirationType).map((type) => (
+            console.log(type)
+        ));
     }, []);
 
     useEffect(() => {

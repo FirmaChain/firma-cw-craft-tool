@@ -170,10 +170,12 @@ const ButtonWrap = styled.div`
 const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
+    
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
     const mintList = useCW721ExecuteStore((state) => state.mintList);
-    const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
+
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
     const modal = useModalStore();
@@ -200,8 +202,8 @@ const MintPreview = () => {
     }, [mintRecipientAddress, mintList]);
 
     const willTotalSupply = useMemo(() => {
-        return addStringAmount(mintSupply, totalSupply);
-    }, [totalSupply, mintSupply]);
+        return addStringAmount(mintSupply, totalNfts);
+    }, [totalNfts, mintSupply]);
 
     const onClickMint = () => {
         const convertMintList: { owner: string, token_id: string, extension: {}, token_uri: string }[] = [];

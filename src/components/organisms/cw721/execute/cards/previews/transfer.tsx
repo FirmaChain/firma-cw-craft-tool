@@ -14,6 +14,7 @@ import { addStringAmount, subtractStringAmount } from '@/utils/balance';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import useFormStore from '@/store/formStore';
 
 const Container = styled.div`
     width: 100%;
@@ -119,8 +120,8 @@ const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
-const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
-    color: ${({ $disabled }) => ($disabled ? '#383838' : '#807E7E')};
+const WalletItemTokenAmount = styled.div<{ $disabled?: boolean, $isError: boolean }>`
+    color: ${({ $disabled, $isError }) => ($disabled ? '#383838' : $isError ? '#E55250' : '#807E7E')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -190,6 +191,10 @@ const TransferPreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     useEffect(() => {
+        clearTransferForm();
+    }, []);
+
+    useEffect(() => {
         if (transfer.length === 1 && transfer[0].recipient === '' && transfer[0].token_ids.length === 1 && transfer[0].token_ids[0] === '') {
             setTotalTransferCount(0)
             setTransferTargets([]);
@@ -198,7 +203,6 @@ const TransferPreview = () => {
             let allValidAddress = false;
             let tokenIdSet = new Set();
 
-            console.log(transfer);
             for (const transferData of transfer) {
                 if (transferData.token_ids.length === 0) allValidAddress = true;
 
@@ -300,7 +304,7 @@ const TransferPreview = () => {
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
                                     <WalletItemAddressTypo $disabled>Wallet Address</WalletItemAddressTypo>                                    
                                 </WalletLeftItemWrap>
-                                <WalletItemTokenAmount $disabled={false}>{`0 ${nftContractInfo.symbol}`}</WalletItemTokenAmount>
+                                <WalletItemTokenAmount $disabled={false} $isError={false}>{`0 ${nftContractInfo.symbol}`}</WalletItemTokenAmount>
                             </WalletItemWrap>
                         )}
                         {transferTargets.map((value, index) => (
@@ -311,7 +315,7 @@ const TransferPreview = () => {
                                         {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                     </WalletItemAddressTypo>
                                 </WalletLeftItemWrap>
-                                <WalletItemTokenAmount $disabled={false}>{`${value.token_id} ${nftContractInfo.symbol}`}</WalletItemTokenAmount>
+                                <WalletItemTokenAmount $disabled={false} $isError={!myNftList.includes(value.token_id)}>{`${value.token_id} ${nftContractInfo.symbol}`}</WalletItemTokenAmount>
                             </WalletItemWrap>
                         ))}
                     </WalletListWrap>

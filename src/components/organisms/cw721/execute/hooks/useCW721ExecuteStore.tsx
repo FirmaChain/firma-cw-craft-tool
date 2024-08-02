@@ -167,7 +167,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         // APPROVE
         approveRecipientAddress: '',
         approveTokenId: '',
-        approveType: 'Block',
+        approveType: 'Height',
         approveValue: '',
         // REVOKE
         revokeAddress: '',
@@ -278,7 +278,7 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.approveRecipientAddress = '';
                 state.approveTokenId = '';
-                state.approveType = '';
+                state.approveType = 'Height';
                 state.approveValue = '';
             })
         },

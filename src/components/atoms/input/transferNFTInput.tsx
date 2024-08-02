@@ -6,6 +6,8 @@ import useFormStore from '@/store/formStore';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import { isValidAddress } from '@/utils/common';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 interface IProps {
     index: number;
@@ -41,6 +43,7 @@ const TransferNFTInput = ({
     inputId,
     disabled
 }: IProps) => {
+    const address = useSelector((state: rootState) => state.wallet.address);
     const id = inputId;
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
@@ -48,8 +51,15 @@ const TransferNFTInput = ({
     const handleAddress = (value: string) => {
         const filtered = value.replace(/[^a-zA-Z0-9]/g, '');
 
-        if (!filtered || isValidAddress(filtered)) clearFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS' });
-        else setFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+        console.log("filtered", filtered);
+        if ((!filtered || isValidAddress(filtered)) && address !== filtered) clearFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS' });
+        else {
+            if (address === filtered) {
+                setFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS', message: 'Cannot transfer to my wallet address.' });
+            } else {
+                setFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+            }
+        }
 
         onChangeLeft(filtered);
     };
