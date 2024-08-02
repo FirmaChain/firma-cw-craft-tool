@@ -42,9 +42,10 @@ const NFTMintInput = ({
 }: IProps) => {
     const id = inputId;
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
     const mintList = useCW721ExecuteStore((state) => state.mintList);
+    const myNFTList = useCW721ExecuteStore((v) => v.myNftList);
 
     const mintTokenIdsExceptSelf = useMemo(() => {
         //? get all list except self
@@ -69,12 +70,28 @@ const NFTMintInput = ({
         onRemoveClick();
     };
 
-    useEffect(() => {
-        if (leftValue !== '' && mintTokenIdsExceptSelf.includes(parseInt(leftValue))) {
-            setFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID', message: 'Duplicated' });
+    const checkMintable = () => {
+        if (leftValue) {
+            if (myNFTList.includes(parseInt(leftValue).toString())) {
+                setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Minted ID' });
+                return;
+            } else {
+                clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
+            }
+
+            if (mintTokenIdsExceptSelf.includes(parseInt(leftValue))) {
+                setFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID', message: 'Duplicated' });
+                return;
+            } else {
+                clearFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID' });
+            }
         } else {
-            clearFromError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID' });
+            clearFormError({ id: `${id}_${leftTitle}` });
         }
+    };
+
+    useEffect(() => {
+        checkMintable();
     }, [mintTokenIdsExceptSelf, leftValue]);
 
     return (

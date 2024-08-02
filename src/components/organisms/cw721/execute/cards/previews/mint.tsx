@@ -11,6 +11,7 @@ import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { isValidAddress } from '@/utils/address';
 import useFormStore from '@/store/formStore';
+import { shortenAddress } from '@/utils/common';
 
 const Container = styled.div`
     width: 100%;
@@ -171,6 +172,7 @@ const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
+    const myNFTList = useCW721ExecuteStore((state) => state.myNftList);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
@@ -198,10 +200,13 @@ const MintPreview = () => {
         //? get all mint nft ids
         const idMap = new Map();
         mintList.forEach((v) => {
-            const numberId = v.token_id === '' ? -1 : Number(v.token_id);
+            const numberId = v.token_id === '' ? -1 : parseInt(v.token_id).toString();
             idMap.set(numberId, numberId);
         });
         const mintIds = Array.from(idMap.keys());
+
+        //! if minted token id included
+        if (myNFTList.some((id) => mintIds.includes(id))) return false;
 
         //! if nft ids are duplicated
         if (mintIds.length !== mintList.length) return false;
@@ -292,7 +297,7 @@ const MintPreview = () => {
                             <WalletLeftItemWrap>
                                 <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
                                 <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
-                                    {mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
+                                    {mintRecipientAddress === '' ? 'Wallet Address' : shortenAddress(mintRecipientAddress, 12, 12)}
                                 </WalletItemAddressTypo>
                             </WalletLeftItemWrap>
                             <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />

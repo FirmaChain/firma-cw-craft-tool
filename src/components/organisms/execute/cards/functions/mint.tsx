@@ -16,6 +16,7 @@ import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
 import useFormStore from '@/store/formStore';
+import Cw721MintInput from '@/components/atoms/walletList/cw721MintInput';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -122,7 +123,7 @@ const Mint = () => {
                     </TotalMintWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <AddressAmountInput
+            <Cw721MintInput
                 list={mintingList}
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}

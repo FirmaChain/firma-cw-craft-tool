@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
@@ -67,13 +67,15 @@ const Burn = () => {
             const burnIds = Array.from(idMap.keys());
 
             //! if user does not own some ids in burn list
-            if (!myNftList.some((ownedId) => !burnIds.includes(ownedId))) {
+            if (burnIds.every((oneId) => myNftList.includes(oneId))) {
+                clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DOES_NOT_OWNED' });
+            } else {
                 setFormError({
                     id: 'CW721_NFT_BURN_ID_INPUT',
                     type: 'DOES_NOT_OWNED',
                     message: `Contains an NFT ID that you don't own.`
                 });
-            } else clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DOES_NOT_OWNED' });
+            }
 
             //! if duplicted id included
             if (splited.length > 1 && idMap.size !== splited.length)

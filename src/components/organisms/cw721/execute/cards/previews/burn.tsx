@@ -18,13 +18,14 @@ const Container = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    height: auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    width: 100%;
+    height: auto;
     padding: 32px 44px;
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
+    gap: 24px;
 `;
 
 const ItemWrap = styled.div`
@@ -224,7 +225,9 @@ const BurnPreview = () => {
                         <BurnSymbolTypo>NFT</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
+
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+
                 <ItemWrap>
                     <ItemLeftWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />

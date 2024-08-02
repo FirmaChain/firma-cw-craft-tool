@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { v4 } from 'uuid';
 
 import {
@@ -13,43 +13,49 @@ import {
     WalletListWrapper,
     DeleteAllButton
 } from './style';
+
+import { IWallet } from '@/interfaces/wallet';
+import InputAddressAmount from '../input/inputAddressAmount';
 import Icons from '../icons';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
-import TransferNFTInput from '../input/transferNFTInput';
-import { IExecuteTransfer } from '@/interfaces/cw721';
 
 interface IProps {
-    list: IExecuteTransfer[];
+    list: IWallet[];
+    decimals: string;
     maxWalletCount?: number;
-    onChangeWalletList: (walletList: IExecuteTransfer[]) => void;
+    onChangeWalletList: (walletList: IWallet[]) => void;
+    addressTitle: string;
+    addressPlaceholder: string;
+    amountTitle: string;
 }
 
-const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }: IProps) => {
+const CW721MintInput = ({
+    list,
+    decimals,
+    maxWalletCount = 20,
+    onChangeWalletList,
+    addressTitle,
+    addressPlaceholder,
+    amountTitle
+}: IProps) => {
     const modal = useModalStore();
 
     const handleAddWallet = () => {
-        onChangeWalletList([...list, { recipient: '', token_ids: [], id: v4() }]);
+        onChangeWalletList([...list, { recipient: '', amount: '', id: v4() }]);
     };
 
     const handleRemoveWallet = (index: number) => {
-        if (list.length !== 1) {
+        if (list.length > 1) {
             const newWalletList = list.filter((_, i) => i !== index);
 
             onChangeWalletList(newWalletList);
         }
     };
 
-    const handleChange = (index: number, field: keyof IExecuteTransfer, value: string) => {
-        if (field === 'token_ids') {
-            const parsedTokenIds = value.split(',');
-
-            const newWalletList = list.map((item, i) => (i === index ? { ...item, [field]: parsedTokenIds } : item));
-            onChangeWalletList(newWalletList);
-        } else {
-            const newWalletList = list.map((item, i) => (i === index ? { ...item, [field]: value } : item));
-            onChangeWalletList(newWalletList);
-        }
+    const handleChange = (index: number, field: keyof IWallet, value: string) => {
+        const newWalletList = list.map((item, i) => (i === index ? { ...item, [field]: value } : item));
+        onChangeWalletList(newWalletList);
     };
 
     const handleDeleteAll = () => {
@@ -59,7 +65,7 @@ const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }:
                 <DeleteAllModal
                     id={id}
                     onConfirm={() => {
-                        onChangeWalletList([{ recipient: '', token_ids: [], id: v4() }]);
+                        onChangeWalletList([{ recipient: '', amount: '', id: v4() }]);
                     }}
                 />
             )
@@ -81,22 +87,21 @@ const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }:
                 </DeleteAllButton>
             </WalletListSummery>
             {list.map((wallet, index) => (
-                <TransferNFTInput
+                <InputAddressAmount
                     key={index}
                     index={index + 1}
-                    leftValue={wallet.recipient}
-                    rightValue={wallet.token_ids.join(',')}
-                    onChangeLeft={(value) => handleChange(index, 'recipient', value)}
-                    onChangeRight={(value) => handleChange(index, 'token_ids', value)}
+                    address={wallet.recipient}
+                    amount={wallet.amount}
+                    onChangeAddress={(value) => handleChange(index, 'recipient', value)}
+                    onChangeAmount={(value) => handleChange(index, 'amount', value)}
                     onRemoveClick={() => handleRemoveWallet(index)}
                     isLast={index === list.length - 1}
+                    decimals={decimals}
+                    addressTitle={addressTitle}
+                    addressPlaceholder={addressPlaceholder}
+                    amountTitle={amountTitle}
                     isValid={true}
-                    leftTitle={'Recipient Address'}
-                    leftPlaceholder={'Input Wallet Address'}
-                    rightTitle="Token ID"
-                    rightPlaceholder="Input the numbers : You can input multiple numbers separated by commas (,)"
                     inputId={wallet.id}
-                    allList={list}
                 />
             ))}
             <AddWalletWrapper disabled={list.length === 20} onClick={handleAddWallet}>
@@ -109,4 +114,4 @@ const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }:
     );
 };
 
-export default React.memo(TransferNFTInputList);
+export default React.memo(CW721MintInput);

@@ -3,6 +3,8 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, Hea
 import TransferNFTInputList from '@/components/atoms/walletList/transferNFTInputList';
 import Divider from '@/components/atoms/divider';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { useEffect } from 'react';
+import useFormStore from '@/store/formStore';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -48,6 +50,13 @@ const MyWalletAmountTypo = styled.div`
 const Transfer = () => {
     const transferInfo = useCW721ExecuteStore((v) => v.transfer);
     const setTransfer = useCW721ExecuteStore((v) => v.setTransfer);
+
+    useEffect(() => {
+        return () => {
+            useCW721ExecuteStore.getState().clearTransferForm();
+            useFormStore.getState().clearForm();
+        };
+    }, []);
 
     return (
         <Container>
