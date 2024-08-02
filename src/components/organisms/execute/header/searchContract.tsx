@@ -12,12 +12,12 @@ import { rootState } from '@/redux/reducers';
 const EndAdornment = ({
     keyword,
     disableSearch = false,
-    onClickSearch,
+    // onClickSearch,
     onClickClear
 }: {
     keyword: string;
     disableSearch?: boolean;
-    onClickSearch: () => void;
+    // onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
     return (
@@ -28,14 +28,14 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <IconButton style={{ padding: 0, display: 'flex' }} disabled={disableSearch} onClick={onClickSearch}>
+            {/* <IconButton style={{ padding: 0, display: 'flex' }} disabled={disableSearch} onClick={onClickSearch}>
                 <Icons.Search
                     width="28px"
                     height="28px"
                     fill={disableSearch ? '#807E7E' : '#E6E6E6'}
                     stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
                 />
-            </IconButton>
+            </IconButton> */}
         </div>
     );
 };
@@ -82,6 +82,9 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const onClickClear = () => {
         setKeyword('');
         setContractAddress(null);
+        clearInfo();
+        clearForm();
+        previousKeywordRef.current = null;
     };
 
     useEffect(() => {
@@ -96,18 +99,22 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         previousKeywordRef.current = null;
     }, [network]);
 
+    useEffect(() => {
+        if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
+    }, [keyword]);
+
     return (
         <SearchInputWithButton2
             placeHolder={'Search CW20 contract address'}
             value={keyword}
             onChange={(v) => setKeyword(v)}
-            onClickEvent={onClickSearch}
+            // onClickEvent={onClickSearch}
             adornment={{
                 end: (
                     <EndAdornment
                         keyword={keyword}
                         disableSearch={keyword.length === 0 || !isValidAddress(keyword)}
-                        onClickSearch={onClickSearch}
+                        // onClickSearch={onClickSearch}
                         onClickClear={onClickClear}
                     />
                 )

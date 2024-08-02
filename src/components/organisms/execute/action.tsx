@@ -113,6 +113,8 @@ const useExecuteActions = () => {
         //? in case of searching cw721 contract in cw20 execute page
 
         try {
+            GlobalActions.handleGlobalLoading(true);
+
             try {
                 const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
                 useExecuteStore.getState().setTokenInfo(tokenInfo);
@@ -142,6 +144,7 @@ const useExecuteActions = () => {
             enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
         } finally {
             //? close global load
+            GlobalActions.handleGlobalLoading(false);
         }
     };
 

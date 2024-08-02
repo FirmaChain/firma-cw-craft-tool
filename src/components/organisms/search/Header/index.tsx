@@ -3,19 +3,20 @@ import { HeaderBox, HeaderWrap, Title } from './styles';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import useSearchStore from '../searchStore';
-import React from 'react';
+import React, { useEffect } from 'react';
 import useSearchActions from '../action';
+import { isValidAddress } from '@/utils/common';
 
 const EndAdornment = ({
     keyword,
     clearKeyword,
-    disableSearch,
-    onClickSearch
+    disableSearch
+    // onClickSearch
 }: {
     keyword: string;
     clearKeyword: () => void;
     disableSearch?: boolean;
-    onClickSearch: () => void;
+    // onClickSearch: () => void;
 }) => {
     const disableEventBubbling = (evt) => {
         evt.preventDefault();
@@ -30,14 +31,14 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
+            {/* <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
                 <Icons.Search
                     width="28px"
                     height="28px"
                     fill={disableSearch ? '#807E7E' : '#E6E6E6'}
                     stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
                 />
-            </IconButton>
+            </IconButton> */}
         </div>
     );
 };
@@ -59,9 +60,9 @@ const Header = () => {
         clearSearchKeywordRef();
     };
 
-    const onClickSearch = () => {
-        checkContractExist(keyword);
-    };
+    useEffect(() => {
+        if (keyword.length > 44 && isValidAddress(keyword)) checkContractExist(keyword);
+    }, [keyword]);
 
     return (
         <HeaderBox>
@@ -71,13 +72,13 @@ const Header = () => {
                     value={keyword}
                     placeHolder={'Search by full CW20 Contract Address'}
                     onChange={(v) => setKeyword(v)}
-                    onClickEvent={disableSearch ? () => null : onClickSearch}
+                    // onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{
                         end: (
                             <EndAdornment
                                 keyword={keyword}
                                 clearKeyword={onClickClearKeyword}
-                                onClickSearch={onClickSearch}
+                                // onClickSearch={onClickSearch}
                                 disableSearch={disableSearch}
                             />
                         )

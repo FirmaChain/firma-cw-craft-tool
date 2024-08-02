@@ -76,7 +76,7 @@ interface InputProps {
     value: string; //
     placeHolder: string; //
     onChange: (value: string) => void; //
-    onClickEvent: () => void;
+    onClickEvent?: () => void;
     textAlign?: 'left' | 'center' | 'right'; //
     readOnly?: boolean; //
     adornment?: {
@@ -100,7 +100,7 @@ const SearchInputWithButton2 = ({
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Enter') {
-            onClickEvent();
+            onClickEvent && onClickEvent();
         }
     };
 
