@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { v4 } from 'uuid';
-import { ContractInfo, Cw721ContractInfo, Cw721Expires } from '@firmachain/firma-js';
+import { ContractInfo, Cw721Approval, Cw721ContractInfo, Cw721Expires } from '@firmachain/firma-js';
 
 import {
     IExecuteTransfer
@@ -26,6 +26,7 @@ interface FormProps {
     ownershipInfo: CwOwnershipInfo;
     minterInfo: string;
     blockHeight: string;
+    nftApprovalInfo: Cw721Approval;
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
@@ -33,6 +34,7 @@ interface FormProps {
     setMyNftList: (v: string[]) => void;
     setOwnershipInfo: (v: CwOwnershipInfo) => void;
     setBlockHeight: (v: string) => void;
+    setNftApprovalInfo: (v: Cw721Approval) => void;
     clearInfo: () => void;
 
     contractAddress: string;
@@ -108,7 +110,7 @@ const INIT_MINTER_INFO: string = '';
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
 const INIT_MINT_LIST: { token_id: string, token_uri: string, id: string }[] = [{ token_id: '', token_uri: '', id: v4() }];
 const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
-
+const INIT_NFT_APPROVAL: Cw721Approval = { spender: '', expires: { at_height: 0 }};
 const useCW721ExecuteStore = create<FormProps>()(
     immer((set) => ({
         contractExist: null,
@@ -125,6 +127,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         ownershipInfo: INIT_OWNERSHIP_INFO,
         minterInfo: INIT_MINTER_INFO,
         blockHeight: '0',
+        nftApprovalInfo: INIT_NFT_APPROVAL,
         setFctBalance: (data) =>
             set((state) => {
                 state.fctBalance = data;
@@ -152,6 +155,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         setBlockHeight: (data) =>
             set((state) => {
                 state.blockHeight = data;
+            }),
+        setNftApprovalInfo: (data) =>
+            set((state) => {
+                state.nftApprovalInfo = data;
             }),
         clearInfo: () =>
             set((state) => {

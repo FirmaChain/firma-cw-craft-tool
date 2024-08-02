@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
@@ -101,24 +101,37 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 
 const RevokePreview = () => {
     const network = useSelector((state: rootState) => state.global.network);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
     const revokeTokenId = useCW721ExecuteStore((state) => state.revokeTokenId);
+    const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
+    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
     
     const modal = useModalStore();
     
     const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
-    const isEnableButton = useMemo(() => {
-        if (revokeAddress === '' || !isValidAddress(revokeAddress)) return false;
-        if (revokeTokenId === '') return false;
-        
-        return true;
-    }, [revokeAddress, revokeTokenId]);
+    useEffect(() => {
+        if (revokeTokenId === '') {
+            setIsEnableButton(false);
+        } else {
+            if (myNftList.includes(revokeTokenId)) {
+                if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
+                    setIsEnableButton(false);
+                } else if (nftApprovalInfo.spender === revokeAddress && nftApprovalInfo.expires !== null) {
+                    setIsEnableButton(true);
+                }
+            } else {
+                setIsEnableButton(false);
+            }
+        }
+    }, [revokeAddress, revokeTokenId, nftApprovalInfo]);
     
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;

@@ -147,6 +147,20 @@ const useCW721ExecuteAction = () => {
         }
     };
 
+    const setNftApprovalInfo = async (contractAddress: string, address: string, token_id: string) => {
+        try {
+            // console.log("contractAddress", contractAddress);
+            // console.log("address", address);
+            // console.log("token_id", token_id);
+            const result = await firmaSDK.Cw721.getApproval(contractAddress, token_id, address, false);
+            // console.log("result", result);
+            useCW721ExecuteStore.getState().setNftApprovalInfo(result);
+        } catch (error) {
+            useCW721ExecuteStore.getState().setNftApprovalInfo({ spender: '', expires: null });
+            // console.log('error', error);
+        }
+    };
+
     return {
         checkContractExist,
         setContractInfo,
@@ -157,6 +171,7 @@ const useCW721ExecuteAction = () => {
         setOwnershipInfo,
         setMyNftList,
         setBlockHeight,
+        setNftApprovalInfo
     };
 };
 

@@ -5,29 +5,69 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } fro
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { isValidAddress } from '@/utils/address';
 
 const Revoke = () => {
+    const address = useSelector((state: rootState) => state.wallet.address);
+
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
     const revokeTokenId = useCW721ExecuteStore((state) => state.revokeTokenId);
+    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
+    const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
+    
     const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
     const setRevokeTokenId = useCW721ExecuteStore((state) => state.setRevokeTokenId);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+    
+    const { setMyNftList, setNftApprovalInfo } = useCW721ExecuteAction();
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const inputId = 'REVOKE';
-
-    useEffect(() => {
-        clearRevokeForm();
-    }, []);
-
+    
     useEffect(() => {
         return () => {
+            clearRevokeForm();
+
             clearFormError({ id: `${inputId}_TOKEN_ID` });
             clearFormError({ id: `${inputId}_ADDRESS` });
         };
     }, []);
+
+    useEffect(() => {
+        setMyNftList(contractAddress, address);
+    }, [contractAddress, address]);
+
+    useEffect(() => {
+        if (revokeAddress !== '' && isValidAddress(revokeAddress) && revokeTokenId !== '') {
+            setNftApprovalInfo(contractAddress, revokeAddress, revokeTokenId);
+        }
+    }, [revokeAddress, revokeTokenId]);
+
+    useEffect(() => {
+        clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
+
+        if (revokeTokenId === '') {
+            clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
+        } else {
+            if (myNftList.includes(revokeTokenId)) {
+                if (nftApprovalInfo.spender === "" && nftApprovalInfo.expires === null) {
+                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved' }); 
+                } else {
+                    if (nftApprovalInfo.spender === revokeAddress) {
+                        clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
+                    }
+                }
+            } else {
+                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
+            }
+        }
+    }, [nftApprovalInfo, revokeTokenId]);
 
     const handleChangeAddress = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
