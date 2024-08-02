@@ -25,12 +25,14 @@ interface FormProps {
     myNftList: string[];
     ownershipInfo: CwOwnershipInfo;
     minterInfo: string;
+    blockHeight: string;
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
     setTotalNfts: (v: string) => void;
     setMyNftList: (v: string[]) => void;
     setOwnershipInfo: (v: CwOwnershipInfo) => void;
+    setBlockHeight: (v: string) => void;
     clearInfo: () => void;
 
     contractAddress: string;
@@ -122,6 +124,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         myNftList: [],
         ownershipInfo: INIT_OWNERSHIP_INFO,
         minterInfo: INIT_MINTER_INFO,
+        blockHeight: '0',
         setFctBalance: (data) =>
             set((state) => {
                 state.fctBalance = data;
@@ -145,6 +148,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         setOwnershipInfo: (data) => 
             set((state) => {
                 state.ownershipInfo = data;
+            }),
+        setBlockHeight: (data) =>
+            set((state) => {
+                state.blockHeight = data;
             }),
         clearInfo: () =>
             set((state) => {

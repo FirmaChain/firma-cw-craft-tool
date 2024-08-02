@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { rootState } from "@/redux/reducers";
 import { CRAFT_CONFIGS } from "@/config";
 import { IC_WARNING } from "@/components/atoms/icons/pngIcons";
+import RenounceQRCodeModal from "@/components/organisms/modal/cw721/renounceQRCodeModal";
 
 const Container = styled.div`
     width: 100%;
@@ -53,7 +54,7 @@ const UpdateOwnershipRenouncePreview = () => {
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
-    const setContractInfo = useCW721ExecuteStore((state) => state.setContractInfo);
+    const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
     const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
 
     const modal = useModalStore();
@@ -64,7 +65,8 @@ const UpdateOwnershipRenouncePreview = () => {
     }, [network]);
 
     const isEnableButton = useMemo(() => {
-        if (ownershipInfo && ownershipInfo.pending_owner === address) return true;
+        console.log(ownershipInfo.owner);
+        if (ownershipInfo && ownershipInfo.owner === address) return true;
         
         // CHECK DATE & BLOCK HEIGHT
         return false;
@@ -95,7 +97,7 @@ const UpdateOwnershipRenouncePreview = () => {
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => (
-                <QRCodeModal
+                <RenounceQRCodeModal
                     module="/cw721/updateOwnershipRenounce"
                     id={id}
                     params={params}

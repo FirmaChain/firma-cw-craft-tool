@@ -134,6 +134,19 @@ const useCW721ExecuteAction = () => {
         }
     };
 
+    const setBlockHeight = async () => {
+        try {
+            const height = (await firmaSDK.BlockChain.getChainSyncInfo()).latest_block_height;
+            useCW721ExecuteStore.getState().setBlockHeight(height);
+        } catch (error) {
+            console.log('error', error);
+            enqueueSnackbar({
+                variant: 'error',
+                message: 'Error occured while fetching setBlockHeight(CW721)'
+            });
+        }
+    };
+
     return {
         checkContractExist,
         setContractInfo,
@@ -142,7 +155,8 @@ const useCW721ExecuteAction = () => {
         setTotalNfts,
         setFctBalance,
         setOwnershipInfo,
-        setMyNftList
+        setMyNftList,
+        setBlockHeight,
     };
 };
 

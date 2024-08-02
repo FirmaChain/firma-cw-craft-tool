@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -20,7 +20,7 @@ import ApproveAll from './functions/approveAll';
 import RevokeAll from './functions/revokeAll';
 import UpdateOwnershipTransfer from './functions/updateOwnershipTransfer';
 
-const Container = styled.div<{ $isSelectMenu?: boolean }>`
+const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
     display: flex;
     padding: 48px;
@@ -79,27 +79,6 @@ const ContractNameTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const DisabledContainer = styled(Container)`
-    user-select: none;
-    border-color: #1e1e1e;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 322px;
-
-    .diabled-typo {
-        color: var(--Gray-800, #dcdcdc);
-
-        /* Body/Body2 - Rg */
-        font-family: 'General Sans Variable';
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
-`;
-
 export interface IMenuItem {
     value: string;
     label: string;
@@ -107,96 +86,102 @@ export interface IMenuItem {
 }
 
 const basicMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
-    { value: 'mint', label: 'Mint' },
-    { value: 'burn', label: 'Burn' },
-    { value: 'transfer', label: 'Transfer' },
-    { value: 'approve', label: 'Approve' },
-    { value: 'revoke', label: 'Revoke' },
-    { value: 'approveAll', label: 'Approve All' },
-    { value: 'revokeAll', label: 'Revoke All' },
-    { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer' },
-    { value: 'updateOwnershipAccept', label: 'Update Ownership Accept' },
-    { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce' }
-];
-
-const advancedMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
-    { value: 'mint', label: 'Mint' },
-    { value: 'burn', label: 'Burn' },
-    { value: 'transfer', label: 'Transfer' },
-    { value: 'approve', label: 'Approve' },
-    { value: 'revoke', label: 'Revoke' },
-    { value: 'approveAll', label: 'Approve All' },
-    { value: 'revokeAll', label: 'Revoke All' },
-    { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer' },
-    { value: 'updateOwnershipAccept', label: 'Update Ownership Accept' },
-    { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce' }
+    { value: 'select', label: 'Select', isDisabled: false },
+    { value: 'mint', label: 'Mint', isDisabled: false },
+    { value: 'burn', label: 'Burn', isDisabled: false },
+    { value: 'transfer', label: 'Transfer', isDisabled: false },
+    { value: 'approve', label: 'Approve', isDisabled: false },
+    { value: 'revoke', label: 'Revoke', isDisabled: false },
+    { value: 'approveAll', label: 'Approve All', isDisabled: false },
+    { value: 'revokeAll', label: 'Revoke All', isDisabled: false },
+    { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer', isDisabled: false },
+    { value: 'updateOwnershipAccept', label: 'Update Ownership Accept', isDisabled: false },
+    { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce', isDisabled: false }
 ];
 
 const CW721ContractInfo = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
 
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const selectMenu = useCW721ExecuteStore((state) => state.selectMenu);
-    const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
+    const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
+    const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
     const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
-
-    const contractExist = useCW721ExecuteStore((v) => v.contractExist);
 
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>(basicMenuItems);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
+    useEffect(() => {
+        let ruleMenus: IMenuItem[] = [...basicMenuItems];
+        
+        if (ownershipInfo && ownershipInfo.owner !== '' && ownershipInfo.owner !== address) {
+            ruleMenus[8].isDisabled = true;
+            ruleMenus[10].isDisabled = true;
+        }
 
+        if (ownershipInfo && ownershipInfo.pending_owner !== '' &&ownershipInfo.pending_owner !== address) {
+            ruleMenus[9].isDisabled = true;
+        }
+
+        // if (ownershipInfo && ownershipInfo.pending_owner === address) {
+        //     if (ownershipInfo.pending_expiry !== null) {
+        //         console.log(ownershipInfo.pending_expiry);
+        //         if ('at_height' in ownershipInfo.pending_expiry) {
+        //             if (ownershipInfo.pending_expiry.at_height <= Number(blockHeight)) {
+        //                 ruleMenus[9].isDisabled = true;
+        //             }
+        //         } else if ('at_time' in ownershipInfo.pending_expiry) {
+        //             console.log('Key is at_time:', ownershipInfo.pending_expiry.at_time);
+        //         }
+        //     }
+        // }
+
+        setOwnerMenus(ruleMenus);
+    }, [ownershipInfo.owner, ownershipInfo.pending_expiry, address, blockHeight]);
+    
     const handleChangeMenu = (menu: string) => {
-        console.log('menu', menu);
         const _selectMenu = ownerMenus.find((item) => item.value === menu);
 
         setSelectMenu(_selectMenu);
     };
 
-    return selectMenu && contractExist ? (
-        <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
-            <TokenInfoWrap>
-                <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
-                <ContractBox>
-                    <ContractSymbolTypo>{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</ContractSymbolTypo>
-                    <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
-                </ContractBox>
-            </TokenInfoWrap>
-            <ExecuteSelect
-                value={selectMenu?.value}
-                placeHolder="Select"
-                options={ownerMenus}
-                onChange={handleChangeMenu}
-                minWidth="280px"
-            />
-            {selectMenu?.value === 'select' && <></>}
-            {selectMenu?.value !== 'select' && (
-                <Fragment>
-                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
-                </Fragment>
+    return (
+        <>
+            {selectMenu && (
+                <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
+                    <TokenInfoWrap>
+                        <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
+                        <ContractBox>
+                            <ContractSymbolTypo>{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</ContractSymbolTypo>
+                            <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
+                        </ContractBox>
+                    </TokenInfoWrap>
+                    <ExecuteSelect
+                        value={selectMenu?.value}
+                        placeHolder="Select"
+                        options={ownerMenus}
+                        onChange={handleChangeMenu}
+                        minWidth="280px"
+                    />
+                    {selectMenu?.value === 'select' && <></>}
+                    {selectMenu?.value !== 'select' && (
+                        <Fragment>
+                            <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
+                        </Fragment>
+                    )}
+                    {selectMenu?.value === 'mint' && <Mint />}
+                    {selectMenu?.value === 'burn' && <Burn />}
+                    {selectMenu?.value === 'transfer' && <Transfer />}
+                    {selectMenu?.value === 'approve' && <Approve />}
+                    {selectMenu?.value === 'revoke' && <Revoke />}
+                    {selectMenu?.value === 'approveAll' && <ApproveAll />}
+                    {selectMenu?.value === 'revokeAll' && <RevokeAll />}
+                    {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
+                    {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
+                    {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
+                </Container>
             )}
-            {selectMenu?.value === 'mint' && <Mint />}
-            {selectMenu?.value === 'burn' && <Burn />}
-            {selectMenu?.value === 'transfer' && <Transfer />}
-            {selectMenu?.value === 'approve' && <Approve />}
-            {selectMenu?.value === 'revoke' && <Revoke />}
-            {selectMenu?.value === 'approveAll' && <ApproveAll />}
-            {selectMenu?.value === 'revokeAll' && <RevokeAll />}
-            {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
-            {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
-            {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
-        </Container>
-    ) : (
-        <DisabledContainer>
-            <div className="diabled-typo">There is no data</div>
-        </DisabledContainer>
+        </>
     );
 };
 

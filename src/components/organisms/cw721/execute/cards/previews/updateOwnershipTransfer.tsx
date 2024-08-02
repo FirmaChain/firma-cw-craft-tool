@@ -134,7 +134,7 @@ const UpdateOwnershipTransferPreview = () => {
     
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [convertType, setConvertType] = useState<string>('at_height');
-
+    
     useEffect(() => {
         if (approveType === 'Time') {
             setConvertType('at_time');

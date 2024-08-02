@@ -9,6 +9,17 @@ export const ModalTitleWrap = styled.div`
     justify-content: center;
 `;
 
+export const ModalTitleHeaderWrap = styled.div`
+    display: flex;
+    gap: 8px;
+    justify-content: center;;
+`;
+
+export const ModalTitleHeaderIcon = styled.img`
+    width: 24px;
+    height: 24px;
+`;
+
 export const ModalTitleTypo = styled.div`
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     text-align: center;
@@ -35,6 +46,36 @@ export const QrCodeWrap = styled.div`
     flex-direction: column;
     // gap: 16px;
     margin-bottom: 28px;
+`;
+
+export const ModalContentWarningCard = styled.div`
+    display: flex;
+    padding: 16px 20px;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(229, 82, 80, 0.18);
+`;
+
+export const ModalContentWarningTypo = styled.div`
+    color: var(--Status-Alert, var(--Primary-Base-White, #E55250));
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ModalContentWarningDesc = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: pre-wrap;
+    text-align: center;
 `;
 
 export const ModalContentBlackCard = styled.div`

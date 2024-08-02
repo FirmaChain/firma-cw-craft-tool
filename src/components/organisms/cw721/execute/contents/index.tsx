@@ -54,8 +54,16 @@ const Contents = () => {
     const contractExist = useCW721ExecuteStore((state) => state.contractExist);
     const setContractExist = useCW721ExecuteStore((state) => state.setContractExist);
 
-    const { searchCW721Contract, setContractInfo, setNftContractInfo, setTotalNfts, setFctBalance, setOwnershipInfo, setMyNftList } =
-        useCW721ExecuteAction();
+    const {
+        searchCW721Contract,
+        setContractInfo,
+        setNftContractInfo,
+        setTotalNfts,
+        setFctBalance,
+        setOwnershipInfo,
+        setMyNftList,
+        setBlockHeight,
+    } = useCW721ExecuteAction();
 
     const clearForm = useCW721ExecuteStore((state) => state.clearForm);
     const contractName = useCW721ExecuteStore((state) => state.nftContractInfo.name);
@@ -91,6 +99,7 @@ const Contents = () => {
             setFctBalance(address);
             setOwnershipInfo(contractAddress);
             setMyNftList(contractAddress, address);
+            setBlockHeight();
         }
     }, [contractExist, contractAddress, address]);
 

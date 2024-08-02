@@ -12,6 +12,10 @@ import { format } from 'date-fns';
 import { useModalStore } from "@/hooks/useModal";
 import { QRCodeModal } from "@/components/organisms/modal";
 import { CRAFT_CONFIGS } from "@/config";
+import useCW721ExecuteAction from "../../hooks/useCW721ExecuteAction";
+import { Cw721Expires } from "@firmachain/firma-js";
+import { addNanoSeconds } from "@/utils/time";
+import { compareStringNumbers } from "@/utils/balance";
 
 const ContentWrap = styled.div`
     display: flex;
@@ -114,7 +118,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     if (allowanceInfo.type === 'at_time')
         return (
             <AccordionTypo $disabled={false}>
-                {format(new Date(Math.floor(Number(allowanceInfo.expire))), 'yyyy-MM-dd HH:mm:ss')}
+                {format(new Date(Math.floor(Number(allowanceInfo.expire) / 1000000)), 'yyyy-MM-dd HH:mm:ss')}
             </AccordionTypo>
         );
 
@@ -129,33 +133,46 @@ const UpdateOwnershipAccept = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
-    
+    const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
+
+    const { setOwnershipInfo } = useCW721ExecuteAction();
+
     const [isOriginOwnerOpen, setIsOriginOwnerOpen] = useState<boolean>(false);
     const [isNewOwnerOpen, setIsNewOwnerOpen] = useState<boolean>(false);
 
     const modal = useModalStore();
 
     useEffect(() => {
-        console.log(ownershipInfo);
-        if (ownershipInfo) {
-            if (ownershipInfo.pending_owner === null && ownershipInfo.pending_expiry === null) {
-                // NOT UPDATE TRANSFER
-            }
-        }
-    }, [ownershipInfo])
+        setOwnershipInfo(contractAddress); 
+    }, []);
 
-    const isEnableButton = useMemo(() => {
-        if (ownershipInfo) {
-            if (ownershipInfo.pending_owner) return false;
-            if (ownershipInfo.pending_owner !== address) return false;
+    const isExpiry = (expiry: Cw721Expires) => {
+        if (expiry === null) return false;
+        
+        if ('at_height' in expiry) {
+            if (expiry.at_height <= Number(blockHeight)) return true;
+        } else if ('at_time' in expiry) {
+            const nowTimestamp = addNanoSeconds(Date.now().toString());
+            if (compareStringNumbers(expiry.at_time, nowTimestamp) !== 1) return true;
         }
-        return true;
-    }, [ownershipInfo, address]);
+        return false;
+    };
+
+    const isDisableButton = useMemo(() => {
+        console.log("pending_owner", ownershipInfo.pending_owner);
+
+        if (ownershipInfo) {
+            if (ownershipInfo.pending_owner === '' || ownershipInfo.pending_owner !== address) return true;
+            if (ownershipInfo.pending_owner === address && isExpiry(ownershipInfo.pending_expiry)) return true;
+        }
+
+        return false;
+    }, [ownershipInfo, address, blockHeight]);
     
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         return config;
-    }, [network]);
+    }, [network, ownershipInfo]);
 
     const onClickOriginOwnerFolding = () => {
         setIsOriginOwnerOpen(!isOriginOwnerOpen);
@@ -203,6 +220,7 @@ const UpdateOwnershipAccept = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
+                        setOwnershipInfo(contractAddress);
                     }}
                 />
             )
@@ -244,13 +262,14 @@ const UpdateOwnershipAccept = () => {
                     </ContentItemWrap>
                     <ContentItemWrap>
                         <ContentItemIcon src={IC_CLOCK} />
-                        {ownershipInfo && ownershipInfo.pending_expiry === null && <ContentItemValue $hasData={false}>Expiration</ContentItemValue>}
+                        {ownershipInfo && ownershipInfo.pending_owner === null && ownershipInfo.pending_expiry === null && <ContentItemValue $hasData={false}>Expiration</ContentItemValue>}
+                        {ownershipInfo && ownershipInfo.pending_owner !== null && ownershipInfo.pending_expiry === null && <ContentItemValue $hasData={true}>Forever</ContentItemValue>}
                         {ownershipInfo && ownershipInfo.pending_expiry !== null && <ExpirationBox allowanceInfo={{ address: '', amount: '', type: Object.keys(ownershipInfo.pending_expiry)[0], expire: Object.values(ownershipInfo.pending_expiry)[0] }}/>}
                     </ContentItemWrap>
                 </ContentBodyWrap>}
             </ContentWrap>
             <ButtonWrap>
-                <GreenButton disabled={isEnableButton} onClick={onClickUpdateOwnershipAccept}>
+                <GreenButton disabled={isDisableButton} onClick={onClickUpdateOwnershipAccept}>
                     <div className="button-text">Update Ownership Accept</div>
                 </GreenButton>
             </ButtonWrap>
