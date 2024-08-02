@@ -185,3 +185,11 @@ a:active {
 .pointer {
   cursor: pointer;
 }
+
+.clamp-single-line {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}

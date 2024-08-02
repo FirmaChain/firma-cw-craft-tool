@@ -150,7 +150,7 @@ const NftTable = ({ items, isLoading }: { items?: { id: string; imgUrl: string }
             ) : isEmpty ? (
                 <EmptyBox isEmpty />
             ) : (
-                <StyledOverlayScrollbar>
+                <StyledOverlayScrollbar defer>
                     <TableGrid>
                         {currentItems.map((item, idx) => (
                             <NFTCard key={idx} item={item} />

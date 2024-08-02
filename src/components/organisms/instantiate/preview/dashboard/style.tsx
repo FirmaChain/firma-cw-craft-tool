@@ -66,7 +66,7 @@ export const DashboardBody = styled.div`
 
 export const StyledOverlayScrollbar = styled(OverlayScrollbarsComponent)`
     .os-scrollbar {
-        --os-size: 16px;
+        --os-size: 14px !important;
         --os-padding-perpendicular: 5px;
         // --os-padding-axis: 30px;
         --os-track-border-radius: 50%;
@@ -76,6 +76,21 @@ export const StyledOverlayScrollbar = styled(OverlayScrollbarsComponent)`
     }
 
     .os-scrollbar-vertical {
-        padding: 20px 5px;
+        padding: 4px;
+    }
+`;
+
+export const DropDownOverlayScrollbar = styled(OverlayScrollbarsComponent)`
+    .os-scrollbar {
+        --os-size: 6px !important;
+        --os-padding-perpendicular: 0px;
+        --os-track-border-radius: 50%;
+        --os-handle-bg: var(--Gray-550, #444);
+        --os-handle-bg-hover: var(--Gray-550, #444);
+        --os-handle-bg-active: var(--Gray-550, #444);
+    }
+
+    .os-scrollbar-vertical {
+        padding: 0;
     }
 `;

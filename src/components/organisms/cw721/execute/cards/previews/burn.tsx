@@ -118,6 +118,7 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnPreview = () => {
+    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -140,8 +141,28 @@ const BurnPreview = () => {
         if (Number(updatedBurnCount) <= -1) return false;
         if (totalBurnCount === 0) return false;
 
+        //! if ends with comma
+        if (burnList.endsWith(',')) return false;
+
+        //? get all burn ids
+        const splited = burnList.split(',').filter((v) => v !== ''); //? filter empty value after comma
+        const idMap = new Map();
+        splited.forEach((v) => {
+            const parsed = parseInt(v).toString();
+            idMap.set(parsed, parsed);
+        });
+
+        const burnIds = Array.from(idMap.keys());
+
+        //! if tring to burn id that user does not own
+        const ownerCheck = burnIds.every((oneId) => myNftList.includes(oneId));
+        if (ownerCheck === false) return false;
+
+        //! if duplicted id included
+        if (splited.length > 1 && burnIds.length !== splited.length) return false;
+
         return true;
-    }, [updatedBurnCount, totalBurnCount]);
+    }, [updatedBurnCount, totalBurnCount, burnList, myNftList]);
 
     const onClickBurn = () => {
         const convertList: { token_id: string }[] = [];
@@ -151,10 +172,10 @@ const BurnPreview = () => {
 
         for (const burnData of token_ids) {
             convertList.push({
-                token_id: burnData,
+                token_id: burnData
             });
         }
-        
+
         const params = {
             header: {
                 title: 'Burn'

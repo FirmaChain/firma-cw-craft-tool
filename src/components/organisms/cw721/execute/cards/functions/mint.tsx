@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import IconTooltip from '@/components/atoms/tooltip';
@@ -8,7 +8,8 @@ import VariableInput from '@/components/atoms/input/variableInput';
 import MintNFTInfoList from '@/components/atoms/walletList/mintNFTInfoList';
 import { v4 } from 'uuid';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
-import { IExecuteMint } from '@/interfaces/cw721';
+import useFormStore from '@/store/formStore';
+import { isValidAddress } from '@/utils/common';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -118,7 +119,9 @@ const Section = styled.div`
     }
 `;
 
-const MINTING_PRESET_TOOLTIP = `You can input a range of Token ID numbers using\n"Start" and "End" , or specify multiple random numbers\nin the 'Token ID' field below in ‘Required Informations’.`;
+const MINTING_PRESET_TOOLTIP = `You can input a range of numbers using\n"Start" and "End", or specify multiple\nrandom numbers in the 'Token ID' field.`;
+
+const BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT'; //! DO NOT CHANGE | USING ON PREVIEW FOR BUTTON STATE
 
 const Mint = () => {
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
@@ -133,34 +136,47 @@ const Mint = () => {
     const setMintList = useCW721ExecuteStore((state) => state.setMintList);
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
+    const setFormError = useFormStore((v) => v.setFormError);
+    const clearFormError = useFormStore((v) => v.clearFormError);
+
     const disableMintIntoList = mintBaseURI.length > 0;
     const totalMintCount = useMemo(() => {
         if (mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '') {
-            return "0";
+            return '0';
         }
 
         return mintList.length;
     }, [mintList]);
 
     useEffect(() => {
-        clearMintForm();
-    }, []);
-
-    useEffect(() => {
         if (mintBaseURI) {
             if (mintStartTokenId && mintEndTokenId && !isNaN(Number(mintStartTokenId)) && !isNaN(Number(mintEndTokenId))) {
                 const parsedStart = parseInt(mintStartTokenId);
+                let parsedEnd = parseInt(mintEndTokenId);
+                if (parsedEnd > parsedStart + 19) parsedEnd = parsedStart + 19;
 
-                setMintList(
-                    new Array(Number(mintEndTokenId) - Number(mintStartTokenId) + 1)
-                        .fill(null)
-                        .map((_, idx) => ({ token_id: (idx + parsedStart).toString(), token_uri: mintBaseURI + (idx + parsedStart), id: v4() }))
-                );
+                if (parsedEnd >= parsedStart) {
+                    setMintList(
+                        new Array(Number(parsedEnd) - Number(mintStartTokenId) + 1).fill(null).map((_, idx) => ({
+                            token_id: (idx + parsedStart).toString(),
+                            token_uri: mintBaseURI + (idx + parsedStart),
+                            id: v4()
+                        }))
+                    );
+                }
             } else {
                 setMintList([{ token_id: '', token_uri: '', id: v4() }]);
             }
         }
     }, [mintBaseURI, mintStartTokenId, mintEndTokenId]);
+
+    useEffect(() => {
+        //? clear error and input before unmount
+        return () => {
+            clearMintForm();
+            useFormStore.getState().clearForm();
+        };
+    }, []);
 
     return (
         <Container>
@@ -188,13 +204,16 @@ const Mint = () => {
                             labelProps={{ label: 'Base URI' }}
                             inputProps={{
                                 value: mintBaseURI,
-                                formId: 'BASE_URI_INPUT',
+                                formId: BASE_URI_FORM_ID,
                                 placeHolder: 'Input base uri ends with ‘/’',
                                 onChange: (v) => {
                                     setMintBaseURI(v);
                                     if (v.length === 0) {
                                         setMintList([{ token_id: '', token_uri: '', id: v4() }]);
                                     }
+
+                                    if (!v || v.endsWith('/')) clearFormError({ id: BASE_URI_FORM_ID, type: 'URI_RULE' });
+                                    else setFormError({ id: BASE_URI_FORM_ID, type: 'URI_RULE', message: `Base uri must end with a '/'.` });
                                 }
                             }}
                         />
@@ -210,7 +229,6 @@ const Mint = () => {
                                         onChange={(v) => setMintStartTokenId(v)}
                                         type="number"
                                         decimal={0}
-                                        maxValue={20}
                                     />
                                 </div>
                                 <div className="input-with-prefix">
@@ -222,7 +240,7 @@ const Mint = () => {
                                         onChange={(v) => setMintEndTokenId(v)}
                                         type="number"
                                         decimal={0}
-                                        maxValue={20}
+                                        maxValue={Number(mintStartTokenId) + 19}
                                     />
                                 </div>
                             </div>
@@ -241,18 +259,40 @@ const Mint = () => {
                                 value: mintRecipientAddress,
                                 formId: 'RECIPIENT_ADDRESS',
                                 placeHolder: 'Input wallet address',
-                                onChange: (v) => setMintRecipientAddress(v)
+                                onChange: (v) => {
+                                    if (!v || isValidAddress(v)) clearFormError({ id: 'RECIPIENT_ADDRESS', type: 'INVALID_ADDRESS' });
+                                    else
+                                        setFormError({
+                                            id: 'RECIPIENT_ADDRESS',
+                                            type: 'INVALID_ADDRESS',
+                                            message: 'Please input firmachain wallet address.'
+                                        });
+
+                                    setMintRecipientAddress(v);
+                                },
+                                emptyErrorMessage: 'Please input wallet address.'
                             }}
                         />
                     </div>
                     <MintNFTInfoList
-                        onChangeWalletList={(v) => setMintList(v)}
+                        onChangeWalletList={(v) => {
+                            if (mintBaseURI) {
+                                //? if using preset
+                                setMintBaseURI('');
+                                setMintStartTokenId('');
+                                setMintEndTokenId('');
+                                clearFormError({ id: BASE_URI_FORM_ID });
+                            }
+
+                            setMintList(v);
+                        }}
                         list={mintList}
                         disableInput={disableMintIntoList}
                         onClickDeleteAll={() => {
                             setMintBaseURI('');
                             setMintStartTokenId('');
                             setMintEndTokenId('');
+                            clearFormError({ id: BASE_URI_FORM_ID });
                         }}
                     />
                 </Section>

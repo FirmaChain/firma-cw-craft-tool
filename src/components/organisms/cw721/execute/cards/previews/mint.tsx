@@ -6,13 +6,11 @@ import { useModalStore } from '@/hooks/useModal';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
-import { CRAFT_CONFIGS } from '@/config';
-import { addStringAmount, getUTokenAmountFromToken } from '@/utils/balance';
+import { addStringAmount } from '@/utils/balance';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { isValidAddress } from '@/utils/address';
+import useFormStore from '@/store/formStore';
 
 const Container = styled.div`
     width: 100%;
@@ -167,20 +165,23 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
+const PRESET_BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT';
+
 const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
-    
+
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
     const mintList = useCW721ExecuteStore((state) => state.mintList);
 
+    const modal = useModalStore();
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
-    const modal = useModalStore();
+    const presetUriInputError = Object.keys(useFormStore((v) => v.formError[PRESET_BASE_URI_FORM_ID]) || {})?.length;
 
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true); //? defualt open
 
     const mintSupply = useMemo(() => {
         if (mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '') {
@@ -191,22 +192,40 @@ const MintPreview = () => {
     }, [mintList]);
 
     const isEnableButton = useMemo(() => {
+        //! if mint recipient address is invalid
         if (!isValidAddress(mintRecipientAddress)) return false;
+
+        //? get all mint nft ids
+        const idMap = new Map();
+        mintList.forEach((v) => {
+            const numberId = v.token_id === '' ? -1 : Number(v.token_id);
+            idMap.set(numberId, numberId);
+        });
+        const mintIds = Array.from(idMap.keys());
+
+        //! if nft ids are duplicated
+        if (mintIds.length !== mintList.length) return false;
+
+        //! if empty value includes
         if (mintList.length > 0) {
             for (const mintData of mintList) {
                 if (mintData.token_id === '') return false;
                 if (mintData.token_uri === '') return false;
             }
         }
+
+        //! if using preset and base uri is not valid
+        if (presetUriInputError > 0) return false;
+
         return true;
-    }, [mintRecipientAddress, mintList]);
+    }, [mintRecipientAddress, mintList, presetUriInputError]);
 
     const willTotalSupply = useMemo(() => {
         return addStringAmount(mintSupply, totalNfts);
     }, [totalNfts, mintSupply]);
 
     const onClickMint = () => {
-        const convertMintList: { owner: string, token_id: string, extension: {}, token_uri: string }[] = [];
+        const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];
         const feeAmount = mintList.length * 15000;
 
         for (const mintData of mintList) {
@@ -217,7 +236,7 @@ const MintPreview = () => {
                 token_uri: mintData.token_uri
             });
         }
-        
+
         const params = {
             header: {
                 title: 'Mint'
@@ -265,14 +284,16 @@ const MintPreview = () => {
                         <TokenInfoRightWrap>
                             <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
                             <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
-                            <ArrowToggleButton onToggle={setIsOpen} />
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>
-                    {!isOpen && (
+                    {isOpen && (
                         <WalletListWrap>
                             <WalletLeftItemWrap>
                                 <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                <WalletItemAddressTypo $disabled={mintRecipientAddress === ''}>{mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}</WalletItemAddressTypo>
+                                <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
+                                    {mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
+                                </WalletItemAddressTypo>
                             </WalletLeftItemWrap>
                             <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                             <WalletItemWrap>
@@ -282,14 +303,16 @@ const MintPreview = () => {
                                         <WalletItemAddressTypo $disabled={true}>NFT Url</WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
                                 )}
-                                {mintList.length >= 1 && (mintList[0].token_id !== '' || mintList[0].token_uri !== '') && (
+                                {mintList.length >= 1 &&
+                                    (mintList[0].token_id !== '' || mintList[0].token_uri !== '') &&
                                     mintList.map((value, index) => (
                                         <WalletLeftItemWrap key={index}>
                                             <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                            <WalletItemAddressTypo $disabled={false}>{value.token_uri}</WalletItemAddressTypo>
+                                            <WalletItemAddressTypo className="clamp-single-line" $disabled={false}>
+                                                {value.token_uri}
+                                            </WalletItemAddressTypo>
                                         </WalletLeftItemWrap>
-                                    ))
-                                )}
+                                    ))}
                             </WalletItemWrap>
                         </WalletListWrap>
                     )}

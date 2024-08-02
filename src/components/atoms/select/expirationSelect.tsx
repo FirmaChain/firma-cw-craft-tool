@@ -1,3 +1,4 @@
+import { DropDownOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useState } from 'react';
 import Select from 'react-select';
@@ -29,7 +30,7 @@ const customStyles = {
             backgroundColor: state.isDisabled ? 'none' : state.isSelected ? '#141414' : '#424242'
         },
         borderRadius: '6px',
-        padding: '4px 8px',
+        padding: '8px 12px',
         color: state.isDisabled ? '#434343' : state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
         width: '100%',
         cursor: 'pointer',
@@ -103,6 +104,24 @@ const BGBox = styled.div`
     background: transparent;
 `;
 
+const SelectListBox = styled.div`
+    width: 100%;
+    display: flex;
+    max-height: 218px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    padding: 8px;
+
+    .list {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+`;
+
 const ExpirationSelect = ({
     value,
     placeHolder = 'Select input',
@@ -166,6 +185,15 @@ const ExpirationSelect = ({
                                         />
                                     </svg>
                                 </Container>
+                            );
+                        },
+                        MenuList: ({ children }) => {
+                            return (
+                                <SelectListBox>
+                                    <DropDownOverlayScrollbar defer>
+                                        <div className="list">{children}</div>
+                                    </DropDownOverlayScrollbar>
+                                </SelectListBox>
                             );
                         }
                     }}

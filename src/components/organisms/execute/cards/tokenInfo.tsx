@@ -22,7 +22,7 @@ import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import useFormStore from '@/store/formStore';
 
-const Container = styled.div<{ $isSelectMenu: boolean }>`
+const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
     display: flex;
     padding: 48px;
@@ -132,6 +132,27 @@ const ContractTypeTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
+const DisabledContainer = styled(Container)`
+    user-select: none;
+    border-color: #1e1e1e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 322px;
+
+    .diabled-typo {
+        color: var(--Gray-800, #dcdcdc);
+
+        /* Body/Body2 - Rg */
+        font-family: 'General Sans Variable';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+    }
+`;
+
 export interface IMenuItem {
     value: string;
     label: string;
@@ -176,6 +197,8 @@ const TokenInfo = () => {
     const marketingInfo = useExecuteStore((state) => state.marketingInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
+
+    const contractExist = useExecuteStore((v) => v.contractExist);
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
@@ -246,58 +269,54 @@ const TokenInfo = () => {
         setOwnerMenus(ruleMenus);
     }, [craftConfig, contractAddress, minterInfo, marketingInfo]);
 
-    return (
-        <>
-            {selectMenu && (
-                <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
-                    <TokenInfoWrap>
-                        <TitleTypo>{'TOKEN INFO'}</TitleTypo>
-                        <TokenBox>
-                            <TokenLogo src={validTokenLogoUrl} size="72px" />
-                            <TokenInfoBox>
-                                <TokenTitleWrap>
-                                    {tokenInfo ? (
-                                        <TokenSymbolTypo>{tokenInfo?.symbol}</TokenSymbolTypo>
-                                    ) : (
-                                        <Skeleton width="120px" height="24px" />
-                                    )}
-                                    {/* <ValidShieldIcon src={IC_VALID_SHIELD} alt={'Firmachain Valid Contract'} /> */}
-                                    {ContractTypeLabel && (
-                                        <ContractTypeLabelWrap>
-                                            <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
-                                        </ContractTypeLabelWrap>
-                                    )}
-                                </TokenTitleWrap>
-                                {tokenInfo ? <TokenNameTypo>{tokenInfo?.name}</TokenNameTypo> : <Skeleton width="80px" height="22px" />}
-                            </TokenInfoBox>
-                        </TokenBox>
-                    </TokenInfoWrap>
-                    <ExecuteSelect
-                        value={selectMenu?.value}
-                        placeHolder="Select"
-                        options={ownerMenus}
-                        onChange={handleChangeMenu}
-                        minWidth="214px"
-                    />
-                    {selectMenu?.value === 'select' && <></>}
-                    {selectMenu?.value !== 'select' && (
-                        <Fragment>
-                            <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
-                            {selectMenu?.value === 'mint' && <Mint />}
-                            {selectMenu?.value === 'burn' && <Burn />}
-                            {selectMenu?.value === 'burnFrom' && <BurnFrom />}
-                            {selectMenu?.value === 'transfer' && <Transfer />}
-                            {selectMenu?.value === 'transferFrom' && <TransferFrom />}
-                            {selectMenu?.value === 'increaseAllowance' && <IncreaseAllowance />}
-                            {selectMenu?.value === 'decreaseAllowance' && <DecreaseAllowance />}
-                            {selectMenu?.value === 'updateMarketing' && <UpdateMarketing />}
-                            {selectMenu?.value === 'updateMinter' && <UpdateMinter />}
-                            {selectMenu?.value === 'updateLogo' && <UpdateLogo />}
-                        </Fragment>
-                    )}
-                </Container>
+    return selectMenu && contractExist ? (
+        <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
+            <TokenInfoWrap>
+                <TitleTypo>{'TOKEN INFO'}</TitleTypo>
+                <TokenBox>
+                    <TokenLogo src={validTokenLogoUrl} size="72px" />
+                    <TokenInfoBox>
+                        <TokenTitleWrap>
+                            {tokenInfo ? <TokenSymbolTypo>{tokenInfo?.symbol}</TokenSymbolTypo> : <Skeleton width="120px" height="24px" />}
+                            {/* <ValidShieldIcon src={IC_VALID_SHIELD} alt={'Firmachain Valid Contract'} /> */}
+                            {ContractTypeLabel && (
+                                <ContractTypeLabelWrap>
+                                    <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
+                                </ContractTypeLabelWrap>
+                            )}
+                        </TokenTitleWrap>
+                        {tokenInfo ? <TokenNameTypo>{tokenInfo?.name}</TokenNameTypo> : <Skeleton width="80px" height="22px" />}
+                    </TokenInfoBox>
+                </TokenBox>
+            </TokenInfoWrap>
+            <ExecuteSelect
+                value={selectMenu?.value}
+                placeHolder="Select"
+                options={ownerMenus}
+                onChange={handleChangeMenu}
+                minWidth="214px"
+            />
+            {selectMenu?.value === 'select' && <></>}
+            {selectMenu?.value !== 'select' && (
+                <Fragment>
+                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
+                    {selectMenu?.value === 'mint' && <Mint />}
+                    {selectMenu?.value === 'burn' && <Burn />}
+                    {selectMenu?.value === 'burnFrom' && <BurnFrom />}
+                    {selectMenu?.value === 'transfer' && <Transfer />}
+                    {selectMenu?.value === 'transferFrom' && <TransferFrom />}
+                    {selectMenu?.value === 'increaseAllowance' && <IncreaseAllowance />}
+                    {selectMenu?.value === 'decreaseAllowance' && <DecreaseAllowance />}
+                    {selectMenu?.value === 'updateMarketing' && <UpdateMarketing />}
+                    {selectMenu?.value === 'updateMinter' && <UpdateMinter />}
+                    {selectMenu?.value === 'updateLogo' && <UpdateLogo />}
+                </Fragment>
             )}
-        </>
+        </Container>
+    ) : (
+        <DisabledContainer>
+            <div className="diabled-typo">There is no data</div>
+        </DisabledContainer>
     );
 };
 

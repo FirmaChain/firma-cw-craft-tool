@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
-import { FirmaUtil } from '@firmachain/firma-js';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
+import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
 
 interface IProps {
     index: number;
@@ -44,13 +44,24 @@ const NFTMintInput = ({
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
 
-    const handleAddress = (value: string) => {
-        const filtered = value.replace(/[^a-zA-Z0-9]/g, '');
+    const mintList = useCW721ExecuteStore((state) => state.mintList);
+
+    const mintTokenIdsExceptSelf = useMemo(() => {
+        //? get all list except self
+        const idsMap = new Map();
+        const allTokenInputs = mintList.filter((oneValue) => oneValue.id !== id).map((v) => v.token_id);
+        allTokenInputs.map((id) => id !== '' && idsMap.set(parseInt(id), parseInt(id)));
+
+        return Array.from(idsMap.keys());
+    }, [id, mintList]);
+
+    const handleNFTId = (value: string) => {
+        const filtered = value.replace(/[^0-9]/g, '');
 
         onChangeLeft(filtered);
     };
 
-    const handleAmount = (value: string) => {
+    const handleNFTUri = (value: string) => {
         onChangeRight(value);
     };
 
@@ -58,17 +69,17 @@ const NFTMintInput = ({
         onRemoveClick();
     };
 
-    // useEffect(() => {
-    //     return () => {
-    //         clearFromError({ id: `${id}_ADDRESS` });
-    //         clearFromError({ id: `${id}_AMOUNT` });
-    //     };
-    // }, []);
+    useEffect(() => {
+        if (leftValue !== '' && mintTokenIdsExceptSelf.includes(parseInt(leftValue))) {
+            setFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID', message: 'Duplicated' });
+        } else {
+            clearFromError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID' });
+        }
+    }, [mintTokenIdsExceptSelf, leftValue]);
 
     return (
         <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
             <div style={{ display: 'flex', width: '100%', flexDirection: 'row', gap: '12px' }}>
-                {/* Wallet Address */}
                 <div
                     style={{
                         display: 'flex',
@@ -84,7 +95,7 @@ const NFTMintInput = ({
                         inputProps={{
                             formId: `${id}_${leftTitle}`,
                             value: leftValue,
-                            onChange: handleAddress,
+                            onChange: handleNFTId,
                             placeHolder: leftPlaceholder,
                             type: 'number',
                             decimal: 0,
@@ -92,7 +103,7 @@ const NFTMintInput = ({
                         }}
                     />
                 </div>
-                {/* Wallet Amount */}
+
                 <div
                     style={{
                         display: 'flex',
@@ -106,14 +117,15 @@ const NFTMintInput = ({
                     <LabelInput
                         labelProps={{ label: rightTitle }}
                         inputProps={{
-                            formId: `${id}_${rightTitle}`,
+                            formId: `${id}_NFT_URI`,
                             value: rightValue,
-                            onChange: handleAmount,
-                            placeHolder: rightPlaceholder
+                            onChange: handleNFTUri,
+                            placeHolder: rightPlaceholder,
+                            disabled: disabled
                         }}
                     />
                 </div>
-                {/* Button */}
+
                 <div
                     style={{
                         display: 'flex',

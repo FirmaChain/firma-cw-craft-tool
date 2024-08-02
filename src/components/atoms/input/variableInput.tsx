@@ -216,6 +216,7 @@ const VariableInput = ({
                     onChange={handleChange}
                     placeholder={placeHolder}
                     readOnly={readOnly || type === 'date'}
+                    disabled={disabled}
                 />
                 {typeof maxLength === 'number' && (
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingRight: '16px' }}>

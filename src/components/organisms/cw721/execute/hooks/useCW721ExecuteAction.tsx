@@ -55,7 +55,7 @@ const useCW721ExecuteAction = () => {
                 message: 'Error occured while fetching setFctBalance'
             });
         }
-    }
+    };
 
     const searchCW721Contract = async (contractAddress: string, address: string) => {
         //? in case of searching cw721 contract in cw20 execute page
@@ -67,6 +67,7 @@ const useCW721ExecuteAction = () => {
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721.' });
                 useCW721ExecuteStore.getState().clearForm();
+                useCW721ExecuteStore.getState().setContractExist(false);
                 return;
             }
 
@@ -105,7 +106,7 @@ const useCW721ExecuteAction = () => {
             });
         }
     };
-    
+
     const setMyNftList = async (contractAddress: string, address: string) => {
         try {
             let completeNftList: string[] = [];
@@ -142,7 +143,7 @@ const useCW721ExecuteAction = () => {
         setFctBalance,
         setOwnershipInfo,
         setMyNftList
-    }
-}
+    };
+};
 
 export default useCW721ExecuteAction;

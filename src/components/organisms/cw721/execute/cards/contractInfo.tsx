@@ -20,7 +20,7 @@ import ApproveAll from './functions/approveAll';
 import RevokeAll from './functions/revokeAll';
 import UpdateOwnershipTransfer from './functions/updateOwnershipTransfer';
 
-const Container = styled.div<{ $isSelectMenu: boolean }>`
+const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
     display: flex;
     padding: 48px;
@@ -79,6 +79,27 @@ const ContractNameTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
+const DisabledContainer = styled(Container)`
+    user-select: none;
+    border-color: #1e1e1e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 322px;
+
+    .diabled-typo {
+        color: var(--Gray-800, #dcdcdc);
+
+        /* Body/Body2 - Rg */
+        font-family: 'General Sans Variable';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+    }
+`;
+
 export interface IMenuItem {
     value: string;
     label: string;
@@ -123,6 +144,8 @@ const CW721ContractInfo = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
 
+    const contractExist = useCW721ExecuteStore((v) => v.contractExist);
+
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>(basicMenuItems);
 
     const craftConfig = useMemo(() => {
@@ -137,43 +160,43 @@ const CW721ContractInfo = () => {
         setSelectMenu(_selectMenu);
     };
 
-    return (
-        <>
-            {selectMenu && (
-                <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
-                    <TokenInfoWrap>
-                        <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
-                        <ContractBox>
-                            <ContractSymbolTypo>{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</ContractSymbolTypo>
-                            <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
-                        </ContractBox>
-                    </TokenInfoWrap>
-                    <ExecuteSelect
-                        value={selectMenu?.value}
-                        placeHolder="Select"
-                        options={ownerMenus}
-                        onChange={handleChangeMenu}
-                        minWidth="280px"
-                    />
-                    {selectMenu?.value === 'select' && <></>}
-                    {selectMenu?.value !== 'select' && (
-                        <Fragment>
-                            <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
-                        </Fragment>
-                    )}
-                    {selectMenu?.value === 'mint' && <Mint />}
-                    {selectMenu?.value === 'burn' && <Burn />}
-                    {selectMenu?.value === 'transfer' && <Transfer />}
-                    {selectMenu?.value === 'approve' && <Approve />}
-                    {selectMenu?.value === 'revoke' && <Revoke />}
-                    {selectMenu?.value === 'approveAll' && <ApproveAll />}
-                    {selectMenu?.value === 'revokeAll' && <RevokeAll />}
-                    {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
-                    {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
-                    {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
-                </Container>
+    return selectMenu && contractExist ? (
+        <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
+            <TokenInfoWrap>
+                <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
+                <ContractBox>
+                    <ContractSymbolTypo>{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</ContractSymbolTypo>
+                    <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
+                </ContractBox>
+            </TokenInfoWrap>
+            <ExecuteSelect
+                value={selectMenu?.value}
+                placeHolder="Select"
+                options={ownerMenus}
+                onChange={handleChangeMenu}
+                minWidth="280px"
+            />
+            {selectMenu?.value === 'select' && <></>}
+            {selectMenu?.value !== 'select' && (
+                <Fragment>
+                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
+                </Fragment>
             )}
-        </>
+            {selectMenu?.value === 'mint' && <Mint />}
+            {selectMenu?.value === 'burn' && <Burn />}
+            {selectMenu?.value === 'transfer' && <Transfer />}
+            {selectMenu?.value === 'approve' && <Approve />}
+            {selectMenu?.value === 'revoke' && <Revoke />}
+            {selectMenu?.value === 'approveAll' && <ApproveAll />}
+            {selectMenu?.value === 'revokeAll' && <RevokeAll />}
+            {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
+            {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
+            {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
+        </Container>
+    ) : (
+        <DisabledContainer>
+            <div className="diabled-typo">There is no data</div>
+        </DisabledContainer>
     );
 };
 

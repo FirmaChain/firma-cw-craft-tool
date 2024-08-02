@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { FirmaUtil } from '@firmachain/firma-js';
+import React from 'react';
 import { v4 } from 'uuid';
 
 import {
@@ -36,34 +35,13 @@ interface IProps {
 }
 
 const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disableInput, onClickDeleteAll }: IProps) => {
-    // const isFetched = useExecuteStore((state) => state.isFetched);
-    // const setIsFetched = useExecuteStore((v) => v.setIsFetched);
-
     const { enqueueSnackbar } = useSnackbar();
+
     const modal = useModalStore();
-
-    // const [validity, setValidity] = useState<boolean[]>([true]);
-
-    // useEffect(() => {
-    //     if (list.length === 0) {
-    //         handleAddWallet();
-    //     }
-
-    //     onChangeWalletList(list);
-    // }, [list]);
-
-    // useEffect(() => {
-    //     if (isFetched) {
-    //         setWalletList([{ token_id: '', token_uri: '', id: v4() }]);
-    //         setValidity([true]);
-    //         setIsFetched(false);
-    //     }
-    // }, [isFetched]);
 
     const handleAddWallet = () => {
         if (list.length < maxWalletCount) {
             onChangeWalletList([...list, { token_id: '', token_uri: '', id: v4() }]);
-            // setValidity([...validity, true]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
                 variant: 'info',
@@ -75,27 +53,15 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
     const handleRemoveWallet = (index: number) => {
         if (list.length > 1) {
             const newWalletList = list.filter((_, i) => i !== index);
-            // const newValidity = validity.filter((_, i) => i !== index);
-            onChangeWalletList(newWalletList);
 
-            // setValidity(newValidity);
+            onChangeWalletList(newWalletList);
         }
     };
 
     const handleChange = (index: number, field: 'token_id' | 'token_uri', value: string) => {
         const newWalletList = list.map((item, i) => (i === index ? { ...item, [field]: value } : item));
         onChangeWalletList(newWalletList);
-
-        // if (field === 'recipient') {
-        //     const isValid = validateAddress(value);
-        //     const newValidity = validity.map((valid, i) => (i === index ? isValid : valid));
-        //     setValidity(newValidity);
-        // }
     };
-
-    // const validateAddress = (value: string): boolean => {
-    //     return FirmaUtil.isValidAddress(value);
-    // };
 
     const handleDeleteAll = () => {
         modal.openModal({
@@ -106,7 +72,6 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                     onConfirm={() => {
                         onChangeWalletList([{ token_id: '', token_uri: '', id: v4() }]);
                         onClickDeleteAll && onClickDeleteAll();
-                        // setValidity([true]);
                     }}
                 />
             )

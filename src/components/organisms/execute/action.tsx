@@ -117,8 +117,9 @@ const useExecuteActions = () => {
                 const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
                 useExecuteStore.getState().setTokenInfo(tokenInfo);
             } catch (error) {
-                enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20.' });
+                enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20 contract.' });
                 useExecuteStore.getState().clearForm();
+                useExecuteStore.getState().setContractExist(false);
                 return;
             }
 

@@ -97,7 +97,14 @@ const Contents = () => {
                         <Preview />
                     </Box>
                 )}
-                {contractExist === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
+
+                {contractExist === false && (
+                    <Box>
+                        <TokenInfo />
+                        <Preview />
+                    </Box>
+                )}
+
                 {contractExist === null && (
                     <LogoBackground>
                         <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />

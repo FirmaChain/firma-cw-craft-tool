@@ -54,15 +54,8 @@ const Contents = () => {
     const contractExist = useCW721ExecuteStore((state) => state.contractExist);
     const setContractExist = useCW721ExecuteStore((state) => state.setContractExist);
 
-    const {
-        searchCW721Contract,
-        setContractInfo,
-        setNftContractInfo,
-        setTotalNfts,
-        setFctBalance,
-        setOwnershipInfo,
-        setMyNftList
-    } = useCW721ExecuteAction();
+    const { searchCW721Contract, setContractInfo, setNftContractInfo, setTotalNfts, setFctBalance, setOwnershipInfo, setMyNftList } =
+        useCW721ExecuteAction();
 
     const clearForm = useCW721ExecuteStore((state) => state.clearForm);
     const contractName = useCW721ExecuteStore((state) => state.nftContractInfo.name);
@@ -110,7 +103,14 @@ const Contents = () => {
                         <Preview />
                     </Box>
                 )}
-                {contractExist === false && <NoticeText>{'No contracts have been deployed.'}</NoticeText>}
+
+                {contractExist === false && (
+                    <Box>
+                        <CW721ContractInfo />
+                        <Preview />
+                    </Box>
+                )}
+
                 {contractExist === null && (
                     <LogoBackground>
                         <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />

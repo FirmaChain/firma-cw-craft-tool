@@ -29,7 +29,7 @@ const customStyles = {
             backgroundColor: state.isDisabled ? 'none' : state.isSelected ? '#141414' : '#424242'
         },
         borderRadius: '6px',
-        padding: '4px 8px',
+        padding: '8px 12px',
         color: state.isDisabled ? '#434343' : state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
         width: '100%',
         cursor: 'pointer',
