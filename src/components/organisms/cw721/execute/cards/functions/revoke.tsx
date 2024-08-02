@@ -16,20 +16,21 @@ const Revoke = () => {
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
     const revokeTokenId = useCW721ExecuteStore((state) => state.revokeTokenId);
+
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
-    
+
     const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
     const setRevokeTokenId = useCW721ExecuteStore((state) => state.setRevokeTokenId);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
-    
+
     const { setMyNftList, setNftApprovalInfo } = useCW721ExecuteAction();
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const inputId = 'REVOKE';
-    
+
     useEffect(() => {
         return () => {
             clearRevokeForm();
@@ -56,8 +57,8 @@ const Revoke = () => {
             clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
         } else {
             if (myNftList.includes(revokeTokenId)) {
-                if (nftApprovalInfo.spender === "" && nftApprovalInfo.expires === null) {
-                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved' }); 
+                if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
+                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved' });
                 } else {
                     if (nftApprovalInfo.spender === revokeAddress) {
                         clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
@@ -80,6 +81,16 @@ const Revoke = () => {
     };
 
     const handleChangeNFTId = (value: string) => {
+        if (value !== '') {
+            const parsedId = parseInt(value).toString();
+
+            if (!myNftList.includes(parsedId))
+                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN', message: `NFT ID that you don't own.` });
+            else clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN' });
+        } else {
+            clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN' });
+        }
+
         setRevokeTokenId(value);
     };
 

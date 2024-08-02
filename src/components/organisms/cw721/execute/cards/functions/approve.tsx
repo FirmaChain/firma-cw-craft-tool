@@ -9,9 +9,9 @@ import useFormStore from '@/store/formStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
 import { useModalStore } from '@/hooks/useModal';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
-import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -56,14 +56,14 @@ enum ExpirationType {
 }
 
 const Approve = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-
+    const address = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
     const approveTokenId = useCW721ExecuteStore((state) => state.approveTokenId);
     const approveType = useCW721ExecuteStore((state) => state.approveType);
     const approveValue = useCW721ExecuteStore((state) => state.approveValue);
     const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
+
     const setApproveRecipientAddress = useCW721ExecuteStore((state) => state.setApproveRecipientAddress);
     const setApproveTokenId = useCW721ExecuteStore((state) => state.setApproveTokenId);
     const setApproveType = useCW721ExecuteStore((state) => state.setApproveType);
@@ -111,7 +111,7 @@ const Approve = () => {
                 setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
             }
         }
-        
+
         setApproveTokenId(value);
     };
 

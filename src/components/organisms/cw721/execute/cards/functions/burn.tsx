@@ -5,6 +5,9 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, Ti
 import LabelInput from '@/components/atoms/input/labelInput';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import useFormStore from '@/store/formStore';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -37,12 +40,15 @@ const TotalMintSupplyBalance = styled.div`
 `;
 
 const Burn = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const burnList = useCW721ExecuteStore((state) => state.burnList);
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const setBurnList = useCW721ExecuteStore((state) => state.setBurnList);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
+    const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
 
     const onChangeBurnId = (text: string) => {
         const cleanedText = text.replace(/,+/g, ',').replace(/^,/, '');
@@ -87,6 +93,9 @@ const Burn = () => {
     };
 
     useEffect(() => {
+        setFctBalance(address);
+        setMyNftList(contractAddress, address);
+
         //? clear error and input before unmount
         return () => {
             clearBurnForm();

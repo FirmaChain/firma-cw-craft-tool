@@ -186,11 +186,7 @@ const MintPreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true); //? defualt open
 
     const mintSupply = useMemo(() => {
-        if (mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '') {
-            return '0';
-        }
-
-        return mintList.length.toString();
+        return mintList.filter((one) => one.token_id !== '' && one.token_uri !== '').length.toString();
     }, [mintList]);
 
     const isEnableButton = useMemo(() => {
@@ -226,8 +222,8 @@ const MintPreview = () => {
     }, [mintRecipientAddress, mintList, presetUriInputError]);
 
     const willTotalSupply = useMemo(() => {
-        return addStringAmount(mintSupply, totalNfts);
-    }, [totalNfts, mintSupply]);
+        return addStringAmount(mintSupply, myNFTList.length.toString());
+    }, [mintSupply, myNFTList]);
 
     const onClickMint = () => {
         const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];

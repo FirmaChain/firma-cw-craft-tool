@@ -111,9 +111,9 @@ const RevokePreview = () => {
     const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
-    
+
     const modal = useModalStore();
-    
+
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
@@ -132,7 +132,7 @@ const RevokePreview = () => {
             }
         }
     }, [revokeAddress, revokeTokenId, nftApprovalInfo]);
-    
+
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         return config;
@@ -159,7 +159,7 @@ const RevokePreview = () => {
                         label: 'Recipient Address',
                         value: revokeAddress,
                         type: 'wallet'
-                    },
+                    }
                 ]
             },
             contract: contractAddress,
@@ -193,7 +193,7 @@ const RevokePreview = () => {
                         <ItemLabelTypo>Revoke NFT</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (

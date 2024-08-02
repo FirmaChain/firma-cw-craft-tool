@@ -5,6 +5,9 @@ import Divider from '@/components/atoms/divider';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useEffect } from 'react';
 import useFormStore from '@/store/formStore';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -48,12 +51,19 @@ const MyWalletAmountTypo = styled.div`
 `;
 
 const Transfer = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const transferInfo = useCW721ExecuteStore((v) => v.transfer);
     const setTransfer = useCW721ExecuteStore((v) => v.setTransfer);
+    const clearTransferForm = useCW721ExecuteStore((v) => v.clearTransferForm);
+    const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
 
     useEffect(() => {
+        setFctBalance(address);
+        setMyNftList(contractAddress, address);
+
         return () => {
-            useCW721ExecuteStore.getState().clearTransferForm();
+            clearTransferForm();
             useFormStore.getState().clearForm();
         };
     }, []);

@@ -10,6 +10,9 @@ import { v4 } from 'uuid';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import useFormStore from '@/store/formStore';
 import { isValidAddress } from '@/utils/common';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -124,6 +127,8 @@ const MINTING_PRESET_TOOLTIP = `You can input a range of numbers using\n"Start" 
 const BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT'; //! DO NOT CHANGE | USING ON PREVIEW FOR BUTTON STATE
 
 const Mint = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
     const mintBaseURI = useCW721ExecuteStore((state) => state.mintBaseURI);
     const mintStartTokenId = useCW721ExecuteStore((state) => state.mintStartTokenId);
@@ -138,6 +143,8 @@ const Mint = () => {
 
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
+
+    const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
 
     const disableMintIntoList = mintBaseURI.length > 0;
     const totalMintCount = useMemo(() => {
@@ -171,6 +178,9 @@ const Mint = () => {
     }, [mintBaseURI, mintStartTokenId, mintEndTokenId]);
 
     useEffect(() => {
+        setFctBalance(address);
+        setMyNftList(contractAddress, address);
+
         //? clear error and input before unmount
         return () => {
             clearMintForm();

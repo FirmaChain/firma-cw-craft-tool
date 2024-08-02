@@ -1,6 +1,7 @@
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import { useSnackbar } from 'notistack';
 import useCW721ExecuteStore from './useCW721ExecuteStore';
+import { GlobalActions } from '@/redux/actions';
 
 const useCW721ExecuteAction = () => {
     const { firmaSDK } = useExecuteHook();
@@ -61,6 +62,8 @@ const useCW721ExecuteAction = () => {
         //? in case of searching cw721 contract in cw20 execute page
 
         try {
+            GlobalActions.handleGlobalLoading(true);
+
             try {
                 const nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress);
                 useCW721ExecuteStore.getState().setNftContractInfo(nftContractInfo);
@@ -78,6 +81,7 @@ const useCW721ExecuteAction = () => {
             enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
         } finally {
             //? close global load
+            GlobalActions.handleGlobalLoading(false);
         }
     };
 

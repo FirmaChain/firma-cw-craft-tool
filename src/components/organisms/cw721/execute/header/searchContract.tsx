@@ -14,12 +14,12 @@ import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 const EndAdornment = ({
     keyword,
     disableSearch = false,
-    onClickSearch,
+    // onClickSearch,
     onClickClear
 }: {
     keyword: string;
     disableSearch?: boolean;
-    onClickSearch: () => void;
+    // onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
     return (
@@ -30,14 +30,14 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <IconButton style={{ padding: 0, display: 'flex' }} disabled={disableSearch} onClick={onClickSearch}>
+            {/* <IconButton style={{ padding: 0, display: 'flex' }} disabled={disableSearch} onClick={onClickSearch}>
                 <Icons.Search
                     width="28px"
                     height="28px"
                     fill={disableSearch ? '#807E7E' : '#E6E6E6'}
                     stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
                 />
-            </IconButton>
+            </IconButton> */}
         </div>
     );
 };
@@ -48,7 +48,7 @@ interface ISearchContractProps {
 
 const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const network = useSelector((state: rootState) => state.global.network);
-    
+
     const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
     const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
     const clearInfo = useCW721ExecuteStore((state) => state.clearInfo);
@@ -63,14 +63,15 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
 
     const onClickSearch = () => {
         if (keyword.length === 0 || previousKeywordRef.current === keyword) return;
+
         const valid = isValidAddress(keyword) && keyword.length > 44;
 
         if (valid) {
             if (contractInfo?.address !== keyword) {
-                // clearInfo();
-                // clearForm();
+                clearInfo();
+                clearForm();
             }
-            
+
             setContractAddress(keyword);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
@@ -84,6 +85,9 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const onClickClear = () => {
         setKeyword('');
         setContractAddress(null);
+        clearForm();
+        clearInfo();
+        previousKeywordRef.current = null;
     };
 
     useEffect(() => {
@@ -98,18 +102,22 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         previousKeywordRef.current = null;
     }, [network]);
 
+    useEffect(() => {
+        if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
+    }, [keyword]);
+
     return (
         <SearchInputWithButton2
             placeHolder={'Search CW721 contract address'}
             value={keyword}
             onChange={(v) => setKeyword(v)}
-            onClickEvent={onClickSearch}
+            // onClickEvent={onClickSearch}
             adornment={{
                 end: (
                     <EndAdornment
                         keyword={keyword}
                         disableSearch={keyword.length === 0 || !isValidAddress(keyword)}
-                        onClickSearch={onClickSearch}
+                        // onClickSearch={onClickSearch}
                         onClickClear={onClickClear}
                     />
                 )

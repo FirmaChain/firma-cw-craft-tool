@@ -73,7 +73,7 @@ const NFTMintInput = ({
     const checkMintable = () => {
         if (leftValue) {
             if (myNFTList.includes(parseInt(leftValue).toString())) {
-                setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Minted ID' });
+                setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Owned ID' });
                 return;
             } else {
                 clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
