@@ -128,6 +128,7 @@ const CW721ContractInfo = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
     const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
+    const minter = useCW721ExecuteStore((state) => state.minter);
     const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
 
     const contractExist = useCW721ExecuteStore((v) => v.contractExist);
@@ -137,30 +138,24 @@ const CW721ContractInfo = () => {
     useEffect(() => {
         let ruleMenus: IMenuItem[] = [...basicMenuItems];
 
+        console.log(minter);
+        if (minter === '' || minter !== address) {
+            ruleMenus[1].isDisabled = true;
+        } else {
+            ruleMenus[1].isDisabled = false;
+        }
+
         if (ownershipInfo && ownershipInfo.owner !== '' && ownershipInfo.owner !== address) {
             ruleMenus[8].isDisabled = true;
             ruleMenus[10].isDisabled = true;
         }
 
-        if (ownershipInfo && ownershipInfo.pending_owner !== '' && ownershipInfo.pending_owner !== address) {
+        if (ownershipInfo && minter !== '' && ownershipInfo.pending_owner !== address) {
             ruleMenus[9].isDisabled = true;
         }
 
-        // if (ownershipInfo && ownershipInfo.pending_owner === address) {
-        //     if (ownershipInfo.pending_expiry !== null) {
-        //         console.log(ownershipInfo.pending_expiry);
-        //         if ('at_height' in ownershipInfo.pending_expiry) {
-        //             if (ownershipInfo.pending_expiry.at_height <= Number(blockHeight)) {
-        //                 ruleMenus[9].isDisabled = true;
-        //             }
-        //         } else if ('at_time' in ownershipInfo.pending_expiry) {
-        //             console.log('Key is at_time:', ownershipInfo.pending_expiry.at_time);
-        //         }
-        //     }
-        // }
-
         setOwnerMenus(ruleMenus);
-    }, [ownershipInfo.owner, ownershipInfo.pending_expiry, address, blockHeight]);
+    }, [ownershipInfo.owner, ownershipInfo.pending_expiry, address, blockHeight, minter]);
 
     const handleChangeMenu = (menu: string) => {
         const _selectMenu = ownerMenus.find((item) => item.value === menu);

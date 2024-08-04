@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
@@ -42,45 +42,53 @@ const TotalMintSupplyBalance = styled.div`
 
 const Burn = () => {
     const address = useSelector((v: rootState) => v.wallet.address);
+
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const burnList = useCW721ExecuteStore((state) => state.burnList);
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
+    const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
     const setBurnList = useCW721ExecuteStore((state) => state.setBurnList);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
-    const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
+    
+    const { setFctBalance, setMyNftList, setNftDatas } = useCW721ExecuteAction();
 
     const onChangeBurnId = (text: string) => {
+
         const cleanedText = text.replace(/,+/g, ',').replace(/^,/, '');
 
         if (cleanedText === '') {
             //! if input valid is empty
             setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'INPUT_IS_EMPTY', message: 'Please input burn NFT id.' });
-        } else {
+        }
+
+        setNftDatas(contractAddress, cleanedText); 
+        setBurnList(cleanedText);
+    };
+
+    useEffect(() => {
+        if (burnList !== '') {
             //! if ends with comma
-            if (cleanedText.endsWith(','))
+            if (burnList.endsWith(','))
                 setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'ENDS_WITH_COMMA', message: 'Token ID list must end with number.' });
             else clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'ENDS_WITH_COMMA' });
 
             //? get input nft ids array
             const idMap = new Map();
-            const splited = cleanedText.split(',').filter((v) => v !== ''); //? filter empty value after comma
+            const splited = burnList.split(',').filter((v) => v !== ''); //? filter empty value after comma
             splited.forEach((v) => {
                 const parsed = parseInt(v).toString();
                 idMap.set(parsed, parsed);
             });
 
-            const burnIds = Array.from(idMap.keys());
-
             //! if user does not own some ids in burn list
-            if (burnIds.every((oneId) => myNftList.includes(oneId))) {
+            if (splited.length === nftDatas.length) {
                 clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DOES_NOT_OWNED' });
             } else {
                 setFormError({
                     id: 'CW721_NFT_BURN_ID_INPUT',
                     type: 'DOES_NOT_OWNED',
-                    message: `Contains an NFT ID that you don't own.`
+                    message: `Contains an NFT ID that is not approved or owned.`
                 });
             }
 
@@ -89,10 +97,8 @@ const Burn = () => {
                 setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DUPLICATED_IDS', message: 'Duplicated NFT id encluded.' });
             else clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DUPLICATED_IDS' });
         }
-
-        setBurnList(cleanedText);
-    };
-
+    }, [burnList, nftDatas]);
+    
     useEffect(() => {
         setFctBalance(address);
         setMyNftList(contractAddress, address);

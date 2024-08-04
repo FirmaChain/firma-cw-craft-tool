@@ -2,6 +2,7 @@ import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook
 import { useSnackbar } from 'notistack';
 import useCW721ExecuteStore from './useCW721ExecuteStore';
 import { GlobalActions } from '@/redux/actions';
+import { Cw721NftInfo } from '@firmachain/firma-js';
 
 const useCW721ExecuteAction = () => {
     const { firmaSDK } = useExecuteHook();
@@ -176,6 +177,26 @@ const useCW721ExecuteAction = () => {
                 message: 'Error occured while fetching setMinter(CW721)'
             });
         }
+    };
+
+    const setNftDatas = async (contractAddress: string, nftIds: string) => {
+        try {
+            const splitNftIds: string[] = nftIds.split(',');
+            const newNftInfo: Cw721NftInfo[] = [];
+
+            for (const splitNftId of splitNftIds) {
+                if (splitNftId === '') continue;
+                try {
+                    const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress, splitNftId);
+                    newNftInfo.push(contractNftData);
+                } catch (error) {
+                    console.log('Does not search data by nft id', splitNftId);
+                }
+            }
+            useCW721ExecuteStore.getState().setNftDatas(newNftInfo);
+        } catch (error) {
+            console.log('error', error);
+        }
     }
 
     return {
@@ -189,7 +210,8 @@ const useCW721ExecuteAction = () => {
         setMyNftList,
         setBlockHeight,
         setNftApprovalInfo,
-        setMinter
+        setMinter,
+        setNftDatas
     };
 };
 

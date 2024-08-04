@@ -8,6 +8,8 @@ import { useMemo } from 'react';
 import { subtractStringAmount } from '@/utils/balance';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { useModalStore } from '@/hooks/useModal';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const Container = styled.div`
     width: 100%;
@@ -119,12 +121,15 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnPreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
     const burnList = useCW721ExecuteStore((state) => state.burnList);
+    const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
 
     const modal = useModalStore();
@@ -156,14 +161,14 @@ const BurnPreview = () => {
         const burnIds = Array.from(idMap.keys());
 
         //! if tring to burn id that user does not own
-        const ownerCheck = burnIds.every((oneId) => myNftList.includes(oneId));
-        if (ownerCheck === false) return false;
+        if (burnIds.length !== nftDatas.length) return false;
+
 
         //! if duplicted id included
         if (splited.length > 1 && burnIds.length !== splited.length) return false;
 
         return true;
-    }, [updatedBurnCount, totalBurnCount, burnList, myNftList]);
+    }, [updatedBurnCount, totalBurnCount, burnList, nftDatas]);
 
     const onClickBurn = () => {
         const convertList: { token_id: string }[] = [];

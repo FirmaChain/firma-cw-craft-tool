@@ -5,6 +5,7 @@ import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
+import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
 
 interface IProps {
     index: number;
@@ -45,7 +46,7 @@ const NFTMintInput = ({
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const mintList = useCW721ExecuteStore((state) => state.mintList);
-    const myNFTList = useCW721ExecuteStore((v) => v.myNftList);
+    const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
 
     const mintTokenIdsExceptSelf = useMemo(() => {
         //? get all list except self
@@ -70,12 +71,12 @@ const NFTMintInput = ({
 
     const checkMintable = () => {
         if (leftValue) {
-            if (myNFTList.includes(parseInt(leftValue).toString())) {
-                setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Owned ID' });
-                return;
-            } else {
-                clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
-            }
+            // if (myNFTList.includes(parseInt(leftValue).toString())) {
+            //     setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Owned ID' });
+            //     return;
+            // } else {
+            //     clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
+            // }
 
             if (mintTokenIdsExceptSelf.includes(parseInt(leftValue))) {
                 setFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID', message: 'Duplicated' });

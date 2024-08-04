@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { v4 } from 'uuid';
-import { ContractInfo, Cw721Approval, Cw721ContractInfo, Cw721Expires } from '@firmachain/firma-js';
+import { ContractInfo, Cw721Approval, Cw721ContractInfo, Cw721Expires, Cw721NftInfo } from '@firmachain/firma-js';
 
 import {
     IExecuteTransfer
@@ -28,6 +28,8 @@ interface FormProps {
     blockHeight: string;
     nftApprovalInfo: Cw721Approval;
     minter: string;
+    nftDatas: Cw721NftInfo[];
+    
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
@@ -37,6 +39,7 @@ interface FormProps {
     setBlockHeight: (v: string) => void;
     setNftApprovalInfo: (v: Cw721Approval) => void;
     setMinter: (v: string) => void;
+    setNftDatas: (v: Cw721NftInfo[]) => void;
     clearInfo: () => void;
 
     contractAddress: string;
@@ -113,6 +116,7 @@ const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
 const INIT_MINT_LIST: { token_id: string, token_uri: string, id: string }[] = [{ token_id: '', token_uri: '', id: v4() }];
 const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
 const INIT_NFT_APPROVAL: Cw721Approval = { spender: '', expires: { at_height: 0 }};
+
 const useCW721ExecuteStore = create<FormProps>()(
     immer((set) => ({
         contractExist: null,
@@ -131,6 +135,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         blockHeight: '0',
         nftApprovalInfo: INIT_NFT_APPROVAL,
         minter: '',
+        nftDatas: [],
         setFctBalance: (data) =>
             set((state) => {
                 state.fctBalance = data;
@@ -166,6 +171,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         setMinter: (data) =>
             set((state) => {
                 state.minter = data;
+            }),
+        setNftDatas: (data) =>
+            set((state) => {
+                state.nftDatas = data;
             }),
         clearInfo: () =>
             set((state) => {
@@ -283,11 +292,13 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.mintStartTokenId = '';
                 state.mintEndTokenId = '';
                 state.mintList = INIT_MINT_LIST;
+                state.nftDatas = [];
             })
         },
         clearBurnForm: () => {
             set((state) => {
                 state.burnList = '';
+                state.nftDatas = [];
             })
         },
         clearTransferForm: () => {

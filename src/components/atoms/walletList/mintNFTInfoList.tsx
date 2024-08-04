@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
 import {
@@ -38,6 +38,9 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
     const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
+
+    const [oldStartId, setOldStartId] = useState<string>('');
+    const [oldEndId, setOldEndId] = useState<string>('');
 
     const handleAddWallet = () => {
         if (list.length < maxWalletCount) {
