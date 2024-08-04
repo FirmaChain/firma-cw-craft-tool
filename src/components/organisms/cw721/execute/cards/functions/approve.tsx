@@ -12,6 +12,7 @@ import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { INT_NUMBERS, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -165,7 +166,8 @@ const Approve = () => {
                                     value: approveRecipientAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
-                                    emptyErrorMessage: 'Please input firmachain wallet address.'
+                                    emptyErrorMessage: 'Please input firmachain wallet address.',
+                                    regex: WALLET_ADDRESS_REGEX
                                 }}
                             />
                         </div>
@@ -187,7 +189,7 @@ const Approve = () => {
                                     onChange: handleChangeTokenId,
                                     placeHolder: '0',
                                     textAlign: 'right',
-                                    regex: /[^0-9]/g,
+                                    regex: INT_NUMBERS,
                                     emptyErrorMessage: 'Please input token ID'
                                 }}
                             />

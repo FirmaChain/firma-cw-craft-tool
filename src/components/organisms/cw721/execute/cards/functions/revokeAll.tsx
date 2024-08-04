@@ -4,6 +4,7 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import { useEffect, useState } from 'react';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const RevokeAll = () => {
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
@@ -54,7 +55,8 @@ const RevokeAll = () => {
                                 value: revokeAddress,
                                 onChange: handleChangeAddress,
                                 placeHolder: 'Input Wallet Address',
-                                emptyErrorMessage: 'Please input firmachain wallet address.'
+                                emptyErrorMessage: 'Please input firmachain wallet address.',
+                                regex: WALLET_ADDRESS_REGEX
                             }}
                         />
                     </div>

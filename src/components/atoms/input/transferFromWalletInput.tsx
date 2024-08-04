@@ -8,6 +8,7 @@ import useFormStore from '@/store/formStore';
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
 import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -123,7 +124,8 @@ const TransferFromWalletInput = ({
                                     formId: fromAddressId,
                                     value: transferFromInfo.fromAddress,
                                     onChange: (v) => handleOnChange(fromAddressId, v),
-                                    placeHolder: 'Input address'
+                                    placeHolder: 'Input address',
+                                    regex: WALLET_ADDRESS_REGEX
                                 }}
                             />
                         </div>
@@ -173,8 +175,8 @@ const TransferFromWalletInput = ({
                                     formId: toAddressId,
                                     value: transferFromInfo.toAddress,
                                     onChange: (v) => handleOnChange(toAddressId, v),
-
-                                    placeHolder: 'Input address'
+                                    placeHolder: 'Input address',
+                                    regex: WALLET_ADDRESS_REGEX
                                 }}
                             />
                         </div>
@@ -202,7 +204,7 @@ const TransferFromWalletInput = ({
                                     textAlign: 'right'
                                 }}
                             />
-                            <AllowanceTypo>{`Allowance : ${formatWithCommas(getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals))}`}</AllowanceTypo>
+                            <AllowanceTypo className="clamp-single-line">{`Allowance : ${formatWithCommas(getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals))}`}</AllowanceTypo>
                         </div>
                     </div>
                 </div>

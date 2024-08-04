@@ -13,6 +13,7 @@ import { isValidAddress } from '@/utils/common';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -280,7 +281,8 @@ const Mint = () => {
 
                                     setMintRecipientAddress(v);
                                 },
-                                emptyErrorMessage: 'Please input wallet address.'
+                                emptyErrorMessage: 'Please input wallet address.',
+                                regex: WALLET_ADDRESS_REGEX
                             }}
                         />
                     </div>

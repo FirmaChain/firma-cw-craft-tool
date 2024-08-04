@@ -2,6 +2,7 @@ import { useId, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import { IC_CALENDAR } from '../icons/pngIcons';
+import { DEFAULT_INPUT_REGEX, FLOAT_NUMBER, INT_NUMBERS } from '@/constants/regex';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -116,6 +117,7 @@ interface InputProps {
     readOnly?: boolean; //
     disabled?: boolean;
     onClickDate?: () => void;
+    hideErrorMessage?: boolean;
 }
 
 const VariableInput = ({
@@ -132,7 +134,8 @@ const VariableInput = ({
     decimal = 6,
     maxValue,
     regex,
-    onClickDate
+    onClickDate,
+    hideErrorMessage = false
 }: InputProps) => {
     const key = useId();
     const [isFocus, setIsFocus] = useState(false);
@@ -143,13 +146,13 @@ const VariableInput = ({
     const isError = errorMessage.length > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let inputValue = event.currentTarget.value.replace(/[^a-zA-Z0-9!#$&'"`₩(){\}*^+,/:;=?@<>[\]_.~%\- |\\]/g, '');
+        let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
 
         if (inputValue !== event.target.value) return;
 
         if (inputValue.length > 0) {
             if (type === 'number') {
-                inputValue = inputValue.replace(decimal === 0 ? /[^0-9]/g : /[^0-9.]/g, '');
+                inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
 
                 if (inputValue.length > 0 && inputValue.split('').every((one) => one === '0')) inputValue = '0';
 
@@ -235,9 +238,11 @@ const VariableInput = ({
                     </div>
                 )}
             </StyledInput>
-            <div style={{ paddingTop: errorMessage.length > 0 ? '4px' : 0, paddingLeft: '8px' }}>
-                <ErrorMessage>{errorMessage[0]}</ErrorMessage>
-            </div>
+            {!hideErrorMessage && (
+                <div style={{ paddingTop: errorMessage.length > 0 ? '4px' : 0, paddingLeft: '8px' }}>
+                    <ErrorMessage>{errorMessage[0]}</ErrorMessage>
+                </div>
+            )}
         </div>
     );
 };

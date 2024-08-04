@@ -1,3 +1,4 @@
+import { DEFAULT_INPUT_REGEX } from '@/constants/regex';
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -105,7 +106,7 @@ const SearchInputWithButton2 = ({
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        onChange(event.currentTarget.value.replace(/[^a-zA-Z0-9!#$&'"`₩(){\}*^+,/:;=?@<>[\]_.~%\- |\\]/g, ''));
+        onChange(event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, ''));
     };
 
     return (

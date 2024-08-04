@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { IExecuteTransfer } from '@/interfaces/cw721';
 import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
+import { NUMBERS_WITH_COMMA, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 interface IProps {
     index: number;
@@ -52,16 +53,16 @@ const TransferNFTInput = ({
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const checkAddressValid = (filtered: string) => {
-        if (filtered) {
-            if (!isValidAddress(filtered)) {
+    const checkAddressValid = (value: string) => {
+        if (value) {
+            if (!isValidAddress(value)) {
                 setFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
                 return;
             } else {
                 clearFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS' });
             }
 
-            if (address.toLowerCase() === filtered.toLowerCase()) {
+            if (address.toLowerCase() === value.toLowerCase()) {
                 setFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF', message: 'Cannot transfer to my wallet address.' });
             } else {
                 clearFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF' });
@@ -73,11 +74,9 @@ const TransferNFTInput = ({
     };
 
     const handleAddress = (value: string) => {
-        const filtered = value.replace(/[^a-zA-Z0-9]/g, '');
+        checkAddressValid(value);
 
-        checkAddressValid(filtered);
-
-        onChangeLeft(filtered);
+        onChangeLeft(value);
     };
 
     const handleTokenId = (value: string) => {
@@ -185,7 +184,8 @@ const TransferNFTInput = ({
                             formId: `${id}_${leftTitle}`,
                             value: leftValue,
                             onChange: handleAddress,
-                            placeHolder: leftPlaceholder
+                            placeHolder: leftPlaceholder,
+                            regex: WALLET_ADDRESS_REGEX
                         }}
                     />
                 </div>
@@ -207,7 +207,7 @@ const TransferNFTInput = ({
                             value: rightValue,
                             onChange: handleTokenId,
                             placeHolder: rightPlaceholder,
-                            regex: /[^0-9,]/g
+                            regex: NUMBERS_WITH_COMMA
                         }}
                     />
                 </div>

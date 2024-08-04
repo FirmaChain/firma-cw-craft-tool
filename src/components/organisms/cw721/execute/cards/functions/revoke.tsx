@@ -9,6 +9,7 @@ import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { isValidAddress } from '@/utils/address';
+import { INT_NUMBERS, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const Revoke = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
@@ -114,7 +115,8 @@ const Revoke = () => {
                                     value: revokeAddress,
                                     onChange: handleChangeAddress,
                                     placeHolder: 'Input Wallet Address',
-                                    emptyErrorMessage: 'Please input firmachain wallet address.'
+                                    emptyErrorMessage: 'Please input firmachain wallet address.',
+                                    regex: WALLET_ADDRESS_REGEX
                                 }}
                             />
                         </div>
@@ -136,7 +138,7 @@ const Revoke = () => {
                                     onChange: handleChangeNFTId,
                                     placeHolder: '0',
                                     textAlign: 'right',
-                                    regex: /[^0-9]/g,
+                                    regex: INT_NUMBERS,
                                     emptyErrorMessage: 'Please input token ID'
                                 }}
                             />

@@ -9,6 +9,7 @@ import useFormStore from '@/store/formStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
 import { useModalStore } from '@/hooks/useModal';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -80,9 +81,7 @@ const ApproveAll = () => {
 
     useEffect(() => {
         clearApproveForm();
-        Object.values(ExpirationType).map((type) => (
-            console.log(type)
-        ));
+        Object.values(ExpirationType).map((type) => console.log(type));
     }, []);
 
     useEffect(() => {
@@ -141,7 +140,8 @@ const ApproveAll = () => {
                             value: approveRecipientAddress,
                             onChange: handleChangeAddress,
                             placeHolder: 'Input Wallet Address',
-                            emptyErrorMessage: 'Please input firmachain wallet address.'
+                            emptyErrorMessage: 'Please input firmachain wallet address.',
+                            regex: WALLET_ADDRESS_REGEX
                         }}
                     />
                 </div>

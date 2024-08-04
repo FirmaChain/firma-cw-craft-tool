@@ -8,6 +8,7 @@ import useFormStore from '@/store/formStore';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { NUMBERS_WITH_COMMA } from '@/constants/regex';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -133,7 +134,7 @@ const Burn = () => {
                         onChange: (v) => onChangeBurnId(v),
                         placeHolder: 'Input the numbers : You can input multiple numbers separated by commas (,)',
                         emptyErrorMessage: 'Please input burn NFT id.',
-                        regex: /[^0-9,]/g
+                        regex: NUMBERS_WITH_COMMA
                     }}
                 />
             </ContentWrap>

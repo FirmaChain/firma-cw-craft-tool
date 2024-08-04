@@ -10,6 +10,7 @@ import { MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../../instaniateStore';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 interface IProps {
     decimals: string;
@@ -89,7 +90,7 @@ const Minterble = ({ decimals }: IProps) => {
                                 placeHolder: 'Input minter address',
                                 onChange: handleMinterAddress,
                                 emptyErrorMessage: 'Please input wallet address.',
-                                regex: /[^A-Za-z0-9\s]/g
+                                regex: WALLET_ADDRESS_REGEX
                             }}
                         />
                     )}
