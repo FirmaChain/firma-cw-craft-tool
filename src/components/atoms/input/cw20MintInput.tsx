@@ -1,4 +1,4 @@
-import React, { useEffect, useId } from 'react';
+import React from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
@@ -23,7 +23,7 @@ interface IProps {
     inputId: string;
 }
 
-const InputAddressAmount = ({
+const CW20MintInput = ({
     index,
     address,
     amount,
@@ -90,8 +90,8 @@ const InputAddressAmount = ({
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
-                        width: '100%',
-                        maxWidth: '164px',
+                        minWidth: '212px',
+                        maxWidth: '212px',
                         gap: '8px'
                     }}
                 >
@@ -145,4 +145,4 @@ const InputAddressAmount = ({
     );
 };
 
-export default React.memo(InputAddressAmount);
+export default React.memo(CW20MintInput);

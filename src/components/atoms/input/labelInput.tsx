@@ -33,6 +33,7 @@ interface IInputProps {
     textAlign?: 'left' | 'center' | 'right';
     readOnly?: boolean;
     disabled?: boolean;
+    hideErrorMessage?: boolean;
 }
 
 const IconBackground = styled.div`
@@ -73,7 +74,8 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
         maxValue,
         textAlign = 'left',
         readOnly = false,
-        disabled = false
+        disabled = false,
+        hideErrorMessage = false
     } = inputProps;
 
     const errorMessage = Object.values(useFormStore((state) => state.formError[formId]) || {});
@@ -181,6 +183,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 maxValue={maxValue}
                 regex={regex}
                 disabled={disabled}
+                hideErrorMessage={hideErrorMessage}
             />
         </div>
     );

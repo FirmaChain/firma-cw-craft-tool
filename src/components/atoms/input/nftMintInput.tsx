@@ -57,9 +57,7 @@ const NFTMintInput = ({
     }, [id, mintList]);
 
     const handleNFTId = (value: string) => {
-        const filtered = value.replace(/[^0-9]/g, '');
-
-        onChangeLeft(filtered);
+        onChangeLeft(value);
     };
 
     const handleNFTUri = (value: string) => {

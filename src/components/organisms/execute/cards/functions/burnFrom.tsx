@@ -6,10 +6,10 @@ import { IWallet } from '@/interfaces/wallet';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useEffect, useMemo } from 'react';
 import { addStringAmount, getUTokenAmountFromToken } from '@/utils/balance';
-import { parseAmountWithDecimal2 } from '@/utils/common';
-import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
+import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
 import useFormStore from '@/store/formStore';
 import Cw20BurnFromInputList from '@/components/atoms/walletList/cw20BurnFromInputList';
+import Icons from '@/components/atoms/icons';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -24,6 +24,8 @@ const SummeryLabelTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const SummeryAmountTypo = styled.div`
@@ -44,9 +46,21 @@ const SummerySymbolTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
+const ErrorTypo = styled.div`
+    color: var(--Status-Alert, #e55250);
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+
+    white-space: pre;
+`;
+
 const BurnFrom = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const burnFromList = useExecuteStore((state) => state.burnFromList);
+    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
 
     const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
 
@@ -63,6 +77,41 @@ const BurnFrom = () => {
 
         return getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString());
     }, [burnFromList, tokenInfo]);
+
+    const showExceedMessage = useMemo(() => {
+        let result = false;
+
+        const addressAmountMap: Record<string, bigint> = {};
+
+        burnFromList.map((value) => {
+            if (isValidAddress(value.recipient)) {
+                const lowerAddress = value.recipient.toLowerCase();
+
+                if (!addressAmountMap[lowerAddress]) {
+                    addressAmountMap[lowerAddress] = BigInt(0);
+                }
+
+                const uToken = getUTokenAmountFromToken(value.amount, String(tokenInfo?.decimals));
+
+                addressAmountMap[lowerAddress] = addressAmountMap[lowerAddress] + BigInt(uToken);
+            }
+        });
+
+        const checkAddress = Object.keys(addressAmountMap);
+
+        checkAddress.map((address: string) => {
+            const currentAllowance = BigInt(allowanceByAddress[address] || '');
+
+            const inputAmount = addressAmountMap[address];
+
+            //! if total amount is bigger than provided allowance
+            if (currentAllowance < inputAmount) {
+                result = true;
+            }
+        });
+
+        return result;
+    }, [allowanceByAddress, burnFromList, tokenInfo]);
 
     useEffect(() => {
         return () => {
@@ -81,9 +130,17 @@ const BurnFrom = () => {
                 <SummeryCard>
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo>{parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)}</SummeryAmountTypo>
+                        <SummeryAmountTypo className="clamp-single-line">
+                            {parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)}
+                        </SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
+                    {showExceedMessage && (
+                        <SummeryWrap>
+                            <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
+                            <ErrorTypo>You have exceeded allowance.</ErrorTypo>
+                        </SummeryWrap>
+                    )}
                 </SummeryCard>
             </HeaderWrap>
             <Cw20BurnFromInputList

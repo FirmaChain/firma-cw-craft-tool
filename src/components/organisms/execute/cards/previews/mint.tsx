@@ -5,7 +5,6 @@ import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/ico
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import {
     addStringAmount,
-    compareStringNumbers,
     formatWithCommas,
     getTokenAmountFromUToken,
     getUTokenAmountFromToken,
@@ -20,6 +19,8 @@ import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
+import { TOOLTIP_ID } from '@/constants/tooltip';
+import { ONE_TO_MINE } from '@/constants/regex';
 
 const Container = styled.div`
     width: 100%;
@@ -44,6 +45,8 @@ const TokenInfoWrap = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+
+    gap: 16px;
 `;
 
 const TokenTitleWrap = styled.div`
@@ -73,6 +76,8 @@ const TokenInfoTitleTypo = styled.div`
     font-weight: 400;
     line-height: 22px;
     opacity: 0.8;
+
+    white-space: pre;
 `;
 
 const TokenInfoRightWrap = styled.div`
@@ -112,10 +117,11 @@ const WalletItemWrap = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+
+    gap: 16px;
 `;
 
 const WalletLeftItemWrap = styled.div`
-    width: 100%;
     display: flex;
     gap: 16px;
 `;
@@ -132,6 +138,7 @@ const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+    white-space: pre;
 `;
 
 const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
@@ -150,6 +157,8 @@ const TokenInfoSubTitleTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    white-space: pre;
 `;
 
 const TotalSupplyWrap = styled.div`
@@ -196,30 +205,53 @@ const MintPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
     const totalMintBalance = useMemo(() => {
         let totalAmount = '0';
-        let allAddressesValid = true;
-        let allAmountsValid = true;
 
         for (const wallet of mintingList) {
-            if (!isValidAddress(wallet.recipient)) {
-                allAddressesValid = false;
-            }
-            if (!wallet.amount || wallet.amount.trim() === '') {
-                allAmountsValid = false;
-            }
             totalAmount = addStringAmount(totalAmount, wallet.amount);
         }
 
-        const possibleMintAmount = subtractStringAmount(minterInfo ? minterInfo.cap : '0', tokenInfo.total_supply);
-        const compare = compareStringNumbers(getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString()), possibleMintAmount);
-
-        setIsEnableButton(allAddressesValid && allAmountsValid && compare !== 1);
-
         return getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString());
-    }, [mintingList, tokenInfo, minterInfo]);
+    }, [mintingList, tokenInfo]);
+
+    const mintableAmount = useMemo(() => {
+        if (!minterInfo || !tokenInfo) return '';
+
+        return subtractStringAmount(minterInfo?.cap, tokenInfo?.total_supply);
+    }, [minterInfo, tokenInfo]);
+
+    const totalMintAmount = useMemo(() => {
+        let addAmount = '0';
+        for (const wallet of mintingList) {
+            addAmount = addStringAmount(getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString()), addAmount);
+        }
+        return addAmount;
+    }, [mintingList, tokenInfo.decimals]);
+
+    const exceedMinterCap = useMemo(() => {
+        if (!mintableAmount || !totalMintAmount) return false;
+
+        return BigInt(mintableAmount) < BigInt(totalMintAmount);
+    }, [mintableAmount, totalMintAmount]);
+
+    const isEnableButton = useMemo(() => {
+        //! all list is filled
+        if (mintingList.some(({ recipient, amount }) => !recipient || !amount)) return false;
+
+        //! all addresses in list is valid
+        if (mintingList.some(({ recipient }) => !isValidAddress(recipient))) return false;
+
+        //! all amount in list valid number ( > 0)
+        if (mintingList.some(({ amount }) => amount.replace(ONE_TO_MINE, '') === '')) return false;
+
+        if (exceedMinterCap)
+            //! total supply amount + current supply <= minter cap
+            return false;
+
+        return true;
+    }, [exceedMinterCap, mintingList]);
 
     const onClickMint = () => {
         const convertWalletList: IWallet[] = [];
@@ -289,7 +321,7 @@ const MintPreview = () => {
                             <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
                         </TokenInfoLeft>
                         <TokenInfoRightWrap>
-                            <TokenInfoMintAmountTypo>
+                            <TokenInfoMintAmountTypo className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
                             </TokenInfoMintAmountTypo>
                             <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
@@ -302,11 +334,17 @@ const MintPreview = () => {
                                 <WalletItemWrap key={index}>
                                     <WalletLeftItemWrap>
                                         <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                        <WalletItemAddressTypo $disabled={!value.recipient}>
+                                        <WalletItemAddressTypo
+                                            $disabled={!value.recipient}
+                                            data-tooltip-content={value.recipient?.length > 25 ? value.recipient : ''}
+                                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                                            data-tooltip-wrapper="span"
+                                            data-tooltip-place="bottom"
+                                        >
                                             {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                         </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
-                                    <WalletItemTokenAmount $disabled={!Number(value.amount)}>
+                                    <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
                                         {value.amount === '' ? '0' : formatWithCommas(value.amount)}
                                     </WalletItemTokenAmount>
                                 </WalletItemWrap>
@@ -328,7 +366,7 @@ const MintPreview = () => {
                     </TokenInfoLeft>
                     <TokenInfoRightWrap>
                         <TotalSupplyWrap>
-                            <TotalSupplyAmount>
+                            <TotalSupplyAmount className="clamp-single-line">
                                 {formatWithCommas(
                                     getTokenAmountFromUToken(
                                         String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),

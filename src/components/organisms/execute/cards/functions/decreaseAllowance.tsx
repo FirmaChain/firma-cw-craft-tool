@@ -13,6 +13,9 @@ import { addNanoSeconds } from '@/utils/time';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
 import { useModalStore } from '@/hooks/useModal';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -61,6 +64,7 @@ enum ExpirationType {
 }
 
 const DecreaseAllowance = () => {
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
     const isFetched = useExecuteStore((state) => state.isFetched);
     const allowance = useExecuteStore((state) => state.allowance);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
@@ -71,7 +75,7 @@ const DecreaseAllowance = () => {
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
     const inputId = 'DECREASE_ALLOWANCE';
 
@@ -85,18 +89,34 @@ const DecreaseAllowance = () => {
     }, [isFetched]);
 
     useEffect(() => {
+        setAllowance({
+            address: '',
+            amount: '',
+            type: 'at_height',
+            expire: ''
+        });
+
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearAllowance();
         };
     }, []);
 
-    const handleChangeAddress = (value: string) => {
+    const checkAddressValid = (value: string) => {
         if (FirmaUtil.isValidAddress(value) || value === '') {
-            clearFromError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
-            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+            return;
         }
+
+        if (value.toLowerCase() === userAddress)
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS', message: 'Cannot use self address.' });
+        else clearFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS' });
+    };
+
+    const handleChangeAddress = (value: string) => {
+        checkAddressValid(value);
 
         setAllowance({
             address: value,
@@ -209,8 +229,9 @@ const DecreaseAllowance = () => {
                                     value:
                                         allowance === null || allowance === undefined ? '' : !allowance?.address ? '' : allowance?.address,
                                     onChange: handleChangeAddress,
-                                    placeHolder: 'Input Wallet Address'
-                                    // emptyErrorMessage: 'Please input firmachain wallet address.'
+                                    placeHolder: 'Input Wallet Address',
+                                    emptyErrorMessage: 'Please input firmachain wallet address.',
+                                    regex: WALLET_ADDRESS_REGEX
                                 }}
                             />
                         </div>
@@ -221,6 +242,7 @@ const DecreaseAllowance = () => {
                                 flexDirection: 'column',
                                 justifyContent: 'flex-start',
                                 minWidth: '212px',
+                                maxWidth: '212px',
                                 gap: '8px'
                             }}
                         >
@@ -228,8 +250,7 @@ const DecreaseAllowance = () => {
                                 labelProps={{ label: 'Decrease Amount' }}
                                 inputProps={{
                                     formId: `${inputId}_AMOUNT`,
-                                    value:
-                                        allowance === null || allowance === undefined ? '0' : !allowance?.amount ? '' : allowance?.amount,
+                                    value: allowance === null || allowance === undefined || !allowance?.amount ? '' : allowance?.amount,
                                     onChange: handleChangeAmount,
                                     placeHolder: '0',
                                     type: 'number',
@@ -240,7 +261,7 @@ const DecreaseAllowance = () => {
                                 }}
                             />
 
-                            <UserBalanceTypo>
+                            <UserBalanceTypo className="clamp-single-line">
                                 Balance: {getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())}
                             </UserBalanceTypo>
                         </div>

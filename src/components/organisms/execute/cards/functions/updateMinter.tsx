@@ -4,6 +4,7 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const MINTER_INPUT_FORM_ID = 'EXECUTE_UPDATE_MINTER';
 const MINTER_ERROR_TYPE = 'INVALID_ADDRESS';
@@ -54,7 +55,8 @@ const UpdateMinter = () => {
                     value: minterAddress || '',
                     onChange: onChangeMinter,
                     placeHolder: 'Input Wallet Address',
-                    emptyErrorMessage: 'Please input address'
+                    emptyErrorMessage: 'Please input minter address',
+                    regex: WALLET_ADDRESS_REGEX
                 }}
             />
         </Container>

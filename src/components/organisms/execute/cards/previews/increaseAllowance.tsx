@@ -6,7 +6,6 @@ import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components
 import { addStringAmount, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 
-import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
 
 import { useModalStore } from '@/hooks/useModal';
@@ -20,6 +19,8 @@ import { format } from 'date-fns';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import commaNumber from 'comma-number';
+import { ONE_TO_MINE } from '@/constants/regex';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -42,6 +43,7 @@ const ContentWrap = styled.div`
 const ItemWrap = styled.div`
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 const ItemLabelWrap = styled.div`
@@ -64,6 +66,7 @@ const ItemLabelTypo = styled.div`
     line-height: 22px; /* 137.5% */
 
     opacity: 0.8;
+    white-space: pre;
 `;
 
 const ItemAmountWrap = styled.div`
@@ -111,6 +114,8 @@ const UpdatedBalanceLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    white-space: pre;
 `;
 
 const UpdatedBalanceTypo = styled.div`
@@ -156,6 +161,8 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null }) => {
@@ -164,7 +171,11 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
     if (allowanceInfo.type === 'never') return <AccordionTypo $disabled={false}>Forever</AccordionTypo>;
     if (!allowanceInfo.expire) return <AccordionTypo $disabled={true}>Expiration</AccordionTypo>;
     if (allowanceInfo.type === 'at_height')
-        return <AccordionTypo $disabled={false}>{commaNumber(allowanceInfo?.expire)} Block</AccordionTypo>;
+        return (
+            <AccordionTypo className="clamp-single-line" $disabled={false}>
+                {commaNumber(allowanceInfo?.expire)} Block
+            </AccordionTypo>
+        );
     if (allowanceInfo.type === 'at_time')
         return (
             <AccordionTypo $disabled={false}>
@@ -176,6 +187,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
 };
 
 const IncreaseAllowancePreview = () => {
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
     const allowanceInfo = useExecuteStore((v) => v.allowanceInfo);
@@ -305,9 +317,11 @@ const IncreaseAllowancePreview = () => {
         if (!addressExist || allowanceInfo === null) return false;
         if (!allowance) return false;
         if (!allowance.type || (allowance.type !== 'never' && (!allowance.expire || !allowance.type))) return false;
+        if (allowance.address.toLowerCase() === userAddress.toLowerCase()) return false;
+        if (!allowance.amount || allowance.amount.replace(ONE_TO_MINE, '') === '') return false;
 
         return true;
-    }, [addressExist, allowance?.amount, allowance?.expire, allowance?.type, allowance?.address]);
+    }, [addressExist, allowance?.amount, allowance?.expire, allowance?.type, allowance?.address, allowance?.amount, userAddress]);
 
     return (
         <Container>
@@ -318,8 +332,8 @@ const IncreaseAllowancePreview = () => {
                         <ItemLabelTypo>Increase Allowance Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>
-                            {allowance === null ? '0' : commaNumber(allowance?.amount === undefined ? '0' : allowance.amount)}
+                        <ItemAmountTypo className="clamp-single-line">
+                            {allowance === null ? '0' : commaNumber(!allowance?.amount ? '0' : allowance.amount)}
                         </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
@@ -331,19 +345,27 @@ const IncreaseAllowancePreview = () => {
                             <img src={IC_WALLET} alt="wallet" />
                             <div
                                 style={{
-                                    width: '100%',
                                     display: 'flex',
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    justifyContent: 'space-between'
+                                    justifyContent: 'space-between',
+                                    gap: '16px',
+                                    overflow: 'hidden',
+                                    width: '100%'
                                 }}
                             >
-                                <AccordionTypo $disabled={!allowance || !allowance.address}>
+                                <AccordionTypo
+                                    $disabled={!allowance || !allowance.address}
+                                    data-tooltip-content={allowance?.address.length >= 25 ? allowance.address : ''}
+                                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                                    data-tooltip-wrapper="span"
+                                    data-tooltip-place="bottom"
+                                >
                                     {!allowance || allowance?.address === ''
                                         ? 'Wallet Address'
                                         : shortenAddress(allowance?.address || '', 16, 16)}
                                 </AccordionTypo>
-                                <AccordionTypo $disabled={allowance === null || !Number(allowance.amount)}>
+                                <AccordionTypo className="clamp-single-line" $disabled={allowance === null || !Number(allowance.amount)}>
                                     {commaNumber(allowance === null ? '0' : allowance?.amount) || 0}
                                 </AccordionTypo>
                             </div>
@@ -358,12 +380,11 @@ const IncreaseAllowancePreview = () => {
                 <ItemWrap>
                     <ItemLabelWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                        </div>
+
+                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo className="clamp-single-line">
                             {commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
                         </UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>

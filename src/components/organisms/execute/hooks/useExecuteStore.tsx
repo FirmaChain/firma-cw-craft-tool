@@ -61,6 +61,7 @@ interface FormProps {
     marketingProject: string | null;
     minterAddress: string | null;
     marketingLogoUrl: string | null;
+    allowanceByAddress: Record<string, string>;
 
     setIsFetched: (v: boolean) => void;
     setContractAddress: (v: string) => void;
@@ -76,6 +77,7 @@ interface FormProps {
     setMarketingProject: (v: string) => void;
     setMinterAddress: (v: string) => void;
     setMarketingLogoUrl: (v: string) => void;
+    setAllowanceByAddress: ({ address, amount }: { address: string; amount: string }) => void;
 
     clearMinterList: () => void;
     clearBurn: () => void;
@@ -167,6 +169,7 @@ const useExecuteStore = create<FormProps>()(
         marketingProject: null,
         minterAddress: null,
         marketingLogoUrl: null,
+        allowanceByAddress: {},
 
         setIsFetched: (data) =>
             set((state) => {
@@ -224,6 +227,10 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.marketingLogoUrl = data;
             }),
+        setAllowanceByAddress: (data) =>
+            set((state) => {
+                state.allowanceByAddress = { ...state.allowanceByAddress, [data.address]: data.amount };
+            }),
 
         clearMinterList: () =>
             set((state) => {
@@ -236,6 +243,7 @@ const useExecuteStore = create<FormProps>()(
         clearBurnFrom: () =>
             set((state) => {
                 state.burnFromList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];
+                state.allowanceByAddress = {};
             }),
         clearAllowance: () =>
             set((state) => {
@@ -248,6 +256,7 @@ const useExecuteStore = create<FormProps>()(
         clearTransferFrom: () =>
             set((state) => {
                 state.transferFromList = INIT_TRANSFER_FROM_LIST;
+                state.allowanceByAddress = {};
             }),
         clearMinter: () =>
             set((state) => {
@@ -294,6 +303,7 @@ const useExecuteStore = create<FormProps>()(
                 state.marketingProject = null;
                 state.minterAddress = null;
                 state.marketingLogoUrl = null;
+                state.allowanceByAddress = {};
             });
         }
     }))

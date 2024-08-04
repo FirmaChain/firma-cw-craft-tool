@@ -192,4 +192,6 @@ a:active {
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   word-break: break-all;
+
+  white-space: unset !important;
 }

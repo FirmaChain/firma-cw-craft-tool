@@ -1,10 +1,12 @@
-import React, { useEffect, useId } from 'react';
+import React from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 interface IProps {
@@ -23,7 +25,7 @@ interface IProps {
     inputId: string;
 }
 
-const InputAddressAmount = ({
+const CW20TransferInput = ({
     index,
     address,
     amount,
@@ -39,13 +41,30 @@ const InputAddressAmount = ({
     inputId
 }: IProps) => {
     const id = inputId;
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
 
+    const checkValidAddress = (value: string) => {
+        if (value !== '') {
+            if (!FirmaUtil.isValidAddress(value)) {
+                setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
+                return;
+            } else clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+
+            if (value.toLowerCase() === userAddress.toLowerCase()) {
+                setFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Cannot use self address.' });
+                return;
+            } else clearFromError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
+        } else {
+            clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFromError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
+        }
+    };
+
     const handleAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-        else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
+        checkValidAddress(value);
 
         onChangeAddress(value);
     };
@@ -145,4 +164,4 @@ const InputAddressAmount = ({
     );
 };
 
-export default React.memo(InputAddressAmount);
+export default React.memo(CW20TransferInput);

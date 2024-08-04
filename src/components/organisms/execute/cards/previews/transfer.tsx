@@ -1,5 +1,5 @@
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import {
     addStringAmount,
     formatWithCommas,
@@ -7,7 +7,7 @@ import {
     getUTokenAmountFromToken,
     subtractStringAmount
 } from '@/utils/balance';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { shortenAddress } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
@@ -15,11 +15,12 @@ import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
-import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { ONE_TO_MINE } from '@/constants/regex';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -42,6 +43,7 @@ const ContentWrap = styled.div`
 const ItemWrap = styled.div`
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 const ItemLabelWrap = styled.div`
@@ -64,6 +66,7 @@ const ItemLabelTypo = styled.div`
     line-height: 22px; /* 137.5% */
 
     opacity: 0.8;
+    white-space: pre;
 `;
 
 const ItemAmountWrap = styled.div`
@@ -103,11 +106,12 @@ const WalletItemWrap = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 const WalletLeftItemWrap = styled.div`
-    width: 100%;
     display: flex;
+
     gap: 16px;
 `;
 
@@ -146,6 +150,8 @@ const UpdatedBalanceLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    white-space: pre;
 `;
 
 const UpdatedBalanceTypo = styled.div`
@@ -189,38 +195,45 @@ const TransferPreview = () => {
 
     const modal = useModalStore();
 
-    const [totalTransferAmount, setTotalTransferAmount] = useState<string>('0');
-    const [updatedAmount, setUpdatedAmount] = useState<string>('0');
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    const calculateTotalBalance = useCallback(() => {
+    console.log(transferList);
+
+    const updatedAmount = useMemo(() => {
         let calcTransferAmount = '0';
-        let allAddressesValid = true;
-        let allAmountsValid = true;
 
         for (const wallet of transferList) {
-            if (!isValidAddress(wallet.recipient)) {
-                allAddressesValid = false;
-            }
-            if (!wallet.amount || wallet.amount === '') {
-                allAmountsValid = false;
-            }
             calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
         }
 
-        console.log('allAddressesValid', allAddressesValid);
-        console.log('allAmountsValid', allAmountsValid);
         const remainAmount = subtractStringAmount(cw20Balance, getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
-        setUpdatedAmount(remainAmount);
-
-        setIsEnableButton(allAddressesValid && allAmountsValid);
-        setTotalTransferAmount(getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString()));
+        return remainAmount;
     }, [transferList, cw20Balance, tokenInfo]);
 
-    useEffect(() => {
-        calculateTotalBalance();
-    }, [transferList, calculateTotalBalance]);
+    const totalTransferAmount = useMemo(() => {
+        let calcTransferAmount = '0';
+
+        for (const wallet of transferList) {
+            calcTransferAmount = addStringAmount(calcTransferAmount, wallet.amount);
+        }
+
+        return getUTokenAmountFromToken(calcTransferAmount, tokenInfo.decimals.toString());
+    }, [transferList, tokenInfo]);
+
+    const isEnableButton = useMemo(() => {
+        //! check all address and amount is not empty
+        if (transferList.some((v) => v.recipient === '' || v.amount === '')) return false;
+        //! check all address is valid
+        if (transferList.some((v) => !isValidAddress(v.recipient))) return false;
+        //! check all address is not self address
+        if (transferList.some((v) => v.recipient.toLowerCase() === address.toLowerCase())) return false;
+        //! check all amount is valid ( > 0)
+        if (transferList.some((v) => v.amount.replace(ONE_TO_MINE, '') === '')) return false;
+        //! check total amount is not exceed token balance
+        if (BigInt(cw20Balance || '0') < BigInt(totalTransferAmount)) return false;
+
+        return true;
+    }, [address, cw20Balance, totalTransferAmount, transferList]);
 
     const onClickTransfer = () => {
         const convertWalletList = [];
@@ -288,7 +301,7 @@ const TransferPreview = () => {
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>
+                        <ItemAmountTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
                         </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
@@ -301,11 +314,17 @@ const TransferPreview = () => {
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                    <WalletItemAddressTypo $disabled={!value.recipient}>
+                                    <WalletItemAddressTypo
+                                        $disabled={!value.recipient}
+                                        data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
+                                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                                        data-tooltip-wrapper="span"
+                                        data-tooltip-place="bottom"
+                                    >
                                         {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                     </WalletItemAddressTypo>
                                 </WalletLeftItemWrap>
-                                <WalletItemTokenAmount $disabled={!Number(value.amount)}>
+                                <WalletItemTokenAmount className="clamp-single-line" $disabled={!Number(value.amount)}>
                                     {value.amount === '' ? '0' : formatWithCommas(value.amount)}
                                 </WalletItemTokenAmount>
                             </WalletItemWrap>
@@ -321,7 +340,7 @@ const TransferPreview = () => {
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
                         </UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>

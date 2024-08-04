@@ -39,7 +39,7 @@ const TitleTypo = styled.div`
 `;
 
 const Preview = () => {
-    const selectMenu = useExecuteStore((v) => v.selectMenu);;
+    const selectMenu = useExecuteStore((v) => v.selectMenu);
 
     return (
         <>

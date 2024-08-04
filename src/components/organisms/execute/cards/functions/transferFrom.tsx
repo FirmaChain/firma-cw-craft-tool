@@ -20,6 +20,8 @@ const SummeryLabelTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const SummeryAmountTypo = styled.div`
@@ -78,7 +80,7 @@ const TransferFrom = () => {
                 <SummeryCard>
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Transfer Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo>{totalTransferAmount}</SummeryAmountTypo>
+                        <SummeryAmountTypo className="clamp-single-line">{totalTransferAmount}</SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                 </SummeryCard>

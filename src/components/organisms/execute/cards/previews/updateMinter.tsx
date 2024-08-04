@@ -104,11 +104,6 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
-
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
 `;
 
 const UpdateMinter = () => {
@@ -125,8 +120,8 @@ const UpdateMinter = () => {
     const modal = useModalStore();
 
     const errorMessage = useMemo(() => {
-        if (minterAddress === '') return 'Please input address';
-        if (!FirmaUtil.isValidAddress(minterAddress)) return 'Invalid address';
+        if (minterAddress === '') return 'Please input minter address';
+        if (!FirmaUtil.isValidAddress(minterAddress)) return 'This is an invalid wallet address.';
         if (minterAddress === minterInfo?.minter) return 'Same address as before';
         return '';
     }, [minterAddress, minterAddress]);
@@ -187,7 +182,9 @@ const UpdateMinter = () => {
                 <AccordionBox>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                         <img src={IC_WALLET} alt="wallet" style={{ width: '20px' }} />
-                        <AccordionTypo $disabled={!Boolean(minterAddress)}>{minterAddress || 'Wallet Address'}</AccordionTypo>
+                        <AccordionTypo className="clamp-single-line" $disabled={!Boolean(minterAddress)}>
+                            {minterAddress || 'Wallet Address'}
+                        </AccordionTypo>
                     </div>
                 </AccordionBox>
             </ContentWrap>

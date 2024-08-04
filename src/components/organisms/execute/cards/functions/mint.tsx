@@ -1,11 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
-import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
 import {
     addStringAmount,
-    compareStringNumbers,
     formatWithCommas,
     getTokenAmountFromUToken,
     getUTokenAmountFromToken,
@@ -14,9 +12,10 @@ import {
 import { IWallet } from '@/interfaces/wallet';
 import IconTooltip from '@/components/atoms/tooltip';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
 import useFormStore from '@/store/formStore';
-import Cw721MintInput from '@/components/atoms/walletList/cw721MintInput';
+import Divider from '@/components/atoms/divider';
+import Cw20MintInputList from '@/components/atoms/walletList/cw20MintInputList';
+import Icons from '@/components/atoms/icons';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -31,6 +30,8 @@ const TotalMintLabelTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const TotalMintSupplyBalance = styled.div`
@@ -49,6 +50,8 @@ const TotalMintSubLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const TotalMintSubBalance = styled.div`
@@ -60,20 +63,27 @@ const TotalMintSubBalance = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-const DOTTED_DIVIDER = styled.img`
-    width: 100%;
-    height: auto;
+const MinterCapExceedBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
 `;
 
 const Mint = () => {
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-
     const mintingList = useExecuteStore((state) => state.mintingList);
     const setMinterList = useExecuteStore((state) => state.setMinterList);
 
+    //! if minter cap is zero, or no minter info provided, disable mint
+    const DISABLE_MINT = !minterInfo || !minterInfo?.cap || BigInt(minterInfo?.cap) === BigInt(0);
+
     const mintableAmount = useMemo(() => {
         if (!minterInfo || !tokenInfo) return '';
+
+        // console.log(minterInfo, tokenInfo);
 
         return subtractStringAmount(minterInfo?.cap, tokenInfo?.total_supply);
     }, [minterInfo, tokenInfo]);
@@ -85,6 +95,14 @@ const Mint = () => {
         }
         return addAmount;
     }, [mintingList]);
+
+    const exceedMinterCap = useMemo(() => {
+        if (!mintableAmount || !totalMintAmount) return false;
+
+        // console.log(BigInt(mintableAmount), BigInt(totalMintAmount));
+
+        return BigInt(mintableAmount) < BigInt(totalMintAmount);
+    }, [mintableAmount, totalMintAmount]);
 
     const handleWalletList = (value: IWallet[]) => {
         setMinterList(value);
@@ -107,15 +125,23 @@ const Mint = () => {
                 <SummeryCard>
                     <TotalMintWrap>
                         <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
-                        <TotalMintSupplyBalance>
+                        <TotalMintSupplyBalance className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
                         </TotalMintSupplyBalance>
                         <TotalMintSupplyBalance>{tokenInfo.symbol}</TotalMintSupplyBalance>
                     </TotalMintWrap>
-                    <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                    {exceedMinterCap && (
+                        <MinterCapExceedBox>
+                            <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
+                            <TotalMintLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
+                                You have exceeded minter cap.
+                            </TotalMintLabelTypo>
+                        </MinterCapExceedBox>
+                    )}
+                    <Divider $direction="horizontal" $variant="dash" $color="#444" />
                     <TotalMintWrap>
                         <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                        <TotalMintSubBalance>
+                        <TotalMintSubBalance className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}
                         </TotalMintSubBalance>
                         <TotalMintSubBalance>{tokenInfo.symbol}</TotalMintSubBalance>
@@ -123,13 +149,14 @@ const Mint = () => {
                     </TotalMintWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <Cw721MintInput
+            <Cw20MintInputList
                 list={mintingList}
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}
                 addressTitle={'Recipient Address'}
                 addressPlaceholder={'Input Wallet Address'}
                 amountTitle={'Amount'}
+                blockAllInput={DISABLE_MINT}
             />
         </Container>
     );

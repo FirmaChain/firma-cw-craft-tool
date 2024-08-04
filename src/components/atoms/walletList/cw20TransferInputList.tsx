@@ -18,7 +18,7 @@ import { IWallet } from '@/interfaces/wallet';
 import Icons from '../icons';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
-import Cw20BurnFromInput from '../input/cw20BurnFromInput';
+import Cw20TransferInput from '../input/cw20TransferInput';
 
 interface IProps {
     list: IWallet[];
@@ -30,7 +30,7 @@ interface IProps {
     amountTitle: string;
 }
 
-const CW20BurnFromInputList = ({
+const CW20TransferInputList = ({
     list,
     decimals,
     maxWalletCount = 20,
@@ -53,12 +53,12 @@ const CW20BurnFromInputList = ({
         }
     };
 
-    const handleAddressChange = (index: number, value: string) => {
+    const handleAddress = (index: number, value: string) => {
         const newWalletList = list.map((item, i) => (i === index ? { ...item, recipient: value } : item));
         onChangeWalletList(newWalletList);
     };
 
-    const handleAmountChange = (index: number, value: string) => {
+    const handleAmount = (index: number, value: string) => {
         const newWalletList = list.map((item, i) => (i === index ? { ...item, amount: value } : item));
         onChangeWalletList(newWalletList);
     };
@@ -92,13 +92,13 @@ const CW20BurnFromInputList = ({
                 </DeleteAllButton>
             </WalletListSummery>
             {list.map((wallet, index) => (
-                <Cw20BurnFromInput
+                <Cw20TransferInput
                     key={index}
                     index={index + 1}
                     address={wallet.recipient}
                     amount={wallet.amount}
-                    onChangeAddress={(value) => handleAddressChange(index, value)}
-                    onChangeAmount={(value) => handleAmountChange(index, value)}
+                    onChangeAddress={(value) => handleAddress(index, value)}
+                    onChangeAmount={(value) => handleAmount(index, value)}
                     onRemoveClick={() => handleRemoveWallet(index)}
                     isLast={index === list.length - 1}
                     decimals={decimals}
@@ -119,4 +119,4 @@ const CW20BurnFromInputList = ({
     );
 };
 
-export default React.memo(CW20BurnFromInputList);
+export default React.memo(CW20TransferInputList);

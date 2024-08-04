@@ -7,7 +7,7 @@ import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { CRAFT_CONFIGS } from '@/config';
 
-import { IC_COIN_STACK, IC_COIN_STACK2, IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
+import { IC_COIN_STACK, IC_COIN_STACK2 } from '@/components/atoms/icons/pngIcons';
 import {
     compareStringNumbers,
     formatWithCommas,
@@ -16,7 +16,6 @@ import {
     subtractStringAmount
 } from '@/utils/balance';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import IconTooltip from '@/components/atoms/tooltip';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
@@ -42,6 +41,7 @@ const ContentWrap = styled.div`
 const ItemWrap = styled.div`
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 const ItemLeftWrap = styled.div`
@@ -64,6 +64,7 @@ const BurnInfoTitleTypo = styled.div`
     line-height: 22px; /* 137.5% */
 
     opacity: 0.8;
+    white-space: pre;
 `;
 
 const ItemRightWrap = styled.div`
@@ -106,6 +107,7 @@ const UpdatedBalanceLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+    white-space: pre;
 `;
 
 const UpdatedBalanceTypo = styled.div`
@@ -151,7 +153,7 @@ const BurnPreview = () => {
     const updatedBalance = useMemo(() => {
         let amount = '0';
 
-        amount = subtractStringAmount(getTokenAmountFromUToken(cw20Balance, '6'), burnAmount);
+        amount = subtractStringAmount(getTokenAmountFromUToken(cw20Balance, String(tokenInfo.decimals)), burnAmount);
 
         return amount;
     }, [cw20Balance, burnAmount]);
@@ -222,7 +224,9 @@ const BurnPreview = () => {
                         <BurnInfoTitleTypo>Total Burn Amount</BurnInfoTitleTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <BurnAmountTypo>{formatWithCommas(burnAmount !== null ? burnAmount : '0')}</BurnAmountTypo>
+                        <BurnAmountTypo className="clamp-single-line">
+                            {formatWithCommas(burnAmount !== null ? burnAmount : '0')}
+                        </BurnAmountTypo>
                         <BurnSymbolTypo>{tokenInfo.symbol}</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
@@ -230,12 +234,10 @@ const BurnPreview = () => {
                 <ItemWrap>
                     <ItemLeftWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                        </div>
+                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <UpdatedBalanceTypo>{formatWithCommas(updatedBalance)}</UpdatedBalanceTypo>
+                        <UpdatedBalanceTypo className="clamp-single-line">{formatWithCommas(updatedBalance)}</UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>

@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from 'react';
+import React, { useEffect } from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
@@ -13,6 +13,7 @@ import { rootState } from '@/redux/reducers';
 import { isValidAddress } from '@/utils/common';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 import commaNumber from 'comma-number';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -46,32 +47,49 @@ const CW20BurnFromInput = ({
     onChangeAddress,
     onChangeAmount,
     onRemoveClick,
-    isValid,
+    // isValid,
     isLast,
     decimals,
-    addressTitle,
-    addressPlaceholder,
-    amountTitle,
+    // addressTitle,
+    // addressPlaceholder,
+    // amountTitle,
     inputId
 }: IProps) => {
     const id = inputId;
 
-    const { firmaSDK } = useExecuteHook();
     const contractAddress = useExecuteStore((v) => v.contractAddress);
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
+    const setAllowanceByAddress = useExecuteStore((v) => v.setAllowanceByAddress);
 
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
+    const { getCw20AllowanceBalance } = useExecuteHook();
 
-    const [allowance, setAllowance] = useState('0');
+    // const [allowance, setAllowance] = useState('');
+    const allowance = allowanceByAddress[address.toLowerCase()] || '';
+
+    const checkValidAddress = (value: string) => {
+        if (value === '') {
+            clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            return;
+        }
+
+        if (userAddress.toLowerCase() !== value.toLowerCase()) clearFromError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
+        else {
+            setFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Cannot use self address.' });
+            return;
+        }
+
+        if (FirmaUtil.isValidAddress(value)) clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
+    };
 
     const handleAddress = async (value: string) => {
-        const filtered = value.replace(/[^a-zA-Z0-9]/g, '');
+        checkValidAddress(value);
 
-        if (FirmaUtil.isValidAddress(filtered) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-        else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
-
-        onChangeAddress(filtered);
+        onChangeAddress(value);
     };
 
     const handleAmount = (value: string) => {
@@ -84,18 +102,44 @@ const CW20BurnFromInput = ({
 
     const getAllownace = async () => {
         try {
-            const allowance = await firmaSDK.Cw20.getAllowance(contractAddress, address, userAddress);
+            const {
+                success,
+                blockHeight: nowBlockHeight,
+                data: allowance
+            } = await getCw20AllowanceBalance(contractAddress, address, userAddress);
 
-            setAllowance(allowance.allowance);
+            if (success) {
+                if (allowance.expires['never']) {
+                    // setAllowance(allowance.allowance);
+                    setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
+                } else if (allowance.expires['at_time']) {
+                    const nowTimestamp = Number(new Date());
+                    const expiresTimestamp = Math.floor(Number(allowance.expires['at_time']) / 1000000);
+
+                    if (expiresTimestamp > nowTimestamp) {
+                        // setAllowance(allowance.allowance);
+                        setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
+                    }
+                } else {
+                    //? at_height
+                    const expiresBlockHeight = allowance.expires['at_height'];
+
+                    if (expiresBlockHeight > nowBlockHeight) {
+                        // setAllowance(allowance.allowance);
+                        setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
+                    }
+                }
+            }
         } catch (error) {
             console.log(error);
-            setAllowance('0');
+            // setAllowance('0');
         }
     };
 
     useEffect(() => {
+        // setAllowance('');
+        if (Number(allowance) > 0) handleAmount('');
         if (isValidAddress(address)) getAllownace();
-        else setAllowance('');
     }, [address]);
 
     return (
@@ -110,7 +154,8 @@ const CW20BurnFromInput = ({
                                 value: address,
                                 onChange: handleAddress,
                                 placeHolder: 'Input Wallet Address',
-                                emptyErrorMessage: 'Please input firmachain wallet address.'
+                                emptyErrorMessage: 'Please input firmachain wallet address.',
+                                regex: WALLET_ADDRESS_REGEX
                             }}
                         />
                     </div>
@@ -121,6 +166,7 @@ const CW20BurnFromInput = ({
                             flexDirection: 'column',
                             justifyContent: 'flex-start',
                             minWidth: '212px',
+                            maxWidth: '212px',
                             gap: '8px'
                         }}
                     >
@@ -133,13 +179,14 @@ const CW20BurnFromInput = ({
                                 placeHolder: '0',
                                 type: 'number',
                                 decimal: Number(decimals),
-                                // emptyErrorMessage: 'Please input mint amount',
+                                emptyErrorMessage: 'Please input mint amount',
                                 textAlign: 'right',
-                                maxValue: Number(getTokenAmountFromUToken(allowance, decimals.toString()))
+                                maxValue: Number(getTokenAmountFromUToken(allowance, decimals.toString())),
+                                hideErrorMessage: true
                             }}
                         />
 
-                        <UserBalanceTypo>
+                        <UserBalanceTypo className="clamp-single-line">
                             Allowance : {commaNumber(getTokenAmountFromUToken(allowance, decimals.toString()))}
                         </UserBalanceTypo>
                     </div>

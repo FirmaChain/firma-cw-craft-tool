@@ -12,6 +12,7 @@ import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { isValidAddress } from '@/utils/address';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -34,6 +35,7 @@ const ContentWrap = styled.div`
 const ItemWrap = styled.div`
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 const ItemLabelWrap = styled.div`
@@ -56,6 +58,7 @@ const ItemLabelTypo = styled.div`
     line-height: 22px; /* 137.5% */
 
     opacity: 0.8;
+    white-space: pre;
 `;
 
 const ItemAmountWrap = styled.div`
@@ -110,22 +113,47 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 
 const FromToAddressLine = ({ from, to, amount, decimal }: { from?: string; to?: string; amount?: string; decimal?: string }) => {
     return (
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div
+            style={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px'
+            }}
+        >
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                     <img src={IC_WALLET} alt="wallet" style={{ width: '20px' }} />
-                    <AccordionTypo $disabled={!Boolean(from)}>{from ? shortenAddress(from) : 'Wallet Address'}</AccordionTypo>
+                    <AccordionTypo
+                        data-tooltip-content={from.length >= 13 ? from : ''}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                        $disabled={!Boolean(from)}
+                    >
+                        {from ? shortenAddress(from) : 'Wallet Address'}
+                    </AccordionTypo>
                 </div>
 
                 <img src={IC_ARROW_WITH_TAIL} alt="arrow" style={{ width: '16px' }} />
 
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                     <img src={IC_WALLET} alt="wallet" style={{ width: '20px' }} />
-                    <AccordionTypo $disabled={!Boolean(to)}>{to ? shortenAddress(to) : 'Wallet Address'}</AccordionTypo>
+                    <AccordionTypo
+                        data-tooltip-content={to.length >= 13 ? to : ''}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                        $disabled={!Boolean(to)}
+                    >
+                        {to ? shortenAddress(to) : 'Wallet Address'}
+                    </AccordionTypo>
                 </div>
             </div>
 
-            <AccordionTypo $disabled={!Boolean(amount && decimal)}>
+            <AccordionTypo className="clamp-single-line" $disabled={!Boolean(amount && decimal)}>
                 {amount && decimal ? getUTokenStrFromTokenStr(amount, decimal) : 0}
             </AccordionTypo>
         </div>
@@ -254,7 +282,7 @@ const TransferFromPreview = () => {
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
+                        <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>

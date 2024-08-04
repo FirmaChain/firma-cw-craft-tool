@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
@@ -9,6 +9,11 @@ import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import useFormStore from '@/store/formStore';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { ONE_TO_MINE } from '@/constants/regex';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -31,6 +36,7 @@ const ContentWrap = styled.div`
 const ItemWrap = styled.div`
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 const ItemLabelWrap = styled.div`
@@ -53,6 +59,7 @@ const ItemLabelTypo = styled.div`
     line-height: 22px; /* 137.5% */
 
     opacity: 0.8;
+    white-space: pre;
 `;
 
 const ItemAmountWrap = styled.div`
@@ -92,10 +99,10 @@ const WalletItemWrap = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 const WalletLeftItemWrap = styled.div`
-    width: 100%;
     display: flex;
     gap: 16px;
 `;
@@ -112,6 +119,8 @@ const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
@@ -132,37 +141,95 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnFromPreview = () => {
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
     const burnFromList = useExecuteStore((v) => v.burnFromList);
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
+    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
     const clearBurnFrom = useExecuteStore((v) => v.clearBurnFrom);
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
+    const setFormError = useFormStore((v) => v.setFormError);
+    const clearFormError = useFormStore((v) => v.clearFormError);
 
     const modal = useModalStore();
 
-    const [totalBurnBalance, setTotalBurnBalance] = useState<string>('0');
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    const calculateTotalBurnBalance = useCallback(() => {
+    const totalBurnBalance = useMemo(() => {
         let totalAmount = '0';
-        let allAddressesValid = true;
-        let allAmountsValid = true;
 
         for (const wallet of burnFromList) {
-            if (!isValidAddress(wallet.recipient)) {
-                allAddressesValid = false;
-            }
-            if (!wallet.amount || wallet.amount.trim() === '') {
-                allAmountsValid = false;
-            }
             totalAmount = addStringAmount(totalAmount, wallet.amount);
         }
 
-        setIsEnableButton(allAddressesValid && allAmountsValid);
-        setTotalBurnBalance(getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString()));
+        return getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString());
     }, [burnFromList, tokenInfo]);
+
+    const checkAmounyByAddress = () => {
+        let result = true;
+
+        const addressAmountMap: Record<string, bigint> = {};
+
+        burnFromList.map((value) => {
+            if (isValidAddress(value.recipient)) {
+                const lowerAddress = value.recipient.toLowerCase();
+
+                if (!addressAmountMap[lowerAddress]) {
+                    addressAmountMap[lowerAddress] = BigInt(0);
+                }
+
+                const uToken = getUTokenAmountFromToken(value.amount, String(tokenInfo?.decimals));
+
+                addressAmountMap[lowerAddress] = addressAmountMap[lowerAddress] + BigInt(uToken);
+            }
+        });
+
+        const checkAddress = Object.keys(addressAmountMap);
+
+        checkAddress.map((address: string) => {
+            const currentAllowance = BigInt(allowanceByAddress[address] || '');
+
+            const inputAmount = addressAmountMap[address];
+            const formIds = burnFromList.filter((one) => one.recipient.toLowerCase() === address).map((v) => v.id);
+
+            //! if total amount is bigger than provided allowance
+            if (currentAllowance < inputAmount) {
+                result = false;
+                formIds.map((id) => setFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED', message: 'Allowance exceed.' }));
+            } else {
+                formIds.map((id) => clearFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED' }));
+            }
+        });
+
+        return result;
+    };
+
+    useEffect(() => {
+        checkAmounyByAddress();
+    }, [allowanceByAddress]);
+
+    const isEnableButton = useMemo(() => {
+        //! if self-address is included
+        if (burnFromList.some((v) => v.recipient.toLowerCase() === userAddress)) return false;
+
+        //! check all amount by address is valid
+        const isAmountOK = checkAmounyByAddress();
+        if (!isAmountOK) return false;
+
+        //! check all list is filled (empty value check)
+        if (
+            burnFromList.some(
+                (value) => value.recipient === '' || value.amount === '' || value.amount.replace(ONE_TO_MINE, '').length === 0
+            )
+        )
+            return false;
+
+        //! check all address is valid
+        if (burnFromList.some((value) => !isValidAddress(value.recipient))) return false;
+
+        return true;
+    }, [burnFromList, userAddress]);
 
     const onClickBurn = () => {
         const convertWalletList = [];
@@ -220,10 +287,6 @@ const BurnFromPreview = () => {
         });
     };
 
-    useEffect(() => {
-        calculateTotalBurnBalance();
-    }, [burnFromList, calculateTotalBurnBalance]);
-
     return (
         <Container>
             <ContentWrap>
@@ -233,7 +296,7 @@ const BurnFromPreview = () => {
                         <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo>
+                        <ItemAmountTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
                         </ItemAmountTypo>
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
@@ -246,11 +309,17 @@ const BurnFromPreview = () => {
                             <WalletItemWrap key={index}>
                                 <WalletLeftItemWrap>
                                     <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                    <WalletItemAddressTypo $disabled={!value.recipient}>
+                                    <WalletItemAddressTypo
+                                        $disabled={!value.recipient}
+                                        data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
+                                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                                        data-tooltip-wrapper="span"
+                                        data-tooltip-place="bottom"
+                                    >
                                         {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                     </WalletItemAddressTypo>
                                 </WalletLeftItemWrap>
-                                <WalletItemTokenAmount $disabled={!Number(value.amount)}>
+                                <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
                                     {value.amount === '' ? '0' : formatWithCommas(value.amount)}
                                 </WalletItemTokenAmount>
                             </WalletItemWrap>
@@ -260,7 +329,7 @@ const BurnFromPreview = () => {
             </ContentWrap>
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>
-                    <div className="button-text">Burn From</div>
+                    <div className="button-text">Burn</div>
                 </GreenButton>
             </ButtonWrap>
         </Container>

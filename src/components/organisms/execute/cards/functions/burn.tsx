@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
-import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import { parseAmountWithDecimal2 } from '@/utils/common';
+import { parseAmountWithDecimal, parseAmountWithDecimal2 } from '@/utils/common';
 import useFormStore from '@/store/formStore';
+import useExecuteActions from '../../action';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -33,6 +36,9 @@ const Burn = () => {
     const cw20Balance = useExecuteStore((v) => v.cw20Balance);
     const burnAmount = useExecuteStore((v) => v.burnAmount);
     const setBurnAmount = useExecuteStore((v) => v.setBurnAmount);
+    const contractAddress = useExecuteStore((v) => v.contractAddress);
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const { setCw20Balance } = useExecuteActions();
 
     const handleBurnAmount = (value: string) => {
         const truncateDecimals = (value: string) => {
@@ -60,7 +66,10 @@ const Burn = () => {
         setBurnAmount(burnAmount);
     };
 
+    const userBalance = useMemo(() => {}, []);
+
     useEffect(() => {
+        setCw20Balance(contractAddress, address);
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearBurn();
@@ -89,8 +98,10 @@ const Burn = () => {
                 />
 
                 <WalletBalanceWrap>
-                    <WalletBalanceTypo>Balance :</WalletBalanceTypo>
-                    <WalletBalanceTypo>{parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}</WalletBalanceTypo>
+                    <WalletBalanceTypo style={{ whiteSpace: 'pre' }}>Balance :</WalletBalanceTypo>
+                    <WalletBalanceTypo className="clamp-single-line">
+                        {parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}
+                    </WalletBalanceTypo>
                 </WalletBalanceWrap>
             </ContentWrap>
         </Container>

@@ -1,12 +1,19 @@
 import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
-import { IC_DOTTED_DIVIDER } from '@/components/atoms/icons/pngIcons';
 import { IWallet } from '@/interfaces/wallet';
-import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import {
+    addStringAmount,
+    compareStringNumbers,
+    formatWithCommas,
+    getTokenAmountFromUToken,
+    getUTokenAmountFromToken
+} from '@/utils/balance';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import AddressAmountInput from '@/components/atoms/walletList/addressAmountInput';
 import useFormStore from '@/store/formStore';
+import Cw20TransferInputList from '@/components/atoms/walletList/cw20TransferInputList';
+import Icons from '@/components/atoms/icons';
+import Divider from '@/components/atoms/divider';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -20,6 +27,8 @@ const TotalTransferLabelTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const TotalTransferAmountTypo = styled.div`
@@ -31,11 +40,6 @@ const TotalTransferAmountTypo = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-const DOTTED_DIVIDER = styled.img`
-    width: 100%;
-    height: auto;
-`;
-
 const MyWalletLabelTypo = styled.div`
     color: var(--Gray-550, #444);
     font-family: 'General Sans Variable';
@@ -43,6 +47,8 @@ const MyWalletLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const MyWalletAmountTypo = styled.div`
@@ -52,6 +58,14 @@ const MyWalletAmountTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
+`;
+
+const ErrorMessageBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
 `;
 
 const Transfer = () => {
@@ -67,6 +81,15 @@ const Transfer = () => {
         }
         return addAmount;
     }, [transferList]);
+
+    const isBalanceExceed = useMemo(() => {
+        // totalTransferAmount
+        // cw20Balance
+
+        if (!totalTransferAmount || !cw20Balance) return false;
+
+        return BigInt(totalTransferAmount) > BigInt(cw20Balance);
+    }, [cw20Balance, totalTransferAmount]);
 
     const handleWalletList = (value: IWallet[]) => {
         setTransferList(value);
@@ -89,22 +112,30 @@ const Transfer = () => {
                 <SummeryCard>
                     <ItemWrap>
                         <TotalTransferLabelTypo>Total Transfer Amount :</TotalTransferLabelTypo>
-                        <TotalTransferAmountTypo>
+                        <TotalTransferAmountTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
                         </TotalTransferAmountTypo>
                         <TotalTransferAmountTypo>{tokenInfo.symbol}</TotalTransferAmountTypo>
                     </ItemWrap>
-                    <DOTTED_DIVIDER src={IC_DOTTED_DIVIDER} alt={'Dotted Divider'} />
+                    {isBalanceExceed && (
+                        <ErrorMessageBox>
+                            <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
+                            <TotalTransferLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
+                                You have exceeded token balance.
+                            </TotalTransferLabelTypo>
+                        </ErrorMessageBox>
+                    )}
+                    <Divider $direction={'horizontal'} $variant="dash" $color="#444" />
                     <ItemWrap>
                         <MyWalletLabelTypo>My Wallet Balance :</MyWalletLabelTypo>
-                        <MyWalletAmountTypo>
+                        <MyWalletAmountTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}
                         </MyWalletAmountTypo>
                         <MyWalletAmountTypo>{tokenInfo.symbol}</MyWalletAmountTypo>
                     </ItemWrap>
                 </SummeryCard>
             </HeaderWrap>
-            <AddressAmountInput
+            <Cw20TransferInputList
                 list={transferList}
                 decimals={tokenInfo.decimals.toString()}
                 onChangeWalletList={handleWalletList}

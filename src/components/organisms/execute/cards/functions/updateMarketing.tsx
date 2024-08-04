@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { NETWORKS } from '@/constants/common';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -96,7 +97,8 @@ const UpdateMarketing = () => {
                                 value: currentAddr,
                                 formId: 'input address',
                                 placeHolder: 'Input Wallet Address',
-                                onChange: handleAddress
+                                onChange: handleAddress,
+                                regex: WALLET_ADDRESS_REGEX
                             }}
                         />
                         <LabelInput
