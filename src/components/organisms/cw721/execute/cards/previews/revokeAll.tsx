@@ -107,17 +107,17 @@ const RevokeAllPreview = () => {
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
-    
+
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const isEnableButton = useMemo(() => {
         if (revokeAddress === '' || !isValidAddress(revokeAddress)) return false;
-        
+
         return true;
     }, [revokeAddress]);
-    
+
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         return config;
@@ -139,12 +139,12 @@ const RevokeAllPreview = () => {
                         label: 'Recipient Address',
                         value: revokeAddress,
                         type: 'wallet'
-                    },
+                    }
                 ]
             },
             contract: contractAddress,
             msg: {
-                operator: revokeAddress,
+                operator: revokeAddress
             }
         };
 
@@ -172,7 +172,7 @@ const RevokeAllPreview = () => {
                         <ItemLabelTypo>Revoke All NFTs</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (

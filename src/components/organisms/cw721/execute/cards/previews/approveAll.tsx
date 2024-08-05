@@ -132,7 +132,7 @@ const ApproveAllPreview = () => {
     const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
 
     const modal = useModalStore();
-    
+
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [convertType, setConvertType] = useState<string>('at_height');
 
@@ -155,10 +155,10 @@ const ApproveAllPreview = () => {
         if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
         if (approveType === '') return false;
         if (approveType !== 'Forever' && approveValue === '') return false;
-        
+
         return true;
     }, [approveRecipientAddress, approveType, approveValue]);
-    
+
     const onClickApproveAll = () => {
         let expires = {};
         let convertValue = '';
@@ -179,7 +179,7 @@ const ApproveAllPreview = () => {
         }
 
         const feeAmount = craftConfig.DEFAULT_FEE;
-        
+
         const params = {
             header: {
                 title: 'Approve All'
@@ -204,7 +204,7 @@ const ApproveAllPreview = () => {
             contract: contractAddress,
             msg: {
                 expires: expires,
-                operator: approveRecipientAddress,
+                operator: approveRecipientAddress
             }
         };
 
@@ -232,7 +232,7 @@ const ApproveAllPreview = () => {
                         <ItemLabelTypo>Approve All NFTs</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
@@ -244,7 +244,7 @@ const ApproveAllPreview = () => {
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
-                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }}/>
+                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }} />
                         </AccordionRow>
                     </AccordionBox>
                 )}

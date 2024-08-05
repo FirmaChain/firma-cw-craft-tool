@@ -132,7 +132,7 @@ const ApprovePreview = () => {
     const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
 
     const modal = useModalStore();
-    
+
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [convertType, setConvertType] = useState<string>('at_height');
 
@@ -156,7 +156,7 @@ const ApprovePreview = () => {
         if (approveTokenId === '') return false;
         if (approveType === '') return false;
         if (approveType !== 'Forever' && approveValue === '') return false;
-        
+
         return true;
     }, [approveRecipientAddress, approveTokenId, approveType, approveValue]);
 
@@ -180,7 +180,7 @@ const ApprovePreview = () => {
         }
 
         const feeAmount = craftConfig.DEFAULT_FEE;
-        
+
         const params = {
             header: {
                 title: 'Approve'
@@ -239,7 +239,7 @@ const ApprovePreview = () => {
                         <ItemLabelTypo>Approve NFT</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
@@ -256,7 +256,7 @@ const ApprovePreview = () => {
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
-                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }}/>
+                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }} />
                         </AccordionRow>
                     </AccordionBox>
                 )}

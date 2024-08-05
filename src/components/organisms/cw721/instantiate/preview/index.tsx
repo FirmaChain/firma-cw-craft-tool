@@ -1,15 +1,15 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import useInstantiateStore from "../instantiateStore";
-import { IC_PREVIEW, IC_TAG, IC_WALLET } from "@/components/atoms/icons/pngIcons";
-import ContentItem from "./contentItem";
-import { useSelector } from "react-redux";
-import { rootState } from "@/redux/reducers";
-import { useEffect, useMemo } from "react";
-import Submit from "./submit";
-import { useModalStore } from "@/hooks/useModal";
-import { CRAFT_CONFIGS } from "@/config";
-import InstantitateModal from "@/components/organisms/modal/cw721/instantiateModal";
+import useInstantiateStore from '../instantiateStore';
+import { IC_PREVIEW, IC_TAG, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import ContentItem from './contentItem';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useEffect, useMemo } from 'react';
+import Submit from './submit';
+import { useModalStore } from '@/hooks/useModal';
+import { CRAFT_CONFIGS } from '@/config';
+import InstantitateModal from '@/components/organisms/modal/cw721/instantiateModal';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
@@ -121,7 +121,7 @@ const Preview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
     const network = useSelector((state: rootState) => state.global.network);
-    
+
     const modal = useModalStore();
 
     const nftName = useInstantiateStore((v) => v.nftName);
@@ -133,16 +133,16 @@ const Preview = () => {
     const disableButton = useMemo(() => {
         if (isInit) {
             if (nftName === '') return true;
-            if (nftSymbol === '') return true;
+            if (nftSymbol.length < 3) return true;
             if (label === '') return true;
 
-            if (contractMode === "ADVANCED" && admin === '') return true;
-            if (contractMode === "ADVANCED" && minter === '') return true;
+            if (contractMode === 'ADVANCED' && admin === '') return true;
+            if (contractMode === 'ADVANCED' && minter === '') return true;
         }
 
         return false;
-    }, [nftName, nftSymbol, label, contractMode]);
-    
+    }, [isInit, nftName, nftSymbol, label, contractMode, admin, minter]);
+
     const craftConfig = useMemo(() => {
         return network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
     }, [network]);
@@ -170,20 +170,20 @@ const Preview = () => {
             };
 
             const datas: {
-                header: { title: string },
-                amount: { fee: string, fct: string },
-                list: { label: string, value: string }[]
+                header: { title: string };
+                amount: { fee: string; fct: string };
+                list: { label: string; value: string }[];
             } = {
                 header: {
-                    title: "CW721 Instantiate"
+                    title: 'CW721 Instantiate'
                 },
                 amount: {
                     fee: craftConfig.DEFAULT_FEE.toString(),
-                    fct: "",
+                    fct: ''
                 },
                 list: [
-                    { label: "Contract Name", value: nftName },
-                    { label: "Contract Symbol", value: nftSymbol }
+                    { label: 'Contract Name', value: nftName },
+                    { label: 'Contract Symbol', value: nftSymbol }
                 ]
             };
 
@@ -202,7 +202,7 @@ const Preview = () => {
         <ContentWrapper>
             <TitleWrapper>
                 <TitleIconWrapper>
-                    <TitleIcon src={IC_PREVIEW} alt={"CW721 Instantiate Title Icon"}/>
+                    <TitleIcon src={IC_PREVIEW} alt={'CW721 Instantiate Title Icon'} />
                 </TitleIconWrapper>
                 <TextGroupWrapper>
                     <TitleText>PREVIEW</TitleText>
@@ -215,14 +215,24 @@ const Preview = () => {
                     <BodyNftSymbolTypo $disabled={nftSymbol === ''}>{nftSymbol || 'Symbol'}</BodyNftSymbolTypo>
                 </BodyNftInfoWrap>
                 <BodyContractInfoWrap>
-                    <ContentItem imagePath={IC_WALLET} name={"Admin Address"} value={contractMode === "BASIC" ? address : admin} defaultValue={"Wallet Address"} />
-                    <ContentItem imagePath={IC_WALLET} name={"Minter Address"} value={contractMode === "BASIC" ? address : minter} defaultValue={"Wallet Address"} />
-                    <ContentItem imagePath={IC_TAG} name={"Label"} value={label} isCover defaultValue={"Label"} />
+                    <ContentItem
+                        imagePath={IC_WALLET}
+                        name={'Admin Address'}
+                        value={contractMode === 'BASIC' ? address : admin}
+                        defaultValue={'Wallet Address'}
+                    />
+                    <ContentItem
+                        imagePath={IC_WALLET}
+                        name={'Minter Address'}
+                        value={contractMode === 'BASIC' ? address : minter}
+                        defaultValue={'Wallet Address'}
+                    />
+                    <ContentItem imagePath={IC_TAG} name={'Label'} value={label} isCover defaultValue={'Label'} />
                 </BodyContractInfoWrap>
             </BodyCard>
             <Submit onClickInstantiate={onClickSubmit} disableButton={disableButton} />
         </ContentWrapper>
-    )
-}
+    );
+};
 
 export default Preview;

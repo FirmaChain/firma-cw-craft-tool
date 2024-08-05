@@ -6,11 +6,12 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useEffect } from 'react';
 import { ENG_NUM_SPACE, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import useFormStore from '@/store/formStore';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    height: fit-content;
     padding: 48px 48px;
     display: flex;
     flex-direction: column;
@@ -90,9 +91,22 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
     const setAdmin = useInstantiateStore((v) => v.setAdmin);
     const setLabel = useInstantiateStore((v) => v.setLabel);
 
+    const setFormError = useFormStore((v) => v.setFormError);
+    const clearFormError = useFormStore((v) => v.clearFormError);
+
+    const onSymbolChange = (value: string) => {
+        //! minimum 3 characters
+        if (value === '' || value.length >= 3) clearFormError({ id: 'nftContractSymbol', type: 'MINIMUM_THREE_CHARS' });
+        else setFormError({ id: 'nftContractSymbol', type: 'MINIMUM_THREE_CHARS', message: 'Minimum 3 characters required.' });
+
+        setNftSymbol(value);
+    };
+
     useEffect(() => {
         setMinter('');
+        clearFormError({ id: 'adminAddress' });
         setAdmin('');
+        clearFormError({ id: 'minterAddress' });
     }, [contractMode]);
 
     return (
@@ -122,13 +136,13 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             }}
                         />
                         <LabelInput
-                            labelProps={{ label: 'NFT Contract Symbol', subText: 'Minimum 3 charactes' }}
+                            labelProps={{ label: 'NFT Contract Symbol', subText: 'Minimum 3 characters' }}
                             inputProps={{
                                 value: nftSymbol,
                                 formId: 'nftContractSymbol',
                                 placeHolder: 'ex) MCT, FCT',
                                 maxLength: 12,
-                                onChange: setNftSymbol,
+                                onChange: onSymbolChange,
                                 emptyErrorMessage: 'Please input token symbol.',
                                 regex: ONLY_ENGLISH
                             }}
@@ -149,7 +163,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             }}
                         />
                         <LabelInput
-                            labelProps={{ label: 'NFT Contract Symbol', subText: 'Minimum 3 charactes' }}
+                            labelProps={{ label: 'NFT Contract Symbol', subText: 'Minimum 3 characters' }}
                             inputProps={{
                                 value: nftSymbol,
                                 formId: 'nftContractSymbol',
@@ -170,7 +184,8 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             formId: 'adminAddress',
                             placeHolder: 'Input wallet Address',
                             onChange: setAdmin,
-                            regex: WALLET_ADDRESS_REGEX
+                            regex: WALLET_ADDRESS_REGEX,
+                            emptyErrorMessage: 'Please input admin address.'
                         }}
                     />
                 )}
@@ -182,7 +197,8 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             formId: 'minterAddress',
                             placeHolder: 'Input wallet Address',
                             onChange: setMinter,
-                            regex: WALLET_ADDRESS_REGEX
+                            regex: WALLET_ADDRESS_REGEX,
+                            emptyErrorMessage: 'Please input minter address.'
                         }}
                     />
                 )}
@@ -193,7 +209,9 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                         formId: 'label',
                         placeHolder: 'ex) Event reward contract',
                         onChange: setLabel,
-                        regex: ENG_NUM_SPACE
+                        regex: ENG_NUM_SPACE,
+                        emptyErrorMessage: 'Please input label.',
+                        maxLength: 128
                     }}
                 />
             </InformationBody>

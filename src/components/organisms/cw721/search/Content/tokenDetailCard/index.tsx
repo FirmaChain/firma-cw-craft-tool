@@ -11,7 +11,19 @@ import Cell from '@/components/atoms/table/cells';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { Cw721Expires } from '@firmachain/firma-js';
 import { format } from 'date-fns';
-import { CardHeaderTypo, CardSpecific, ContractCard, NFTTableContainer, SpecificItem, SpecificLabelTypo, SpecificValueBox, SpecificValueCover, SpecificValueTypo, SpecificValueWrapper, TableExpandButton } from './style';
+import {
+    CardHeaderTypo,
+    CardSpecific,
+    ContractCard,
+    NFTTableContainer,
+    SpecificItem,
+    SpecificLabelTypo,
+    SpecificValueBox,
+    SpecificValueCover,
+    SpecificValueTypo,
+    SpecificValueWrapper,
+    TableExpandButton
+} from './style';
 import NFTsTable from '../../../common/nftsTable';
 import { IC_EXPAND } from '@/components/atoms/icons/pngIcons';
 import Skeleton from '@/components/atoms/skeleton';
@@ -26,13 +38,18 @@ const TokenInfo = () => {
     const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
     const { handleCW721NFTIdList, handleCW721OwnedNFTIdList } = useNFTContractDetail();
     const { nfts, addNFTs, updateNFTs, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
-    const { nfts: ownedNfts, addNFTs: addOwnedNFTs, updateNFTs: updateOwnedNFTs,
+    const {
+        nfts: ownedNfts,
+        addNFTs: addOwnedNFTs,
+        updateNFTs: updateOwnedNFTs,
         clearCW721NFTListData: clearCW721OwnedNFTListData,
-        currentPage: currentOwnedPage, setCurrentPage: setCurrentOwnedPage } = useCW721OwnedNFTListContext();
+        currentPage: currentOwnedPage,
+        setCurrentPage: setCurrentOwnedPage
+    } = useCW721OwnedNFTListContext();
 
     const contractAddress = contractDetail?.contractAddress || '';
     const codeId = contractDetail?.codeId || '';
-    const minter = contractDetail.minter || '';
+    const minter = contractDetail.minter;
     const contractName = contractDetail?.name || '';
     const contractSymbol = contractDetail?.symbol || '';
     const codeID = contractDetail?.codeId || '';
@@ -53,7 +70,7 @@ const TokenInfo = () => {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
     return (
         <SectionContainer>
@@ -75,7 +92,12 @@ const TokenInfo = () => {
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Minter</SpecificLabelTypo>
-                    {minter ? <SpecificValueTypo>{minter}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                    {typeof minter === 'string' ? (
+                        // if minter is null (ownership renounced)
+                        <SpecificValueTypo>{minter || '-'}</SpecificValueTypo>
+                    ) : (
+                        <Skeleton width="100px" height="22px" />
+                    )}
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Name</SpecificLabelTypo>
@@ -109,7 +131,8 @@ const TokenInfo = () => {
                         >
                             <SpecificValueWrapper>
                                 <SpecificValueTypo>
-                                    {`${totalSupply === null ? 0 : totalSupply}`}<span>{'NFT'}</span>
+                                    {`${totalSupply === null ? 0 : totalSupply}`}
+                                    <span>{'NFT'}</span>
                                 </SpecificValueTypo>
                             </SpecificValueWrapper>
                             <TableExpandButton $expand={expandTotal} src={IC_EXPAND} alt={'expand'} />
@@ -125,7 +148,8 @@ const TokenInfo = () => {
                                 addNFTs={addNFTs}
                                 updateNFTs={updateNFTs}
                                 clearListData={clearCW721NFTListData}
-                                setCurrentPage={setCurrentPage} />
+                                setCurrentPage={setCurrentPage}
+                            />
                         </NFTTableContainer>
                     </SpecificValueBox>
                 </SpecificItem>
@@ -137,7 +161,9 @@ const TokenInfo = () => {
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
                             <SpecificValueWrapper>
-                                <SpecificValueTypo><span style={{ paddingLeft: 0 }}>{'NFT'}</span></SpecificValueTypo>
+                                <SpecificValueTypo>
+                                    <span style={{ paddingLeft: 0 }}>{'NFT'}</span>
+                                </SpecificValueTypo>
                             </SpecificValueWrapper>
                             <TableExpandButton $expand={expandOwned} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
@@ -152,7 +178,8 @@ const TokenInfo = () => {
                                 addNFTs={addOwnedNFTs}
                                 updateNFTs={updateOwnedNFTs}
                                 clearListData={clearCW721OwnedNFTListData}
-                                setCurrentPage={setCurrentOwnedPage} />
+                                setCurrentPage={setCurrentOwnedPage}
+                            />
                         </NFTTableContainer>
                     </SpecificValueBox>
                 </SpecificItem>
@@ -236,11 +263,7 @@ const OwnerInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {pending_expiry ? (
-                            <PendingExpiery expireInfo={pending_expiry} />
-                        ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
-                        )}
+                        {pending_expiry ? <PendingExpiery expireInfo={pending_expiry} /> : <SpecificValueTypo>{'-'}</SpecificValueTypo>}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
@@ -256,7 +279,6 @@ const OwnerInformation = () => {
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>
-
             </CardSpecific>
         </ContractCard>
     );

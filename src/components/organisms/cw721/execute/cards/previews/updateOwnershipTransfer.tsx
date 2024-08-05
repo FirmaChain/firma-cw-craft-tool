@@ -131,10 +131,10 @@ const UpdateOwnershipTransferPreview = () => {
     const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
 
     const modal = useModalStore();
-    
+
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [convertType, setConvertType] = useState<string>('at_height');
-    
+
     useEffect(() => {
         if (approveType === 'Time') {
             setConvertType('at_time');
@@ -154,7 +154,7 @@ const UpdateOwnershipTransferPreview = () => {
         if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
         if (approveType === '') return false;
         if (approveType !== 'Forever' && approveValue === '') return false;
-        
+
         return true;
     }, [approveRecipientAddress, approveType, approveValue]);
 
@@ -178,7 +178,7 @@ const UpdateOwnershipTransferPreview = () => {
         }
 
         const feeAmount = craftConfig.DEFAULT_FEE;
-        
+
         const params = {
             header: {
                 title: 'Update Ownership Transfer'
@@ -231,7 +231,7 @@ const UpdateOwnershipTransferPreview = () => {
                         <ItemLabelTypo>Update Ownership Transfer</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ArrowToggleButton onToggle={setIsOpen} />
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
                 {isOpen && (
@@ -243,7 +243,7 @@ const UpdateOwnershipTransferPreview = () => {
                         </AccordionRow>
                         <AccordionRow>
                             <img src={IC_CLOCK} alt="clock" />
-                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }}/>
+                            <ExpirationBox allowanceInfo={{ address: '', amount: '', type: convertType, expire: approveValue }} />
                         </AccordionRow>
                     </AccordionBox>
                 )}
