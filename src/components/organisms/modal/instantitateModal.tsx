@@ -449,11 +449,11 @@ interface SuccessData {
 const InstantitateModal = ({
     id,
     module,
-    params
+    params,
 }: {
     id: string;
     module: string;
-    params: { admin: string; codeId: string; label: string; msg: string, type: string };
+    params: { admin: string; codeId: string; label: string; msg: string, type: string, length: number };
 }) => {
     const { firmaSDK } = useExecuteHook();
     const walletAddress = useSelector((state: rootState) => state.wallet.address);
@@ -475,6 +475,13 @@ const InstantitateModal = ({
     };
 
     const requestData = JSON.parse(params.msg);
+
+    const craftConfig = useMemo(() => {
+        if (network === 'MAINNET')
+            return CRAFT_CONFIGS.MAINNET;
+        else
+            return CRAFT_CONFIGS.TESTNET;
+    }, [network]);
 
     const supplyAmount = useMemo(() => {
         try {
@@ -511,6 +518,22 @@ const InstantitateModal = ({
         };
     }, [result]);
 
+    const instantiateFee = useMemo(() => {
+        const requestData = JSON.parse(params.msg);
+        try {
+            if (requestData?.initial_balances.length >= 2) {
+                const defaultLength = Number(requestData?.initial_balances.length) - 1;
+                const instantiateFee = defaultLength * craftConfig.INSTANTIATE_FEE;
+                console.log(defaultLength);
+                return craftConfig.DEFAULT_FEE + instantiateFee;
+            } else {
+                return craftConfig.DEFAULT_FEE;
+            }
+        } catch (error) {
+            return '0';
+        }
+    }, [params]);
+    
     const openContractAddress = () => openLink(`${explorerUrl}/accounts/${parsedData?.contractAddress}`);
     const openHash = () => openLink(`${explorerUrl}/transactions/${parsedData?.transactionHash}`);
 
@@ -622,7 +645,7 @@ const InstantitateModal = ({
                         </div>
                         <div className="fee-amount-box">
                             <div className="fee-amount">
-                                <div>0.03833</div>
+                                <div>{instantiateFee}</div>
                                 <img src={IC_SYMBOL_GRAY} alt="firma-logo" className="logo" />
                             </div>
                             <div

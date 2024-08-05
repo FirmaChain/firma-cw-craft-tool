@@ -5,6 +5,8 @@ export const CRAFT_CONFIGS = {
         FIRMACHAIN_CONFIG: FirmaConfig.MainNetConfig,
         DEFAULT_FEE: 30000,
         DEFAULT_GAS: 300000,
+        INSTANTIATE_FEE: 12000,
+        BULK_FEE: 15000,
         IS_DEFAULT_GAS: false,
         CRAFT_SERVER_URI: '',
         GRAPHQL_CONFIG: {
@@ -25,6 +27,8 @@ export const CRAFT_CONFIGS = {
         FIRMACHAIN_CONFIG: FirmaConfig.TestNetConfig,
         DEFAULT_FEE: 30000,
         DEFAULT_GAS: 300000,
+        INSTANTIATE_FEE: 12000,
+        BULK_FEE: 15000,
         IS_DEFAULT_GAS: false,
         CRAFT_SERVER_URI: '',
         GRAPHQL_CONFIG: {

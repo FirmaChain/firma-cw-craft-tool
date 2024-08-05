@@ -34,13 +34,19 @@ const useMyNFTContracts = () => {
             const contractLists = await Promise.all(contractListsPromises);
             const allContracts = contractLists.flat();
 
-            const contractInfoPromises = allContracts.map((contract) => firmaSDK.CosmWasm.getContractInfo(contract));
+            const ownershipDataPromises = allContracts.map(async (contract) => {
+                const ownershipInfo = await firmaSDK.Cw721.getOwnerShip(contract);
+                return { contract, ownershipInfo };
+            });
 
-            const contractInfos = await Promise.all(contractInfoPromises);
+            const ownershipDatas = await Promise.all(ownershipDataPromises);
 
-            const myContracts = contractInfos
-                .filter((contractInfo) => contractInfo.contract_info.admin === address)
-                .map((contractInfo) => contractInfo.address);
+            const myContracts = ownershipDatas
+                .filter((ownershipData) => ownershipData.ownershipInfo.owner === address)
+                .map((ownershipData) => ownershipData.contract);
+            // const myContracts = contractInfos
+            //     .filter((contractInfo) => contractInfo.contract_info.admin === address)
+            //     .map((contractInfo) => contractInfo.address);
 
             return ["firma1h7kqndzgm0mj6wur0s3ynldnpffgqj8dlsx4q7w66g8xfkhq30asglkqcp", ...myContracts];
         } catch (error) {

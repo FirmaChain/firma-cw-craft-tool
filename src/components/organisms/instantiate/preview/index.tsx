@@ -111,7 +111,8 @@ const Preview = ({ isBasic }: IProps) => {
                     codeId: codeId,
                     label: isBasic ? 'CW20' : label,
                     msg: JSON.stringify(messageData),
-                    type: craftConfig.CW20.TYPE
+                    type: craftConfig.CW20.TYPE,
+                    length: convertWalletList.length
                 };
 
                 modal.openModal({
