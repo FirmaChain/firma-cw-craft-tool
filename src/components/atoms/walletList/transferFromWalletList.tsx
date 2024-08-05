@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
 import {
-    AddWalletTypo,
-    AddWalletWrapper,
     MaxWalletCountTypo,
     NowWalletCountTypo,
     TotalWalletTypo,
@@ -26,6 +24,7 @@ import { compareStringNumbers } from '@/utils/balance';
 import { getCurrentUTCTimeStamp, removeNanoSeconds } from '@/utils/time';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
+import AddWalletButton from '../buttons/addWalletButton';
 
 interface IProps {
     contractAddress: string;
@@ -168,7 +167,7 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
             ]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
-                variant: 'info',
+                variant: 'warning',
                 autoHideDuration: 2000
             });
         }
@@ -238,12 +237,7 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                     />
                 );
             })}
-            <AddWalletWrapper disabled={transferList.length === 20} onClick={handleAddWallet}>
-                <Icons.Add width={'16px'} height={'16px'} />
-                <AddWalletTypo>
-                    Add (<span style={{ fontWeight: '600' }}>{transferList.length}</span>/{maxWalletCount})
-                </AddWalletTypo>
-            </AddWalletWrapper>
+            <AddWalletButton disabled={transferList.length === 20} count={transferList.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
         </WalletListWrapper>
     );
 };

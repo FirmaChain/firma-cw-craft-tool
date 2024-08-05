@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 
 import {
-    AddWalletTypo,
-    AddWalletWrapper,
     MaxWalletCountTypo,
     NowWalletCountTypo,
     TotalWalletTypo,
@@ -19,6 +17,7 @@ import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import NftMintInput from '../input/nftMintInput';
+import AddWalletButton from '../buttons/addWalletButton';
 
 interface IMintInfo {
     token_id: string;
@@ -47,7 +46,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
             onChangeWalletList([...list, { token_id: '', token_uri: '', id: v4() }]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
-                variant: 'info',
+                variant: 'warning',
                 autoHideDuration: 2000
             });
         }
@@ -114,12 +113,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletWrapper disabled={list.length === 20} onClick={handleAddWallet}>
-                <Icons.Add width={'16px'} height={'16px'} />
-                <AddWalletTypo>
-                    Add (<span style={{ fontWeight: '600' }}>{list.length}</span>/{maxWalletCount})
-                </AddWalletTypo>
-            </AddWalletWrapper>
+            <AddWalletButton disabled={list.length === 20} count={list.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
         </WalletListWrapper>
     );
 };

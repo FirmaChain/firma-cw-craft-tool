@@ -301,7 +301,7 @@ const NFTsTable = ({ codeId, contractAddress, nftsInfo, nfts, currentPage, handl
                 }
             </Fragment>
         }
-        {nfts &&
+        {NFTIds.length > 0 &&
             <PaginationContainer style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
                 <PaginationButton onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                     <Icons.PrevPage width={'20px'} height={'20px'} stroke={currentPage !== 1 ? '#FFFFFF' : '#707070'} />

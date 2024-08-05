@@ -2,8 +2,6 @@ import React from 'react';
 import { v4 } from 'uuid';
 
 import {
-    AddWalletTypo,
-    AddWalletWrapper,
     MaxWalletCountTypo,
     NowWalletCountTypo,
     TotalWalletTypo,
@@ -19,6 +17,7 @@ import Icons from '../icons';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import Cw20BurnFromInput from '../input/cw20BurnFromInput';
+import AddWalletButton from '../buttons/addWalletButton';
 
 interface IProps {
     list: IWallet[];
@@ -109,12 +108,7 @@ const CW20BurnFromInputList = ({
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletWrapper disabled={list.length === 20} onClick={handleAddWallet}>
-                <Icons.Add width={'16px'} height={'16px'} />
-                <AddWalletTypo>
-                    Add (<span style={{ fontWeight: '600' }}>{list.length}</span>/{maxWalletCount})
-                </AddWalletTypo>
-            </AddWalletWrapper>
+            <AddWalletButton disabled={list.length === 20} count={list.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
         </WalletListWrapper>
     );
 };

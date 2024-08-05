@@ -216,14 +216,16 @@ const useNFTContractDetail = () => {
     const handleCW721OwnedNFTIdList = useCallback(async (contractAddress: string, address: string) => {
         try {
             const nftIdList = ownedNftsInfo.totalNftIds;
-            const lastNftId = ownedNftsInfo.totalNftIds[ownedNftsInfo.totalNftIds.length - 1];
-            const result = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress, address, 99, lastNftId);
+            if (nftIdList.length > 0) {
+                const lastNftId = ownedNftsInfo.totalNftIds[ownedNftsInfo.totalNftIds.length - 1];
+                const result = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress, address, 99, lastNftId);
 
-            const newNftIdList = result.filter((nft) => nftIdList.some((existNft) => existNft === nft) === false);
-            setOwnedNftsInfo({
-                ...ownedNftsInfo,
-                totalNftIds: [...nftIdList, ...newNftIdList]
-            })
+                const newNftIdList = result.filter((nft) => nftIdList.some((existNft) => existNft === nft) === false);
+                setOwnedNftsInfo({
+                    ...ownedNftsInfo,
+                    totalNftIds: [...nftIdList, ...newNftIdList]
+                })
+            }
         } catch (error) {
             console.log(error);
             enqueueSnackbar(`failed get NFT ID list`, {

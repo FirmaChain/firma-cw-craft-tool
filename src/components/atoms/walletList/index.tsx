@@ -3,8 +3,6 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { v4 } from 'uuid';
 
 import {
-    AddWalletTypo,
-    AddWalletWrapper,
     MaxWalletCountTypo,
     NowWalletCountTypo,
     TotalWalletTypo,
@@ -22,6 +20,7 @@ import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+import AddWalletButton from '../buttons/addWalletButton';
 
 interface IProps {
     decimals: string;
@@ -80,7 +79,7 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
             setValidity([...validity, true]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
-                variant: 'info',
+                variant: 'warning',
                 autoHideDuration: 2000
             });
         }
@@ -157,12 +156,7 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletWrapper disabled={walletList.length === 20} onClick={handleAddWallet}>
-                <Icons.Add width={'16px'} height={'16px'} />
-                <AddWalletTypo>
-                    Add (<span style={{ fontWeight: '600' }}>{walletList.length}</span>/{maxWalletCount})
-                </AddWalletTypo>
-            </AddWalletWrapper>
+            <AddWalletButton disabled={walletList.length === 20} count={walletList.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
         </WalletListWrapper>
     );
 };

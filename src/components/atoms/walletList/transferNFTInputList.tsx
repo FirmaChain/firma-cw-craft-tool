@@ -2,8 +2,6 @@ import React, { useEffect, useMemo } from 'react';
 import { v4 } from 'uuid';
 
 import {
-    AddWalletTypo,
-    AddWalletWrapper,
     MaxWalletCountTypo,
     NowWalletCountTypo,
     TotalWalletTypo,
@@ -18,6 +16,7 @@ import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import TransferNFTInput from '../input/transferNFTInput';
 import { IExecuteTransfer } from '@/interfaces/cw721';
+import AddWalletButton from '../buttons/addWalletButton';
 
 interface IProps {
     list: IExecuteTransfer[];
@@ -99,12 +98,7 @@ const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }:
                     allList={list}
                 />
             ))}
-            <AddWalletWrapper disabled={list.length === 20} onClick={handleAddWallet}>
-                <Icons.Add width={'16px'} height={'16px'} />
-                <AddWalletTypo>
-                    Add (<span style={{ fontWeight: '600' }}>{list.length}</span>/{maxWalletCount})
-                </AddWalletTypo>
-            </AddWalletWrapper>
+            <AddWalletButton disabled={list.length === 20} count={list.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
         </WalletListWrapper>
     );
 };

@@ -2,8 +2,6 @@ import React from 'react';
 import { v4 } from 'uuid';
 
 import {
-    AddWalletTypo,
-    AddWalletWrapper,
     MaxWalletCountTypo,
     NowWalletCountTypo,
     TotalWalletTypo,
@@ -21,6 +19,7 @@ import { useSnackbar } from 'notistack';
 import { IWalletWithID } from '@/components/organisms/instantiate/instaniateStore';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
+import AddWalletButton from '../buttons/addWalletButton';
 
 interface IProps {
     walletList: IWalletWithID[];
@@ -49,7 +48,7 @@ const FormWalletList = ({
             setWalletList([...walletList, { recipient: '', amount: '', id: v4() }]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
-                variant: 'info',
+                variant: 'warning',
                 autoHideDuration: 2000
             });
         }
@@ -107,12 +106,7 @@ const FormWalletList = ({
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletWrapper disabled={walletList.length === 20} onClick={handleAddWallet}>
-                <Icons.Add width={'16px'} height={'16px'} stroke={walletList.length === 20 ? '#383838' : '#999999'} />
-                <AddWalletTypo>
-                    Add (<span style={{ fontWeight: '600' }}>{walletList.length}</span>/{maxWalletCount})
-                </AddWalletTypo>
-            </AddWalletWrapper>
+            <AddWalletButton disabled={walletList.length === 20} count={walletList.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
         </WalletListWrapper>
     );
 };
