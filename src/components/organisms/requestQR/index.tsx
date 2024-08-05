@@ -68,7 +68,6 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
         try {
             if (requestData?.status === '1') {
                 setActiveQR(false);
-
                 if (requestData?.type === 'LOGIN') {
                     onSuccess(requestData);
                 } else {

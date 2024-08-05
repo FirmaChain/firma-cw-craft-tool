@@ -456,6 +456,7 @@ const InstantitateModal = ({
     module: string;
     params: { admin: string; codeId: string; label: string; msg: string; type: string; length: number };
 }) => {
+
     const { firmaSDK } = useExecuteHook();
     const walletAddress = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
@@ -497,7 +498,6 @@ const InstantitateModal = ({
         if (result === null) return null;
 
         const { message, signData, ...rest } = result;
-
         const parsedMessage = JSON.parse(message);
         const { address, chainId, rawData } = JSON.parse(signData);
         const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);

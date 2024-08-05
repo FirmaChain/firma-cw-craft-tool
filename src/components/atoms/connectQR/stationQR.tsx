@@ -56,7 +56,7 @@ const StationQR = () => {
                 }}
                 ref={canvasRef}
             >
-                <QRCode value={stationUrl} size={144} quietZone={0} logoImage={IC_FIRMACHAIN_QRCODE} logoWidth={32} logoHeight={32} />
+                <QRCode value={stationUrl} size={144} quietZone={0} logoImage={IC_FIRMACHAIN_QRCODE} logoWidth={40} logoHeight={40} />
             </div>
         </div>
     );

@@ -455,10 +455,9 @@ const InstantitateModal = ({
 
     const parsedData = useMemo(() => {
         if (result === null) return null;
-
         const { message, signData, ...rest } = result;
-
         const parsedMessage = JSON.parse(message);
+
         const { address, chainId, rawData } = JSON.parse(signData);
         const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);
         const parsedLogs = JSON.parse(rawLog)[0];
@@ -515,7 +514,6 @@ const InstantitateModal = ({
                                     useFormStore.getState().clearForm();
                                 }}
                                 onFailed={(requestData: any) => {
-                                    setResult(requestData);
                                     setStatus('failure');
                                     enqueueSnackbar('[CW721] Instantiation failed', {
                                         variant: 'error',

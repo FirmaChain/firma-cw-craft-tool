@@ -1,9 +1,8 @@
 import { CRAFT_CONFIGS } from '@/config';
 import { rootState } from '@/redux/reducers';
 import { FirmaSDK } from '@firmachain/firma-js';
-import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 
 interface CW20MyTokenContextProps {
     firmaSDK: FirmaSDK;
