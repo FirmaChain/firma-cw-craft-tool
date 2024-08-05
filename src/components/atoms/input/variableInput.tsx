@@ -261,7 +261,7 @@ const VariableInput = ({
             </StyledInput>
             {!hideErrorMessage && (
                 <div style={{ paddingTop: errorMessage.length > 0 ? '4px' : 0, paddingLeft: '8px' }}>
-                    <ErrorMessage>{errorMessage[errorMessage.length - 1]}</ErrorMessage>
+                    <ErrorMessage>{errorMessage[0]}</ErrorMessage>
                 </div>
             )}
         </div>
