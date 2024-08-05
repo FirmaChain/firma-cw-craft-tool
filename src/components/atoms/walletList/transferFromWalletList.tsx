@@ -230,14 +230,19 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                         transferFromInfo={wallet}
                         onChange={handleWalleInfoChange}
                         onRemoveClick={() => handleRemoveWallet(index)}
-                        isLast={index === transferList.length - 1}
+                        isLast={transferList.length === 1}
                         isValid={validity[index]}
                         decimals={decimals}
                         inputId={wallet.id}
                     />
                 );
             })}
-            <AddWalletButton disabled={transferList.length === 20} count={transferList.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
+            <AddWalletButton
+                disabled={transferList.length === 20}
+                count={transferList.length}
+                maxCount={maxWalletCount}
+                onClick={handleAddWallet}
+            />
         </WalletListWrapper>
     );
 };

@@ -15,7 +15,7 @@ import { useModalStore } from '@/hooks/useModal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -136,6 +136,10 @@ const IncreaseAllowance = () => {
     };
 
     const handleChangeAmount = (value: string) => {
+        const onlyNumbers = value.replace(ONE_TO_MINE, '');
+        if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
+        else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
+
         const truncateDecimals = (value: string) => {
             const decimalPlaces = parseInt(tokenInfo.decimals.toString(), 10);
             const fractionalPart = value.split('.')[1];
@@ -264,9 +268,10 @@ const IncreaseAllowance = () => {
                                     placeHolder: '0',
                                     type: 'number',
                                     decimal: tokenInfo?.decimals,
-                                    // emptyErrorMessage: 'Please input mint amount',
+                                    emptyErrorMessage: 'Please input amount',
                                     textAlign: 'right',
-                                    maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString()))
+                                    // maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())),
+                                    hideErrorMessage: true
                                 }}
                             />
 

@@ -52,6 +52,7 @@ const TransferFromWalletInput = ({
     onRemoveClick,
     isValid,
     decimals,
+    isLast,
     // addressTitle,
     // addressPlaceholder,
     // amountTitle,
@@ -65,7 +66,7 @@ const TransferFromWalletInput = ({
     const toAddressId = `${id}_TO_ADDRESS`;
     const transferAmountId = `${id}_TO_AMOUNT`;
 
-    const disableRemoveBtn = index === 1;
+    const disableRemoveBtn = isLast;
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);

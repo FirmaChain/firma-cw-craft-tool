@@ -15,7 +15,7 @@ import ExpirationModal from '@/components/organisms/modal/expirationModal';
 import { useModalStore } from '@/hooks/useModal';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -107,12 +107,15 @@ const DecreaseAllowance = () => {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
-            return;
+            return false;
         }
 
-        if (value.toLowerCase() === userAddress)
+        if (value.toLowerCase() === userAddress) {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS', message: 'Cannot use self address.' });
-        else clearFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS' });
+            return false;
+        } else clearFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS' });
+
+        return true;
     };
 
     const handleChangeAddress = (value: string) => {
@@ -127,6 +130,10 @@ const DecreaseAllowance = () => {
     };
 
     const handleChangeAmount = (value: string) => {
+        const onlyNumbers = value.replace(ONE_TO_MINE, '');
+        if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
+        else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
+
         const truncateDecimals = (value: string) => {
             const decimalPlaces = tokenInfo.decimals;
             const fractionalPart = value.split('.')[1];
@@ -255,9 +262,10 @@ const DecreaseAllowance = () => {
                                     placeHolder: '0',
                                     type: 'number',
                                     decimal: tokenInfo.decimals ? tokenInfo.decimals : 6,
-                                    // emptyErrorMessage: 'Please input mint amount',
+                                    emptyErrorMessage: 'Please input amount',
                                     textAlign: 'right',
-                                    maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString()))
+                                    maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())),
+                                    hideErrorMessage: true
                                 }}
                             />
 

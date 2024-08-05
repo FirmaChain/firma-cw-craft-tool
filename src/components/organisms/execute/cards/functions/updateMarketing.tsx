@@ -88,7 +88,7 @@ const UpdateMarketing = () => {
                         formId: 'input description',
                         placeHolder: 'This is token Description',
                         onChange: setMarketingDescription,
-                        maxLength: 100
+                        maxLength: isBasic ? 100 : 300
                     }}
                 />
                 {!isBasic && address === marketingInfo?.marketing && (
