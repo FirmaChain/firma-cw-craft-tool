@@ -22,7 +22,8 @@ import { rootState } from '@/redux/reducers';
 import IconTooltip from '@/components/atoms/tooltip';
 import commaNumber from 'comma-number';
 import Divider from '@/components/atoms/divider';
-import { parseAmountWithDecimal } from '@/utils/common';
+import { parseAmountWithDecimal, shortenAddress } from '@/utils/common';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 interface IProps {
     minterble: boolean;
@@ -39,10 +40,10 @@ const CAP_TOOLTIP_TEXT = `Minter Cap is a value that limits the maximum\nnumber 
 const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply, walletList, decimals }: IProps) => {
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
 
-    const [toggleMinterDetail, setToggleMinterDetail] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    const onClickToggleMinterDetail = (isOpen: boolean) => {
-        setToggleMinterDetail(isOpen);
+    const onClickOpen = (isOpen: boolean) => {
+        setIsOpen(isOpen);
     };
 
     const isBasic = contractMode === 'BASIC';
@@ -57,7 +58,8 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
     }, [isBasic, minterAddress]);
 
     useEffect(() => {
-        if (isBasic) setToggleMinterDetail(false);
+        if (isBasic) setIsOpen(false);
+        else setIsOpen(true);
     }, [isBasic]);
 
     return (
@@ -78,18 +80,24 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                     {commaNumber(parseAmountWithDecimal(minterCap, '0')) || 0}
                                 </HeaderMinterCapAmount>
                                 {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
-                                {!isBasic && <ArrowToggleButton onToggle={onClickToggleMinterDetail} />}
+                                {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}
                             </HeaderRightWrapper>
                         </MinterCapHeaderWrapper>
-                        {toggleMinterDetail ? (
+                        {isOpen ? (
                             <DetailWrapper>
                                 <DetailLeftWrapper>
                                     <Icons.Wallet width={'20px'} height={'20px'} />
-                                    <DetailAddressText $disabled={!Boolean(currentMinterAddress)}>
-                                        {currentMinterAddress || 'Wallet Address'}
+                                    <DetailAddressText
+                                        $disabled={!Boolean(currentMinterAddress)}
+                                        data-tooltip-content={currentMinterAddress.length >= 25 ? currentMinterAddress : ''}
+                                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                                        data-tooltip-wrapper="span"
+                                        data-tooltip-place="bottom"
+                                    >
+                                        {shortenAddress(currentMinterAddress, 12, 12) || 'Wallet Address'}
                                     </DetailAddressText>
                                 </DetailLeftWrapper>
-                                <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))}>
+                                <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
                                     {commaNumber(parseAmountWithDecimal(minterCap, '0')) || 0}
                                 </DetailMinterCapAmount>
                             </DetailWrapper>

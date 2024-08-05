@@ -29,10 +29,10 @@ interface IProps {
 }
 
 const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps) => {
-    const [toggleWalletList, setToggleWalletList] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    const onClickToggleWalletList = (isOpen: boolean) => {
-        setToggleWalletList(isOpen);
+    const onClickOpen = (isOpen: boolean) => {
+        setIsOpen(isOpen);
     };
 
     return (
@@ -49,10 +49,10 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                         </SummeryRightTotalSupply>
                         {tokenSymbol && Number(totalSupply) > 0 && <SummeryRightTokenSymbol>{tokenSymbol}</SummeryRightTokenSymbol>}
                     </div>
-                    <ArrowToggleButton onToggle={onClickToggleWalletList} />
+                    <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />
                 </SummeryRightWrapeer>
             </TotalSupplySummery>
-            {toggleWalletList ? (
+            {isOpen ? (
                 walletList.length === 0 ? (
                     <WalletListItem>
                         <ItemLeftWrapper>
@@ -69,15 +69,15 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                     <Icons.Wallet width={'20px'} height={'20px'} />
                                     <ItemLeftAddress
                                         $disabled={!Boolean(wallet.recipient)}
-                                        data-tooltip-content={wallet.recipient.length > 28 ? wallet.recipient : ''}
+                                        data-tooltip-content={wallet.recipient.length > 25 ? wallet.recipient : ''}
                                         data-tooltip-id={TOOLTIP_ID.COMMON}
                                         data-tooltip-wrapper="span"
                                         data-tooltip-place="bottom"
                                     >
-                                        {shortenAddress(wallet.recipient, 20, 8) || 'Wallet Address'}
+                                        {shortenAddress(wallet.recipient, 12, 12) || 'Wallet Address'}
                                     </ItemLeftAddress>
                                 </ItemLeftWrapper>
-                                <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))}>
+                                <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
                                     {commaNumber(parseAmountWithDecimal(wallet.amount, '0')) || '0'}
                                 </ItemTokenAmount>
                             </WalletListItem>

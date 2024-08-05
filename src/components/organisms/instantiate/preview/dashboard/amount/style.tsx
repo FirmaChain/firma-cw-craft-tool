@@ -75,6 +75,7 @@ export const DetailWrapper = styled.div`
     justify-content: space-between;
     border-radius: 12px;
     background: var(--Gray-150, #141414);
+    gap: 16px;
 `;
 
 export const DetailLeftWrapper = styled.div`

@@ -69,6 +69,7 @@ export const WalletListItem = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 export const ItemLeftWrapper = styled.div`
