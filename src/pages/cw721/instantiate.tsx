@@ -1,14 +1,14 @@
-import { useSelector } from "react-redux";
-import styled from "styled-components";
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
-import { rootState } from "@/redux/reducers";
-import useFormStore from "@/store/formStore";
+import { rootState } from '@/redux/reducers';
+import useFormStore from '@/store/formStore';
 
-import useInstantiateStore from "@/components/organisms/instantiate/instaniateStore";
-import { Container } from "@/styles/instantiate";
-import { Content, Header, Preview } from "@/components/organisms/cw721/instantiate";
-import React, { useEffect, useMemo } from "react";
-import { GlobalActions } from "@/redux/actions";
+import useInstantiateStore from '@/components/organisms/instantiate/instaniateStore';
+import { Container } from '@/styles/instantiate';
+import { Content, Header, Preview } from '@/components/organisms/cw721/instantiate';
+import React, { useEffect, useMemo } from 'react';
+import { GlobalActions } from '@/redux/actions';
 
 export const MainContent = styled.div`
     width: 100%;
@@ -38,7 +38,7 @@ const CW721Instantiate = () => {
             clearInput();
         };
     }, []);
-    
+
     const isBasic = useMemo(() => {
         return contractMode === 'BASIC';
     }, [contractMode]);
@@ -53,7 +53,7 @@ const CW721Instantiate = () => {
                 </Box>
             </MainContent>
         </Container>
-    )
-}
+    );
+};
 
 export default React.memo(CW721Instantiate);

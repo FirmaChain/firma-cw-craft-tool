@@ -88,7 +88,7 @@ const ContractInformation = () => {
                     {codeID ? <SpecificValueTypo>{codeID}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
                 </SpecificItem>
 
-                <SpecificItem style={{ alignItems: 'flex-start' }}>
+                <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     <SpecificValueBox>
                         <IconButton
@@ -97,7 +97,8 @@ const ContractInformation = () => {
                         >
                             <SpecificValueWrapper>
                                 <SpecificValueTypo>
-                                    {`${totalSupply}`}<span>{'NFT'}</span>
+                                    {`${totalSupply}`}
+                                    <span>{'NFT'}</span>
                                 </SpecificValueTypo>
                             </SpecificValueWrapper>
                             <TableExpandButton $expand={expand} src={IC_EXPAND} alt={'expand'} />
@@ -113,7 +114,8 @@ const ContractInformation = () => {
                                 addNFTs={addNFTs}
                                 updateNFTs={updateNFTs}
                                 clearListData={clearCW721NFTListData}
-                                setCurrentPage={setCurrentPage} />
+                                setCurrentPage={setCurrentPage}
+                            />
                         </NFTTableContainer>
                     </SpecificValueBox>
                 </SpecificItem>
@@ -121,6 +123,5 @@ const ContractInformation = () => {
         </ContractCard>
     );
 };
-
 
 export default ContractInformation;

@@ -5,16 +5,17 @@ import { IC_PREVIEW, IC_TAG, IC_WALLET } from '@/components/atoms/icons/pngIcons
 import ContentItem from './contentItem';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import Submit from './submit';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
 import InstantitateModal from '@/components/organisms/modal/cw721/instantiateModal';
+import { isValidAddress } from '@/utils/common';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    height: fit-content;
     padding: 48px 48px;
     display: flex;
     flex-direction: column;
@@ -132,12 +133,15 @@ const Preview = () => {
 
     const disableButton = useMemo(() => {
         if (isInit) {
-            if (nftName === '') return true;
+            if (nftName.length < 3) return true;
             if (nftSymbol.length < 3) return true;
             if (label === '') return true;
+            if (label.length >= 128) return true;
 
-            if (contractMode === 'ADVANCED' && admin === '') return true;
-            if (contractMode === 'ADVANCED' && minter === '') return true;
+            if (contractMode === 'ADVANCED') {
+                if (admin === '' || !isValidAddress(admin)) return true;
+                if (minter === '' || !isValidAddress(minter)) return true;
+            }
         }
 
         return false;

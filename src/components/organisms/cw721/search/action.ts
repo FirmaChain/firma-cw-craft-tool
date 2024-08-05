@@ -1,5 +1,4 @@
 import { useSnackbar } from 'notistack';
-import useExecuteHook from '../../execute/hooks/useExecueteHook';
 import useCW721SearchStore from './cw721SearchStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -10,9 +9,10 @@ import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
 import { CRAFT_CONFIGS } from '@/config';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const useCW721SearchActions = () => {
-    const { firmaSDK } = useExecuteHook();
+    const { firmaSDK } = useFirmaSDKContext();
     const { client } = useApollo();
     const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
     const { enqueueSnackbar } = useSnackbar();

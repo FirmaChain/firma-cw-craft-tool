@@ -7,6 +7,7 @@ import { rootState } from '@/redux/reducers';
 import { useEffect } from 'react';
 import { ENG_NUM_SPACE, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useFormStore from '@/store/formStore';
+import { isValidAddress } from '@/utils/common';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
@@ -94,12 +95,34 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
 
+    const onNameChange = (value: string) => {
+        //! minimum 3 characters
+        if (value === '' || value.length >= 3) clearFormError({ id: 'nftContractName', type: 'MINIMUM_THREE_CHARS' });
+        else setFormError({ id: 'nftContractName', type: 'MINIMUM_THREE_CHARS', message: 'Minimum 3 characters required.' });
+
+        setNftName(value);
+    };
+
     const onSymbolChange = (value: string) => {
         //! minimum 3 characters
         if (value === '' || value.length >= 3) clearFormError({ id: 'nftContractSymbol', type: 'MINIMUM_THREE_CHARS' });
         else setFormError({ id: 'nftContractSymbol', type: 'MINIMUM_THREE_CHARS', message: 'Minimum 3 characters required.' });
 
         setNftSymbol(value);
+    };
+
+    const onAdminChange = (value: string) => {
+        if (value === '' || isValidAddress(value)) clearFormError({ id: 'adminAddress', type: 'INVALID_ADDRESS' });
+        else setFormError({ id: 'adminAddress', type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+
+        setAdmin(value);
+    };
+
+    const onMinterChange = (value: string) => {
+        if (value === '' || isValidAddress(value)) clearFormError({ id: 'minterAddress', type: 'INVALID_ADDRESS' });
+        else setFormError({ id: 'minterAddress', type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+
+        setMinter(value);
     };
 
     useEffect(() => {
@@ -121,61 +144,33 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                 </TextGroupWrapper>
             </TitleWrapper>
             <InformationBody>
-                {isBasic ? (
-                    <>
-                        <LabelInput
-                            labelProps={{ label: 'NFT Contract Name' }}
-                            inputProps={{
-                                value: nftName,
-                                formId: 'nftContractName',
-                                placeHolder: 'ex) My CW Token',
-                                maxLength: 30,
-                                onChange: setNftName,
-                                emptyErrorMessage: 'Please input token name.',
-                                regex: ENG_NUM_SPACE
-                            }}
-                        />
-                        <LabelInput
-                            labelProps={{ label: 'NFT Contract Symbol', subText: 'Minimum 3 characters' }}
-                            inputProps={{
-                                value: nftSymbol,
-                                formId: 'nftContractSymbol',
-                                placeHolder: 'ex) MCT, FCT',
-                                maxLength: 12,
-                                onChange: onSymbolChange,
-                                emptyErrorMessage: 'Please input token symbol.',
-                                regex: ONLY_ENGLISH
-                            }}
-                        />
-                    </>
-                ) : (
-                    <AdvancedContractWrap>
-                        <LabelInput
-                            labelProps={{ label: 'NFT Contract Name' }}
-                            inputProps={{
-                                value: nftName,
-                                formId: 'nftContractName',
-                                placeHolder: 'ex) My CW Token',
-                                maxLength: 30,
-                                onChange: setNftName,
-                                emptyErrorMessage: 'Please input token name.',
-                                regex: ENG_NUM_SPACE
-                            }}
-                        />
-                        <LabelInput
-                            labelProps={{ label: 'NFT Contract Symbol', subText: 'Minimum 3 characters' }}
-                            inputProps={{
-                                value: nftSymbol,
-                                formId: 'nftContractSymbol',
-                                placeHolder: 'ex) MCT, FCT',
-                                maxLength: 12,
-                                onChange: setNftSymbol,
-                                emptyErrorMessage: 'Please input token symbol.',
-                                regex: ONLY_ENGLISH
-                            }}
-                        />
-                    </AdvancedContractWrap>
-                )}
+                <AdvancedContractWrap style={{ flexDirection: isBasic ? 'column' : 'row', gap: isBasic ? '24px' : '12px' }}>
+                    <LabelInput
+                        labelProps={{ label: 'NFT Contract Name', subText: 'Minimum 3 charactes' }}
+                        inputProps={{
+                            value: nftName,
+                            formId: 'nftContractName',
+                            placeHolder: 'ex) My CW Token',
+                            maxLength: 30,
+                            onChange: onNameChange,
+                            emptyErrorMessage: 'Please input token name.',
+                            regex: ENG_NUM_SPACE
+                        }}
+                    />
+                    <LabelInput
+                        labelProps={{ label: 'NFT Contract Symbol', subText: 'Minimum 3 characters' }}
+                        inputProps={{
+                            value: nftSymbol,
+                            formId: 'nftContractSymbol',
+                            placeHolder: 'ex) MCT, FCT',
+                            maxLength: 12,
+                            onChange: onSymbolChange,
+                            emptyErrorMessage: 'Please input token symbol.',
+                            regex: ONLY_ENGLISH
+                        }}
+                    />
+                </AdvancedContractWrap>
+
                 {!isBasic && (
                     <LabelInput
                         labelProps={{ label: 'Admin Address' }}
@@ -183,7 +178,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             value: admin,
                             formId: 'adminAddress',
                             placeHolder: 'Input wallet Address',
-                            onChange: setAdmin,
+                            onChange: onAdminChange,
                             regex: WALLET_ADDRESS_REGEX,
                             emptyErrorMessage: 'Please input admin address.'
                         }}
@@ -196,7 +191,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             value: minter,
                             formId: 'minterAddress',
                             placeHolder: 'Input wallet Address',
-                            onChange: setMinter,
+                            onChange: onMinterChange,
                             regex: WALLET_ADDRESS_REGEX,
                             emptyErrorMessage: 'Please input minter address.'
                         }}

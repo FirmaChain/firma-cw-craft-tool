@@ -21,10 +21,18 @@ export const CardSpecific = styled.div`
     gap: 24px;
 `;
 
-export const SpecificItem = styled.div`
+export const SpecificItem = styled.div<{ $isNFTList?: boolean }>`
     display: flex;
     gap: 32px;
     align-items: center;
+    flex-direction: row;
+
+    ${({ $isNFTList }) =>
+        $isNFTList &&
+        `@media (max-width: 1200px) {
+        gap: 24px;
+        flex-direction: column;
+    }`}
 `;
 
 export const SpecificLabelTypo = styled.div`
@@ -37,7 +45,6 @@ export const SpecificLabelTypo = styled.div`
     font-weight: 400;
     line-height: 22px;
 `;
-
 
 export const SpecificValueBox = styled.div`
     width: 100%;
@@ -108,22 +115,28 @@ export const NFTTableContainer = styled.div<{ $expand: boolean }>`
     border-radius: 12px;
     background: var(--Gray-150, #141414);
     transition: all 0.5s ease;
-    ${({ $expand }) => $expand ? `
+    ${({ $expand }) =>
+        $expand
+            ? `
         max-height: 1500px;
-    `: `
+    `
+            : `
         max-height: 0px;
     `}
     overflow: hidden;
-`
+`;
 
 export const TableExpandButton = styled.img<{ $expand: boolean }>`
     width: 20px;
     height: 20px;
     object-fit: contain;
     transition: all 0.5s ease;
-    ${({ $expand }) => $expand ? `
+    ${({ $expand }) =>
+        $expand
+            ? `
         transform: rotate(0deg);
-    `: `
+    `
+            : `
         transform: rotate(180deg);
     `}
-`
+`;

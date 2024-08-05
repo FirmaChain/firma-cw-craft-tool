@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const ItemWrapper = styled.div<{ $isCover?: boolean }>`
     display: flex;
@@ -41,13 +41,12 @@ const ItemValue = styled.div`
 
 const ItemEmptyValue = styled.div`
     color: var(--Gray-500, #383838);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
 `;
-
 
 const ItemValueCover = styled.div<{ $visible: boolean }>`
     display: flex;
@@ -79,7 +78,7 @@ const ItemEmptyValueCover = styled.div`
     padding: 4px 12px;
     border-radius: 100px;
     border: 1px solid var(--Gray-500, #383838);
-    background: var(--Gray-400, #1E1E1E);
+    background: var(--Gray-400, #1e1e1e);
     align-items: center;
     justify-content: center;
     overflow: hidden;
@@ -87,7 +86,7 @@ const ItemEmptyValueCover = styled.div`
 
 const ItemEmptyCoverValue = styled.div`
     color: var(--Gray-500, #383838);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -113,22 +112,25 @@ const ContentItem = ({ imagePath, name, value, isCover = false, defaultValue }: 
     return (
         <ItemWrapper $isCover={isCover}>
             <ItemLeftWrapper>
-                <ItemIcon src={imagePath}/>
+                <ItemIcon src={imagePath} />
                 {/* {imagePath} */}
                 <ItemText>{name}</ItemText>
             </ItemLeftWrapper>
-            {!isCover ?
-                value === null || value === ''
-                    ? <ItemEmptyValue>{defaultValue}</ItemEmptyValue>
-                    : <ItemValue>{value}</ItemValue>
-            : value === null || value === ''
-                    ? <ItemEmptyValueCover>
-                        <ItemEmptyCoverValue>{defaultValue}</ItemEmptyCoverValue>
-                      </ItemEmptyValueCover>
-                    : <ItemValueCover $visible={value.length > 0}>
-                        <ItemCoverValue>{value}</ItemCoverValue>
-                      </ItemValueCover>
-            }
+            {!isCover ? (
+                value === null || value === '' ? (
+                    <ItemEmptyValue>{defaultValue}</ItemEmptyValue>
+                ) : (
+                    <ItemValue>{value}</ItemValue>
+                )
+            ) : value === null || value === '' ? (
+                <ItemEmptyValueCover>
+                    <ItemEmptyCoverValue>{defaultValue}</ItemEmptyCoverValue>
+                </ItemEmptyValueCover>
+            ) : (
+                <ItemValueCover $visible={value.length > 0}>
+                    <ItemCoverValue>{value}</ItemCoverValue>
+                </ItemValueCover>
+            )}
         </ItemWrapper>
     );
 };

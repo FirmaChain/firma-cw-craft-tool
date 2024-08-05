@@ -1,11 +1,15 @@
-import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import { useSnackbar } from 'notistack';
 import useCW721ExecuteStore from './useCW721ExecuteStore';
 import { GlobalActions } from '@/redux/actions';
-import { Cw721NftInfo } from '@firmachain/firma-js';
+import { Cw721ContractInfo, Cw721NftInfo } from '@firmachain/firma-js';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { sleep } from '@/utils/common';
 
 const useCW721ExecuteAction = () => {
-    const { firmaSDK } = useExecuteHook();
+    const { firmaSDK } = useFirmaSDKContext();
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -65,9 +69,10 @@ const useCW721ExecuteAction = () => {
         try {
             GlobalActions.handleGlobalLoading(true);
 
+            let nftContractInfo: Cw721ContractInfo;
+
             try {
-                const nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress);
-                useCW721ExecuteStore.getState().setNftContractInfo(nftContractInfo);
+                nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress);
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721.' });
                 useCW721ExecuteStore.getState().clearForm();
@@ -75,8 +80,30 @@ const useCW721ExecuteAction = () => {
                 return;
             }
 
+            await sleep(150);
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
             useCW721ExecuteStore.getState().setContractInfo(contractInfo);
+
+            await sleep(150);
+            await setTotalNfts(contractAddress);
+
+            await sleep(150);
+            await setFctBalance(userAddress);
+
+            await sleep(150);
+            await setOwnershipInfo(contractAddress);
+
+            await sleep(150);
+            await setMyNftList(contractAddress, userAddress);
+
+            await sleep(150);
+            await setBlockHeight();
+
+            await sleep(150);
+            await setMinter(contractAddress);
+
+            await sleep(150);
+            useCW721ExecuteStore.getState().setNftContractInfo(nftContractInfo);
         } catch (error) {
             console.log('error', error);
             enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
@@ -197,7 +224,7 @@ const useCW721ExecuteAction = () => {
         } catch (error) {
             console.log('error', error);
         }
-    }
+    };
 
     return {
         checkContractExist,

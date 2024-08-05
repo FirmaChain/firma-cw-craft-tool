@@ -40,9 +40,11 @@ export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: sho
     height: 30px;
     position: absolute;
     top: 50%;
-    left: ${({ $position: position }) => (position === 'left' ? '-3%' : '44%')};
-    margin-left: ${({ $position: position }) => (position === 'left' ? '10px' : '0px')};
-    transition: width 0.5s ease, left 0.5s ease;
+    left: ${({ $position: position }) => (position === 'left' ? '4px' : 'calc(100% - 138px - 4px)')};
+    // margin-left: ${({ $position: position }) => (position === 'left' ? '10px' : '0px')};
+    transition:
+        width 0.5s ease,
+        left 0.5s ease;
     transform: translateY(-50%);
 `;
 
