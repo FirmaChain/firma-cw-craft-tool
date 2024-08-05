@@ -6,6 +6,7 @@ import { Expires, FirmaSDK } from '@firmachain/firma-js';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import useExecuteStore from './useExecuteStore';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 export interface ITokenInfoState {
     success: boolean;
@@ -44,13 +45,8 @@ interface IAllowanceBalanceState {
 
 const useExecuteHook = () => {
     const { enqueueSnackbar } = useSnackbar();
-
-    const network = useSelector((state: rootState) => state.global.network);
+    const { firmaSDK } = useFirmaSDKContext();
     const userAddress = useSelector((state: rootState) => state.wallet.address);
-
-    const MAINNET_SDK = new FirmaSDK(CRAFT_CONFIGS.MAINNET.FIRMACHAIN_CONFIG);
-    const TESTNET_SDK = new FirmaSDK(CRAFT_CONFIGS.TESTNET.FIRMACHAIN_CONFIG);
-    const firmaSDK = network === 'MAINNET' ? MAINNET_SDK : TESTNET_SDK;
 
     const getContractTokenInfo = useCallback(
         async (contractAddress: string, address: string) => {
@@ -99,10 +95,10 @@ const useExecuteHook = () => {
                 resultData.tokenSymbol = tokenInfo.symbol;
                 resultData.decimals = tokenInfo.decimals.toString();
                 resultData.totalSupply = tokenInfo.total_supply;
-                
+
                 resultData.minter.minter = minterInfo && minterInfo.minter;
                 resultData.minter.cap = minterInfo && minterInfo.cap;
-                
+
                 resultData.marketingLogoUrl = marketingInfo.logo?.url || '';
                 resultData.marketingDescription = marketingInfo.description;
                 resultData.marketingAddress = marketingInfo.marketing;

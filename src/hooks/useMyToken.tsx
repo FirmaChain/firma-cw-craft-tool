@@ -5,15 +5,14 @@ import { FirmaSDK } from '@firmachain/firma-js';
 import { rootState } from '../redux/reducers';
 import { CRAFT_CONFIGS } from '../config';
 import { useSnackbar } from 'notistack';
-
-const TESTNET_SDK = new FirmaSDK(CRAFT_CONFIGS.TESTNET.FIRMACHAIN_CONFIG);
-const MAINNET_SDK = new FirmaSDK(CRAFT_CONFIGS.MAINNET.FIRMACHAIN_CONFIG);
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const useMyToken = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
+    const { firmaSDK } = useFirmaSDKContext();
 
     //? remove lines for less re-rendering
     // const [firmaSDK, setFirmaSDK] = useState<FirmaSDK | null>(null);
@@ -33,7 +32,6 @@ const useMyToken = () => {
     // }, [network]);
 
     const curSDKConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    const firmaSDK = network === 'MAINNET' ? MAINNET_SDK : TESTNET_SDK;
 
     const basicCodeId = curSDKConfig.CW20.BASIC_CODE_ID;
     const advancedCodeId = curSDKConfig.CW20.ADVANCED_CODE_ID;

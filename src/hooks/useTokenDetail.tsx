@@ -6,6 +6,7 @@ import { Cw20SpenderAllowance, FirmaSDK } from '@firmachain/firma-js';
 import { rootState } from '../redux/reducers';
 import { NETWORKS } from '../constants/common';
 import { CRAFT_CONFIGS } from '../config';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 export interface IAllowances {
     Receiver: string;
@@ -50,20 +51,7 @@ interface _Cw20SpenderAllowance extends Cw20SpenderAllowance {
 
 const useTokenDetail = () => {
     const { enqueueSnackbar } = useSnackbar();
-
-    const { network } = useSelector((state: rootState) => state.global);
-
-    const [firmaSDK, setFirmaSDK] = useState<FirmaSDK | null>(null);
-
-    useEffect(() => {
-        const initializeFirmaSDK = () => {
-            const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-
-            const newFirmaSDK = new FirmaSDK(craftConfig.FIRMACHAIN_CONFIG);
-            setFirmaSDK(newFirmaSDK);
-        };
-        initializeFirmaSDK();
-    }, [network]);
+    const { firmaSDK } = useFirmaSDKContext();
 
     const getTokenDetail = useCallback(
         async (contractAddress: string, address: string) => {

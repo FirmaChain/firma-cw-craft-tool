@@ -7,18 +7,16 @@ import { CRAFT_CONFIGS } from '../config';
 import { useSnackbar } from 'notistack';
 import { IContractInfo } from '@/context/cw721MyNFTContractsContext';
 import { IMG_NFT_EMPTY_THUMBNAIL } from '@/components/atoms/icons/pngIcons';
-
-const TESTNET_SDK = new FirmaSDK(CRAFT_CONFIGS.TESTNET.FIRMACHAIN_CONFIG);
-const MAINNET_SDK = new FirmaSDK(CRAFT_CONFIGS.MAINNET.FIRMACHAIN_CONFIG);
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const useMyNFTContracts = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
+    const { firmaSDK } = useFirmaSDKContext();
 
     const curSDKConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    const firmaSDK = network === 'MAINNET' ? MAINNET_SDK : TESTNET_SDK;
 
     const basicCodeId = curSDKConfig.CW721.BASIC_CODE_ID;
     const advancedCodeId = curSDKConfig.CW721.ADVANCED_CODE_ID;

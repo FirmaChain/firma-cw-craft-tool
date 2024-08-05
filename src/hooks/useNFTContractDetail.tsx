@@ -10,6 +10,7 @@ import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender } from '@/utils/common';
 import useApollo from './useApollo';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 export interface IAllowances {
     Receiver: string;
@@ -60,22 +61,9 @@ export interface INFTContractDetailState extends INFTContractInfo { }
 const useNFTContractDetail = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const { network } = useSelector((state: rootState) => state.global);
+    const { firmaSDK } = useFirmaSDKContext();
     const { client } = useApollo();
     const { nftsInfo, setNftsInfo, ownedNftsInfo, setOwnedNftsInfo } = useNFTContractDetailStore();
-
-    const [firmaSDK, setFirmaSDK] = useState<FirmaSDK | null>(null);
-
-    const initializeFirmaSDK = () => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-
-        const newFirmaSDK = new FirmaSDK(craftConfig.FIRMACHAIN_CONFIG);
-        setFirmaSDK(newFirmaSDK);
-    };
-
-    useEffect(() => {
-        initializeFirmaSDK();
-    }, [network]);
 
     const checkExistContract = async (contractAddress: string) => {
         try {
