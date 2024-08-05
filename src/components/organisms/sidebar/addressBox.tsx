@@ -9,7 +9,6 @@ import Divider from '@/components/atoms/divider';
 import styled from 'styled-components';
 import { IC_LOG_OUT } from '@/components/atoms/icons/pngIcons';
 import { useEffect, useState } from 'react';
-import useExecuteHook from '../execute/hooks/useExecueteHook';
 
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import Skeleton from '@/components/atoms/skeleton';
@@ -17,6 +16,7 @@ import { WalletActions } from '@/redux/actions';
 import { persistor } from '@/redux';
 import useResetStoreData from '@/hooks/useResetStoreData';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const BalanceBox = styled(AddressCard)`
     position: absolute;
@@ -106,9 +106,9 @@ const AddressBox = () => {
     const location = useLocation();
 
     const { enqueueSnackbar } = useSnackbar();
-    const { resetAll } = useResetStoreData()
+    const { resetAll } = useResetStoreData();
 
-    const { firmaSDK } = useExecuteHook();
+    const { firmaSDK } = useFirmaSDKContext();
 
     const [balance, setBalance] = useState<string>('');
     const [open, setOpen] = useState(false);

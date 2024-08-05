@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { format } from 'date-fns';
 import { IC_CALENDAR } from '../icons/pngIcons';
 import { DEFAULT_INPUT_REGEX, FLOAT_NUMBER, INT_NUMBERS } from '@/constants/regex';
+// import useFormStore from '@/store/formStore';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -118,6 +119,7 @@ interface InputProps {
     disabled?: boolean;
     onClickDate?: () => void;
     hideErrorMessage?: boolean;
+    inputId?: string;
 }
 
 const VariableInput = ({
@@ -135,9 +137,12 @@ const VariableInput = ({
     maxValue,
     regex,
     onClickDate,
-    hideErrorMessage = false
+    hideErrorMessage = false,
+    inputId
 }: InputProps) => {
-    const key = useId();
+    // const setFormError = useFormStore((v) => v.setFormError);
+    // const clearFormError = useFormStore((v) => v.clearFormError);
+
     const [isFocus, setIsFocus] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>();
@@ -147,8 +152,6 @@ const VariableInput = ({
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
-
-        if (inputValue !== event.target.value) return;
 
         if (inputValue.length > 0) {
             if (type === 'number') {
@@ -167,11 +170,11 @@ const VariableInput = ({
                 if (typeof maxValue === 'number') inputValue = Number(inputValue) > maxValue ? String(maxValue) : inputValue;
             } else {
                 //? Filter input string if valid regex provided
-                console.log(inputValue);
+                // console.log(inputValue);
                 if (regex) {
-                    console.log('REGEX', regex);
+                    // console.log('REGEX', regex);
                     inputValue = inputValue.replace(regex, '');
-                    console.log('inputValue', inputValue);
+                    // console.log('inputValue', inputValue);
                 }
 
                 //? Slice remaining string if maxLength provided
@@ -180,10 +183,28 @@ const VariableInput = ({
         }
 
         onChange(inputValue);
+
+        // if (type === 'string') {
+        //     //! if user input is not same with end-value
+        //     if (inputValue !== event.target.value) {
+        //         //! if text input length is same with maxLength
+        //         if (typeof maxLength === 'number' && inputValue.length === maxLength) {
+        //             setFormError({ id: inputId, type: 'MAX_LENGTH', message: `Max input length is ${maxLength}.` });
+        //         } else {
+        //             setFormError({ id: inputId, type: 'INVALID_TYPO', message: `${event.nativeEvent['data']} is not valid.` });
+        //         }
+        //     } else {
+        //         clearFormError({ id: inputId, type: 'INVALID_TYPO' });
+        //         clearFormError({ id: inputId, type: 'MAX_LENGTH' });
+        //     }
+        // }
     };
 
-    const handleDateChange = (date: Date) => {
-        onChange(String(Number(date)));
+    const _onBlur = () => {
+        // clearFormError({ id: inputId, type: 'INVALID_TYPO' });
+        // clearFormError({ id: inputId, type: 'MAX_LENGTH' });
+
+        onBlur();
     };
 
     return (
@@ -202,7 +223,7 @@ const VariableInput = ({
                 onClick={() => inputRef.current?.focus()}
                 onBlur={() => {
                     setIsFocus(false);
-                    onBlur();
+                    _onBlur();
                 }}
                 $isFocus={isFocus}
                 $error={isError}
@@ -240,7 +261,7 @@ const VariableInput = ({
             </StyledInput>
             {!hideErrorMessage && (
                 <div style={{ paddingTop: errorMessage.length > 0 ? '4px' : 0, paddingLeft: '8px' }}>
-                    <ErrorMessage>{errorMessage[0]}</ErrorMessage>
+                    <ErrorMessage>{errorMessage[errorMessage.length - 1]}</ErrorMessage>
                 </div>
             )}
         </div>

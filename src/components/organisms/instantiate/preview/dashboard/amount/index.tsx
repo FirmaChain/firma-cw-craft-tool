@@ -58,8 +58,7 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
     }, [isBasic, minterAddress]);
 
     useEffect(() => {
-        if (isBasic) setIsOpen(false);
-        else setIsOpen(true);
+        if (!isBasic) setIsOpen(true);
     }, [isBasic]);
 
     return (
@@ -83,7 +82,7 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                 {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}
                             </HeaderRightWrapper>
                         </MinterCapHeaderWrapper>
-                        {isOpen ? (
+                        {!isBasic && isOpen ? (
                             <DetailWrapper>
                                 <DetailLeftWrapper>
                                     <Icons.Wallet width={'20px'} height={'20px'} />

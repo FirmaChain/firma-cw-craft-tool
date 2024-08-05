@@ -51,7 +51,7 @@ const Preview = ({ isBasic }: IProps) => {
 
         return cw20CodeId;
     }, [network, contractMode]);
-    
+
     const craftConfig = useMemo(() => {
         return network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
     }, [network]);
@@ -70,7 +70,7 @@ const Preview = ({ isBasic }: IProps) => {
             for (const wallet of walletList) {
                 const recipient: string = wallet.recipient;
                 const convertedAmount = getApplyDecimalsAmount(wallet.amount, newDecimals.toString());
-                
+
                 if (walletObj[recipient]) {
                     walletObj[recipient] = addStringAmount(walletObj[recipient], convertedAmount);
                 } else {
@@ -164,7 +164,7 @@ const Preview = ({ isBasic }: IProps) => {
 
     const disableButton = useMemo(() => {
         if (isInit) {
-            if (tokenName === '') return true;
+            if (tokenName.length < 3) return true;
 
             if (tokenSymbol === '') return true;
 

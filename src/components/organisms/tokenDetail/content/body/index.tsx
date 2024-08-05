@@ -13,8 +13,8 @@ const ContentBody = () => {
             <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
             <AdditionalInformation />
             <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
-            <MyAllowances />
-            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
+            {/* <MyAllowances />
+            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" /> */}
             <AllAccounts />
             <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
             <Transactions />

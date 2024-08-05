@@ -1,18 +1,14 @@
-import { useState } from 'react';
 import IconButton from './iconButton';
 import Icons from '../icons';
 
 interface IProps {
-    open?: boolean;
+    open: boolean;
     onToggle: (isOpen: boolean) => void;
 }
 
 const ArrowToggleButton = ({ open, onToggle }: IProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(open);
-
     const onClickButton = () => {
-        setIsOpen(!isOpen);
-        onToggle(!isOpen);
+        onToggle(!open);
     };
 
     return (
@@ -20,7 +16,7 @@ const ArrowToggleButton = ({ open, onToggle }: IProps) => {
             style={{ display: 'flex', width: '20px', height: '20px', alignItems: 'center', justifyContent: 'center', padding: 0 }}
             onClick={onClickButton}
         >
-            {isOpen ? (
+            {open ? (
                 <Icons.LeftArrow width="16px" height="16px" stroke="#FFFFFF" style={{ transform: 'rotate(90deg)' }} />
             ) : (
                 <Icons.LeftArrow width="16px" height="16px" stroke="#FFFFFF" style={{ transform: 'rotate(270deg)' }} />

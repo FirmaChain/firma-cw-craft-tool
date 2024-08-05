@@ -11,12 +11,21 @@ interface IProps {
 const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IProps) => {
     return (
         <MarketingWrapper>
-            {label && (
-                <MarketingItem isCover={true} imageChild={<Icons.Tag width={'24px'} height={'24px'} />} name={'Label'} value={label} />
-            )}
-            {decimals !== '' && (
-                <MarketingItem imageChild={<Icons.Percent width={'24px'} height={'24px'} />} name={'Decimal'} value={decimals} />
-            )}
+            <MarketingItem
+                isCover={true}
+                imageChild={<Icons.Tag width={'24px'} height={'24px'} />}
+                name={'Label'}
+                value={label}
+                defaultValue="Label"
+            />
+
+            <MarketingItem
+                imageChild={<Icons.Percent width={'24px'} height={'24px'} />}
+                name={'Decimal'}
+                value={decimals}
+                defaultValue="Decimal"
+            />
+
             {marketingAddress && (
                 <MarketingItem
                     imageChild={<Icons.Wallet width={'24px'} height={'24px'} />}

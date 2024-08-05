@@ -20,7 +20,6 @@ import useExecuteStore from '../hooks/useExecuteStore';
 import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
-import useFormStore from '@/store/formStore';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
@@ -232,54 +231,23 @@ const TokenInfo = () => {
     }, [contractInfo, network]);
 
     const ownerMenus = useMemo(() => {
-        let ruleMenus: IMenuItem[] = [];
-
         if (!contractInfo) return [];
 
         const isBasic = contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID;
+        const ruleMenus: IMenuItem[] = isBasic ? [...basicMenuItems] : [...advancedMenuItems];
+
+        const updateMenuItems = (menu: IMenuItem[], indices: number[], condition: boolean) => {
+            indices.forEach((index) => {
+                menu[index] = { ...menu[index], isDisabled: condition };
+            });
+        };
 
         if (isBasic) {
-            ruleMenus = [...basicMenuItems];
-
-            //! if minter info not provided or minter address is not connected address
-            if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
-                ruleMenus[1] = { ...ruleMenus[1], isDisabled: true };
-                ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
-            }
-            //  else {
-            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
-            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
-            // }
-
-            //! if marketing info not provided or marketing address is not connected address
-            if (!marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase()) {
-                ruleMenus[8] = { ...ruleMenus[8], isDisabled: true };
-            }
-            //  else {
-            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
-            // }
+            updateMenuItems(ruleMenus, [1, 9], !minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase());
+            updateMenuItems(ruleMenus, [8], !marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase());
         } else {
-            ruleMenus = [...advancedMenuItems];
-
-            //! if minter info not provided or minter address is not connected address
-            if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
-                ruleMenus[1] = { ...ruleMenus[1], isDisabled: true };
-                ruleMenus[10] = { ...ruleMenus[10], isDisabled: true };
-            }
-            //  else {
-            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
-            //     ruleMenus[10] = { ...ruleMenus[10], isDisabled: false };
-            // }
-
-            //! if marketing info not provided or marketing address is not connected address
-            if (!marketingInfo || marketingInfo.marketing !== address) {
-                ruleMenus[8] = { ...ruleMenus[8], isDisabled: true };
-                ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
-            }
-            //  else {
-            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
-            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: false };
-            // }
+            updateMenuItems(ruleMenus, [1, 10], !minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase());
+            updateMenuItems(ruleMenus, [8, 9], !marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase());
         }
 
         return ruleMenus;

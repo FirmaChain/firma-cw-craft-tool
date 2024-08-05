@@ -1,8 +1,7 @@
-import styled from "styled-components";
-import IconButton from "./iconButton";
-import Icons from "../icons";
+import styled from 'styled-components';
+import Icons from '../icons';
 
-const Container = styled.div <{ $disabled: boolean }>`
+const Container = styled.div<{ $disabled: boolean }>`
     width: 100%;
     padding: 8px 0px;
     display: flex;
@@ -12,7 +11,9 @@ const Container = styled.div <{ $disabled: boolean }>`
     justify-content: center;
     gap: 6px;
 
-    ${({ $disabled }) => $disabled === true && `
+    ${({ $disabled }) =>
+        $disabled === true &&
+        `
         cursor: not-allowed;
         border-color: var(--Gray-100, #313131);
         > div {
@@ -23,7 +24,9 @@ const Container = styled.div <{ $disabled: boolean }>`
             stroke: var(--Gray-500, #383838);
         }
     `};
-    ${({ $disabled }) => $disabled === false && `
+    ${({ $disabled }) =>
+        $disabled === false &&
+        `
         cursor: pointer;
         border-color: var(--Gray-600, #707070);
         
@@ -48,9 +51,7 @@ const Container = styled.div <{ $disabled: boolean }>`
             }
         }
     `};
-
 `;
-
 
 const TitleTypo = styled.div<{ $disabled?: boolean }>`
     font-size: 14px;
@@ -58,7 +59,6 @@ const TitleTypo = styled.div<{ $disabled?: boolean }>`
     font-weight: 400;
     line-height: 20px;
 `;
-
 
 interface IProps {
     disabled: boolean;
@@ -69,11 +69,13 @@ interface IProps {
 
 const AddWalletButton = ({ disabled, count, maxCount, onClick }: IProps) => {
     return (
-        <Container $disabled={disabled} onClick={onClick}>
+        <Container $disabled={disabled} onClick={() => !disabled && onClick()}>
             <Icons.Add width={'16px'} height={'16px'} />
-            <TitleTypo>Add (<span style={{ fontWeight: '600' }}>{count}</span>/{maxCount})</TitleTypo>
+            <TitleTypo>
+                Add (<span style={{ fontWeight: '600' }}>{count}</span>/{maxCount})
+            </TitleTypo>
         </Container>
-    )
-}
+    );
+};
 
 export default AddWalletButton;

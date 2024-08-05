@@ -33,12 +33,13 @@ export const AmountItem = ({ label, decimals, amount, symbol }: IAmountProps) =>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
                 <ItemAmountValue
-                    data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
+                // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
+                // data-tooltip-id={TOOLTIP_ID.COMMON}
+                // data-tooltip-wrapper="span"
+                // data-tooltip-place="bottom"
                 >
-                    {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)}
+                    {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
+                    {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ItemAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
@@ -52,13 +53,13 @@ export const ResultAmountItem = ({ label, decimals, amount, symbol }: IAmountPro
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
                 <ResultItemAmountTypo
-                    data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
+                // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
+                // data-tooltip-id={TOOLTIP_ID.COMMON}
+                // data-tooltip-wrapper="span"
+                // data-tooltip-place="bottom"
                 >
-                    {/* {parseAmountWithDecimal2(amount, decimals, true)} */}
-                    {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)}
+                    {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
+                    {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ResultItemAmountTypo>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>

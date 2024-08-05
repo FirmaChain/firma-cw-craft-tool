@@ -68,7 +68,7 @@ const ItemLabelTypo = styled.div`
 `;
 
 const ItemValueTypo = styled.div`
-    width: 338px;
+    width: 100%;
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;

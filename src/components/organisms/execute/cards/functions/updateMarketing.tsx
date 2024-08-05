@@ -113,7 +113,7 @@ const UpdateMarketing = () => {
                             inputProps={{
                                 value: currentProj,
                                 formId: 'input project',
-                                placeHolder: 'ex) http://firmachain.org',
+                                placeHolder: 'ex) https://firmachain.org',
                                 onChange: setMarketingProject
                             }}
                         />

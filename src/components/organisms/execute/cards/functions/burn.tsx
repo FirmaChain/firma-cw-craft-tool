@@ -93,7 +93,8 @@ const Burn = () => {
                         type: 'number',
                         onChange: handleBurnAmount,
                         placeHolder: '0',
-                        decimal: tokenInfo.decimals
+                        decimal: tokenInfo.decimals,
+                        hideErrorMessage: true
                     }}
                 />
 

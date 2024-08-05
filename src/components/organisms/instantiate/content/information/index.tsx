@@ -14,7 +14,6 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../instaniateStore';
-import { isValidUrl } from '@/utils/url';
 import { ENG_NUM_SPACE, HTTP_URI_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 interface IProps {
@@ -33,6 +32,7 @@ const Information = ({ isBasic }: IProps) => {
     const label = useInstantiateStore((v) => v.label);
     const marketingAddress = useInstantiateStore((v) => v.marketingAddress);
     const marketingProject = useInstantiateStore((v) => v.marketingProject);
+    const walletList = useInstantiateStore((v) => v.walletList);
     const setTokenName = useInstantiateStore((v) => v.setTokenName);
     const setTokenSymbol = useInstantiateStore((v) => v.setTokenSymbol);
     const setTokenLogoUrl = useInstantiateStore((v) => v.setTokenLogoUrl);
@@ -41,8 +41,15 @@ const Information = ({ isBasic }: IProps) => {
     const setLabel = useInstantiateStore((v) => v.setLabel);
     const setMarketingAddress = useInstantiateStore((v) => v.setMarketingAddress);
     const setMarketingProject = useInstantiateStore((v) => v.setMarketingProject);
+    const setWalletList = useInstantiateStore((v) => v.setWalletList);
 
     const handleTokenName = (value: string) => {
+        if (value.length === 0 || value.length >= 3) {
+            clearFormError({ id: 'tokenName', type: 'MINIMAL_SYMBOL_LENGTH' });
+        } else {
+            setFormError({ id: 'tokenName', type: 'MINIMAL_SYMBOL_LENGTH', message: 'Minimum 3 characters required.' });
+        }
+
         setTokenName(value);
     };
 
@@ -75,12 +82,24 @@ const Information = ({ isBasic }: IProps) => {
     const handleDescription = (value: string) => {
         setTokenDescription(value);
     };
+
+    const clearListAmount = () => {
+        setWalletList(
+            walletList.map((v) => {
+                clearFormError({ id: `${v.id}_AMOUNT` });
+                return { ...v, amount: '' };
+            })
+        );
+    };
+
     const handleDecimals = (value: string) => {
         if (Number(value) < 0) {
             setDecimals('0');
         } else {
             setDecimals(value);
         }
+
+        clearListAmount();
     };
 
     const handleLabel = (value: string) => {
@@ -119,6 +138,8 @@ const Information = ({ isBasic }: IProps) => {
             handleDescription('');
             clearFormError({ id: 'tokenDescription' });
         }
+
+        clearListAmount();
     }, [isBasic]);
 
     return (
@@ -135,7 +156,7 @@ const Information = ({ isBasic }: IProps) => {
             <InformationBody>
                 <TokenNameSymbol>
                     <LabelInput
-                        labelProps={{ label: 'Token Name' }}
+                        labelProps={{ label: 'Token Name', subText: 'Minimum 3 charactes' }}
                         inputProps={{
                             value: tokenName,
                             formId: 'tokenName',
@@ -233,7 +254,7 @@ const Information = ({ isBasic }: IProps) => {
                             inputProps={{
                                 value: marketingProject,
                                 formId: 'marketingProject',
-                                placeHolder: 'ex) http://firmachain.org',
+                                placeHolder: 'ex) https://firmachain.org',
                                 onChange: handleMarketingProject,
                                 regex: HTTP_URI_REGEX
                             }}

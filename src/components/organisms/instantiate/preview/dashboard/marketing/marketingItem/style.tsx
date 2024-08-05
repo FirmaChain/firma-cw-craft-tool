@@ -12,6 +12,7 @@ export const ItemLeftWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 16px;
+    align-items: center;
 `;
 
 export const ItemText = styled.div`
