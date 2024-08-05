@@ -42,6 +42,8 @@ const Revoke = () => {
     }, []);
 
     useEffect(() => {
+        if (contractAddress === null) return ;
+        
         setMyNftList(contractAddress, address);
     }, [contractAddress, address]);
 

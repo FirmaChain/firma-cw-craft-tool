@@ -10,6 +10,9 @@ import ExpirationModal from '@/components/organisms/modal/expirationModal';
 import { useModalStore } from '@/hooks/useModal';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -54,6 +57,7 @@ enum ExpirationType {
 }
 
 const ApproveAll = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
     const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
     const approveType = useCW721ExecuteStore((state) => state.approveType);
     const approveValue = useCW721ExecuteStore((state) => state.approveValue);
@@ -61,6 +65,8 @@ const ApproveAll = () => {
     const setApproveType = useCW721ExecuteStore((state) => state.setApproveType);
     const setApproveValue = useCW721ExecuteStore((state) => state.setApproveValue);
     const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
+
+    const { setFctBalance } = useCW721ExecuteAction();
 
     const modal = useModalStore();
 
@@ -85,6 +91,8 @@ const ApproveAll = () => {
     }, []);
 
     useEffect(() => {
+        setFctBalance(address);
+        
         return () => {
             clearFormError({ id: `${inputId}_ADDRESS` });
         };

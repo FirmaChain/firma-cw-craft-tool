@@ -100,6 +100,8 @@ const Burn = () => {
     }, [burnList, nftDatas]);
     
     useEffect(() => {
+        if (contractAddress === null) return ;
+        
         setFctBalance(address);
         setMyNftList(contractAddress, address);
 

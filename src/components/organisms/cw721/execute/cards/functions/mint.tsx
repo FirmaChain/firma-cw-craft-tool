@@ -247,6 +247,8 @@ const Mint = () => {
     }, [mintBaseURI, mintStartTokenId, mintEndTokenId, setAlreadyMintList, setNotYetMintList]);
 
     useEffect(() => {
+        if (contractAddress === null) return ;
+        
         setFctBalance(address);
         setMyNftList(contractAddress, address);
 

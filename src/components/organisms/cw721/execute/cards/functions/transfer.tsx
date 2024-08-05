@@ -59,6 +59,8 @@ const Transfer = () => {
     const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
 
     useEffect(() => {
+        if (contractAddress === null) return ;
+        
         setFctBalance(address);
         setMyNftList(contractAddress, address);
 
