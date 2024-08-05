@@ -9,6 +9,8 @@ import { ITransferFrom } from '@/components/organisms/execute/cards/functions/tr
 import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -56,6 +58,7 @@ const TransferFromWalletInput = ({
     inputId
 }: IProps) => {
     const id = inputId;
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
 
     const fromAddressId = `${id}_FROM_ADDRESS`;
     const fromBalanceId = `${id}_FROM_BALANCE`;
@@ -64,15 +67,53 @@ const TransferFromWalletInput = ({
 
     const disableRemoveBtn = index === 1;
 
-    // const setFormError = useFormStore((state) => state.setFormError);
+    const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
+
+    const checkOwnerAddress = (value: string) => {
+        //! value is empty
+        if (value !== '') {
+            //! if address is invalid
+            if (isValidAddress(value)) clearFormError({ id: fromAddressId, type: 'INVALID_ADDRESS' });
+            else {
+                setFormError({ id: fromAddressId, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+                return;
+            }
+
+            //! if address is same with connected address
+            if (value.toLowerCase() !== userAddress.toLowerCase()) clearFormError({ id: fromAddressId, type: 'SAME_WITH_USER' });
+            else {
+                setFormError({ id: fromAddressId, type: 'SAME_WITH_USER', message: 'Cannot use self address.' });
+                return;
+            }
+        } else {
+            //? clear other error except empty error
+            clearFormError({ id: fromAddressId, type: 'INVALID_ADDRESS' });
+            clearFormError({ id: fromAddressId, type: 'SAME_WITH_USER' });
+        }
+    };
+
+    const checkRecipientAddress = (value: string) => {
+        if (value !== '') {
+            //! if address is invalid
+            if (isValidAddress(value)) clearFormError({ id: toAddressId, type: 'INVALID_ADDRESS' });
+            else {
+                setFormError({ id: toAddressId, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+                return;
+            }
+        } else {
+            clearFormError({ id: toAddressId, type: 'INVALID_ADDRESS' });
+        }
+    };
 
     const handleOnChange = (id: string, value: string) => {
         const _data = { ...transferFromInfo };
 
         switch (id) {
             case fromAddressId:
+                checkOwnerAddress(value);
                 _data.fromAddress = value;
+                _data.fromAmount = '';
                 break;
 
             case fromBalanceId:
@@ -80,7 +121,10 @@ const TransferFromWalletInput = ({
                 break;
 
             case toAddressId:
+                checkRecipientAddress(value);
                 _data.toAddress = value;
+                _data.allowanceAmount = '';
+                _data.toAmount = '';
                 break;
 
             case transferAmountId:
@@ -113,7 +157,7 @@ const TransferFromWalletInput = ({
 
     return (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '100%', height: 'fit-content', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ width: '100%', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
@@ -125,7 +169,8 @@ const TransferFromWalletInput = ({
                                     value: transferFromInfo.fromAddress,
                                     onChange: (v) => handleOnChange(fromAddressId, v),
                                     placeHolder: 'Input address',
-                                    regex: WALLET_ADDRESS_REGEX
+                                    regex: WALLET_ADDRESS_REGEX,
+                                    emptyErrorMessage: 'Please input wallet address.'
                                 }}
                             />
                         </div>
@@ -176,7 +221,8 @@ const TransferFromWalletInput = ({
                                     value: transferFromInfo.toAddress,
                                     onChange: (v) => handleOnChange(toAddressId, v),
                                     placeHolder: 'Input address',
-                                    regex: WALLET_ADDRESS_REGEX
+                                    regex: WALLET_ADDRESS_REGEX,
+                                    emptyErrorMessage: 'Please input wallet address.'
                                 }}
                             />
                         </div>
@@ -201,7 +247,9 @@ const TransferFromWalletInput = ({
                                     placeHolder: '0',
                                     type: 'number',
                                     decimal: decimals ? Number(decimals) : 6,
-                                    textAlign: 'right'
+                                    textAlign: 'right',
+                                    emptyErrorMessage: 'Please input amount.',
+                                    hideErrorMessage: true
                                 }}
                             />
                             <AllowanceTypo className="clamp-single-line">{`Allowance : ${formatWithCommas(getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals))}`}</AllowanceTypo>

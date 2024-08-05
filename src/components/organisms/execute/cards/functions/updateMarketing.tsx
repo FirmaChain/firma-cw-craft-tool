@@ -31,6 +31,7 @@ const UpdateMarketing = () => {
     const setMarketingDescription = useExecuteStore((state) => state.setMarketingDescription);
     const setMarketingAddress = useExecuteStore((state) => state.setMarketingAddress);
     const setMarketingProject = useExecuteStore((state) => state.setMarketingProject);
+    const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
@@ -53,9 +54,12 @@ const UpdateMarketing = () => {
 
     useEffect(() => {
         if (marketingInfo) {
-            setMarketingDescription(marketingInfo.description);
-            setMarketingAddress(marketingInfo.marketing);
-            setMarketingProject(marketingInfo.project);
+            if (marketingInfo?.marketing.toLowerCase() !== address.toLowerCase()) setSelectMenu({ value: 'select', label: 'Select' });
+            else {
+                setMarketingDescription(marketingInfo.description);
+                setMarketingAddress(marketingInfo.marketing);
+                setMarketingProject(marketingInfo.project);
+            }
         }
     }, [marketingInfo]);
 
@@ -98,7 +102,8 @@ const UpdateMarketing = () => {
                                 formId: 'input address',
                                 placeHolder: 'Input Wallet Address',
                                 onChange: handleAddress,
-                                regex: WALLET_ADDRESS_REGEX
+                                regex: WALLET_ADDRESS_REGEX,
+                                emptyErrorMessage: 'Please input wallet address.'
                             }}
                         />
                         <LabelInput

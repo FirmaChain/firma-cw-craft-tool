@@ -61,18 +61,16 @@ const ItemLabelTypo = styled.div`
 `;
 
 const ItemValueForDescTypo = styled.div`
-    width: 338px;
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
-    overflow-wrap: break-word;
+    // overflow-wrap: break-word;
 `;
 
 const ItemValueTypo = styled.div`
-    width: 338px;
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
@@ -151,7 +149,7 @@ const UpdateMarketingPreview = () => {
                 },
                 {
                     label: 'Marketing Address',
-                    value: finalAddress === "" ? address : finalAddress,
+                    value: finalAddress === '' ? address : finalAddress,
                     type: 'url'
                 },
                 {
@@ -174,7 +172,7 @@ const UpdateMarketingPreview = () => {
             contract: contractAddress,
             msg: {
                 project: isBasic ? '' : finalProejct,
-                marketing: finalAddress === "" ? address : finalAddress,
+                marketing: finalAddress === '' ? address : finalAddress,
                 description: finalDesc
             }
         };
@@ -196,17 +194,18 @@ const UpdateMarketingPreview = () => {
     };
 
     const isEnableButton = useMemo(() => {
-        if (marketingAddress === "" && marketingInfo.marketing !== address) return true;
+        if (marketingAddress === '' && marketingInfo.marketing !== address) return true;
         console.log(222);
-        if (marketingAddress !== "" && !isValidAddress(marketingAddress)) return false;
+        if (marketingAddress !== '' && !isValidAddress(marketingAddress)) return false;
         console.log(333);
-        if ((marketingAddress !== "" && marketingInfo.marketing !== marketingAddress) ||
+        if (
+            (marketingAddress !== '' && marketingInfo.marketing !== marketingAddress) ||
             marketingInfo.description !== marketingDescription ||
             marketingInfo.project !== marketingProject
-            )
+        )
             return true;
         console.log(444);
-            
+
         return false;
     }, [marketingInfo, marketingDescription, marketingAddress, marketingProject]);
 
@@ -219,7 +218,7 @@ const UpdateMarketingPreview = () => {
                         <ItemLabelTypo>Marketing Desc</ItemLabelTypo>
                     </ItemLabelWrap>
                     {marketingDescription !== '' ? (
-                        <ItemValueForDescTypo>{finalDesc}</ItemValueForDescTypo>
+                        <ItemValueForDescTypo className="clamp-single-line">{finalDesc}</ItemValueForDescTypo>
                     ) : (
                         marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>
                     )}
@@ -232,7 +231,7 @@ const UpdateMarketingPreview = () => {
                                 <ItemLabelTypo>Marketing Address</ItemLabelTypo>
                             </ItemLabelWrap>
                             {marketingAddress !== '' ? (
-                                <ItemValueTypo>{finalAddress}</ItemValueTypo>
+                                <ItemValueTypo className="clamp-single-line">{finalAddress}</ItemValueTypo>
                             ) : (
                                 <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>
                             )}
@@ -243,7 +242,7 @@ const UpdateMarketingPreview = () => {
                                 <ItemLabelTypo>Marketing Project</ItemLabelTypo>
                             </ItemLabelWrap>
                             {marketingProject !== '' ? (
-                                <ItemValueTypo>{finalProejct}</ItemValueTypo>
+                                <ItemValueTypo className="clamp-single-line">{finalProejct}</ItemValueTypo>
                             ) : (
                                 <ItemDefaultTypo>Project Url</ItemDefaultTypo>
                             )}

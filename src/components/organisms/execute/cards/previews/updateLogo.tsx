@@ -43,8 +43,9 @@ const ContentBodyWrap = styled.div`
     width: 100%;
     height: auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 32px 44px;
+    gap: 32px;
 `;
 
 const ItemLabelWrap = styled.div`
@@ -61,6 +62,9 @@ const ItemLabelTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+
+    white-space: pre;
+    width: 138px;
 `;
 
 const ItemValueTypo = styled.div`

@@ -1,18 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_ARROW_WITH_TAIL, IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { addStringAmount, formatWithCommas, getUTokenAmountFromToken } from '@/utils/balance';
 import { getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
-import { ModalActions } from '@/redux/actions';
-import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { isValidAddress } from '@/utils/address';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import useFormStore from '@/store/formStore';
+import { ONE_TO_MINE } from '@/constants/regex';
 
 const Container = styled.div`
     width: 100%;
@@ -169,10 +169,13 @@ const TransferFromPreview = () => {
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
     const clearTransferFrom = useExecuteStore((state) => state.clearTransferFrom);
 
+    const setFormError = useFormStore((v) => v.setFormError);
+    const clearFormError = useFormStore((v) => v.clearFormError);
+
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
+    // const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
     const totalTransferAmount = useMemo(() => {
         const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
@@ -185,35 +188,40 @@ const TransferFromPreview = () => {
         return totalAmount;
     }, [transferFromList]);
 
-    useEffect(() => {
-        let allAddressesValid = true;
-        let allAmountsValid = true;
+    const isEnableButton = useMemo(() => {
+        //! if some from-to address is duplicated
+        let isDuplicated = false;
+        transferFromList.map(({ fromAddress, toAddress }) => {
+            const findAllDuplicted = transferFromList.filter(
+                (v) =>
+                    v.fromAddress !== '' &&
+                    v.toAddress !== '' &&
+                    v.fromAddress.toLowerCase() === fromAddress.toLowerCase() &&
+                    v.toAddress.toLowerCase() === toAddress.toLowerCase()
+            );
 
-        for (const transferFrom of transferFromList) {
-            console.log('transferFrom.fromAmount', transferFrom.fromAmount);
-            if (!isValidAddress(transferFrom.fromAddress) || !isValidAddress(transferFrom.toAddress)) {
-                // console.log("isValid address");
-                allAddressesValid = false;
+            //! if duplucatted list is more than 2 (one for self)
+            if (findAllDuplicted.length > 1) {
+                isDuplicated = true;
+                findAllDuplicted.map(({ id: formId }) =>
+                    setFormError({ id: `${formId}_TO_ADDRESS`, type: 'DUPLICATED_FROM_TO', message: 'Duplicated from-to address.' })
+                );
+            } else {
+                findAllDuplicted.map(({ id: formId }) => clearFormError({ id: `${formId}_TO_ADDRESS`, type: 'DUPLICATED_FROM_TO' }));
             }
-            if (!transferFrom.fromAmount || transferFrom.fromAmount === '' || transferFrom.fromAmount === '0') {
-                allAmountsValid = false;
-            }
-            if (!transferFrom.toAmount || transferFrom.toAmount === '' || transferFrom.toAmount === '0') {
-                allAmountsValid = false;
-            }
-            // if (!transferFrom.allowanceAmount || transferFrom.allowanceAmount === '' || transferFrom.allowanceAmount === '0') {
-            //     allAmountsValid = false;
-            // }
-            // if (!transferFrom.fromAmount || transferFrom.fromAmount === '' || transferFrom.fromAmount === '0') {
-            //     allAmountsValid = false;
-            // }
-            // if (!transferFrom.toAmount || transferFrom.toAmount === '' || transferFrom.toAmount === '0') {
-            //     allAmountsValid = false;
-            // }
-        }
-        // console.log(transferFromList);
+        });
+        if (isDuplicated) return false;
 
-        setIsEnableButton(allAddressesValid && allAmountsValid);
+        //! if empty values included
+        if (transferFromList.some((v) => v.fromAddress === '' || v.toAddress === '' || v.toAmount === '')) return false;
+
+        //! if all address is valid
+        if (transferFromList.some((v) => !isValidAddress(v.fromAddress) || !isValidAddress(v.toAddress))) return false;
+
+        //! if all toAmount values valid
+        if (transferFromList.some((v) => v.toAmount.replace(ONE_TO_MINE, '') === '')) return false;
+
+        return true;
     }, [transferFromList]);
 
     const onClickTransfer = () => {

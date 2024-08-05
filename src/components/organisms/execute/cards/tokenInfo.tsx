@@ -160,30 +160,30 @@ export interface IMenuItem {
 }
 
 const basicMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
-    { value: 'mint', label: 'Mint' },
-    { value: 'burn', label: 'Burn' },
-    { value: 'burnFrom', label: 'Burn From' },
-    { value: 'increaseAllowance', label: 'Increase Allowance' },
-    { value: 'decreaseAllowance', label: 'Decrease Allowance' },
-    { value: 'transfer', label: 'Transfer' },
-    { value: 'transferFrom', label: 'Transfer From' },
-    { value: 'updateLogo', label: 'Update Logo' },
-    { value: 'updateMinter', label: 'Update Minter' }
+    { value: 'select', label: 'Select', isDisabled: false },
+    { value: 'mint', label: 'Mint', isDisabled: false },
+    { value: 'burn', label: 'Burn', isDisabled: false },
+    { value: 'burnFrom', label: 'Burn From', isDisabled: false },
+    { value: 'increaseAllowance', label: 'Increase Allowance', isDisabled: false },
+    { value: 'decreaseAllowance', label: 'Decrease Allowance', isDisabled: false },
+    { value: 'transfer', label: 'Transfer', isDisabled: false },
+    { value: 'transferFrom', label: 'Transfer From', isDisabled: false },
+    { value: 'updateLogo', label: 'Update Logo', isDisabled: false },
+    { value: 'updateMinter', label: 'Update Minter', isDisabled: false }
 ];
 
 const advancedMenuItems: IMenuItem[] = [
-    { value: 'select', label: 'Select' },
-    { value: 'mint', label: 'Mint' },
-    { value: 'burn', label: 'Burn' },
-    { value: 'burnFrom', label: 'Burn From' },
-    { value: 'increaseAllowance', label: 'Increase Allowance' },
-    { value: 'decreaseAllowance', label: 'Decrease Allowance' },
-    { value: 'transfer', label: 'Transfer' },
-    { value: 'transferFrom', label: 'Transfer From' },
-    { value: 'updateLogo', label: 'Update Logo' },
-    { value: 'updateMarketing', label: 'Update Marketing' },
-    { value: 'updateMinter', label: 'Update Minter' }
+    { value: 'select', label: 'Select', isDisabled: false },
+    { value: 'mint', label: 'Mint', isDisabled: false },
+    { value: 'burn', label: 'Burn', isDisabled: false },
+    { value: 'burnFrom', label: 'Burn From', isDisabled: false },
+    { value: 'increaseAllowance', label: 'Increase Allowance', isDisabled: false },
+    { value: 'decreaseAllowance', label: 'Decrease Allowance', isDisabled: false },
+    { value: 'transfer', label: 'Transfer', isDisabled: false },
+    { value: 'transferFrom', label: 'Transfer From', isDisabled: false },
+    { value: 'updateLogo', label: 'Update Logo', isDisabled: false },
+    { value: 'updateMarketing', label: 'Update Marketing', isDisabled: false },
+    { value: 'updateMinter', label: 'Update Minter', isDisabled: false }
 ];
 
 const TokenInfo = () => {
@@ -201,7 +201,7 @@ const TokenInfo = () => {
     const contractExist = useExecuteStore((v) => v.contractExist);
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
-    const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
+    // const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
 
     useEffect(() => {
         if (marketingInfo && marketingInfo.logo) {
@@ -231,43 +231,66 @@ const TokenInfo = () => {
         return false;
     }, [contractInfo, network]);
 
+    const ownerMenus = useMemo(() => {
+        let ruleMenus: IMenuItem[] = [];
+
+        if (!contractInfo) return [];
+
+        const isBasic = contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID;
+
+        if (isBasic) {
+            ruleMenus = [...basicMenuItems];
+
+            //! if minter info not provided or minter address is not connected address
+            if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
+                ruleMenus[1] = { ...ruleMenus[1], isDisabled: true };
+                ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
+            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
+            // }
+
+            //! if marketing info not provided or marketing address is not connected address
+            if (!marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase()) {
+                ruleMenus[8] = { ...ruleMenus[8], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
+            // }
+        } else {
+            ruleMenus = [...advancedMenuItems];
+
+            //! if minter info not provided or minter address is not connected address
+            if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
+                ruleMenus[1] = { ...ruleMenus[1], isDisabled: true };
+                ruleMenus[10] = { ...ruleMenus[10], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
+            //     ruleMenus[10] = { ...ruleMenus[10], isDisabled: false };
+            // }
+
+            //! if marketing info not provided or marketing address is not connected address
+            if (!marketingInfo || marketingInfo.marketing !== address) {
+                ruleMenus[8] = { ...ruleMenus[8], isDisabled: true };
+                ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
+            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: false };
+            // }
+        }
+
+        return ruleMenus;
+    }, [contractInfo, craftConfig, minterInfo, address, marketingInfo]);
+
     const handleChangeMenu = (menu: string) => {
         console.log('menu', menu);
         const _selectMenu = ownerMenus.find((item) => item.value === menu);
 
         setSelectMenu(_selectMenu);
     };
-
-    useEffect(() => {
-        let ruleMenus: IMenuItem[] = [];
-
-        if (contractInfo && contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID) {
-            ruleMenus = [...basicMenuItems];
-
-            if (minterInfo && minterInfo.minter !== address) {
-                ruleMenus[1].isDisabled = true;
-                ruleMenus[9].isDisabled = true;
-            }
-
-            if (marketingInfo && marketingInfo.marketing !== address) {
-                ruleMenus[8].isDisabled = true;
-            }
-        } else {
-            ruleMenus = [...advancedMenuItems];
-
-            if (minterInfo && minterInfo.minter !== address) {
-                ruleMenus[1].isDisabled = true;
-                ruleMenus[10].isDisabled = true;
-            }
-
-            if (marketingInfo && marketingInfo.marketing !== address) {
-                ruleMenus[8].isDisabled = true;
-                ruleMenus[9].isDisabled = true;
-            }
-        }
-
-        setOwnerMenus(ruleMenus);
-    }, [craftConfig, contractAddress, minterInfo, marketingInfo]);
 
     return selectMenu && contractExist ? (
         <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>

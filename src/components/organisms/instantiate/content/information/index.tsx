@@ -185,7 +185,8 @@ const Information = ({ isBasic }: IProps) => {
                                 placeHolder: 'ex) Event reward contract',
                                 onChange: handleLabel,
                                 emptyErrorMessage: 'Please input token label.',
-                                regex: ENG_NUM_SPACE
+                                regex: ENG_NUM_SPACE,
+                                maxLength: 128
                             }}
                         />
                     </>

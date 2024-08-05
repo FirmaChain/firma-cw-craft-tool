@@ -365,7 +365,7 @@ const DecreaseAllowancePreview = () => {
                                         : shortenAddress(allowance?.address, 16, 16)}
                                 </AccordionTypo>
                                 <AccordionTypo className="clamp-single-line" $disabled={allowance === null || !Number(allowance.amount)}>
-                                    {commaNumber(allowance === null ? '0' : allowance?.amount)}
+                                    {commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
                                 </AccordionTypo>
                             </div>
                         </AccordionRow>

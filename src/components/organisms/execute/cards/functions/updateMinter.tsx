@@ -8,6 +8,7 @@ import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const MINTER_INPUT_FORM_ID = 'EXECUTE_UPDATE_MINTER';
 const MINTER_ERROR_TYPE = 'INVALID_ADDRESS';
+const SAME_MINTER_ERROR = 'SAME_ADDRESS';
 
 const UpdateMinter = () => {
     const minterInfo = useExecuteStore((state) => state.minterInfo);
@@ -22,6 +23,12 @@ const UpdateMinter = () => {
             clearFormError({ id: MINTER_INPUT_FORM_ID, type: MINTER_ERROR_TYPE });
         } else {
             setFormError({ id: MINTER_INPUT_FORM_ID, type: MINTER_ERROR_TYPE, message: 'Please input firmachain wallet address.' });
+        }
+
+        if (FirmaUtil.isValidAddress(v) && minterInfo?.minter?.toLowerCase() === v.toLowerCase()) {
+            setFormError({ id: MINTER_INPUT_FORM_ID, type: SAME_MINTER_ERROR, message: 'Same address with before.' });
+        } else {
+            clearFormError({ id: MINTER_INPUT_FORM_ID, type: SAME_MINTER_ERROR });
         }
 
         setMinterAddress(v);

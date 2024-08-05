@@ -323,6 +323,8 @@ const IncreaseAllowancePreview = () => {
         return true;
     }, [addressExist, allowance?.amount, allowance?.expire, allowance?.type, allowance?.address, allowance?.amount, userAddress]);
 
+    console.log('allowance', allowance);
+
     return (
         <Container>
             <ContentWrap>
@@ -366,7 +368,8 @@ const IncreaseAllowancePreview = () => {
                                         : shortenAddress(allowance?.address || '', 16, 16)}
                                 </AccordionTypo>
                                 <AccordionTypo className="clamp-single-line" $disabled={allowance === null || !Number(allowance.amount)}>
-                                    {commaNumber(allowance === null ? '0' : allowance?.amount) || 0}
+                                    {/* {commaNumber(allowance === null ? '0' : allowance?.amount) || 0} */}
+                                    {commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
                                 </AccordionTypo>
                             </div>
                         </AccordionRow>
