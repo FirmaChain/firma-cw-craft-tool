@@ -29,7 +29,7 @@ interface FormProps {
     nftApprovalInfo: Cw721Approval;
     minter: string;
     nftDatas: Cw721NftInfo[];
-    
+
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
@@ -49,7 +49,9 @@ interface FormProps {
     mintBaseURI: string;
     mintStartTokenId: string;
     mintEndTokenId: string;
-    mintList: { token_id: string, token_uri: string, id: string }[];
+    mintList: { token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }[];
+    alreadyMintList: string[];
+    notYetMintList: string[];
     // BURN
     burnList: string;
     // TRANSFER
@@ -70,7 +72,9 @@ interface FormProps {
     setMintBaseURI: (v: string) => void;
     setMintStartTokenId: (v: string) => void;
     setMintEndTokenId: (v: string) => void;
-    setMintList: (v: { token_id: string, token_uri: string, id: string }[]) => void;
+    setMintList: (v: { token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }[]) => void;
+    setAlreadyMintList: (v: string[]) => void;
+    setNotYetMintList: (v: string[]) => void;
     // BURN
     setBurnList: (v: string) => void;
     // TRANSFER
@@ -113,9 +117,9 @@ const INIT_NFT_CONTRACT_INFO: Cw721ContractInfo = { name: '', symbol: '' };
 const INIT_OWNERSHIP_INFO: CwOwnershipInfo = { owner: '', pending_owner: '', pending_expiry: { at_height: 0 } };
 const INIT_MINTER_INFO: string = '';
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
-const INIT_MINT_LIST: { token_id: string, token_uri: string, id: string }[] = [{ token_id: '', token_uri: '', id: v4() }];
+const INIT_MINT_LIST: { token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }[] = [{ token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }];
 const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
-const INIT_NFT_APPROVAL: Cw721Approval = { spender: '', expires: { at_height: 0 }};
+const INIT_NFT_APPROVAL: Cw721Approval = { spender: '', expires: { at_height: 0 } };
 
 const useCW721ExecuteStore = create<FormProps>()(
     immer((set) => ({
@@ -156,7 +160,7 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.nftContractInfo = data;
             }),
-        setOwnershipInfo: (data) => 
+        setOwnershipInfo: (data) =>
             set((state) => {
                 state.ownershipInfo = data;
             }),
@@ -186,10 +190,12 @@ const useCW721ExecuteStore = create<FormProps>()(
         selectMenu: INIT_SELECT_MENU,
         // MINT
         mintRecipientAddress: '',
-        mintBaseURI: '',
+        mintBaseURI: 'https://google.com/',
         mintStartTokenId: '',
         mintEndTokenId: '',
         mintList: INIT_MINT_LIST,
+        alreadyMintList: [],
+        notYetMintList: [],
         // BURN
         burnList: '',
         // TRANSFER
@@ -212,25 +218,33 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.selectMenu = data;
             }),
         // MINT
-        setMintRecipientAddress: (data) => 
+        setMintRecipientAddress: (data) =>
             set((state) => {
                 state.mintRecipientAddress = data;
             }),
-        setMintBaseURI: (data) => 
+        setMintBaseURI: (data) =>
             set((state) => {
                 state.mintBaseURI = data;
             }),
-        setMintStartTokenId: (data) => 
+        setMintStartTokenId: (data) =>
             set((state) => {
                 state.mintStartTokenId = data;
             }),
-        setMintEndTokenId: (data) => 
+        setMintEndTokenId: (data) =>
             set((state) => {
                 state.mintEndTokenId = data;
             }),
-        setMintList: (data) => 
+        setMintList: (data) =>
             set((state) => {
                 state.mintList = data;
+            }),
+        setAlreadyMintList: (data) =>
+            set((state) => {
+                state.alreadyMintList = data;
+            }),
+        setNotYetMintList: (data) =>
+            set((state) => {
+                state.notYetMintList = data;
             }),
         // BURN
         setBurnList: (data) =>
@@ -287,12 +301,14 @@ const useCW721ExecuteStore = create<FormProps>()(
         },
         clearMintForm: () => {
             set((state) => {
-                state.mintBaseURI = '';
+                state.mintBaseURI = 'https://google.com/';
                 state.mintRecipientAddress = '';
                 state.mintStartTokenId = '';
                 state.mintEndTokenId = '';
                 state.mintList = INIT_MINT_LIST;
                 state.nftDatas = [];
+                state.alreadyMintList = [];
+                state.notYetMintList = [];
             })
         },
         clearBurnForm: () => {

@@ -103,7 +103,7 @@ const DisabledContainer = styled(Container)`
 export interface IMenuItem {
     value: string;
     label: string;
-    isDisabled?: boolean;
+    isDisabled: boolean;
 }
 
 const basicMenuItems: IMenuItem[] = [
@@ -136,26 +136,26 @@ const CW721ContractInfo = () => {
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>(basicMenuItems);
 
     useEffect(() => {
-        let ruleMenus: IMenuItem[] = [...basicMenuItems];
+        const ruleMenus = basicMenuItems.map((item, index) => {
+            let isDisabled = item.isDisabled;
 
-        console.log(minter);
-        if (minter === '' || minter !== address) {
-            ruleMenus[1].isDisabled = true;
-        } else {
-            ruleMenus[1].isDisabled = false;
-        }
+            if (index === 1) {
+                isDisabled = minter === '' || minter !== address;
+            }
 
-        if (ownershipInfo && ownershipInfo.owner !== '' && ownershipInfo.owner !== address) {
-            ruleMenus[8].isDisabled = true;
-            ruleMenus[10].isDisabled = true;
-        }
+            if (index === 8 || index === 10) {
+                isDisabled = ownershipInfo && ownershipInfo.owner !== '' && ownershipInfo.owner !== address;
+            }
 
-        if (ownershipInfo && minter !== '' && ownershipInfo.pending_owner !== address) {
-            ruleMenus[9].isDisabled = true;
-        }
+            if (index === 9) {
+                isDisabled = ownershipInfo && minter !== '' && ownershipInfo.pending_owner !== address;
+            }
+
+            return { ...item, isDisabled };
+        });
 
         setOwnerMenus(ruleMenus);
-    }, [ownershipInfo.owner, ownershipInfo.pending_expiry, address, blockHeight, minter]);
+    }, [ownershipInfo, address, blockHeight, minter, setOwnerMenus]);
 
     const handleChangeMenu = (menu: string) => {
         const _selectMenu = ownerMenus.find((item) => item.value === menu);

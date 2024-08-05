@@ -14,6 +14,7 @@ import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -147,6 +148,13 @@ const Mint = () => {
 
     const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
 
+    const { firmaSDK } = useFirmaSDKContext();
+
+    const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
+    const notYetMintList = useCW721ExecuteStore((state) => state.notYetMintList);
+    const setAlreadyMintList = useCW721ExecuteStore((state) => state.setAlreadyMintList);
+    const setNotYetMintList = useCW721ExecuteStore((state) => state.setNotYetMintList);
+
     const disableMintIntoList = mintBaseURI.length > 0;
     const totalMintCount = useMemo(() => {
         if (mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '') {
@@ -156,27 +164,87 @@ const Mint = () => {
         return mintList.length;
     }, [mintList]);
 
+    // useEffect(() => {
+    //     if (mintBaseURI) {
+    //         if (mintStartTokenId && mintEndTokenId && !isNaN(Number(mintStartTokenId)) && !isNaN(Number(mintEndTokenId))) {
+    //             const parsedStart = parseInt(mintStartTokenId);
+    //             let parsedEnd = parseInt(mintEndTokenId);
+    //             if (parsedEnd > parsedStart + 19) parsedEnd = parsedStart + 19;
+
+    //             if (parsedEnd >= parsedStart) {
+    //                 setMintList(
+    //                     new Array(Number(parsedEnd) - Number(mintStartTokenId) + 1).fill(null).map((_, idx) => ({
+    //                         token_id: (idx + parsedStart).toString(),
+    //                         token_uri: mintBaseURI + (idx + parsedStart),
+    //                         id: v4()
+    //                     }))
+    //                 );
+    //             }
+    //         } else {
+    //             setMintList([{ token_id: '', token_uri: '', id: v4() }]);
+    //         }
+    //     }
+    // }, [mintBaseURI, mintStartTokenId, mintEndTokenId]);
+
     useEffect(() => {
         if (mintBaseURI) {
-            if (mintStartTokenId && mintEndTokenId && !isNaN(Number(mintStartTokenId)) && !isNaN(Number(mintEndTokenId))) {
+            const validMintStartId = mintStartTokenId !== '' && !isNaN(Number(mintStartTokenId));
+            const validMintEndId = mintEndTokenId !== '' && !isNaN(Number(mintEndTokenId));
+
+            if (validMintStartId && validMintEndId) {
                 const parsedStart = parseInt(mintStartTokenId);
                 let parsedEnd = parseInt(mintEndTokenId);
                 if (parsedEnd > parsedStart + 19) parsedEnd = parsedStart + 19;
 
                 if (parsedEnd >= parsedStart) {
-                    setMintList(
-                        new Array(Number(parsedEnd) - Number(mintStartTokenId) + 1).fill(null).map((_, idx) => ({
-                            token_id: (idx + parsedStart).toString(),
-                            token_uri: mintBaseURI + (idx + parsedStart),
-                            id: v4()
-                        }))
-                    );
+                    const newMintList = Array.from({ length: parsedEnd - parsedStart + 1 }, (_, idx) => ({
+                        token_id: (idx + parsedStart).toString(),
+                        token_uri: mintBaseURI + (idx + parsedStart),
+                        id: v4(),
+                        isAlreadyMint: false
+                    }));
+
+                    console.log(alreadyMintList, notYetMintList);
+
+
+                    const mergeMintList = alreadyMintList.concat(notYetMintList);
+                    const fetchPromises = newMintList.map(newMintData => {
+                        const { token_id } = newMintData;
+
+                        return new Promise<{ token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }>((resolve) => {
+                            if (token_id !== '' && !mergeMintList.includes(token_id)) {
+                                firmaSDK.Cw721.getNftData(contractAddress, token_id)
+                                    .then(() => {
+                                        resolve({ ...newMintData, isAlreadyMint: true });
+                                    })
+                                    .catch(() => {
+                                        resolve({ ...newMintData, isAlreadyMint: false });
+                                    });
+                            } else {
+                                const isAlreadyMint = alreadyMintList.includes(token_id);
+                                resolve({ ...newMintData, isAlreadyMint });
+                            }
+                        });
+                    });
+
+                    Promise.all(fetchPromises).then((results) => {
+                        const updatedAlreadyMintList = results.filter(data => data.isAlreadyMint).map(data => data.token_id);
+                        const updatedNotYetMintList = results.filter(data => !data.isAlreadyMint).map(data => data.token_id);
+
+                        const uniqueAlreadyMintList = Array.from(new Set([...alreadyMintList, ...updatedAlreadyMintList]));
+                        const uniqueNotYetMintList = Array.from(new Set([...notYetMintList, ...updatedNotYetMintList]));
+
+                        setAlreadyMintList(uniqueAlreadyMintList);
+                        setNotYetMintList(uniqueNotYetMintList);
+
+                        setMintList(results);
+                    });
                 }
             } else {
-                setMintList([{ token_id: '', token_uri: '', id: v4() }]);
+                setMintList([{ token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }]);
             }
         }
-    }, [mintBaseURI, mintStartTokenId, mintEndTokenId]);
+    }, [mintBaseURI, mintStartTokenId, mintEndTokenId, setAlreadyMintList, setNotYetMintList]);
 
     useEffect(() => {
         setFctBalance(address);
@@ -220,7 +288,7 @@ const Mint = () => {
                                 onChange: (v) => {
                                     setMintBaseURI(v);
                                     if (v.length === 0) {
-                                        setMintList([{ token_id: '', token_uri: '', id: v4() }]);
+                                        setMintList([{ token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }]);
                                     }
 
                                     if (!v || v.endsWith('/')) clearFormError({ id: BASE_URI_FORM_ID, type: 'URI_RULE' });

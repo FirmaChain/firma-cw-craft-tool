@@ -23,6 +23,7 @@ interface IMintInfo {
     token_id: string;
     token_uri: string;
     id: string;
+    isAlreadyMint: boolean
 }
 
 interface IProps {
@@ -43,7 +44,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
 
     const handleAddWallet = () => {
         if (list.length < maxWalletCount) {
-            onChangeWalletList([...list, { token_id: '', token_uri: '', id: v4() }]);
+            onChangeWalletList([...list, { token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }]);
         } else {
             enqueueSnackbar(`You can only add up to ${maxWalletCount} wallets.`, {
                 variant: 'warning',
@@ -72,7 +73,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                 <DeleteAllModal
                     id={id}
                     onConfirm={() => {
-                        onChangeWalletList([{ token_id: '', token_uri: '', id: v4() }]);
+                        onChangeWalletList([{ token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }]);
                         onClickDeleteAll && onClickDeleteAll();
                     }}
                 />
@@ -105,7 +106,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                     onChangeRight={(value) => handleChange(index, 'token_uri', value)}
                     onRemoveClick={() => handleRemoveWallet(index)}
                     isLast={index === list.length - 1}
-                    isValid={true}
+                    isValid={!Boolean(wallet.isAlreadyMint)}
                     leftTitle={'Token ID'}
                     leftPlaceholder={'0'}
                     rightTitle="NFT URIs"

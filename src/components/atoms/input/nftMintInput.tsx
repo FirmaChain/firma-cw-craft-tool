@@ -71,12 +71,12 @@ const NFTMintInput = ({
 
     const checkMintable = () => {
         if (leftValue) {
-            // if (myNFTList.includes(parseInt(leftValue).toString())) {
-            //     setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Owned ID' });
-            //     return;
-            // } else {
-            //     clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
-            // }
+            if (isValid) {
+                clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
+            } else {
+                setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Already minted' });
+                return;
+            }
 
             if (mintTokenIdsExceptSelf.includes(parseInt(leftValue))) {
                 setFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID', message: 'Duplicated' });
@@ -115,7 +115,7 @@ const NFTMintInput = ({
                             placeHolder: leftPlaceholder,
                             type: 'number',
                             decimal: 0,
-                            readOnly: disabled
+                            readOnly: disabled,
                         }}
                     />
                 </div>
