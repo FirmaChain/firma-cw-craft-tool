@@ -32,7 +32,14 @@ export const AmountItem = ({ label, decimals, amount, symbol }: IAmountProps) =>
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ItemAmountValue>{parseAmountWithDecimal2(amount, decimals)}</ItemAmountValue>
+                <ItemAmountValue
+                    data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
+                    {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)}
+                </ItemAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
@@ -44,7 +51,15 @@ export const ResultAmountItem = ({ label, decimals, amount, symbol }: IAmountPro
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ResultItemAmountTypo>{parseAmountWithDecimal2(amount, decimals)}</ResultItemAmountTypo>
+                <ResultItemAmountTypo
+                    data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
+                    {/* {parseAmountWithDecimal2(amount, decimals, true)} */}
+                    {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)}
+                </ResultItemAmountTypo>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
@@ -170,7 +185,7 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
     );
 };
 
-export const NftItem = ({ label, value, symbol }: { label: string, value: string, symbol: string }) => {
+export const NftItem = ({ label, value, symbol }: { label: string; value: string; symbol: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -182,7 +197,7 @@ export const NftItem = ({ label, value, symbol }: { label: string, value: string
     );
 };
 
-export const NftIdItem = ({ label, value }: { label: string, value: string }) => {
+export const NftIdItem = ({ label, value }: { label: string; value: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -191,7 +206,7 @@ export const NftIdItem = ({ label, value }: { label: string, value: string }) =>
                 <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
             </ItemValueWrap>
         </ItemWrap>
-    )
-}
+    );
+};
 
 export { QRCodeModal };

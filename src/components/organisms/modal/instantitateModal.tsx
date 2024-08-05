@@ -18,6 +18,7 @@ import useExecuteHook from '../execute/hooks/useExecueteHook';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
+import { FirmaUtil } from '@firmachain/firma-js';
 
 const CloseBtnBox = styled.div`
     display: flex;
@@ -449,11 +450,11 @@ interface SuccessData {
 const InstantitateModal = ({
     id,
     module,
-    params,
+    params
 }: {
     id: string;
     module: string;
-    params: { admin: string; codeId: string; label: string; msg: string, type: string, length: number };
+    params: { admin: string; codeId: string; label: string; msg: string; type: string; length: number };
 }) => {
     const { firmaSDK } = useExecuteHook();
     const walletAddress = useSelector((state: rootState) => state.wallet.address);
@@ -477,10 +478,8 @@ const InstantitateModal = ({
     const requestData = JSON.parse(params.msg);
 
     const craftConfig = useMemo(() => {
-        if (network === 'MAINNET')
-            return CRAFT_CONFIGS.MAINNET;
-        else
-            return CRAFT_CONFIGS.TESTNET;
+        if (network === 'MAINNET') return CRAFT_CONFIGS.MAINNET;
+        else return CRAFT_CONFIGS.TESTNET;
     }, [network]);
 
     const supplyAmount = useMemo(() => {
@@ -530,10 +529,10 @@ const InstantitateModal = ({
                 return craftConfig.DEFAULT_FEE;
             }
         } catch (error) {
-            return '0';
+            return 0;
         }
     }, [params]);
-    
+
     const openContractAddress = () => openLink(`${explorerUrl}/accounts/${parsedData?.contractAddress}`);
     const openHash = () => openLink(`${explorerUrl}/transactions/${parsedData?.transactionHash}`);
 
@@ -612,7 +611,9 @@ const InstantitateModal = ({
                                         data-tooltip-wrapper="span"
                                         data-tooltip-place="bottom"
                                     >
-                                        {parseAmountWithDecimal2(supplyAmount, requestData?.decimals, true)}
+                                        {Number(parseAmountWithDecimal2(supplyAmount, requestData?.decimals)) < 0.01
+                                            ? '< 0.01'
+                                            : parseAmountWithDecimal2(supplyAmount, requestData?.decimals, true)}
                                     </div>
                                     <div className="symbol-typo">{requestData?.symbol}</div>
                                 </div>
@@ -629,7 +630,9 @@ const InstantitateModal = ({
                                             data-tooltip-wrapper="span"
                                             data-tooltip-place="bottom"
                                         >
-                                            {parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals, true)}
+                                            {Number(parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals)) < 0.01
+                                                ? '< 0.01'
+                                                : parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals, true)}
                                         </div>
                                         <div className="symbol-typo">{requestData.symbol}</div>
                                     </div>
@@ -645,18 +648,12 @@ const InstantitateModal = ({
                         </div>
                         <div className="fee-amount-box">
                             <div className="fee-amount">
-                                <div>{instantiateFee}</div>
+                                {FirmaUtil.getFCTStringFromUFCT(instantiateFee)}
                                 <img src={IC_SYMBOL_GRAY} alt="firma-logo" className="logo" />
                             </div>
-                            <div
-                                className="user-balance"
-                                data-tooltip-content={parseAmountWithDecimal2(balance, '6')}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
-                            >
+                            <div className="user-balance">
                                 <span className="typo">
-                                    (My balance : {balance ? parseAmountWithDecimal2(balance, '6', true) : 'Loading'}
+                                    (My balance : {balance ? FirmaUtil.getFCTStringFromUFCTStr(balance) : 'Loading'}
                                 </span>
                                 <img src={IC_SYMBOL_GRAY} alt="firma-logo" className="" style={{ width: '12px', height: '12px' }} />
                                 <span className="typo" style={{ padding: 0 }}>

@@ -379,7 +379,9 @@ export const parseAmountWithDecimal2 = (amount: string, decimals: string, isPrev
     const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
     let formattedDecimalPart = '';
-    if (isPreview) {
+
+    if (isPreview || decimalsNumber === 0) {
+        // Ensure that at least 2 decimal places are shown if isPreview is true or decimals is 0
         formattedDecimalPart = decimalPart.padEnd(2, '0').slice(0, 2);
     } else {
         formattedDecimalPart = decimalPart.padEnd(decimalsNumber, '0');
@@ -389,6 +391,32 @@ export const parseAmountWithDecimal2 = (amount: string, decimals: string, isPrev
 
     return result;
 };
+
+// export const parseAmountWithDecimal2 = (amount: string, decimals: string, isPreview?: boolean) => {
+//     const decimalsNumber = parseInt(decimals, 10);
+//     const pointIndex = amount.length - decimalsNumber;
+
+//     let result = '';
+//     if (pointIndex > 0) {
+//         result = amount.slice(0, pointIndex) + '.' + amount.slice(pointIndex);
+//     } else {
+//         result = '0.' + '0'.repeat(Math.abs(pointIndex)) + amount;
+//     }
+
+//     const [integerPart, decimalPart = ''] = result.split('.');
+//     const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+//     let formattedDecimalPart = '';
+//     if (isPreview) {
+//         formattedDecimalPart = decimalPart.padEnd(2, '0').slice(0, 2);
+//     } else {
+//         formattedDecimalPart = decimalPart.padEnd(decimalsNumber, '0');
+//     }
+
+//     result = `${formattedIntegerPart}.${formattedDecimalPart}`;
+
+//     return result;
+// };
 
 export const checkImageUrl = (url: string, onValid: () => void, onInvalid: () => void) => {
     if (url) {
