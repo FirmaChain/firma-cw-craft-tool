@@ -42,15 +42,17 @@ const customStyles = {
 const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?: boolean }>`
     user-select: none;
 
+    height: 36px;
+
     box-sizing: border-box;
+
+    background: ${({ $open }) => ($open ? 'var(--Gray-400, #2C2C2C)' : 'transparent')};
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    background: var(--200, #1e1e1e);
-
-    padding: 7px 10px 7px 14px;
+    padding: 7px 12px 7px 16px;
     border-radius: 6px;
     border: 1px solid;
     ${({ $open, $isDisabled }) =>
@@ -74,7 +76,7 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
-        line-height: 20px; /* 142.857% */
+        line-height: 100%;
     }
 
     .open-indicater-stroke {

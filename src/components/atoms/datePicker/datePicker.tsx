@@ -108,7 +108,7 @@ const StyledDatePicker = styled.div<{ open?: boolean }>`
 `;
 
 const DateWrap = styled.div<{ $open?: boolean }>`
-    width: 130px;
+    width: 138px;
     height: 36px;
     border-radius: 6px;
 
@@ -118,10 +118,10 @@ const DateWrap = styled.div<{ $open?: boolean }>`
     justify-content: space-between;
     gap: 8px;
 
-    padding: 7px 16px;
+    padding: 7px 20px;
     border: 1px solid;
     border-color: ${({ $open }) => ($open ? '#FFFFFF !important' : 'var(--Gray-500, #383838)')};
-    background: var(--200, #1e1e1e);
+    background: ${({ $open }) => ($open ? '#2c2c2c' : 'var(--200, #1e1e1e)')};
 
     .typo {
         color: var(--Gray-900, var(--Primary-Base-White, #fff));
@@ -132,7 +132,7 @@ const DateWrap = styled.div<{ $open?: boolean }>`
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
-        line-height: 20px; /* 142.857% */
+        line-height: 100%;
 
         white-space: pre;
     }
@@ -166,6 +166,16 @@ const SECONDS = new Array(12).fill(null).map((_, idx) => {
     return { label: String(value).padStart(2, '0'), value: String(value) };
 });
 
+const BGBox = styled.div`
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: transparent;
+`;
+
 function toTimestamp(dateObj, hours, minutes, seconds) {
     const h = parseInt(hours, 10);
     const m = parseInt(minutes, 10);
@@ -176,14 +186,22 @@ function toTimestamp(dateObj, hours, minutes, seconds) {
     return updatedDate.getTime().toString();
 }
 
-const DateInputBox = React.forwardRef(({ open, onClickOpen, date }: { open: boolean; onClickOpen: () => void; date: Date }, ref: any) => {
-    return (
-        <DateWrap className="pointer" onClick={onClickOpen} $open={open} ref={ref}>
-            <Icons.Calendar />
-            <div className="typo">{format(date, 'yyyy.MM.dd')}</div>
-        </DateWrap>
-    );
-});
+const DateInputBox = React.forwardRef(
+    (
+        { open, onClickOpen, onClickClose, date }: { open: boolean; onClickOpen: () => void; onClickClose: () => void; date: Date },
+        ref: any
+    ) => {
+        return (
+            <>
+                <DateWrap className="pointer" onClick={onClickOpen} $open={open} ref={ref}>
+                    <Icons.Calendar width="16px" />
+                    <div className="typo">{format(date, 'yyyy.MM.dd')}</div>
+                </DateWrap>
+                {open && <BGBox onClick={onClickClose} />}
+            </>
+        );
+    }
+);
 
 const CustomHeader = ({
     date,
@@ -259,7 +277,14 @@ const ExpirationDatePicker = ({ setTargetTimestamp }: { setTargetTimestamp: (v: 
                     renderCustomHeader={(props) => <CustomHeader {...props} />}
                     dateFormat="yyyy.MM.dd"
                     enableTabLoop={false}
-                    customInput={<DateInputBox open={open} onClickOpen={() => setOpen(true)} date={selected.date} />}
+                    customInput={
+                        <DateInputBox
+                            open={open}
+                            onClickOpen={() => setOpen(true)}
+                            onClickClose={() => setOpen(false)}
+                            date={selected.date}
+                        />
+                    }
                     minDate={new Date()}
                     showPopperArrow={false}
                 />

@@ -48,6 +48,8 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?
 
     box-sizing: border-box;
 
+    background: ${({ $open }) => ($open ? 'var(--Gray-400, #2C2C2C)' : 'transparent')};
+
     display: flex;
     align-items: center;
     justify-content: space-between;
