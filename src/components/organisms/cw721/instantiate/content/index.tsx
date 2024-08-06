@@ -5,7 +5,7 @@ import useInstantiateStore from '../instantiateStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useEffect } from 'react';
-import { ENG_NUM_SPACE, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, ENG_NUM_SPACE, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useFormStore from '@/store/formStore';
 import { isValidAddress } from '@/utils/common';
 
@@ -146,7 +146,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
             <InformationBody>
                 <AdvancedContractWrap style={{ flexDirection: isBasic ? 'column' : 'row', gap: isBasic ? '24px' : '12px' }}>
                     <LabelInput
-                        labelProps={{ label: 'NFT Contract Name', subText: 'Minimum 3 charactes' }}
+                        labelProps={{ label: 'NFT Contract Name', subText: 'Minimum 3 characters' }}
                         inputProps={{
                             value: nftName,
                             formId: 'nftContractName',
@@ -154,7 +154,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             maxLength: 30,
                             onChange: onNameChange,
                             emptyErrorMessage: 'Please input token name.',
-                            regex: ENG_NUM_SPACE
+                            regex: DEFAULT_INPUT_REGEX
                         }}
                     />
                     <LabelInput
@@ -204,7 +204,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                         formId: 'label',
                         placeHolder: 'ex) Event reward contract',
                         onChange: setLabel,
-                        regex: ENG_NUM_SPACE,
+                        regex: DEFAULT_INPUT_REGEX,
                         emptyErrorMessage: 'Please input label.',
                         maxLength: 128
                     }}

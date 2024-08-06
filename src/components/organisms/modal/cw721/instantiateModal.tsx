@@ -125,7 +125,7 @@ const FeeLabel = styled.div`
 
 const ItemValueWrap = styled.div`
     display: flex;
-    gap: 6px;
+    gap: 4px;
     align-items: center;
     justify-content: center;
 `;

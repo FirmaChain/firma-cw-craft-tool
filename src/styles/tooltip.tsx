@@ -6,6 +6,11 @@ const DefaultTooltip = styled(Tooltip)`
     border-radius: 5px !important;
     padding: 8px 12px !important;
 
+    max-width: 50vw; /* Set maximum width */
+    white-space: normal; /* Allow line break */
+    word-wrap: break-word; /* Break long words */
+    word-break: break-word; /* Break long words */
+
     //? inside
     background: #4a4a4a !important;
     text-align: center;
@@ -17,13 +22,18 @@ const DefaultTooltip = styled(Tooltip)`
     font-family: 'General Sans Variable';
     font-size: 13px !important;
     line-height: 20px !important; /* 153.846% */
-    white-space: pre;
+    white-space: pre-wrap;
 `;
 
 export const LightTooltip = styled(Tooltip)`
     //? outside
     border-radius: 5px !important;
     padding: 8px 12px !important;
+
+    max-width: 50vw; /* Set maximum width */
+    white-space: normal; /* Allow line break */
+    word-wrap: break-word; /* Break long words */
+    word-break: break-word; /* Break long words */
 
     //? inside
     background: #e6e6e6 !important;
@@ -39,7 +49,7 @@ export const LightTooltip = styled(Tooltip)`
 
     font-weight: 500;
     line-height: 20px !important; /* 142.857% */
-    white-space: pre;
+    white-space: pre-wrap;
 `;
 
 export default DefaultTooltip;

@@ -1,9 +1,9 @@
-import { IC_LABEL_TAG } from "@/components/atoms/icons/pngIcons";
-import { IContractInfo } from "@/context/cw721MyNFTContractsContext";
-import IconButton from "@/components/atoms/buttons/iconButton";
-import Icons from "@/components/atoms/icons";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { IC_LABEL_TAG } from '@/components/atoms/icons/pngIcons';
+import { IContractInfo } from '@/context/cw721MyNFTContractsContext';
+import IconButton from '@/components/atoms/buttons/iconButton';
+import Icons from '@/components/atoms/icons';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled(IconButton)`
     width: 100%;
@@ -15,7 +15,7 @@ const Container = styled(IconButton)`
     border-radius: 24px;
     background: var(--Gray-300, #222);
     overflow: hidden;
-`
+`;
 
 const TopBox = styled.div`
     width: 100%;
@@ -29,7 +29,7 @@ const TopBox = styled.div`
     @media only screen and (max-width: 1450px) {
         padding: 30px 34px 34px;
     }
-`
+`;
 
 const BottomBox = styled.div`
     width: 100%;
@@ -45,7 +45,7 @@ const BottomBox = styled.div`
     @media only screen and (max-width: 1450px) {
         padding: 22px 34px;
     }
-`
+`;
 
 const TitleBox = styled.div`
     width: 100%;
@@ -54,18 +54,18 @@ const TitleBox = styled.div`
     justify-content: flex-start;
     flex-direction: column;
     gap: 12px;
-`
+`;
 
 const SymbolBox = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-`
+`;
 
 const SymbolTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
@@ -75,11 +75,11 @@ const SymbolTypo = styled.div`
         font-size: 20px;
         line-height: 20px;
     }
-`
+`;
 
 const ContractNameTypo = styled.div`
     color: var(--Gray-750, #999);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 22px;
     font-style: normal;
     font-weight: 400;
@@ -89,7 +89,7 @@ const ContractNameTypo = styled.div`
         font-size: 18px;
         line-height: 18px;
     }
-`
+`;
 
 const LabelBox = styled.div`
     display: flex;
@@ -97,18 +97,18 @@ const LabelBox = styled.div`
     align-items: center;
     gap: 8px;
     border-radius: 100px;
-    background: var(--Gray-400, #2C2C2C);
-`
+    background: var(--Gray-400, #2c2c2c);
+`;
 
 const LabelTagImg = styled.img`
     width: 16px;
     height: 16px;
     object-fit: contain;
-`
+`;
 
 const LabelTypo = styled.div`
     color: var(--Gray-650, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -118,11 +118,11 @@ const LabelTypo = styled.div`
         font-size: 12px;
         line-height: 12px;
     }
-`
+`;
 
 const TotalNftCountTypo = styled.div`
     color: var(--Gray-750, #999);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
@@ -132,7 +132,7 @@ const TotalNftCountTypo = styled.div`
         font-size: 14px;
         line-height: 14px;
     }
-`
+`;
 
 const PreviewNFTsBox = styled.div`
     display: flex;
@@ -140,14 +140,14 @@ const PreviewNFTsBox = styled.div`
     gap: 16px;
     align-self: stretch;
     min-height: 36px;
-`
+`;
 
 const ThumbnailBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding-left: 4px;
-`
+`;
 
 const ThumbnailImg = styled.img`
     width: 36px;
@@ -157,7 +157,7 @@ const ThumbnailImg = styled.img`
     object-fit: cover;
     margin-left: -4px;
     background: #222;
-`
+`;
 
 interface IProps {
     data: IContractInfo;
@@ -171,52 +171,60 @@ const ContractCard = ({ data }: IProps) => {
         const thumbnailURIs = data.nftThumbnailURI;
 
         if (totalNFTsCount === 0) {
-            return <PreviewNFTsBox><TotalNftCountTypo>{"No NFTs have been minted."}</TotalNftCountTypo></PreviewNFTsBox>
+            return (
+                <PreviewNFTsBox>
+                    <TotalNftCountTypo>{'No NFTs have been minted.'}</TotalNftCountTypo>
+                </PreviewNFTsBox>
+            );
         } else {
             const count = totalNFTsCount > 999 ? '+999' : `+${totalNFTsCount}`;
-            if (thumbnailURIs.filter((value) => value === "").length >= thumbnailURIs.length) {
-                return <PreviewNFTsBox><TotalNftCountTypo>{`Total Minted NFTs : ${count}`}</TotalNftCountTypo></PreviewNFTsBox>
+            if (thumbnailURIs.filter((value) => value === '').length >= thumbnailURIs.length) {
+                return (
+                    <PreviewNFTsBox>
+                        <TotalNftCountTypo>{`Total Minted NFTs : ${count}`}</TotalNftCountTypo>
+                    </PreviewNFTsBox>
+                );
             } else {
                 return (
                     <PreviewNFTsBox>
                         <ThumbnailBox>
-                            {thumbnailURIs.filter((value) => value !== "").map((value, index) => {
-                                return (
-                                    <ThumbnailImg key={`${data.contractAddress}-nft-${index}`} src={value} alt={'NFT'} />
-                                )
-                            })}
+                            {thumbnailURIs
+                                .filter((value) => value !== '')
+                                .map((value, index) => {
+                                    return <ThumbnailImg key={`${data.contractAddress}-nft-${index}`} src={value} alt={'NFT'} />;
+                                })}
                         </ThumbnailBox>
                         <TotalNftCountTypo>{count}</TotalNftCountTypo>
                     </PreviewNFTsBox>
-                )
+                );
             }
         }
-    }
+    };
 
     const handleMoveToDetail = () => {
-        navigate(`/cw721/mynft/detail/${data.contractAddress}`)
-    }
+        navigate(`/cw721/mynft/detail/${data.contractAddress}`);
+    };
 
     return (
         <Container onClick={handleMoveToDetail}>
             <TopBox>
                 <TitleBox>
                     <SymbolBox>
-                        <SymbolTypo>{data.symbol}</SymbolTypo>
+                        <SymbolTypo className="clamp-single-line">{data.symbol}</SymbolTypo>
                         <Icons.RightArrow width={'20px'} height={'20px'} stroke={'#FFFFFF'} />
                     </SymbolBox>
-                    <ContractNameTypo>{data.name}</ContractNameTypo>
+                    <ContractNameTypo className="clamp-single-line">{data.name}</ContractNameTypo>
                 </TitleBox>
                 <LabelBox>
                     <LabelTagImg src={IC_LABEL_TAG} alt={'cw721 label'} />
-                    <LabelTypo>{data.label}</LabelTypo>
+                    <LabelTypo className="clamp-single-line">{data.label}</LabelTypo>
                 </LabelBox>
             </TopBox>
             <BottomBox>
                 <DisplayNFTCount />
             </BottomBox>
         </Container>
-    )
-}
+    );
+};
 
 export default ContractCard;

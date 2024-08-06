@@ -77,7 +77,7 @@ const ContractInformation = () => {
                     <SpecificItem style={{ height: '28px' }}>
                         <SpecificLabelTypo>Label</SpecificLabelTypo>
                         {typeof label === 'string' ? (
-                            <SpecificValueCover>{label}</SpecificValueCover>
+                            <SpecificValueCover className="clamp-single-line">{label}</SpecificValueCover>
                         ) : (
                             <Skeleton width="100px" height="22px" />
                         )}

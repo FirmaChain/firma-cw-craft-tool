@@ -102,12 +102,8 @@ export const SpecificValueCover = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
-
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    word-break: break-word;
+    white-space: pre;
+    word-break: break-all;
 `;
 
 export const NFTTableContainer = styled.div<{ $expand: boolean }>`
