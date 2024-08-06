@@ -40,7 +40,7 @@ import {
 } from './style';
 import React, { useState } from 'react';
 import { useModalStore } from '@/hooks/useModal';
-import { AmountItem, ExpirationItem, NftIdItem, NftItem, ResultAmountItem, TransactionItem, UrlItem, WalletAdress, WalletItem } from '.';
+import { AmountItem, ExpirationItem, NftComfirmItem, NftIdItem, NftItem, ResultAmountItem, TransactionItem, UrlItem, WalletAdress, WalletItem } from '.';
 import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
 import RequestQR from '@/components/organisms/requestQR';
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
@@ -175,7 +175,7 @@ const QRCodeModal = ({
                                 } else if (['at_time', 'at_height', 'never'].includes(el.type)) {
                                     return <ExpirationItem value={el.value} type={el.type} />;
                                 } else if (el.type === 'nft') {
-                                    return <NftItem label={el.label} value={el.value} symbol={params.content.symbol} />
+                                    return <NftItem label={el.label} value={el.value} />
                                 } else if (el.type === 'nft_id') {
                                     return <NftIdItem label={el.label} value={el.value} />
                                 }
@@ -243,7 +243,7 @@ const QRCodeModal = ({
                                 } else if (['at_time', 'at_height', 'never'].includes(el.type)) {
                                     return <ExpirationItem value={el.value} type={el.type} />;
                                 } else if (el.type === 'nft') {
-                                    return <NftItem label={el.label} value={el.value} symbol={params.content.symbol} />
+                                    return <NftComfirmItem label={el.label} value={el.value} />
                                 } else if (el.type === 'nft_id') {
                                     return <NftIdItem label={el.label} value={el.value} />
                                 }

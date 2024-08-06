@@ -109,10 +109,11 @@ const Preview = ({ isBasic }: IProps) => {
                 const params = {
                     admin: address,
                     codeId: codeId,
-                    label: isBasic ? 'CW20' : label,
+                    label: label,
                     msg: JSON.stringify(messageData),
                     type: craftConfig.CW20.TYPE,
-                    length: convertWalletList.length
+                    totalLength: label.length + JSON.stringify(messageData).length,
+                    walletLength: convertWalletList.length
                 };
 
                 modal.openModal({
@@ -172,7 +173,7 @@ const Preview = ({ isBasic }: IProps) => {
 
             if (!isBasic && decimals === '') return true;
 
-            if (!isBasic && label === '') return true;
+            if (label === '') return true;
 
             if (walletList.length === 0) return true;
 

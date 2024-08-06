@@ -124,8 +124,8 @@ export const ResultItemAmountTypo = styled.div`
 `;
 
 export const ItemAmountSymbol = styled.div`
-    color: var(--Gray-600, #5a5a5a);
-    font-family: 'General Sans Variable';
+    color: var(--Gray-600, #5A5A5A);
+    font-family: "General Sans Variable";
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
@@ -143,12 +143,12 @@ export const ItemLabel = styled.div`
 `;
 
 export const ItemValue = styled.div`
-    color: var(--Gray-700, #807e7e);
-    font-family: 'General Sans Variable';
-    font-size: 14px;
+    color: #E6E6E6;
+    font-family: "General Sans Variable";
+    font-size: 18px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 20px; /* 142.857% */
+    font-weight: 600;
+    line-height: 22px; /* 122.222% */
 `;
 
 export const ItemIcon = styled.img`
@@ -777,7 +777,7 @@ export const MobileAppLinkBox = styled.div`
         display: flex;
         flex-direction: row;
         align-items: center;
-        jusitfy-content: space-between;
+        justify-content: space-between;
         gap: 16px;
     }
 

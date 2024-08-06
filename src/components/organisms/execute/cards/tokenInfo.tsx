@@ -20,6 +20,7 @@ import useExecuteStore from '../hooks/useExecuteStore';
 import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import useFormStore from '@/store/formStore';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
@@ -168,7 +169,7 @@ const basicMenuItems: IMenuItem[] = [
     { value: 'transfer', label: 'Transfer', isDisabled: false },
     { value: 'transferFrom', label: 'Transfer From', isDisabled: false },
     { value: 'updateLogo', label: 'Update Logo', isDisabled: false },
-    { value: 'updateMinter', label: 'Update Minter', isDisabled: false }
+    { value: 'updateMarketing', label: 'Update Marketing', isDisabled: false },
 ];
 
 const advancedMenuItems: IMenuItem[] = [
@@ -189,7 +190,6 @@ const TokenInfo = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
 
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
     const selectMenu = useExecuteStore((state) => state.selectMenu);
     const contractInfo = useExecuteStore((state) => state.contractInfo);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
@@ -200,7 +200,6 @@ const TokenInfo = () => {
     const contractExist = useExecuteStore((v) => v.contractExist);
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
-    // const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>([]);
 
     useEffect(() => {
         if (marketingInfo && marketingInfo.logo) {
@@ -231,23 +230,54 @@ const TokenInfo = () => {
     }, [contractInfo, network]);
 
     const ownerMenus = useMemo(() => {
+        let ruleMenus: IMenuItem[] = [];
+
         if (!contractInfo) return [];
 
         const isBasic = contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID;
-        const ruleMenus: IMenuItem[] = isBasic ? [...basicMenuItems] : [...advancedMenuItems];
-
-        const updateMenuItems = (menu: IMenuItem[], indices: number[], condition: boolean) => {
-            indices.forEach((index) => {
-                menu[index] = { ...menu[index], isDisabled: condition };
-            });
-        };
 
         if (isBasic) {
-            updateMenuItems(ruleMenus, [1, 9], !minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase());
-            updateMenuItems(ruleMenus, [8], !marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase());
+            ruleMenus = [...basicMenuItems];
+
+            //! if minter info not provided or minter address is not connected address
+            if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
+                ruleMenus[1] = { ...ruleMenus[1], isDisabled: true };
+                ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
+            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
+            // }
+
+            //! if marketing info not provided or marketing address is not connected address
+            if (!marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase()) {
+                ruleMenus[8] = { ...ruleMenus[8], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
+            // }
         } else {
-            updateMenuItems(ruleMenus, [1, 10], !minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase());
-            updateMenuItems(ruleMenus, [8, 9], !marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase());
+            ruleMenus = [...advancedMenuItems];
+
+            //! if minter info not provided or minter address is not connected address
+            if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
+                ruleMenus[1] = { ...ruleMenus[1], isDisabled: true };
+                ruleMenus[10] = { ...ruleMenus[10], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
+            //     ruleMenus[10] = { ...ruleMenus[10], isDisabled: false };
+            // }
+
+            //! if marketing info not provided or marketing address is not connected address
+            if (!marketingInfo || marketingInfo.marketing !== address) {
+                ruleMenus[8] = { ...ruleMenus[8], isDisabled: true };
+                ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
+            }
+            //  else {
+            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
+            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: false };
+            // }
         }
 
         return ruleMenus;

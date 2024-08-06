@@ -454,7 +454,7 @@ const InstantitateModal = ({
 }: {
     id: string;
     module: string;
-    params: { admin: string; codeId: string; label: string; msg: string; type: string; length: number };
+    params: { admin: string; codeId: string; label: string; msg: string; type: string; totalLength: number, walletLength: number };
 }) => {
 
     const { firmaSDK } = useExecuteHook();
@@ -520,13 +520,24 @@ const InstantitateModal = ({
     const instantiateFee = useMemo(() => {
         const requestData = JSON.parse(params.msg);
         try {
+            let resultFee = craftConfig.DEFAULT_FEE;
+
+            console.log("MSG LENGTH", JSON.stringify(params.msg).length);
+            console.log("TOTAL LENGTH", params.totalLength);
+            if (params.totalLength > 1200) {
+                const multipleCount = ((Number(params.totalLength) - 1200) / 100);
+                console.log(multipleCount);
+                resultFee = resultFee + (multipleCount * Number(craftConfig.INSTANTIATE_LENGTH_FEE));
+            }
+
+            console.log(resultFee);
             if (requestData?.initial_balances.length >= 2) {
                 const defaultLength = Number(requestData?.initial_balances.length) - 1;
-                const instantiateFee = defaultLength * craftConfig.INSTANTIATE_FEE;
+                const instantiateFee = defaultLength * craftConfig.INSTANTIATE_WALLET_FEE;
                 console.log(defaultLength);
-                return craftConfig.DEFAULT_FEE + instantiateFee;
+                return resultFee + instantiateFee;
             } else {
-                return craftConfig.DEFAULT_FEE;
+                return resultFee;
             }
         } catch (error) {
             return 0;
@@ -572,8 +583,8 @@ const InstantitateModal = ({
                         onSuccess={(requestData: any) => {
                             setResult(requestData);
                             setStatus('success');
-                            useInstantiateStore.getState().clearForm();
-                            useFormStore.getState().clearForm();
+                            // useInstantiateStore.getState().clearForm();
+                            // useFormStore.getState().clearForm();
                         }}
                         onFailed={(requestData: any) => {
                             setStatus('failure');

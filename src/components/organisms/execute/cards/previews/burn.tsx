@@ -180,7 +180,7 @@ const BurnPreview = () => {
                     {
                         label: 'Total Burn Amount',
                         value: amount,
-                        type: 'amount'
+                        type: 'nft'
                     }
                 ]
             },

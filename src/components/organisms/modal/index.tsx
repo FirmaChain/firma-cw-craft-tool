@@ -186,16 +186,28 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
     );
 };
 
-export const NftItem = ({ label, value, symbol }: { label: string; value: string; symbol: string }) => {
+export const NftItem = ({ label, value }: { label: string; value: string; }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
                 <ItemAmountValue>{value}</ItemAmountValue>
-                <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
+                <ItemAmountSymbol>NFT</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
     );
+};
+
+export const NftComfirmItem = ({ label, value }: { label: string; value: string; }) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ItemValue>{value}</ItemValue>
+                <ItemAmountSymbol>NFT</ItemAmountSymbol>
+            </ItemValueWrap>
+        </ItemWrap>
+    )
 };
 
 export const NftIdItem = ({ label, value }: { label: string; value: string }) => {

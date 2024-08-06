@@ -189,7 +189,6 @@ const Information = ({ isBasic }: IProps) => {
                                 value: decimals,
                                 formId: 'tokenDecimal',
                                 placeHolder: '0 ~ 18',
-
                                 onChange: handleDecimals,
                                 emptyErrorMessage: 'Please input token decimal.',
                                 type: 'number',
@@ -197,22 +196,20 @@ const Information = ({ isBasic }: IProps) => {
                                 maxValue: 18
                             }}
                         />
-
-                        <LabelInput
-                            labelProps={{ label: 'Label' }}
-                            inputProps={{
-                                value: label,
-                                formId: 'tokenLabel',
-                                placeHolder: 'ex) Event reward contract',
-                                onChange: handleLabel,
-                                emptyErrorMessage: 'Please input token label.',
-                                regex: ENG_NUM_SPACE,
-                                maxLength: 128
-                            }}
-                        />
                     </>
                 )}
-
+                <LabelInput
+                    labelProps={{ label: 'Label' }}
+                    inputProps={{
+                        value: label,
+                        formId: 'tokenLabel',
+                        placeHolder: 'ex) Event reward contract',
+                        onChange: handleLabel,
+                        emptyErrorMessage: 'Please input token label.',
+                        regex: ENG_NUM_SPACE,
+                        maxLength: 128
+                    }}
+                />
                 <LabelInput
                     labelProps={{ label: isBasic ? 'Token Image Link (Optional)' : 'Marketing Logo (Optional)' }}
                     inputProps={{

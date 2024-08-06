@@ -190,7 +190,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         selectMenu: INIT_SELECT_MENU,
         // MINT
         mintRecipientAddress: '',
-        mintBaseURI: 'https://google.com/',
+        mintBaseURI: '',
         mintStartTokenId: '',
         mintEndTokenId: '',
         mintList: INIT_MINT_LIST,
@@ -301,7 +301,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         },
         clearMintForm: () => {
             set((state) => {
-                state.mintBaseURI = 'https://google.com/';
+                state.mintBaseURI = '';
                 state.mintRecipientAddress = '';
                 state.mintStartTokenId = '';
                 state.mintEndTokenId = '';
