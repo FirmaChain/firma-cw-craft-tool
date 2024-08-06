@@ -284,7 +284,7 @@ const IncreaseAllowancePreview = () => {
                     {
                         label: 'Expiration',
                         value: allowance.expire,
-                        type: allowance.type === 'at_height' ? 'block' : allowance.type === 'at_time' ? 'time' : 'never'
+                        type: allowance.type
                     }
                 ]
             },

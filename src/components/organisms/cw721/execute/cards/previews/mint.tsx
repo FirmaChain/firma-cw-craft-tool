@@ -12,6 +12,7 @@ import { QRCodeModal } from '@/components/organisms/modal';
 import { isValidAddress } from '@/utils/address';
 import useFormStore from '@/store/formStore';
 import { shortenAddress } from '@/utils/common';
+import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 
 const Container = styled.div`
     width: 100%;
@@ -19,17 +20,27 @@ const Container = styled.div`
     flex-direction: column;
     gap: 36px;
     justify-content: center;
+    overflow: hidden;
 `;
 
-const ContentWrap = styled.div`
+const ContentScrollWrap = styled.div`
+    display: flex;
+    width: 100%;
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
+`;
+
+const ContentBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    border-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
+    // border-radius: 24px;
+    // border: 1px solid var(--Gray-550, #444);
     gap: 24px;
+    // overflow: scroll;
 `;
 
 const TokenInfoWrap = styled.div`
@@ -275,69 +286,73 @@ const MintPreview = () => {
 
     return (
         <Container>
-            <ContentWrap>
-                <TokenTitleWrap>
-                    <TokenInfoWrap>
-                        <TokenInfoLeft>
-                            <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
-                            <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
-                        </TokenInfoLeft>
-                        <TokenInfoRightWrap>
-                            <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
-                            <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
-                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                        </TokenInfoRightWrap>
-                    </TokenInfoWrap>
-                    {isOpen && (
-                        <WalletListWrap>
-                            <WalletLeftItemWrap>
-                                <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
-                                    {mintRecipientAddress === '' ? 'Wallet Address' : shortenAddress(mintRecipientAddress, 12, 12)}
-                                </WalletItemAddressTypo>
-                            </WalletLeftItemWrap>
-                            <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                            <WalletItemWrap>
-                                {mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '' && (
+            <ContentScrollWrap>
+                <ExecutePreviewOverlayScroll defer>
+                    <ContentBox>
+                        <TokenTitleWrap>
+                            <TokenInfoWrap>
+                                <TokenInfoLeft>
+                                    <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
+                                    <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
+                                </TokenInfoLeft>
+                                <TokenInfoRightWrap>
+                                    <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
+                                    <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
+                                    <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                                </TokenInfoRightWrap>
+                            </TokenInfoWrap>
+                            {isOpen && (
+                                <WalletListWrap>
                                     <WalletLeftItemWrap>
-                                        <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                        <WalletItemAddressTypo $disabled={true}>NFT Url</WalletItemAddressTypo>
+                                        <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                        <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
+                                            {mintRecipientAddress === '' ? 'Wallet Address' : shortenAddress(mintRecipientAddress, 12, 12)}
+                                        </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
-                                )}
-                                {mintList.length >= 1 &&
-                                    (mintList[0].token_id !== '' || mintList[0].token_uri !== '') &&
-                                    mintList.map((value, index) => (
-                                        <WalletLeftItemWrap key={index}>
-                                            <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                            <WalletItemAddressTypo className="clamp-single-line" $disabled={false}>
-                                                {value.token_uri}
-                                            </WalletItemAddressTypo>
-                                        </WalletLeftItemWrap>
-                                    ))}
-                            </WalletItemWrap>
-                        </WalletListWrap>
-                    )}
-                </TokenTitleWrap>
-                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                <TokenInfoWrap>
-                    <TokenInfoLeft>
-                        <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                            <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
-                            <IconTooltip
-                                size="14px"
-                                tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
-                            />
-                        </div>
-                    </TokenInfoLeft>
-                    <TokenInfoRightWrap>
-                        <TotalSupplyWrap>
-                            <TotalSupplyAmount>{willTotalSupply}</TotalSupplyAmount>
-                            <TotalSupplySymbol>NFT</TotalSupplySymbol>
-                        </TotalSupplyWrap>
-                    </TokenInfoRightWrap>
-                </TokenInfoWrap>
-            </ContentWrap>
+                                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                                    <WalletItemWrap>
+                                        {mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '' && (
+                                            <WalletLeftItemWrap>
+                                                <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
+                                                <WalletItemAddressTypo $disabled={true}>NFT Url</WalletItemAddressTypo>
+                                            </WalletLeftItemWrap>
+                                        )}
+                                        {mintList.length >= 1 &&
+                                            (mintList[0].token_id !== '' || mintList[0].token_uri !== '') &&
+                                            mintList.map((value, index) => (
+                                                <WalletLeftItemWrap key={index}>
+                                                    <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
+                                                    <WalletItemAddressTypo className="clamp-single-line" $disabled={false}>
+                                                        {value.token_uri}
+                                                    </WalletItemAddressTypo>
+                                                </WalletLeftItemWrap>
+                                            ))}
+                                    </WalletItemWrap>
+                                </WalletListWrap>
+                            )}
+                        </TokenTitleWrap>
+                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                        <TokenInfoWrap>
+                            <TokenInfoLeft>
+                                <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                    <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
+                                    <IconTooltip
+                                        size="14px"
+                                        tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
+                                    />
+                                </div>
+                            </TokenInfoLeft>
+                            <TokenInfoRightWrap>
+                                <TotalSupplyWrap>
+                                    <TotalSupplyAmount>{willTotalSupply}</TotalSupplyAmount>
+                                    <TotalSupplySymbol>NFT</TotalSupplySymbol>
+                                </TotalSupplyWrap>
+                            </TokenInfoRightWrap>
+                        </TokenInfoWrap>
+                    </ContentBox>
+                </ExecutePreviewOverlayScroll>
+            </ContentScrollWrap>
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickMint}>
                     <div className="button-text">Mint</div>

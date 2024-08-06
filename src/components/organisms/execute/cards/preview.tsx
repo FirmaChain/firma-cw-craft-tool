@@ -27,6 +27,9 @@ const Container = styled.div<{ $isSelectMenu: boolean }>`
     /* border: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191)' : '1px solid var(--Green-500, #444)')}; */
     border: 1px solid var(--Green-500, #444);
     background: var(--200, #1e1e1e);
+
+    max-height: 742px;
+    overflow: hidden;
 `;
 
 const TitleTypo = styled.div`

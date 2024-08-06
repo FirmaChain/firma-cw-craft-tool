@@ -82,10 +82,9 @@ const UpdateOwnershipTransfer = () => {
 
     useEffect(() => {
         clearApproveForm();
-    }, []);
 
-    useEffect(() => {
         return () => {
+            clearApproveForm();
             clearFormError({ id: `${inputId}_ADDRESS` });
         };
     }, []);

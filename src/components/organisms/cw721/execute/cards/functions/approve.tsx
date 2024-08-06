@@ -92,8 +92,9 @@ const Approve = () => {
     };
 
     useEffect(() => {
-        if (contractAddress === null) return ;
-        
+        if (contractAddress === null) return;
+
+        clearApproveForm();
         setFctBalance(address);
         setMyNftList(contractAddress, address);
 

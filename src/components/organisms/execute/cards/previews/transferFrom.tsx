@@ -13,6 +13,7 @@ import { isValidAddress } from '@/utils/address';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import useFormStore from '@/store/formStore';
 import { ONE_TO_MINE } from '@/constants/regex';
+import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 
 const Container = styled.div`
     width: 100%;
@@ -20,16 +21,27 @@ const Container = styled.div`
     flex-direction: column;
     gap: 36px;
     justify-content: center;
+    overflow: hidden;
 `;
 
-const ContentWrap = styled.div`
-    height: auto;
+const ContentScrollWrap = styled.div`
     display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 32px 44px;
+    width: 100%;
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
+`;
+
+const ContentBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 32px 44px;
+    // border-radius: 24px;
+    // border: 1px solid var(--Gray-550, #444);
+    gap: 24px;
+    // overflow: scroll;
 `;
 
 const ItemWrap = styled.div`
@@ -283,32 +295,36 @@ const TransferFromPreview = () => {
 
     return (
         <Container>
-            <ContentWrap>
-                <ItemWrap>
-                    <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
-                        <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
-                    </ItemLabelWrap>
-                    <ItemAmountWrap>
-                        <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                    </ItemAmountWrap>
-                </ItemWrap>
-                {isOpen && (
-                    <AccordionBox>
-                        {transferFromList.map((info, index) => (
-                            <FromToAddressLine
-                                key={index}
-                                from={info.fromAddress}
-                                to={info.toAddress}
-                                amount={info.toAmount}
-                                decimal={tokenInfo.decimals.toString()}
-                            />
-                        ))}
-                    </AccordionBox>
-                )}
-            </ContentWrap>
+            <ContentScrollWrap>
+                <ExecutePreviewOverlayScroll defer>
+                    <ContentBox>
+                        <ItemWrap>
+                            <ItemLabelWrap>
+                                <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                                <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
+                            </ItemLabelWrap>
+                            <ItemAmountWrap>
+                                <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
+                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                                <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                            </ItemAmountWrap>
+                        </ItemWrap>
+                        {isOpen && (
+                            <AccordionBox>
+                                {transferFromList.map((info, index) => (
+                                    <FromToAddressLine
+                                        key={index}
+                                        from={info.fromAddress}
+                                        to={info.toAddress}
+                                        amount={info.toAmount}
+                                        decimal={tokenInfo.decimals.toString()}
+                                    />
+                                ))}
+                            </AccordionBox>
+                        )}
+                    </ContentBox>
+                </ExecutePreviewOverlayScroll>
+            </ContentScrollWrap>
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>

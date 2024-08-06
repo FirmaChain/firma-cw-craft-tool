@@ -10,22 +10,21 @@ import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButt
 import IconButton from '@/components/atoms/buttons/iconButton';
 
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
+import { useNavigate } from 'react-router-dom';
 
 const EndAdornment = ({
     keyword,
-    disableSearch = false,
-    // onClickSearch,
+    showClearButton,
     onClickClear
 }: {
     keyword: string;
-    disableSearch?: boolean;
-    // onClickSearch: () => void;
+    showClearButton?: boolean;
     onClickClear: () => void;
 }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
-            {keyword && (
-                <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
+            {showClearButton && (
+                <IconButton id="clear-all-button" style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
@@ -47,9 +46,12 @@ interface ISearchContractProps {
 }
 
 const SearchContract = ({ contractAddress }: ISearchContractProps) => {
+    const navigate = useNavigate();
+
     const network = useSelector((state: rootState) => state.global.network);
 
     const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
+    const storeContractAddress = useCW721ExecuteStore((v) => v.contractAddress);
     const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
     const clearInfo = useCW721ExecuteStore((state) => state.clearInfo);
     const clearForm = useCW721ExecuteStore((state) => state.clearForm);
@@ -88,6 +90,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         clearForm();
         clearInfo();
         previousKeywordRef.current = null;
+        navigate('/cw721/execute', { replace: true });
     };
 
     useEffect(() => {
@@ -116,7 +119,8 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                 end: (
                     <EndAdornment
                         keyword={keyword}
-                        disableSearch={keyword.length === 0 || !isValidAddress(keyword)}
+                        showClearButton={keyword.length > 0 || storeContractAddress.length > 0}
+                        // disableSearch={(keyword.length === 0 || !isValidAddress(keyword))}
                         // onClickSearch={onClickSearch}
                         onClickClear={onClickClear}
                     />

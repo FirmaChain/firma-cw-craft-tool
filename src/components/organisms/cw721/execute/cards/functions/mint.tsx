@@ -155,7 +155,7 @@ const Mint = () => {
     const setAlreadyMintList = useCW721ExecuteStore((state) => state.setAlreadyMintList);
     const setNotYetMintList = useCW721ExecuteStore((state) => state.setNotYetMintList);
 
-    const disableMintIntoList = mintBaseURI.length > 0;
+    const disableMintIntoList = Boolean(mintStartTokenId && mintEndTokenId);
     const totalMintCount = useMemo(() => {
         if (mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '') {
             return '0';
@@ -206,12 +206,11 @@ const Mint = () => {
 
                     console.log(alreadyMintList, notYetMintList);
 
-
                     const mergeMintList = alreadyMintList.concat(notYetMintList);
-                    const fetchPromises = newMintList.map(newMintData => {
+                    const fetchPromises = newMintList.map((newMintData) => {
                         const { token_id } = newMintData;
 
-                        return new Promise<{ token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }>((resolve) => {
+                        return new Promise<{ token_id: string; token_uri: string; id: string; isAlreadyMint: boolean }>((resolve) => {
                             if (token_id !== '' && !mergeMintList.includes(token_id)) {
                                 firmaSDK.Cw721.getNftData(contractAddress, token_id)
                                     .then(() => {
@@ -228,8 +227,8 @@ const Mint = () => {
                     });
 
                     Promise.all(fetchPromises).then((results) => {
-                        const updatedAlreadyMintList = results.filter(data => data.isAlreadyMint).map(data => data.token_id);
-                        const updatedNotYetMintList = results.filter(data => !data.isAlreadyMint).map(data => data.token_id);
+                        const updatedAlreadyMintList = results.filter((data) => data.isAlreadyMint).map((data) => data.token_id);
+                        const updatedNotYetMintList = results.filter((data) => !data.isAlreadyMint).map((data) => data.token_id);
 
                         const uniqueAlreadyMintList = Array.from(new Set([...alreadyMintList, ...updatedAlreadyMintList]));
                         const uniqueNotYetMintList = Array.from(new Set([...notYetMintList, ...updatedNotYetMintList]));
@@ -247,8 +246,8 @@ const Mint = () => {
     }, [mintBaseURI, mintStartTokenId, mintEndTokenId, setAlreadyMintList, setNotYetMintList]);
 
     useEffect(() => {
-        if (contractAddress === null) return ;
-        
+        if (contractAddress === null) return;
+
         setFctBalance(address);
         setMyNftList(contractAddress, address);
 

@@ -5,6 +5,7 @@ import Icons from '@/components/atoms/icons';
 import {
     DashboardBody,
     DashboardWrapper,
+    ExecutePreviewOverlayScroll,
     IconBackground,
     StyledOverlayScrollbar,
     TextGroupWrapper,
@@ -51,9 +52,8 @@ const Dashboard = ({
     marketingAddress,
     marketingProject
 }: IProps) => {
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
-
-    const showAdvancedInfo = Boolean(contractMode === 'ADVANCED');
+    // const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    // const showAdvancedInfo = Boolean(contractMode === 'ADVANCED');
 
     return (
         <DashboardWrapper>
@@ -68,26 +68,16 @@ const Dashboard = ({
             </TitleWrapper>
 
             <DashboardBody>
-                <StyledOverlayScrollbar
-                    defer
-                    overflow={{
-                        x: 'hidden'
-                    }}
-                >
+                <ExecutePreviewOverlayScroll defer>
                     <TokenInfo
                         tokenLogoUrl={tokenLogoUrl}
                         tokenName={tokenName}
                         tokenSymbol={tokenSymbol}
                         tokenDescription={tokenDescription}
                     />
-                    {showAdvancedInfo && (
-                        <Marketing
-                            label={label}
-                            decimals={decimals}
-                            marketingAddress={marketingAddress}
-                            marketingProject={marketingProject}
-                        />
-                    )}
+                    {/* {showAdvancedInfo && ( */}
+                    <Marketing label={label} decimals={decimals} marketingAddress={marketingAddress} marketingProject={marketingProject} />
+                    {/* )} */}
                     <Amount
                         minterble={minterble}
                         minterCap={minterCap}
@@ -97,7 +87,7 @@ const Dashboard = ({
                         walletList={walletList}
                         decimals={decimals}
                     />
-                </StyledOverlayScrollbar>
+                </ExecutePreviewOverlayScroll>
             </DashboardBody>
         </DashboardWrapper>
     );

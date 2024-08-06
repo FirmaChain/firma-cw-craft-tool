@@ -188,6 +188,7 @@ const ApproveAllPreview = () => {
                 symbol: nftContractInfo.symbol,
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
+                alert: 'Approve All does not appear in ‘NFT ID’ searches.',
                 list: [
                     {
                         label: 'Recipient Address',

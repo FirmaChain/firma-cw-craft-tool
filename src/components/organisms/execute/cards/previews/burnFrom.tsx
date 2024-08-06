@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 
 const Container = styled.div`
     width: 100%;
@@ -21,16 +22,27 @@ const Container = styled.div`
     flex-direction: column;
     gap: 36px;
     justify-content: center;
+    overflow: hidden;
 `;
 
-const ContentWrap = styled.div`
-    height: auto;
+const ContentScrollWrap = styled.div`
     display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 32px 44px;
+    width: 100%;
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
+`;
+
+const ContentBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 32px 44px;
+    // border-radius: 24px;
+    // border: 1px solid var(--Gray-550, #444);
+    gap: 24px;
+    // overflow: scroll;
 `;
 
 const ItemWrap = styled.div`
@@ -289,44 +301,48 @@ const BurnFromPreview = () => {
 
     return (
         <Container>
-            <ContentWrap>
-                <ItemWrap>
-                    <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Burn From Title Icon'} />
-                        <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
-                    </ItemLabelWrap>
-                    <ItemAmountWrap>
-                        <ItemAmountTypo className="clamp-single-line">
-                            {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
-                        </ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                    </ItemAmountWrap>
-                </ItemWrap>
-                {isOpen && (
-                    <WalletListWrap>
-                        {burnFromList.map((value, index) => (
-                            <WalletItemWrap key={index}>
-                                <WalletLeftItemWrap>
-                                    <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                    <WalletItemAddressTypo
-                                        $disabled={!value.recipient}
-                                        data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
-                                        data-tooltip-id={TOOLTIP_ID.COMMON}
-                                        data-tooltip-wrapper="span"
-                                        data-tooltip-place="bottom"
-                                    >
-                                        {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
-                                    </WalletItemAddressTypo>
-                                </WalletLeftItemWrap>
-                                <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
-                                    {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                </WalletItemTokenAmount>
-                            </WalletItemWrap>
-                        ))}
-                    </WalletListWrap>
-                )}
-            </ContentWrap>
+            <ContentScrollWrap>
+                <ExecutePreviewOverlayScroll defer>
+                    <ContentBox>
+                        <ItemWrap>
+                            <ItemLabelWrap>
+                                <ItemLabelIcon src={IC_COIN_STACK} alt={'Burn From Title Icon'} />
+                                <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
+                            </ItemLabelWrap>
+                            <ItemAmountWrap>
+                                <ItemAmountTypo className="clamp-single-line">
+                                    {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
+                                </ItemAmountTypo>
+                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                                <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                            </ItemAmountWrap>
+                        </ItemWrap>
+                        {isOpen && (
+                            <WalletListWrap>
+                                {burnFromList.map((value, index) => (
+                                    <WalletItemWrap key={index}>
+                                        <WalletLeftItemWrap>
+                                            <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                            <WalletItemAddressTypo
+                                                $disabled={!value.recipient}
+                                                data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
+                                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                                data-tooltip-wrapper="span"
+                                                data-tooltip-place="bottom"
+                                            >
+                                                {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                            </WalletItemAddressTypo>
+                                        </WalletLeftItemWrap>
+                                        <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
+                                            {value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                        </WalletItemTokenAmount>
+                                    </WalletItemWrap>
+                                ))}
+                            </WalletListWrap>
+                        )}
+                    </ContentBox>
+                </ExecutePreviewOverlayScroll>
+            </ContentScrollWrap>
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>
                     <div className="button-text">Burn</div>

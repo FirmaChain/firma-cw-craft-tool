@@ -21,6 +21,7 @@ import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ONE_TO_MINE } from '@/constants/regex';
+import { ExecutePreviewOverlayScroll, StyledOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
 
 const Container = styled.div`
     width: 100%;
@@ -28,17 +29,27 @@ const Container = styled.div`
     flex-direction: column;
     gap: 36px;
     justify-content: center;
+    overflow: hidden;
 `;
 
-const ContentWrap = styled.div`
+const ContentScrollWrap = styled.div`
+    display: flex;
+    width: 100%;
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
+`;
+
+const ContentBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    border-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
+    // border-radius: 24px;
+    // border: 1px solid var(--Gray-550, #444);
     gap: 24px;
+    // overflow: scroll;
 `;
 
 const TokenInfoWrap = styled.div`
@@ -285,7 +296,7 @@ const MintPreview = () => {
                     {
                         label: 'Total Wallet Count',
                         value: convertWalletList.length.toString(),
-                        type: 'wallet'
+                        type: 'wallet-count'
                     }
                 ]
             },
@@ -313,72 +324,76 @@ const MintPreview = () => {
 
     return (
         <Container>
-            <ContentWrap>
-                <TokenTitleWrap>
-                    <TokenInfoWrap>
-                        <TokenInfoLeft>
-                            <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
-                            <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
-                        </TokenInfoLeft>
-                        <TokenInfoRightWrap>
-                            <TokenInfoMintAmountTypo className="clamp-single-line">
-                                {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
-                            </TokenInfoMintAmountTypo>
-                            <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
-                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                        </TokenInfoRightWrap>
-                    </TokenInfoWrap>
-                    {isOpen && (
-                        <WalletListWrap>
-                            {mintingList.map((value, index) => (
-                                <WalletItemWrap key={index}>
-                                    <WalletLeftItemWrap>
-                                        <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                        <WalletItemAddressTypo
-                                            $disabled={!value.recipient}
-                                            data-tooltip-content={value.recipient?.length > 25 ? value.recipient : ''}
-                                            data-tooltip-id={TOOLTIP_ID.COMMON}
-                                            data-tooltip-wrapper="span"
-                                            data-tooltip-place="bottom"
-                                        >
-                                            {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
-                                        </WalletItemAddressTypo>
-                                    </WalletLeftItemWrap>
-                                    <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
-                                        {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                    </WalletItemTokenAmount>
-                                </WalletItemWrap>
-                            ))}
-                        </WalletListWrap>
-                    )}
-                </TokenTitleWrap>
-                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                <TokenInfoWrap>
-                    <TokenInfoLeft>
-                        <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                            <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
-                            <IconTooltip
-                                size="14px"
-                                tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
-                            />
-                        </div>
-                    </TokenInfoLeft>
-                    <TokenInfoRightWrap>
-                        <TotalSupplyWrap>
-                            <TotalSupplyAmount className="clamp-single-line">
-                                {formatWithCommas(
-                                    getTokenAmountFromUToken(
-                                        String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),
-                                        tokenInfo.decimals.toString()
-                                    )
-                                )}
-                            </TotalSupplyAmount>
-                            <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
-                        </TotalSupplyWrap>
-                    </TokenInfoRightWrap>
-                </TokenInfoWrap>
-            </ContentWrap>
+            <ContentScrollWrap>
+                <ExecutePreviewOverlayScroll defer>
+                    <ContentBox>
+                        <TokenTitleWrap>
+                            <TokenInfoWrap>
+                                <TokenInfoLeft>
+                                    <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
+                                    <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
+                                </TokenInfoLeft>
+                                <TokenInfoRightWrap>
+                                    <TokenInfoMintAmountTypo className="clamp-single-line">
+                                        {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
+                                    </TokenInfoMintAmountTypo>
+                                    <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
+                                    <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                                </TokenInfoRightWrap>
+                            </TokenInfoWrap>
+                            {isOpen && (
+                                <WalletListWrap>
+                                    {mintingList.map((value, index) => (
+                                        <WalletItemWrap key={index}>
+                                            <WalletLeftItemWrap>
+                                                <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                                <WalletItemAddressTypo
+                                                    $disabled={!value.recipient}
+                                                    data-tooltip-content={value.recipient?.length > 25 ? value.recipient : ''}
+                                                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                                                    data-tooltip-wrapper="span"
+                                                    data-tooltip-place="bottom"
+                                                >
+                                                    {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                                </WalletItemAddressTypo>
+                                            </WalletLeftItemWrap>
+                                            <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
+                                                {value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                            </WalletItemTokenAmount>
+                                        </WalletItemWrap>
+                                    ))}
+                                </WalletListWrap>
+                            )}
+                        </TokenTitleWrap>
+                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                        <TokenInfoWrap>
+                            <TokenInfoLeft>
+                                <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                    <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
+                                    <IconTooltip
+                                        size="14px"
+                                        tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
+                                    />
+                                </div>
+                            </TokenInfoLeft>
+                            <TokenInfoRightWrap>
+                                <TotalSupplyWrap>
+                                    <TotalSupplyAmount className="clamp-single-line">
+                                        {formatWithCommas(
+                                            getTokenAmountFromUToken(
+                                                String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),
+                                                tokenInfo.decimals.toString()
+                                            )
+                                        )}
+                                    </TotalSupplyAmount>
+                                    <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
+                                </TotalSupplyWrap>
+                            </TokenInfoRightWrap>
+                        </TokenInfoWrap>
+                    </ContentBox>
+                </ExecutePreviewOverlayScroll>
+            </ContentScrollWrap>
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickMint}>
                     <div className="button-text">Mint</div>

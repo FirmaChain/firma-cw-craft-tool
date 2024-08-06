@@ -92,7 +92,8 @@ const ApproveAll = () => {
 
     useEffect(() => {
         setFctBalance(address);
-        
+        clearApproveForm();
+
         return () => {
             clearFormError({ id: `${inputId}_ADDRESS` });
         };
