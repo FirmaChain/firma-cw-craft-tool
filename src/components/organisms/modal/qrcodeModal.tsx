@@ -269,7 +269,8 @@ const QRCodeModal = ({
                         </ResultsConfirmButton>
                         <ResultsGoToMyMintetedTokenButton
                             onClick={() => {
-                                navigate(`/mytoken/detail/${params.contract}`);
+                                const url = cwMode === "CW20" ? `/mytoken/detail/${params.contract}` : `/cw721/mynft/detail/${params.contract}`;
+                                navigate(url);
                                 onCloseModal();
                             }}
                         >
