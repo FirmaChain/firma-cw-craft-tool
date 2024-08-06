@@ -1,4 +1,4 @@
-import SearchInputWithButton2 from "@/components/atoms/input/searchInputWithButton";
+import SearchInputWithButton from "@/components/atoms/input/searchInputWithButton";
 import { ContentBodyContainer, CardHeaderTypo, ContractCard, SearchButton, SpecificItem, SpecificLabelTypo, SpecificValueWrapper, SpecificValueTypo, SpecificPlaceholderTypo } from "./style";
 import { Fragment, useCallback, useRef, useState } from "react";
 import IconButton from "@/components/atoms/buttons/iconButton";
@@ -103,7 +103,7 @@ const Search = () => {
         <ContentBodyContainer>
             <ContractCard>
                 <CardHeaderTypo>{'Search'}</CardHeaderTypo>
-                <SearchInputWithButton2
+                <SearchInputWithButton
                     value={keyword}
                     placeHolder={'Search by Token ID'}
                     onChange={(v) => setKeyword(v)}

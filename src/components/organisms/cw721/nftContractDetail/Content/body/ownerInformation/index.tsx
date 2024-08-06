@@ -15,6 +15,7 @@ import Skeleton from '@/components/atoms/skeleton';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import { Cw721Expires } from '@firmachain/firma-js';
 import { format } from 'date-fns';
+import { removeNanoSeconds } from '@/utils/time';
 
 const OwnerInformation = () => {
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
@@ -29,14 +30,16 @@ const OwnerInformation = () => {
 
         if (expireInfo['at_height'])
             return (
-                <div className="white-typo">
-                    {expireInfo['at_height']} <div className="gray-typo">Block</div>
-                </div>
+                <SpecificValueTypo>
+                    {expireInfo['at_height']} <SpecificValueTypo>Block</SpecificValueTypo>
+                </SpecificValueTypo>
             );
 
-        if (expireInfo['at_time']) return <div className="white-typo">{format(expireInfo['at_time'], 'yyyy-MM-dd HH:mm:ss')}</div>;
+        const expireDate = new Date(Number(removeNanoSeconds(expireInfo['at_time'])) / 1000);
 
-        if (expireInfo['never']) return <div className="white-typo">Forever</div>;
+        if (expireInfo['at_time']) return <SpecificValueTypo>{format(expireDate, 'yyyy-MM-dd HH:mm:ss')}</SpecificValueTypo>;
+
+        if (expireInfo['never']) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
         return <div></div>;
     };

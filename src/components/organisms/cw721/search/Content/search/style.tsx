@@ -40,7 +40,7 @@ export const SearchButton = styled.div<({ $disabled: boolean }) >`
     gap: 10px;
     border-radius: 8px;
     background: ${({ $disabled }) => $disabled ? `#707070` : `var(--Green-500, #02E191)`};
-    color: var(--Gray-100, #121212);
+    color: ${({ $disabled }) => $disabled ? `#444` : `var(--Green-500, #121212)`};
     text-align: center;
     font-family: "General Sans Variable";
     font-size: 14px;

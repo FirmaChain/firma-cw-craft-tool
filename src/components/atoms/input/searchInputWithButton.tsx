@@ -18,7 +18,7 @@ const StyledInput = styled.div<{
     align-items: center;
     justify-content: center;
 
-    padding: 0 24px;
+    padding: 0px 10px 0px 24px;
     gap: 8px;
 
     background: var(--Gray-200, #1a1a1a);

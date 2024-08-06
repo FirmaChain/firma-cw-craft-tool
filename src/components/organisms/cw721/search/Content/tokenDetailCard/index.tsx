@@ -91,15 +91,6 @@ const TokenInfo = () => {
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
-                    <SpecificLabelTypo>Minter</SpecificLabelTypo>
-                    {typeof minter === 'string' ? (
-                        // if minter is null (ownership renounced)
-                        <SpecificValueTypo>{minter || '-'}</SpecificValueTypo>
-                    ) : (
-                        <Skeleton width="100px" height="22px" />
-                    )}
-                </SpecificItem>
-                <SpecificItem>
                     <SpecificLabelTypo>Contract Name</SpecificLabelTypo>
                     {contractName ? <SpecificValueTypo>{contractName}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
                 </SpecificItem>
