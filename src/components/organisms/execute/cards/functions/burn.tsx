@@ -5,7 +5,7 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } fro
 import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import { parseAmountWithDecimal, parseAmountWithDecimal2 } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import useFormStore from '@/store/formStore';
 import useExecuteActions from '../../action';
 import { useSelector } from 'react-redux';
