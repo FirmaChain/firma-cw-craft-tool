@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { format } from 'date-fns';
 import { IC_CALENDAR } from '../icons/pngIcons';
 import { DEFAULT_INPUT_REGEX, FLOAT_NUMBER, INT_NUMBERS } from '@/constants/regex';
+import { compareStringNumbers } from '@/utils/balance';
 // import useFormStore from '@/store/formStore';
 
 const StyledInput = styled.div<{
@@ -113,7 +114,7 @@ interface InputProps {
     regex?: RegExp; //
     type?: 'string' | 'number' | 'date'; //
     decimal?: number; //
-    maxValue?: number; //
+    maxValue?: string; //
     textAlign?: 'left' | 'center' | 'right'; //
     readOnly?: boolean; //
     disabled?: boolean;
@@ -167,7 +168,8 @@ const VariableInput = ({
                 if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
 
                 //? check if value is bigger than max-value (if maxValue is provided)
-                if (typeof maxValue === 'number') inputValue = Number(inputValue) > maxValue ? String(maxValue) : inputValue;
+                if (typeof maxValue === 'string')
+                    inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
             } else {
                 //? Filter input string if valid regex provided
                 // console.log(inputValue);

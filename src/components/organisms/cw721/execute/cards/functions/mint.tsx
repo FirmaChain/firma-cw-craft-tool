@@ -320,7 +320,7 @@ const Mint = () => {
                                         onChange={(v) => setMintEndTokenId(v)}
                                         type="number"
                                         decimal={0}
-                                        maxValue={Number(mintStartTokenId) + 19}
+                                        maxValue={String(Number(mintStartTokenId) + 19)}
                                     />
                                 </div>
                             </div>

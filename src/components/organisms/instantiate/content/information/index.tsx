@@ -14,7 +14,7 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../instaniateStore';
-import { ENG_NUM_SPACE, HTTP_URI_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, ENG_NUM_SPACE, HTTP_URI_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 interface IProps {
     isBasic: boolean;
@@ -42,6 +42,7 @@ const Information = ({ isBasic }: IProps) => {
     const setMarketingAddress = useInstantiateStore((v) => v.setMarketingAddress);
     const setMarketingProject = useInstantiateStore((v) => v.setMarketingProject);
     const setWalletList = useInstantiateStore((v) => v.setWalletList);
+    const setMinterCap = useInstantiateStore((v) => v.setMinterCap);
 
     const handleTokenName = (value: string) => {
         if (value.length === 0 || value.length >= 3) {
@@ -92,6 +93,11 @@ const Information = ({ isBasic }: IProps) => {
         );
     };
 
+    const clearMinterCap = () => {
+        setMinterCap('');
+        clearFormError({ id: 'minterCap' });
+    };
+
     const handleDecimals = (value: string) => {
         if (Number(value) < 0) {
             setDecimals('0');
@@ -100,6 +106,7 @@ const Information = ({ isBasic }: IProps) => {
         }
 
         clearListAmount();
+        clearMinterCap();
     };
 
     const handleLabel = (value: string) => {
@@ -140,6 +147,7 @@ const Information = ({ isBasic }: IProps) => {
         }
 
         clearListAmount();
+        clearMinterCap();
     }, [isBasic]);
 
     return (
@@ -156,7 +164,7 @@ const Information = ({ isBasic }: IProps) => {
             <InformationBody>
                 <TokenNameSymbol>
                     <LabelInput
-                        labelProps={{ label: 'Token Name', subText: 'Minimum 3 charactes' }}
+                        labelProps={{ label: 'Token Name', subText: 'Minimum 3 characters' }}
                         inputProps={{
                             value: tokenName,
                             formId: 'tokenName',
@@ -164,17 +172,17 @@ const Information = ({ isBasic }: IProps) => {
                             maxLength: 30,
                             onChange: handleTokenName,
                             emptyErrorMessage: 'Please input token name.',
-                            regex: ENG_NUM_SPACE
+                            regex: DEFAULT_INPUT_REGEX
                         }}
                     />
 
                     <LabelInput
-                        labelProps={{ label: 'Token Symbol', subText: 'Minimum 3 charactes' }}
+                        labelProps={{ label: 'Token Symbol', subText: 'Minimum 3 characters' }}
                         inputProps={{
                             value: tokenSymbol,
                             formId: 'tokenSymbol',
                             placeHolder: 'ex) MCT, FCT',
-                            maxLength: 6,
+                            maxLength: 12,
                             onChange: handleTokenSymbol,
                             emptyErrorMessage: 'Please input token symbol.',
                             regex: ONLY_ENGLISH
@@ -192,7 +200,7 @@ const Information = ({ isBasic }: IProps) => {
                             emptyErrorMessage: 'Please input token decimal.',
                             type: 'number',
                             decimal: 0,
-                            maxValue: 18
+                            maxValue: '18'
                         }}
                     />
                 )}
@@ -204,7 +212,7 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) Event reward contract',
                         onChange: handleLabel,
                         emptyErrorMessage: 'Please input token label.',
-                        regex: ENG_NUM_SPACE,
+                        regex: DEFAULT_INPUT_REGEX,
                         maxLength: 128
                     }}
                 />
@@ -216,7 +224,8 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) https://example.thisismy.token.jpg',
                         onChange: handleTokenLogoUrl,
                         imgPreview: true,
-                        regex: HTTP_URI_REGEX
+                        regex: DEFAULT_INPUT_REGEX,
+                        maxLength: 300
                     }}
                 />
 
@@ -228,7 +237,7 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) This is my token',
                         onChange: handleDescription,
                         maxLength: isBasic ? 100 : 300,
-                        regex: ENG_NUM_SPACE
+                        regex: DEFAULT_INPUT_REGEX
                     }}
                 />
                 {!isBasic && (
@@ -251,7 +260,8 @@ const Information = ({ isBasic }: IProps) => {
                                 formId: 'marketingProject',
                                 placeHolder: 'ex) https://firmachain.org',
                                 onChange: handleMarketingProject,
-                                regex: HTTP_URI_REGEX
+                                regex: DEFAULT_INPUT_REGEX,
+                                maxLength: 300
                             }}
                         />
                     </>

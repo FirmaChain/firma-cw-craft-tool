@@ -104,7 +104,8 @@ const Minterble = ({ decimals }: IProps) => {
                             onChange: handleMinterCap,
                             emptyErrorMessage: 'Please input minter cap.',
                             type: 'number',
-                            decimal: decimals === '' ? 6 : Number(decimals)
+                            decimal: decimals === '' ? 6 : Number(decimals),
+                            maxValue: '99999999999999999999.999999999999999999'
                         }}
                     />
                 </Fragment>

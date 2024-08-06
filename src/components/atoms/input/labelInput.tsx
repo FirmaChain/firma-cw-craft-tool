@@ -29,7 +29,7 @@ interface IInputProps {
     regex?: RegExp;
     type?: 'string' | 'number' | 'date';
     decimal?: number;
-    maxValue?: number;
+    maxValue?: string;
     textAlign?: 'left' | 'center' | 'right';
     readOnly?: boolean;
     disabled?: boolean;

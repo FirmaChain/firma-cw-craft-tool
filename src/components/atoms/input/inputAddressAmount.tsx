@@ -105,7 +105,8 @@ const InputAddressAmount = ({
                             type: 'number',
                             decimal: decimals ? Number(decimals) : 6,
                             emptyErrorMessage: 'Please input amount.',
-                            textAlign: 'right'
+                            textAlign: 'right',
+                            maxValue: '999999999999999999.999999999999999999'
                         }}
                     />
                 </div>

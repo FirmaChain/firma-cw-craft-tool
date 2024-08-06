@@ -181,7 +181,7 @@ const CW20BurnFromInput = ({
                                 decimal: Number(decimals),
                                 emptyErrorMessage: 'Please input mint amount',
                                 textAlign: 'right',
-                                maxValue: Number(getTokenAmountFromUToken(allowance, decimals.toString())),
+                                maxValue: getTokenAmountFromUToken(allowance, decimals.toString()),
                                 hideErrorMessage: true
                             }}
                         />
