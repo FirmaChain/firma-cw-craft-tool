@@ -143,12 +143,12 @@ export const ItemLabel = styled.div`
 `;
 
 export const ItemValue = styled.div`
-    color: #e6e6e6;
-    font-family: 'General Sans Variable';
-    font-size: 18px;
+    color: var(--Gray-700, #807E7E);
+    font-family: "General Sans Variable";
+    font-size: 14px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 22px; /* 122.222% */
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
 `;
 
 export const ItemIcon = styled.img`

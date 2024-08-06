@@ -165,6 +165,22 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     white-space: pre;
 `;
 
+const AccordionValueWrap = styled.div`
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+`;
+
+const AccordionSymbolTypo = styled.div`
+    color: var(--Gray-550, #444);
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+`;
+
 const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null }) => {
     if (!allowanceInfo) return <AccordionTypo $disabled>Expiration</AccordionTypo>;
 
@@ -367,10 +383,13 @@ const IncreaseAllowancePreview = () => {
                                         ? 'Wallet Address'
                                         : shortenAddress(allowance?.address || '', 16, 16)}
                                 </AccordionTypo>
-                                <AccordionTypo className="clamp-single-line" $disabled={allowance === null || !Number(allowance.amount)}>
-                                    {/* {commaNumber(allowance === null ? '0' : allowance?.amount) || 0} */}
-                                    {commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
-                                </AccordionTypo>
+                                <AccordionValueWrap>
+                                    <AccordionTypo className="clamp-single-line" $disabled={allowance === null || !Number(allowance.amount)}>
+                                        {/* {commaNumber(allowance === null ? '0' : allowance?.amount) || 0} */}
+                                        {commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
+                                    </AccordionTypo>
+                                    <AccordionSymbolTypo>{tokenInfo.symbol}</AccordionSymbolTypo>
+                                </AccordionValueWrap>
                             </div>
                         </AccordionRow>
                         <AccordionRow>

@@ -114,6 +114,13 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
+const AccordionValueWrap = styled.div`
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+`;
+
 const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #707070)')};
     font-family: 'General Sans Variable';
@@ -123,7 +130,16 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
-const FromToAddressLine = ({ from, to, amount, decimal }: { from?: string; to?: string; amount?: string; decimal?: string }) => {
+const AccordionSymbolTypo = styled.div`
+    color: var(--Gray-550, #444);
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+`;
+
+const FromToAddressLine = ({ from, to, amount, decimal, symbol }: { from?: string; to?: string; amount?: string; decimal?: string, symbol: string }) => {
     return (
         <div
             style={{
@@ -164,10 +180,13 @@ const FromToAddressLine = ({ from, to, amount, decimal }: { from?: string; to?: 
                     </AccordionTypo>
                 </div>
             </div>
-
-            <AccordionTypo className="clamp-single-line" $disabled={!Boolean(amount && decimal)}>
-                {amount && decimal ? getUTokenStrFromTokenStr(amount, decimal) : 0}
-            </AccordionTypo>
+            <AccordionValueWrap>
+                <AccordionTypo className="clamp-single-line" $disabled={!Boolean(amount && decimal)}>
+                    {amount && decimal ? getUTokenStrFromTokenStr(amount, decimal) : 0}
+                </AccordionTypo>
+                <AccordionSymbolTypo>{symbol}</AccordionSymbolTypo>
+            </AccordionValueWrap>
+            
         </div>
     );
 };
@@ -318,6 +337,7 @@ const TransferFromPreview = () => {
                                         to={info.toAddress}
                                         amount={info.toAmount}
                                         decimal={tokenInfo.decimals.toString()}
+                                        symbol={tokenInfo.symbol}
                                     />
                                 ))}
                             </AccordionBox>

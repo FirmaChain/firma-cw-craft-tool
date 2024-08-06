@@ -122,6 +122,9 @@ const QRCodeModal = ({
 
     const onCloseModal = () => {
         closeModal(id);
+        if (status === 'success') {
+            onClickConfirm();
+        }
     };
 
     const onClickTransactionHash = (hash: string) => {

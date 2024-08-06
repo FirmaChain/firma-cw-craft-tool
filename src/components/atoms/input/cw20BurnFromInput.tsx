@@ -78,7 +78,7 @@ const CW20BurnFromInput = ({
 
         if (userAddress.toLowerCase() !== value.toLowerCase()) clearFromError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
         else {
-            setFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Cannot use self address.' });
+            setFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
             return;
         }
 

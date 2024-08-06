@@ -373,6 +373,7 @@ const Mint = () => {
                             setMintBaseURI('');
                             setMintStartTokenId('');
                             setMintEndTokenId('');
+                            setMintRecipientAddress('');
                             clearFormError({ id: BASE_URI_FORM_ID });
                         }}
                     />

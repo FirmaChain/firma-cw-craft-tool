@@ -15,7 +15,7 @@ import Skeleton from '@/components/atoms/skeleton';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import { Cw721Expires } from '@firmachain/firma-js';
 import { format } from 'date-fns';
-import { removeNanoSeconds } from '@/utils/time';
+import { isValidAddress } from '@/utils/address';
 
 const OwnerInformation = () => {
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
@@ -26,6 +26,7 @@ const OwnerInformation = () => {
     const minter = contractInfo?.minter;
 
     const PendingExpiery = ({ expireInfo }: { expireInfo: Cw721Expires | null }) => {
+        console.log(expireInfo['never']);
         if (!expireInfo) return <div></div>;
 
         if (expireInfo['at_height'])
@@ -35,9 +36,8 @@ const OwnerInformation = () => {
                 </SpecificValueTypo>
             );
 
-        const expireDate = new Date(Number(removeNanoSeconds(expireInfo['at_time'])) / 1000);
-
-        if (expireInfo['at_time']) return <SpecificValueTypo>{format(expireDate, 'yyyy-MM-dd HH:mm:ss')}</SpecificValueTypo>;
+        const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
+        if (expireInfo['at_time']) return <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>;
 
         if (expireInfo['never']) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
@@ -77,8 +77,8 @@ const OwnerInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {pending_expiry ? (
-                            <PendingExpiery expireInfo={pending_expiry} />
+                        {isValidAddress(pending_owner) && pending_expiry === null ? (
+                            <SpecificValueTypo>{'Forever'}</SpecificValueTypo>
                         ) : (
                             <SpecificValueTypo>{'-'}</SpecificValueTypo>
                         )}

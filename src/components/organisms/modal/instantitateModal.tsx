@@ -735,7 +735,7 @@ const InstantitateModal = ({
                             <span className="typo">Confirm</span>
                         </CloseButton>
                         <ConfirmButton onClick={onClickGoToMyTokens}>
-                            <span className="typo">Go to My Minted Tokens</span>
+                            <span className="typo">Go to My Minted Token</span>
                         </ConfirmButton>
                     </ResultIconBox>
                 </>

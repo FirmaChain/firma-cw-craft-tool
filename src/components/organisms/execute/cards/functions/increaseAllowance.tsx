@@ -120,7 +120,7 @@ const IncreaseAllowance = () => {
         }
 
         if (value.toLowerCase() === userAddress)
-            setFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS', message: 'Cannot use self address.' });
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
         else clearFormError({ id: `${inputId}_ADDRESS`, type: 'DO_NOT_USE_SELF_ADDRESS' });
     };
 

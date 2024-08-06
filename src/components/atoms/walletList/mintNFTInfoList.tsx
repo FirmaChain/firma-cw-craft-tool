@@ -39,9 +39,6 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
 
     const modal = useModalStore();
 
-    const [oldStartId, setOldStartId] = useState<string>('');
-    const [oldEndId, setOldEndId] = useState<string>('');
-
     const handleAddWallet = () => {
         if (list.length < maxWalletCount) {
             onChangeWalletList([...list, { token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }]);

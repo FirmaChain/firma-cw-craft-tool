@@ -84,7 +84,7 @@ const TransferFromWalletInput = ({
             //! if address is same with connected address
             if (value.toLowerCase() !== userAddress.toLowerCase()) clearFormError({ id: fromAddressId, type: 'SAME_WITH_USER' });
             else {
-                setFormError({ id: fromAddressId, type: 'SAME_WITH_USER', message: 'Cannot use self address.' });
+                setFormError({ id: fromAddressId, type: 'SAME_WITH_USER', message: 'Self address is not allowed.' });
                 return;
             }
         } else {

@@ -141,12 +141,28 @@ const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
+const WalletItemTokenWrap = styled.div`
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+`;
+
 const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? '#383838' : '#807E7E')};
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+const WalletItemTokenSymbol = styled.div`
+    color: var(--Gray-550, #444);
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
     line-height: 20px; /* 142.857% */
 `;
 
@@ -338,9 +354,12 @@ const TransferPreview = () => {
                                                 {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                             </WalletItemAddressTypo>
                                         </WalletLeftItemWrap>
-                                        <WalletItemTokenAmount className="clamp-single-line" $disabled={!Number(value.amount)}>
-                                            {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                        </WalletItemTokenAmount>
+                                        <WalletItemTokenWrap>
+                                            <WalletItemTokenAmount className="clamp-single-line" $disabled={!Number(value.amount)}>
+                                                {value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                            </WalletItemTokenAmount>
+                                            <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
+                                        </WalletItemTokenWrap>
                                     </WalletItemWrap>
                                 ))}
                             </WalletListWrap>

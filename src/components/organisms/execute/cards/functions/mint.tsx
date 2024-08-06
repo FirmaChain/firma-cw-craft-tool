@@ -16,8 +16,6 @@ import useFormStore from '@/store/formStore';
 import Divider from '@/components/atoms/divider';
 import Cw20MintInputList from '@/components/atoms/walletList/cw20MintInputList';
 import Icons from '@/components/atoms/icons';
-import { parseAmountWithDecimal2 } from '@/utils/common';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -70,7 +68,7 @@ const MinterCapExceedBox = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 4px;
-    margin-left: 4px;
+    margin-top: -15px;
 `;
 
 const Mint = () => {
@@ -100,8 +98,6 @@ const Mint = () => {
 
     const exceedMinterCap = useMemo(() => {
         if (!mintableAmount || !totalMintAmount) return false;
-
-        // console.log(BigInt(mintableAmount), BigInt(totalMintAmount));
 
         return BigInt(mintableAmount) < BigInt(totalMintAmount);
     }, [mintableAmount, totalMintAmount]);
