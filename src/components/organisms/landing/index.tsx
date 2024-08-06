@@ -71,7 +71,10 @@ const CW20Btn = () => {
             <Icons.CW20 />
             <div className="typo-box">
                 <div className="variant">Token</div>
-                <div className="type">CW20</div>
+                <div style={{ display: 'flex', gap: '1px' }}>
+                    <div className="type">CW</div>
+                    <div className="type">20</div>
+                </div>
             </div>
         </ContractBtnBase>
     );
@@ -103,7 +106,10 @@ const CW721Btn = () => {
             <Icons.CW721 />
             <div className="typo-box">
                 <div className="variant">NFT</div>
-                <div className="type">CW721</div>
+                <div style={{ display: 'flex', gap: '1px' }}>
+                    <div className="type">CW</div>
+                    <div className="type">721</div>
+                </div>
             </div>
         </ContractBtnBase>
     );

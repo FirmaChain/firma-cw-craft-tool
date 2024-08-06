@@ -166,7 +166,8 @@ const AddressBox = () => {
 
     return (
         <div style={{ position: 'relative' }}>
-            <IconButton style={{ padding: 0 }} onClick={() => setOpen(!open)}>
+            {/* <IconButton style={{ padding: 0 }} onClick={() => setOpen(!open)}> */}
+            <IconButton style={{ padding: 0 }} onClick={onClickAddress}>
                 <AddressCard>
                     <AddressText>{shortenAddress(address, 8, 6)}</AddressText>
                     <div style={{ display: 'flex' }} onClick={onClickAddress}>
@@ -174,7 +175,7 @@ const AddressBox = () => {
                     </div>
                 </AddressCard>
             </IconButton>
-            {open && (
+            {/* {open && ( */}
                 <BalanceBox>
                     <div className="bg-box" style={{}}>
                         <div className="title">Balance :</div>
@@ -194,7 +195,7 @@ const AddressBox = () => {
                         <div className="typo">Disconnect</div>
                     </DisconnectBtn>
                 </BalanceBox>
-            )}
+            {/* )} */}
         </div>
     );
 };

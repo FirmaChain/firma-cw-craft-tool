@@ -201,9 +201,9 @@ export const ContractBtnBase = styled(IconButton)<{ disabled?: boolean }>`
         margin-top: -4px;
         color: ${({ disabled }) => (disabled ? 'var(--Gray-450, #313131)' : 'var(--Gray-300, #222)')};
         font-family: Inter;
-        font-size: 10px;
+        font-size: 13px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 500;
         line-height: 140%; /* 14px */
     }
 
