@@ -167,7 +167,7 @@ const Preview = ({ isBasic }: IProps) => {
         if (isInit) {
             if (tokenName.length < 3) return true;
 
-            if (tokenSymbol === '') return true;
+            if (tokenSymbol.length < 3) return true;
 
             if (!validateSymbol(tokenSymbol)) return true;
 

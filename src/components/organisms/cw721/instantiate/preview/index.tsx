@@ -136,7 +136,7 @@ const Preview = () => {
             if (nftName.length < 3) return true;
             if (nftSymbol.length < 3) return true;
             if (label === '') return true;
-            if (label.length >= 128) return true;
+            if (label.length > 128) return true;
 
             if (contractMode === 'ADVANCED') {
                 if (admin === '' || !isValidAddress(admin)) return true;

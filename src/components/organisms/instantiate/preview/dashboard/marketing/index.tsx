@@ -1,6 +1,8 @@
 import Icons from '@/components/atoms/icons';
 import MarketingItem from './marketingItem';
 import { MarketingWrapper } from './style';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 interface IProps {
     label: string;
@@ -9,6 +11,10 @@ interface IProps {
     marketingProject: string;
 }
 const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IProps) => {
+    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+
+    const isBasic = Boolean(contractMode === 'BASIC');
+
     return (
         <MarketingWrapper>
             <MarketingItem
@@ -19,12 +25,14 @@ const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IPro
                 defaultValue="Label"
             />
 
-            <MarketingItem
-                imageChild={<Icons.Percent width={'24px'} height={'24px'} />}
-                name={'Decimal'}
-                value={decimals}
-                defaultValue="Decimal"
-            />
+            {!isBasic && (
+                <MarketingItem
+                    imageChild={<Icons.Percent width={'24px'} height={'24px'} />}
+                    name={'Decimal'}
+                    value={decimals}
+                    defaultValue="Decimal"
+                />
+            )}
 
             {marketingAddress && (
                 <MarketingItem
