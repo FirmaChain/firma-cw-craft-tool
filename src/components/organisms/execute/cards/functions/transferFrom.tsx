@@ -4,8 +4,9 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, Ti
 import { useEffect, useMemo } from 'react';
 import TransferFromWalletList from '@/components/atoms/walletList/transferFromWalletList';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import { addDecimals, getUTokenStrFromTokenStr } from '@/utils/common';
+import { getUTokenStrFromTokenStr } from '@/utils/common';
 import useFormStore from '@/store/formStore';
+import { addStringAmountsArray } from '@/utils/balance';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -60,7 +61,7 @@ const TransferFrom = () => {
     const totalTransferAmount = useMemo(() => {
         const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
 
-        return addDecimals(...amounts);
+        return addStringAmountsArray([...amounts]);
     }, [transferFromList]);
 
     useEffect(() => {

@@ -150,7 +150,7 @@ const UpdateMarketingPreview = () => {
                 {
                     label: 'Marketing Address',
                     value: finalAddress === '' ? address : finalAddress,
-                    type: 'url'
+                    type: 'wallet'
                 },
                 {
                     label: 'Marketing Project',

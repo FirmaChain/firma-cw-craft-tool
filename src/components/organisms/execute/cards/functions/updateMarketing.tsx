@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { NETWORKS } from '@/constants/common';
-import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -88,7 +88,8 @@ const UpdateMarketing = () => {
                         formId: 'input description',
                         placeHolder: 'This is token Description',
                         onChange: setMarketingDescription,
-                        maxLength: isBasic ? 100 : 300
+                        maxLength: isBasic ? 100 : 300,
+                        regex: DEFAULT_INPUT_REGEX
                     }}
                 />
                 {!isBasic && address === marketingInfo?.marketing && (
@@ -114,7 +115,9 @@ const UpdateMarketing = () => {
                                 value: currentProj,
                                 formId: 'input project',
                                 placeHolder: 'ex) https://firmachain.org',
-                                onChange: setMarketingProject
+                                onChange: setMarketingProject,
+                                regex: DEFAULT_INPUT_REGEX,
+                                maxLength: 300
                             }}
                         />
                     </Fragment>

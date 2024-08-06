@@ -44,7 +44,8 @@ const UpdateLogo = () => {
                     formId: LOGO_URL_ERROR_TYPE,
                     value: marketingLogoUrl === null ? '' : marketingLogoUrl,
                     onChange: onChangeMarketingLogoUrl,
-                    placeHolder: 'ex) https://example.thisismy.token.jpg'
+                    placeHolder: 'ex) https://example.thisismy.token.jpg',
+                    maxLength: 300
                 }}
             />
         </Container>
