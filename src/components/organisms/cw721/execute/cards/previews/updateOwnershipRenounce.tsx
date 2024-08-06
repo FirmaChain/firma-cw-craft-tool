@@ -134,7 +134,7 @@ const UpdateOwnershipRenouncePreview = () => {
                 color={isEnableButton ? '#E55250B3' : '#707070'}
                 text={!isInit ? 'Connect Wallet' : 'Renounce'}
                 sx={{ color: '#121212', fontStyle: 'normal', fontSize: '14px', fontWeight: 600 }}
-                onClick={resetAllInfo}
+                onClick={onClickRenounce}
                 disabled={!isEnableButton}
             />
         </Container>

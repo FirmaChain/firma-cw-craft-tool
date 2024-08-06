@@ -12,7 +12,7 @@ export const Container = styled.div`
 export const ContractWarp = styled.div`
     display: flex;
     width: 100%;
-    max-width: 1504px;
+    max-width: 1600px;
     padding: 40px 48px;
     flex-direction: column;
     align-items: flex-start;

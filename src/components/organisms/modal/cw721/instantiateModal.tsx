@@ -550,7 +550,7 @@ const InstantitateModal = ({
                             </ItemWrap>
                             <ItemRightWrap>
                                 <MyBalanceValue>
-                                    {`(My Balance : ${formatWithCommas(FirmaUtil.getFCTStringFromUFCTStr(balance))}`}
+                                    {`(My Balance : ${balance ? formatWithCommas(FirmaUtil.getFCTStringFromUFCTStr(balance)) : 'Loading'}`}
                                     <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Mini Icon'} />
                                     {')'}
                                 </MyBalanceValue>

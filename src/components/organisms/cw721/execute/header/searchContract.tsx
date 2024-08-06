@@ -119,7 +119,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                 end: (
                     <EndAdornment
                         keyword={keyword}
-                        showClearButton={keyword.length > 0 || storeContractAddress.length > 0}
+                        showClearButton={Boolean(keyword?.length > 0 || storeContractAddress?.length > 0)}
                         // disableSearch={(keyword.length === 0 || !isValidAddress(keyword))}
                         // onClickSearch={onClickSearch}
                         onClickClear={onClickClear}

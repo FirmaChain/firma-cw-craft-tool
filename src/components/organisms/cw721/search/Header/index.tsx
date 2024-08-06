@@ -129,7 +129,7 @@ const Header = () => {
                             <EndAdornment
                                 keyword={keyword}
                                 clearKeyword={onClickClearKeyword}
-                                showClearButton={Boolean(keyword.length > 0 || contractDetail !== null)}
+                                showClearButton={Boolean(keyword?.length > 0 || contractDetail !== null)}
                                 // onClickSearch={onClickSearch}
                                 // disableSearch={disableSearch}
                             />
