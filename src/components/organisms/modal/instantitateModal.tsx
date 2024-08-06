@@ -530,11 +530,9 @@ const InstantitateModal = ({
                 resultFee = resultFee + (multipleCount * Number(craftConfig.INSTANTIATE_LENGTH_FEE));
             }
 
-            console.log(resultFee);
             if (requestData?.initial_balances.length >= 2) {
                 const defaultLength = Number(requestData?.initial_balances.length) - 1;
                 const instantiateFee = defaultLength * craftConfig.INSTANTIATE_WALLET_FEE;
-                console.log(defaultLength);
                 return resultFee + instantiateFee;
             } else {
                 return resultFee;
@@ -583,8 +581,8 @@ const InstantitateModal = ({
                         onSuccess={(requestData: any) => {
                             setResult(requestData);
                             setStatus('success');
-                            // useInstantiateStore.getState().clearForm();
-                            // useFormStore.getState().clearForm();
+                            useInstantiateStore.getState().clearForm();
+                            useFormStore.getState().clearForm();
                         }}
                         onFailed={(requestData: any) => {
                             setStatus('failure');
