@@ -18,7 +18,7 @@ import Icons from '@/components/atoms/icons';
 import { IWallet } from '@/interfaces/wallet';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import commaNumber from 'comma-number';
-import { parseAmountWithDecimal, shortenAddress } from '@/utils/common';
+import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 
 interface IProps {
@@ -44,8 +44,8 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                 </SummeryLeftWrapper>
                 <SummeryRightWrapeer>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                        <SummeryRightTotalSupply $disabled={!Boolean(Number(totalSupply))}>
-                            {commaNumber(parseAmountWithDecimal(totalSupply, '0'))}
+                        <SummeryRightTotalSupply className="clamp-single-line" $disabled={!Boolean(Number(totalSupply))}>
+                            {commaNumber(totalSupply)}
                         </SummeryRightTotalSupply>
                         {tokenSymbol && Number(totalSupply) > 0 && <SummeryRightTokenSymbol>{tokenSymbol}</SummeryRightTokenSymbol>}
                     </div>
@@ -78,7 +78,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                     </ItemLeftAddress>
                                 </ItemLeftWrapper>
                                 <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
-                                    {commaNumber(parseAmountWithDecimal(wallet.amount, '0')) || '0'}
+                                    {commaNumber(wallet.amount) || '0'}
                                 </ItemTokenAmount>
                             </WalletListItem>
                         ))}

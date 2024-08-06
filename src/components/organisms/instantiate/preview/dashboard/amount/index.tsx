@@ -22,7 +22,7 @@ import { rootState } from '@/redux/reducers';
 import IconTooltip from '@/components/atoms/tooltip';
 import commaNumber from 'comma-number';
 import Divider from '@/components/atoms/divider';
-import { parseAmountWithDecimal, shortenAddress } from '@/utils/common';
+import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 
 interface IProps {
@@ -75,8 +75,8 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                 </div>
                             </HeaderLeftWrapper>
                             <HeaderRightWrapper>
-                                <HeaderMinterCapAmount $disabled={!Boolean(Number(minterCap))}>
-                                    {commaNumber(parseAmountWithDecimal(minterCap, '0')) || 0}
+                                <HeaderMinterCapAmount className="clamp-single-line" $disabled={!Boolean(Number(minterCap))}>
+                                    {commaNumber(minterCap) || 0}
                                 </HeaderMinterCapAmount>
                                 {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
                                 {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}
@@ -97,7 +97,7 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                     </DetailAddressText>
                                 </DetailLeftWrapper>
                                 <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
-                                    {commaNumber(parseAmountWithDecimal(minterCap, '0')) || 0}
+                                    {commaNumber(minterCap) || 0}
                                 </DetailMinterCapAmount>
                             </DetailWrapper>
                         ) : (

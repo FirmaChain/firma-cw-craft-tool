@@ -10,6 +10,7 @@ export const TotalSupplySummery = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 export const SummeryLeftWrapper = styled.div`
@@ -53,7 +54,6 @@ export const SummeryRightTokenSymbol = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
-    word-break: break-word;
 `;
 
 export const WalletListWrapper = styled.div`
@@ -86,6 +86,8 @@ export const ItemLeftAddress = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+
+    white-space: pre;
 `;
 
 export const ItemTokenAmount = styled.div<{ $disabled?: boolean }>`

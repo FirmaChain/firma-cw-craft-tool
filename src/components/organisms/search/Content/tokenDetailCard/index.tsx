@@ -98,7 +98,7 @@ const TokenInfo = () => {
                         </div>
                     )}
                 </div>
-                {!isBasic && minterAddress && (
+                {minterAddress && (
                     <div className="box-row">
                         <div className="box-title">Minter Address</div>
                         <div className="box-value">
@@ -346,7 +346,7 @@ const AllAccounts = () => {
         }
     ];
 
-    const filtereRows = allAccounts?.filter((row) => row.address.toLowerCase().includes(keyword));
+    const filtereRows = allAccounts?.filter((row) => row.address.toLowerCase().includes(keyword.toLowerCase()));
 
     return (
         <SectionContainer>
@@ -364,7 +364,7 @@ const AllAccounts = () => {
                                         <Icons.CloseIcon width="18px" height="18px" />
                                     </IconButton>
                                 )}
-                                <Icons.Search width={'15px'} height={'15px'} />
+                                {/* <Icons.Search width={'15px'} height={'15px'} /> */}
                             </div>
                         )
                     }}

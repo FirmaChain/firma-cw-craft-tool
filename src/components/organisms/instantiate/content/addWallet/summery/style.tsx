@@ -22,6 +22,7 @@ export const SummeryAttributeKey = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
+    white-space: pre;
 `;
 
 export const SummeryAttributeValue = styled.div`

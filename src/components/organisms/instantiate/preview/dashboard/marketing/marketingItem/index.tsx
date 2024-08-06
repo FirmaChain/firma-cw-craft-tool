@@ -1,6 +1,7 @@
 import React from 'react';
 import { ItemCoverValue, ItemLeftWrapper, ItemText, ItemValue, ItemValueCover, ItemWrapper } from './style';
 import styled from 'styled-components';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 interface IProps {
     imageChild: React.ReactNode;
@@ -8,6 +9,7 @@ interface IProps {
     value: string;
     isCover?: boolean;
     defaultValue?: string;
+    tooltip?: string;
 }
 
 const ItemEmptyValue = styled.div`
@@ -30,7 +32,7 @@ const ItemEmptyValueCover = styled.div`
     overflow: hidden;
 `;
 
-const MarketingItem = ({ imageChild, name, value, isCover = false, defaultValue }: IProps) => {
+const MarketingItem = ({ imageChild, name, value, isCover = false, defaultValue, tooltip }: IProps) => {
     return (
         <ItemWrapper $isCover={isCover}>
             <ItemLeftWrapper>
@@ -39,12 +41,25 @@ const MarketingItem = ({ imageChild, name, value, isCover = false, defaultValue 
             </ItemLeftWrapper>
             {!isCover ? (
                 value ? (
-                    <ItemValue>{value}</ItemValue>
+                    <ItemValue
+                        data-tooltip-content={tooltip || ''}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                    >
+                        {value}
+                    </ItemValue>
                 ) : (
                     <ItemEmptyValue>{defaultValue}</ItemEmptyValue>
                 )
             ) : value ? (
-                <ItemValueCover $visible={value.length > 0}>
+                <ItemValueCover
+                    $visible={value.length > 0}
+                    data-tooltip-content={tooltip || ''}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
                     <ItemCoverValue>{value}</ItemCoverValue>
                 </ItemValueCover>
             ) : (

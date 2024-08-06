@@ -38,7 +38,7 @@ const AllAccounts = () => {
 
     const rows = useMemo(() => {
         if (keyword !== '') {
-            return accounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword));
+            return accounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
         } else {
             return accounts;
         }
@@ -60,7 +60,7 @@ const AllAccounts = () => {
                                         <Icons.CloseIcon width="18px" height="18px" />
                                     </IconButton>
                                 )}
-                                <Icons.Search width={'15px'} height={'15px'} />
+                                {/* <Icons.Search width={'15px'} height={'15px'} /> */}
                             </div>
                         )
                     }}

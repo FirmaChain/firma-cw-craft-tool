@@ -23,6 +23,14 @@ import Divider from '@/components/atoms/divider';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
+import styled from 'styled-components';
+import GreenButton from '@/components/atoms/buttons/greenButton';
+
+const WalletSearcBtn = styled(GreenButton)`
+    min-width: unset;
+    width: 168px;
+    height: 40px;
+`;
 
 const EndAdornment = ({
     keyword,
@@ -37,22 +45,41 @@ const EndAdornment = ({
 }) => {
     const _disableSearch = keyword === '' || disableSearch;
 
+    const lastSearched = useRef('');
+
+    const _onClickSearch = () => {
+        if (lastSearched.current.toLowerCase() !== keyword.toLowerCase()) {
+            onClickSearch();
+            lastSearched.current = keyword.toLowerCase();
+        }
+    };
+
+    const _onClickClear = () => {
+        lastSearched.current = '';
+        onClickClear();
+    };
+
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
-                <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
+                <IconButton style={{ padding: 0, display: 'flex' }} onClick={_onClickClear}>
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
 
-            <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
+            <WalletSearcBtn disabled={_disableSearch} onClick={_onClickSearch}>
+                <div className="button-typo" style={{ fontSize: '14px' }}>
+                    Search
+                </div>
+            </WalletSearcBtn>
+            {/* <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
                 <Icons.Search
                     width="28px"
                     height="28px"
                     fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
                     stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
                 />
-            </IconButton>
+            </IconButton> */}
         </div>
     );
 };

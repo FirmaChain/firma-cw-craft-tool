@@ -14,7 +14,6 @@ import {
     Divider
 } from './style';
 import Icons from '@/components/atoms/icons';
-import { parseAmountWithDecimal } from '@/utils/common';
 import React from 'react';
 import { IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
 import commaNumber from 'comma-number';
@@ -58,7 +57,7 @@ const MintedTokenCard = ({
         }
     }, [tokenLogoUrl]);
 
-    const totalSupplyTypo = commaNumber(parseAmountWithDecimal(totalSupply, decimals.toString()));
+    const totalSupplyTypo = commaNumber(totalSupply);
 
     return (
         <ItemWrapper

@@ -12,13 +12,13 @@ import styled from 'styled-components';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Divider from '@/components/atoms/divider';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
-import { addDecimals, openLink, parseAmountWithDecimal2, shortenAddress } from '@/utils/common';
-import { TOOLTIP_ID } from '@/constants/tooltip';
+import { openLink, shortenAddress } from '@/utils/common';
 import useExecuteHook from '../execute/hooks/useExecueteHook';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { FirmaUtil } from '@firmachain/firma-js';
+import { addStringAmountsArray, getTokenAmountFromUToken } from '@/utils/balance';
 
 const CloseBtnBox = styled.div`
     display: flex;
@@ -97,6 +97,7 @@ const InfoBoxSection = styled.div`
         width: 100%;
         justify-content: space-between;
         align-items: center;
+        gap: 16px;
     }
 
     .row-key {
@@ -110,6 +111,8 @@ const InfoBoxSection = styled.div`
         font-style: normal;
         font-weight: 400;
         line-height: 18px; /* 138.462% */
+
+        white-space: pre;
     }
 
     .normal-typo {
@@ -226,6 +229,7 @@ const FeeBox = styled.div`
         display: flex;
         flex-direction: row;
         align-items: center;
+        gap: 4px;
 
         .logo {
             width: 16px;
@@ -454,9 +458,8 @@ const InstantitateModal = ({
 }: {
     id: string;
     module: string;
-    params: { admin: string; codeId: string; label: string; msg: string; type: string; totalLength: number, walletLength: number };
+    params: { admin: string; codeId: string; label: string; msg: string; type: string; totalLength: number; walletLength: number };
 }) => {
-
     const { firmaSDK } = useExecuteHook();
     const walletAddress = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
@@ -487,7 +490,7 @@ const InstantitateModal = ({
         try {
             if (requestData?.initial_balances.length === 0) return '0';
             else {
-                return addDecimals(...requestData?.initial_balances.map((one) => one.amount));
+                return addStringAmountsArray([...requestData?.initial_balances.map((one) => one.amount)]);
             }
         } catch (error) {
             return '0';
@@ -522,12 +525,12 @@ const InstantitateModal = ({
         try {
             let resultFee = craftConfig.DEFAULT_FEE;
 
-            console.log("MSG LENGTH", JSON.stringify(params.msg).length);
-            console.log("TOTAL LENGTH", params.totalLength);
+            console.log('MSG LENGTH', JSON.stringify(params.msg).length);
+            console.log('TOTAL LENGTH', params.totalLength);
             if (params.totalLength > 1200) {
-                const multipleCount = ((Number(params.totalLength) - 1200) / 100);
+                const multipleCount = (Number(params.totalLength) - 1200) / 100;
                 console.log(multipleCount);
-                resultFee = resultFee + (multipleCount * Number(craftConfig.INSTANTIATE_LENGTH_FEE));
+                resultFee = resultFee + multipleCount * Number(craftConfig.INSTANTIATE_LENGTH_FEE);
             }
 
             if (requestData?.initial_balances.length >= 2) {
@@ -613,8 +616,11 @@ const InstantitateModal = ({
                             <div className="row">
                                 <div className="row-key">Supply Amount</div>
                                 <div className="amount-box">
-                                    <div
-                                        className="amount-highlight"
+                                    <div className="amount-highlight clamp-single-line">
+                                        {getTokenAmountFromUToken(supplyAmount, requestData?.decimals)}
+                                    </div>
+                                    {/* <div
+                                        className="amount-highlight clamp-single-line"
                                         data-tooltip-content={parseAmountWithDecimal2(supplyAmount, requestData?.decimals)}
                                         data-tooltip-id={TOOLTIP_ID.COMMON}
                                         data-tooltip-wrapper="span"
@@ -623,7 +629,7 @@ const InstantitateModal = ({
                                         {Number(parseAmountWithDecimal2(supplyAmount, requestData?.decimals)) < 0.01
                                             ? '< 0.01'
                                             : parseAmountWithDecimal2(supplyAmount, requestData?.decimals, true)}
-                                    </div>
+                                    </div> */}
                                     <div className="symbol-typo">{requestData?.symbol}</div>
                                 </div>
                             </div>
@@ -633,15 +639,16 @@ const InstantitateModal = ({
                                     <div className="row-key">Minter Cap</div>
                                     <div className="amount-box">
                                         <div
-                                            className="amount-gray"
-                                            data-tooltip-content={parseAmountWithDecimal2(requestData.mint?.cap, requestData?.decimals)}
-                                            data-tooltip-id={TOOLTIP_ID.COMMON}
-                                            data-tooltip-wrapper="span"
-                                            data-tooltip-place="bottom"
+                                            className="amount-gray clamp-single-line"
+                                            // data-tooltip-content={parseAmountWithDecimal2(requestData.mint?.cap, requestData?.decimals)}
+                                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                                            // data-tooltip-wrapper="span"
+                                            // data-tooltip-place="bottom"
                                         >
-                                            {Number(parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals)) < 0.01
+                                            {getTokenAmountFromUToken(requestData.mint?.cap, requestData.decimals)}
+                                            {/* {Number(parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals)) < 0.01
                                                 ? '< 0.01'
-                                                : parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals, true)}
+                                                : parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals, true)} */}
                                         </div>
                                         <div className="symbol-typo">{requestData.symbol}</div>
                                     </div>

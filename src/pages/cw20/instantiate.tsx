@@ -5,9 +5,9 @@ import { Box, Container, MainContent } from '../../styles/instantiate';
 import { Content, Header, Preview } from '../../components/organisms/instantiate';
 import { rootState } from '@/redux/reducers';
 import useFormStore from '@/store/formStore';
-import { addDecimals } from '@/utils/common';
 import { GlobalActions } from '@/redux/actions';
 import useInstantiateStore from '@/components/organisms/instantiate/instaniateStore';
+import { addStringAmountsArray } from '@/utils/balance';
 
 const Cw20Instantiate = () => {
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
@@ -19,7 +19,7 @@ const Cw20Instantiate = () => {
     const isBasic = contractMode === 'BASIC';
 
     useEffect(() => {
-        const sumAmount = addDecimals(...walletList.map((one) => one.amount));
+        const sumAmount = addStringAmountsArray([...walletList.map((one) => one.amount)]);
 
         useInstantiateStore.getState().setTotalSupply(sumAmount.toString());
         useInstantiateStore.getState().setWalletCount(walletList.length);

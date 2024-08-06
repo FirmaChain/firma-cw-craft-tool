@@ -23,22 +23,22 @@ const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IPro
                 name={'Label'}
                 value={label}
                 defaultValue="Label"
+                tooltip={label.length >= 30 ? label : ''}
             />
 
-            {!isBasic && (
-                <MarketingItem
-                    imageChild={<Icons.Percent width={'24px'} height={'24px'} />}
-                    name={'Decimal'}
-                    value={decimals}
-                    defaultValue="Decimal"
-                />
-            )}
+            <MarketingItem
+                imageChild={<Icons.Percent width={'24px'} height={'24px'} />}
+                name={'Decimal'}
+                value={isBasic ? '6' : decimals}
+                defaultValue="Decimal"
+            />
 
             {marketingAddress && (
                 <MarketingItem
                     imageChild={<Icons.Wallet width={'24px'} height={'24px'} />}
                     name={'Marketing Address'}
                     value={marketingAddress}
+                    tooltip={marketingAddress.length >= 30 ? marketingAddress : ''}
                 />
             )}
             {marketingProject && (
@@ -46,6 +46,7 @@ const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IPro
                     imageChild={<Icons.Link width={'24px'} height={'24px'} />}
                     name={'Marketing Project'}
                     value={marketingProject}
+                    tooltip={marketingProject.length >= 30 ? marketingProject : ''}
                 />
             )}
         </MarketingWrapper>

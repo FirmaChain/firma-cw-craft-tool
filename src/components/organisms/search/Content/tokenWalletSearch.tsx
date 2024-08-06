@@ -4,7 +4,7 @@ import Divider from '@/components/atoms/divider';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { isValidAddress, parseAmountWithDecimal2, parseExpires } from '@/utils/common';
 import useTokenDetail from '@/hooks/useTokenDetail';
 import useSearchStore from '../searchStore';
@@ -12,6 +12,14 @@ import Cell from '@/components/atoms/table/cells';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
+import GreenButton from '@/components/atoms/buttons/greenButton';
+import styled from 'styled-components';
+
+const WalletSearcBtn = styled(GreenButton)`
+    min-width: unset;
+    width: 168px;
+    height: 40px;
+`;
 
 const EndAdornment = ({
     keyword,
@@ -26,22 +34,33 @@ const EndAdornment = ({
 }) => {
     const _disableSearch = keyword === '' || disableSearch;
 
+    const lastSearched = useRef<string>('');
+
+    const _onClickSearch = () => {
+        if (lastSearched.current.toLowerCase() !== keyword.toLowerCase()) {
+            onClickSearch();
+            lastSearched.current = keyword.toLowerCase();
+        }
+    };
+
+    const _onClickClear = () => {
+        lastSearched.current = '';
+        onClickClear();
+    };
+
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
-                <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
+                <IconButton style={{ padding: 0, display: 'flex' }} onClick={_onClickClear}>
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
 
-            <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
-                <Icons.Search
-                    width="28px"
-                    height="28px"
-                    fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
-                    stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
-                />
-            </IconButton>
+            <WalletSearcBtn disabled={_disableSearch} onClick={_onClickSearch}>
+                <div className="button-text" style={{ fontSize: '14px' }}>
+                    Search
+                </div>
+            </WalletSearcBtn>
         </div>
     );
 };

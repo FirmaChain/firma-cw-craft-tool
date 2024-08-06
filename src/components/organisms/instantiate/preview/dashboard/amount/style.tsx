@@ -24,6 +24,7 @@ export const MinterCapHeaderWrapper = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 export const HeaderLeftWrapper = styled.div`
@@ -40,6 +41,8 @@ export const HeaderMinterCapText = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px;
+
+    white-space: pre;
 `;
 
 export const HeaderRightWrapper = styled.div`

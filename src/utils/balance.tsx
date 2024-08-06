@@ -103,6 +103,48 @@ export const addStringAmount = (amount1: string, amount2: string) => {
     return decResult ? `${intResult}.${decResult}` : intResult;
 };
 
+export const addStringAmountsArray = (amounts: string[]): string => {
+    let totalIntPart = '0';
+    let totalDecPart = '0';
+
+    for (const amount of amounts) {
+        const [intPart, decPart] = amount.split('.');
+
+        const decLength = Math.max(totalDecPart.length, decPart?.length || 0);
+        const dec1 = totalDecPart.padEnd(decLength, '0');
+        const dec2 = (decPart || '').padEnd(decLength, '0');
+
+        let carry = 0;
+        let decResult = '';
+        for (let i = decLength - 1; i >= 0; i--) {
+            let sum = parseInt(dec1[i]) + parseInt(dec2[i]) + carry;
+            carry = Math.floor(sum / 10);
+            decResult = (sum % 10) + decResult;
+        }
+
+        const maxLength = Math.max(totalIntPart.length, intPart.length);
+        const int1 = totalIntPart.padStart(maxLength, '0');
+        const int2 = intPart.padStart(maxLength, '0');
+        let intResult = '';
+        for (let i = maxLength - 1; i >= 0; i--) {
+            let sum = parseInt(int1[i]) + parseInt(int2[i]) + carry;
+            carry = Math.floor(sum / 10);
+            intResult = (sum % 10) + intResult;
+        }
+        if (carry) {
+            intResult = carry + intResult;
+        }
+
+        totalIntPart = intResult;
+        totalDecPart = decResult;
+    }
+
+    // Trim trailing zeros in decimal part and handle cases with zero decimal part
+    totalDecPart = totalDecPart.replace(/0+$/, '');
+
+    return totalDecPart ? `${totalIntPart}.${totalDecPart}` : totalIntPart;
+};
+
 export const subtractStringAmount = (amount1: string, amount2: string) => {
     const compareStrings = (str1: string, str2: string): boolean => {
         const [intPart1, decPart1 = ''] = str1.split('.');

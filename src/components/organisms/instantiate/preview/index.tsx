@@ -8,13 +8,13 @@ import Dashboard from './dashboard';
 import Submit from './submit';
 import { ModalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
-import { compareAmounts, compareStringsAsNumbers, getApplyDecimalsAmount, isValidAddress, validateSymbol } from '@/utils/common';
+import { compareStringsAsNumbers, getApplyDecimalsAmount, isValidAddress, validateSymbol } from '@/utils/common';
 import { CRAFT_CONFIGS } from '@/config';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
 import InstantitateModal from '../../modal/instantitateModal';
-import { addStringAmount } from '@/utils/balance';
+import { addStringAmount, compareStringNumbers } from '@/utils/balance';
 
 interface IProps {
     isBasic: boolean;
@@ -188,7 +188,7 @@ const Preview = ({ isBasic }: IProps) => {
 
             if (minterble && minterCap === '') return true;
 
-            if (minterble && compareAmounts(minterCap, totalSupply)) return true;
+            if (minterble && compareStringNumbers(minterCap, totalSupply) < 0) return true;
 
             return false;
         } else {
@@ -197,7 +197,7 @@ const Preview = ({ isBasic }: IProps) => {
     }, [decimals, isBasic, isInit, label, minterAddress, minterCap, minterble, tokenName, tokenSymbol, totalSupply, walletList]);
 
     useEffect(() => {
-        if (minterCap !== '' && Number(totalSupply) > 0 && compareAmounts(minterCap, totalSupply)) {
+        if (minterCap !== '' && Number(totalSupply) > 0 && compareStringNumbers(minterCap, totalSupply) <= -1) {
             setFormError({
                 id: 'minterCap',
                 type: 'INSUFFICIENT_MINTER_CAP',
@@ -209,7 +209,7 @@ const Preview = ({ isBasic }: IProps) => {
                 type: 'INSUFFICIENT_MINTER_CAP'
             });
         }
-    }, [minterCap]);
+    }, [minterCap, totalSupply]);
 
     return (
         <PreviewWrapper>
