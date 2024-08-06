@@ -206,7 +206,7 @@ const useCW721ExecuteAction = () => {
         }
     };
 
-    const setNftDatas = async (contractAddress: string, nftIds: string) => {
+    const setNftDatas = async (contractAddress: string, owner: string, nftIds: string) => {
         try {
             const splitNftIds: string[] = nftIds.split(',');
             const newNftInfo: Cw721NftInfo[] = [];
@@ -215,7 +215,17 @@ const useCW721ExecuteAction = () => {
                 if (splitNftId === '') continue;
                 try {
                     const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress, splitNftId);
-                    newNftInfo.push(contractNftData);
+                    if (contractNftData.access.owner === owner) {
+                        newNftInfo.push(contractNftData);
+                    } else {
+                        const approvals = contractNftData.access.approvals;
+                        for (const approval of approvals) {
+                            if (approval.spender === owner) {
+                                newNftInfo.push(contractNftData);
+                                break;
+                            }
+                        }
+                    }
                 } catch (error) {
                     console.log('Does not search data by nft id', splitNftId);
                 }

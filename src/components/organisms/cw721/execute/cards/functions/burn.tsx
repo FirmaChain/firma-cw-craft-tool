@@ -62,7 +62,7 @@ const Burn = () => {
             setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'INPUT_IS_EMPTY', message: 'Please input burn NFT id.' });
         }
 
-        setNftDatas(contractAddress, cleanedText); 
+        setNftDatas(contractAddress, address, cleanedText); 
         setBurnList(cleanedText);
     };
 

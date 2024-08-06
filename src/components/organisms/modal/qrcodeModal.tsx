@@ -94,6 +94,7 @@ const QRCodeModal = ({
 
     const { enqueueSnackbar } = useSnackbar();
 
+    const cwMode = useSelector((v: rootState) => v.global.cwMode);
     const network = useSelector((v: rootState) => v.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -272,7 +273,7 @@ const QRCodeModal = ({
                                 onCloseModal();
                             }}
                         >
-                            <ResultsGoToMyMintetedTokenButtonTypo>Go to My Minted Tokens</ResultsGoToMyMintetedTokenButtonTypo>
+                            <ResultsGoToMyMintetedTokenButtonTypo>{cwMode === "CW20" ? "Go to My Minted Token" : "Go to My NFT Contract"}</ResultsGoToMyMintetedTokenButtonTypo>
                         </ResultsGoToMyMintetedTokenButton>
                     </ResultsButtonWrap>
                 </div>
