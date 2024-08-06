@@ -11,7 +11,8 @@ import {
     ItemWrap,
     ResultItemAmountTypo,
     ExpirationTypo,
-    ItemUrlTypo
+    ItemUrlTypo,
+    ModalResultAddressTypo
 } from './style';
 import { IC_ID_CIRCLE, IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { shortenAddress } from '@/utils/address';
@@ -72,7 +73,7 @@ interface IWalletProps {
     count: string;
 }
 
-export const WalletItem = ({ label, count }: IWalletProps) => {
+export const WalletCount = ({ label, count }: IWalletProps) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -89,15 +90,32 @@ export const WalletAdress = ({ label, address }: { label: string; address: strin
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemValue
+                <ModalResultAddressTypo
                     data-tooltip-content={address}
                     data-tooltip-id={TOOLTIP_ID.COMMON}
                     data-tooltip-wrapper="span"
                     data-tooltip-place="bottom"
                 >
                     {shortenAddress(address, 12, 12)}
-                </ItemValue>
-                <ItemIcon src={IC_WALLET} alt={'wallet'} />
+                </ModalResultAddressTypo>
+            </ItemValueWrap>
+        </ItemWrap>
+    );
+};
+
+export const ResultWalletAdress = ({ label, address }: { label: string; address: string }) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ModalResultAddressTypo
+                    data-tooltip-content={address}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
+                    {shortenAddress(address, 12, 12)}
+                </ModalResultAddressTypo>
             </ItemValueWrap>
         </ItemWrap>
     );
@@ -109,13 +127,13 @@ interface IUrlProps {
 }
 
 export const UrlItem = ({ label, logo }: IUrlProps) => {
-    const _value = logo.length >= 40 ? shortenAddress(logo, 12, 12) : logo;
+    // const _value = logo.length > 32 ? shortenAddress(logo, 20, 12) : logo;
 
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemUrlTypo>{_value}</ItemUrlTypo>
+                <ItemUrlTypo>{shortenAddress(logo, 20, 12)}</ItemUrlTypo>
             </ItemValueWrap>
         </ItemWrap>
     );
@@ -151,7 +169,7 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
         if (type === 'at_height') return value;
         if (type === 'at_time') {
             const timeInMs = Math.floor(Number(value) / 1000000);
-            return format(timeInMs, 'yyyy-MM-dd HH:mm:ss');
+            return format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a');
         }
 
         return '';
@@ -186,7 +204,7 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
     );
 };
 
-export const NftItem = ({ label, value }: { label: string; value: string; }) => {
+export const NftItem = ({ label, value, symbol }: { label: string; value: string; symbol: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -198,16 +216,16 @@ export const NftItem = ({ label, value }: { label: string; value: string; }) => 
     );
 };
 
-export const NftComfirmItem = ({ label, value }: { label: string; value: string; }) => {
+export const NftResultItem = ({ label, value, symbol }: { label: string; value: string; symbol: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemValue>{value}</ItemValue>
+                <ItemAmountValue style={{ color: '#FFFFFF' }}>{value}</ItemAmountValue>
                 <ItemAmountSymbol>NFT</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
-    )
+    );
 };
 
 export const NftIdItem = ({ label, value }: { label: string; value: string }) => {
@@ -216,6 +234,18 @@ export const NftIdItem = ({ label, value }: { label: string; value: string }) =>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
                 <ItemAmountValue>{value}</ItemAmountValue>
+                <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
+            </ItemValueWrap>
+        </ItemWrap>
+    );
+};
+
+export const ResultNftIdItem = ({ label, value }: { label: string; value: string }) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ItemAmountValue style={{ color: '#FFFFFF' }}>{value}</ItemAmountValue>
                 <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
             </ItemValueWrap>
         </ItemWrap>

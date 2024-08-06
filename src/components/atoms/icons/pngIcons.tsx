@@ -1,5 +1,5 @@
 const PUBLIC_IC_URL = '/assets/icon/';
-const PUBLIC_IMG_URL = '/assets/image/'
+const PUBLIC_IMG_URL = '/assets/image/';
 
 export const FIRMA_DIM_LOGO = PUBLIC_IC_URL + 'firma_dim_logo.png';
 export const IC_VALID_SHIELD = PUBLIC_IC_URL + 'ic_valid_shield.png';
@@ -58,3 +58,4 @@ export const IMG_NFT_EMPTY_THUMBNAIL = PUBLIC_IMG_URL + 'img_nft_thumbnail.png';
 export const IC_EXPAND = PUBLIC_IC_URL + 'ic_expand.png';
 export const IC_WARNING = PUBLIC_IC_URL + 'ic_warning.png';
 export const IC_CHECK_SQUARE = PUBLIC_IC_URL + 'ic_check_square.png';
+export const IC_ALERT_YELLOW = PUBLIC_IC_URL + 'ic_alert_yellow.png';

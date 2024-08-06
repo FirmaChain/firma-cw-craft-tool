@@ -36,12 +36,26 @@ import {
     ResultsGoToMyMintetedTokenButtonTypo,
     ResultsTitleFailedTypo,
     ResultFailedTypo,
-    ResultFailedDesc
+    ResultFailedDesc,
+    ModalAlertBox
 } from './style';
 import React, { useState } from 'react';
 import { useModalStore } from '@/hooks/useModal';
-import { AmountItem, ExpirationItem, NftComfirmItem, NftIdItem, NftItem, ResultAmountItem, TransactionItem, UrlItem, WalletAdress, WalletItem } from '.';
-import { IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
+import {
+    AmountItem,
+    ExpirationItem,
+    NftIdItem,
+    NftItem,
+    NftResultItem,
+    ResultAmountItem,
+    ResultNftIdItem,
+    ResultWalletAdress,
+    TransactionItem,
+    UrlItem,
+    // WalletAdress,
+    WalletCount
+} from '.';
+import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
 import RequestQR from '@/components/organisms/requestQR';
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import { FirmaUtil } from '@firmachain/firma-js';
@@ -49,6 +63,7 @@ import { getTransactionHash } from '@/utils/transaction';
 import { useNavigate } from 'react-router-dom';
 import { CRAFT_CONFIGS } from '@/config';
 import Divider from '@/components/atoms/divider';
+import Icons from '@/components/atoms/icons';
 
 interface SuccessData {
     addedAt: string;
@@ -69,6 +84,7 @@ interface ModalParameters {
         symbol?: string;
         fctAmount?: string;
         feeAmount?: string;
+        alert?: string;
         list?: {
             label: string;
             value: string;
@@ -136,7 +152,7 @@ const QRCodeModal = ({
                                 params={params}
                                 signer={address}
                                 onSuccess={(requestData: any) => {
-                                    console.log("requestData: ", requestData);
+                                    console.log('requestData: ', requestData);
                                     setResult(requestData);
                                     setStatus('success');
                                 }}
@@ -153,6 +169,12 @@ const QRCodeModal = ({
                         </QrCodeWrap>
                     </ModalTitleWrap>
                     <ModalContentWrap style={{ marginBottom: '36px' }}>
+                        {params.content.alert && (
+                            <ModalAlertBox>
+                                <img src={IC_ALERT_YELLOW} alt="alert" style={{ width: '16px' }} />
+                                <span className="typo">{params.content.alert}</span>
+                            </ModalAlertBox>
+                        )}
                         <ModalContentBlackCard>
                             {params.content.list.map((el, index) => {
                                 console.log(params.content.list);
@@ -167,17 +189,17 @@ const QRCodeModal = ({
                                         />
                                     );
                                 } else if (el.type === 'wallet') {
-                                    return <WalletAdress label={el.label} address={el.value} />;
+                                    return <ResultWalletAdress label={el.label} address={el.value} />;
                                 } else if (el.type === 'url') {
                                     return <UrlItem label={el.label} logo={el.value} />;
                                 } else if (el.type === 'wallet-count') {
-                                    return <WalletItem label={el.label} count={el.value} />;
+                                    return <WalletCount label={el.label} count={el.value} />;
                                 } else if (['at_time', 'at_height', 'never'].includes(el.type)) {
                                     return <ExpirationItem value={el.value} type={el.type} />;
                                 } else if (el.type === 'nft') {
-                                    return <NftItem label={el.label} value={el.value} />
+                                    return <NftItem label={el.label} value={el.value} symbol={params.content.symbol} />;
                                 } else if (el.type === 'nft_id') {
-                                    return <NftIdItem label={el.label} value={el.value} />
+                                    return <NftIdItem label={el.label} value={el.value} />;
                                 }
                             })}
                         </ModalContentBlackCard>
@@ -235,17 +257,17 @@ const QRCodeModal = ({
                                         />
                                     );
                                 } else if (el.type === 'wallet') {
-                                    return <WalletAdress label={el.label} address={el.value} />;
+                                    return <ResultWalletAdress label={el.label} address={el.value} />;
                                 } else if (el.type === 'url') {
                                     return <UrlItem label={el.label} logo={el.value} />;
                                 } else if (el.type === 'wallet-count') {
-                                    return <WalletItem label={el.label} count={el.value} />;
+                                    return <WalletCount label={el.label} count={el.value} />;
                                 } else if (['at_time', 'at_height', 'never'].includes(el.type)) {
                                     return <ExpirationItem value={el.value} type={el.type} />;
                                 } else if (el.type === 'nft') {
-                                    return <NftComfirmItem label={el.label} value={el.value} />
+                                    return <NftResultItem label={el.label} value={el.value} symbol={params.content.symbol} />;
                                 } else if (el.type === 'nft_id') {
-                                    return <NftIdItem label={el.label} value={el.value} />
+                                    return <ResultNftIdItem label={el.label} value={el.value} />;
                                 }
                             })}
                         </ResultsContentSummeryWrap>
@@ -269,12 +291,15 @@ const QRCodeModal = ({
                         </ResultsConfirmButton>
                         <ResultsGoToMyMintetedTokenButton
                             onClick={() => {
-                                const url = cwMode === "CW20" ? `/mytoken/detail/${params.contract}` : `/cw721/mynft/detail/${params.contract}`;
+                                const url =
+                                    cwMode === 'CW20' ? `/mytoken/detail/${params.contract}` : `/cw721/mynft/detail/${params.contract}`;
                                 navigate(url);
                                 onCloseModal();
                             }}
                         >
-                            <ResultsGoToMyMintetedTokenButtonTypo>{cwMode === "CW20" ? "Go to My Minted Token" : "Go to My NFT Contract"}</ResultsGoToMyMintetedTokenButtonTypo>
+                            <ResultsGoToMyMintetedTokenButtonTypo>
+                                {cwMode === 'CW20' ? 'Go to My Minted Token' : 'Go to My NFT Contract'}
+                            </ResultsGoToMyMintetedTokenButtonTypo>
                         </ResultsGoToMyMintetedTokenButton>
                     </ResultsButtonWrap>
                 </div>

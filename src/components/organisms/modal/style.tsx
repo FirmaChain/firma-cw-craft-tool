@@ -12,7 +12,7 @@ export const ModalTitleWrap = styled.div`
 export const ModalTitleHeaderWrap = styled.div`
     display: flex;
     gap: 8px;
-    justify-content: center;;
+    justify-content: center;
 `;
 
 export const ModalTitleHeaderIcon = styled.img`
@@ -58,9 +58,9 @@ export const ModalContentWarningCard = styled.div`
 `;
 
 export const ModalContentWarningTypo = styled.div`
-    color: var(--Status-Alert, var(--Primary-Base-White, #E55250));
+    color: var(--Status-Alert, var(--Primary-Base-White, #e55250));
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -68,8 +68,8 @@ export const ModalContentWarningTypo = styled.div`
 `;
 
 export const ModalContentWarningDesc = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -124,8 +124,8 @@ export const ResultItemAmountTypo = styled.div`
 `;
 
 export const ItemAmountSymbol = styled.div`
-    color: var(--Gray-600, #5A5A5A);
-    font-family: "General Sans Variable";
+    color: var(--Gray-600, #5a5a5a);
+    font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
@@ -143,8 +143,8 @@ export const ItemLabel = styled.div`
 `;
 
 export const ItemValue = styled.div`
-    color: #E6E6E6;
-    font-family: "General Sans Variable";
+    color: #e6e6e6;
+    font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -513,6 +513,8 @@ export const ResultsTitleMessage = styled.div`
     line-height: 20px; /* 142.857% */
 
     margin-top: 14px;
+
+    white-space: pre;
 `;
 
 export const ResultsContentWrap = styled.div`
@@ -803,4 +805,41 @@ export const MobileAppLinkBox = styled.div`
             cursor: pointer;
         }
     }
+`;
+
+export const ModalAlertBox = styled.div`
+    display: flex;
+    padding: 12px 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    align-self: stretch;
+
+    border-radius: 8px;
+    background: rgba(255, 212, 38, 0.08);
+
+    .typo {
+        color: var(--Gray-800, #dcdcdc);
+        text-align: center;
+
+        /* Body/Body2 - Md */
+        font-family: 'General Sans Variable';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px; /* 142.857% */
+    }
+`;
+
+export const ModalResultAddressTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    text-align: right;
+
+    /* Body/Body3 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 138.462% */
 `;

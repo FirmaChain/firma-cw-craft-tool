@@ -12,7 +12,47 @@ import { getTransactionHash } from '@/utils/transaction';
 import { useNavigate } from 'react-router-dom';
 import { CRAFT_CONFIGS } from '@/config';
 import Divider from '@/components/atoms/divider';
-import { FCTSymbolIcon, FCTSymbolMiniIcon, FeeAmount, FeeLabel, ItemValueWrap, ItemWrap, ModalBase, ModalCancelButton, ModalCancelTypo, ModalContentGrayCard, ModalContentWarningCard, ModalContentWarningDesc, ModalContentWarningTypo, ModalContentWrap, ModalTitleDescTypo, ModalTitleHeaderIcon, ModalTitleHeaderWrap, ModalTitleTypo, ModalTitleWrap, MyBalanceValue, MyBalanceWrap, QrCodeWrap, ResultFailedDesc, ResultFailedTypo, ResultIcon, ResultsButtonWrap, ResultsConfirmButton, ResultsConfirmButtonTypo, ResultsContentHashWrap, ResultsContentSummeryWrap, ResultsContentWrap, ResultsGoToMyMintetedTokenButton, ResultsGoToMyMintetedTokenButtonTypo, ResultsHeader, ResultsTitleExecuteTypo, ResultsTitleFailedTypo, ResultsTitleMessage, ResultsTitleSuccessTypo, ResultsTitleWrap } from '../style';
+import {
+    FCTSymbolIcon,
+    FCTSymbolMiniIcon,
+    FeeAmount,
+    FeeLabel,
+    ItemValueWrap,
+    ItemWrap,
+    ModalBase,
+    ModalCancelButton,
+    ModalCancelTypo,
+    ModalContentGrayCard,
+    ModalContentWarningCard,
+    ModalContentWarningDesc,
+    ModalContentWarningTypo,
+    ModalContentWrap,
+    ModalTitleDescTypo,
+    ModalTitleHeaderIcon,
+    ModalTitleHeaderWrap,
+    ModalTitleTypo,
+    ModalTitleWrap,
+    MyBalanceValue,
+    MyBalanceWrap,
+    QrCodeWrap,
+    ResultFailedDesc,
+    ResultFailedTypo,
+    ResultIcon,
+    ResultsButtonWrap,
+    ResultsConfirmButton,
+    ResultsConfirmButtonTypo,
+    ResultsContentHashWrap,
+    ResultsContentSummeryWrap,
+    ResultsContentWrap,
+    ResultsGoToMyMintetedTokenButton,
+    ResultsGoToMyMintetedTokenButtonTypo,
+    ResultsHeader,
+    ResultsTitleExecuteTypo,
+    ResultsTitleFailedTypo,
+    ResultsTitleMessage,
+    ResultsTitleSuccessTypo,
+    ResultsTitleWrap
+} from '../style';
 import { TransactionItem } from '..';
 
 interface SuccessData {
@@ -89,7 +129,7 @@ const RenounceQRCodeModal = ({
                 <>
                     <ModalTitleWrap>
                         <ModalTitleHeaderWrap>
-                            <ModalTitleHeaderIcon src={IC_WARNING} alt={"warning icon"}/>
+                            <ModalTitleHeaderIcon src={IC_WARNING} alt={'warning icon'} />
                             <ModalTitleTypo style={{ marginBottom: '20px' }}>Update Ownership Renounce</ModalTitleTypo>
                         </ModalTitleHeaderWrap>
                         <ModalTitleDescTypo style={{ marginBottom: '24px' }}>
@@ -103,7 +143,7 @@ const RenounceQRCodeModal = ({
                                 params={params}
                                 signer={address}
                                 onSuccess={(requestData: any) => {
-                                    console.log("requestData: ", requestData);
+                                    console.log('requestData: ', requestData);
                                     setResult(requestData);
                                     setStatus('success');
                                 }}
@@ -122,7 +162,11 @@ const RenounceQRCodeModal = ({
                     <ModalContentWrap style={{ marginBottom: '36px' }}>
                         <ModalContentWarningCard>
                             <ModalContentWarningTypo>Warning :</ModalContentWarningTypo>
-                            <ModalContentWarningDesc>{'Are you sure you want to renounce ownership of the NFT contract?\nIf you renounce ownership, the contract will be permanently deleted.'}</ModalContentWarningDesc>
+                            <ModalContentWarningDesc>
+                                {
+                                    'Are you sure you want to renounce ownership of the NFT contract?\nIf you renounce ownership, the contract will be permanently deleted.'
+                                }
+                            </ModalContentWarningDesc>
                         </ModalContentWarningCard>
                         <ModalContentGrayCard>
                             <ItemWrap>
@@ -162,7 +206,7 @@ const RenounceQRCodeModal = ({
                             <ResultsTitleExecuteTypo>Update Ownership Renounce</ResultsTitleExecuteTypo>
                             <ResultsTitleSuccessTypo>Success</ResultsTitleSuccessTypo>
                         </ResultsTitleWrap>
-                        <ResultsTitleMessage>{`${params.header.title} has been Succeeded.\nThe contract has been permanently deleted`}</ResultsTitleMessage>
+                        <ResultsTitleMessage>{`${params.header.title} has been Succeeded.\nThe contract has been permanently deleted.`}</ResultsTitleMessage>
                     </ResultsHeader>
                     <ResultsContentWrap>
                         <ResultsContentHashWrap>

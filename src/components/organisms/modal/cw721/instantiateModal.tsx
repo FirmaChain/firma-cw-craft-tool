@@ -153,11 +153,15 @@ const MyBalanceValue = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 14px; /* 116.667% */
+
+    display: flex;
+    align-items: center;
 `;
 
 const FCTSymbolMiniIcon = styled.img`
     width: 12px;
     height: 12px;
+    margin-left: 4px;
 `;
 
 const ModalCancelButton = styled(IconButton)`
@@ -425,7 +429,7 @@ const InstantitateModal = ({
     id: string;
     module: string;
     datas: ModalDatas;
-    params: { admin: string; codeId: string; label: string; msg: string, type: string };
+    params: { admin: string; codeId: string; label: string; msg: string; type: string };
 }) => {
     const { firmaSDK } = useExecuteHook();
     const address = useSelector((state: rootState) => state.wallet.address);
@@ -475,6 +479,8 @@ const InstantitateModal = ({
             ...rest
         };
     }, [result]);
+
+    console.log('parsedData', parsedData);
 
     const onCloseModal = () => {
         closeModal(id);
@@ -543,10 +549,11 @@ const InstantitateModal = ({
                                 </ItemValueWrap>
                             </ItemWrap>
                             <ItemRightWrap>
-                                <MyBalanceValue>{`(My Balance :`}</MyBalanceValue>
-                                <MyBalanceValue>{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</MyBalanceValue>
-                                <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Mini Icon'} />
-                                <MyBalanceValue>{`)`}</MyBalanceValue>
+                                <MyBalanceValue>
+                                    {`(My Balance : ${formatWithCommas(FirmaUtil.getFCTStringFromUFCTStr(balance))}`}
+                                    <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Mini Icon'} />
+                                    {')'}
+                                </MyBalanceValue>
                             </ItemRightWrap>
                         </ModalContentGrayCard>
                     </ModalContentWrap>
@@ -599,11 +606,11 @@ const InstantitateModal = ({
                         </ResultsConfirmButton>
                         <ResultsGoToMyMintetedTokenButton
                             onClick={() => {
-                                navigate(`/mynft/detail/${parsedData.contractAddress}`);
+                                navigate(`/cw721/mynft/detail/${parsedData.contractAddress}`);
                                 onCloseModal();
                             }}
                         >
-                            <ResultsGoToMyMintetedTokenButtonTypo>Go to My Minted Tokens</ResultsGoToMyMintetedTokenButtonTypo>
+                            <ResultsGoToMyMintetedTokenButtonTypo>Go to My NFT Contracts</ResultsGoToMyMintetedTokenButtonTypo>
                         </ResultsGoToMyMintetedTokenButton>
                     </ResultsButtonWrap>
                 </div>
