@@ -126,8 +126,8 @@ const Information = ({ isBasic }: IProps) => {
             handleDecimals('');
             clearFormError({ id: 'tokenDecimal' });
 
-            handleLabel('');
-            clearFormError({ id: 'tokenLabel' });
+            // handleLabel('');
+            // clearFormError({ id: 'tokenLabel' });
 
             handleMarketingAddress('');
             clearFormError({ id: 'marketingAddress' });
@@ -182,21 +182,19 @@ const Information = ({ isBasic }: IProps) => {
                     />
                 </TokenNameSymbol>
                 {!isBasic && (
-                    <>
-                        <LabelInput
-                            labelProps={{ label: 'Decimals' }}
-                            inputProps={{
-                                value: decimals,
-                                formId: 'tokenDecimal',
-                                placeHolder: '0 ~ 18',
-                                onChange: handleDecimals,
-                                emptyErrorMessage: 'Please input token decimal.',
-                                type: 'number',
-                                decimal: 0,
-                                maxValue: 18
-                            }}
-                        />
-                    </>
+                    <LabelInput
+                        labelProps={{ label: 'Decimals' }}
+                        inputProps={{
+                            value: decimals,
+                            formId: 'tokenDecimal',
+                            placeHolder: '0 ~ 18',
+                            onChange: handleDecimals,
+                            emptyErrorMessage: 'Please input token decimal.',
+                            type: 'number',
+                            decimal: 0,
+                            maxValue: 18
+                        }}
+                    />
                 )}
                 <LabelInput
                     labelProps={{ label: 'Label' }}

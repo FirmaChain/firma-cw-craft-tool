@@ -8,21 +8,24 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { useNavigate } from 'react-router-dom';
 
 const EndAdornment = ({
     keyword,
-    disableSearch = false,
+    showClearButton,
+    // disableSearch = false,
     // onClickSearch,
     onClickClear
 }: {
     keyword: string;
-    disableSearch?: boolean;
+    showClearButton?: boolean;
+    // disableSearch?: boolean;
     // onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
-            {keyword && (
+            {showClearButton && (
                 <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
@@ -45,11 +48,15 @@ interface ISearchContractProps {
 }
 
 const SearchContract = ({ contractAddress }: ISearchContractProps) => {
+    const navigate = useNavigate();
+
     const setContractAddress = useExecuteStore((state) => state.setContractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
     const clearInfo = useExecuteStore((state) => state.clearInfo);
     const network = useSelector((v: rootState) => v.global.network);
     const contractInfo = useExecuteStore((v) => v.contractInfo);
+
+    const storeContractAddress = useExecuteStore((v) => v.contractAddress);
 
     const previousKeywordRef = useRef<string | null>(null);
     const [keyword, setKeyword] = useState<string>(contractAddress);
@@ -69,6 +76,8 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                 clearForm();
             }
 
+            console.log('keyword', keyword);
+
             setContractAddress(keyword);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
@@ -85,6 +94,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         clearInfo();
         clearForm();
         previousKeywordRef.current = null;
+        navigate('/execute', { replace: true });
     };
 
     useEffect(() => {
@@ -113,9 +123,10 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                 end: (
                     <EndAdornment
                         keyword={keyword}
-                        disableSearch={keyword.length === 0 || !isValidAddress(keyword)}
+                        // disableSearch={keyword.length === 0 || !isValidAddress(keyword)}
                         // onClickSearch={onClickSearch}
                         onClickClear={onClickClear}
+                        showClearButton={Boolean(keyword.length > 0 || storeContractAddress?.length > 0)}
                     />
                 )
             }}

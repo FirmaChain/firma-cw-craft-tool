@@ -10,12 +10,14 @@ import { isValidAddress } from '@/utils/common';
 const EndAdornment = ({
     keyword,
     clearKeyword,
-    disableSearch
+    showClearButton
+    // disableSearch
     // onClickSearch
 }: {
     keyword: string;
     clearKeyword: () => void;
-    disableSearch?: boolean;
+    showClearButton?: boolean;
+    // disableSearch?: boolean;
     // onClickSearch: () => void;
 }) => {
     const disableEventBubbling = (evt) => {
@@ -25,7 +27,7 @@ const EndAdornment = ({
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }} onClick={disableEventBubbling}>
-            {keyword.length > 0 && (
+            {showClearButton && (
                 <IconButton style={{ display: 'flex', padding: 0 }} onClick={clearKeyword}>
                     <Icons.CloseIcon width="32px" height="32px" strokeWidth="2.6" stroke="#1A1A1A" />
                 </IconButton>
@@ -48,10 +50,9 @@ const Header = () => {
     const setKeyword = useSearchStore((state) => state.setKeyword);
     const clearAll = useSearchStore((state) => state.clearAll);
     const clearSearchInfo = useSearchStore((state) => state.clearSearchInfo);
+    const storeContractInfo = useSearchStore((v) => v.contractInfo);
 
     const { checkContractExist, clearSearchKeywordRef } = useSearchActions();
-
-    const disableSearch = keyword.length === 0;
 
     const onClickClearKeyword = () => {
         setKeyword('');
@@ -78,8 +79,9 @@ const Header = () => {
                             <EndAdornment
                                 keyword={keyword}
                                 clearKeyword={onClickClearKeyword}
+                                showClearButton={Boolean(keyword.length > 0 || storeContractInfo !== null)}
                                 // onClickSearch={onClickSearch}
-                                disableSearch={disableSearch}
+                                // disableSearch={disableSearch}
                             />
                         )
                     }}

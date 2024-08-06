@@ -2,9 +2,7 @@ import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButt
 import { HeaderBox, HeaderWrap, Title } from './styles';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
-import useCW721SearchStore from '../cw721SearchStore';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import useCW721SearchActions from '../action';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import { GlobalActions } from '@/redux/actions';
@@ -15,12 +13,14 @@ import { isValidAddress } from '@/utils/common';
 const EndAdornment = ({
     keyword,
     clearKeyword,
-    disableSearch
+    showClearButton
+    // disableSearch
     // onClickSearch
 }: {
     keyword: string;
     clearKeyword: () => void;
-    disableSearch?: boolean;
+    showClearButton?: boolean;
+    // disableSearch?: boolean;
     // onClickSearch: () => void;
 }) => {
     const disableEventBubbling = (evt) => {
@@ -30,7 +30,7 @@ const EndAdornment = ({
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }} onClick={disableEventBubbling}>
-            {keyword.length > 0 && (
+            {showClearButton && (
                 <IconButton style={{ display: 'flex', padding: 0 }} onClick={clearKeyword}>
                     <Icons.CloseIcon width="32px" height="32px" strokeWidth="2.6" stroke="#1A1A1A" />
                 </IconButton>
@@ -53,7 +53,7 @@ const Header = () => {
     const [keyword, setKeyword] = useState<string>('');
     const prevKeyword = useRef<string | null>(null);
 
-    const disableSearch = keyword.length === 0;
+    const { contractDetail } = useNFTContractDetailStore();
 
     const { setContractDetail, setNftsInfo, setOwnedNftsInfo, setTransactions, clearForm } = useNFTContractDetailStore();
     const { checkExistContract, getNFTContractDetail, getNFTsInfo, getOwnedNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
@@ -129,8 +129,9 @@ const Header = () => {
                             <EndAdornment
                                 keyword={keyword}
                                 clearKeyword={onClickClearKeyword}
+                                showClearButton={Boolean(keyword.length > 0 || contractDetail !== null)}
                                 // onClickSearch={onClickSearch}
-                                disableSearch={disableSearch}
+                                // disableSearch={disableSearch}
                             />
                         )
                     }}
