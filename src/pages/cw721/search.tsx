@@ -9,7 +9,7 @@ const CW721SearchPage = () => {
     }, []);
 
     return (
-        <Container>
+        <Container style={{ gap: '0px' }}>
             <Header />
             <Content />
         </Container>

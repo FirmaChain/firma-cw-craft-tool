@@ -57,6 +57,8 @@ export const SpecificValueBox = styled.div`
 export const SpecificValueWrapper = styled.div`
     display: flex;
     gap: 8px;
+    justify-content: center;
+    align-items: center;
 `;
 
 export const SpecificValueTypo = styled.div`

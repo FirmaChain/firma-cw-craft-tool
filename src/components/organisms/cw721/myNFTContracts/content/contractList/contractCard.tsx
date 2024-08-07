@@ -24,7 +24,6 @@ const TopBox = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 22px;
 
     @media only screen and (max-width: 1450px) {
         padding: 30px 34px 34px;

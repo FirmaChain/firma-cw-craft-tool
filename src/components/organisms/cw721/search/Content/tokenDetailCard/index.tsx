@@ -25,12 +25,16 @@ import {
     TableExpandButton
 } from './style';
 import NFTsTable from '../../../common/nftsTable';
-import { IC_EXPAND } from '@/components/atoms/icons/pngIcons';
+import { IC_EXPAND, IC_WARNING_SIGN } from '@/components/atoms/icons/pngIcons';
 import Skeleton from '@/components/atoms/skeleton';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import { useCW721NFTListContext } from '@/context/cw721NFTListContext';
 import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext';
+import useCW721ExecuteAction from '../../../execute/hooks/useCW721ExecuteAction';
+import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
+import { compareStringNumbers } from '@/utils/balance';
+import IconTooltip from '@/components/atoms/tooltip';
 
 const TokenInfo = () => {
     const network = useSelector((v: rootState) => v.global.network);
@@ -181,6 +185,9 @@ const TokenInfo = () => {
 
 const OwnerInformation = () => {
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
+    const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
+
+    const { setBlockHeight } = useCW721ExecuteAction();
 
     const admin = contractInfo?.admin || null;
     const pending_owner = contractInfo?.ownerInfo.pending_owner;
@@ -188,24 +195,51 @@ const OwnerInformation = () => {
     const minter = contractInfo?.minter;
 
     useEffect(() => {
-        console.log(contractInfo?.ownerInfo);
-    }, [contractInfo]);
+        setBlockHeight();
+    }, []);
 
-    const PendingExpiery = ({ pendingOwner, expireInfo }: { pendingOwner: string, expireInfo: Cw721Expires | null }) => {
+    const PendingExpiery = ({ pendingOwner, expireInfo, expireBlockHeight }: { pendingOwner: string, expireInfo: Cw721Expires | null, expireBlockHeight: string }) => {
         if (!pendingOwner && !expireInfo) return <SpecificValueTypo>-</SpecificValueTypo>;
 
         if (!expireInfo) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
-        if (expireInfo['at_height'])
-            return (
-                <SpecificValueTypo>
-                    {expireInfo['at_height']} <SpecificSubValueType>Block</SpecificSubValueType>
-                </SpecificValueTypo>
-            );
+        if (expireInfo['at_height']) {
+            if (expireInfo['at_height'] !== "0" && expireBlockHeight !== "0") {
+                if (compareStringNumbers((expireInfo['at_height'] - 16000000).toString(), expireBlockHeight) === 1) {
+                    return (
+                        <SpecificValueTypo>
+                            {expireInfo['at_height']}
+                            <SpecificSubValueType>Block</SpecificSubValueType>
+                        </SpecificValueTypo>
+                    )
+                } else {
+                    return (
+                        <SpecificValueWrapper>
+                            <IconTooltip size={'24px'} tooltip={'The height has expired.'} TooltipIcon={IC_WARNING_SIGN}/>
+                            <SpecificValueTypo style={{ color: '#5A5A5A' }}>{expireInfo['at_height']}</SpecificValueTypo>
+                        </SpecificValueWrapper>
+                    )
+                }
+            }
+        }
 
         if (expireInfo['at_time']) {
+            const nowTimestamp = new Date().getTime();
             const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
-            return <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>;
+            
+            if (compareStringNumbers("1", nowTimestamp.toString()) === 1) {
+                return (
+                    <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>
+                )
+            } else {
+                return (
+                    <SpecificValueWrapper>
+                        <IconTooltip size={'24px'} tooltip={'The time has expired.'} TooltipIcon={IC_WARNING_SIGN}/>
+                        <SpecificValueTypo style={{ color: '#5A5A5A' }}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>
+                    </SpecificValueWrapper>
+                )
+            }
+
         }
 
 
@@ -245,7 +279,7 @@ const OwnerInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} />
+                        <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} expireBlockHeight={blockHeight} />
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>

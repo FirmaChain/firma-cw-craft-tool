@@ -19,7 +19,7 @@ const CW721Execute = () => {
     }, [contractAddress]);
 
     return (
-        <Container>
+        <Container style={{ gap: '0px' }}>
             <Header contractAddress={contractAddress === null ? '' : contractAddress} />
             <Contents />
         </Container>

@@ -59,3 +59,4 @@ export const IC_EXPAND = PUBLIC_IC_URL + 'ic_expand.png';
 export const IC_WARNING = PUBLIC_IC_URL + 'ic_warning.png';
 export const IC_CHECK_SQUARE = PUBLIC_IC_URL + 'ic_check_square.png';
 export const IC_ALERT_YELLOW = PUBLIC_IC_URL + 'ic_alert_yellow.png';
+export const IC_WARNING_SIGN = PUBLIC_IC_URL + 'ic_warning_sign.png';
