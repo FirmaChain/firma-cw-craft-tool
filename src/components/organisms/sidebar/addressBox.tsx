@@ -105,7 +105,7 @@ const BalanceTitleTypo = styled.div`
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 12px;
 `;
 
@@ -198,14 +198,14 @@ const AddressBox = () => {
             {/* {open && ( */}
                 <BalanceBox>
                     <div className="bg-box" style={{}}>
-                        <div className="title">Balance :</div>
+                        <BalanceTitleTypo>Balance :</BalanceTitleTypo>
                         <div className="balance-box">
                             {balance ? (
-                                <span className="balance">{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</span>
+                                <BalanceAmountTypo>{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</BalanceAmountTypo>
                             ) : (
-                                <Skeleton width="80px" height="12px" />
+                                <Skeleton width="80px" height="14px" />
                             )}
-                            <Icons.FirmaChain width="10px" height="10px" fill="#FFFFFF" />
+                            <Icons.FirmaChain width="14px" height="14px" fill="#FFFFFF" />
                         </div>
                     </div>
 
