@@ -115,13 +115,15 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     if (!allowanceInfo.expire) return <AccordionTypo $disabled={true}>Expiration</AccordionTypo>;
     if (allowanceInfo.type === 'at_height')
         return <AccordionTypo $disabled={false}>{commaNumber(allowanceInfo?.expire)} Block</AccordionTypo>;
-    if (allowanceInfo.type === 'at_time')
+    if (allowanceInfo.type === 'at_time') {
+        const timeInMs = Math.floor(Number(allowanceInfo.expire) / 1000000);
         return (
             <AccordionTypo $disabled={false}>
-                {format(new Date(Math.floor(Number(allowanceInfo.expire) / 1000000)), 'yyyy-MM-dd HH:mm:ss')}
+                {format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}
             </AccordionTypo>
         );
-
+    }
+    
     return <></>;
 };
 
@@ -233,7 +235,7 @@ const UpdateOwnershipAccept = () => {
                 <ContentHeader>
                     <ContentTitleWrap>
                         <TitleIcon src={IC_CHECK_SQUARE} alt={'Origin Ownership Accept Header Icon'}/>
-                        <TitleTypo>Origin Ownership</TitleTypo>
+                        <TitleTypo>Previous Owner</TitleTypo>
                     </ContentTitleWrap>
                     <FoldingButton onClick={onClickOriginOwnerFolding}>
                         <FoldingIcon src={isOriginOwnerOpen ? IC_ROUND_ARROW_DOWN : IC_ROUND_ARROW_UP} alt={'Origin Ownership Accept Folding Icon'}/>
@@ -248,7 +250,7 @@ const UpdateOwnershipAccept = () => {
                 <ContentHeader>
                     <ContentTitleWrap>
                         <TitleIcon src={IC_CHECK_SQUARE} alt={'New Ownership Accept Header Icon'}/>
-                        <TitleTypo>New Ownership</TitleTypo>
+                        <TitleTypo>New Owner</TitleTypo>
                     </ContentTitleWrap>
                     <FoldingButton onClick={onClickNewOwnerFolding}>
                         <FoldingIcon src={isNewOwnerOpen ? IC_ROUND_ARROW_DOWN : IC_ROUND_ARROW_UP} alt={'New Ownership Accept Folding Icon'}/>

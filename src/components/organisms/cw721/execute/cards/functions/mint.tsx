@@ -164,28 +164,6 @@ const Mint = () => {
         return mintList.length;
     }, [mintList]);
 
-    // useEffect(() => {
-    //     if (mintBaseURI) {
-    //         if (mintStartTokenId && mintEndTokenId && !isNaN(Number(mintStartTokenId)) && !isNaN(Number(mintEndTokenId))) {
-    //             const parsedStart = parseInt(mintStartTokenId);
-    //             let parsedEnd = parseInt(mintEndTokenId);
-    //             if (parsedEnd > parsedStart + 19) parsedEnd = parsedStart + 19;
-
-    //             if (parsedEnd >= parsedStart) {
-    //                 setMintList(
-    //                     new Array(Number(parsedEnd) - Number(mintStartTokenId) + 1).fill(null).map((_, idx) => ({
-    //                         token_id: (idx + parsedStart).toString(),
-    //                         token_uri: mintBaseURI + (idx + parsedStart),
-    //                         id: v4()
-    //                     }))
-    //                 );
-    //             }
-    //         } else {
-    //             setMintList([{ token_id: '', token_uri: '', id: v4() }]);
-    //         }
-    //     }
-    // }, [mintBaseURI, mintStartTokenId, mintEndTokenId]);
-
     useEffect(() => {
         if (mintBaseURI) {
             const validMintStartId = mintStartTokenId !== '' && !isNaN(Number(mintStartTokenId));
@@ -204,7 +182,7 @@ const Mint = () => {
                         isAlreadyMint: false
                     }));
 
-                    console.log(alreadyMintList, notYetMintList);
+                    console.log("alreadyMintList", alreadyMintList, "notYetMintList", notYetMintList);
 
                     const mergeMintList = alreadyMintList.concat(notYetMintList);
                     const fetchPromises = newMintList.map((newMintData) => {

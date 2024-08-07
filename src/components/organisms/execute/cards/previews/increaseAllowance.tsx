@@ -192,13 +192,14 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
                 {commaNumber(allowanceInfo?.expire)} Block
             </AccordionTypo>
         );
-    if (allowanceInfo.type === 'at_time')
+    if (allowanceInfo.type === 'at_time') {
+        const timeInMs = Math.floor(Number(allowanceInfo.expire) / 1000000);
         return (
             <AccordionTypo $disabled={false}>
-                {format(new Date(Math.floor(Number(allowanceInfo.expire) / 1000000)), 'yyyy-MM-dd HH:mm:ss')}
+                {format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}
             </AccordionTypo>
         );
-
+    }
     return <></>;
 };
 
