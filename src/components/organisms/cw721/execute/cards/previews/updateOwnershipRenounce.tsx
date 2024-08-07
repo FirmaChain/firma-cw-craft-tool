@@ -22,7 +22,6 @@ const Container = styled.div`
 
 const WarningTextWrap = styled.div`
     display: flex;
-    justify-content: flex-start;
     padding: 12px 20px;
     gap: 16px;
     width: 100%;
@@ -42,10 +41,12 @@ const WarningTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 22px; /* 137.5% */
+    white-space: pre-wrap;
+    text-align: center;
 `;
 
 const UpdateOwnershipRenouncePreview = () => {
-    const WARNING_TEXT: string = 'If you renounce ownership of the NFT contract, the contract will be deleted.';
+    const WARNING_TEXT: string = 'If you renounce ownership of this NFT contract,\nyou will not be able to use the NFT Minting and Update Ownership functions.';
     const WARNING_MODAL_TEXT: string =
         'Are you sure you want to renounce ownership of the NFT contract?\nIf you renounce ownership, the contract will be permanently deleted.';
 

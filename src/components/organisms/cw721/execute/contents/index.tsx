@@ -13,6 +13,7 @@ import Preview from '../cards/preview';
 
 const Container = styled.div`
     width: 100%;
+    height: fit-content;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -25,12 +26,6 @@ const Box = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
     gap: 32px;
     max-width: 1600px;
-`;
-
-const NoticeText = styled.div`
-    font-size: 18px;
-    color: #999999;
-    font-weight: 500;
 `;
 
 const LogoBackground = styled.div`

@@ -136,8 +136,9 @@ const UpdateOwnershipAccept = () => {
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
     const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
+    const clearSelectMenu = useCW721ExecuteStore((state) => state.clearSelectMenu);
 
-    const { setOwnershipInfo } = useCW721ExecuteAction();
+    const { setOwnershipInfo, setMinter } = useCW721ExecuteAction();
 
     const [isOriginOwnerOpen, setIsOriginOwnerOpen] = useState<boolean>(false);
     const [isNewOwnerOpen, setIsNewOwnerOpen] = useState<boolean>(false);
@@ -145,6 +146,8 @@ const UpdateOwnershipAccept = () => {
     const modal = useModalStore();
 
     useEffect(() => {
+        if (!contractAddress) return ;
+
         setOwnershipInfo(contractAddress); 
     }, []);
 
@@ -223,6 +226,8 @@ const UpdateOwnershipAccept = () => {
                     params={params}
                     onClickConfirm={() => {
                         setOwnershipInfo(contractAddress);
+                        setMinter(contractAddress);
+                        clearSelectMenu();
                     }}
                 />
             )

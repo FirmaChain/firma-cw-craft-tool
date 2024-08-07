@@ -254,7 +254,7 @@ const VariableInput = ({
             >
                 <input
                     ref={inputRef}
-                    value={value && type === 'date' ? format(Number(value), 'MM-dd-yyyy HH:mm:ss (O)') : value}
+                    value={value && type === 'date' ? format(Number(value), 'MMMM-dd-yyyy HH:mm:ss a') : value}
                     type="text"
                     onChange={handleChange}
                     placeholder={placeHolder}

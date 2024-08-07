@@ -89,6 +89,7 @@ interface FormProps {
     setRevokeTokenId: (v: string) => void;
 
     clearForm: () => void;
+    clearSelectMenu: () => void;
     clearMintForm: () => void;
     clearBurnForm: () => void;
     clearTransferForm: () => void;
@@ -297,6 +298,11 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.mintStartTokenId = '';
                 state.mintEndTokenId = '';
                 state.mintList = INIT_MINT_LIST;
+            })
+        },
+        clearSelectMenu: () => {
+            set((state) => {
+                state.selectMenu = INIT_SELECT_MENU;
             })
         },
         clearMintForm: () => {

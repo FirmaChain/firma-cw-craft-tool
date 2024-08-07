@@ -22,6 +22,7 @@ import UpdateOwnershipTransfer from './functions/updateOwnershipTransfer';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
+    height: fit-content;
     display: flex;
     padding: 48px;
     flex-direction: column;

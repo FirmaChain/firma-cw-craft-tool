@@ -172,7 +172,7 @@ const UpdateOwnershipTransfer = () => {
                             approveType === ExpirationType.Height
                                 ? 'ex) 7216240'
                                 : approveType === ExpirationType.Time
-                                  ? 'ex) MM-DD-YYYY  HH:MM:SS'
+                                  ? 'ex) MMMM-dd-yyyy HH:mm:ss a'
                                   : 'FOREVER'
                         }
                         type={approveType === ExpirationType.Time ? 'date' : 'number'}

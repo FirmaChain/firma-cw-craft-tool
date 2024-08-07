@@ -39,7 +39,7 @@ const OwnerInformation = () => {
 
         if (expireInfo['at_height']) {
             if (expireInfo['at_height'] !== "0" && expireBlockHeight !== "0") {
-                if (compareStringNumbers((expireInfo['at_height'] - 16000000).toString(), expireBlockHeight) === 1) {
+                if (compareStringNumbers((expireInfo['at_height']).toString(), expireBlockHeight) === 1) {
                     return (
                         <SpecificValueTypo>
                             {expireInfo['at_height']}
@@ -61,7 +61,9 @@ const OwnerInformation = () => {
             const nowTimestamp = new Date().getTime();
             const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
             
-            if (compareStringNumbers("1", nowTimestamp.toString()) === 1) {
+            console.log("timeInMs", timeInMs);
+            console.log("nowTimestamp", nowTimestamp);
+            if (compareStringNumbers(timeInMs.toString(), nowTimestamp.toString()) === 1) {
                 return (
                     <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>
                 )
