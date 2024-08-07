@@ -50,11 +50,10 @@ const Burn = () => {
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
-    
+
     const { setFctBalance, setMyNftList, setNftDatas } = useCW721ExecuteAction();
 
     const onChangeBurnId = (text: string) => {
-
         const cleanedText = text.replace(/,+/g, ',').replace(/^,/, '');
 
         if (cleanedText === '') {
@@ -62,7 +61,7 @@ const Burn = () => {
             setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'INPUT_IS_EMPTY', message: 'Please input burn NFT id.' });
         }
 
-        setNftDatas(contractAddress, address, cleanedText); 
+        setNftDatas(contractAddress, address, cleanedText);
         setBurnList(cleanedText);
     };
 
@@ -77,7 +76,7 @@ const Burn = () => {
             const idMap = new Map();
             const splited = burnList.split(',').filter((v) => v !== ''); //? filter empty value after comma
             splited.forEach((v) => {
-                const parsed = parseInt(v).toString();
+                const parsed = BigInt(v).toString();
                 idMap.set(parsed, parsed);
             });
 
@@ -98,10 +97,10 @@ const Burn = () => {
             else clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DUPLICATED_IDS' });
         }
     }, [burnList, nftDatas]);
-    
+
     useEffect(() => {
-        if (contractAddress === null) return ;
-        
+        if (contractAddress === null) return;
+
         setFctBalance(address);
         setMyNftList(contractAddress, address);
 

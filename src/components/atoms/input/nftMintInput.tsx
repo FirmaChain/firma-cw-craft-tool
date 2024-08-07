@@ -5,7 +5,9 @@ import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
-import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
+import { INT_NUMBERS } from '@/constants/regex';
+import { CW721_MAX_MINTABLE_ID } from '@/utils/balance';
+// import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
 
 interface IProps {
     index: number;
@@ -42,20 +44,20 @@ const NFTMintInput = ({
     disabled
 }: IProps) => {
     const id = inputId;
-    const setFormError = useFormStore((state) => state.setFormError);
-    const clearFormError = useFormStore((state) => state.clearFormError);
+    // const setFormError = useFormStore((state) => state.setFormError);
+    // const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const mintList = useCW721ExecuteStore((state) => state.mintList);
-    const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
+    // const mintList = useCW721ExecuteStore((state) => state.mintList);
+    // const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
 
-    const mintTokenIdsExceptSelf = useMemo(() => {
-        //? get all list except self
-        const idsMap = new Map();
-        const allTokenInputs = mintList.filter((oneValue) => oneValue.id !== id).map((v) => v.token_id);
-        allTokenInputs.map((id) => id !== '' && idsMap.set(parseInt(id), parseInt(id)));
+    // const mintTokenIdsExceptSelf = useMemo(() => {
+    //     //? get all list except self
+    //     const idsMap = new Map();
+    //     const allTokenInputs = mintList.filter((oneValue) => oneValue.id !== id).map((v) => v.token_id);
+    //     allTokenInputs.map((id) => id !== '' && idsMap.set(BigInt(id).toString(), parseInt(id)));
 
-        return Array.from(idsMap.keys());
-    }, [id, mintList]);
+    //     return Array.from(idsMap.keys());
+    // }, [id, mintList]);
 
     const handleNFTId = (value: string) => {
         onChangeLeft(value);
@@ -69,29 +71,29 @@ const NFTMintInput = ({
         onRemoveClick();
     };
 
-    const checkMintable = () => {
-        if (leftValue) {
-            if (isValid) {
-                clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
-            } else {
-                setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Already minted' });
-                return;
-            }
+    // const checkMintable = () => {
+    //     if (leftValue) {
+    //         if (isValid) {
+    //             clearFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED' });
+    //         } else {
+    //             setFormError({ id: `${id}_${leftTitle}`, type: 'ALREADY_MINTED', message: 'Already minted' });
+    //             return;
+    //         }
 
-            if (mintTokenIdsExceptSelf.includes(parseInt(leftValue))) {
-                setFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID', message: 'Duplicated' });
-                return;
-            } else {
-                clearFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID' });
-            }
-        } else {
-            clearFormError({ id: `${id}_${leftTitle}` });
-        }
-    };
+    //         if (mintTokenIdsExceptSelf.includes(parseInt(leftValue))) {
+    //             setFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID', message: 'Duplicated' });
+    //             return;
+    //         } else {
+    //             clearFormError({ id: `${id}_${leftTitle}`, type: 'DUPLICATED_ID' });
+    //         }
+    //     } else {
+    //         clearFormError({ id: `${id}_${leftTitle}` });
+    //     }
+    // };
 
-    useEffect(() => {
-        checkMintable();
-    }, [mintTokenIdsExceptSelf, leftValue]);
+    // useEffect(() => {
+    //     checkMintable();
+    // }, [mintTokenIdsExceptSelf, leftValue]);
 
     return (
         <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
@@ -109,13 +111,16 @@ const NFTMintInput = ({
                     <LabelInput
                         labelProps={{ label: leftTitle }}
                         inputProps={{
-                            formId: `${id}_${leftTitle}`,
+                            formId: `${id}_NFT_ID`,
                             value: leftValue,
                             onChange: handleNFTId,
                             placeHolder: leftPlaceholder,
                             type: 'number',
                             decimal: 0,
                             readOnly: disabled,
+                            emptyErrorMessage: 'Please input NFT ID.',
+                            regex: INT_NUMBERS,
+                            maxValue: CW721_MAX_MINTABLE_ID
                         }}
                     />
                 </div>
@@ -137,7 +142,9 @@ const NFTMintInput = ({
                             value: rightValue,
                             onChange: handleNFTUri,
                             placeHolder: rightPlaceholder,
-                            disabled: disabled
+                            disabled: disabled,
+                            maxLength: 300,
+                            emptyErrorMessage: 'Please input NFT URI.'
                         }}
                     />
                 </div>

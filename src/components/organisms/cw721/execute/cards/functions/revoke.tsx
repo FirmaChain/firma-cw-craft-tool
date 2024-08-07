@@ -42,8 +42,8 @@ const Revoke = () => {
     }, []);
 
     useEffect(() => {
-        if (contractAddress === null) return ;
-        
+        if (contractAddress === null) return;
+
         setMyNftList(contractAddress, address);
     }, [contractAddress, address]);
 
@@ -85,7 +85,7 @@ const Revoke = () => {
 
     const handleChangeNFTId = (value: string) => {
         if (value !== '') {
-            const parsedId = parseInt(value).toString();
+            const parsedId = BigInt(value).toString();
 
             if (!myNftList.includes(parsedId))
                 setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN', message: `NFT ID that you don't own.` });

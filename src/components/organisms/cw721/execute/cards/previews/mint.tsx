@@ -177,13 +177,15 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
-const PRESET_BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT';
+// const PRESET_BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT';
 
 const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
+    // const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
     const myNFTList = useCW721ExecuteStore((state) => state.myNftList);
+    const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
+    const notYetMintList = useCW721ExecuteStore((state) => state.notYetMintList);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
@@ -192,7 +194,7 @@ const MintPreview = () => {
     const modal = useModalStore();
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
-    const presetUriInputError = Object.keys(useFormStore((v) => v.formError[PRESET_BASE_URI_FORM_ID]) || {})?.length;
+    // const presetUriInputError = Object.keys(useFormStore((v) => v.formError[PRESET_BASE_URI_FORM_ID]) || {})?.length;
 
     const [isOpen, setIsOpen] = useState<boolean>(true); //? defualt open
 
@@ -204,33 +206,39 @@ const MintPreview = () => {
         //! if mint recipient address is invalid
         if (!isValidAddress(mintRecipientAddress)) return false;
 
+        //! if all input values are not empty
+        if (mintList.some((v) => v.token_id === '' || v.token_uri === '')) return false;
+
         //? get all mint nft ids
         const idMap = new Map();
         mintList.forEach((v) => {
-            const numberId = v.token_id === '' ? -1 : parseInt(v.token_id).toString();
+            const numberId = v.token_id === '' ? -1 : BigInt(v.token_id).toString();
             idMap.set(numberId, numberId);
         });
         const mintIds = Array.from(idMap.keys());
 
-        //! if minted token id included
-        if (myNFTList.some((id) => mintIds.includes(id))) return false;
-
-        //! if nft ids are duplicated
+        //! if some ids are duplicated
         if (mintIds.length !== mintList.length) return false;
 
-        //! if empty value includes
-        if (mintList.length > 0) {
-            for (const mintData of mintList) {
-                if (mintData.token_id === '') return false;
-                if (mintData.token_uri === '') return false;
-            }
-        }
+        //! if some ids are included in "already included list"
+        if (mintIds.some((id) => alreadyMintList.includes(id))) return false;
 
-        //! if using preset and base uri is not valid
-        if (presetUriInputError > 0) return false;
+        //! if some ids not included in "not Yet minted list"
+        if (mintIds.some((id) => !notYetMintList.includes(id))) return false;
+
+        // //! if empty value includes
+        // if (mintList.length > 0) {
+        //     for (const mintData of mintList) {
+        //         if (mintData.token_id === '') return false;
+        //         if (mintData.token_uri === '') return false;
+        //     }
+        // }
+
+        // //! if using preset and base uri is not valid
+        // if (presetUriInputError > 0) return false;
 
         return true;
-    }, [mintRecipientAddress, mintList, presetUriInputError]);
+    }, [mintRecipientAddress, mintList, alreadyMintList, notYetMintList]);
 
     const willTotalSupply = useMemo(() => {
         return addStringAmount(mintSupply, myNFTList.length.toString());
@@ -311,22 +319,17 @@ const MintPreview = () => {
                                     </WalletLeftItemWrap>
                                     <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                                     <WalletItemWrap>
-                                        {mintList.length === 1 && mintList[0].token_id === '' && mintList[0].token_uri === '' && (
-                                            <WalletLeftItemWrap>
+                                        {mintList.map((value, index) => (
+                                            <WalletLeftItemWrap key={index}>
                                                 <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                                <WalletItemAddressTypo $disabled={true}>NFT Url</WalletItemAddressTypo>
+                                                <WalletItemAddressTypo
+                                                    className="clamp-single-line"
+                                                    $disabled={mintList[0].token_uri === ''}
+                                                >
+                                                    {value.token_uri || 'NFT Url'}
+                                                </WalletItemAddressTypo>
                                             </WalletLeftItemWrap>
-                                        )}
-                                        {mintList.length >= 1 &&
-                                            (mintList[0].token_id !== '' || mintList[0].token_uri !== '') &&
-                                            mintList.map((value, index) => (
-                                                <WalletLeftItemWrap key={index}>
-                                                    <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                                    <WalletItemAddressTypo className="clamp-single-line" $disabled={false}>
-                                                        {value.token_uri}
-                                                    </WalletItemAddressTypo>
-                                                </WalletLeftItemWrap>
-                                            ))}
+                                        ))}
                                     </WalletItemWrap>
                                 </WalletListWrap>
                             )}

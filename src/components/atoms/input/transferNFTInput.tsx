@@ -104,7 +104,7 @@ const TransferNFTInput = ({
         const idsMap = new Map();
         ids.map((id) => {
             if (id !== '') {
-                const parsedId = parseInt(id).toString();
+                const parsedId = BigInt(id).toString();
 
                 idsMap.set(parsedId, parsedId);
             }
@@ -119,7 +119,7 @@ const TransferNFTInput = ({
         const idsMap = new Map();
         ids.map((id) => {
             if (id !== '') {
-                const parsedId = parseInt(id).toString();
+                const parsedId = BigInt(id).toString();
 
                 idsMap.set(parsedId, parsedId);
             }

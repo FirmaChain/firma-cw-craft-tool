@@ -122,7 +122,7 @@ const ButtonWrap = styled.div`
 
 const BurnPreview = () => {
     const address = useSelector((v: rootState) => v.wallet.address);
-    
+
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -154,7 +154,7 @@ const BurnPreview = () => {
         const splited = burnList.split(',').filter((v) => v !== ''); //? filter empty value after comma
         const idMap = new Map();
         splited.forEach((v) => {
-            const parsed = parseInt(v).toString();
+            const parsed = BigInt(v).toString();
             idMap.set(parsed, parsed);
         });
 
@@ -162,7 +162,6 @@ const BurnPreview = () => {
 
         //! if tring to burn id that user does not own
         if (burnIds.length !== nftDatas.length) return false;
-
 
         //! if duplicted id included
         if (splited.length > 1 && burnIds.length !== splited.length) return false;
