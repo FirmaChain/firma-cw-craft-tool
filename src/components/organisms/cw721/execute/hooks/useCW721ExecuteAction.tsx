@@ -6,12 +6,20 @@ import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { sleep } from '@/utils/common';
+import { useState } from 'react';
+
+interface IValidTokensState {
+    tokenId: string;
+    valid: boolean;
+    info: Cw721NftInfo | null;
+}
 
 const useCW721ExecuteAction = () => {
     const { firmaSDK } = useFirmaSDKContext();
     const userAddress = useSelector((v: rootState) => v.wallet.address);
 
     const { enqueueSnackbar } = useSnackbar();
+    const [validTokens, setValidTokens] = useState<IValidTokensState[]>([]);
 
     const checkContractExist = async (contractAddress: string) => {
         try {
@@ -209,25 +217,42 @@ const useCW721ExecuteAction = () => {
     const setNftDatas = async (contractAddress: string, owner: string, nftIds: string) => {
         try {
             const splitNftIds: string[] = nftIds.split(',');
-            const newNftInfo: Cw721NftInfo[] = [];
+            const existInfo = validTokens.filter((value) => value.info !== null && splitNftIds.includes(value.tokenId)).map((value) => value.info);
+            const newNftInfo: Cw721NftInfo[] = [...existInfo];
 
             for (const splitNftId of splitNftIds) {
                 if (splitNftId === '') continue;
-                try {
-                    const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress, splitNftId);
-                    if (contractNftData.access.owner === owner) {
-                        newNftInfo.push(contractNftData);
-                    } else {
-                        const approvals = contractNftData.access.approvals;
-                        for (const approval of approvals) {
-                            if (approval.spender === owner) {
+                const alreadyVerify = validTokens.find((value) => value.tokenId === splitNftId)
+                if (alreadyVerify === undefined) {
+                    try {
+                        const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress, splitNftId);
+                        if (contractNftData.access.owner === owner) {
+                            newNftInfo.push(contractNftData);
+
+                            setValidTokens(prev => [
+                                ...(Array.isArray(prev) ? prev : []),
+                                { tokenId: splitNftId, valid: true, info: contractNftData }
+                            ]);
+                        } else {
+                            const approvals = contractNftData.access.approvals;
+                            const approval = approvals.filter((value) => value.spender === owner);
+                            const isApproval = approval.length > 0;
+
+                            if (isApproval) {
                                 newNftInfo.push(contractNftData);
-                                break;
                             }
+                            setValidTokens(prev => [
+                                ...(Array.isArray(prev) ? prev : []),
+                                { tokenId: splitNftId, valid: isApproval, info: isApproval ? contractNftData : null }
+                            ]);
                         }
+                    } catch (error) {
+                        setValidTokens(prev => [
+                            ...(Array.isArray(prev) ? prev : []),
+                            { tokenId: splitNftId, valid: false, info: null }
+                        ]);
+                        console.log('Does not search data by nft id', splitNftId);
                     }
-                } catch (error) {
-                    console.log('Does not search data by nft id', splitNftId);
                 }
             }
             useCW721ExecuteStore.getState().setNftDatas(newNftInfo);

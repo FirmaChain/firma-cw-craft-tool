@@ -97,6 +97,10 @@ const LabelBox = styled.div`
     gap: 8px;
     border-radius: 100px;
     background: var(--Gray-400, #2c2c2c);
+
+    @media only screen and (max-width: 1450px) {
+        margin-top: 10px;
+    }
 `;
 
 const LabelTagImg = styled.img`
