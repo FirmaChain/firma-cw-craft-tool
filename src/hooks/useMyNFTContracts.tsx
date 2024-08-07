@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { FirmaSDK } from '@firmachain/firma-js';
+import { FirmaSDK, Pagination } from '@firmachain/firma-js';
 
 import { rootState } from '../redux/reducers';
 import { CRAFT_CONFIGS } from '../config';
@@ -21,14 +21,26 @@ const useMyNFTContracts = () => {
     const basicCodeId = curSDKConfig.CW721.BASIC_CODE_ID;
     const advancedCodeId = curSDKConfig.CW721.ADVANCED_CODE_ID;
 
+    const getAllContracts = async (codeId: string): Promise<string[]> => {
+        let allContracts: string[] = [];
+        let nextKey = null;
+
+        do {
+            const response = await firmaSDK.CosmWasm.getContractListFromCodeId(codeId, nextKey);
+            allContracts = allContracts.concat(response.dataList);
+            nextKey = response.pagination.next_key;
+        } while (nextKey);
+    
+        return allContracts;
+    };
+
     const getCW721ContractList = useCallback(async () => {
         if (!firmaSDK) return [];
 
         try {
             const codeIds = [basicCodeId, advancedCodeId];
 
-            const contractListsPromises = codeIds.map((codeId) => firmaSDK.CosmWasm.getContractListFromCodeId(codeId));
-
+            const contractListsPromises = codeIds.map((codeId) => getAllContracts(codeId));
             const contractLists = await Promise.all(contractListsPromises);
             const allContracts = contractLists.flat();
 

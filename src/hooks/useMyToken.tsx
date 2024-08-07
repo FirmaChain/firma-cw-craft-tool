@@ -36,18 +36,30 @@ const useMyToken = () => {
     const basicCodeId = curSDKConfig.CW20.BASIC_CODE_ID;
     const advancedCodeId = curSDKConfig.CW20.ADVANCED_CODE_ID;
 
+    const getAllContracts = async (codeId: string): Promise<string[]> => {
+        let allContracts: string[] = [];
+        let nextKey = null;
+
+        do {
+            const response = await firmaSDK.CosmWasm.getContractListFromCodeId(codeId, nextKey);
+            allContracts = allContracts.concat(response.dataList);
+            nextKey = response.pagination.next_key;
+        } while (nextKey);
+    
+        return allContracts;
+    };
+
     const getCW20ContractList = useCallback(async () => {
         if (!firmaSDK) return [];
 
         try {
             const codeIds = [basicCodeId, advancedCodeId];
 
-            const contractListsPromises = codeIds.map((codeId) => firmaSDK.CosmWasm.getContractListFromCodeId(codeId));
-
+            const contractListsPromises = codeIds.map(async (codeId) => getAllContracts(codeId));
             const contractLists = await Promise.all(contractListsPromises);
             const allContracts = contractLists.flat();
 
-            const contractInfoPromises = allContracts.map((contract) => firmaSDK.CosmWasm.getContractInfo(contract));
+            const contractInfoPromises = allContracts.map(async (contract) => firmaSDK.CosmWasm.getContractInfo(contract));
 
             const contractInfos = await Promise.all(contractInfoPromises);
 

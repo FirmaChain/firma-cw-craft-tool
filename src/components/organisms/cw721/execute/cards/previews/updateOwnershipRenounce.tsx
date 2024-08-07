@@ -42,7 +42,6 @@ const WarningTypo = styled.div`
     font-weight: 500;
     line-height: 22px; /* 137.5% */
     white-space: pre-wrap;
-    text-align: center;
 `;
 
 const UpdateOwnershipRenouncePreview = () => {

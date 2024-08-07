@@ -161,10 +161,10 @@ const RenounceQRCodeModal = ({
                     </ModalTitleWrap>
                     <ModalContentWrap style={{ marginBottom: '36px' }}>
                         <ModalContentWarningCard>
-                            <ModalContentWarningTypo>Warning :</ModalContentWarningTypo>
+                            <ModalContentWarningTypo>{"Warning: "}</ModalContentWarningTypo>
                             <ModalContentWarningDesc>
                                 {
-                                    'Are you sure you want to renounce ownership of the NFT contract?\nIf you renounce ownership, the contract will be permanently deleted.'
+                                    "If you renounce ownership of the NFT contract, it cannot be reverted to the previous state."
                                 }
                             </ModalContentWarningDesc>
                         </ModalContentWarningCard>
