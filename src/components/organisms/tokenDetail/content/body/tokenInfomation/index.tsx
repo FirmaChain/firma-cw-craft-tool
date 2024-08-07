@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
+import { getTokenAmountFromUToken } from '@/utils/balance';
 
 const TokenInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
@@ -87,12 +88,14 @@ const TokenInformation = () => {
                     {totalSupply ? (
                         <SpecificValueWrapper>
                             <SpecificValueTypo
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, decimals))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                            // data-tooltip-content={
+                            //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, decimals)) : ''
+                            // }
+                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                            // data-tooltip-wrapper="span"
+                            // data-tooltip-place="bottom"
                             >
-                                {totalSupply && commaNumber(parseAmountWithDecimal2(totalSupply, decimals, true))}
+                                {totalSupply && commaNumber(getTokenAmountFromUToken(totalSupply, decimals))}
                             </SpecificValueTypo>
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                         </SpecificValueWrapper>
@@ -116,12 +119,12 @@ const TokenInformation = () => {
 
                         <SpecificValueWrapper>
                             <SpecificValueTypo
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(minterCap, decimals))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                            // data-tooltip-content={Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(minterCap, decimals)) : ''}
+                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                            // data-tooltip-wrapper="span"
+                            // data-tooltip-place="bottom"
                             >
-                                {minterCap === '' ? '0' : commaNumber(parseAmountWithDecimal2(minterCap, decimals, true))}
+                                {minterCap === '' ? '0' : commaNumber(getTokenAmountFromUToken(minterCap, decimals))}
                             </SpecificValueTypo>
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                         </SpecificValueWrapper>
@@ -133,12 +136,14 @@ const TokenInformation = () => {
                     {addressBalance ? (
                         <SpecificValueWrapper>
                             <SpecificValueTypo
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(addressBalance, decimals))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                            // data-tooltip-content={
+                            //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(addressBalance, decimals)) : ''
+                            // }
+                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                            // data-tooltip-wrapper="span"
+                            // data-tooltip-place="bottom"
                             >
-                                {addressBalance && commaNumber(parseAmountWithDecimal2(addressBalance, decimals, true))}
+                                {addressBalance && commaNumber(getTokenAmountFromUToken(addressBalance, decimals))}
                             </SpecificValueTypo>
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                         </SpecificValueWrapper>

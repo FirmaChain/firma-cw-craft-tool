@@ -21,6 +21,7 @@ import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/pr
 import Skeleton from '@/components/atoms/skeleton';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 import IconButton from '@/components/atoms/buttons/iconButton';
+import { getTokenAmountFromUToken } from '@/utils/balance';
 
 const TokenInfo = () => {
     const network = useSelector((v: rootState) => v.global.network);
@@ -30,7 +31,7 @@ const TokenInfo = () => {
     const minterAddress = useSearchStore((state) => state.minterInfo?.minter);
     const tokenName = useSearchStore((state) => state.tokenInfo?.name);
     const symbol = useSearchStore((state) => state.tokenInfo?.symbol);
-    const decimals = useSearchStore((state) => state.tokenInfo?.decimals);
+    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || 0;
     const label = useSearchStore((state) => state.contractInfo?.contract_info?.label);
     const totalSupply = useSearchStore((state) => state.tokenInfo?.total_supply);
     const minterCap = useSearchStore((state) => state.minterInfo?.cap);
@@ -87,12 +88,14 @@ const TokenInfo = () => {
                         <div className="box-value">
                             <div
                                 className="white-typo"
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals)))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                                // data-tooltip-content={
+                                //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals))) : ''
+                                // }
+                                // data-tooltip-id={TOOLTIP_ID.COMMON}
+                                // data-tooltip-wrapper="span"
+                                // data-tooltip-place="bottom"
                             >
-                                {commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals), true))}
+                                {commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
                             </div>
                             <div className="gray-typo">{symbol}</div>
                         </div>
@@ -114,12 +117,12 @@ const TokenInfo = () => {
                         <div className="box-value">
                             <div
                                 className="white-typo"
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(minterCap, String(decimals)))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                                // data-tooltip-content={decimals > 2 ? commaNumber(parseAmountWithDecimal2(minterCap, String(decimals))) : ''}
+                                // data-tooltip-id={TOOLTIP_ID.COMMON}
+                                // data-tooltip-wrapper="span"
+                                // data-tooltip-place="bottom"
                             >
-                                {commaNumber(parseAmountWithDecimal2(minterCap, String(decimals), true))}
+                                {commaNumber(getTokenAmountFromUToken(minterCap, String(decimals)))}
                             </div>
                             <div className="gray-typo">{symbol}</div>
                         </div>
@@ -132,12 +135,14 @@ const TokenInfo = () => {
                             <div className="box-value">
                                 <div
                                     className="white-typo"
-                                    data-tooltip-content={commaNumber(parseAmountWithDecimal2(userBalance, String(decimals)))}
-                                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                                    data-tooltip-wrapper="span"
-                                    data-tooltip-place="bottom"
+                                    // data-tooltip-content={
+                                    //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(userBalance, String(decimals))) : ''
+                                    // }
+                                    // data-tooltip-id={TOOLTIP_ID.COMMON}
+                                    // data-tooltip-wrapper="span"
+                                    // data-tooltip-place="bottom"
                                 >
-                                    {commaNumber(parseAmountWithDecimal2(userBalance, String(decimals), true))}
+                                    {commaNumber(getTokenAmountFromUToken(userBalance, String(decimals)))}
                                 </div>
                                 <div className="gray-typo">{symbol}</div>
                             </div>

@@ -4,7 +4,7 @@ import { FirmaUtil } from '@firmachain/firma-js';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { getTokenStrFromUTokenStr } from '@/utils/common';
+import { getTokenStrFromUTokenStr, parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
@@ -16,6 +16,7 @@ import { useModalStore } from '@/hooks/useModal';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -24,6 +25,7 @@ const UserBalanceTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 14px; /* 116.667% */
+    width: fit-content;
 `;
 
 const InputTitle = styled.div`
@@ -269,8 +271,14 @@ const DecreaseAllowance = () => {
                                 }}
                             />
 
-                            <UserBalanceTypo className="clamp-single-line">
-                                Balance: {getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())}
+                            <UserBalanceTypo
+                                className="clamp-single-line"
+                                data-tooltip-content={parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString())}
+                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                data-tooltip-wrapper="span"
+                                data-tooltip-place="bottom"
+                            >
+                                Balance: {parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}
                             </UserBalanceTypo>
                         </div>
                     </div>

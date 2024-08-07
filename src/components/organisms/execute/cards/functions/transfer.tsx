@@ -110,21 +110,23 @@ const Transfer = () => {
                     <HeaderDescTypo>Move tokens from one address to another</HeaderDescTypo>
                 </TitleWrap>
                 <SummeryCard>
-                    <ItemWrap>
-                        <TotalTransferLabelTypo>Total Transfer Amount :</TotalTransferLabelTypo>
-                        <TotalTransferAmountTypo className="clamp-single-line">
-                            {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
-                        </TotalTransferAmountTypo>
-                        <TotalTransferAmountTypo>{tokenInfo.symbol}</TotalTransferAmountTypo>
-                    </ItemWrap>
-                    {isBalanceExceed && (
-                        <ErrorMessageBox>
-                            <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
-                            <TotalTransferLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
-                                You have exceeded token balance.
-                            </TotalTransferLabelTypo>
-                        </ErrorMessageBox>
-                    )}
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <ItemWrap>
+                            <TotalTransferLabelTypo>Total Transfer Amount :</TotalTransferLabelTypo>
+                            <TotalTransferAmountTypo className="clamp-single-line">
+                                {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
+                            </TotalTransferAmountTypo>
+                            <TotalTransferAmountTypo>{tokenInfo.symbol}</TotalTransferAmountTypo>
+                        </ItemWrap>
+                        {isBalanceExceed && (
+                            <ErrorMessageBox>
+                                <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
+                                <TotalTransferLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
+                                    You have exceeded token balance.
+                                </TotalTransferLabelTypo>
+                            </ErrorMessageBox>
+                        )}
+                    </div>
                     <Divider $direction={'horizontal'} $variant="dash" $color="#444" />
                     <ItemWrap>
                         <MyWalletLabelTypo>My Wallet Balance :</MyWalletLabelTypo>

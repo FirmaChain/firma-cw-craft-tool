@@ -10,6 +10,7 @@ import useFormStore from '@/store/formStore';
 import useExecuteActions from '../../action';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -20,6 +21,7 @@ const ContentWrap = styled.div`
 const WalletBalanceWrap = styled.div`
     display: flex;
     gap: 4px;
+    width: fit-content;
 `;
 
 const WalletBalanceTypo = styled.div`
@@ -98,7 +100,12 @@ const Burn = () => {
                     }}
                 />
 
-                <WalletBalanceWrap>
+                <WalletBalanceWrap
+                    data-tooltip-content={parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString())}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
                     <WalletBalanceTypo style={{ whiteSpace: 'pre' }}>Balance :</WalletBalanceTypo>
                     <WalletBalanceTypo className="clamp-single-line">
                         {parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}

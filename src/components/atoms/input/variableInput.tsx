@@ -123,6 +123,22 @@ interface InputProps {
     inputId?: string;
 }
 
+const checkMaxValue = (currentInput: string, maxInput: string): string => {
+    const [currentIntegerPart, currentDecimalPart] = currentInput.split('.');
+    const [maxIntegerPart, maxDecimalPart] = maxInput.split('.');
+
+    const currentInteger = BigInt(currentIntegerPart);
+    const maxInteger = BigInt(maxIntegerPart);
+
+    const newInt = currentInteger > maxInteger ? maxInteger : currentInteger;
+
+    if (typeof currentDecimalPart === 'string') {
+        return `${newInt.toString()}.${currentDecimalPart}`;
+    } else {
+        return newInt.toString();
+    }
+};
+
 const VariableInput = ({
     value,
     type = 'string',
@@ -168,8 +184,9 @@ const VariableInput = ({
                 if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
 
                 //? check if value is bigger than max-value (if maxValue is provided)
-                if (typeof maxValue === 'string')
-                    inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
+
+                if (typeof maxValue === 'string') inputValue = checkMaxValue(inputValue, maxValue);
+                // inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
             } else {
                 //? Filter input string if valid regex provided
                 // console.log(inputValue);

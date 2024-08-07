@@ -11,6 +11,8 @@ import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { parseAmountWithDecimal2 } from '@/utils/common';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -21,6 +23,8 @@ const AllowanceTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 14px; /* 116.667% */
+
+    width: fit-content;
 `;
 
 interface IProps {
@@ -253,7 +257,13 @@ const TransferFromWalletInput = ({
                                     hideErrorMessage: true
                                 }}
                             />
-                            <AllowanceTypo className="clamp-single-line">{`Allowance : ${formatWithCommas(getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals))}`}</AllowanceTypo>
+                            <AllowanceTypo
+                                className="clamp-single-line"
+                                data-tooltip-content={parseAmountWithDecimal2(transferFromInfo.allowanceAmount, decimals)}
+                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                data-tooltip-wrapper="span"
+                                data-tooltip-place="bottom"
+                            >{`Allowance : ${parseAmountWithDecimal2(transferFromInfo.allowanceAmount, decimals, true)}`}</AllowanceTypo>
                         </div>
                     </div>
                 </div>

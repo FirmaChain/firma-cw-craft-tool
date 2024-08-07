@@ -25,6 +25,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
 import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import { getTokenAmountFromUToken } from '@/utils/balance';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -45,41 +46,19 @@ const EndAdornment = ({
 }) => {
     const _disableSearch = keyword === '' || disableSearch;
 
-    const lastSearched = useRef('');
-
-    const _onClickSearch = () => {
-        if (lastSearched.current.toLowerCase() !== keyword.toLowerCase()) {
-            onClickSearch();
-            lastSearched.current = keyword.toLowerCase();
-        }
-    };
-
-    const _onClickClear = () => {
-        lastSearched.current = '';
-        onClickClear();
-    };
-
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
-                <IconButton style={{ padding: 0, display: 'flex' }} onClick={_onClickClear}>
+                <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
 
-            <WalletSearcBtn disabled={_disableSearch} onClick={_onClickSearch}>
+            <WalletSearcBtn disabled={_disableSearch} onClick={onClickSearch}>
                 <div className="button-typo" style={{ fontSize: '14px' }}>
                     Search
                 </div>
             </WalletSearcBtn>
-            {/* <IconButton style={{ padding: 0, display: 'flex' }} disabled={_disableSearch} onClick={onClickSearch}>
-                <Icons.Search
-                    width="28px"
-                    height="28px"
-                    fill={_disableSearch ? '#807E7E' : '#FFFFFF'}
-                    stroke={_disableSearch ? '#807E7E' : '#FFFFFF'}
-                />
-            </IconButton> */}
         </div>
     );
 };
@@ -89,7 +68,7 @@ const WalletSearch = () => {
 
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
     const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
-    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals);
+    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
 
     const { getWalletSearch } = useTokenDetail();
 
@@ -99,11 +78,16 @@ const WalletSearch = () => {
     const [allAllowances, setAllAllowances] = useState<any[]>([]);
     const [allReceives, setAllReceives] = useState<any[]>([]);
 
+    const lastTime = useRef<null | Date>(null);
+
     const onClickSearch = () => {
         fetchWalletSearch();
     };
 
     const fetchWalletSearch = useCallback(async () => {
+        if (Number(new Date()) - Number(lastTime.current) < 2 * 1000) return;
+        else lastTime.current = new Date();
+
         if (!isLoading && isInit && searchAddress.length > 0 && isValidAddress(searchAddress)) {
             setIsLoading(true);
 
@@ -146,12 +130,14 @@ const WalletSearch = () => {
                     balanceAmount !== null && (
                         <BalanceAmountWrapper>
                             <BalanceAmountTypo
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, decimals))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                            // data-tooltip-content={
+                            //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(balanceAmount, decimals)) : ''
+                            // }
+                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                            // data-tooltip-wrapper="span"
+                            // data-tooltip-place="bottom"
                             >
-                                {commaNumber(parseAmountWithDecimal2(balanceAmount, decimals, true))}
+                                {commaNumber(getTokenAmountFromUToken(balanceAmount, decimals))}
                             </BalanceAmountTypo>
                             <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
                         </BalanceAmountWrapper>

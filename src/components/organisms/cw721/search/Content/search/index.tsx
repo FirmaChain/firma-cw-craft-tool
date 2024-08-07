@@ -1,15 +1,25 @@
-import SearchInputWithButton from "@/components/atoms/input/searchInputWithButton";
-import { ContentBodyContainer, CardHeaderTypo, ContractCard, SearchButton, SpecificItem, SpecificLabelTypo, SpecificValueWrapper, SpecificValueTypo, SpecificPlaceholderTypo } from "./style";
-import { Fragment, useCallback, useRef, useState } from "react";
-import IconButton from "@/components/atoms/buttons/iconButton";
-import Icons from "@/components/atoms/icons";
-import Divider from "@/components/atoms/divider";
-import CopyIconButton from "@/components/atoms/buttons/copyIconButton";
-import useNFTContractDetailStore from "@/store/useNFTContractDetailStore";
-import useNFTContractDetail, { ISearchData } from "@/hooks/useNFTContractDetail";
-import StyledTable, { IColumn } from "@/components/atoms/table";
-import Cell from "@/components/atoms/table/cells";
-import { parseExpires } from "@/utils/common";
+import SearchInputWithButton from '@/components/atoms/input/searchInputWithButton';
+import {
+    ContentBodyContainer,
+    CardHeaderTypo,
+    ContractCard,
+    SearchButton,
+    SpecificItem,
+    SpecificLabelTypo,
+    SpecificValueWrapper,
+    SpecificValueTypo,
+    SpecificPlaceholderTypo
+} from './style';
+import { Fragment, useCallback, useRef, useState } from 'react';
+import IconButton from '@/components/atoms/buttons/iconButton';
+import Icons from '@/components/atoms/icons';
+import Divider from '@/components/atoms/divider';
+import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
+import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import useNFTContractDetail, { ISearchData } from '@/hooks/useNFTContractDetail';
+import StyledTable, { IColumn } from '@/components/atoms/table';
+import Cell from '@/components/atoms/table/cells';
+import { parseExpires } from '@/utils/common';
 
 const columns: IColumn[] = [
     {
@@ -27,7 +37,6 @@ const columns: IColumn[] = [
         minWidth: '200px'
     }
 ];
-
 
 const EndAdornment = ({
     keyword,
@@ -66,11 +75,11 @@ const Search = () => {
 
     const [keyword, setKeyword] = useState<string>('');
     const [fetchData, setFetchData] = useState<ISearchData>({
-        tokenId: "",
-        owner: "",
-        tokenURI: "",
+        tokenId: '',
+        owner: '',
+        tokenURI: '',
         approvals: []
-    })
+    });
     const prevData = useRef<ISearchData | null>(null);
 
     const isSearched = !Boolean(prevData.current === null);
@@ -81,7 +90,12 @@ const Search = () => {
         setKeyword('');
     };
 
+    const lastTime = useRef<null | Date>(null);
+
     const onClickSearch = useCallback(async () => {
+        if (Number(new Date()) - Number(lastTime.current) < 2 * 1000) return;
+        else lastTime.current = new Date();
+
         try {
             if (prevData.current !== null && prevData.current.tokenId === keyword) return;
             if (contractDetail === null) return;
@@ -89,7 +103,7 @@ const Search = () => {
 
             setFetchData(result);
 
-            if (result.owner === "") {
+            if (result.owner === '') {
                 prevData.current = null;
             } else {
                 prevData.current = result;
@@ -124,37 +138,37 @@ const Search = () => {
             <SpecificItem>
                 <SpecificLabelTypo>{'Token ID'}</SpecificLabelTypo>
                 <SpecificValueWrapper>
-                    {isSearched ?
+                    {isSearched ? (
                         <SpecificValueTypo>{fetchData.tokenId}</SpecificValueTypo>
-                        :
+                    ) : (
                         <SpecificPlaceholderTypo>{'Token ID'}</SpecificPlaceholderTypo>
-                    }
+                    )}
                 </SpecificValueWrapper>
             </SpecificItem>
             <SpecificItem>
                 <SpecificLabelTypo>{'Owner'}</SpecificLabelTypo>
                 <SpecificValueWrapper>
-                    {isSearched ?
+                    {isSearched ? (
                         <Fragment>
                             <SpecificValueTypo>{fetchData.owner}</SpecificValueTypo>
                             <CopyIconButton text={fetchData.owner} width={'22px'} height={'22px'} />
                         </Fragment>
-                        :
+                    ) : (
                         <SpecificPlaceholderTypo>{'Wallet Address'}</SpecificPlaceholderTypo>
-                    }
+                    )}
                 </SpecificValueWrapper>
             </SpecificItem>
             <SpecificItem>
                 <SpecificLabelTypo>{'Token URI'}</SpecificLabelTypo>
                 <SpecificValueWrapper>
-                    {isSearched ?
+                    {isSearched ? (
                         <Fragment>
                             <SpecificValueTypo>{fetchData.tokenURI}</SpecificValueTypo>
                             <CopyIconButton text={fetchData.tokenURI} width={'22px'} height={'22px'} />
                         </Fragment>
-                        :
+                    ) : (
                         <SpecificPlaceholderTypo>{'Token URI'}</SpecificPlaceholderTypo>
-                    }
+                    )}
                 </SpecificValueWrapper>
             </SpecificItem>
             <ContractCard>
@@ -164,7 +178,7 @@ const Search = () => {
                 <StyledTable columns={columns} rows={fetchData.approvals || []} rowsPerPage={15} isLoading={false} disablePagination />
             </ContractCard>
         </ContentBodyContainer>
-    )
-}
+    );
+};
 
 export default Search;

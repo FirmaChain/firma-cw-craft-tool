@@ -11,6 +11,7 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../../instaniateStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { getMaxMinterCap } from '@/utils/balance';
 
 interface IProps {
     decimals: string;
@@ -105,7 +106,7 @@ const Minterble = ({ decimals }: IProps) => {
                             emptyErrorMessage: 'Please input minter cap.',
                             type: 'number',
                             decimal: decimals === '' ? 6 : Number(decimals),
-                            maxValue: '99999999999999999999.999999999999999999'
+                            maxValue: getMaxMinterCap(decimals)
                         }}
                     />
                 </Fragment>

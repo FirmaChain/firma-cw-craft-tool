@@ -19,6 +19,7 @@ import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { addStringAmountsArray, getTokenAmountFromUToken } from '@/utils/balance';
+import commaNumber from 'comma-number';
 
 const CloseBtnBox = styled.div`
     display: flex;
@@ -617,7 +618,7 @@ const InstantitateModal = ({
                                 <div className="row-key">Supply Amount</div>
                                 <div className="amount-box">
                                     <div className="amount-highlight clamp-single-line">
-                                        {getTokenAmountFromUToken(supplyAmount, requestData?.decimals)}
+                                        {commaNumber(getTokenAmountFromUToken(supplyAmount, requestData?.decimals))}
                                     </div>
                                     {/* <div
                                         className="amount-highlight clamp-single-line"
@@ -645,7 +646,7 @@ const InstantitateModal = ({
                                             // data-tooltip-wrapper="span"
                                             // data-tooltip-place="bottom"
                                         >
-                                            {getTokenAmountFromUToken(requestData.mint?.cap, requestData.decimals)}
+                                            {commaNumber(getTokenAmountFromUToken(requestData.mint?.cap, requestData.decimals))}
                                             {/* {Number(parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals)) < 0.01
                                                 ? '< 0.01'
                                                 : parseAmountWithDecimal2(requestData.mint?.cap, requestData.decimals, true)} */}

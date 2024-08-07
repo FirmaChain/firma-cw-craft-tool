@@ -132,12 +132,12 @@ const ResultStatus = ({ isSuccess, typo }: { isSuccess: boolean; typo?: string }
 const TokenAmount = ({ amount, decimals, symbol }: { amount: string; decimals: string; symbol: string }) => {
     return (
         <Cell.Default
-            data-tooltip-content={commaNumber(parseAmountWithDecimal2(amount, decimals))}
+            data-tooltip-content={Number(decimals) > 2 ? parseAmountWithDecimal2(amount, decimals) : ''}
             data-tooltip-id={TOOLTIP_ID.COMMON}
             data-tooltip-wrapper="span"
             data-tooltip-place="bottom"
         >
-            {commaNumber(parseAmountWithDecimal2(amount, decimals, true))} <TokenAmountSymbolTypo>{symbol}</TokenAmountSymbolTypo>
+            {parseAmountWithDecimal2(amount, decimals, true)} <TokenAmountSymbolTypo>{symbol}</TokenAmountSymbolTypo>
         </Cell.Default>
     );
 };

@@ -8,6 +8,7 @@ import commaNumber from 'comma-number';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import { getTokenAmountFromUToken } from '@/utils/balance';
 
 const TokenNameCard = () => {
     const logoUrl = useSearchStore((state) => state.marketingInfo?.logo?.url);
@@ -16,7 +17,7 @@ const TokenNameCard = () => {
     const tokenName = useSearchStore((state) => state.tokenInfo?.name);
     const ownerAddress = useSearchStore((state) => state.contractInfo?.contract_info.admin);
     const totalSupply = useSearchStore((state) => state.tokenInfo?.total_supply) || '';
-    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || '';
+    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || 0;
 
     const isOwner = userAddress === ownerAddress;
 
@@ -49,12 +50,12 @@ const TokenNameCard = () => {
                     <div className="amount">
                         <span
                             className="bold"
-                            data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals)))}
-                            data-tooltip-id={TOOLTIP_ID.COMMON}
-                            data-tooltip-wrapper="span"
-                            data-tooltip-place="bottom"
+                            // data-tooltip-content={decimals > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals))) : ''}
+                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                            // data-tooltip-wrapper="span"
+                            // data-tooltip-place="bottom"
                         >
-                            {commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals), true))}
+                            {commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
                         </span>{' '}
                         <span className="symbol">{symbol}</span>
                     </div>

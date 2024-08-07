@@ -68,7 +68,7 @@ const MinterCapExceedBox = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 4px;
-    margin-top: -15px;
+    // margin-top: -15px;
 `;
 
 const Mint = () => {
@@ -121,31 +121,33 @@ const Mint = () => {
                     <HeaderDescTypo>Create new tokens and add them to the total supply</HeaderDescTypo>
                 </TitleWrap>
                 <SummeryCard>
-                    <TotalMintWrap>
-                        <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
-                        <TotalMintSupplyBalance
-                            className="clamp-single-line"
-                            // data-tooltip-content={
-                            //     Number(totalMintAmount) > 0
-                            //         ? formatWithCommas(parseAmountWithDecimal2(totalMintAmount, tokenInfo.decimals.toString()))
-                            //         : ''
-                            // }
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
-                        >
-                            {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
-                        </TotalMintSupplyBalance>
-                        <TotalMintSupplyBalance>{tokenInfo.symbol}</TotalMintSupplyBalance>
-                    </TotalMintWrap>
-                    {exceedMinterCap && (
-                        <MinterCapExceedBox>
-                            <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
-                            <TotalMintLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
-                                You have exceeded minter cap.
-                            </TotalMintLabelTypo>
-                        </MinterCapExceedBox>
-                    )}
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <TotalMintWrap>
+                            <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
+                            <TotalMintSupplyBalance
+                                className="clamp-single-line"
+                                // data-tooltip-content={
+                                //     Number(totalMintAmount) > 0
+                                //         ? formatWithCommas(parseAmountWithDecimal2(totalMintAmount, tokenInfo.decimals.toString()))
+                                //         : ''
+                                // }
+                                // data-tooltip-id={TOOLTIP_ID.COMMON}
+                                // data-tooltip-wrapper="span"
+                                // data-tooltip-place="bottom"
+                            >
+                                {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
+                            </TotalMintSupplyBalance>
+                            <TotalMintSupplyBalance>{tokenInfo.symbol}</TotalMintSupplyBalance>
+                        </TotalMintWrap>
+                        {exceedMinterCap && (
+                            <MinterCapExceedBox>
+                                <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
+                                <TotalMintLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
+                                    You have exceeded minter cap.
+                                </TotalMintLabelTypo>
+                            </MinterCapExceedBox>
+                        )}
+                    </div>
                     <Divider $direction="horizontal" $variant="dash" $color="#444" />
                     <TotalMintWrap>
                         <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>

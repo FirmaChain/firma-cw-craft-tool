@@ -252,3 +252,28 @@ export const compareStringNumbers = (amount1: string, amount2: string) => {
 
     return 0;
 };
+
+const MAX_POSSIBLE_MINTER_CAP = '999999999999999999999999999999999999';
+const MAX_POSSIBLE_INIT_AMOUNT = '9999999999999999999999999999999999';
+
+export const getMaxMinterCap = (decimals: string) => {
+    const _decimals = decimals === '' ? 6 : parseInt(decimals);
+
+    if (_decimals === 0) return MAX_POSSIBLE_MINTER_CAP;
+
+    const INT_PART = MAX_POSSIBLE_MINTER_CAP.slice(0, MAX_POSSIBLE_MINTER_CAP.length - _decimals);
+    const FLOAT_PART = MAX_POSSIBLE_MINTER_CAP.slice(MAX_POSSIBLE_MINTER_CAP.length - _decimals, MAX_POSSIBLE_MINTER_CAP.length);
+
+    return `${INT_PART}.${FLOAT_PART}`;
+};
+
+export const getMaxCW20InitWalletAmount = (decimals: string) => {
+    const _decimals = decimals === '' ? 6 : parseInt(decimals);
+
+    if (_decimals === 0) return MAX_POSSIBLE_INIT_AMOUNT;
+
+    const INT_PART = MAX_POSSIBLE_INIT_AMOUNT.slice(0, MAX_POSSIBLE_INIT_AMOUNT.length - _decimals);
+    const FLOAT_PART = MAX_POSSIBLE_INIT_AMOUNT.slice(MAX_POSSIBLE_INIT_AMOUNT.length - _decimals, MAX_POSSIBLE_INIT_AMOUNT.length);
+
+    return `${INT_PART}.${FLOAT_PART}`;
+};

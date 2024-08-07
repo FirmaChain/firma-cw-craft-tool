@@ -1,4 +1,4 @@
-import React, { useEffect, useId } from 'react';
+import React from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
@@ -6,6 +6,7 @@ import useFormStore from '@/store/formStore';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { getMaxCW20InitWalletAmount } from '@/utils/balance';
 
 interface IProps {
     index: number;
@@ -106,7 +107,7 @@ const InputAddressAmount = ({
                             decimal: decimals ? Number(decimals) : 6,
                             emptyErrorMessage: 'Please input amount.',
                             textAlign: 'right',
-                            maxValue: '999999999999999999.999999999999999999'
+                            maxValue: getMaxCW20InitWalletAmount(decimals)
                         }}
                     />
                 </div>

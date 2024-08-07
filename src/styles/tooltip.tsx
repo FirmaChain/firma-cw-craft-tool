@@ -6,7 +6,7 @@ const DefaultTooltip = styled(Tooltip)`
     border-radius: 5px !important;
     padding: 8px 12px !important;
 
-    max-width: 50vw; /* Set maximum width */
+    max-width: 30vw; /* Set maximum width */
     white-space: normal; /* Allow line break */
     word-wrap: break-word; /* Break long words */
     word-break: break-word; /* Break long words */
@@ -30,7 +30,7 @@ export const LightTooltip = styled(Tooltip)`
     border-radius: 5px !important;
     padding: 8px 12px !important;
 
-    max-width: 50vw; /* Set maximum width */
+    max-width: 30vw; /* Set maximum width */
     white-space: normal; /* Allow line break */
     word-wrap: break-word; /* Break long words */
     word-break: break-word; /* Break long words */

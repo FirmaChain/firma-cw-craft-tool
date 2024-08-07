@@ -5,11 +5,12 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, Ti
 import { IWallet } from '@/interfaces/wallet';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useEffect, useMemo } from 'react';
-import { addStringAmount, getUTokenAmountFromToken } from '@/utils/balance';
+import { addStringAmount, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
 import useFormStore from '@/store/formStore';
 import Cw20BurnFromInputList from '@/components/atoms/walletList/cw20BurnFromInputList';
 import Icons from '@/components/atoms/icons';
+import commaNumber from 'comma-number';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -130,8 +131,17 @@ const BurnFrom = () => {
                 <SummeryCard>
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo className="clamp-single-line">
-                            {parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)}
+                        <SummeryAmountTypo
+                            className="clamp-single-line"
+                            // data-tooltip-content={
+                            //     tokenInfo.decimals > 2 ? parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals)) : ''
+                            // }
+                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                            // data-tooltip-wrapper="span"
+                            // data-tooltip-place="bottom"
+                        >
+                            {commaNumber(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
+                            {/* {parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)} */}
                         </SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>

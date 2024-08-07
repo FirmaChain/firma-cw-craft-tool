@@ -14,6 +14,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import styled from 'styled-components';
+import { getTokenAmountFromUToken } from '@/utils/balance';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -32,31 +33,15 @@ const EndAdornment = ({
     onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
-    const _disableSearch = keyword === '' || disableSearch;
-
-    const lastSearched = useRef<string>('');
-
-    const _onClickSearch = () => {
-        if (lastSearched.current.toLowerCase() !== keyword.toLowerCase()) {
-            onClickSearch();
-            lastSearched.current = keyword.toLowerCase();
-        }
-    };
-
-    const _onClickClear = () => {
-        lastSearched.current = '';
-        onClickClear();
-    };
-
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
-                <IconButton style={{ padding: 0, display: 'flex' }} onClick={_onClickClear}>
+                <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
 
-            <WalletSearcBtn disabled={_disableSearch} onClick={_onClickSearch}>
+            <WalletSearcBtn disabled={disableSearch} onClick={onClickSearch}>
                 <div className="button-text" style={{ fontSize: '14px' }}>
                     Search
                 </div>
@@ -68,7 +53,7 @@ const EndAdornment = ({
 const TokenWalletSearch = () => {
     const contractAddress = useSearchStore((v) => v.contractInfo?.address);
     const symbol = useSearchStore((state) => state.tokenInfo?.symbol);
-    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || '';
+    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || 0;
 
     //? Search keyword (wallet address)
     const [keyword, setKeyword] = useState<string>('');
@@ -77,9 +62,14 @@ const TokenWalletSearch = () => {
     const [allAllowances, setAllAllowances] = useState<any[] | null>([]);
     const [allReceives, setAllReceives] = useState<any[] | null>([]);
 
+    const lastTime = useRef<null | Date>(null);
+
     const { getWalletSearch } = useTokenDetail();
 
     const getAddressInfo = async () => {
+        if (Number(new Date()) - Number(lastTime.current) < 2 * 1000) return;
+        else lastTime.current = new Date();
+
         if (keyword.length > 0 && isValidAddress(keyword)) {
             setBalanceAmount(null);
             setAllAllowances(null);
@@ -159,13 +149,15 @@ const TokenWalletSearch = () => {
                         balanceAmount && (
                             <WalletBalance
                                 className="balance-box"
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals)))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                                // data-tooltip-content={
+                                //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals))) : ''
+                                // }
+                                // data-tooltip-id={TOOLTIP_ID.COMMON}
+                                // data-tooltip-wrapper="span"
+                                // data-tooltip-place="bottom"
                             >
                                 <div className="balance-amount">
-                                    {commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals), true))}
+                                    {commaNumber(getTokenAmountFromUToken(balanceAmount, String(decimals)))}
                                 </div>
                                 <div className="balance-symbol">{symbol}</div>
                             </WalletBalance>

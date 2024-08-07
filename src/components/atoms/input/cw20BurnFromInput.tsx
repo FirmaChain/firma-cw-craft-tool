@@ -10,10 +10,10 @@ import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { isValidAddress } from '@/utils/common';
+import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
 import { getTokenAmountFromUToken } from '@/utils/balance';
-import commaNumber from 'comma-number';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -22,6 +22,7 @@ const UserBalanceTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 14px; /* 116.667% */
+    width: fit-content;
 `;
 
 interface IProps {
@@ -186,8 +187,14 @@ const CW20BurnFromInput = ({
                             }}
                         />
 
-                        <UserBalanceTypo className="clamp-single-line">
-                            Allowance : {commaNumber(getTokenAmountFromUToken(allowance, decimals.toString()))}
+                        <UserBalanceTypo
+                            className="clamp-single-line"
+                            data-tooltip-content={parseAmountWithDecimal2(allowance, decimals.toString())}
+                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                            data-tooltip-wrapper="span"
+                            data-tooltip-place="bottom"
+                        >
+                            Allowance : {parseAmountWithDecimal2(allowance, decimals.toString(), true)}
                         </UserBalanceTypo>
                     </div>
                 </div>

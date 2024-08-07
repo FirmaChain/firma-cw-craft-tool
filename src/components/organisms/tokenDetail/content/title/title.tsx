@@ -25,13 +25,14 @@ import Divider from '@/components/atoms/divider';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import { getTokenAmountFromUToken } from '@/utils/balance';
 
 const Title = () => {
     const tokenUrl = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl);
     const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
     const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName);
     const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply);
-    const tokenDecimal = useTokenDetailStore((state) => state.tokenDetail?.decimals);
+    const tokenDecimal = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
 
     const navigatge = useNavigate();
@@ -89,12 +90,14 @@ const Title = () => {
 
                         {tokenSymbol ? (
                             <TotalSupplySymbolTypo
-                                data-tooltip-content={commaNumber(parseAmountWithDecimal2(totalSupply, tokenDecimal))}
-                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                data-tooltip-wrapper="span"
-                                data-tooltip-place="bottom"
+                            // data-tooltip-content={
+                            //     Number(tokenDecimal) > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, tokenDecimal)) : ''
+                            // }
+                            // data-tooltip-id={TOOLTIP_ID.COMMON}
+                            // data-tooltip-wrapper="span"
+                            // data-tooltip-place="bottom"
                             >
-                                <span className="bold">{commaNumber(parseAmountWithDecimal2(totalSupply, tokenDecimal, true))}</span>
+                                <span className="bold">{commaNumber(getTokenAmountFromUToken(totalSupply, tokenDecimal))}</span>
 
                                 {tokenSymbol}
                             </TotalSupplySymbolTypo>
