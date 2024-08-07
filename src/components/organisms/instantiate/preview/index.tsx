@@ -15,12 +15,15 @@ import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
 import InstantitateModal from '../../modal/instantitateModal';
 import { addStringAmount, compareStringNumbers } from '@/utils/balance';
+import { useScrollContext } from '@/context/scrollContext';
 
 interface IProps {
     isBasic: boolean;
 }
 
 const Preview = ({ isBasic }: IProps) => {
+    const { scroll } = useScrollContext();
+
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
@@ -212,7 +215,7 @@ const Preview = ({ isBasic }: IProps) => {
     }, [minterCap, totalSupply]);
 
     return (
-        <PreviewWrapper>
+        <PreviewWrapper style={{ top: `${scroll.y}px` }}>
             <Dashboard
                 isBasic={isBasic}
                 tokenLogoUrl={tokenLogoUrl}

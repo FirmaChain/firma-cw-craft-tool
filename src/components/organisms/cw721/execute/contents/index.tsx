@@ -18,6 +18,7 @@ const Container = styled.div`
     align-items: flex-start;
     justify-content: center;
     padding: 36px 96px 115px;
+    position: relative;
 `;
 
 const Box = styled.div`

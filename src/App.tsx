@@ -14,6 +14,7 @@ import { CW721NFTContractsProvider } from './context/cw721MyNFTContractsContext'
 import { CW721NFTListProvider } from './context/cw721NFTListContext';
 import { CW721OwnedNFTListProvider } from './context/cw721OwnedNFTListContext';
 import { FirmaSDKProvider } from './context/firmaSDKContext';
+import { ScrollProvider } from './context/scrollContext';
 
 const App = () => {
     return (
@@ -24,7 +25,9 @@ const App = () => {
                         <CW721NFTContractsProvider>
                             <CW721NFTListProvider>
                                 <CW721OwnedNFTListProvider>
-                                    <Main />
+                                    <ScrollProvider>
+                                        <Main />
+                                    </ScrollProvider>
                                 </CW721OwnedNFTListProvider>
                             </CW721NFTListProvider>
                         </CW721NFTContractsProvider>

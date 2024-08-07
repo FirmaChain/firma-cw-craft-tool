@@ -12,4 +12,6 @@ export const PreviewWrapper = styled.div`
     gap: 36px;
     border-radius: 24px;
     background: var(--200, #1e1e1e);
+    position: sticky;
+    transition: top 0.2s ease;
 `;

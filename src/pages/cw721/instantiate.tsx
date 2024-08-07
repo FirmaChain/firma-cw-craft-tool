@@ -23,6 +23,7 @@ export const Box = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
     gap: 32px;
     max-width: 1600px;
+    position: relative;
 `;
 
 const CW721Instantiate = () => {

@@ -11,6 +11,7 @@ import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
 import InstantitateModal from '@/components/organisms/modal/cw721/instantiateModal';
 import { isValidAddress } from '@/utils/common';
+import { useScrollContext } from '@/context/scrollContext';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
@@ -22,6 +23,8 @@ const ContentWrapper = styled.div`
     gap: 40px;
     border-radius: 24px;
     background: var(--200, #1e1e1e);
+    position: sticky;
+    transition: top 0.2s ease;
 `;
 
 const TitleWrapper = styled.div`
@@ -118,6 +121,7 @@ const BodyContractInfoWrap = styled.div`
 `;
 
 const Preview = () => {
+    const { scroll } = useScrollContext();
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
@@ -203,7 +207,7 @@ const Preview = () => {
     };
 
     return (
-        <ContentWrapper>
+        <ContentWrapper style={{ top: `${scroll.y}px` }}>
             <TitleWrapper>
                 <TitleIconWrapper>
                     <TitleIcon src={IC_PREVIEW} alt={'CW721 Instantiate Title Icon'} />

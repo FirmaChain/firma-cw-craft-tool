@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import Sidebar from './components/organisms/sidebar';
 import AppRoutes from './routes';
 import { ModalRenderer } from './hooks/useModal';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import GlobalLoader from './components/atoms/globalLoader';
+import { useEffect, useRef, useState } from 'react';
+import { useScrollContext } from './context/scrollContext';
 
 const MainContainer = styled.div`
     display: flex;
@@ -23,45 +24,46 @@ const RightContainer = styled.div`
     }
 `;
 
-const MainScrollbar = styled(OverlayScrollbarsComponent)`
-    z-index: 1;
 
-    .os-scrollbar {
-        --os-size: 16px;
-        --os-padding-perpendicular: 5px;
-        --os-padding-axis: 5px;
-        --os-track-border-radius: 50%;
-        --os-handle-bg: var(--Gray-550, #444);
-        --os-handle-bg-hover: var(--Gray-550, #444);
-        --os-handle-bg-active: var(--Gray-550, #444);
-    }
+const ScrollableContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    z-index: 1;
 `;
 
-// const LogoBackground = styled.div`
-//     position: fixed;
-//     width: -webkit-fill-available;
-//     height: -webkit-fill-available;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-
-//     .logo {
-//         width: 480px;
-//     }
-// `;
-
 const Main = () => {
+
+    const scrollRef = useRef<HTMLDivElement | null>(null);
+    const { setScroll } = useScrollContext();
+
+    const handleScroll = () => {
+        if (scrollRef.current) {
+            const { scrollLeft, scrollTop } = scrollRef.current;
+            setScroll({ x: scrollLeft, y: scrollTop });
+        }
+    };
+
+    useEffect(() => {
+        const element = scrollRef.current;
+        if (element) {
+            element.addEventListener('scroll', handleScroll);
+        }
+        return () => {
+            if (element) {
+                element.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
+
     return (
         <MainContainer>
             <ModalRenderer />
             <Sidebar />
             <RightContainer>
-                <MainScrollbar defer>
+                <ScrollableContainer ref={scrollRef}>
                     <AppRoutes />
-                </MainScrollbar>
-                {/* <LogoBackground>
-                    <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />
-                </LogoBackground> */}
+                </ScrollableContainer>
                 <GlobalLoader />
             </RightContainer>
         </MainContainer>

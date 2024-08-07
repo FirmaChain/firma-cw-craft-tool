@@ -13,6 +13,7 @@ import RevokePreview from './previews/revoke';
 import ApproveAllPreview from './previews/approveAll';
 import RevokeAllPreview from './previews/revokeAll';
 import UpdateOwnershipTransferPreview from './previews/updateOwnershipTransfer';
+import { useScrollContext } from '@/context/scrollContext';
 
 const Container = styled.div<{ $isSelectMenu: boolean }>`
     width: 100%;
@@ -30,6 +31,8 @@ const Container = styled.div<{ $isSelectMenu: boolean }>`
 
     max-height: 742px;
     overflow: hidden;
+    position: sticky;
+    transition: top 0.2s ease;
 `;
 
 const TitleTypo = styled.div`
@@ -42,13 +45,14 @@ const TitleTypo = styled.div`
 `;
 
 const Preview = () => {
+    const { scroll } = useScrollContext();
     const selectMenu = useExecuteStore((v) => v.selectMenu);
 
     return (
         <>
             {selectMenu?.value === 'select' && <></>}
             {selectMenu && (
-                <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
+                <Container style={{ top: `${scroll.y + 36}px` }} $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
                     <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
                     {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
                     {selectMenu.value === 'mint' && <MintPreview />}

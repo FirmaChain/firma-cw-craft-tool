@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Box, Container, MainContent } from '../../styles/instantiate';
@@ -37,7 +37,7 @@ const Cw20Instantiate = () => {
         <Container style={{ padding: '61px 96px' }}>
             <Header />
             <MainContent>
-                <Box>
+                <Box >
                     <Content isBasic={isBasic} />
                     <Preview isBasic={isBasic} />
                 </Box>

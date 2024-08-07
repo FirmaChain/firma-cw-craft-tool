@@ -4,11 +4,11 @@ import { FirmaSDK } from '@firmachain/firma-js';
 import { createContext, useContext, ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 
-interface CW20MyTokenContextProps {
+interface FirmaSDKContextProps {
     firmaSDK: FirmaSDK;
 }
 
-const FirmaSDKContext = createContext<CW20MyTokenContextProps | undefined>(undefined);
+const FirmaSDKContext = createContext<FirmaSDKContextProps | undefined>(undefined);
 
 export const useFirmaSDKContext = () => {
     const context = useContext(FirmaSDKContext);
