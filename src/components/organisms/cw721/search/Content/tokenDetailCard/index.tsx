@@ -1,11 +1,10 @@
 import Divider from '@/components/atoms/divider';
 import { CardContainer, SectionContainer } from '../style';
-import useCW721SearchStore from '../../cw721SearchStore';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import IconButton from '@/components/atoms/buttons/iconButton';
@@ -21,6 +20,7 @@ import {
     SpecificValueBox,
     SpecificValueCover,
     SpecificValueTypo,
+    SpecificSubValueType,
     SpecificValueWrapper,
     TableExpandButton
 } from './style';
@@ -179,23 +179,6 @@ const TokenInfo = () => {
     );
 };
 
-const PendingExpiery = ({ expireInfo }: { expireInfo: Cw721Expires | null }) => {
-    if (!expireInfo) return <div></div>;
-
-    if (expireInfo['at_height'])
-        return (
-            <div className="white-typo">
-                {expireInfo['at_height']} <div className="gray-typo">Block</div>
-            </div>
-        );
-
-    if (expireInfo['at_time']) return <div className="white-typo">{format(expireInfo['at_time'], 'yyyy-MM-dd HH:mm:ss')}</div>;
-
-    if (expireInfo['never']) return <div className="white-typo">Forever</div>;
-
-    return <div></div>;
-};
-
 const OwnerInformation = () => {
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
 
@@ -204,21 +187,29 @@ const OwnerInformation = () => {
     const pending_expiry = contractInfo?.ownerInfo.pending_expiry;
     const minter = contractInfo?.minter;
 
-    const PendingExpiery = ({ expireInfo }: { expireInfo: Cw721Expires | null }) => {
-        if (!expireInfo) return <div></div>;
+    useEffect(() => {
+        console.log(contractInfo?.ownerInfo);
+    }, [contractInfo]);
+
+    const PendingExpiery = ({ pendingOwner, expireInfo }: { pendingOwner: string, expireInfo: Cw721Expires | null }) => {
+        if (!pendingOwner && !expireInfo) return <SpecificValueTypo>-</SpecificValueTypo>;
+
+        if (!expireInfo) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
         if (expireInfo['at_height'])
             return (
-                <div className="white-typo">
-                    {expireInfo['at_height']} <div className="gray-typo">Block</div>
-                </div>
+                <SpecificValueTypo>
+                    {expireInfo['at_height']} <SpecificSubValueType>Block</SpecificSubValueType>
+                </SpecificValueTypo>
             );
 
-        if (expireInfo['at_time']) return <div className="white-typo">{format(expireInfo['at_time'], 'yyyy-MM-dd HH:mm:ss')}</div>;
+        if (expireInfo['at_time']) {
+            const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
+            return <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>;
+        }
 
-        if (expireInfo['never']) return <div className="white-typo">Forever</div>;
 
-        return <div></div>;
+        return <SpecificValueTypo></SpecificValueTypo>;
     };
 
     return (
@@ -254,7 +245,7 @@ const OwnerInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {pending_expiry ? <PendingExpiery expireInfo={pending_expiry} /> : <SpecificValueTypo>{'-'}</SpecificValueTypo>}
+                        <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} />
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>

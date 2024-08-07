@@ -1,21 +1,21 @@
+import { Cw721Expires } from '@firmachain/firma-js';
+import { format } from 'date-fns';
+
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
+import Skeleton from '@/components/atoms/skeleton';
+import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import { isValidAddress } from '@/utils/address';
 
 import {
     SpecificItem,
     SpecificLabelTypo,
     SpecificValueTypo,
     SpecificValueWrapper,
+    SpecificSubValueType,
     ContractCard,
     CardHeaderTypo,
     CardSpecific
 } from './style';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
-import Skeleton from '@/components/atoms/skeleton';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
-import { Cw721Expires } from '@firmachain/firma-js';
-import { format } from 'date-fns';
-import { isValidAddress } from '@/utils/address';
 
 const OwnerInformation = () => {
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
@@ -25,23 +25,25 @@ const OwnerInformation = () => {
     const pending_expiry = contractInfo?.ownerInfo.pending_expiry;
     const minter = contractInfo?.minter;
 
-    const PendingExpiery = ({ expireInfo }: { expireInfo: Cw721Expires | null }) => {
-        console.log(expireInfo['never']);
-        if (!expireInfo) return <div></div>;
+    const PendingExpiery = ({ pendingOwner,expireInfo }: { pendingOwner: string, expireInfo: Cw721Expires | null }) => {
+        if (!pendingOwner && !expireInfo) return <SpecificValueTypo>-</SpecificValueTypo>;
+
+        if (!expireInfo) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
         if (expireInfo['at_height'])
             return (
                 <SpecificValueTypo>
-                    {expireInfo['at_height']} <SpecificValueTypo>Block</SpecificValueTypo>
+                    {expireInfo['at_height']} <SpecificSubValueType>Block</SpecificSubValueType>
                 </SpecificValueTypo>
             );
 
-        const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
-        if (expireInfo['at_time']) return <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>;
+        if (expireInfo['at_time']) {
+            const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
+            return <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>;
+        }
 
-        if (expireInfo['never']) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
-        return <div></div>;
+        return <SpecificValueTypo></SpecificValueTypo>;
     };
 
     return (
@@ -77,11 +79,7 @@ const OwnerInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {isValidAddress(pending_owner) && pending_expiry === null ? (
-                            <SpecificValueTypo>{'Forever'}</SpecificValueTypo>
-                        ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
-                        )}
+                        <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} />
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>

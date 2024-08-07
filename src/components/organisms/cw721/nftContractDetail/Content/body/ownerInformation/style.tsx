@@ -44,18 +44,23 @@ export const SpecificValueWrapper = styled.div`
 `;
 
 export const SpecificValueTypo = styled.div`
+    display: flex;
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
     line-height: 22px;
+    gap: 8px;
+`;
 
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    word-break: break-word;
+export const SpecificSubValueType = styled.div`
+    color: var(--Gray-650, #707070);
+    font-family: "General Sans Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
 `;
 
 export const SpecificValueSymbol = styled.div`
