@@ -46,10 +46,12 @@ const ContentBox = styled.div`
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    // border-radius: 24px;
-    // border: 1px solid var(--Gray-550, #444);
+
     gap: 24px;
-    // overflow: scroll;
+
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
 `;
 
 const ItemWrap = styled.div`
@@ -105,13 +107,13 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const WalletListWrap = styled.div`
-    height: auto;
+    // height: auto;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    border-radius: 12px;
-    background: var(--Gray-150, #141414);
+    // border-radius: 12px;
+    // background: var(--Gray-150, #141414);
 `;
 
 const WalletItemWrap = styled.div`
@@ -159,7 +161,7 @@ const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
 
 const WalletItemTokenSymbol = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -206,6 +208,13 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const ScrollbarContainer = styled.div`
+    border-radius: 12px;
+    display: flex;
+    background: var(--Gray-150, #141414);
+    overflow: hidden;
 `;
 
 const TransferPreview = () => {
@@ -322,23 +331,23 @@ const TransferPreview = () => {
 
     return (
         <Container>
-            <ContentScrollWrap>
-                <ExecutePreviewOverlayScroll defer>
-                    <ContentBox>
-                        <ItemWrap>
-                            <ItemLabelWrap>
-                                <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
-                                <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
-                            </ItemLabelWrap>
-                            <ItemAmountWrap>
-                                <ItemAmountTypo className="clamp-single-line">
-                                    {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
-                                </ItemAmountTypo>
-                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                                <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                            </ItemAmountWrap>
-                        </ItemWrap>
-                        {isOpen && (
+            <ContentBox>
+                <ItemWrap>
+                    <ItemLabelWrap>
+                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                        <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
+                    </ItemLabelWrap>
+                    <ItemAmountWrap>
+                        <ItemAmountTypo className="clamp-single-line">
+                            {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
+                        </ItemAmountTypo>
+                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                    </ItemAmountWrap>
+                </ItemWrap>
+                {isOpen && (
+                    <ScrollbarContainer>
+                        <ExecutePreviewOverlayScroll defer>
                             <WalletListWrap>
                                 {transferList.map((value, index) => (
                                     <WalletItemWrap key={index}>
@@ -363,25 +372,26 @@ const TransferPreview = () => {
                                     </WalletItemWrap>
                                 ))}
                             </WalletListWrap>
-                        )}
-                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                        <ItemWrap>
-                            <ItemLabelWrap>
-                                <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                                    <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                                </div>
-                            </ItemLabelWrap>
-                            <ItemLabelWrap>
-                                <UpdatedBalanceTypo className="clamp-single-line">
-                                    {formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
-                                </UpdatedBalanceTypo>
-                                <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
-                            </ItemLabelWrap>
-                        </ItemWrap>
-                    </ContentBox>
-                </ExecutePreviewOverlayScroll>
-            </ContentScrollWrap>
+                        </ExecutePreviewOverlayScroll>
+                    </ScrollbarContainer>
+                )}
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                <ItemWrap>
+                    <ItemLabelWrap>
+                        <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                        </div>
+                    </ItemLabelWrap>
+                    <ItemLabelWrap>
+                        <UpdatedBalanceTypo className="clamp-single-line">
+                            {formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
+                        </UpdatedBalanceTypo>
+                        <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
+                    </ItemLabelWrap>
+                </ItemWrap>
+            </ContentBox>
+
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>

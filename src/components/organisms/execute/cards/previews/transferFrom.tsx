@@ -38,10 +38,12 @@ const ContentBox = styled.div`
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    // border-radius: 24px;
-    // border: 1px solid var(--Gray-550, #444);
+
     gap: 24px;
-    // overflow: scroll;
+
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
 `;
 
 const ItemWrap = styled.div`
@@ -102,8 +104,8 @@ const AccordionBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    border-radius: 12px;
-    background: var(--Gray-150, #141414);
+    // border-radius: 12px;
+    // background: var(--Gray-150, #141414);
 `;
 
 const ButtonWrap = styled.div`
@@ -132,14 +134,33 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 
 const AccordionSymbolTypo = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
 `;
 
-const FromToAddressLine = ({ from, to, amount, decimal, symbol }: { from?: string; to?: string; amount?: string; decimal?: string, symbol: string }) => {
+const ScrollbarContainer = styled.div`
+    border-radius: 12px;
+    display: flex;
+    background: var(--Gray-150, #141414);
+    overflow: hidden;
+`;
+
+const FromToAddressLine = ({
+    from,
+    to,
+    amount,
+    decimal,
+    symbol
+}: {
+    from?: string;
+    to?: string;
+    amount?: string;
+    decimal?: string;
+    symbol: string;
+}) => {
     return (
         <div
             style={{
@@ -186,7 +207,6 @@ const FromToAddressLine = ({ from, to, amount, decimal, symbol }: { from?: strin
                 </AccordionTypo>
                 <AccordionSymbolTypo>{symbol}</AccordionSymbolTypo>
             </AccordionValueWrap>
-            
         </div>
     );
 };
@@ -314,21 +334,21 @@ const TransferFromPreview = () => {
 
     return (
         <Container>
-            <ContentScrollWrap>
-                <ExecutePreviewOverlayScroll defer>
-                    <ContentBox>
-                        <ItemWrap>
-                            <ItemLabelWrap>
-                                <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
-                                <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
-                            </ItemLabelWrap>
-                            <ItemAmountWrap>
-                                <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
-                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                                <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                            </ItemAmountWrap>
-                        </ItemWrap>
-                        {isOpen && (
+            <ContentBox>
+                <ItemWrap>
+                    <ItemLabelWrap>
+                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                        <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
+                    </ItemLabelWrap>
+                    <ItemAmountWrap>
+                        <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
+                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                    </ItemAmountWrap>
+                </ItemWrap>
+                {isOpen && (
+                    <ScrollbarContainer>
+                        <ExecutePreviewOverlayScroll defer>
                             <AccordionBox>
                                 {transferFromList.map((info, index) => (
                                     <FromToAddressLine
@@ -341,10 +361,11 @@ const TransferFromPreview = () => {
                                     />
                                 ))}
                             </AccordionBox>
-                        )}
-                    </ContentBox>
-                </ExecutePreviewOverlayScroll>
-            </ContentScrollWrap>
+                        </ExecutePreviewOverlayScroll>
+                    </ScrollbarContainer>
+                )}
+            </ContentBox>
+
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>

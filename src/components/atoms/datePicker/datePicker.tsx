@@ -161,10 +161,10 @@ const MINUTES = new Array(12).fill(null).map((_, idx) => {
     return { label: String(value).padStart(2, '0'), value: String(value) };
 });
 
-const SECONDS = new Array(12).fill(null).map((_, idx) => {
-    const value = idx * 5;
-    return { label: String(value).padStart(2, '0'), value: String(value) };
-});
+// const SECONDS = new Array(12).fill(null).map((_, idx) => {
+//     const value = idx * 5;
+//     return { label: String(value).padStart(2, '0'), value: String(value) };
+// });
 
 const BGBox = styled.div`
     position: fixed;
@@ -304,13 +304,13 @@ const ExpirationDatePicker = ({ setTargetTimestamp }: { setTargetTimestamp: (v: 
                 value={selected.min}
                 placeHolder="0"
             />
-            <ExpirationSelect
+            {/* <ExpirationSelect
                 minWidth="70px"
                 options={SECONDS}
                 onChange={(v) => handleSelected('sec', v)}
                 value={selected.sec}
                 placeHolder="0"
-            />
+            /> */}
         </Container>
     );
 };

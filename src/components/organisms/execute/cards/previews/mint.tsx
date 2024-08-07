@@ -32,24 +32,18 @@ const Container = styled.div`
     overflow: hidden;
 `;
 
-const ContentScrollWrap = styled.div`
-    display: flex;
-    width: 100%;
-    border-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
-    overflow: hidden;
-`;
-
 const ContentBox = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    // border-radius: 24px;
-    // border: 1px solid var(--Gray-550, #444);
+
     gap: 24px;
-    // overflow: scroll;
+
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
 `;
 
 const TokenInfoWrap = styled.div`
@@ -65,6 +59,7 @@ const TokenTitleWrap = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow: hidden;
 `;
 
 const TokenInfoLeft = styled.div`
@@ -115,13 +110,13 @@ const TokeInfoMintSymbolTypo = styled.div`
 `;
 
 const WalletListWrap = styled.div`
-    height: auto;
+    // height: auto;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    border-radius: 12px;
-    background: var(--Gray-150, #141414);
+    // border-radius: 12px;
+    // background: var(--Gray-150, #141414);
 `;
 
 const WalletItemWrap = styled.div`
@@ -170,7 +165,7 @@ const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
 
 const WalletItemTokenSymbol = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -217,6 +212,13 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const ScrollbarContainer = styled.div`
+    border-radius: 12px;
+    display: flex;
+    background: var(--Gray-150, #141414);
+    overflow: hidden;
 `;
 
 const MintPreview = () => {
@@ -340,24 +342,24 @@ const MintPreview = () => {
 
     return (
         <Container>
-            <ContentScrollWrap>
-                <ExecutePreviewOverlayScroll defer>
-                    <ContentBox>
-                        <TokenTitleWrap>
-                            <TokenInfoWrap>
-                                <TokenInfoLeft>
-                                    <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
-                                    <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
-                                </TokenInfoLeft>
-                                <TokenInfoRightWrap>
-                                    <TokenInfoMintAmountTypo className="clamp-single-line">
-                                        {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
-                                    </TokenInfoMintAmountTypo>
-                                    <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
-                                    <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                                </TokenInfoRightWrap>
-                            </TokenInfoWrap>
-                            {isOpen && (
+            <ContentBox>
+                <TokenTitleWrap>
+                    <TokenInfoWrap>
+                        <TokenInfoLeft>
+                            <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
+                            <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
+                        </TokenInfoLeft>
+                        <TokenInfoRightWrap>
+                            <TokenInfoMintAmountTypo className="clamp-single-line">
+                                {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
+                            </TokenInfoMintAmountTypo>
+                            <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                        </TokenInfoRightWrap>
+                    </TokenInfoWrap>
+                    {isOpen && (
+                        <ScrollbarContainer>
+                            <ExecutePreviewOverlayScroll>
                                 <WalletListWrap>
                                     {mintingList.map((value, index) => (
                                         <WalletItemWrap key={index}>
@@ -382,37 +384,38 @@ const MintPreview = () => {
                                         </WalletItemWrap>
                                     ))}
                                 </WalletListWrap>
-                            )}
-                        </TokenTitleWrap>
-                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                        <TokenInfoWrap>
-                            <TokenInfoLeft>
-                                <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                                    <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
-                                    <IconTooltip
-                                        size="14px"
-                                        tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
-                                    />
-                                </div>
-                            </TokenInfoLeft>
-                            <TokenInfoRightWrap>
-                                <TotalSupplyWrap>
-                                    <TotalSupplyAmount className="clamp-single-line">
-                                        {formatWithCommas(
-                                            getTokenAmountFromUToken(
-                                                String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),
-                                                tokenInfo.decimals.toString()
-                                            )
-                                        )}
-                                    </TotalSupplyAmount>
-                                    <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
-                                </TotalSupplyWrap>
-                            </TokenInfoRightWrap>
-                        </TokenInfoWrap>
-                    </ContentBox>
-                </ExecutePreviewOverlayScroll>
-            </ContentScrollWrap>
+                            </ExecutePreviewOverlayScroll>
+                        </ScrollbarContainer>
+                    )}
+                </TokenTitleWrap>
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                <TokenInfoWrap>
+                    <TokenInfoLeft>
+                        <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
+                            <IconTooltip
+                                size="14px"
+                                tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
+                            />
+                        </div>
+                    </TokenInfoLeft>
+                    <TokenInfoRightWrap>
+                        <TotalSupplyWrap>
+                            <TotalSupplyAmount className="clamp-single-line">
+                                {formatWithCommas(
+                                    getTokenAmountFromUToken(
+                                        String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),
+                                        tokenInfo.decimals.toString()
+                                    )
+                                )}
+                            </TotalSupplyAmount>
+                            <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
+                        </TotalSupplyWrap>
+                    </TokenInfoRightWrap>
+                </TokenInfoWrap>
+            </ContentBox>
+
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickMint}>
                     <div className="button-text">Mint</div>
