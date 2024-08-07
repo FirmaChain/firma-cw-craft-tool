@@ -221,7 +221,7 @@ export const NftResultItem = ({ label, value, symbol }: { label: string; value: 
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemAmountValue style={{ color: '#FFFFFF' }}>{value}</ItemAmountValue>
+                <ItemAmountValue style={{ color: '#E6E6E6' }}>{value}</ItemAmountValue>
                 <ItemAmountSymbol>NFT</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>

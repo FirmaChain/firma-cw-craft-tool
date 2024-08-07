@@ -9,6 +9,8 @@ import FirmaLoading from '@/components/atoms/globalLoader/firmaLoad';
 import Icons from '@/components/atoms/icons';
 import styled from 'styled-components';
 import { INFTsInfo } from '@/hooks/useNFTContractDetail';
+import { TOOLTIP_ID } from '@/constants/tooltip';
+import { useMeasure } from 'react-use';
 
 const Container = styled.div`
     width: 100%;
@@ -20,14 +22,15 @@ const Container = styled.div`
     align-self: stretch;
 `;
 
-const TableContainer = styled.div`
+const TableContainer = styled.div<{ $max?: boolean }>`
     width: 100%;
     min-height: 244px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-columns: repeat(${({ $max }) => ($max ? '10' : 'auto-fill')}, minmax(80px, 1fr));
     justify-items: center;
-    // grid-template-columns: repeat(10, minmax(80px, 1fr));
     gap: 16px;
+
+    // grid-template-columns: repeat(10, minmax(80px, 1fr));
 
     // @media only screen and (max-width: 1750px) {
     //     grid-template-columns: repeat(8, minmax(80px, 1fr));
@@ -158,6 +161,8 @@ const NFTsTable = ({
     clearListData,
     setCurrentPage
 }: IProps) => {
+    const [ref, { width }] = useMeasure();
+
     const network = useSelector((state: rootState) => state.global.network);
     const { fetchNFTImage } = useCW721NFTListContext();
 
@@ -298,7 +303,7 @@ const NFTsTable = ({
     }, []);
 
     return (
-        <Container>
+        <Container ref={ref}>
             {isLoading === true && (
                 <LoadingBox>
                     <FirmaLoading size={'40px'} />
@@ -309,12 +314,20 @@ const NFTsTable = ({
                     {NFTIds.length === 0 ? (
                         <EmptyNFTsTypo>{'There is no data'}</EmptyNFTsTypo>
                     ) : (
-                        <TableContainer>
+                        <TableContainer $max={width >= 1070}>
                             {pageItems.map((nft) => {
                                 return (
                                     <NFTItemBox key={nft.tokenId}>
                                         <NFTImg src={nft.image} alt={`${contractAddress}-${nft}`} />
-                                        <NFTTokenIdTypo>{nft.tokenId}</NFTTokenIdTypo>
+                                        <NFTTokenIdTypo
+                                            className="clamp-single-line"
+                                            data-tooltip-content={nft.tokenId.length > 7 ? nft.tokenId : ''}
+                                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                                            data-tooltip-wrapper="span"
+                                            data-tooltip-place="bottom"
+                                        >
+                                            {nft.tokenId}
+                                        </NFTTokenIdTypo>
                                     </NFTItemBox>
                                 );
                             })}

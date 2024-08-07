@@ -184,6 +184,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 regex={regex}
                 disabled={disabled}
                 hideErrorMessage={hideErrorMessage}
+                inputId={formId}
             />
         </div>
     );

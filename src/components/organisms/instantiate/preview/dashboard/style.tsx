@@ -109,6 +109,6 @@ export const ExecutePreviewOverlayScroll = styled(OverlayScrollbarsComponent)`
     }
 
     .os-scrollbar-vertical {
-        padding: 28px 6px;
+        padding: 24px 6px;
     }
 `;

@@ -1,10 +1,10 @@
-import { useId, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 import { IC_CALENDAR } from '../icons/pngIcons';
 import { DEFAULT_INPUT_REGEX, FLOAT_NUMBER, INT_NUMBERS } from '@/constants/regex';
 import { compareStringNumbers } from '@/utils/balance';
-// import useFormStore from '@/store/formStore';
+import useFormStore from '@/store/formStore';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -170,38 +170,46 @@ const VariableInput = ({
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
 
-        if (inputValue.length > 0) {
-            if (type === 'number') {
-                inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
+        try {
+            if (inputValue.length > 0) {
+                if (type === 'number') {
+                    inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
 
-                if (inputValue.length > 0 && inputValue.split('').every((one) => one === '0')) inputValue = '0';
+                    if (inputValue.length > 0 && inputValue.split('').every((one) => one === '0')) inputValue = '0';
 
-                const firstDotIndex = inputValue.indexOf('.');
-                if (firstDotIndex !== -1) {
-                    inputValue = inputValue.substring(0, firstDotIndex + 1) + inputValue.substring(firstDotIndex + 1).replace(/\./g, '');
+                    const firstDotIndex = inputValue.indexOf('.');
+                    if (firstDotIndex !== -1) {
+                        inputValue =
+                            inputValue.substring(0, firstDotIndex + 1) + inputValue.substring(firstDotIndex + 1).replace(/\./g, '');
+                    }
+
+                    if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
+
+                    //? check if value is bigger than max-value (if maxValue is provided)
+
+                    if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
+                        throw new Error('OUT_OF_RANGE');
+                    }
+                    // inputValue = checkMaxValue(inputValue, maxValue);
+                    // inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
+                } else {
+                    //? Filter input string if valid regex provided
+                    if (regex) inputValue = inputValue.replace(regex, '');
+
+                    //? Slice remaining string if maxLength provided
+                    if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);
                 }
-
-                if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
-
-                //? check if value is bigger than max-value (if maxValue is provided)
-
-                if (typeof maxValue === 'string') inputValue = checkMaxValue(inputValue, maxValue);
-                // inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
-            } else {
-                //? Filter input string if valid regex provided
-                // console.log(inputValue);
-                if (regex) {
-                    // console.log('REGEX', regex);
-                    inputValue = inputValue.replace(regex, '');
-                    // console.log('inputValue', inputValue);
-                }
-
-                //? Slice remaining string if maxLength provided
-                if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);
             }
-        }
 
-        onChange(inputValue);
+            onChange(inputValue);
+        } catch (error) {
+        } finally {
+            // if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
+            //     setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds valid range.' });
+            // } else {
+            //     clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
+            // }
+        }
 
         // if (type === 'string') {
         //     //! if user input is not same with end-value
@@ -220,6 +228,7 @@ const VariableInput = ({
     };
 
     const _onBlur = () => {
+        // clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
         // clearFormError({ id: inputId, type: 'INVALID_TYPO' });
         // clearFormError({ id: inputId, type: 'MAX_LENGTH' });
 
