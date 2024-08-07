@@ -12,6 +12,9 @@ const MyContractList = () => {
     const { getCW721ContractInfo } = useMyNFTContracts();
     const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW721NFTContractsContext()
 
+
+    console.log(contracts);
+    
     const [pageItems, setPageItems] = useState<IContractInfo[]>([]);
     const [rowsPerPage, setRowsPerPage] = useState<number>(6);
 

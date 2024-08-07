@@ -52,6 +52,7 @@ const useMyNFTContracts = () => {
             const ownershipDatas = await Promise.all(ownershipDataPromises);
 
             const myContracts = ownershipDatas
+                .filter((ownershipData) => ownershipData.ownershipInfo.owner !== null)
                 .filter((ownershipData) => ownershipData.ownershipInfo.owner === address)
                 .map((ownershipData) => ownershipData.contract);
             // const myContracts = contractInfos

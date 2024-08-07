@@ -50,6 +50,7 @@ export const QrCodeWrap = styled.div`
 
 export const ModalContentWarningCard = styled.div`
     display: flex;
+    flex-direction: column;
     padding: 16px 20px;
     justify-content: center;
     border-radius: 8px;
@@ -75,6 +76,7 @@ export const ModalContentWarningDesc = styled.div`
     font-weight: 500;
     line-height: 20px;
     white-space: pre-wrap;
+    text-align: center;
 `;
 
 export const ModalContentBlackCard = styled.div`

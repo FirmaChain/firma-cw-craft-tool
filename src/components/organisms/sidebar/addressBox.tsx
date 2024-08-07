@@ -99,6 +99,26 @@ const DisconnectBtn = styled(IconButton)`
     }
 `;
 
+const BalanceTitleTypo = styled.div`
+    color: var(--Gray-650, #63f6a5);
+    text-align: center;
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 12px;
+`;
+
+const BalanceAmountTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 12px;
+    padding-right: 2px;
+`;
+
 const AddressBox = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
     const { cwMode } = useSelector((state: rootState) => state.global);

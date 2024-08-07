@@ -79,7 +79,7 @@ const Sidebar = () => {
                     navigate(`/execute`);
                 } else if (location.pathname.includes('search')) {
                     navigate(`/search`);
-                } else if (location.pathname.includes('mytoken')) {
+                } else if (location.pathname.includes('mynft')) {
                     navigate(`/mytoken`);
                 }
                 break;
@@ -91,7 +91,7 @@ const Sidebar = () => {
                     navigate(`/cw721/execute`);
                 } else if (location.pathname.includes('search')) {
                     navigate(`/cw721/search`);
-                } else if (location.pathname.includes('mynft')) {
+                } else if (location.pathname.includes('mytoken')) {
                     navigate(`/cw721/mynft`);
                 }
                 break;

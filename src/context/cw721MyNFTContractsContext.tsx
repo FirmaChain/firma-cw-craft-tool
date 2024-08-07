@@ -44,12 +44,12 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     const addContracts = (newContracts: string[]) => {
-        if (contracts === null) {
+        if (contracts === null || newContracts.length < contracts.length) {
             setContracts(newContracts.map(address => ({ contractAddress: address })))
         } else {
             const uniqueNewContracts = newContracts.filter(contract => !contracts.some(c => c.contractAddress === contract));
             setContracts(prevContracts => [
-                ...prevContracts,
+                ...(Array.isArray(prevContracts) ? prevContracts : []),
                 ...uniqueNewContracts.map(address => ({ contractAddress: address }))
             ]);
         }

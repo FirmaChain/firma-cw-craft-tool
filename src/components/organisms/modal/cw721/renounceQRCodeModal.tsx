@@ -164,7 +164,7 @@ const RenounceQRCodeModal = ({
                             <ModalContentWarningTypo>{"Warning: "}</ModalContentWarningTypo>
                             <ModalContentWarningDesc>
                                 {
-                                    "If you renounce ownership of the NFT contract, it cannot be reverted to the previous state."
+                                    "If you renounce ownership of the NFT contract,\nit cannot be reverted to the previous state."
                                 }
                             </ModalContentWarningDesc>
                         </ModalContentWarningCard>
@@ -228,7 +228,7 @@ const RenounceQRCodeModal = ({
                         </ResultsConfirmButton>
                         <ResultsGoToMyMintetedTokenButton
                             onClick={() => {
-                                navigate(`/mytoken/detail/${params.contract}`);
+                                navigate(`/cw721/mynft/detail/${params.contract}`);
                                 onCloseModal();
                             }}
                         >
