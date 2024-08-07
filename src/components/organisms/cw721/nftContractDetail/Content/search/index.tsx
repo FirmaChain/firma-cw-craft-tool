@@ -21,6 +21,26 @@ import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import { parseExpires } from '@/utils/common';
 import { INT_NUMBERS } from '@/constants/regex';
+import styled from 'styled-components';
+import GreenButton from '@/components/atoms/buttons/greenButton';
+
+const WalletSearcBtn = styled(GreenButton)`
+    min-width: unset;
+    width: 168px;
+    height: 40px;
+`;
+
+const SearchTypo = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-550, #444)' : 'var(--Gray-100, #121212)')};
+    text-align: center;
+
+    /* Body/Body2 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 142.857% */
+`;
 
 const columns: IColumn[] = [
     {
@@ -63,9 +83,9 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
-                <SearchButton $disabled={disableSearch}>{'Search'}</SearchButton>
-            </IconButton>
+            <WalletSearcBtn disabled={disableSearch} onClick={onClickSearch}>
+                <SearchTypo $disabled={disableSearch}>Search</SearchTypo>
+            </WalletSearcBtn>
         </div>
     );
 };

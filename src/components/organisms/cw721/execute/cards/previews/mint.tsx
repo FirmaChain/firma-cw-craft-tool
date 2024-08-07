@@ -37,10 +37,12 @@ const ContentBox = styled.div`
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    // border-radius: 24px;
-    // border: 1px solid var(--Gray-550, #444);
+
     gap: 24px;
-    // overflow: scroll;
+
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
 `;
 
 const TokenInfoWrap = styled.div`
@@ -54,6 +56,7 @@ const TokenTitleWrap = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow: hidden;
 `;
 
 const TokenInfoLeft = styled.div`
@@ -107,8 +110,8 @@ const WalletListWrap = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
-    border-radius: 12px;
-    background: var(--Gray-150, #141414);
+    // border-radius: 12px;
+    // background: var(--Gray-150, #141414);
 `;
 
 const WalletLeftItemWrap = styled.div`
@@ -175,6 +178,13 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const ScrollbarContainer = styled.div`
+    border-radius: 12px;
+    display: flex;
+    background: var(--Gray-150, #141414);
+    overflow: hidden;
 `;
 
 // const PRESET_BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT';
@@ -294,22 +304,22 @@ const MintPreview = () => {
 
     return (
         <Container>
-            <ContentScrollWrap>
-                <ExecutePreviewOverlayScroll defer>
-                    <ContentBox>
-                        <TokenTitleWrap>
-                            <TokenInfoWrap>
-                                <TokenInfoLeft>
-                                    <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
-                                    <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
-                                </TokenInfoLeft>
-                                <TokenInfoRightWrap>
-                                    <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
-                                    <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
-                                    <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                                </TokenInfoRightWrap>
-                            </TokenInfoWrap>
-                            {isOpen && (
+            <ContentBox>
+                <TokenTitleWrap>
+                    <TokenInfoWrap>
+                        <TokenInfoLeft>
+                            <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
+                            <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
+                        </TokenInfoLeft>
+                        <TokenInfoRightWrap>
+                            <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
+                            <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                        </TokenInfoRightWrap>
+                    </TokenInfoWrap>
+                    {isOpen && (
+                        <ScrollbarContainer>
+                            <ExecutePreviewOverlayScroll defer>
                                 <WalletListWrap>
                                     <WalletLeftItemWrap>
                                         <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
@@ -332,30 +342,31 @@ const MintPreview = () => {
                                         ))}
                                     </WalletItemWrap>
                                 </WalletListWrap>
-                            )}
-                        </TokenTitleWrap>
-                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                        <TokenInfoWrap>
-                            <TokenInfoLeft>
-                                <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                                    <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
-                                    <IconTooltip
-                                        size="14px"
-                                        tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
-                                    />
-                                </div>
-                            </TokenInfoLeft>
-                            <TokenInfoRightWrap>
-                                <TotalSupplyWrap>
-                                    <TotalSupplyAmount>{willTotalSupply}</TotalSupplyAmount>
-                                    <TotalSupplySymbol>NFT</TotalSupplySymbol>
-                                </TotalSupplyWrap>
-                            </TokenInfoRightWrap>
-                        </TokenInfoWrap>
-                    </ContentBox>
-                </ExecutePreviewOverlayScroll>
-            </ContentScrollWrap>
+                            </ExecutePreviewOverlayScroll>
+                        </ScrollbarContainer>
+                    )}
+                </TokenTitleWrap>
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                <TokenInfoWrap>
+                    <TokenInfoLeft>
+                        <TokenInfoIcon src={IC_COIN_STACK2} alt={'Mint Execute Subtitle Icon'} />
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <TokenInfoSubTitleTypo>Total Supply</TokenInfoSubTitleTypo>
+                            <IconTooltip
+                                size="14px"
+                                tooltip={`Total Supply is the sum of the existing Total\nSupply and the newly minted amount.`}
+                            />
+                        </div>
+                    </TokenInfoLeft>
+                    <TokenInfoRightWrap>
+                        <TotalSupplyWrap>
+                            <TotalSupplyAmount>{willTotalSupply}</TotalSupplyAmount>
+                            <TotalSupplySymbol>NFT</TotalSupplySymbol>
+                        </TotalSupplyWrap>
+                    </TokenInfoRightWrap>
+                </TokenInfoWrap>
+            </ContentBox>
+
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickMint}>
                     <div className="button-text">Mint</div>

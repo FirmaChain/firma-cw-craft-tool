@@ -39,10 +39,12 @@ const ContentBox = styled.div`
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    // border-radius: 24px;
-    // border: 1px solid var(--Gray-550, #444);
+
     gap: 24px;
-    // overflow: scroll;
+
+    border-radius: 24px;
+    border: 1px solid var(--Gray-550, #444);
+    overflow: hidden;
 `;
 
 const ItemWrap = styled.div`
@@ -182,6 +184,13 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
+const ScrollbarContainer = styled.div`
+    border-radius: 12px;
+    display: flex;
+    background: var(--Gray-150, #141414);
+    overflow: hidden;
+`;
+
 const TransferPreview = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
 
@@ -314,21 +323,21 @@ const TransferPreview = () => {
 
     return (
         <Container>
-            <ContentScrollWrap>
-                <ExecutePreviewOverlayScroll defer>
-                    <ContentBox>
-                        <ItemWrap>
-                            <ItemLabelWrap>
-                                <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
-                                <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
-                            </ItemLabelWrap>
-                            <ItemAmountWrap>
-                                <ItemAmountTypo>{transferIds.length}</ItemAmountTypo>
-                                <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
-                                <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                            </ItemAmountWrap>
-                        </ItemWrap>
-                        {isOpen && (
+            <ContentBox>
+                <ItemWrap>
+                    <ItemLabelWrap>
+                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                        <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
+                    </ItemLabelWrap>
+                    <ItemAmountWrap>
+                        <ItemAmountTypo>{transferIds.length}</ItemAmountTypo>
+                        <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
+                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                    </ItemAmountWrap>
+                </ItemWrap>
+                {isOpen && (
+                    <ScrollbarContainer>
+                        <ExecutePreviewOverlayScroll defer>
                             <WalletListWrap>
                                 {transferListForPreview.map((value, index) => (
                                     <WalletItemWrap key={index}>
@@ -345,26 +354,27 @@ const TransferPreview = () => {
                                     </WalletItemWrap>
                                 ))}
                             </WalletListWrap>
-                        )}
-                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                        <ItemWrap>
-                            <ItemLabelWrap>
-                                <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                                    <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                                    <IconTooltip size="14px" />
-                                </div>
-                            </ItemLabelWrap>
-                            <ItemLabelWrap>
-                                <UpdatedBalanceTypo>
-                                    {subtractStringAmount(myNftList.length.toString(), transferIds.length.toString())}
-                                </UpdatedBalanceTypo>
-                                <UpdatedSymbolTypo>NFT</UpdatedSymbolTypo>
-                            </ItemLabelWrap>
-                        </ItemWrap>
-                    </ContentBox>
-                </ExecutePreviewOverlayScroll>
-            </ContentScrollWrap>
+                        </ExecutePreviewOverlayScroll>
+                    </ScrollbarContainer>
+                )}
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                <ItemWrap>
+                    <ItemLabelWrap>
+                        <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                            <IconTooltip size="14px" />
+                        </div>
+                    </ItemLabelWrap>
+                    <ItemLabelWrap>
+                        <UpdatedBalanceTypo>
+                            {subtractStringAmount(myNftList.length.toString(), transferIds.length.toString())}
+                        </UpdatedBalanceTypo>
+                        <UpdatedSymbolTypo>NFT</UpdatedSymbolTypo>
+                    </ItemLabelWrap>
+                </ItemWrap>
+            </ContentBox>
+
             <ButtonWrap>
                 <GreenButton disabled={!enableButton} onClick={onClickTransfer}>
                     <div className="button-text">Transfer</div>

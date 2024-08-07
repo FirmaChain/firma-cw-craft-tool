@@ -27,28 +27,22 @@ import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 
-// const WalletSearcBtn = styled(GreenButton)`
-//     min-width: unset;
-//     width: 168px;
-//     height: 40px;
-// `;
-
-export const SearchButton = styled.div<({ $disabled: boolean }) >`
-    display: flex;
+const WalletSearcBtn = styled(GreenButton)`
+    min-width: unset;
     width: 168px;
-    padding: 10px 24px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 8px;
-    background: ${({ $disabled }) => $disabled ? `#707070` : `var(--Green-500, #02E191)`};
-    color: ${({ $disabled }) => $disabled ? `#444` : `var(--Green-500, #121212)`};
+    height: 40px;
+`;
+
+const SearchTypo = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? 'var(--Gray-550, #444)' : 'var(--Gray-100, #121212)')};
     text-align: center;
-    font-family: "General Sans Variable";
+
+    /* Body/Body2 - Bd */
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
-    line-height: 20px;
+    line-height: 20px; /* 142.857% */
 `;
 
 const EndAdornment = ({
@@ -72,15 +66,9 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
-                <SearchButton $disabled={disableSearch}>{'Search'}</SearchButton>
-            </IconButton>
-
-            {/* <WalletSearcBtn disabled={_disableSearch} onClick={onClickSearch}>
-                <div className="button-typo" style={{ fontSize: '14px', color: '#444' }}>
-                    Search
-                </div>
-            </WalletSearcBtn> */}
+            <WalletSearcBtn disabled={_disableSearch} onClick={onClickSearch}>
+                <SearchTypo $disabled={_disableSearch}>Search</SearchTypo>
+            </WalletSearcBtn>
         </div>
     );
 };
