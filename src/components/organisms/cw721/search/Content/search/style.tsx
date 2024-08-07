@@ -47,7 +47,7 @@ export const SearchButton = styled.div<({ $disabled: boolean }) >`
     font-style: normal;
     font-weight: 600;
     line-height: 20px;
-`
+`;
 
 export const SpecificItem = styled.div`
     display: flex;

@@ -27,10 +27,28 @@ import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 
-const WalletSearcBtn = styled(GreenButton)`
-    min-width: unset;
+// const WalletSearcBtn = styled(GreenButton)`
+//     min-width: unset;
+//     width: 168px;
+//     height: 40px;
+// `;
+
+export const SearchButton = styled.div<({ $disabled: boolean }) >`
+    display: flex;
     width: 168px;
-    height: 40px;
+    padding: 10px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    background: ${({ $disabled }) => $disabled ? `#707070` : `var(--Green-500, #02E191)`};
+    color: ${({ $disabled }) => $disabled ? `#444` : `var(--Green-500, #121212)`};
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
 `;
 
 const EndAdornment = ({
@@ -54,11 +72,15 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <WalletSearcBtn disabled={_disableSearch} onClick={onClickSearch}>
-                <div className="button-typo" style={{ fontSize: '14px' }}>
+            <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
+                <SearchButton $disabled={disableSearch}>{'Search'}</SearchButton>
+            </IconButton>
+
+            {/* <WalletSearcBtn disabled={_disableSearch} onClick={onClickSearch}>
+                <div className="button-typo" style={{ fontSize: '14px', color: '#444' }}>
                     Search
                 </div>
-            </WalletSearcBtn>
+            </WalletSearcBtn> */}
         </div>
     );
 };
