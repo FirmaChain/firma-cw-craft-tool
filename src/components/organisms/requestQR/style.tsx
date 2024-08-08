@@ -52,7 +52,7 @@ export const TxTimerTypo = styled.div`
 
 export const TimerWrap = styled.div<{ $isTxModal: boolean }>`
     width: ${({ $isTxModal }) => ($isTxModal === false ? '90px' : '80px')};
-    height: 26px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
