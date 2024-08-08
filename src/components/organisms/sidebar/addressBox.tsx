@@ -186,8 +186,8 @@ const AddressBox = () => {
 
     return (
         <div style={{ position: 'relative' }}>
-            {/* <IconButton style={{ padding: 0 }} onClick={() => setOpen(!open)}> */}
-            <IconButton style={{ padding: 0 }} onClick={onClickAddress}>
+            <IconButton style={{ padding: 0 }} onClick={() => setOpen(!open)}>
+            {/* <IconButton style={{ padding: 0 }} onClick={onClickAddress}> */}
                 <AddressCard>
                     <AddressText>{shortenAddress(address, 8, 6)}</AddressText>
                     <div style={{ display: 'flex' }} onClick={onClickAddress}>
@@ -195,17 +195,17 @@ const AddressBox = () => {
                     </div>
                 </AddressCard>
             </IconButton>
-            {/* {open && ( */}
+            {open && (
                 <BalanceBox>
                     <div className="bg-box" style={{}}>
-                        <BalanceTitleTypo>Balance :</BalanceTitleTypo>
+                        <div className="title">Balance :</div>
                         <div className="balance-box">
                             {balance ? (
-                                <BalanceAmountTypo>{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</BalanceAmountTypo>
+                                <span className="balance">{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</span>
                             ) : (
                                 <Skeleton width="80px" height="14px" />
                             )}
-                            <Icons.FirmaChain width="14px" height="14px" fill="#FFFFFF" />
+                            <Icons.FirmaChain width="10px" height="10px" fill="#FFFFFF" />
                         </div>
                     </div>
 
@@ -215,7 +215,7 @@ const AddressBox = () => {
                         <div className="typo">Disconnect</div>
                     </DisconnectBtn>
                 </BalanceBox>
-            {/* )} */}
+            )} 
         </div>
     );
 };
