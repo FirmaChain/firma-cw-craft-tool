@@ -194,7 +194,7 @@ const ScrollbarContainer = styled.div`
 
 const TransferPreview = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
-
+    const approveInfoById = useCW721ExecuteStore((state) => state.approveInfoById);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -238,8 +238,6 @@ const TransferPreview = () => {
         return result;
     }, [userTransferList]);
 
-    console.log(transferListForPreview);
-
     const transferListForModal = useMemo(() => {
         //? flat provided ids with recipient address
 
@@ -257,7 +255,7 @@ const TransferPreview = () => {
         if (userTransferList.some((oneData) => oneData.recipient === '' || oneData.token_ids.length === 0)) return false;
 
         //! some transfer address same with current user address
-        if (userTransferList.some((v) => v.recipient === userAddress)) return false;
+        // if (userTransferList.some((v) => v.recipient === userAddress)) return false;
 
         //! some trnasfer address is invalid
         if (!userTransferList.some((v) => isValidAddress(v.recipient))) return false;
@@ -272,11 +270,11 @@ const TransferPreview = () => {
         const realTransferIds = Array.from(idsMap.keys());
         if (realTransferIds.length !== realNumber.length) return false;
 
-        //! trnasfer nft ids not owned by user
-        if (!realTransferIds.every((id) => myNftList.includes(id))) return false;
+        //! trnasfer nft ids not owned by user (not owned + not approved)
+        if (realTransferIds.some((id) => !myNftList.includes(id) && !approveInfoById[id])) return false;
 
         return true;
-    }, [myNftList, transferIdsWithEmpty, userAddress, userTransferList]);
+    }, [approveInfoById, myNftList, transferIdsWithEmpty, userTransferList]);
 
     const onClickTransfer = () => {
         const feeAmount = transferListForModal.length * 15000;
@@ -344,9 +342,7 @@ const TransferPreview = () => {
                                     <WalletItemWrap key={index}>
                                         <WalletLeftItemWrap>
                                             <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                            <WalletItemAddressTypo
-                                                $disabled={!value.recipient}
-                                            >
+                                            <WalletItemAddressTypo $disabled={!value.recipient}>
                                                 {value.recipient ? value.recipient : 'Wallet Address'}
                                             </WalletItemAddressTypo>
                                         </WalletLeftItemWrap>

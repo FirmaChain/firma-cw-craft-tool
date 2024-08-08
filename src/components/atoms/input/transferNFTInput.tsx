@@ -3,12 +3,12 @@ import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
-import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
-import { isValidAddress } from '@/utils/common';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
+// import { isValidAddress } from '@/utils/common';
+// import { useSelector } from 'react-redux';
+// import { rootState } from '@/redux/reducers';
 import { IExecuteTransfer } from '@/interfaces/cw721';
-import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
 import { NUMBERS_WITH_COMMA, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 interface IProps {
@@ -47,34 +47,33 @@ const TransferNFTInput = ({
     disabled,
     allList
 }: IProps) => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const nftList = useCW721ExecuteStore((v) => v.myNftList);
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const nftList = useCW721ExecuteStore((v) => v.myNftList);
     const id = inputId;
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const checkAddressValid = (value: string) => {
-        if (value) {
-            if (!isValidAddress(value)) {
-                setFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
-                return;
-            } else {
-                clearFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS' });
-            }
-
-            if (address.toLowerCase() === value.toLowerCase()) {
-                setFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF', message: 'Cannot transfer to my wallet address.' });
-            } else {
-                clearFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF' });
-            }
-        } else {
-            clearFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS' });
-            clearFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF' });
-        }
-    };
+    // const checkAddressValid = (value: string) => {
+    //     if (value) {
+    //         if (!isValidAddress(value)) {
+    //             setFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+    //             return;
+    //         } else {
+    //             clearFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS' });
+    //         }
+    //         if (address.toLowerCase() === value.toLowerCase()) {
+    //             setFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF', message: 'Cannot transfer to my wallet address.' });
+    //         } else {
+    //             clearFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF' });
+    //         }
+    //     } else {
+    //         clearFormError({ id: `${id}_${leftTitle}`, type: 'INVALID_ADDRESS' });
+    //         clearFormError({ id: `${id}_${leftTitle}`, type: 'NO_NOT_SEND_TO_SELF' });
+    //     }
+    // };
 
     const handleAddress = (value: string) => {
-        checkAddressValid(value);
+        // checkAddressValid(value);
 
         onChangeLeft(value);
     };
@@ -95,75 +94,75 @@ const TransferNFTInput = ({
 
     const disableRemoveBtn = allList.length <= 1;
 
-    const allTokenIdsExceptThis = useMemo(() => {
-        const ids = allList
-            .filter((info) => info.id !== id)
-            .map((v) => v.token_ids)
-            .flat(1);
+    // const allTokenIdsExceptThis = useMemo(() => {
+    //     const ids = allList
+    //         .filter((info) => info.id !== id)
+    //         .map((v) => v.token_ids)
+    //         .flat(1);
 
-        const idsMap = new Map();
-        ids.map((id) => {
-            if (id !== '') {
-                const parsedId = BigInt(id).toString();
+    //     const idsMap = new Map();
+    //     ids.map((id) => {
+    //         if (id !== '') {
+    //             const parsedId = BigInt(id).toString();
 
-                idsMap.set(parsedId, parsedId);
-            }
-        });
+    //             idsMap.set(parsedId, parsedId);
+    //         }
+    //     });
 
-        return Array.from(idsMap.keys());
-    }, [allList, id]);
+    //     return Array.from(idsMap.keys());
+    // }, [allList, id]);
 
-    const thisTokenIdList = useMemo(() => {
-        const ids = rightValue.split(',').filter((id) => id !== '');
+    // const thisTokenIdList = useMemo(() => {
+    //     const ids = rightValue.split(',').filter((id) => id !== '');
 
-        const idsMap = new Map();
-        ids.map((id) => {
-            if (id !== '') {
-                const parsedId = BigInt(id).toString();
+    //     const idsMap = new Map();
+    //     ids.map((id) => {
+    //         if (id !== '') {
+    //             const parsedId = BigInt(id).toString();
 
-                idsMap.set(parsedId, parsedId);
-            }
-        });
+    //             idsMap.set(parsedId, parsedId);
+    //         }
+    //     });
 
-        return Array.from(idsMap.keys());
-    }, [rightValue]);
+    //     return Array.from(idsMap.keys());
+    // }, [rightValue]);
 
-    const checkInput = () => {
-        if (thisTokenIdList.length > 0) {
-            //! If user tried to add id that does not own
-            if (!thisTokenIdList.every((inputId) => nftList.includes(inputId))) {
-                setFormError({ id: `${id}_${rightTitle}`, type: 'INVALID_ID', message: `Contains an NFT ID that you don't own.` });
-                return;
-            } else {
-                clearFormError({ id: `${id}_${rightTitle}`, type: 'INVALID_ID' });
-            }
+    // const checkInput = () => {
+    //     if (thisTokenIdList.length > 0) {
+    //         //! If user tried to add id that does not own
+    //         // if (!thisTokenIdList.every((inputId) => nftList.includes(inputId))) {
+    //         //     setFormError({ id: `${id}_${rightTitle}`, type: 'INVALID_ID', message: `Contains an NFT ID that you don't own.` });
+    //         //     return;
+    //         // } else {
+    //         //     clearFormError({ id: `${id}_${rightTitle}`, type: 'INVALID_ID' });
+    //         // }
 
-            //! if NFT ids in this form is duplicated
-            const splited = rightValue.split(',').filter((v) => v !== '');
+    //         //! if NFT ids in this form is duplicated
+    //         const splited = rightValue.split(',').filter((v) => v !== '');
 
-            if (splited.length !== thisTokenIdList.length) {
-                setFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID', message: `Duplicated NFT id encluded.` });
-                return;
-            } else {
-                clearFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID' });
-            }
+    //         if (splited.length !== thisTokenIdList.length) {
+    //             setFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID', message: `Duplicated NFT id encluded.` });
+    //             return;
+    //         } else {
+    //             clearFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID' });
+    //         }
 
-            //! if NFT ids from other form is dupliacted
-            if (allTokenIdsExceptThis.some((outerId) => thisTokenIdList.includes(outerId))) {
-                setFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID', message: `Duplicated NFT id encluded.` });
-                return;
-            } else {
-                clearFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID' });
-            }
-        } else {
-            clearFormError({ id: `${id}_${rightTitle}`, type: 'INVALID_ID' });
-            clearFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID' });
-        }
-    };
+    //         //! if NFT ids from other form is dupliacted
+    //         if (allTokenIdsExceptThis.some((outerId) => thisTokenIdList.includes(outerId))) {
+    //             setFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID', message: `Duplicated NFT id encluded.` });
+    //             return;
+    //         } else {
+    //             clearFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID' });
+    //         }
+    //     } else {
+    //         clearFormError({ id: `${id}_${rightTitle}`, type: 'INVALID_ID' });
+    //         clearFormError({ id: `${id}_${rightTitle}`, type: 'DUPLICATED_ID' });
+    //     }
+    // };
 
-    useEffect(() => {
-        checkInput();
-    }, [allTokenIdsExceptThis, thisTokenIdList]);
+    // useEffect(() => {
+    //     checkInput();
+    // }, [allTokenIdsExceptThis, thisTokenIdList]);
 
     return (
         <div style={{ display: 'flex', width: '100%', flexDirection: 'row', gap: '12px' }}>
@@ -196,7 +195,6 @@ const TransferNFTInput = ({
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                         width: '100%',
-
                         gap: '8px'
                     }}
                 >
@@ -215,12 +213,12 @@ const TransferNFTInput = ({
             <div
                 style={{
                     display: 'flex',
-                    height: '100%',
+                    // height: '100%',
                     flexDirection: 'column',
                     alignItems: 'flex-start',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-start',
                     gap: '4px',
-                    padding: '28px 0 16px'
+                    paddingTop: '48px'
                 }}
             >
                 <div

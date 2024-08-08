@@ -3,9 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { v4 } from 'uuid';
 import { ContractInfo, Cw721Approval, Cw721ContractInfo, Cw721Expires, Cw721NftInfo } from '@firmachain/firma-js';
 
-import {
-    IExecuteTransfer
-} from '@/interfaces/cw721';
+import { IExecuteTransfer } from '@/interfaces/cw721';
 import { IMenuItem } from '@/interfaces/common';
 
 interface CwOwnershipInfo {
@@ -49,13 +47,14 @@ interface FormProps {
     mintBaseURI: string;
     mintStartTokenId: string;
     mintEndTokenId: string;
-    mintList: { token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }[];
+    mintList: { token_id: string; token_uri: string; id: string; isAlreadyMint: boolean }[];
     alreadyMintList: string[];
     notYetMintList: string[];
     // BURN
     burnList: string;
     // TRANSFER
     transfer: IExecuteTransfer[];
+    approveInfoById: Record<string, boolean>;
     // APPROVE
     approveRecipientAddress: string;
     approveTokenId: string;
@@ -72,13 +71,14 @@ interface FormProps {
     setMintBaseURI: (v: string) => void;
     setMintStartTokenId: (v: string) => void;
     setMintEndTokenId: (v: string) => void;
-    setMintList: (v: { token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }[]) => void;
+    setMintList: (v: { token_id: string; token_uri: string; id: string; isAlreadyMint: boolean }[]) => void;
     setAlreadyMintList: (v: string[]) => void;
     setNotYetMintList: (v: string[]) => void;
     // BURN
     setBurnList: (v: string) => void;
     // TRANSFER
     setTransfer: (v: IExecuteTransfer[]) => void;
+    setApproveInfoById: (v: Record<string, boolean>) => void;
     // APPROVE
     setApproveRecipientAddress: (v: string) => void;
     setApproveTokenId: (v: string) => void;
@@ -118,7 +118,9 @@ const INIT_NFT_CONTRACT_INFO: Cw721ContractInfo = { name: '', symbol: '' };
 const INIT_OWNERSHIP_INFO: CwOwnershipInfo = { owner: '', pending_owner: '', pending_expiry: { at_height: 0 } };
 const INIT_MINTER_INFO: string = '';
 const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
-const INIT_MINT_LIST: { token_id: string, token_uri: string, id: string, isAlreadyMint: boolean }[] = [{ token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }];
+const INIT_MINT_LIST: { token_id: string; token_uri: string; id: string; isAlreadyMint: boolean }[] = [
+    { token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }
+];
 const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
 const INIT_NFT_APPROVAL: Cw721Approval = { spender: '', expires: { at_height: 0 } };
 
@@ -201,6 +203,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         burnList: '',
         // TRANSFER
         transfer: INIT_TRANSFER,
+        approveInfoById: {},
         // APPROVE
         approveRecipientAddress: '',
         approveTokenId: '',
@@ -257,6 +260,10 @@ const useCW721ExecuteStore = create<FormProps>()(
             set((state) => {
                 state.transfer = data;
             }),
+        setApproveInfoById: (data) =>
+            set((state) => {
+                state.approveInfoById = data;
+            }),
         // APPROVE
         setApproveRecipientAddress: (data) =>
             set((state) => {
@@ -298,12 +305,12 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.mintStartTokenId = '';
                 state.mintEndTokenId = '';
                 state.mintList = INIT_MINT_LIST;
-            })
+            });
         },
         clearSelectMenu: () => {
             set((state) => {
                 state.selectMenu = INIT_SELECT_MENU;
-            })
+            });
         },
         clearMintForm: () => {
             set((state) => {
@@ -315,18 +322,19 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.nftDatas = [];
                 state.alreadyMintList = [];
                 state.notYetMintList = [];
-            })
+            });
         },
         clearBurnForm: () => {
             set((state) => {
                 state.burnList = '';
                 state.nftDatas = [];
-            })
+            });
         },
         clearTransferForm: () => {
             set((state) => {
                 state.transfer = INIT_TRANSFER;
-            })
+                state.approveInfoById = {};
+            });
         },
         clearApproveForm: () => {
             set((state) => {
@@ -334,14 +342,14 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.approveTokenId = '';
                 state.approveType = 'Height';
                 state.approveValue = '';
-            })
+            });
         },
         clearRevokeForm: () => {
             set((state) => {
                 state.revokeAddress = '';
                 state.revokeTokenId = '';
-            })
-        },
+            });
+        }
     }))
 );
 

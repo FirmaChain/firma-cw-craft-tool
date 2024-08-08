@@ -123,19 +123,33 @@ interface InputProps {
     inputId?: string;
 }
 
-const checkMaxValue = (currentInput: string, maxInput: string): string => {
+// const checkMaxValue = (currentInput: string, maxInput: string): string => {
+//     const [currentIntegerPart, currentDecimalPart] = currentInput.split('.');
+//     const [maxIntegerPart, maxDecimalPart] = maxInput.split('.');
+
+//     const currentInteger = BigInt(currentIntegerPart);
+//     const maxInteger = BigInt(maxIntegerPart);
+
+//     const newInt = currentInteger > maxInteger ? maxInteger : currentInteger;
+
+//     if (typeof currentDecimalPart === 'string') {
+//         return `${newInt.toString()}.${currentDecimalPart}`;
+//     } else {
+//         return newInt.toString();
+//     }
+// };
+
+const parseValue = (currentInput: string): string => {
     const [currentIntegerPart, currentDecimalPart] = currentInput.split('.');
-    const [maxIntegerPart, maxDecimalPart] = maxInput.split('.');
 
-    const currentInteger = BigInt(currentIntegerPart);
-    const maxInteger = BigInt(maxIntegerPart);
+    if (currentIntegerPart === '' || currentIntegerPart === '.') return currentInput;
 
-    const newInt = currentInteger > maxInteger ? maxInteger : currentInteger;
+    const ParsedInt = BigInt(currentIntegerPart).toString();
 
     if (typeof currentDecimalPart === 'string') {
-        return `${newInt.toString()}.${currentDecimalPart}`;
+        return `${ParsedInt}.${currentDecimalPart}`;
     } else {
-        return newInt.toString();
+        return ParsedInt.toString();
     }
 };
 
@@ -189,6 +203,8 @@ const VariableInput = ({
 
                     if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
                         throw new Error('OUT_OF_RANGE');
+                    } else {
+                        inputValue = parseValue(inputValue);
                     }
                     // inputValue = checkMaxValue(inputValue, maxValue);
                     // inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
