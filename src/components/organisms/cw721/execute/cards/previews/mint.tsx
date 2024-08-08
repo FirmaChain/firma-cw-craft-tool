@@ -13,6 +13,7 @@ import { isValidAddress } from '@/utils/address';
 import useFormStore from '@/store/formStore';
 import { shortenAddress } from '@/utils/common';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -324,7 +325,7 @@ const MintPreview = () => {
                                     <WalletLeftItemWrap>
                                         <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
                                         <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
-                                            {mintRecipientAddress === '' ? 'Wallet Address' : shortenAddress(mintRecipientAddress, 12, 12)}
+                                            {mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
                                         </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
                                     <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
@@ -335,6 +336,10 @@ const MintPreview = () => {
                                                 <WalletItemAddressTypo
                                                     className="clamp-single-line"
                                                     $disabled={mintList[0].token_uri === ''}
+                                                    data-tooltip-content={value.token_uri.length >= 30 ? value.token_uri : ''}
+                                                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                                                    data-tooltip-wrapper="span"
+                                                    data-tooltip-place="bottom"
                                                 >
                                                     {value.token_uri || 'NFT Url'}
                                                 </WalletItemAddressTypo>

@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -343,8 +344,10 @@ const TransferPreview = () => {
                                     <WalletItemWrap key={index}>
                                         <WalletLeftItemWrap>
                                             <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                            <WalletItemAddressTypo $disabled={!value.recipient}>
-                                                {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                            <WalletItemAddressTypo
+                                                $disabled={!value.recipient}
+                                            >
+                                                {value.recipient ? value.recipient : 'Wallet Address'}
                                             </WalletItemAddressTypo>
                                         </WalletLeftItemWrap>
                                         <WalletItemTokenAmount

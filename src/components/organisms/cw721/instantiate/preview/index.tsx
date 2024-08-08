@@ -228,14 +228,23 @@ const Preview = () => {
                         name={'Admin Address'}
                         value={contractMode === 'BASIC' ? address : admin}
                         defaultValue={'Wallet Address'}
+                        tooltip={address.length >= 30 ? address : ''}
                     />
                     <ContentItem
                         imagePath={IC_WALLET}
                         name={'Minter Address'}
                         value={contractMode === 'BASIC' ? address : minter}
                         defaultValue={'Wallet Address'}
+                        tooltip={address.length >= 30 ? address : ''}
                     />
-                    <ContentItem imagePath={IC_TAG} name={'Label'} value={label} isCover defaultValue={'Label'} />
+                    <ContentItem
+                        imagePath={IC_TAG}
+                        name={'Label'}
+                        value={label}
+                        isCover
+                        defaultValue={'Label'}
+                        tooltip={label.length >= 30 ? label : ''}
+                    />
                 </BodyContractInfoWrap>
             </BodyCard>
             <Submit onClickInstantiate={onClickSubmit} disableButton={disableButton} />

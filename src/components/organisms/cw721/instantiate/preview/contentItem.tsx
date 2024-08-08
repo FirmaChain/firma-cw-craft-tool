@@ -1,3 +1,4 @@
+import { TOOLTIP_ID } from '@/constants/tooltip';
 import styled from 'styled-components';
 
 const ItemWrapper = styled.div<{ $isCover?: boolean }>`
@@ -104,9 +105,10 @@ interface IProps {
     value: string;
     isCover?: boolean;
     defaultValue?: string;
+    tooltip?: string;
 }
 
-const ContentItem = ({ imagePath, name, value, isCover = false, defaultValue }: IProps) => {
+const ContentItem = ({ imagePath, name, value, isCover = false, defaultValue, tooltip }: IProps) => {
     console.log('defaultValue', defaultValue);
     console.log('value', value);
     return (
@@ -120,7 +122,14 @@ const ContentItem = ({ imagePath, name, value, isCover = false, defaultValue }: 
                 value === null || value === '' ? (
                     <ItemEmptyValue>{defaultValue}</ItemEmptyValue>
                 ) : (
-                    <ItemValue>{value}</ItemValue>
+                    <ItemValue
+                        data-tooltip-content={tooltip || ''}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                    >
+                        {value}
+                    </ItemValue>
                 )
             ) : value === null || value === '' ? (
                 <ItemEmptyValueCover>
@@ -128,7 +137,14 @@ const ContentItem = ({ imagePath, name, value, isCover = false, defaultValue }: 
                 </ItemEmptyValueCover>
             ) : (
                 <ItemValueCover $visible={value.length > 0}>
-                    <ItemCoverValue>{value}</ItemCoverValue>
+                    <ItemCoverValue
+                        data-tooltip-content={tooltip || ''}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                    >
+                        {value}
+                    </ItemCoverValue>
                 </ItemValueCover>
             )}
         </ItemWrapper>
