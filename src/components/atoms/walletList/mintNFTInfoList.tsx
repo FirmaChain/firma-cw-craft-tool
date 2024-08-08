@@ -23,7 +23,7 @@ interface IMintInfo {
     token_id: string;
     token_uri: string;
     id: string;
-    isAlreadyMint: boolean
+    isAlreadyMint: boolean;
 }
 
 interface IProps {
@@ -78,6 +78,8 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
         });
     };
 
+    const enableDeleteAll = list.length > 1 || list.some((v) => v.token_id !== '' || v.token_uri !== '');
+
     return (
         <WalletListWrapper>
             <WalletListSummery>
@@ -88,7 +90,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                         <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
                     </WalletCountWrapper>
                 </TotalWalletWrapper>
-                <DeleteAllButton disabled={list.length <= 1} $length={list.length} onClick={handleDeleteAll}>
+                <DeleteAllButton disabled={!enableDeleteAll} $length={list.length} onClick={handleDeleteAll}>
                     <span className="button-text">Delete All</span>
                 </DeleteAllButton>
             </WalletListSummery>

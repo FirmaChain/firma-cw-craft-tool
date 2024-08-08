@@ -10,7 +10,7 @@ const DownloadQRButton = styled(IconButton)`
     align-items: center;
     justify-content: center;
     width: 143px;
-    height: 38px;
+    height: 30px;
     border-radius: 32px;
     border: 1px solid var(--Gray-750, #999);
 
@@ -19,9 +19,9 @@ const DownloadQRButton = styled(IconButton)`
 
         /* Body/Body1 - Bd */
         font-family: 'General Sans Variable';
-        font-size: 16px;
+        font-size: 15px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 500;
         line-height: 22px; /* 137.5% */
     }
 `;
@@ -42,9 +42,6 @@ const StationQR = () => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
-            <DownloadQRButton onClick={handleDownload}>
-                <span className="typo">Download QR</span>
-            </DownloadQRButton>
             <div
                 style={{
                     padding: '6px',
@@ -58,6 +55,9 @@ const StationQR = () => {
             >
                 <QRCode value={stationUrl} size={144} quietZone={0} logoImage={IC_FIRMACHAIN_QRCODE} logoWidth={40} logoHeight={40} />
             </div>
+            <DownloadQRButton onClick={handleDownload}>
+                <span className="typo">Download QR</span>
+            </DownloadQRButton>
         </div>
     );
 };
