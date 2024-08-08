@@ -157,6 +157,7 @@ const TokenInfo = () => {
                         >
                             <SpecificValueWrapper>
                                 <SpecificValueTypo>
+                                    {ownedNfts.length}
                                     <span style={{ paddingLeft: 0 }}>{'NFT'}</span>
                                 </SpecificValueTypo>
                             </SpecificValueWrapper>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Icons from '../icons';
 import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
@@ -11,7 +11,7 @@ import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStor
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
-import { getTokenAmountFromUToken } from '@/utils/balance';
+import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 
@@ -65,10 +65,29 @@ const CW20BurnFromInput = ({
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
-    const { getCw20AllowanceBalance } = useExecuteHook();
+    const { getCw20AllowanceBalance, getCw20Balance } = useExecuteHook();
 
-    // const [allowance, setAllowance] = useState('');
-    const allowance = allowanceByAddress[address.toLowerCase()] || '';
+    const [addressCW20Balance, setAddressCW20Balance] = useState<string>("0");
+
+    const availableAmount = useMemo(() => {
+        if (address.toLowerCase() === "") return "0";
+
+        if (allowanceByAddress[address.toLowerCase()] && addressCW20Balance) {
+            console.log("allowanceByAddress[address.toLowerCase()]", allowanceByAddress[address.toLowerCase()]);
+            console.log("addressCW20Balance", addressCW20Balance);
+            const compareStatus = compareStringNumbers(allowanceByAddress[address.toLowerCase()], addressCW20Balance);
+            
+            if (compareStatus === 1) {
+                return addressCW20Balance;
+            } else if (compareStatus === 0) {
+                return addressCW20Balance;
+            } else if (compareStatus === -1) {
+                return allowanceByAddress[address.toLowerCase()];
+            }
+        } else {
+            return "0";
+        }
+    }, [addressCW20Balance, allowanceByAddress]);
 
     const checkValidAddress = (value: string) => {
         if (value === '') {
@@ -133,14 +152,28 @@ const CW20BurnFromInput = ({
             }
         } catch (error) {
             console.log(error);
-            // setAllowance('0');
+        }
+    };
+
+    const getAddressCW20Balance = async () => {
+        try {
+            const { success, balance } = await getCw20Balance(contractAddress, address);
+
+            if (success) {
+                setAddressCW20Balance(balance);
+            }
+        } catch (error) {
+            console.log(error);
+            setAddressCW20Balance("0");
         }
     };
 
     useEffect(() => {
-        // setAllowance('');
-        if (Number(allowance) > 0) handleAmount('');
-        if (isValidAddress(address)) getAllownace();
+        if (Number(availableAmount) > 0) handleAmount('');
+        if (isValidAddress(address)) {
+            getAllownace();
+            getAddressCW20Balance();
+        }
     }, [address]);
 
     return (
@@ -182,19 +215,19 @@ const CW20BurnFromInput = ({
                                 decimal: Number(decimals),
                                 emptyErrorMessage: 'Please input mint amount',
                                 textAlign: 'right',
-                                maxValue: getTokenAmountFromUToken(allowance, decimals.toString())
+                                maxValue: getTokenAmountFromUToken(availableAmount, decimals.toString())
                                 // hideErrorMessage: true
                             }}
                         />
 
                         <UserBalanceTypo
                             className="clamp-single-line"
-                            data-tooltip-content={parseAmountWithDecimal2(allowance, decimals.toString())}
+                            data-tooltip-content={parseAmountWithDecimal2(availableAmount, decimals.toString())}
                             data-tooltip-id={TOOLTIP_ID.COMMON}
                             data-tooltip-wrapper="span"
                             data-tooltip-place="bottom"
                         >
-                            Allowance : {parseAmountWithDecimal2(allowance, decimals.toString(), true)}
+                            Available : {parseAmountWithDecimal2(availableAmount, decimals.toString(), true)}
                         </UserBalanceTypo>
                     </div>
                 </div>

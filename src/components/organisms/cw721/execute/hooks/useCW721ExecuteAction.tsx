@@ -261,6 +261,15 @@ const useCW721ExecuteAction = () => {
         }
     };
 
+    const setAllOperators = async (contractAddress: string, owner: string, isIncludeExpired: boolean, limit: number = 10, start_after: string | null) => {
+        try {
+            const operators = await firmaSDK.Cw721.getAllOperators(contractAddress, owner, isIncludeExpired, limit, start_after);
+            useCW721ExecuteStore.getState().setAllOperators(operators);
+        } catch (error) {
+            console.log('error', error);
+        }
+    };
+    
     return {
         checkContractExist,
         setContractInfo,
@@ -273,7 +282,8 @@ const useCW721ExecuteAction = () => {
         setBlockHeight,
         setNftApprovalInfo,
         setMinter,
-        setNftDatas
+        setNftDatas,
+        setAllOperators
     };
 };
 

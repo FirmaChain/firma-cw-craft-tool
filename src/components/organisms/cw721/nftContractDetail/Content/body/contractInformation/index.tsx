@@ -24,14 +24,24 @@ import { IC_EXPAND } from '@/components/atoms/icons/pngIcons';
 import NFTsTable from '@/components/organisms/cw721/common/nftsTable';
 import { useCW721NFTListContext } from '@/context/cw721NFTListContext';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
+import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext';
 
 const ContractInformation = () => {
     const network = useSelector((state: rootState) => state.global.network);
+    const { address } = useSelector((state: rootState) => state.wallet);
 
-    const { contractDetail, nftsInfo } = useNFTContractDetailStore((state) => state);
-    const { handleCW721NFTIdList } = useNFTContractDetail();
+    const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
+    const { handleCW721NFTIdList, handleCW721OwnedNFTIdList } = useNFTContractDetail();
     const { nfts, addNFTs, updateNFTs, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
-
+    const {
+        nfts: ownedNfts,
+        addNFTs: addOwnedNFTs,
+        updateNFTs: updateOwnedNFTs,
+        clearCW721NFTListData: clearCW721OwnedNFTListData,
+        currentPage: currentOwnedPage,
+        setCurrentPage: setCurrentOwnedPage
+    } = useCW721OwnedNFTListContext();
+    
     const contractAddress = contractDetail?.contractAddress || '';
     const codeId = contractDetail?.codeId || '';
     const contractName = contractDetail?.name || '';
@@ -40,7 +50,16 @@ const ContractInformation = () => {
     const label = contractDetail?.label;
     const totalSupply = nftsInfo?.totalSupply || '0';
 
-    const [expand, setExpand] = useState(true);
+    const handleOwnedNFTIdList = async (contractAddress: string) => {
+        try {
+            handleCW721OwnedNFTIdList(contractAddress, address);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const [expandTotal, setExpandTotal] = useState(true);
+    const [expandOwned, setExpandOwned] = useState(true);
 
     const isBasic = useMemo(() => {
         const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
@@ -92,7 +111,7 @@ const ContractInformation = () => {
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     <SpecificValueBox>
                         <IconButton
-                            onClick={() => setExpand(!expand)}
+                            onClick={() => setExpandTotal(!expandTotal)}
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
                             <SpecificValueWrapper>
@@ -101,9 +120,9 @@ const ContractInformation = () => {
                                     <span>{'NFT'}</span>
                                 </SpecificValueTypo>
                             </SpecificValueWrapper>
-                            <TableExpandButton $expand={expand} src={IC_EXPAND} alt={'expand'} />
+                            <TableExpandButton $expand={expandTotal} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
-                        <NFTTableContainer $expand={expand}>
+                        <NFTTableContainer $expand={expandTotal}>
                             <NFTsTable
                                 codeId={codeId}
                                 contractAddress={contractAddress}
@@ -115,6 +134,37 @@ const ContractInformation = () => {
                                 updateNFTs={updateNFTs}
                                 clearListData={clearCW721NFTListData}
                                 setCurrentPage={setCurrentPage}
+                            />
+                        </NFTTableContainer>
+                    </SpecificValueBox>
+                </SpecificItem>
+                <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
+                    <SpecificLabelTypo>My NFTs</SpecificLabelTypo>
+                    <SpecificValueBox>
+                        <IconButton
+                            onClick={() => setExpandOwned(!expandOwned)}
+                            style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
+                        >
+                            <SpecificValueWrapper>
+                                <SpecificValueTypo>
+                                    {`${ownedNfts.length}`}
+                                    <span>{'NFT'}</span>
+                                </SpecificValueTypo>
+                            </SpecificValueWrapper>
+                            <TableExpandButton $expand={expandOwned} src={IC_EXPAND} alt={'expand'} />
+                        </IconButton>
+                        <NFTTableContainer $expand={expandOwned}>
+                            <NFTsTable
+                                codeId={codeId}
+                                contractAddress={contractAddress}
+                                nftsInfo={ownedNftsInfo}
+                                nfts={ownedNfts}
+                                currentPage={currentOwnedPage}
+                                handleNFTIdList={handleOwnedNFTIdList}
+                                addNFTs={addOwnedNFTs}
+                                updateNFTs={updateOwnedNFTs}
+                                clearListData={clearCW721OwnedNFTListData}
+                                setCurrentPage={setCurrentOwnedPage}
                             />
                         </NFTTableContainer>
                     </SpecificValueBox>
