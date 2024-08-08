@@ -20,6 +20,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { addStringAmountsArray, getTokenAmountFromUToken } from '@/utils/balance';
 import commaNumber from 'comma-number';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const CloseBtnBox = styled.div`
     display: flex;
@@ -712,7 +713,14 @@ const InstantitateModal = ({
                             <div className="row">
                                 <div className="row-key">CW20 Contract Address</div>
                                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-                                    <div className="normal-typo pointer" onClick={openContractAddress}>
+                                    <div
+                                        className="normal-typo pointer"
+                                        data-tooltip-content={parsedData.contractAddress.length >= 30 ? parsedData.contractAddress : ''}
+                                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                                        data-tooltip-wrapper="span"
+                                        data-tooltip-place="bottom"
+                                        onClick={openContractAddress}
+                                    >
                                         {shortenAddress(parsedData.contractAddress, 12, 12)}
                                     </div>
                                     <CopyIconButton text={parsedData.contractAddress} width={'16px'} height={'16px'} />

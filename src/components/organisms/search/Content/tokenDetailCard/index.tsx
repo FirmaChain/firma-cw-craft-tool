@@ -8,7 +8,7 @@ import JsonViewer from '@/components/atoms/viewer/jsonViewer';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SearchInput2 from '@/components/atoms/input/searchInput';
 import Icons from '@/components/atoms/icons';
 import StyledTable, { IColumn } from '@/components/atoms/table';
@@ -351,7 +351,26 @@ const AllAccounts = () => {
         }
     ];
 
-    const filtereRows = allAccounts?.filter((row) => row.address.toLowerCase().includes(keyword.toLowerCase()));
+    // const filtereRows = allAccounts?.filter((row) => row.address.toLowerCase().includes(keyword.toLowerCase()));
+    const rows = useMemo(() => {
+        if (keyword !== '') {
+            return allAccounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
+        } else {
+            if (allAccounts) {
+                let sortedAccounts = [...allAccounts];
+                const sortAccounts = sortedAccounts.sort((a, b) => {
+                    console.log(a.balance);
+                    if (a.balance.length === b.balance.length) {
+                        return b.balance.localeCompare(a.balance);
+                    } else {
+                        return b.balance.length - a.balance.length;
+                    }
+                })
+                return sortAccounts;
+            }
+            return [];
+        }
+    }, [allAccounts, keyword]);
 
     return (
         <SectionContainer>
@@ -376,7 +395,7 @@ const AllAccounts = () => {
                     maxWidth="564px"
                 />
             </div>
-            <StyledTable columns={columns} rows={filtereRows || []} />
+            <StyledTable columns={columns} rows={rows || []} />
         </SectionContainer>
     );
 };

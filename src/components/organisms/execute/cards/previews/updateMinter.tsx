@@ -144,7 +144,7 @@ const UpdateMinter = () => {
                 list: [
                     {
                         label: 'Minter',
-                        value: shortenAddress(minterAddress, 15, 15),
+                        value: minterAddress,
                         type: 'wallet'
                     }
                 ]

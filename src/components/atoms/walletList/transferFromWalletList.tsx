@@ -25,6 +25,8 @@ import { getCurrentUTCTimeStamp, removeNanoSeconds } from '@/utils/time';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import AddWalletButton from '../buttons/addWalletButton';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 interface IProps {
     contractAddress: string;
@@ -42,6 +44,8 @@ const generateId = () => {
 };
 
 const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20, transferList, setTransferList }: IProps) => {
+    const address = useSelector((state: rootState) => state.wallet.address);
+
     const { enqueueSnackbar } = useSnackbar();
     const { getCw20Balance, getCw20AllowanceBalance } = useExecuteHook();
     const modal = useModalStore();
@@ -92,7 +96,7 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
             try {
                 const _walletList = [...transferList];
 
-                if (isValidAddress(transferList[updateIndex].fromAddress) && isValidAddress(transferList[updateIndex].toAddress)) {
+                if (isValidAddress(transferList[updateIndex].fromAddress)) {
                     const response = await getCw20Balance(contractAddress, transferList[updateIndex].fromAddress);
                     const newTransfer: ITransferFrom = {
                         fromAddress: transferList[updateIndex].fromAddress,
@@ -107,7 +111,7 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                     const { success, blockHeight, data } = await getCw20AllowanceBalance(
                         contractAddress,
                         transferList[updateIndex].fromAddress,
-                        transferList[updateIndex].toAddress
+                        address
                     );
                     console.log('SUCCESS', success);
                     if (success === true) {

@@ -8,8 +8,7 @@ import { useMemo } from 'react';
 import { subtractStringAmount } from '@/utils/balance';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { useModalStore } from '@/hooks/useModal';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 
 const Container = styled.div`
     width: 100%;
@@ -121,9 +120,6 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnPreview = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -131,6 +127,7 @@ const BurnPreview = () => {
     const burnList = useCW721ExecuteStore((state) => state.burnList);
     const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
+    const { setTotalNfts } = useCW721ExecuteAction();
 
     const modal = useModalStore();
 
@@ -210,6 +207,7 @@ const BurnPreview = () => {
                     params={params}
                     onClickConfirm={() => {
                         clearBurnForm();
+                        setTotalNfts(contractAddress);
                     }}
                 />
             )

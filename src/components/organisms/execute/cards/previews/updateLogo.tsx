@@ -2,10 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { IC_LINK_FILL } from '@/components/atoms/icons/pngIcons';
-import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import Icons from '@/components/atoms/icons';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
@@ -86,44 +84,6 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`;
-
-const ExecuteButton = styled(IconButton)<{ disabled?: boolean }>`
-    width: 220px !important;
-    height: 48px;
-    border-radius: 8px;
-    background: ${({ disabled }) => (!disabled ? '#02E191' : '#707070')};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    border: none;
-    outline: none;
-    transition:
-        background 0.1s,
-        transform 0.1s;
-`;
-
-const ExecuteButtonTypo = styled.div`
-    color: var(--Gray-100, #121212);
-    text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px; /* 125% */
-`;
-
-const ImageWrap = styled.div`
-    width: 72px;
-    height: 72px;
-    flex-shrink: 0;
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
 `;
 
 const LinkIcon = styled.img`
@@ -223,7 +183,14 @@ const UpdateLogo = () => {
                         <LinkIcon src={IC_LINK_FILL} alt={'Update Marketing Logo'} />
                         <ItemLabelTypo>Marketing Logo</ItemLabelTypo>
                     </ItemLabelWrap>
-                    <ItemValueTypo>{marketingLogoUrl}</ItemValueTypo>
+                    <ItemValueTypo
+                        data-tooltip-content={marketingLogoUrl.length >= 30 ? marketingLogoUrl : ''}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                    >
+                        {marketingLogoUrl}
+                    </ItemValueTypo>
                 </ContentBodyWrap>
             </ContentWrap>
             <ButtonWrap>

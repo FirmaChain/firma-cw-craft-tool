@@ -12,6 +12,7 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { isValidAddress } from '@/utils/common';
 import useExecuteActions from '../../action';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -218,7 +219,15 @@ const UpdateMarketingPreview = () => {
                         <ItemLabelTypo>Marketing Desc</ItemLabelTypo>
                     </ItemLabelWrap>
                     {marketingDescription !== '' ? (
-                        <ItemValueForDescTypo className="clamp-single-line">{finalDesc}</ItemValueForDescTypo>
+                        <ItemValueForDescTypo
+                            className="clamp-single-line"
+                            data-tooltip-content={finalDesc.length >= 35 ? finalDesc : ''}
+                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                            data-tooltip-wrapper="span"
+                            data-tooltip-place="bottom"
+                        >
+                            {finalDesc}
+                        </ItemValueForDescTypo>
                     ) : (
                         marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>
                     )}
@@ -231,7 +240,15 @@ const UpdateMarketingPreview = () => {
                                 <ItemLabelTypo>Marketing Address</ItemLabelTypo>
                             </ItemLabelWrap>
                             {marketingAddress !== '' ? (
-                                <ItemValueTypo className="clamp-single-line">{finalAddress}</ItemValueTypo>
+                                <ItemValueTypo
+                                    className="clamp-single-line"
+                                    data-tooltip-content={finalAddress.length >= 35 ? finalAddress : ''}
+                                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                                    data-tooltip-wrapper="span"
+                                    data-tooltip-place="bottom"
+                                >
+                                    {finalAddress}
+                                </ItemValueTypo>
                             ) : (
                                 <ItemDefaultTypo>Wallet Address</ItemDefaultTypo>
                             )}

@@ -21,6 +21,7 @@ import useExecuteActions from '../../action';
 import commaNumber from 'comma-number';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 
 const Container = styled.div`
     width: 100%;
@@ -412,7 +413,14 @@ const IncreaseAllowancePreview = () => {
                                         : shortenAddress(allowance?.address || '', 16, 16)}
                                 </AccordionTypo>
                                 <AccordionValueWrap>
-                                    <AccordionTypo className="clamp-single-line" $disabled={allowance === null || !Number(allowance.amount)}>
+                                    <AccordionTypo
+                                        className="clamp-single-line"
+                                        $disabled={allowance === null || !Number(allowance.amount)}
+                                        data-tooltip-content={allowance?.amount && parseAmountWithDecimal2(allowance?.amount, tokenInfo.decimals.toString())}
+                                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                                        data-tooltip-wrapper="span"
+                                        data-tooltip-place="bottom"
+                                    >
                                         {/* {commaNumber(allowance === null ? '0' : allowance?.amount) || 0} */}
                                         {commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
                                     </AccordionTypo>

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_ARROW_WITH_TAIL, IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { addStringAmount, formatWithCommas, getUTokenAmountFromToken } from '@/utils/balance';
-import { getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
+import { getUTokenStrFromTokenStr, parseAmountWithDecimal2, shortenAddress } from '@/utils/common';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
@@ -217,7 +217,14 @@ const FromToAddressLine = ({
                 </div>
             </div>
             <AccordionValueWrap>
-                <AccordionTypo className="clamp-single-line" $disabled={!Boolean(amount && decimal)}>
+                <AccordionTypo
+                    className="clamp-single-line"
+                    $disabled={!Boolean(amount && decimal)}
+                    data-tooltip-content={amount.length >= 4 ? amount : ''}
+                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                    data-tooltip-wrapper="span"
+                    data-tooltip-place="bottom"
+                >
                     {amount && decimal ? getUTokenStrFromTokenStr(amount, decimal) : 0}
                 </AccordionTypo>
                 <AccordionSymbolTypo>{symbol}</AccordionSymbolTypo>

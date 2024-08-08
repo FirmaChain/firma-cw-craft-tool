@@ -40,7 +40,19 @@ const AllAccounts = () => {
         if (keyword !== '') {
             return accounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
         } else {
-            return accounts;
+            if (accounts) {
+                let sortedAccounts = [...accounts];
+                const sortAccounts = sortedAccounts.sort((a, b) => {
+                    console.log(a.Balance);
+                    if (a.Balance.length === b.Balance.length) {
+                        return b.Balance.localeCompare(a.Balance);
+                    } else {
+                        return b.Balance.length - a.Balance.length;
+                    }
+                })
+                return sortAccounts;
+            }
+            return [];
         }
     }, [accounts, keyword]);
 

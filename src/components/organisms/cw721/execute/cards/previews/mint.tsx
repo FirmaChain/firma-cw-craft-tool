@@ -14,6 +14,7 @@ import useFormStore from '@/store/formStore';
 import { shortenAddress } from '@/utils/common';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 
 const Container = styled.div`
     width: 100%;
@@ -231,6 +232,7 @@ const MintPreview = () => {
     const modal = useModalStore();
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
+    const { setTotalNfts } = useCW721ExecuteAction();
     // const presetUriInputError = Object.keys(useFormStore((v) => v.formError[PRESET_BASE_URI_FORM_ID]) || {})?.length;
 
     const [isOpen, setIsOpen] = useState<boolean>(true); //? defualt open
@@ -323,6 +325,7 @@ const MintPreview = () => {
                     params={params}
                     onClickConfirm={() => {
                         clearMintForm();
+                        setTotalNfts(contractAddress);
                     }}
                 />
             )
