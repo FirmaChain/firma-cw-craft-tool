@@ -17,10 +17,13 @@ const Header = () => {
     return (
         <HeaderBox>
             <HeaderWrap>
-                <IconButton style={{ padding: 0, height: '24px' }} onClick={onClickPrev}>
+                <IconButton
+                    style={{ padding: 0, height: '24px', display: 'flex', flexDirection: 'row', alignItems: 'content', gap: '4px' }}
+                    onClick={onClickPrev}
+                >
                     <Icons.LeftArrow width={'24'} height={'24'} strokeWidth={'2px'} stroke={'#FFFFFF'} />
+                    {tokenName ? <HeaderTitle>{tokenName}</HeaderTitle> : <Skeleton />}
                 </IconButton>
-                {tokenName ? <HeaderTitle>{tokenName}</HeaderTitle> : <Skeleton />}
             </HeaderWrap>
         </HeaderBox>
     );

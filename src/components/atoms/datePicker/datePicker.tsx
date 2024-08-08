@@ -98,6 +98,10 @@ const StyledDatePicker = styled.div<{ open?: boolean }>`
         color: var(--Gray-100, #121212);
     }
 
+    .react-datepicker__day--keyboard-selected {
+        background-color: rgba(2, 225, 145, 0.2);
+    }
+
     .react-datepicker__day--disabled {
         color: var(--Gray-575, #474747);
 

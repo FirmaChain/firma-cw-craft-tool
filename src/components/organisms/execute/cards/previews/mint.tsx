@@ -40,7 +40,6 @@ const ContentBox = styled.div`
     padding: 32px 44px;
 
     gap: 24px;
-
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
     overflow: hidden;
@@ -54,12 +53,22 @@ const TokenInfoWrap = styled.div`
     gap: 16px;
 `;
 
-const TokenTitleWrap = styled.div`
+const TokenTitleWrap = styled.div<{ $isOpen: boolean }>`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     overflow: hidden;
+
+    transition: all 0.2s all;
+
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
+        gap: 20px;
+    `
+            : `
+        gap: 0px;
+    `}
 `;
 
 const TokenInfoLeft = styled.div`
@@ -109,16 +118,29 @@ const TokeInfoMintSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const WalletListWrap = styled.div`
-    // height: auto;
-    padding: 24px 32px;
+const WalletListWrap = styled.div<{ $isOpen: boolean }>`
+    height: object-fit;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    // border-radius: 12px;
-    // background: var(--Gray-150, #141414);
-`;
+    overflow: hidden;
+    height: object-fit;
+    transition: all 0.15s ease;
 
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
+    max-height: 100%;
+    padding: 24px 32px;
+    gap: 20px;
+    opacity: 1;
+`
+            : `
+    max-height: 0px;
+    padding: 0px 32px;
+    gap: 0px;
+    opacity: 0;
+`}
+`;
 const WalletItemWrap = styled.div`
     width: 100%;
     display: flex;
@@ -343,7 +365,7 @@ const MintPreview = () => {
     return (
         <Container>
             <ContentBox>
-                <TokenTitleWrap>
+                <TokenTitleWrap $isOpen={isOpen}>
                     <TokenInfoWrap>
                         <TokenInfoLeft>
                             <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
@@ -357,36 +379,35 @@ const MintPreview = () => {
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>
-                    {isOpen && (
-                        <ScrollbarContainer>
-                            <ExecutePreviewOverlayScroll>
-                                <WalletListWrap>
-                                    {mintingList.map((value, index) => (
-                                        <WalletItemWrap key={index}>
-                                            <WalletLeftItemWrap>
-                                                <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                                <WalletItemAddressTypo
-                                                    $disabled={!value.recipient}
-                                                    data-tooltip-content={value.recipient?.length > 25 ? value.recipient : ''}
-                                                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                                                    data-tooltip-wrapper="span"
-                                                    data-tooltip-place="bottom"
-                                                >
-                                                    {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
-                                                </WalletItemAddressTypo>
-                                            </WalletLeftItemWrap>
-                                            <WalletItemTokenWrap>
-                                                <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
-                                                    {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                                </WalletItemTokenAmount>
-                                                <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
-                                            </WalletItemTokenWrap>
-                                        </WalletItemWrap>
-                                    ))}
-                                </WalletListWrap>
-                            </ExecutePreviewOverlayScroll>
-                        </ScrollbarContainer>
-                    )}
+
+                    <ScrollbarContainer>
+                        <ExecutePreviewOverlayScroll>
+                            <WalletListWrap $isOpen={isOpen}>
+                                {mintingList.map((value, index) => (
+                                    <WalletItemWrap key={index}>
+                                        <WalletLeftItemWrap>
+                                            <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                            <WalletItemAddressTypo
+                                                $disabled={!value.recipient}
+                                                data-tooltip-content={value.recipient?.length > 25 ? value.recipient : ''}
+                                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                                data-tooltip-wrapper="span"
+                                                data-tooltip-place="bottom"
+                                            >
+                                                {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                            </WalletItemAddressTypo>
+                                        </WalletLeftItemWrap>
+                                        <WalletItemTokenWrap>
+                                            <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
+                                                {value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                            </WalletItemTokenAmount>
+                                            <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
+                                        </WalletItemTokenWrap>
+                                    </WalletItemWrap>
+                                ))}
+                            </WalletListWrap>
+                        </ExecutePreviewOverlayScroll>
+                    </ScrollbarContainer>
                 </TokenTitleWrap>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <TokenInfoWrap>
