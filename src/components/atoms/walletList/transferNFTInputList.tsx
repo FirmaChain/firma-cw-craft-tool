@@ -65,6 +65,8 @@ const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }:
         });
     };
 
+    const enableDeleteAll = list.length > 1 || list.some((v) => v.recipient !== '' || v.token_ids.length !== 0);
+
     return (
         <WalletListWrapper>
             <WalletListSummery>
@@ -75,7 +77,7 @@ const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }:
                         <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
                     </WalletCountWrapper>
                 </TotalWalletWrapper>
-                <DeleteAllButton disabled={list.length <= 1} $length={list.length} onClick={handleDeleteAll}>
+                <DeleteAllButton disabled={!enableDeleteAll} $length={list.length} onClick={handleDeleteAll}>
                     <span className="button-text">Delete All</span>
                 </DeleteAllButton>
             </WalletListSummery>

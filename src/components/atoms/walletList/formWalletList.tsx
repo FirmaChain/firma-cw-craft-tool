@@ -74,6 +74,8 @@ const FormWalletList = ({
         });
     };
 
+    const enableDeleteAll = walletList.length > 1 || walletList.some((v) => v.amount !== '' || v.recipient !== '');
+
     return (
         <WalletListWrapper>
             <WalletListSummery>
@@ -84,7 +86,7 @@ const FormWalletList = ({
                         <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
                     </WalletCountWrapper>
                 </TotalWalletWrapper>
-                <DeleteAllButton disabled={walletList.length <= 1} $length={walletList.length} onClick={handleDeleteAll}>
+                <DeleteAllButton disabled={!enableDeleteAll} $length={walletList.length} onClick={handleDeleteAll}>
                     <span className="button-text">Delete All</span>
                 </DeleteAllButton>
             </WalletListSummery>
@@ -106,7 +108,12 @@ const FormWalletList = ({
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletButton disabled={walletList.length === 20} count={walletList.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
+            <AddWalletButton
+                disabled={walletList.length === 20}
+                count={walletList.length}
+                maxCount={maxWalletCount}
+                onClick={handleAddWallet}
+            />
         </WalletListWrapper>
     );
 };

@@ -78,6 +78,8 @@ const CW20MintInputList = ({
         });
     };
 
+    const enableDeleteAll = list.length > 1 || list.some((v) => v.amount !== '' || v.recipient !== '');
+
     return (
         <WalletListWrapper>
             <WalletListSummery>
@@ -88,7 +90,7 @@ const CW20MintInputList = ({
                         <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
                     </WalletCountWrapper>
                 </TotalWalletWrapper>
-                <DeleteAllButton disabled={list.length <= 1} $length={list.length} onClick={handleDeleteAll}>
+                <DeleteAllButton disabled={!enableDeleteAll} $length={list.length} onClick={handleDeleteAll}>
                     <span className="button-text">Delete All</span>
                 </DeleteAllButton>
             </WalletListSummery>
@@ -110,7 +112,12 @@ const CW20MintInputList = ({
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletButton disabled={list.length === 20 || blockAllInput} count={list.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
+            <AddWalletButton
+                disabled={list.length === 20 || blockAllInput}
+                count={list.length}
+                maxCount={maxWalletCount}
+                onClick={handleAddWallet}
+            />
         </WalletListWrapper>
     );
 };

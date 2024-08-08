@@ -208,6 +208,9 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
         });
     };
 
+    const enableDeleteAll =
+        transferList.length > 1 || transferList.some((v) => v.fromAddress !== '' || v.toAddress !== '' || v.toAmount !== '');
+
     return (
         <WalletListWrapper>
             <WalletListSummery>
@@ -218,7 +221,7 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                         <MaxWalletCountTypo>{`/${maxWalletCount}`}</MaxWalletCountTypo>
                     </WalletCountWrapper>
                 </TotalWalletWrapper>
-                <DeleteAllButton disabled={transferList.length <= 1} $length={transferList.length} onClick={handleDeleteAll}>
+                <DeleteAllButton disabled={!enableDeleteAll} $length={transferList.length} onClick={handleDeleteAll}>
                     <span className="button-text">Delete All</span>
                 </DeleteAllButton>
             </WalletListSummery>
