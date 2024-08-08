@@ -184,7 +184,7 @@ const UpdateLogo = () => {
                         <ItemLabelTypo>Marketing Logo</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemValueTypo
-                        data-tooltip-content={marketingLogoUrl.length >= 30 ? marketingLogoUrl : ''}
+                        data-tooltip-content={marketingLogoUrl?.length >= 30 ? marketingLogoUrl : ''}
                         data-tooltip-id={TOOLTIP_ID.COMMON}
                         data-tooltip-wrapper="span"
                         data-tooltip-place="bottom"

@@ -65,7 +65,7 @@ const TransferNFTInputList = ({ list, maxWalletCount = 20, onChangeWalletList }:
         });
     };
 
-    const enableDeleteAll = list.length > 1 || list.some((v) => v.recipient !== '' || v.token_ids.length !== 0);
+    const enableDeleteAll = list.length > 1 || list.some((v) => v.recipient !== '' || v.token_ids.filter((v) => v !== '').length > 0);
 
     return (
         <WalletListWrapper>

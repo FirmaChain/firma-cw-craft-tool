@@ -113,10 +113,10 @@ const TokenInfo = () => {
                         )}
                     </SpecificItem>
                 )}
-                <SpecificItem>
+                {/* <SpecificItem>
                     <SpecificLabelTypo>Code ID</SpecificLabelTypo>
                     {codeID ? <SpecificValueTypo>{codeID}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
-                </SpecificItem>
+                </SpecificItem> */}
                 <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     <SpecificValueBox>
@@ -198,27 +198,35 @@ const OwnerInformation = () => {
         setBlockHeight();
     }, []);
 
-    const PendingExpiery = ({ pendingOwner, expireInfo, expireBlockHeight }: { pendingOwner: string, expireInfo: Cw721Expires | null, expireBlockHeight: string }) => {
+    const PendingExpiery = ({
+        pendingOwner,
+        expireInfo,
+        expireBlockHeight
+    }: {
+        pendingOwner: string;
+        expireInfo: Cw721Expires | null;
+        expireBlockHeight: string;
+    }) => {
         if (!pendingOwner && !expireInfo) return <SpecificValueTypo>-</SpecificValueTypo>;
 
         if (!expireInfo) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
         if (expireInfo['at_height']) {
-            if (expireInfo['at_height'] !== "0" && expireBlockHeight !== "0") {
-                if (compareStringNumbers((expireInfo['at_height']).toString(), expireBlockHeight) === 1) {
+            if (expireInfo['at_height'] !== '0' && expireBlockHeight !== '0') {
+                if (compareStringNumbers(expireInfo['at_height'].toString(), expireBlockHeight) === 1) {
                     return (
                         <SpecificValueTypo>
                             {expireInfo['at_height']}
                             <SpecificSubValueType>Block</SpecificSubValueType>
                         </SpecificValueTypo>
-                    )
+                    );
                 } else {
                     return (
                         <SpecificValueWrapper>
-                            <IconTooltip size={'24px'} tooltip={'The height has expired.'} TooltipIcon={IC_WARNING_SIGN}/>
+                            <IconTooltip size={'24px'} tooltip={'The height has expired.'} TooltipIcon={IC_WARNING_SIGN} />
                             <SpecificValueTypo style={{ color: '#5A5A5A' }}>{expireInfo['at_height']}</SpecificValueTypo>
                         </SpecificValueWrapper>
-                    )
+                    );
                 }
             }
         }
@@ -226,22 +234,18 @@ const OwnerInformation = () => {
         if (expireInfo['at_time']) {
             const nowTimestamp = new Date().getTime();
             const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
-            
+
             if (compareStringNumbers(timeInMs.toString(), nowTimestamp.toString()) === 1) {
-                return (
-                    <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>
-                )
+                return <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>;
             } else {
                 return (
                     <SpecificValueWrapper>
-                        <IconTooltip size={'24px'} tooltip={'The time has expired.'} TooltipIcon={IC_WARNING_SIGN}/>
+                        <IconTooltip size={'24px'} tooltip={'The time has expired.'} TooltipIcon={IC_WARNING_SIGN} />
                         <SpecificValueTypo style={{ color: '#5A5A5A' }}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>
                     </SpecificValueWrapper>
-                )
+                );
             }
-
         }
-
 
         return <SpecificValueTypo></SpecificValueTypo>;
     };

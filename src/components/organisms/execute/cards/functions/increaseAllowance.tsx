@@ -271,10 +271,10 @@ const IncreaseAllowance = () => {
                                     placeHolder: '0',
                                     type: 'number',
                                     decimal: tokenInfo?.decimals,
-                                    emptyErrorMessage: 'Please input amount',
+                                    emptyErrorMessage: 'Please input amount.',
                                     textAlign: 'right',
-                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()),
-                                    hideErrorMessage: true
+                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
+                                    // hideErrorMessage: true
                                 }}
                             />
 

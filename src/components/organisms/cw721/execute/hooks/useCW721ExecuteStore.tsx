@@ -121,7 +121,7 @@ const INIT_SELECT_MENU: IMenuItem = { value: 'select', label: 'Select' };
 const INIT_MINT_LIST: { token_id: string; token_uri: string; id: string; isAlreadyMint: boolean }[] = [
     { token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }
 ];
-const INIT_TRANSFER: IExecuteTransfer[] = [{ recipient: '', token_ids: [] }];
+const INIT_TRANSFER: IExecuteTransfer = { recipient: '', token_ids: [] };
 const INIT_NFT_APPROVAL: Cw721Approval = { spender: '', expires: { at_height: 0 } };
 
 const useCW721ExecuteStore = create<FormProps>()(
@@ -202,7 +202,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         // BURN
         burnList: '',
         // TRANSFER
-        transfer: INIT_TRANSFER,
+        transfer: [{ ...INIT_TRANSFER, id: v4() }],
         approveInfoById: {},
         // APPROVE
         approveRecipientAddress: '',
@@ -332,7 +332,7 @@ const useCW721ExecuteStore = create<FormProps>()(
         },
         clearTransferForm: () => {
             set((state) => {
-                state.transfer = INIT_TRANSFER;
+                state.transfer = [{ ...INIT_TRANSFER, id: v4() }];
                 state.approveInfoById = {};
             });
         },

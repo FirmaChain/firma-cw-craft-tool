@@ -53,6 +53,12 @@ const TransferNFTInput = ({
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
+    const addressError = useFormStore((state) => state.formError[`${id}_${leftTitle}`]) || {};
+    const idError = useFormStore((state) => state.formError[`${id}_${rightTitle}`]) || {};
+
+    const hasAddrErr = Object.keys(addressError).length > 0;
+    const hasIdErr = Object.keys(idError).length > 0;
+
     // const checkAddressValid = (value: string) => {
     //     if (value) {
     //         if (!isValidAddress(value)) {
@@ -184,7 +190,8 @@ const TransferNFTInput = ({
                             value: leftValue,
                             onChange: handleAddress,
                             placeHolder: leftPlaceholder,
-                            regex: WALLET_ADDRESS_REGEX
+                            regex: WALLET_ADDRESS_REGEX,
+                            emptyErrorMessage: 'Please input wallet address.'
                         }}
                     />
                 </div>
@@ -205,7 +212,8 @@ const TransferNFTInput = ({
                             value: rightValue,
                             onChange: handleTokenId,
                             placeHolder: rightPlaceholder,
-                            regex: NUMBERS_WITH_COMMA
+                            regex: NUMBERS_WITH_COMMA,
+                            emptyErrorMessage: 'Please input token id.'
                         }}
                     />
                 </div>
@@ -224,7 +232,7 @@ const TransferNFTInput = ({
                 <div
                     style={{
                         width: '16px',
-                        height: '28px',
+                        height: hasAddrErr && hasIdErr ? '37px' : '28px',
                         borderTopRightRadius: '8px',
                         borderTop: '1px dashed #444444',
                         borderRight: '1px dashed #444444'
@@ -246,7 +254,7 @@ const TransferNFTInput = ({
                 <div
                     style={{
                         width: '16px',
-                        height: '28px',
+                        height: hasAddrErr && !hasIdErr ? '46px' : hasAddrErr && hasIdErr ? '37px' : '28px',
                         borderBottomRightRadius: '8px',
                         borderBottom: '1px dashed #444444',
                         borderRight: '1px dashed #444444'

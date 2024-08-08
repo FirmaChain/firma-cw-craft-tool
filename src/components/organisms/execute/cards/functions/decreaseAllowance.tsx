@@ -266,8 +266,8 @@ const DecreaseAllowance = () => {
                                     decimal: tokenInfo.decimals ? tokenInfo.decimals : 6,
                                     emptyErrorMessage: 'Please input amount',
                                     textAlign: 'right',
-                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()),
-                                    hideErrorMessage: true
+                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
+                                    // hideErrorMessage: true
                                 }}
                             />
 

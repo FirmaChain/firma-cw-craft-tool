@@ -163,9 +163,16 @@ const TransferFromWalletInput = ({
     //     };
     // }, []);
 
+    const addressError = useFormStore((state) => state.formError[`${id}_FROM_ADDRESS`]) || {};
+    const amountError = useFormStore((state) => state.formError[`${id}_TO_AMOUNT`]) || {};
+
+    const hasAddrErr = Object.keys(addressError).length > 0;
+    const hasAmountErr = Object.keys(amountError).length > 0;
+
     return (
         <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '100%', height: '190px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '20px' }}>
+                {/*  height: '190px', */}
                 <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
@@ -257,7 +264,7 @@ const TransferFromWalletInput = ({
                                     decimal: decimals ? Number(decimals) : 6,
                                     textAlign: 'right',
                                     emptyErrorMessage: 'Please input amount.',
-                                    hideErrorMessage: true,
+                                    // hideErrorMessage: true,
                                     maxValue: getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals)
                                 }}
                             />
@@ -275,18 +282,19 @@ const TransferFromWalletInput = ({
             <div
                 style={{
                     display: 'flex',
-                    height: '100%',
+                    // height: '100%',
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     justifyContent: 'center',
                     gap: '4px',
-                    padding: '28px 0 16px'
+                    paddingTop: hasAddrErr && amountError ? 0 : '8px'
+                    // padding: '28px 0 16px'
                 }}
             >
                 <div
                     style={{
                         width: '16px',
-                        height: '28px',
+                        height: hasAddrErr && !hasAmountErr ? '28px' : hasAddrErr && amountError ? '40px' : '28px',
                         borderTopRightRadius: '8px',
                         borderTop: '1px dashed #444444',
                         borderRight: '1px dashed #444444'
@@ -308,7 +316,7 @@ const TransferFromWalletInput = ({
                 <div
                     style={{
                         width: '16px',
-                        height: '28px',
+                        height: !hasAddrErr && hasAmountErr ? '46px' : hasAddrErr && amountError ? '40px' : '28px',
                         borderBottomRightRadius: '8px',
                         borderBottom: '1px dashed #444444',
                         borderRight: '1px dashed #444444'
