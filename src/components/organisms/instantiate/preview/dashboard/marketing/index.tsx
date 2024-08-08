@@ -38,7 +38,7 @@ const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IPro
                     imageChild={<Icons.Wallet width={'24px'} height={'24px'} />}
                     name={'Marketing Address'}
                     value={marketingAddress}
-                    tooltip={marketingAddress.length >= 30 ? marketingAddress : ''}
+                    tooltip={marketingAddress}
                 />
             )}
             {marketingProject && (
@@ -46,7 +46,7 @@ const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IPro
                     imageChild={<Icons.Link width={'24px'} height={'24px'} />}
                     name={'Marketing Project'}
                     value={marketingProject}
-                    tooltip={marketingProject.length >= 30 ? marketingProject : ''}
+                    tooltip={marketingProject}
                 />
             )}
         </MarketingWrapper>

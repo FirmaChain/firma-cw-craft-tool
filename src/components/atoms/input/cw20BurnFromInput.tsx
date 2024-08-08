@@ -113,23 +113,32 @@ const CW20BurnFromInput = ({
                 if (allowance.expires['never']) {
                     // setAllowance(allowance.allowance);
                     setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
-                } else if (allowance.expires['at_time']) {
+                    return;
+                }
+
+                if (allowance.expires['at_time']) {
                     const nowTimestamp = Number(new Date());
                     const expiresTimestamp = Math.floor(Number(allowance.expires['at_time']) / 1000000);
 
                     if (expiresTimestamp > nowTimestamp) {
                         // setAllowance(allowance.allowance);
                         setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
+                        return;
                     }
-                } else {
+                }
+
+                if (allowance.expires['at_height']) {
                     //? at_height
                     const expiresBlockHeight = allowance.expires['at_height'];
 
                     if (expiresBlockHeight > nowBlockHeight) {
                         // setAllowance(allowance.allowance);
                         setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
+                        return;
                     }
                 }
+
+                setAllowanceByAddress({ address: address.toLowerCase(), amount: '' });
             }
         } catch (error) {
             console.log(error);
