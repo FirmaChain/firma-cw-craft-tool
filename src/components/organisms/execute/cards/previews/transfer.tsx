@@ -61,12 +61,15 @@ const ItemBox = styled.div<{ $isOpen: boolean }>`
     height: fit-content;
     transition: all 0.2s all;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         gap: 24px;
-    `: `
+    `
+            : `
         gap: 0px;
     `}
-`
+`;
 
 const ItemWrap = styled.div`
     display: flex;
@@ -128,17 +131,20 @@ const WalletListWrap = styled.div<{ $isOpen: boolean }>`
     height: object-fit;
     transition: all 0.15s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         max-height: 100%;
         padding: 24px 32px;
         gap: 20px;
         opacity: 1;
-    `: `
+    `
+            : `
         max-height: 0px;
         padding: 0px 32px;
         gap: 0px;
         opacity: 0;
-    `}  
+    `}
 `;
 
 const WalletItemWrap = styled.div`
@@ -259,7 +265,7 @@ const TransferPreview = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    console.log(transferList);
+    // console.log(transferList);
 
     const updatedAmount = useMemo(() => {
         let calcTransferAmount = '0';

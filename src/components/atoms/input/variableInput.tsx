@@ -171,8 +171,8 @@ const VariableInput = ({
     hideErrorMessage = false,
     inputId
 }: InputProps) => {
-    // const setFormError = useFormStore((v) => v.setFormError);
-    // const clearFormError = useFormStore((v) => v.clearFormError);
+    const setFormError = useFormStore((v) => v.setFormError);
+    const clearFormError = useFormStore((v) => v.clearFormError);
 
     const [isFocus, setIsFocus] = useState(false);
 
@@ -197,15 +197,17 @@ const VariableInput = ({
                             inputValue.substring(0, firstDotIndex + 1) + inputValue.substring(firstDotIndex + 1).replace(/\./g, '');
                     }
 
-                    if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
+                    // if (typeof maxValue === 'string') console.log(maxValue, inputValue, compareStringNumbers(inputValue, maxValue));
 
                     //? check if value is bigger than max-value (if maxValue is provided)
-
                     if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
                         throw new Error('OUT_OF_RANGE');
                     } else {
                         inputValue = parseValue(inputValue);
                     }
+
+                    if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
+
                     // inputValue = checkMaxValue(inputValue, maxValue);
                     // inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
                 } else {
@@ -218,13 +220,14 @@ const VariableInput = ({
             }
 
             onChange(inputValue);
-        } catch (error) {
+        } catch (error: any) {
+            if (error.message !== 'OUT_OF_RANGE') console.log(error);
         } finally {
-            // if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
-            //     setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds valid range.' });
-            // } else {
-            //     clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
-            // }
+            if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
+                setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds valid range.' });
+            } else {
+                clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
+            }
         }
 
         // if (type === 'string') {
@@ -244,7 +247,7 @@ const VariableInput = ({
     };
 
     const _onBlur = () => {
-        // clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
+        clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
         // clearFormError({ id: inputId, type: 'INVALID_TYPO' });
         // clearFormError({ id: inputId, type: 'MAX_LENGTH' });
 

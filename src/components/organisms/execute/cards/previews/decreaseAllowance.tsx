@@ -45,12 +45,15 @@ const ItemBox = styled.div<{ $isOpen: boolean }>`
     height: fit-content;
     transition: all 0.2s all;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         gap: 24px;
-    `: `
+    `
+            : `
         gap: 0px;
     `}
-`
+`;
 
 const ItemWrap = styled.div`
     display: flex;
@@ -113,17 +116,20 @@ const AccordionBox = styled.div<{ $isOpen: boolean }>`
     background: var(--Gray-150, #141414);
     transition: all 0.15s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         max-height: 100%;
         padding: 24px 32px;
         gap: 20px;
         opacity: 1;
-    `: `
+    `
+            : `
         max-height: 0px;
         padding: 0px 32px;
         gap: 0px;
         opacity: 0;
-    `}  
+    `}
 `;
 const CoinStack2Icon = styled.img`
     width: 24px;
@@ -197,7 +203,7 @@ const AccordionValueWrap = styled.div`
 
 const AccordionSymbolTypo = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -217,11 +223,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
         );
     if (allowanceInfo.type === 'at_time') {
         const timeInMs = Math.floor(Number(allowanceInfo.expire) / 1000000);
-        return (
-            <AccordionTypo $disabled={false}>
-                {format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}
-            </AccordionTypo>
-        );
+        return <AccordionTypo $disabled={false}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</AccordionTypo>;
     }
 
     return <></>;
@@ -363,9 +365,9 @@ const DecreaseAllowancePreview = () => {
         if (!allowance.amount || allowance.amount.replace(ONE_TO_MINE, '') === '') return false;
 
         return true;
-    }, [addressExist, allowance?.amount, allowance?.expire, allowance?.type, allowance?.address, allowance?.amount, userAddress]);
+    }, [addressExist, allowanceInfo, allowance, userAddress]);
 
-    console.log('allowance', allowance);
+    // console.log('allowance', allowance);
 
     return (
         <Container>
@@ -409,7 +411,10 @@ const DecreaseAllowancePreview = () => {
                                         : shortenAddress(allowance?.address, 16, 16)}
                                 </AccordionTypo>
                                 <AccordionValueWrap>
-                                    <AccordionTypo className="clamp-single-line" $disabled={allowance === null || !Number(allowance.amount)}>
+                                    <AccordionTypo
+                                        className="clamp-single-line"
+                                        $disabled={allowance === null || !Number(allowance.amount)}
+                                    >
                                         {/* {commaNumber(allowance === null ? '0' : allowance?.amount) || 0} */}
                                         {commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
                                     </AccordionTypo>

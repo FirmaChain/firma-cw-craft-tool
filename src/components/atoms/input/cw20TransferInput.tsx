@@ -8,6 +8,7 @@ import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { getMaxCW20InitWalletAmount, getMaxMinterCap } from '@/utils/balance';
 
 interface IProps {
     index: number;
@@ -124,7 +125,8 @@ const CW20TransferInput = ({
                             type: 'number',
                             decimal: decimals ? Number(decimals) : 6,
                             emptyErrorMessage: 'Please input amount.',
-                            textAlign: 'right'
+                            textAlign: 'right',
+                            maxValue: getMaxCW20InitWalletAmount(decimals)
                         }}
                     />
                 </div>

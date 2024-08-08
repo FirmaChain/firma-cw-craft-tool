@@ -4,7 +4,7 @@ import { FirmaUtil } from '@firmachain/firma-js';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { getTokenStrFromUTokenStr, parseAmountWithDecimal2 } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
@@ -132,35 +132,35 @@ const DecreaseAllowance = () => {
     };
 
     const handleChangeAmount = (value: string) => {
-        const onlyNumbers = value.replace(ONE_TO_MINE, '');
-        if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
-        else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
+        // const onlyNumbers = value.replace(ONE_TO_MINE, '');
+        // if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
+        // else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
 
-        const truncateDecimals = (value: string) => {
-            const decimalPlaces = tokenInfo.decimals;
-            const fractionalPart = value.split('.')[1];
+        // const truncateDecimals = (value: string) => {
+        //     const decimalPlaces = tokenInfo.decimals;
+        //     const fractionalPart = value.split('.')[1];
 
-            if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
-                return value;
-            }
-            return cw20Balance;
-        };
+        //     if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
+        //         return value;
+        //     }
+        //     return cw20Balance;
+        // };
 
-        const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        if (!isValidFormat) {
-            return;
-        }
+        // const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
+        // if (!isValidFormat) {
+        //     return;
+        // }
 
-        const truncatedValue = truncateDecimals(value);
-        const convertDecreaseAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
-        const decreaseAmount =
-            compareStringNumbers(cw20Balance, convertDecreaseAmount) === 1
-                ? truncatedValue
-                : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
+        // const truncatedValue = truncateDecimals(value);
+        // const convertDecreaseAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
+        // const decreaseAmount =
+        //     compareStringNumbers(cw20Balance, convertDecreaseAmount) === 1
+        //         ? truncatedValue
+        //         : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAllowance({
             address: allowance === null ? '' : allowance?.address,
-            amount: decreaseAmount,
+            amount: value,
             type: allowance === null ? '' : !allowance.type ? 'at_height' : allowance.type,
             expire: allowance === null ? '' : allowance.expire
         });
@@ -266,7 +266,7 @@ const DecreaseAllowance = () => {
                                     decimal: tokenInfo.decimals ? tokenInfo.decimals : 6,
                                     emptyErrorMessage: 'Please input amount',
                                     textAlign: 'right',
-                                    maxValue: getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString()),
+                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()),
                                     hideErrorMessage: true
                                 }}
                             />

@@ -119,6 +119,8 @@ const TransferFromWalletInput = ({
                 checkOwnerAddress(value);
                 _data.fromAddress = value;
                 _data.fromAmount = '';
+                _data.allowanceAmount = '';
+                _data.toAmount = '';
                 break;
 
             case fromBalanceId:
@@ -128,19 +130,20 @@ const TransferFromWalletInput = ({
             case toAddressId:
                 checkRecipientAddress(value);
                 _data.toAddress = value;
-                _data.allowanceAmount = '';
-                _data.toAmount = '';
+                // _data.allowanceAmount = '';
+                // _data.toAmount = '';
                 break;
 
             case transferAmountId:
-                if (isValidAddress(_data.toAddress)) {
-                    const compare = compareStringNumbers(getUTokenAmountFromToken(value, decimals), _data.allowanceAmount);
-                    if (compare === 1) {
-                        _data.toAmount = getTokenAmountFromUToken(_data.allowanceAmount, decimals);
-                    } else {
-                        _data.toAmount = value;
-                    }
-                }
+                _data.toAmount = value;
+                // if (isValidAddress(_data.toAddress)) {
+                //     const compare = compareStringNumbers(getUTokenAmountFromToken(value, decimals), _data.allowanceAmount);
+                //     if (compare === 1) {
+                //         _data.toAmount = getTokenAmountFromUToken(_data.allowanceAmount, decimals);
+                //     } else {
+                //         _data.toAmount = value;
+                //     }
+                // }
                 break;
         }
 
@@ -254,7 +257,8 @@ const TransferFromWalletInput = ({
                                     decimal: decimals ? Number(decimals) : 6,
                                     textAlign: 'right',
                                     emptyErrorMessage: 'Please input amount.',
-                                    hideErrorMessage: true
+                                    hideErrorMessage: true,
+                                    maxValue: getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals)
                                 }}
                             />
                             <AllowanceTypo

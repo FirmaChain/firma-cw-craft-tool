@@ -43,32 +43,30 @@ const Burn = () => {
     const { setCw20Balance } = useExecuteActions();
 
     const handleBurnAmount = (value: string) => {
-        const truncateDecimals = (value: string) => {
-            const decimalPlaces = tokenInfo.decimals;
-            const fractionalPart = value.split('.')[1];
+        // const truncateDecimals = (value: string) => {
+        //     const decimalPlaces = tokenInfo.decimals;
+        //     const fractionalPart = value.split('.')[1];
 
-            if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
-                return value;
-            }
-            return cw20Balance;
-        };
+        //     if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
+        //         return value;
+        //     }
+        //     return cw20Balance;
+        // };
 
-        const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        if (!isValidFormat) {
-            return;
-        }
+        // const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
+        // if (!isValidFormat) {
+        //     return;
+        // }
 
-        const truncatedValue = truncateDecimals(value);
-        const convertBurnAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
-        const burnAmount =
-            compareStringNumbers(cw20Balance, convertBurnAmount) === 1
-                ? truncatedValue
-                : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
+        // const truncatedValue = truncateDecimals(value);
+        // const convertBurnAmount = getUTokenAmountFromToken(value, tokenInfo.decimals.toString());
+        // const burnAmount =
+        //     compareStringNumbers(cw20Balance, convertBurnAmount) === 1
+        //         ? value
+        //         : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
-        setBurnAmount(burnAmount);
+        setBurnAmount(value);
     };
-
-    const userBalance = useMemo(() => {}, []);
 
     useEffect(() => {
         setCw20Balance(contractAddress, address);
@@ -96,7 +94,8 @@ const Burn = () => {
                         onChange: handleBurnAmount,
                         placeHolder: '0',
                         decimal: tokenInfo.decimals,
-                        hideErrorMessage: true
+                        hideErrorMessage: true,
+                        maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
                     }}
                 />
 

@@ -83,10 +83,10 @@ const ContractInformation = () => {
                         )}
                     </SpecificItem>
                 )}
-                <SpecificItem>
+                {/* <SpecificItem>
                     <SpecificLabelTypo>Code ID</SpecificLabelTypo>
                     {codeID ? <SpecificValueTypo>{codeID}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
-                </SpecificItem>
+                </SpecificItem> */}
 
                 <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>

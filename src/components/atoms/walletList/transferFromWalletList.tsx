@@ -89,7 +89,8 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
         };
 
         fetchData();
-    }, [contractAddress, transferList[updateIndex] && transferList[updateIndex].fromAddress]);
+    }, [contractAddress, transferList[updateIndex].fromAddress]);
+    //  transferList[updateIndex] &&
 
     useEffect(() => {
         const fetchData = async () => {
@@ -159,8 +160,8 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
         fetchData();
     }, [
         contractAddress,
-        transferList[updateIndex] && transferList[updateIndex].fromAddress,
-        transferList[updateIndex] && transferList[updateIndex].toAddress
+        transferList[updateIndex] && transferList[updateIndex].fromAddress
+        // transferList[updateIndex] && transferList[updateIndex].toAddress
     ]);
 
     const handleAddWallet = () => {

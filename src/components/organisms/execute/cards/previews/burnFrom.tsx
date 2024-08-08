@@ -45,9 +45,12 @@ const ContentBox = styled.div<{ $isOpen: boolean }>`
     // overflow: scroll;
     transition: all 0.2s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         gap: 24px;
-    `: `
+    `
+            : `
         gap: 0px;
     `}
 `;
@@ -113,17 +116,20 @@ const WalletListWrap = styled.div<{ $isOpen: boolean }>`
     background: var(--Gray-150, #141414);
     transition: all 0.15s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         max-height: 100%;
         padding: 24px 32px;
         gap: 20px;
         opacity: 1;
-    `: `
+    `
+            : `
         max-height: 0px;
         padding: 0px 32px;
         gap: 0px;
         opacity: 0;
-    `}  
+    `}
 `;
 
 const WalletItemWrap = styled.div`
@@ -172,7 +178,7 @@ const WalletItemTokenAmount = styled.div<{ $disabled?: boolean }>`
 
 const WalletItemTokenSymbol = styled.div`
     color: var(--Gray-550, #444);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -232,22 +238,22 @@ const BurnFromPreview = () => {
             }
         });
 
-        const checkAddress = Object.keys(addressAmountMap);
+        // const checkAddress = Object.keys(addressAmountMap);
 
-        checkAddress.map((address: string) => {
-            const currentAllowance = BigInt(allowanceByAddress[address] || '');
+        // checkAddress.map((address: string) => {
+        //     const currentAllowance = BigInt(allowanceByAddress[address] || '');
 
-            const inputAmount = addressAmountMap[address];
-            const formIds = burnFromList.filter((one) => one.recipient.toLowerCase() === address).map((v) => v.id);
+        //     const inputAmount = addressAmountMap[address];
+        //     const formIds = burnFromList.filter((one) => one.recipient.toLowerCase() === address).map((v) => v.id);
 
-            //! if total amount is bigger than provided allowance
-            if (currentAllowance < inputAmount) {
-                result = false;
-                formIds.map((id) => setFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED', message: 'Allowance exceed.' }));
-            } else {
-                formIds.map((id) => clearFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED' }));
-            }
-        });
+        //     //! if total amount is bigger than provided allowance
+        //     if (currentAllowance < inputAmount) {
+        //         result = false;
+        //         formIds.map((id) => setFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED', message: 'Allowance exceed.' }));
+        //     } else {
+        //         formIds.map((id) => clearFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED' }));
+        //     }
+        // });
 
         return result;
     };

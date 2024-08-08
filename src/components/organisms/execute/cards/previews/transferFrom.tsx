@@ -44,9 +44,12 @@ const ContentBox = styled.div<{ $isOpen: boolean }>`
     overflow: hidden;
     transition: all 0.2s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         gap: 24px;
-    `: `
+    `
+            : `
         gap: 0px;
     `}
 `;
@@ -111,17 +114,20 @@ const AccordionBox = styled.div<{ $isOpen: boolean }>`
     height: object-fit;
     transition: all 0.15s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         max-height: 100%;
         padding: 24px 32px;
         gap: 20px;
         opacity: 1;
-    `: `
+    `
+            : `
         max-height: 0px;
         padding: 0px 32px;
         gap: 0px;
         opacity: 0;
-    `}  
+    `}
 `;
 
 const ButtonWrap = styled.div`

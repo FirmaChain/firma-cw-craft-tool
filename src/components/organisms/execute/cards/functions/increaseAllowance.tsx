@@ -139,35 +139,35 @@ const IncreaseAllowance = () => {
     };
 
     const handleChangeAmount = (value: string) => {
-        const onlyNumbers = value.replace(ONE_TO_MINE, '');
-        if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
-        else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
+        // const onlyNumbers = value.replace(ONE_TO_MINE, '');
+        // if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
+        // else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
 
-        const truncateDecimals = (value: string) => {
-            const decimalPlaces = parseInt(tokenInfo.decimals.toString(), 10);
-            const fractionalPart = value.split('.')[1];
+        // const truncateDecimals = (value: string) => {
+        //     const decimalPlaces = parseInt(tokenInfo.decimals.toString(), 10);
+        //     const fractionalPart = value.split('.')[1];
 
-            if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
-                return value;
-            }
-            return cw20Balance;
-        };
+        //     if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
+        //         return value;
+        //     }
+        //     return cw20Balance;
+        // };
 
-        const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        if (!isValidFormat) {
-            return;
-        }
+        // const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
+        // if (!isValidFormat) {
+        //     return;
+        // }
 
-        const truncatedValue = truncateDecimals(value);
-        const convertIncreaseAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
-        const increaseAmount =
-            compareStringNumbers(cw20Balance, convertIncreaseAmount) === 1
-                ? truncatedValue
-                : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
+        // const truncatedValue = truncateDecimals(value);
+        // const convertIncreaseAmount = getUTokenAmountFromToken(value, tokenInfo.decimals.toString());
+        // const increaseAmount =
+        //     compareStringNumbers(cw20Balance, convertIncreaseAmount) === 1
+        //         ? value
+        //         : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAllowance({
             address: allowance === null ? '' : allowance?.address,
-            amount: increaseAmount,
+            amount: value,
             type: allowance === null ? '' : !allowance.type ? 'at_height' : allowance.type,
             expire: allowance === null ? '' : allowance.expire
         });
@@ -273,7 +273,7 @@ const IncreaseAllowance = () => {
                                     decimal: tokenInfo?.decimals,
                                     emptyErrorMessage: 'Please input amount',
                                     textAlign: 'right',
-                                    // maxValue: Number(getTokenStrFromUTokenStr(cw20Balance, tokenInfo.decimals.toString())),
+                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()),
                                     hideErrorMessage: true
                                 }}
                             />
