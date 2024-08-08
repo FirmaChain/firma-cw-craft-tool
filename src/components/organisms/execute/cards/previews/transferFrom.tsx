@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_ARROW_WITH_TAIL, IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { addStringAmount, formatWithCommas, getUTokenAmountFromToken } from '@/utils/balance';
+import { addStringAmount, compareStringNumbers, formatWithCommas, getUTokenAmountFromToken } from '@/utils/balance';
 import { getUTokenStrFromTokenStr, parseAmountWithDecimal2, shortenAddress } from '@/utils/common';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
@@ -14,6 +14,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import useFormStore from '@/store/formStore';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
+import commaNumber from 'comma-number';
 
 const Container = styled.div`
     width: 100%;
@@ -231,7 +232,7 @@ const FromToAddressLine = ({
                     data-tooltip-wrapper="span"
                     data-tooltip-place="bottom"
                 >
-                    {amount && decimal ? getUTokenStrFromTokenStr(amount, decimal) : 0}
+                    {amount && decimal ? commaNumber(getUTokenStrFromTokenStr(amount, decimal)) : 0}
                 </AccordionTypo>
                 <AccordionSymbolTypo>{symbol}</AccordionSymbolTypo>
             </AccordionValueWrap>
@@ -244,12 +245,11 @@ const TransferFromPreview = () => {
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
+    const balanceByAddress = useExecuteStore((v) => v.balanceByAddress);
 
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
     const clearTransferFrom = useExecuteStore((state) => state.clearTransferFrom);
-
-    const setFormError = useFormStore((v) => v.setFormError);
-    const clearFormError = useFormStore((v) => v.clearFormError);
 
     const modal = useModalStore();
 
@@ -267,29 +267,33 @@ const TransferFromPreview = () => {
         return totalAmount;
     }, [transferFromList]);
 
-    const isEnableButton = useMemo(() => {
-        //! if some from-to address is duplicated
-        let isDuplicated = false;
-        transferFromList.map(({ fromAddress, toAddress }) => {
-            const findAllDuplicted = transferFromList.filter(
-                (v) =>
-                    v.fromAddress !== '' &&
-                    v.toAddress !== '' &&
-                    v.fromAddress.toLowerCase() === fromAddress.toLowerCase() &&
-                    v.toAddress.toLowerCase() === toAddress.toLowerCase()
-            );
+    const totalAmountByAddress = useMemo(() => {
+        const result: Record<string, string> = {};
 
-            //! if duplucatted list is more than 2 (one for self)
-            if (findAllDuplicted.length > 1) {
-                isDuplicated = true;
-                findAllDuplicted.map(({ id: formId }) =>
-                    setFormError({ id: `${formId}_TO_ADDRESS`, type: 'DUPLICATED_FROM_TO', message: 'Duplicated from-to address.' })
-                );
-            } else {
-                findAllDuplicted.map(({ id: formId }) => clearFormError({ id: `${formId}_TO_ADDRESS`, type: 'DUPLICATED_FROM_TO' }));
-            }
+        transferFromList.map(({ fromAddress, toAmount }) => {
+            const _addr = fromAddress.toLowerCase();
+
+            if (!result[_addr]) result[_addr] = '';
+
+            result[_addr] = addStringAmount(result[_addr], toAmount);
         });
-        if (isDuplicated) return false;
+
+        return result;
+    }, [transferFromList]);
+
+    const isEnableButton = useMemo(() => {
+        const exceedAmount = transferFromList.some(({ fromAddress }) => {
+            const _addr = fromAddress.toLowerCase();
+
+            const requiredBalance = totalAmountByAddress[_addr] || '0';
+            const ownerBalance = balanceByAddress[_addr] || '0';
+            const ownerAllowance = allowanceByAddress[_addr] || '0';
+
+            if (compareStringNumbers(requiredBalance, ownerBalance) > 0 || compareStringNumbers(requiredBalance, ownerAllowance) > 0)
+                return true;
+        });
+
+        if (exceedAmount) return false;
 
         //! if empty values included
         if (transferFromList.some((v) => v.fromAddress === '' || v.toAddress === '' || v.toAmount === '')) return false;
@@ -301,7 +305,7 @@ const TransferFromPreview = () => {
         if (transferFromList.some((v) => v.toAmount.replace(ONE_TO_MINE, '') === '')) return false;
 
         return true;
-    }, [transferFromList]);
+    }, [allowanceByAddress, balanceByAddress, totalAmountByAddress, transferFromList]);
 
     const onClickTransfer = () => {
         const convertTransferList = [];

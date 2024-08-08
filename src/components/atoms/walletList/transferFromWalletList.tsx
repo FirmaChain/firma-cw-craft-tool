@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { v4 } from 'uuid';
 
 import {
@@ -20,13 +20,15 @@ import { ITransferFrom } from '@/components/organisms/execute/cards/functions/tr
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import { isValidAddress } from '@/utils/address';
 import { isAtHeight, isAtTime, isNever } from '@/utils/allowance';
-import { compareStringNumbers } from '@/utils/balance';
+import { addStringAmount, compareStringNumbers } from '@/utils/balance';
 import { getCurrentUTCTimeStamp, removeNanoSeconds } from '@/utils/time';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import AddWalletButton from '../buttons/addWalletButton';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+import useFormStore from '@/store/formStore';
 
 interface IProps {
     contractAddress: string;
@@ -44,125 +46,50 @@ const generateId = () => {
 };
 
 const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20, transferList, setTransferList }: IProps) => {
-    const address = useSelector((state: rootState) => state.wallet.address);
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
     const { enqueueSnackbar } = useSnackbar();
-    const { getCw20Balance, getCw20AllowanceBalance } = useExecuteHook();
+    const setFormError = useFormStore((v) => v.setFormError);
+    const clearFormError = useFormStore((v) => v.clearFormError);
+    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
+    const balanceByAddress = useExecuteStore((v) => v.balanceByAddress);
+
     const modal = useModalStore();
 
     const [validity, setValidity] = useState<boolean[]>([true]);
-    const [updateIndex, setUpdateIndex] = useState<number>(0);
+    // const [updateIndex, setUpdateIndex] = useState<number>(0);
+
+    const totalAmountByAddress = useMemo(() => {
+        const result: Record<string, string> = {};
+
+        transferList.map(({ fromAddress, toAmount }) => {
+            const _addr = fromAddress.toLowerCase();
+
+            if (!result[_addr]) result[_addr] = '';
+
+            result[_addr] = addStringAmount(result[_addr], toAmount);
+        });
+
+        return result;
+    }, [transferList]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const _walletList = [...transferList];
+        transferList.forEach(({ id, toAmount, fromAddress }) => {
+            if (toAmount !== '') {
+                const _addr = fromAddress.toLowerCase();
 
-                if (transferList[updateIndex] !== undefined) {
-                    const newTransfer: ITransferFrom = {
-                        fromAddress: transferList[updateIndex].fromAddress,
-                        fromAmount: transferList[updateIndex].fromAmount,
-                        toAddress: transferList[updateIndex].toAddress,
-                        toAmount: transferList[updateIndex].toAmount,
-                        allowanceAmount: transferList[updateIndex].allowanceAmount,
-                        id: transferList[updateIndex].id
-                    };
+                const requiredBalance = totalAmountByAddress[_addr] || '0';
+                const ownerBalance = balanceByAddress[_addr] || '0';
+                const ownerAllowance = allowanceByAddress[_addr] || '0';
 
-                    if (isValidAddress(transferList[updateIndex].fromAddress)) {
-                        const response = await getCw20Balance(contractAddress, transferList[updateIndex].fromAddress);
-                        if (response.success === true) {
-                            newTransfer.fromAmount = response.balance;
-                            _walletList[updateIndex] = newTransfer;
-
-                            setTransferList(_walletList);
-                        }
-                    } else {
-                        newTransfer.fromAmount = '0';
-                        _walletList[updateIndex] = newTransfer;
-
-                        setTransferList(_walletList);
-                    }
+                if (compareStringNumbers(requiredBalance, ownerBalance) > 0 || compareStringNumbers(requiredBalance, ownerAllowance) > 0) {
+                    setFormError({ id: `${id}_TO_AMOUNT`, type: 'EXCEED_AVAIL_AMOUNT', message: 'Exceed available amount.' });
+                } else {
+                    clearFormError({ id: `${id}_TO_AMOUNT`, type: 'EXCEED_AVAIL_AMOUNT' });
                 }
-            } catch (error) {
-                console.log(error);
             }
-        };
-
-        fetchData();
-    }, [contractAddress, transferList[updateIndex].fromAddress]);
-    //  transferList[updateIndex] &&
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const _walletList = [...transferList];
-
-                if (isValidAddress(transferList[updateIndex].fromAddress)) {
-                    const response = await getCw20Balance(contractAddress, transferList[updateIndex].fromAddress);
-                    const newTransfer: ITransferFrom = {
-                        fromAddress: transferList[updateIndex].fromAddress,
-                        fromAmount: response.balance,
-                        toAddress: transferList[updateIndex].toAddress,
-                        toAmount: transferList[updateIndex].toAmount,
-                        allowanceAmount: transferList[updateIndex].allowanceAmount,
-                        id: transferList[updateIndex].id
-                    };
-
-                    console.log('FIRST NEW TRANSFER', newTransfer);
-                    const { success, blockHeight, data } = await getCw20AllowanceBalance(
-                        contractAddress,
-                        transferList[updateIndex].fromAddress,
-                        address
-                    );
-                    console.log('SUCCESS', success);
-                    if (success === true) {
-                        const { allowance, expires } = data;
-
-                        console.log('EXPIRES', expires);
-                        if (isAtHeight(expires)) {
-                            const compareHeight = compareStringNumbers(expires.at_height.toString(), blockHeight);
-                            if (compareHeight === 1) {
-                                newTransfer.allowanceAmount = allowance;
-                            } else {
-                                newTransfer.allowanceAmount = '0';
-                            }
-                        } else if (isAtTime(expires)) {
-                            const allowanceTime = removeNanoSeconds(expires.at_time);
-                            const timeStamp = getCurrentUTCTimeStamp();
-                            const compareTime = compareStringNumbers(allowanceTime, timeStamp);
-
-                            console.log('COMPARE TIME', compareTime);
-
-                            if (compareTime === 1) {
-                                console.log('ALLOWANCE AMOUNT', allowance);
-                                console.log('UPDATE INDEX', updateIndex);
-                                console.log('NEW TRANSFER', newTransfer[updateIndex]);
-                                newTransfer.allowanceAmount = allowance;
-                            } else {
-                                newTransfer.allowanceAmount = '0';
-                            }
-                            console.log(`NEW TRANSFER`, newTransfer);
-                        } else if (isNever(expires)) {
-                            console.log('Never expires');
-                            newTransfer.allowanceAmount = allowance;
-                        }
-
-                        console.log('WALLET LIST', _walletList);
-                        _walletList[updateIndex] = newTransfer;
-                        setTransferList(_walletList);
-                    }
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchData();
-    }, [
-        contractAddress,
-        transferList[updateIndex] && transferList[updateIndex].fromAddress
-        // transferList[updateIndex] && transferList[updateIndex].toAddress
-    ]);
+        });
+    }, [allowanceByAddress, balanceByAddress, totalAmountByAddress]);
 
     const handleAddWallet = () => {
         if (transferList.length < maxWalletCount) {
@@ -192,7 +119,6 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
 
         _walletList[index] = value;
 
-        setUpdateIndex(index);
         setTransferList(_walletList);
     };
 

@@ -13,6 +13,9 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
+import commaNumber from 'comma-number';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -64,11 +67,17 @@ const TransferFromWalletInput = ({
 }: IProps) => {
     const id = inputId;
     const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const contractAddress = useExecuteStore((v) => v.contractAddress);
+
+    const { getCw20Balance, getCw20AllowanceBalance } = useExecuteHook();
 
     const fromAddressId = `${id}_FROM_ADDRESS`;
     const fromBalanceId = `${id}_FROM_BALANCE`;
     const toAddressId = `${id}_TO_ADDRESS`;
     const transferAmountId = `${id}_TO_AMOUNT`;
+
+    const balance = useExecuteStore((v) => v.balanceByAddress[transferFromInfo.fromAddress.toLowerCase()]) || '';
+    const allowance = useExecuteStore((v) => v.allowanceByAddress[transferFromInfo.fromAddress.toLowerCase()]) || '';
 
     const disableRemoveBtn = isLast;
 
@@ -99,16 +108,58 @@ const TransferFromWalletInput = ({
     };
 
     const checkRecipientAddress = (value: string) => {
-        if (value !== '') {
-            //! if address is invalid
-            if (isValidAddress(value)) clearFormError({ id: toAddressId, type: 'INVALID_ADDRESS' });
-            else {
-                setFormError({ id: toAddressId, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+        if (value !== '' && isValidAddress(value)) clearFormError({ id: toAddressId, type: 'INVALID_ADDRESS' });
+        else setFormError({ id: toAddressId, type: 'INVALID_ADDRESS', message: 'This is an invalid wallet address.' });
+    };
+
+    const getOwnerBalance = async (ownerAddress: string) => {
+        const { success, balance } = await getCw20Balance(contractAddress, ownerAddress);
+
+        useExecuteStore
+            .getState()
+            .setBalanceByAddress({ address: ownerAddress.toLowerCase(), amount: getTokenAmountFromUToken(balance, decimals) });
+    };
+
+    const getUserAllowance = async (ownerAddress: string) => {
+        const {
+            success,
+            blockHeight,
+            data: { allowance, expires }
+        } = await getCw20AllowanceBalance(contractAddress, ownerAddress, userAddress);
+
+        if (success) {
+            if (expires['never']) {
+                useExecuteStore
+                    .getState()
+                    .setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: getTokenAmountFromUToken(allowance, decimals) });
                 return;
             }
-        } else {
-            clearFormError({ id: toAddressId, type: 'INVALID_ADDRESS' });
+
+            if (expires['at_height']) {
+                if (BigInt(expires['at_height']) > BigInt(blockHeight)) {
+                    useExecuteStore.getState().setAllowanceByAddress({
+                        address: ownerAddress.toLowerCase(),
+                        amount: getTokenAmountFromUToken(allowance, decimals)
+                    });
+                    return;
+                }
+            }
+
+            if (expires['at_time']) {
+                //? approved to certain time. need to check
+                const expirationTimestamp = BigInt(expires['at_time']) / BigInt(1_000_000);
+
+                if (expirationTimestamp > BigInt(Number(new Date()))) {
+                    useExecuteStore.getState().setAllowanceByAddress({
+                        address: ownerAddress.toLowerCase(),
+                        amount: getTokenAmountFromUToken(allowance, decimals)
+                    });
+                    return;
+                }
+            }
         }
+
+        useExecuteStore.getState().setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: '' });
     };
 
     const handleOnChange = (id: string, value: string) => {
@@ -121,6 +172,10 @@ const TransferFromWalletInput = ({
                 _data.fromAmount = '';
                 _data.allowanceAmount = '';
                 _data.toAmount = '';
+                if (isValidAddress(value)) {
+                    getOwnerBalance(value);
+                    getUserAllowance(value);
+                }
                 break;
 
             case fromBalanceId:
@@ -204,11 +259,11 @@ const TransferFromWalletInput = ({
                                 labelProps={{ label: 'Balance' }}
                                 inputProps={{
                                     formId: fromBalanceId,
-                                    value: getTokenAmountFromUToken(transferFromInfo.fromAmount, decimals),
+                                    value: commaNumber(balance),
                                     onChange: (v) => handleOnChange(fromBalanceId, v),
                                     placeHolder: '0',
-                                    type: 'number',
-                                    decimal: decimals ? Number(decimals) : 6,
+                                    type: 'string',
+                                    // decimal: decimals ? Number(decimals) : 6,
                                     textAlign: 'right',
                                     readOnly: true
                                 }}
@@ -265,16 +320,16 @@ const TransferFromWalletInput = ({
                                     textAlign: 'right',
                                     emptyErrorMessage: 'Please input amount.',
                                     // hideErrorMessage: true,
-                                    maxValue: getTokenAmountFromUToken(transferFromInfo.allowanceAmount, decimals)
+                                    maxValue: getTokenAmountFromUToken(allowance, decimals)
                                 }}
                             />
                             <AllowanceTypo
                                 className="clamp-single-line"
-                                data-tooltip-content={parseAmountWithDecimal2(transferFromInfo.allowanceAmount, decimals)}
+                                data-tooltip-content={parseAmountWithDecimal2(allowance, decimals)}
                                 data-tooltip-id={TOOLTIP_ID.COMMON}
                                 data-tooltip-wrapper="span"
                                 data-tooltip-place="bottom"
-                            >{`Allowance : ${parseAmountWithDecimal2(transferFromInfo.allowanceAmount, decimals, true)}`}</AllowanceTypo>
+                            >{`Allowance : ${parseAmountWithDecimal2(allowance, decimals, true)}`}</AllowanceTypo>
                         </div>
                     </div>
                 </div>

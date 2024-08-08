@@ -62,6 +62,7 @@ interface FormProps {
     minterAddress: string | null;
     marketingLogoUrl: string | null;
     allowanceByAddress: Record<string, string>;
+    balanceByAddress: Record<string, string>;
 
     setIsFetched: (v: boolean) => void;
     setContractAddress: (v: string) => void;
@@ -78,6 +79,7 @@ interface FormProps {
     setMinterAddress: (v: string) => void;
     setMarketingLogoUrl: (v: string) => void;
     setAllowanceByAddress: ({ address, amount }: { address: string; amount: string }) => void;
+    setBalanceByAddress: ({ address, amount }: { address: string; amount: string }) => void;
 
     clearMinterList: () => void;
     clearBurn: () => void;
@@ -170,6 +172,7 @@ const useExecuteStore = create<FormProps>()(
         minterAddress: null,
         marketingLogoUrl: null,
         allowanceByAddress: {},
+        balanceByAddress: {},
 
         setIsFetched: (data) =>
             set((state) => {
@@ -231,6 +234,10 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.allowanceByAddress = { ...state.allowanceByAddress, [data.address]: data.amount };
             }),
+        setBalanceByAddress: (data) =>
+            set((state) => {
+                state.balanceByAddress = { ...state.balanceByAddress, [data.address]: data.amount };
+            }),
 
         clearMinterList: () =>
             set((state) => {
@@ -257,6 +264,7 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.transferFromList = INIT_TRANSFER_FROM_LIST;
                 state.allowanceByAddress = {};
+                state.balanceByAddress = {};
             }),
         clearMinter: () =>
             set((state) => {
@@ -304,6 +312,7 @@ const useExecuteStore = create<FormProps>()(
                 state.minterAddress = null;
                 state.marketingLogoUrl = null;
                 state.allowanceByAddress = {};
+                state.balanceByAddress = {};
             });
         }
     }))
