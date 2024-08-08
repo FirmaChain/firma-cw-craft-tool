@@ -47,12 +47,26 @@ const ContentBox = styled.div`
     height: auto;
     padding: 32px 44px;
 
-    gap: 24px;
-
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
     overflow: hidden;
+    gap: 24px;
 `;
+
+const ItemBox = styled.div<{ $isOpen: boolean }>`
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 24px;
+    height: fit-content;
+    transition: all 0.2s all;
+
+    ${({ $isOpen }) => $isOpen ? `
+        gap: 24px;
+    `: `
+        gap: 0px;
+    `}
+`
 
 const ItemWrap = styled.div`
     display: flex;
@@ -106,14 +120,25 @@ const ItemAmountSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const WalletListWrap = styled.div`
-    // height: auto;
-    padding: 24px 32px;
+const WalletListWrap = styled.div<{ $isOpen: boolean }>`
+    height: object-fit;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    // border-radius: 12px;
-    // background: var(--Gray-150, #141414);
+    overflow: hidden;
+    height: object-fit;
+    transition: all 0.15s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 100%;
+        padding: 24px 32px;
+        gap: 20px;
+        opacity: 1;
+    `: `
+        max-height: 0px;
+        padding: 0px 32px;
+        gap: 0px;
+        opacity: 0;
+    `}  
 `;
 
 const WalletItemWrap = styled.div`
@@ -332,23 +357,23 @@ const TransferPreview = () => {
     return (
         <Container>
             <ContentBox>
-                <ItemWrap>
-                    <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
-                        <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
-                    </ItemLabelWrap>
-                    <ItemAmountWrap>
-                        <ItemAmountTypo className="clamp-single-line">
-                            {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
-                        </ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                    </ItemAmountWrap>
-                </ItemWrap>
-                {isOpen && (
+                <ItemBox $isOpen={isOpen}>
+                    <ItemWrap>
+                        <ItemLabelWrap>
+                            <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                            <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
+                        </ItemLabelWrap>
+                        <ItemAmountWrap>
+                            <ItemAmountTypo className="clamp-single-line">
+                                {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
+                            </ItemAmountTypo>
+                            <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                        </ItemAmountWrap>
+                    </ItemWrap>
                     <ScrollbarContainer>
                         <ExecutePreviewOverlayScroll defer>
-                            <WalletListWrap>
+                            <WalletListWrap $isOpen={isOpen}>
                                 {transferList.map((value, index) => (
                                     <WalletItemWrap key={index}>
                                         <WalletLeftItemWrap>
@@ -374,7 +399,7 @@ const TransferPreview = () => {
                             </WalletListWrap>
                         </ExecutePreviewOverlayScroll>
                     </ScrollbarContainer>
-                )}
+                </ItemBox>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <ItemWrap>
                     <ItemLabelWrap>

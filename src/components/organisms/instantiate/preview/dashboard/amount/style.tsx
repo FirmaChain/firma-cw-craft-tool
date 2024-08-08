@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const AmountWrapper = styled.div`
+export const AmountWrapper = styled.div<{ $isMinterble: boolean }>`
     width: 100%;
     box-sizing: border-box;
     // width: 552px;
@@ -10,13 +10,57 @@ export const AmountWrapper = styled.div`
     flex-direction: column;
     // border-radius: 0px 0px 24px 24px;
     border-top: 1px solid var(--Gray-550, #444);
-    gap: 24px;
-`;
+    transition: all 0.2s ease;
+
+    > div:nth-child(1), > div:nth-child(2){
+        height: fit-content;
+        overflow: hidden;
+        transition: all 0.15s ease;
+    }
+
+    ${({ $isMinterble }) => $isMinterble ? `
+        gap: 24px;
+        > div:nth-child(1), > div:nth-child(2){
+            opacity: 1;
+            max-height: 100%;
+        }
+
+        > div:nth-child(1) {
+            >div:nth-child(2) {
+                padding: 24px 32px;
+                max-height: 100%;
+
+                > div {
+                    max-height: 100%; 
+                }
+            } 
+        }
+    `: `
+        gap: 0px;
+        > div:nth-child(1), > div:nth-child(2){
+            opacity: 0;
+            max-height: 0px !important;
+            min-height: 0px !important;
+        }
+
+        > div:nth-child(1) {
+            >div:nth-child(2) {
+                padding: 0px 32px;
+                max-height: 0px;
+
+                > div {
+                    max-height: 0px; 
+                }
+            } 
+        }
+    `}
+`
 
 export const MinterCapWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
+
 `;
 
 export const MinterCapHeaderWrapper = styled.div`
@@ -48,7 +92,7 @@ export const HeaderMinterCapText = styled.div`
 export const HeaderRightWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
 `;
 
@@ -71,7 +115,7 @@ export const HeaderMinterCapTokenSymbol = styled.div`
     line-height: 22px;
 `;
 
-export const DetailWrapper = styled.div`
+export const DetailWrapper = styled.div<{ $isOpen: boolean }>`
     display: flex;
     padding: 24px 32px;
     flex-direction: row;
@@ -79,12 +123,38 @@ export const DetailWrapper = styled.div`
     border-radius: 12px;
     background: var(--Gray-150, #141414);
     gap: 16px;
+    height: fit-content;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    
+    ${({ $isOpen }) => $isOpen ? `
+        opacity: 1 !important;
+        padding: 24px 32px !important;
+        max-height: 100% !important;
+
+        > div {
+            max-height: 100% !important; 
+        }
+    `: `
+        opacity: 0 !important;
+        padding: 0px 32px !important;
+        max-height: 0px !important;
+
+        > div {
+            max-height: 0px !important; 
+        }
+    `}
 `;
+
 
 export const DetailLeftWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 16px;
+    height: fit-content;
+    overflow: hidden;
+    transition: all 0.15s ease;
+    
 `;
 
 export const DetailAddressText = styled.div<{ $disabled?: boolean }>`

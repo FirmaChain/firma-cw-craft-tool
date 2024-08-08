@@ -20,14 +20,21 @@ const Container = styled.div`
     justify-content: center;
 `;
 
-const ContentWrap = styled.div`
+const ContentWrap = styled.div<{ $isOpen: boolean }>`
     height: auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
     padding: 32px 44px;
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
+
+    transition: all 0.2s all;
+
+    ${({ $isOpen }) => $isOpen ? `
+        gap: 24px;
+    `: `
+        gap: 0px;
+    `}
 `;
 
 const ItemWrap = styled.div`
@@ -62,14 +69,26 @@ const ItemAmountWrap = styled.div`
     gap: 8px;
 `;
 
-const AccordionBox = styled.div`
-    height: auto;
+const AccordionBox = styled.div<{ $isOpen: boolean }>`
+    height: fit-content;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     border-radius: 12px;
     background: var(--Gray-150, #141414);
+    transition: all 0.15s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 100%;
+        padding: 24px 32px;
+        gap: 20px;
+        opacity: 1;
+    `: `
+        max-height: 0px;
+        padding: 0px 32px;
+        gap: 0px;
+        opacity: 0;
+    `}  
 `;
 
 const ButtonWrap = styled.div`
@@ -165,7 +184,7 @@ const RevokeAllPreview = () => {
 
     return (
         <Container>
-            <ContentWrap>
+            <ContentWrap $isOpen={isOpen}>
                 <ItemWrap>
                     <ItemLabelWrap>
                         <ItemLabelIcon src="/assets/icon/ic_reverse_left.png" alt={'revoke-nft'} />
@@ -175,15 +194,13 @@ const RevokeAllPreview = () => {
                         <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
-                {isOpen && (
-                    <AccordionBox>
-                        <AccordionRow>
-                            <img src={IC_WALLET} alt="wallet" />
-                            {revokeAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
-                            {revokeAddress !== '' && <AccordionTypo $disabled={false}>{revokeAddress}</AccordionTypo>}
-                        </AccordionRow>
-                    </AccordionBox>
-                )}
+                <AccordionBox $isOpen={isOpen}>
+                    <AccordionRow>
+                        <img src={IC_WALLET} alt="wallet" />
+                        {revokeAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
+                        {revokeAddress !== '' && <AccordionTypo $disabled={false}>{revokeAddress}</AccordionTypo>}
+                    </AccordionRow>
+                </AccordionBox>
             </ContentWrap>
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickRevokeAll}>

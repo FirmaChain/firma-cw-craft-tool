@@ -6,7 +6,7 @@ import SimpleSwitch from '@/components/atoms/switch/simpleSwitch';
 import { GlobalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
 
-import { MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
+import { MinterbleInputBox, MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../../instaniateStore';
@@ -80,37 +80,35 @@ const Minterble = ({ decimals }: IProps) => {
                 <MinterbleText>Additional Instantiation</MinterbleText>
                 <SimpleSwitch checked={minterble} onChange={handleMinterble} />
             </MinterbleOption>
-            {minterble && (
-                <Fragment>
-                    {contractMode === 'ADVANCED' && (
-                        <LabelInput
-                            labelProps={{ label: 'Minter Address', tooltip: ADDRESS_TOOLTIP_TEXT }}
-                            inputProps={{
-                                value: minterAddress,
-                                formId: 'minterAddress',
-                                placeHolder: 'Input minter address',
-                                onChange: handleMinterAddress,
-                                emptyErrorMessage: 'Please input wallet address.',
-                                regex: WALLET_ADDRESS_REGEX
-                            }}
-                        />
-                    )}
-
+            <MinterbleInputBox $isOpen={minterble}>
+                {contractMode === 'ADVANCED' && (
                     <LabelInput
-                        labelProps={{ label: 'Minter Cap', tooltip: contractMode === 'BASIC' ? CAP_TOOLTIP_TEXT : '' }}
+                        labelProps={{ label: 'Minter Address', tooltip: ADDRESS_TOOLTIP_TEXT }}
                         inputProps={{
-                            value: minterCap,
-                            formId: 'minterCap',
-                            placeHolder: '0',
-                            onChange: handleMinterCap,
-                            emptyErrorMessage: 'Please input minter cap.',
-                            type: 'number',
-                            decimal: decimals === '' ? 6 : Number(decimals),
-                            maxValue: getMaxMinterCap(decimals)
+                            value: minterAddress,
+                            formId: 'minterAddress',
+                            placeHolder: 'Input minter address',
+                            onChange: handleMinterAddress,
+                            emptyErrorMessage: 'Please input wallet address.',
+                            regex: WALLET_ADDRESS_REGEX
                         }}
                     />
-                </Fragment>
-            )}
+                )}
+
+                <LabelInput
+                    labelProps={{ label: 'Minter Cap', tooltip: contractMode === 'BASIC' ? CAP_TOOLTIP_TEXT : '' }}
+                    inputProps={{
+                        value: minterCap,
+                        formId: 'minterCap',
+                        placeHolder: '0',
+                        onChange: handleMinterCap,
+                        emptyErrorMessage: 'Please input minter cap.',
+                        type: 'number',
+                        decimal: decimals === '' ? 6 : Number(decimals),
+                        maxValue: getMaxMinterCap(decimals)
+                    }}
+                />
+            </MinterbleInputBox>
         </MinterbleWrapper>
     );
 };

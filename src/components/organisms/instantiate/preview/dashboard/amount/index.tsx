@@ -62,51 +62,43 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
     }, [isBasic]);
 
     return (
-        <AmountWrapper>
-            {minterble && (
-                <>
-                    <MinterCapWrapper>
-                        <MinterCapHeaderWrapper>
-                            <HeaderLeftWrapper>
-                                <Icons.CoinStack2 width={'24px'} height={'24px'} />
-                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                                    <HeaderMinterCapText>Minter Cap</HeaderMinterCapText>
-                                    <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} TooltipIcon={<Icons.Alert />} />
-                                </div>
-                            </HeaderLeftWrapper>
-                            <HeaderRightWrapper>
-                                <HeaderMinterCapAmount className="clamp-single-line" $disabled={!Boolean(Number(minterCap))}>
-                                    {commaNumber(minterCap) || 0}
-                                </HeaderMinterCapAmount>
-                                {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
-                                {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}
-                            </HeaderRightWrapper>
-                        </MinterCapHeaderWrapper>
-                        {!isBasic && isOpen ? (
-                            <DetailWrapper>
-                                <DetailLeftWrapper>
-                                    <Icons.Wallet width={'20px'} height={'20px'} />
-                                    <DetailAddressText
-                                        $disabled={!Boolean(currentMinterAddress)}
-                                        data-tooltip-content={currentMinterAddress.length >= 25 ? currentMinterAddress : ''}
-                                        data-tooltip-id={TOOLTIP_ID.COMMON}
-                                        data-tooltip-wrapper="span"
-                                        data-tooltip-place="bottom"
-                                    >
-                                        {shortenAddress(currentMinterAddress, 12, 12) || 'Wallet Address'}
-                                    </DetailAddressText>
-                                </DetailLeftWrapper>
-                                <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
-                                    {commaNumber(minterCap) || 0}
-                                </DetailMinterCapAmount>
-                            </DetailWrapper>
-                        ) : (
-                            <></>
-                        )}
-                    </MinterCapWrapper>
-                    <Divider $direction="horizontal" $color="#383838" $variant="dash" />
-                </>
-            )}
+        <AmountWrapper $isMinterble={minterble}>
+            <MinterCapWrapper>
+                <MinterCapHeaderWrapper>
+                    <HeaderLeftWrapper>
+                        <Icons.CoinStack2 width={'24px'} height={'24px'} />
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <HeaderMinterCapText>Minter Cap</HeaderMinterCapText>
+                            <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} TooltipIcon={<Icons.Alert />} />
+                        </div>
+                    </HeaderLeftWrapper>
+                    <HeaderRightWrapper>
+                        <HeaderMinterCapAmount className="clamp-single-line" $disabled={!Boolean(Number(minterCap))}>
+                            {commaNumber(minterCap) || 0}
+                        </HeaderMinterCapAmount>
+                        {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
+                        {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}
+                    </HeaderRightWrapper>
+                </MinterCapHeaderWrapper>
+                <DetailWrapper $isOpen={!isBasic && isOpen}>
+                    <DetailLeftWrapper>
+                        <Icons.Wallet width={'20px'} height={'20px'} />
+                        <DetailAddressText
+                            $disabled={!Boolean(currentMinterAddress)}
+                            data-tooltip-content={currentMinterAddress.length >= 25 ? currentMinterAddress : ''}
+                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                            data-tooltip-wrapper="span"
+                            data-tooltip-place="bottom"
+                        >
+                            {shortenAddress(currentMinterAddress, 12, 12) || 'Wallet Address'}
+                        </DetailAddressText>
+                    </DetailLeftWrapper>
+                    <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
+                        {commaNumber(minterCap) || 0}
+                    </DetailMinterCapAmount>
+                </DetailWrapper>
+            </MinterCapWrapper>
+            <Divider $direction="horizontal" $color="#383838" $variant="dash" />
             <TotalSupply totalSupply={totalSupply} tokenSymbol={tokenSymbol} walletList={walletList} decimals={decimals} />
         </AmountWrapper>
     );

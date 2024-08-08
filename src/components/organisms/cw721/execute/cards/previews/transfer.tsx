@@ -48,6 +48,21 @@ const ContentBox = styled.div`
     overflow: hidden;
 `;
 
+const ItemBox = styled.div<{ $isOpen: boolean }>`
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 24px;
+    height: fit-content;
+    transition: all 0.2s all;
+
+    ${({ $isOpen }) => $isOpen ? `
+        gap: 24px;
+    `: `
+        gap: 0px;
+    `}
+`
+
 const ItemWrap = styled.div`
     display: flex;
     justify-content: space-between;
@@ -98,14 +113,26 @@ const ItemAmountSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const WalletListWrap = styled.div`
-    height: auto;
+const WalletListWrap = styled.div<{ $isOpen: boolean }>`
+    height: fit-content;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     border-radius: 12px;
     background: var(--Gray-150, #141414);
+    transition: all 0.15s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 100%;
+        padding: 24px 32px;
+        gap: 20px;
+        opacity: 1;
+    `: `
+        max-height: 0px;
+        padding: 0px 32px;
+        gap: 0px;
+        opacity: 0;
+    `}  
 `;
 
 const WalletItemWrap = styled.div`
@@ -323,21 +350,21 @@ const TransferPreview = () => {
     return (
         <Container>
             <ContentBox>
-                <ItemWrap>
-                    <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
-                        <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
-                    </ItemLabelWrap>
-                    <ItemAmountWrap>
-                        <ItemAmountTypo>{transferIds.length}</ItemAmountTypo>
-                        <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
-                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                    </ItemAmountWrap>
-                </ItemWrap>
-                {isOpen && (
+                <ItemBox $isOpen={isOpen}>
+                    <ItemWrap>
+                        <ItemLabelWrap>
+                            <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                            <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
+                        </ItemLabelWrap>
+                        <ItemAmountWrap>
+                            <ItemAmountTypo>{transferIds.length}</ItemAmountTypo>
+                            <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                        </ItemAmountWrap>
+                    </ItemWrap>
                     <ScrollbarContainer>
                         <ExecutePreviewOverlayScroll defer>
-                            <WalletListWrap>
+                            <WalletListWrap $isOpen={isOpen}>
                                 {transferListForPreview.map((value, index) => (
                                     <WalletItemWrap key={index}>
                                         <WalletLeftItemWrap>
@@ -355,7 +382,7 @@ const TransferPreview = () => {
                             </WalletListWrap>
                         </ExecutePreviewOverlayScroll>
                     </ScrollbarContainer>
-                )}
+                </ItemBox>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <ItemWrap>
                     <ItemLabelWrap>

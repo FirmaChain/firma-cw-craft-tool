@@ -37,6 +37,21 @@ const ContentWrap = styled.div`
     border: 1px solid var(--Gray-550, #444);
 `;
 
+const ItemBox = styled.div<{ $isOpen: boolean }>`
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 24px;
+    height: fit-content;
+    transition: all 0.2s all;
+
+    ${({ $isOpen }) => $isOpen ? `
+        gap: 24px;
+    `: `
+        gap: 0px;
+    `}
+`
+
 const ItemWrap = styled.div`
     display: flex;
     justify-content: space-between;
@@ -89,16 +104,27 @@ const ItemAmountSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const AccordionBox = styled.div`
-    height: auto;
+const AccordionBox = styled.div<{ $isOpen: boolean }>`
+    height: fit-content;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     border-radius: 12px;
     background: var(--Gray-150, #141414);
-`;
+    transition: all 0.15s ease;
 
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 100%;
+        padding: 24px 32px;
+        gap: 20px;
+        opacity: 1;
+    `: `
+        max-height: 0px;
+        padding: 0px 32px;
+        gap: 0px;
+        opacity: 0;
+    `}  
+`;
 const CoinStack2Icon = styled.img`
     width: 24px;
     height: 24px;
@@ -344,21 +370,21 @@ const DecreaseAllowancePreview = () => {
     return (
         <Container>
             <ContentWrap>
-                <ItemWrap>
-                    <ItemLabelWrap>
-                        <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
-                        <ItemLabelTypo>Decrease Allowance Amount</ItemLabelTypo>
-                    </ItemLabelWrap>
-                    <ItemAmountWrap>
-                        <ItemAmountTypo className="clamp-single-line">
-                            {commaNumber(!allowance?.amount ? '0' : allowance.amount)}
-                        </ItemAmountTypo>
-                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                        <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                    </ItemAmountWrap>
-                </ItemWrap>
-                {isOpen && (
-                    <AccordionBox>
+                <ItemBox $isOpen={isOpen}>
+                    <ItemWrap>
+                        <ItemLabelWrap>
+                            <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
+                            <ItemLabelTypo>Decrease Allowance Amount</ItemLabelTypo>
+                        </ItemLabelWrap>
+                        <ItemAmountWrap>
+                            <ItemAmountTypo className="clamp-single-line">
+                                {commaNumber(!allowance?.amount ? '0' : allowance.amount)}
+                            </ItemAmountTypo>
+                            <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                        </ItemAmountWrap>
+                    </ItemWrap>
+                    <AccordionBox $isOpen={isOpen}>
                         <AccordionRow>
                             <img src={IC_WALLET} alt="wallet" />
                             <div
@@ -396,7 +422,7 @@ const DecreaseAllowancePreview = () => {
                             <ExpirationBox allowanceInfo={allowance} />
                         </AccordionRow>
                     </AccordionBox>
-                )}
+                </ItemBox>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <ItemWrap>
                     <ItemLabelWrap>

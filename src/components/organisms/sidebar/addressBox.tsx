@@ -18,18 +18,26 @@ import useResetStoreData from '@/hooks/useResetStoreData';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
-const BalanceBox = styled(AddressCard)`
+const BalanceBox = styled(AddressCard) <{ $isOpen: boolean }>`
     position: absolute;
     z-index: 1;
 
     margin-top: 6px;
     background: var(--Gray-200, #1a1a1a);
-
     flex-direction: column;
-    height: fit-content;
-    padding: 10px;
-
     gap: 10px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: fit-content;
+
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 500px;
+        padding: 10px;
+    `: `
+        max-height: 0px;
+        padding: 0 10px;
+        border: 0px solid transparent;
+    `}
 
     .bg-box {
         border-radius: 4px;
@@ -131,7 +139,7 @@ const AddressBox = () => {
     const { firmaSDK } = useFirmaSDKContext();
 
     const [balance, setBalance] = useState<string>('');
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
 
     const onClickAddress = async (evt) => {
         evt.preventDefault();
@@ -187,7 +195,7 @@ const AddressBox = () => {
     return (
         <div style={{ position: 'relative' }}>
             <IconButton style={{ padding: 0 }} onClick={() => setOpen(!open)}>
-            {/* <IconButton style={{ padding: 0 }} onClick={onClickAddress}> */}
+                {/* <IconButton style={{ padding: 0 }} onClick={onClickAddress}> */}
                 <AddressCard>
                     <AddressText>{shortenAddress(address, 8, 6)}</AddressText>
                     <div style={{ display: 'flex' }} onClick={onClickAddress}>
@@ -195,27 +203,25 @@ const AddressBox = () => {
                     </div>
                 </AddressCard>
             </IconButton>
-            {open && (
-                <BalanceBox>
-                    <div className="bg-box" style={{}}>
-                        <div className="title">Balance :</div>
-                        <div className="balance-box">
-                            {balance ? (
-                                <span className="balance">{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</span>
-                            ) : (
-                                <Skeleton width="80px" height="14px" />
-                            )}
-                            <Icons.FirmaChain width="10px" height="10px" fill="#FFFFFF" />
-                        </div>
+            <BalanceBox $isOpen={open}>
+                <div className="bg-box" style={{}}>
+                    <div className="title">Balance :</div>
+                    <div className="balance-box">
+                        {balance ? (
+                            <span className="balance">{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</span>
+                        ) : (
+                            <Skeleton width="80px" height="14px" />
+                        )}
+                        <Icons.FirmaChain width="10px" height="10px" fill="#FFFFFF" />
                     </div>
+                </div>
 
-                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-450, #313131)" />
-                    <DisconnectBtn onClick={onClickLogout}>
-                        <img src={IC_LOG_OUT} alt="logout" style={{ width: '14px' }} />
-                        <div className="typo">Disconnect</div>
-                    </DisconnectBtn>
-                </BalanceBox>
-            )} 
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-450, #313131)" />
+                <DisconnectBtn onClick={onClickLogout}>
+                    <img src={IC_LOG_OUT} alt="logout" style={{ width: '14px' }} />
+                    <div className="typo">Disconnect</div>
+                </DisconnectBtn>
+            </BalanceBox>
         </div>
     );
 };

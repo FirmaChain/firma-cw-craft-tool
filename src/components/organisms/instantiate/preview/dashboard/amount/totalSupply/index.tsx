@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import {
     ItemLeftAddress,
@@ -52,8 +52,8 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                     <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />
                 </SummeryRightWrapeer>
             </TotalSupplySummery>
-            {isOpen ? (
-                walletList.length === 0 ? (
+            <WalletListWrapper $isOpen={isOpen}>
+                {walletList.length === 0 ? (
                     <WalletListItem>
                         <ItemLeftWrapper>
                             <Icons.Wallet width={'20px'} height={'20px'} />
@@ -62,7 +62,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                         <ItemTokenAmount>{'0'}</ItemTokenAmount>
                     </WalletListItem>
                 ) : (
-                    <WalletListWrapper>
+                    <Fragment>
                         {walletList.map((wallet, index) => (
                             <WalletListItem key={index}>
                                 <ItemLeftWrapper>
@@ -82,11 +82,8 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                 </ItemTokenAmount>
                             </WalletListItem>
                         ))}
-                    </WalletListWrapper>
-                )
-            ) : (
-                <></>
-            )}
+                    </Fragment>)}
+            </WalletListWrapper>
         </TotalSupplyWrapper>
     );
 };

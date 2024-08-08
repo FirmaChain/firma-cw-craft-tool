@@ -33,7 +33,7 @@ const ContentScrollWrap = styled.div`
     overflow: hidden;
 `;
 
-const ContentBox = styled.div`
+const ContentBox = styled.div<{ $isOpen: boolean }>`
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -43,6 +43,13 @@ const ContentBox = styled.div`
     // border: 1px solid var(--Gray-550, #444);
     gap: 24px;
     // overflow: scroll;
+    transition: all 0.2s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        gap: 24px;
+    `: `
+        gap: 0px;
+    `}
 `;
 
 const ItemWrap = styled.div`
@@ -97,14 +104,26 @@ const ItemAmountSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const WalletListWrap = styled.div`
-    height: auto;
+const WalletListWrap = styled.div<{ $isOpen: boolean }>`
+    height: fit-content;
     padding: 24px 32px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     border-radius: 12px;
     background: var(--Gray-150, #141414);
+    transition: all 0.15s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 100%;
+        padding: 24px 32px;
+        gap: 20px;
+        opacity: 1;
+    `: `
+        max-height: 0px;
+        padding: 0px 32px;
+        gap: 0px;
+        opacity: 0;
+    `}  
 `;
 
 const WalletItemWrap = styled.div`
@@ -319,7 +338,7 @@ const BurnFromPreview = () => {
         <Container>
             <ContentScrollWrap>
                 <ExecutePreviewOverlayScroll defer>
-                    <ContentBox>
+                    <ContentBox $isOpen={isOpen}>
                         <ItemWrap>
                             <ItemLabelWrap>
                                 <ItemLabelIcon src={IC_COIN_STACK} alt={'Burn From Title Icon'} />
@@ -333,32 +352,30 @@ const BurnFromPreview = () => {
                                 <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                             </ItemAmountWrap>
                         </ItemWrap>
-                        {isOpen && (
-                            <WalletListWrap>
-                                {burnFromList.map((value, index) => (
-                                    <WalletItemWrap key={index}>
-                                        <WalletLeftItemWrap>
-                                            <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                            <WalletItemAddressTypo
-                                                $disabled={!value.recipient}
-                                                data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
-                                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                                data-tooltip-wrapper="span"
-                                                data-tooltip-place="bottom"
-                                            >
-                                                {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
-                                            </WalletItemAddressTypo>
-                                        </WalletLeftItemWrap>
-                                        <WalletItemTokenWrap>
-                                                <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
-                                                    {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                                </WalletItemTokenAmount>
-                                            <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
-                                        </WalletItemTokenWrap>
-                                    </WalletItemWrap>
-                                ))}
-                            </WalletListWrap>
-                        )}
+                        <WalletListWrap $isOpen={isOpen}>
+                            {burnFromList.map((value, index) => (
+                                <WalletItemWrap key={index}>
+                                    <WalletLeftItemWrap>
+                                        <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                        <WalletItemAddressTypo
+                                            $disabled={!value.recipient}
+                                            data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
+                                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                                            data-tooltip-wrapper="span"
+                                            data-tooltip-place="bottom"
+                                        >
+                                            {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                        </WalletItemAddressTypo>
+                                    </WalletLeftItemWrap>
+                                    <WalletItemTokenWrap>
+                                        <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
+                                            {value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                        </WalletItemTokenAmount>
+                                        <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
+                                    </WalletItemTokenWrap>
+                                </WalletItemWrap>
+                            ))}
+                        </WalletListWrap>
                     </ContentBox>
                 </ExecutePreviewOverlayScroll>
             </ContentScrollWrap>

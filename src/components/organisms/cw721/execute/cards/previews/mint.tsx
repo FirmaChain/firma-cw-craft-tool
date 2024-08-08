@@ -52,12 +52,17 @@ const TokenInfoWrap = styled.div`
     justify-content: space-between;
 `;
 
-const TokenTitleWrap = styled.div`
+const TokenTitleWrap = styled.div<{ $isOpen: boolean }>`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     overflow: hidden;
+    
+    ${({ $isOpen }) => $isOpen ? `
+        gap: 20px;
+    `: `
+        gap: 0px;
+    `}
 `;
 
 const TokenInfoLeft = styled.div`
@@ -105,14 +110,35 @@ const TokeInfoMintSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const WalletListWrap = styled.div`
-    height: auto;
-    padding: 24px 32px;
+const WalletListWrap = styled.div<{ $isOpen: boolean }>`
     display: flex;
     flex-direction: column;
-    gap: 24px;
     // border-radius: 12px;
     // background: var(--Gray-150, #141414);
+
+    height: fit-content;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    
+    ${({ $isOpen }) => $isOpen ? `
+        opacity: 1;
+        gap: 24px;
+        padding: 24px 32px;
+        max-height: 100%;
+
+        > div {
+            max-height: 100%; 
+        }
+    `: `
+        opacity: 0;
+        gap: 0px;
+        padding: 0px 32px;
+        max-height: 0px;
+
+        > div {
+            max-height: 0px; 
+        }
+    `}
 `;
 
 const WalletLeftItemWrap = styled.div`
@@ -306,7 +332,7 @@ const MintPreview = () => {
     return (
         <Container>
             <ContentBox>
-                <TokenTitleWrap>
+                <TokenTitleWrap $isOpen={isOpen}>
                     <TokenInfoWrap>
                         <TokenInfoLeft>
                             <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
@@ -318,38 +344,36 @@ const MintPreview = () => {
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>
-                    {isOpen && (
-                        <ScrollbarContainer>
-                            <ExecutePreviewOverlayScroll defer>
-                                <WalletListWrap>
-                                    <WalletLeftItemWrap>
-                                        <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                        <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
-                                            {mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
-                                        </WalletItemAddressTypo>
-                                    </WalletLeftItemWrap>
-                                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-                                    <WalletItemWrap>
-                                        {mintList.map((value, index) => (
-                                            <WalletLeftItemWrap key={index}>
-                                                <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                                <WalletItemAddressTypo
-                                                    className="clamp-single-line"
-                                                    $disabled={mintList[0].token_uri === ''}
-                                                    data-tooltip-content={value.token_uri.length >= 30 ? value.token_uri : ''}
-                                                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                                                    data-tooltip-wrapper="span"
-                                                    data-tooltip-place="bottom"
-                                                >
-                                                    {value.token_uri || 'NFT Url'}
-                                                </WalletItemAddressTypo>
-                                            </WalletLeftItemWrap>
-                                        ))}
-                                    </WalletItemWrap>
-                                </WalletListWrap>
-                            </ExecutePreviewOverlayScroll>
-                        </ScrollbarContainer>
-                    )}
+                    <ScrollbarContainer>
+                        <ExecutePreviewOverlayScroll defer>
+                            <WalletListWrap $isOpen={isOpen}>
+                                <WalletLeftItemWrap>
+                                    <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                    <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
+                                        {mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
+                                    </WalletItemAddressTypo>
+                                </WalletLeftItemWrap>
+                                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+                                <WalletItemWrap>
+                                    {mintList.map((value, index) => (
+                                        <WalletLeftItemWrap key={index}>
+                                            <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
+                                            <WalletItemAddressTypo
+                                                className="clamp-single-line"
+                                                $disabled={mintList[0].token_uri === ''}
+                                                data-tooltip-content={value.token_uri.length >= 30 ? value.token_uri : ''}
+                                                data-tooltip-id={TOOLTIP_ID.COMMON}
+                                                data-tooltip-wrapper="span"
+                                                data-tooltip-place="bottom"
+                                            >
+                                                {value.token_uri || 'NFT Url'}
+                                            </WalletItemAddressTypo>
+                                        </WalletLeftItemWrap>
+                                    ))}
+                                </WalletItemWrap>
+                            </WalletListWrap>
+                        </ExecutePreviewOverlayScroll>
+                    </ScrollbarContainer>
                 </TokenTitleWrap>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                 <TokenInfoWrap>

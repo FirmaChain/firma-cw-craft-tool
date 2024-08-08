@@ -32,18 +32,23 @@ const ContentScrollWrap = styled.div`
     overflow: hidden;
 `;
 
-const ContentBox = styled.div`
+const ContentBox = styled.div<{ $isOpen: boolean }>`
     display: flex;
     flex-direction: column;
     width: 100%;
     height: auto;
     padding: 32px 44px;
 
-    gap: 24px;
-
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
     overflow: hidden;
+    transition: all 0.2s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        gap: 24px;
+    `: `
+        gap: 0px;
+    `}
 `;
 
 const ItemWrap = styled.div`
@@ -98,14 +103,25 @@ const ItemAmountSymbolTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const AccordionBox = styled.div`
-    height: auto;
-    padding: 24px 32px;
+const AccordionBox = styled.div<{ $isOpen: boolean }>`
+    height: object-fit;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    // border-radius: 12px;
-    // background: var(--Gray-150, #141414);
+    overflow: hidden;
+    height: object-fit;
+    transition: all 0.15s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 100%;
+        padding: 24px 32px;
+        gap: 20px;
+        opacity: 1;
+    `: `
+        max-height: 0px;
+        padding: 0px 32px;
+        gap: 0px;
+        opacity: 0;
+    `}  
 `;
 
 const ButtonWrap = styled.div`
@@ -145,7 +161,6 @@ const ScrollbarContainer = styled.div`
     border-radius: 12px;
     display: flex;
     background: var(--Gray-150, #141414);
-    overflow: hidden;
 `;
 
 const FromToAddressLine = ({
@@ -334,7 +349,7 @@ const TransferFromPreview = () => {
 
     return (
         <Container>
-            <ContentBox>
+            <ContentBox $isOpen={isOpen}>
                 <ItemWrap>
                     <ItemLabelWrap>
                         <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
@@ -346,24 +361,22 @@ const TransferFromPreview = () => {
                         <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>
-                {isOpen && (
-                    <ScrollbarContainer>
-                        <ExecutePreviewOverlayScroll defer>
-                            <AccordionBox>
-                                {transferFromList.map((info, index) => (
-                                    <FromToAddressLine
-                                        key={index}
-                                        from={info.fromAddress}
-                                        to={info.toAddress}
-                                        amount={info.toAmount}
-                                        decimal={tokenInfo.decimals.toString()}
-                                        symbol={tokenInfo.symbol}
-                                    />
-                                ))}
-                            </AccordionBox>
-                        </ExecutePreviewOverlayScroll>
-                    </ScrollbarContainer>
-                )}
+                <ScrollbarContainer>
+                    <ExecutePreviewOverlayScroll defer>
+                        <AccordionBox $isOpen={isOpen}>
+                            {transferFromList.map((info, index) => (
+                                <FromToAddressLine
+                                    key={index}
+                                    from={info.fromAddress}
+                                    to={info.toAddress}
+                                    amount={info.toAmount}
+                                    decimal={tokenInfo.decimals.toString()}
+                                    symbol={tokenInfo.symbol}
+                                />
+                            ))}
+                        </AccordionBox>
+                    </ExecutePreviewOverlayScroll>
+                </ScrollbarContainer>
             </ContentBox>
 
             <ButtonWrap>

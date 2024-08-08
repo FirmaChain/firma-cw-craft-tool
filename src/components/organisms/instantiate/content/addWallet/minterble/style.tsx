@@ -21,3 +21,21 @@ export const MinterbleText = styled.div`
     font-weight: 600;
     line-height: 22px;
 `;
+
+
+export const MinterbleInputBox = styled.div<{ $isOpen: boolean }>`
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    height: fit-content;
+    overflow: hidden;
+    transition: all 0.2s ease;
+
+    ${({ $isOpen }) => $isOpen ? `
+        max-height: 100%;
+    `: `
+        max-height: 0px;
+    `}
+`

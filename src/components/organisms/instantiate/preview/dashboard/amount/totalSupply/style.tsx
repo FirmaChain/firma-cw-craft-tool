@@ -56,20 +56,43 @@ export const SummeryRightTokenSymbol = styled.div`
     line-height: 22px;
 `;
 
-export const WalletListWrapper = styled.div`
-    padding: 24px 32px;
+export const WalletListWrapper = styled.div<{ $isOpen: boolean }>`
     display: flex;
     flex-direction: column;
     gap: 20px;
     border-radius: 12px;
     background: var(--Gray-150, #141414);
+    height: fit-content;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    
+    ${({ $isOpen }) => $isOpen ? `
+        opacity: 1;
+        padding: 24px 32px;
+        max-height: 100%;
+
+        > div {
+            max-height: 100%; 
+        }
+    `: `
+        opacity: 0;
+        padding: 0px 32px;
+        max-height: 0px;
+
+        > div {
+            max-height: 0px; 
+        }
+    `}
 `;
 
 export const WalletListItem = styled.div`
+    height: fit-content;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     gap: 16px;
+    overflow: hidden;
+    transition: all 0.15s ease;
 `;
 
 export const ItemLeftWrapper = styled.div`
