@@ -4,11 +4,11 @@ import { FirmaUtil } from '@firmachain/firma-js';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { parseAmountWithDecimal2 } from '@/utils/common';
+import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
-import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { compareStringNumbers, getMaxMinterCap, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { addNanoSeconds } from '@/utils/time';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
@@ -17,6 +17,9 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import useExecuteActions from '../../action';
+import useExecuteHook from '../../hooks/useExecueteHook';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -66,6 +69,7 @@ enum ExpirationType {
 }
 
 const DecreaseAllowance = () => {
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const isFetched = useExecuteStore((state) => state.isFetched);
     const allowance = useExecuteStore((state) => state.allowance);
@@ -74,6 +78,10 @@ const DecreaseAllowance = () => {
     const setAllowance = useExecuteStore((state) => state.setAllowance);
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
 
+    const { getCw20AllowanceBalance } = useExecuteHook();
+
+    const { firmaSDK } = useFirmaSDKContext();
+
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -81,6 +89,7 @@ const DecreaseAllowance = () => {
 
     const inputId = 'DECREASE_ALLOWANCE';
 
+    const [allowAmount, setAllowAmount] = useState<string>('');
     const [expirationType, setExpirationType] = useState<ExpirationType>(ExpirationType.Height);
     const [expInputValue, setExpInputValue] = useState('');
 
@@ -120,15 +129,53 @@ const DecreaseAllowance = () => {
         return true;
     };
 
+    const updateAllowance = async (searchAddress: string) => {
+        const { success, blockHeight, data } = await getCw20AllowanceBalance(contractAddress, userAddress, searchAddress);
+
+        if (success) {
+            const { allowance, expires } = data;
+
+            if (expires['never']) {
+                setAllowAmount(allowance);
+                return;
+            }
+
+            if (expires['at_time']) {
+                const nowTimestamp = Number(new Date());
+                const expiresTimestamp = Math.floor(Number(expires['at_time']) / 1000000);
+
+                if (expiresTimestamp > nowTimestamp) {
+                    setAllowAmount(allowance);
+                    return;
+                }
+            }
+
+            if (expires['at_height']) {
+                //? at_height
+                const expiresBlockHeight = expires['at_height'];
+
+                if (expiresBlockHeight > blockHeight) {
+                    setAllowAmount(allowance);
+                    return;
+                }
+            }
+
+            setAllowAmount('');
+        }
+    };
+
     const handleChangeAddress = (value: string) => {
         checkAddressValid(value);
 
         setAllowance({
             address: value,
-            amount: allowance?.amount,
+            amount: '',
             type: !allowance?.type ? 'at_height' : allowance.type,
             expire: allowance?.expire
         });
+
+        if (isValidAddress(value)) updateAllowance(value);
+        else setAllowAmount('');
     };
 
     const handleChangeAmount = (value: string) => {
@@ -266,19 +313,20 @@ const DecreaseAllowance = () => {
                                     decimal: tokenInfo.decimals ? tokenInfo.decimals : 6,
                                     emptyErrorMessage: 'Please input amount',
                                     textAlign: 'right',
-                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
+                                    maxValue: getMaxMinterCap(tokenInfo.decimals.toString())
+                                    // getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
                                     // hideErrorMessage: true
                                 }}
                             />
 
                             <UserBalanceTypo
                                 className="clamp-single-line"
-                                data-tooltip-content={parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString())}
+                                data-tooltip-content={parseAmountWithDecimal2(allowAmount, tokenInfo.decimals.toString())}
                                 data-tooltip-id={TOOLTIP_ID.COMMON}
                                 data-tooltip-wrapper="span"
                                 data-tooltip-place="bottom"
                             >
-                                Balance: {parseAmountWithDecimal2(cw20Balance, tokenInfo.decimals.toString(), true)}
+                                Allowance: {parseAmountWithDecimal2(allowAmount, tokenInfo.decimals.toString(), true)}
                             </UserBalanceTypo>
                         </div>
                     </div>

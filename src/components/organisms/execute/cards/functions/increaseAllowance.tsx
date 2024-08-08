@@ -7,7 +7,13 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { getTokenStrFromUTokenStr, parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
-import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import {
+    compareStringNumbers,
+    getMaxCW20InitWalletAmount,
+    getMaxMinterCap,
+    getTokenAmountFromUToken,
+    getUTokenAmountFromToken
+} from '@/utils/balance';
 import useFormStore from '@/store/formStore';
 import { addNanoSeconds } from '@/utils/time';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
@@ -273,7 +279,8 @@ const IncreaseAllowance = () => {
                                     decimal: tokenInfo?.decimals,
                                     emptyErrorMessage: 'Please input amount.',
                                     textAlign: 'right',
-                                    maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
+                                    maxValue: getMaxMinterCap(tokenInfo?.decimals.toString())
+                                    // maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
                                     // hideErrorMessage: true
                                 }}
                             />

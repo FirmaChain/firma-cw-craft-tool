@@ -49,7 +49,9 @@ const StationQR = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: '#FFFFFF'
+                    background: '#FFFFFF',
+                    width: '156px',
+                    height: '156px'
                 }}
                 ref={canvasRef}
             >
