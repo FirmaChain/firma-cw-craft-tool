@@ -13,6 +13,7 @@ import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import { isValidAddress } from '@/utils/address';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -76,7 +77,7 @@ const ApproveAll = () => {
     const inputId = 'APPROVE_ALL';
 
     const handleChangeAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') {
+        if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });

@@ -5,6 +5,7 @@ import { IC_CALENDAR } from '../icons/pngIcons';
 import { DEFAULT_INPUT_REGEX, FLOAT_NUMBER, INT_NUMBERS } from '@/constants/regex';
 import { compareStringNumbers } from '@/utils/balance';
 import useFormStore from '@/store/formStore';
+import { NumericFormat } from 'react-number-format';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -123,36 +124,6 @@ interface InputProps {
     inputId?: string;
 }
 
-// const checkMaxValue = (currentInput: string, maxInput: string): string => {
-//     const [currentIntegerPart, currentDecimalPart] = currentInput.split('.');
-//     const [maxIntegerPart, maxDecimalPart] = maxInput.split('.');
-
-//     const currentInteger = BigInt(currentIntegerPart);
-//     const maxInteger = BigInt(maxIntegerPart);
-
-//     const newInt = currentInteger > maxInteger ? maxInteger : currentInteger;
-
-//     if (typeof currentDecimalPart === 'string') {
-//         return `${newInt.toString()}.${currentDecimalPart}`;
-//     } else {
-//         return newInt.toString();
-//     }
-// };
-
-const parseValue = (currentInput: string): string => {
-    const [currentIntegerPart, currentDecimalPart] = currentInput.split('.');
-
-    if (currentIntegerPart === '' || currentIntegerPart === '.') return currentInput;
-
-    const ParsedInt = BigInt(currentIntegerPart).toString();
-
-    if (typeof currentDecimalPart === 'string') {
-        return `${ParsedInt}.${currentDecimalPart}`;
-    } else {
-        return ParsedInt.toString();
-    }
-};
-
 const VariableInput = ({
     value,
     type = 'string',
@@ -184,73 +155,26 @@ const VariableInput = ({
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
 
-        try {
-            if (inputValue.length > 0) {
-                if (type === 'number') {
-                    inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
+        // try {
+        if (inputValue.length > 0) {
+            if (type === 'number') {
+                inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
 
-                    if (inputValue.length > 0 && inputValue.split('').every((one) => one === '0')) inputValue = '0';
-
-                    const firstDotIndex = inputValue.indexOf('.');
-                    if (firstDotIndex !== -1) {
-                        inputValue =
-                            inputValue.substring(0, firstDotIndex + 1) + inputValue.substring(firstDotIndex + 1).replace(/\./g, '');
-                    }
-
-                    // if (typeof maxValue === 'string') console.log(maxValue, inputValue, compareStringNumbers(inputValue, maxValue));
-
-                    //? check if value is bigger than max-value (if maxValue is provided)
-                    if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
-                        throw new Error('OUT_OF_RANGE');
-                    } else {
-                        inputValue = parseValue(inputValue);
-                    }
-
-                    if (typeof decimal === 'number') inputValue = inputValue.replace(new RegExp(`(\\.\\d{${decimal}})\\d+`), '$1');
-
-                    // inputValue = checkMaxValue(inputValue, maxValue);
-                    // inputValue = compareStringNumbers(inputValue, maxValue) >= 0 ? String(maxValue) : inputValue;
-                } else {
-                    //? Filter input string if valid regex provided
-                    if (regex) inputValue = inputValue.replace(regex, '');
-
-                    //? Slice remaining string if maxLength provided
-                    if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);
-                }
-            }
-
-            onChange(inputValue);
-        } catch (error: any) {
-            if (error.message !== 'OUT_OF_RANGE') console.log(error);
-        } finally {
-            if (typeof maxValue === 'string' && compareStringNumbers(inputValue, maxValue) > 0) {
-                setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds valid range.' });
+                if (inputValue.startsWith('.')) inputValue = `${0}${inputValue}`;
             } else {
-                clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
+                //? Filter input string if valid regex provided
+                if (regex) inputValue = inputValue.replace(regex, '');
+
+                //? Slice remaining string if maxLength provided
+                if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);
             }
         }
 
-        // if (type === 'string') {
-        //     //! if user input is not same with end-value
-        //     if (inputValue !== event.target.value) {
-        //         //! if text input length is same with maxLength
-        //         if (typeof maxLength === 'number' && inputValue.length === maxLength) {
-        //             setFormError({ id: inputId, type: 'MAX_LENGTH', message: `Max input length is ${maxLength}.` });
-        //         } else {
-        //             setFormError({ id: inputId, type: 'INVALID_TYPO', message: `${event.nativeEvent['data']} is not valid.` });
-        //         }
-        //     } else {
-        //         clearFormError({ id: inputId, type: 'INVALID_TYPO' });
-        //         clearFormError({ id: inputId, type: 'MAX_LENGTH' });
-        //     }
-        // }
+        onChange(inputValue);
     };
 
     const _onBlur = () => {
         clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
-        // clearFormError({ id: inputId, type: 'INVALID_TYPO' });
-        // clearFormError({ id: inputId, type: 'MAX_LENGTH' });
-
         onBlur();
     };
 
@@ -280,15 +204,39 @@ const VariableInput = ({
                 $disabled={disabled}
                 onFocus={() => !readOnly && setIsFocus(true)}
             >
-                <input
-                    ref={inputRef}
-                    value={value && type === 'date' ? format(Number(value), 'MMMM-dd-yyyy HH:mm:ss a') : value}
-                    type="text"
-                    onChange={handleChange}
-                    placeholder={placeHolder}
-                    readOnly={readOnly || type === 'date'}
-                    disabled={disabled}
-                />
+                {type === 'number' ? (
+                    <NumericFormat
+                        getInputRef={inputRef}
+                        value={value}
+                        onChange={handleChange}
+                        thousandSeparator
+                        max={maxValue}
+                        decimalScale={decimal}
+                        isAllowed={({ value }) => {
+                            if (value.includes('-')) return false;
+
+                            if (compareStringNumbers(value, maxValue) > 0) {
+                                setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds valid range.' });
+                                return false;
+                            } else return true;
+                        }}
+                        placeholder={placeHolder}
+                        readOnly={readOnly}
+                        disabled={disabled}
+                        min={'0'}
+                    />
+                ) : (
+                    <input
+                        ref={inputRef}
+                        value={value && type === 'date' ? format(Number(value), 'MMMM-dd-yyyy HH:mm:ss a') : value}
+                        type="text"
+                        onChange={handleChange}
+                        placeholder={placeHolder}
+                        readOnly={readOnly || type === 'date'}
+                        disabled={disabled}
+                    />
+                )}
+
                 {typeof maxLength === 'number' && (
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingRight: '16px' }}>
                         <div className="current-length">{valueLength}</div>
@@ -299,7 +247,6 @@ const VariableInput = ({
                     <div style={{ marginRight: '10px' }}>
                         <button
                             style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                            // onClick={onClickDate}
                         >
                             <img src={IC_CALENDAR} alt="date-picker" style={{ width: '24px', height: '24px', cursor: 'pointer' }} />
                         </button>
@@ -308,7 +255,6 @@ const VariableInput = ({
             </StyledInput>
             {!hideErrorMessage && (
                 <div style={{ paddingTop: errorMessage.length > 0 ? '4px' : 0 }}>
-                    {/* paddingLeft: '8px' */}
                     <ErrorMessage>{errorMessage[0]}</ErrorMessage>
                 </div>
             )}

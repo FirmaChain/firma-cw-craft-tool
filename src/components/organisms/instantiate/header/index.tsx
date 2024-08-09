@@ -19,7 +19,7 @@ const Header = () => {
     return (
         <HeaderBox>
             <HeaderWrap>
-                <HeaderTitle>Instantitate</HeaderTitle>
+                <HeaderTitle>Instantiate</HeaderTitle>
                 <ModeSwitch leftMenu={CONTRACT_MODES[0]} rightMenu={CONTRACT_MODES[1]} onChangeMenu={onChangeMenu} />
             </HeaderWrap>
         </HeaderBox>

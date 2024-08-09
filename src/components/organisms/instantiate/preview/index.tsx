@@ -8,7 +8,7 @@ import Dashboard from './dashboard';
 import Submit from './submit';
 import { ModalActions } from '@/redux/actions';
 import { rootState } from '@/redux/reducers';
-import { compareStringsAsNumbers, getApplyDecimalsAmount, isValidAddress, validateSymbol } from '@/utils/common';
+import { compareStringsAsNumbers, getApplyDecimalsAmount, validateSymbol } from '@/utils/common';
 import { CRAFT_CONFIGS } from '@/config';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
@@ -16,6 +16,7 @@ import useInstantiateStore from '../instaniateStore';
 import InstantitateModal from '../../modal/instantitateModal';
 import { addStringAmount, compareStringNumbers } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
+import { isValidAddress } from '@/utils/address';
 
 interface IProps {
     isBasic: boolean;

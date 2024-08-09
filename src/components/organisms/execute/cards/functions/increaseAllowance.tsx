@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { isValidAddress } from '@/utils/address';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -127,7 +128,7 @@ const IncreaseAllowance = () => {
     }, []);
 
     const checkAddressValid = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') {
+        if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });

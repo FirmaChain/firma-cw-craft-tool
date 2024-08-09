@@ -5,7 +5,7 @@ import Icons from '@/components/atoms/icons';
 import useSearchStore from '../searchStore';
 import React, { useEffect } from 'react';
 import useSearchActions from '../action';
-import { isValidAddress } from '@/utils/common';
+import { isValidAddress } from '@/utils/address';
 
 const EndAdornment = ({
     keyword,

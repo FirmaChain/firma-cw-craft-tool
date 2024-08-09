@@ -23,7 +23,7 @@ const useCW721ExecuteAction = () => {
 
     const checkContractExist = async (contractAddress: string) => {
         try {
-            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress);
+            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress?.toLowerCase());
             return exist.length > 0;
         } catch (error) {
             console.log(error);
@@ -33,7 +33,7 @@ const useCW721ExecuteAction = () => {
 
     const setContractInfo = async (contractAddress: string) => {
         try {
-            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setContractInfo(contractInfo);
         } catch (error) {
             console.log('error - contractAddress', contractAddress);
@@ -47,7 +47,7 @@ const useCW721ExecuteAction = () => {
 
     const setNftContractInfo = async (contractAddress: string) => {
         try {
-            const nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress);
+            const nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setNftContractInfo(nftContractInfo);
         } catch (error) {
             console.log('error', error);
@@ -60,7 +60,7 @@ const useCW721ExecuteAction = () => {
 
     const setFctBalance = async (address: string) => {
         try {
-            const fctBalance = await firmaSDK.Bank.getBalance(address);
+            const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
             useCW721ExecuteStore.getState().setFctBalance(fctBalance);
         } catch (error) {
             console.log('error', error);
@@ -80,7 +80,7 @@ const useCW721ExecuteAction = () => {
             let nftContractInfo: Cw721ContractInfo;
 
             try {
-                nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress);
+                nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721.' });
                 useCW721ExecuteStore.getState().clearForm();
@@ -89,7 +89,7 @@ const useCW721ExecuteAction = () => {
             }
 
             await sleep(150);
-            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setContractInfo(contractInfo);
 
             await sleep(150);
@@ -123,7 +123,7 @@ const useCW721ExecuteAction = () => {
 
     const setTotalNfts = async (contractAddress: string) => {
         try {
-            const totalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress);
+            const totalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setTotalNfts(totalNfts.toString());
         } catch (error) {
             console.log('error', error);
@@ -136,7 +136,7 @@ const useCW721ExecuteAction = () => {
 
     const setOwnershipInfo = async (contractAddress: string) => {
         try {
-            const ownerShip = await firmaSDK.Cw721.getOwnerShip(contractAddress);
+            const ownerShip = await firmaSDK.Cw721.getOwnerShip(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setOwnershipInfo(ownerShip);
         } catch (error) {
             console.log('error', error);
@@ -154,7 +154,12 @@ const useCW721ExecuteAction = () => {
             const limit = 150;
 
             while (true) {
-                const nftList = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress, address, limit, startAfter);
+                const nftList = await firmaSDK.Cw721.getNFTIdListOfOwner(
+                    contractAddress?.toLowerCase(),
+                    address?.toLowerCase(),
+                    limit,
+                    startAfter
+                );
                 completeNftList = completeNftList.concat(nftList);
 
                 if (nftList.length < limit) {
@@ -189,7 +194,7 @@ const useCW721ExecuteAction = () => {
 
     const setNftApprovalInfo = async (contractAddress: string, address: string, token_id: string) => {
         try {
-            const result = await firmaSDK.Cw721.getApproval(contractAddress, token_id, address, false);
+            const result = await firmaSDK.Cw721.getApproval(contractAddress?.toLowerCase(), token_id, address?.toLowerCase(), false);
             // console.log("result", result);
             useCW721ExecuteStore.getState().setNftApprovalInfo(result);
         } catch (error) {
@@ -200,7 +205,7 @@ const useCW721ExecuteAction = () => {
 
     const setMinter = async (contractAddress: string) => {
         try {
-            const minter = await firmaSDK.Cw721.getMinter(contractAddress);
+            const minter = await firmaSDK.Cw721.getMinter(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setMinter(minter);
         } catch (error) {
             console.log('error', error);
@@ -224,7 +229,7 @@ const useCW721ExecuteAction = () => {
                 const alreadyVerify = validTokens.find((value) => value.tokenId === splitNftId);
                 if (alreadyVerify === undefined) {
                     try {
-                        const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress, splitNftId);
+                        const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress?.toLowerCase(), splitNftId);
                         if (contractNftData.access.owner === owner) {
                             newNftInfo.push(contractNftData);
 
@@ -235,8 +240,8 @@ const useCW721ExecuteAction = () => {
                         } else {
                             console.log('contractNftData.access.owner', contractNftData.access.owner);
                             const allOperators: Cw721Approval[] = await firmaSDK.Cw721.getAllOperators(
-                                contractAddress,
-                                contractNftData.access.owner,
+                                contractAddress?.toLowerCase(),
+                                contractNftData.access.owner?.toLowerCase(),
                                 true,
                                 10,
                                 null

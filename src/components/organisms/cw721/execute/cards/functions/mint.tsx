@@ -9,12 +9,12 @@ import MintNFTInfoList from '@/components/atoms/walletList/mintNFTInfoList';
 import { v4 } from 'uuid';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import useFormStore from '@/store/formStore';
-import { isValidAddress } from '@/utils/common';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import { isValidAddress } from '@/utils/address';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -199,7 +199,7 @@ const Mint = () => {
 
         for (const id of targetIds) {
             try {
-                await firmaSDK.Cw721.getNftData(contractAddress, id);
+                await firmaSDK.Cw721.getNftData(contractAddress?.toLowerCase(), id);
                 minted.push(id);
             } catch (error) {
                 notYet.push(id);

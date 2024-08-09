@@ -10,9 +10,9 @@ import { CRAFT_CONFIGS } from '@/config';
 import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import { isValidAddress } from '@/utils/common';
 import useExecuteActions from '../../action';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { isValidAddress } from '@/utils/address';
 
 const Container = styled.div`
     width: 100%;

@@ -73,18 +73,18 @@ const useExecuteHook = () => {
                 marketingAddress: '',
 
                 addressAmount: '',
-                fctAmount: '',
+                fctAmount: ''
             };
 
             if (!firmaSDK) return resultData;
 
             try {
-                const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
-                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
-                const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress);
-                const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress);
-                const balanceInfo = await firmaSDK.Cw20.getBalance(contractAddress, address);
-                const fctBalanceInfo = await firmaSDK.Bank.getBalance(address);
+                const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
+                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
+                const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress?.toLowerCase());
+                const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
+                const balanceInfo = await firmaSDK.Cw20.getBalance(contractAddress, address?.toLowerCase());
+                const fctBalanceInfo = await firmaSDK.Bank.getBalance(address?.toLowerCase());
 
                 resultData.success = true;
                 resultData.contractAddress = contractInfo.address;
@@ -125,7 +125,7 @@ const useExecuteHook = () => {
             if (!firmaSDK) return resultData;
 
             try {
-                const balance = await firmaSDK.Cw20.getBalance(contractAddress, address);
+                const balance = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), address?.toLowerCase());
                 resultData.balance = balance;
             } catch (error) {
                 resultData.success = false;
@@ -152,7 +152,11 @@ const useExecuteHook = () => {
             if (!firmaSDK) return resultData;
 
             try {
-                const allowance = await firmaSDK.Cw20.getAllowance(contractAddress, owner, spender);
+                const allowance = await firmaSDK.Cw20.getAllowance(
+                    contractAddress?.toLowerCase(),
+                    owner?.toLowerCase(),
+                    spender?.toLowerCase()
+                );
                 const blockHeight = (await firmaSDK.BlockChain.getChainSyncInfo()).latest_block_height;
 
                 resultData.blockHeight = blockHeight;

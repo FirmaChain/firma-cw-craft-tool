@@ -13,7 +13,7 @@ import {
 import Allowances from './allowances';
 import useTokenDetail from '@/hooks/useTokenDetail';
 import { rootState } from '@/redux/reducers';
-import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 
 import IconButton from '@/components/atoms/buttons/iconButton';
@@ -26,6 +26,8 @@ import Skeleton from '@/components/atoms/skeleton';
 import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { getTokenAmountFromUToken } from '@/utils/balance';
+import { FirmaUtil } from '@firmachain/firma-js';
+import { isValidAddress } from '@/utils/address';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -56,8 +58,6 @@ const EndAdornment = ({
     onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
-    const _disableSearch = keyword === '' || disableSearch;
-
     return (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
@@ -66,8 +66,8 @@ const EndAdornment = ({
                 </IconButton>
             )}
 
-            <WalletSearcBtn disabled={_disableSearch} onClick={onClickSearch}>
-                <SearchTypo $disabled={_disableSearch}>Search</SearchTypo>
+            <WalletSearcBtn disabled={disableSearch} onClick={onClickSearch}>
+                <SearchTypo $disabled={disableSearch}>Search</SearchTypo>
             </WalletSearcBtn>
         </div>
     );
@@ -98,7 +98,7 @@ const WalletSearch = () => {
         if (Number(new Date()) - Number(lastTime.current) < 2 * 1000) return;
         else lastTime.current = new Date();
 
-        if (!isLoading && isInit && searchAddress.length > 0 && isValidAddress(searchAddress)) {
+        if (!isLoading && isInit && isValidAddress(searchAddress)) {
             setIsLoading(true);
 
             const searchResult = await getWalletSearch(contractAddress, searchAddress);
@@ -109,7 +109,7 @@ const WalletSearch = () => {
 
             setIsLoading(false);
         }
-    }, [getWalletSearch, isInit, searchAddress]);
+    }, [contractAddress, isInit, isLoading, searchAddress]);
 
     return (
         <WalletSearchWrapper>
@@ -124,7 +124,7 @@ const WalletSearch = () => {
                         end: (
                             <EndAdornment
                                 keyword={searchAddress}
-                                disableSearch={!isValidAddress(searchAddress) || searchAddress === ''}
+                                disableSearch={!isValidAddress(searchAddress)}
                                 onClickSearch={onClickSearch}
                                 onClickClear={() => setSearchAddress('')}
                             />

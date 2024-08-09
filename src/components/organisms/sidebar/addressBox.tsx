@@ -18,7 +18,7 @@ import useResetStoreData from '@/hooks/useResetStoreData';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
-const BalanceBox = styled(AddressCard) <{ $isOpen: boolean }>`
+const BalanceBox = styled(AddressCard)<{ $isOpen: boolean }>`
     position: absolute;
     z-index: 1;
 
@@ -30,10 +30,13 @@ const BalanceBox = styled(AddressCard) <{ $isOpen: boolean }>`
     overflow: hidden;
     height: fit-content;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         max-height: 500px;
         padding: 10px;
-    `: `
+    `
+            : `
         max-height: 0px;
         padding: 0 10px;
         border: 0px solid transparent;
@@ -184,7 +187,7 @@ const AddressBox = () => {
     };
 
     const getBalance = async () => {
-        const balance = await firmaSDK.Bank.getBalance(address);
+        const balance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
         setBalance(balance);
     };
 

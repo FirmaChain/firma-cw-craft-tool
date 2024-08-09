@@ -63,6 +63,7 @@ interface FormProps {
     marketingLogoUrl: string | null;
     allowanceByAddress: Record<string, string>;
     balanceByAddress: Record<string, string>;
+    cw20BalanceByAddress: Record<string, string>;
 
     setIsFetched: (v: boolean) => void;
     setContractAddress: (v: string) => void;
@@ -80,6 +81,7 @@ interface FormProps {
     setMarketingLogoUrl: (v: string) => void;
     setAllowanceByAddress: ({ address, amount }: { address: string; amount: string }) => void;
     setBalanceByAddress: ({ address, amount }: { address: string; amount: string }) => void;
+    setCW20BalanceByAddress: ({ address, amount }: { address: string; amount: string }) => void;
 
     clearMinterList: () => void;
     clearBurn: () => void;
@@ -173,6 +175,7 @@ const useExecuteStore = create<FormProps>()(
         marketingLogoUrl: null,
         allowanceByAddress: {},
         balanceByAddress: {},
+        cw20BalanceByAddress: {},
 
         setIsFetched: (data) =>
             set((state) => {
@@ -238,7 +241,10 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.balanceByAddress = { ...state.balanceByAddress, [data.address]: data.amount };
             }),
-
+        setCW20BalanceByAddress: (data) =>
+            set((state) => {
+                state.cw20BalanceByAddress = { ...state.cw20BalanceByAddress, [data.address]: data.amount };
+            }),
         clearMinterList: () =>
             set((state) => {
                 state.mintingList = [{ ...INIT_ADDRESS_AMOUNT, id: v4() }];

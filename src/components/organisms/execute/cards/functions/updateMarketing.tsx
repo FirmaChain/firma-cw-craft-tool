@@ -12,6 +12,7 @@ import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { NETWORKS } from '@/constants/common';
 import { DEFAULT_INPUT_REGEX, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { isValidAddress } from '@/utils/address';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -42,7 +43,7 @@ const UpdateMarketing = () => {
     }, [contractInfo, network]);
 
     const handleAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
+        if (isValidAddress(value) || value === '') clearFromError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
         setMarketingAddress(value);

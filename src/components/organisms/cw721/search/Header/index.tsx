@@ -8,7 +8,7 @@ import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import { GlobalActions } from '@/redux/actions';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { isValidAddress } from '@/utils/common';
+import { isValidAddress } from '@/utils/address';
 
 const EndAdornment = ({
     keyword,

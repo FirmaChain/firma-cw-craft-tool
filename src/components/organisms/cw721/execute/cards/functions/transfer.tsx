@@ -85,7 +85,7 @@ const Transfer = () => {
 
         for (const id of approvalCheckIds) {
             try {
-                const nftInfo = await firmaSDK.Cw721.getNftData(contractAddress, id);
+                const nftInfo = await firmaSDK.Cw721.getNftData(contractAddress?.toLowerCase(), id);
 
                 if (nftInfo.access.owner.toLowerCase() === address.toLowerCase()) {
                     //? IF owner is connected user
@@ -93,7 +93,13 @@ const Transfer = () => {
                     continue;
                 }
 
-                const allOperators = await firmaSDK.Cw721.getAllOperators(contractAddress, nftInfo.access.owner, true, 10, null);
+                const allOperators = await firmaSDK.Cw721.getAllOperators(
+                    contractAddress?.toLowerCase(),
+                    nftInfo.access.owner?.toLowerCase(),
+                    true,
+                    10,
+                    null
+                );
                 const expiration2 = allOperators.find(({ spender }) => spender.toLowerCase() === address.toLowerCase());
                 const expiration1 = nftInfo.access.approvals.find(({ spender }) => spender.toLowerCase() === address.toLowerCase());
                 const expiration = expiration1 ? expiration1 : expiration2;

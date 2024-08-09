@@ -33,9 +33,12 @@ const ContentWrap = styled.div<{ $isOpen: boolean }>`
 
     transition: all 0.2s all;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         gap: 24px;
-    `: `
+    `
+            : `
         gap: 0px;
     `}
 `;
@@ -82,17 +85,20 @@ const AccordionBox = styled.div<{ $isOpen: boolean }>`
     transition: all 0.15s ease;
     gap: 20px;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         max-height: 100%;
         padding: 24px 32px;
         gap: 20px;
         opacity: 1;
-    `: `
+    `
+            : `
         max-height: 0px;
         padding: 0px 32px;
         gap: 0px;
         opacity: 0;
-    `}  
+    `}
 `;
 
 const ButtonWrap = styled.div`
@@ -123,7 +129,6 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | null }) => {
-    console.log(allowanceInfo);
     if (!allowanceInfo) return <AccordionTypo $disabled>Expiration</AccordionTypo>;
 
     if (allowanceInfo.type === 'never') return <AccordionTypo $disabled={false}>Forever</AccordionTypo>;
@@ -132,11 +137,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
         return <AccordionTypo $disabled={false}>{commaNumber(allowanceInfo?.expire)} Block</AccordionTypo>;
     if (allowanceInfo.type === 'at_time') {
         const timeInMs = Math.floor(Number(allowanceInfo.expire));
-        return (
-            <AccordionTypo $disabled={false}>
-                {format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}
-            </AccordionTypo>
-        );
+        return <AccordionTypo $disabled={false}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</AccordionTypo>;
     }
 
     return <></>;

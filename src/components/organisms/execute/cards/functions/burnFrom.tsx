@@ -4,13 +4,14 @@ import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, Ti
 
 import { IWallet } from '@/interfaces/wallet';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { addStringAmount, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
-import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
+
 import useFormStore from '@/store/formStore';
 import Cw20BurnFromInputList from '@/components/atoms/walletList/cw20BurnFromInputList';
 import Icons from '@/components/atoms/icons';
 import commaNumber from 'comma-number';
+import { isValidAddress } from '@/utils/address';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -62,6 +63,7 @@ const BurnFrom = () => {
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const burnFromList = useExecuteStore((state) => state.burnFromList);
     const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
+    const cw20BalanceByAddress = useExecuteStore((v) => v.cw20BalanceByAddress);
 
     const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
 
@@ -101,12 +103,29 @@ const BurnFrom = () => {
         const checkAddress = Object.keys(addressAmountMap);
 
         checkAddress.map((address: string) => {
-            const currentAllowance = BigInt(allowanceByAddress[address] || '');
+            const cw20Balance = BigInt(cw20BalanceByAddress[address] || '');
+            const allowanceBalance = BigInt(allowanceByAddress[address] || '');
+
+            console.log("cw20BalanceByAddress[address]", cw20BalanceByAddress[address]);
+            console.log("allowanceByAddress[address]", allowanceByAddress[address]);
+
+            let availableBalance: bigint = BigInt(0);
+
+            if (allowanceBalance > cw20Balance) {
+                availableBalance = cw20Balance;
+            } else if (allowanceBalance < cw20Balance) {
+                availableBalance = allowanceBalance;
+            } else {
+                // cw20Balance === allowanceBalance
+                availableBalance = allowanceBalance;
+            }
+
+            // const availableBalance = cw20Balance > allowanceBalance ? allowanceBalance : cw20Balance < allowanceBalance ? cw20Balance : allowanceBalance;
 
             const inputAmount = addressAmountMap[address];
 
             //! if total amount is bigger than provided allowance
-            if (currentAllowance < inputAmount) {
+            if (availableBalance < inputAmount) {
                 result = true;
             }
         });

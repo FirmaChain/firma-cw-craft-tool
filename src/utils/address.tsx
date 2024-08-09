@@ -1,7 +1,7 @@
 import { FirmaUtil } from '@firmachain/firma-js';
 
 export const isValidAddress = (address: string) => {
-    return FirmaUtil.isValidAddress(address);
+    return FirmaUtil.isValidAddress(address?.toLowerCase());
 };
 
 export const shortenAddress = (address: string, startLength: number = 6, endLength: number = 6) => {
