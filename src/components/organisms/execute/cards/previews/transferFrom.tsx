@@ -108,27 +108,27 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const AccordionBox = styled.div<{ $isOpen: boolean }>`
-    height: object-fit;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    height: object-fit;
+
     transition: all 0.15s ease;
+    width: 100%;
 
     ${({ $isOpen }) =>
         $isOpen
             ? `
-        max-height: 100%;
-        padding: 24px 32px;
-        gap: 20px;
-        opacity: 1;
-    `
+    max-height: 100%;
+    padding: 24px 26px 24px 32px;
+    gap: 20px;
+    opacity: 1;
+`
             : `
-        max-height: 0px;
-        padding: 0px 32px;
-        gap: 0px;
-        opacity: 0;
-    `}
+    max-height: 0px;
+    padding: 0px 32px;
+    gap: 0px;
+    opacity: 0;
+`}
 `;
 
 const ButtonWrap = styled.div`
@@ -168,6 +168,7 @@ const ScrollbarContainer = styled.div`
     border-radius: 12px;
     display: flex;
     background: var(--Gray-150, #141414);
+    overflow: hidden;
 `;
 
 const FromToAddressLine = ({
@@ -379,20 +380,20 @@ const TransferFromPreview = () => {
                     </ItemAmountWrap>
                 </ItemWrap>
                 <ScrollbarContainer>
-                    <ExecutePreviewOverlayScroll defer>
-                        <AccordionBox $isOpen={isOpen}>
-                            {transferFromList.map((info, index) => (
-                                <FromToAddressLine
-                                    key={index}
-                                    from={info.fromAddress}
-                                    to={info.toAddress}
-                                    amount={info.toAmount}
-                                    decimal={tokenInfo.decimals.toString()}
-                                    symbol={tokenInfo.symbol}
-                                />
-                            ))}
-                        </AccordionBox>
-                    </ExecutePreviewOverlayScroll>
+                    {/* <ExecutePreviewOverlayScroll defer> */}
+                    <AccordionBox $isOpen={isOpen} className="address-scrollbar">
+                        {transferFromList.map((info, index) => (
+                            <FromToAddressLine
+                                key={index}
+                                from={info.fromAddress}
+                                to={info.toAddress}
+                                amount={info.toAmount}
+                                decimal={tokenInfo.decimals.toString()}
+                                symbol={tokenInfo.symbol}
+                            />
+                        ))}
+                    </AccordionBox>
+                    {/* </ExecutePreviewOverlayScroll> */}
                 </ScrollbarContainer>
             </ContentBox>
 

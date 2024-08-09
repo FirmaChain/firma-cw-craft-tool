@@ -195,3 +195,22 @@ a:active {
 
   white-space: unset !important;
 }
+
+.address-scrollbar {
+
+  /* Scrollbar withd is 6px (for now) */
+  /* resize right-padding required */
+  &::-webkit-scrollbar-track-piece {
+    margin: 20px 0;
+    background: #141414;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #141414;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+
+}

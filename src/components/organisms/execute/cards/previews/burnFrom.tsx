@@ -108,27 +108,26 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const WalletListWrap = styled.div<{ $isOpen: boolean }>`
-    height: fit-content;
-    padding: 24px 32px;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
-    background: var(--Gray-150, #141414);
+
     transition: all 0.15s ease;
+    width: 100%;
 
     ${({ $isOpen }) =>
         $isOpen
             ? `
-        max-height: 100%;
-        padding: 24px 32px;
-        gap: 20px;
-        opacity: 1;
-    `
+    max-height: 100%;
+    padding: 24px 26px 24px 32px;
+    gap: 20px;
+    opacity: 1;
+`
             : `
-        max-height: 0px;
-        padding: 0px 32px;
-        gap: 0px;
-        opacity: 0;
+    max-height: 0px;
+    padding: 0px 32px;
+    gap: 0px;
+    opacity: 0;
     `}
 `;
 
@@ -191,6 +190,13 @@ const ButtonWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const ScrollbarContainer = styled.div`
+    border-radius: 12px;
+    display: flex;
+    background: var(--Gray-150, #141414);
+    overflow: hidden;
 `;
 
 const BurnFromPreview = () => {
@@ -343,22 +349,23 @@ const BurnFromPreview = () => {
     return (
         <Container>
             <ContentScrollWrap>
-                <ExecutePreviewOverlayScroll defer>
-                    <ContentBox $isOpen={isOpen}>
-                        <ItemWrap>
-                            <ItemLabelWrap>
-                                <ItemLabelIcon src={IC_COIN_STACK} alt={'Burn From Title Icon'} />
-                                <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
-                            </ItemLabelWrap>
-                            <ItemAmountWrap>
-                                <ItemAmountTypo className="clamp-single-line">
-                                    {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
-                                </ItemAmountTypo>
-                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
-                                <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
-                            </ItemAmountWrap>
-                        </ItemWrap>
-                        <WalletListWrap $isOpen={isOpen}>
+                {/* <ExecutePreviewOverlayScroll defer> */}
+                <ContentBox $isOpen={isOpen}>
+                    <ItemWrap>
+                        <ItemLabelWrap>
+                            <ItemLabelIcon src={IC_COIN_STACK} alt={'Burn From Title Icon'} />
+                            <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
+                        </ItemLabelWrap>
+                        <ItemAmountWrap>
+                            <ItemAmountTypo className="clamp-single-line">
+                                {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
+                            </ItemAmountTypo>
+                            <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                            <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
+                        </ItemAmountWrap>
+                    </ItemWrap>
+                    <ScrollbarContainer>
+                        <WalletListWrap $isOpen={isOpen} className="address-scrollbar">
                             {burnFromList.map((value, index) => (
                                 <WalletItemWrap key={index}>
                                     <WalletLeftItemWrap>
@@ -382,8 +389,9 @@ const BurnFromPreview = () => {
                                 </WalletItemWrap>
                             ))}
                         </WalletListWrap>
-                    </ContentBox>
-                </ExecutePreviewOverlayScroll>
+                    </ScrollbarContainer>
+                </ContentBox>
+                {/* </ExecutePreviewOverlayScroll> */}
             </ContentScrollWrap>
             <ButtonWrap>
                 <GreenButton disabled={!isEnableButton} onClick={onClickBurn}>

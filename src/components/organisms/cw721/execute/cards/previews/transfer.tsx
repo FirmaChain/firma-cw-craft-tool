@@ -56,12 +56,15 @@ const ItemBox = styled.div<{ $isOpen: boolean }>`
     height: fit-content;
     transition: all 0.2s all;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         gap: 24px;
-    `: `
+    `
+            : `
         gap: 0px;
     `}
-`
+`;
 
 const ItemWrap = styled.div`
     display: flex;
@@ -114,25 +117,27 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const WalletListWrap = styled.div<{ $isOpen: boolean }>`
-    height: fit-content;
-    padding: 24px 32px;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
-    background: var(--Gray-150, #141414);
-    transition: all 0.15s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
-        max-height: 100%;
-        padding: 24px 32px;
-        gap: 20px;
-        opacity: 1;
-    `: `
-        max-height: 0px;
-        padding: 0px 32px;
-        gap: 0px;
-        opacity: 0;
-    `}  
+    transition: all 0.15s ease;
+    width: 100%;
+
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
+    max-height: 100%;
+    padding: 24px 26px 24px 32px;
+    gap: 20px;
+    opacity: 1;
+`
+            : `
+    max-height: 0px;
+    padding: 0px 32px;
+    gap: 0px;
+    opacity: 0;
+`}
 `;
 
 const WalletItemWrap = styled.div`
@@ -363,24 +368,24 @@ const TransferPreview = () => {
                         </ItemAmountWrap>
                     </ItemWrap>
                     <ScrollbarContainer>
-                        <ExecutePreviewOverlayScroll defer>
-                            <WalletListWrap $isOpen={isOpen}>
-                                {transferListForPreview.map((value, index) => (
-                                    <WalletItemWrap key={index}>
-                                        <WalletLeftItemWrap>
-                                            <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                            <WalletItemAddressTypo $disabled={!value.recipient}>
-                                                {value.recipient ? value.recipient : 'Wallet Address'}
-                                            </WalletItemAddressTypo>
-                                        </WalletLeftItemWrap>
-                                        <WalletItemTokenAmount
-                                            $disabled={value.count === 0}
-                                            $isError={false}
-                                        >{`${value.count} NFT`}</WalletItemTokenAmount>
-                                    </WalletItemWrap>
-                                ))}
-                            </WalletListWrap>
-                        </ExecutePreviewOverlayScroll>
+                        {/* <ExecutePreviewOverlayScroll defer> */}
+                        <WalletListWrap $isOpen={isOpen} className="address-scrollbar">
+                            {transferListForPreview.map((value, index) => (
+                                <WalletItemWrap key={index}>
+                                    <WalletLeftItemWrap>
+                                        <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                        <WalletItemAddressTypo $disabled={!value.recipient}>
+                                            {value.recipient ? value.recipient : 'Wallet Address'}
+                                        </WalletItemAddressTypo>
+                                    </WalletLeftItemWrap>
+                                    <WalletItemTokenAmount
+                                        $disabled={value.count === 0}
+                                        $isError={false}
+                                    >{`${value.count} NFT`}</WalletItemTokenAmount>
+                                </WalletItemWrap>
+                            ))}
+                        </WalletListWrap>
+                        {/* </ExecutePreviewOverlayScroll> */}
                     </ScrollbarContainer>
                 </ItemBox>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />

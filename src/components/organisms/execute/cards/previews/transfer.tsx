@@ -124,27 +124,27 @@ const ItemAmountSymbolTypo = styled.div`
 `;
 
 const WalletListWrap = styled.div<{ $isOpen: boolean }>`
-    height: object-fit;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    height: object-fit;
+
     transition: all 0.15s ease;
+    width: 100%;
 
     ${({ $isOpen }) =>
         $isOpen
             ? `
-        max-height: 100%;
-        padding: 24px 32px;
-        gap: 20px;
-        opacity: 1;
-    `
+    max-height: 100%;
+    padding: 24px 26px 24px 32px;
+    gap: 20px;
+    opacity: 1;
+`
             : `
-        max-height: 0px;
-        padding: 0px 32px;
-        gap: 0px;
-        opacity: 0;
-    `}
+    max-height: 0px;
+    padding: 0px 32px;
+    gap: 0px;
+    opacity: 0;
+`}
 `;
 
 const WalletItemWrap = styled.div`
@@ -378,32 +378,32 @@ const TransferPreview = () => {
                         </ItemAmountWrap>
                     </ItemWrap>
                     <ScrollbarContainer>
-                        <ExecutePreviewOverlayScroll defer>
-                            <WalletListWrap $isOpen={isOpen}>
-                                {transferList.map((value, index) => (
-                                    <WalletItemWrap key={index}>
-                                        <WalletLeftItemWrap>
-                                            <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                            <WalletItemAddressTypo
-                                                $disabled={!value.recipient}
-                                                data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
-                                                data-tooltip-id={TOOLTIP_ID.COMMON}
-                                                data-tooltip-wrapper="span"
-                                                data-tooltip-place="bottom"
-                                            >
-                                                {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
-                                            </WalletItemAddressTypo>
-                                        </WalletLeftItemWrap>
-                                        <WalletItemTokenWrap>
-                                            <WalletItemTokenAmount className="clamp-single-line" $disabled={!Number(value.amount)}>
-                                                {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                            </WalletItemTokenAmount>
-                                            <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
-                                        </WalletItemTokenWrap>
-                                    </WalletItemWrap>
-                                ))}
-                            </WalletListWrap>
-                        </ExecutePreviewOverlayScroll>
+                        {/* <ExecutePreviewOverlayScroll defer> */}
+                        <WalletListWrap $isOpen={isOpen} className="address-scrollbar">
+                            {transferList.map((value, index) => (
+                                <WalletItemWrap key={index}>
+                                    <WalletLeftItemWrap>
+                                        <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
+                                        <WalletItemAddressTypo
+                                            $disabled={!value.recipient}
+                                            data-tooltip-content={value.recipient.length >= 25 ? value.recipient : ''}
+                                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                                            data-tooltip-wrapper="span"
+                                            data-tooltip-place="bottom"
+                                        >
+                                            {value.recipient !== '' ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
+                                        </WalletItemAddressTypo>
+                                    </WalletLeftItemWrap>
+                                    <WalletItemTokenWrap>
+                                        <WalletItemTokenAmount className="clamp-single-line" $disabled={!Number(value.amount)}>
+                                            {value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                        </WalletItemTokenAmount>
+                                        <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
+                                    </WalletItemTokenWrap>
+                                </WalletItemWrap>
+                            ))}
+                        </WalletListWrap>
+                        {/* </ExecutePreviewOverlayScroll> */}
                     </ScrollbarContainer>
                 </ItemBox>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
