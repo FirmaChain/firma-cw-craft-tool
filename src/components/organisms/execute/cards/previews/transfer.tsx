@@ -22,6 +22,7 @@ import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -249,6 +250,7 @@ const ScrollbarContainer = styled.div`
 `;
 
 const TransferPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
@@ -265,7 +267,10 @@ const TransferPreview = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
-    // console.log(transferList);
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     const updatedAmount = useMemo(() => {
         let calcTransferAmount = '0';
@@ -306,7 +311,8 @@ const TransferPreview = () => {
     const onClickTransfer = () => {
         const convertWalletList = [];
         let totalAmount = '0';
-        let feeAmount = transferList.length * 15000;
+        const feeAmount = transferList.length === 1
+        ? Number(craftConfig.DEFAULT_FEE) : transferList.length * Number(craftConfig.BULK_FEE);
 
         for (const wallet of transferList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());

@@ -9,6 +9,9 @@ import { subtractStringAmount } from '@/utils/balance';
 import { QRCodeModal } from '@/components/organisms/modal';
 import { useModalStore } from '@/hooks/useModal';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -120,6 +123,8 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+    
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -130,6 +135,11 @@ const BurnPreview = () => {
     const { setTotalNfts } = useCW721ExecuteAction();
 
     const modal = useModalStore();
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     const totalBurnCount = useMemo(() => {
         if (burnList.length === 0) return 0;
@@ -168,7 +178,8 @@ const BurnPreview = () => {
 
     const onClickBurn = () => {
         const convertList: { token_id: string }[] = [];
-        const feeAmount = burnList.length * 15000;
+        const feeAmount = burnList.length === 1
+        ? Number(craftConfig.DEFAULT_FEE) : burnList.length * Number(craftConfig.BULK_FEE);
 
         const token_ids = burnList.split(',');
 

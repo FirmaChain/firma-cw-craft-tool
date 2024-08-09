@@ -15,6 +15,9 @@ import { shortenAddress } from '@/utils/common';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { CRAFT_CONFIGS } from '@/config';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const Container = styled.div`
     width: 100%;
@@ -214,6 +217,8 @@ const ScrollbarContainer = styled.div`
 // const PRESET_BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT';
 
 const MintPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+    
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     // const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
@@ -232,6 +237,11 @@ const MintPreview = () => {
     // const presetUriInputError = Object.keys(useFormStore((v) => v.formError[PRESET_BASE_URI_FORM_ID]) || {})?.length;
 
     const [isOpen, setIsOpen] = useState<boolean>(true); //? defualt open
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     const mintSupply = useMemo(() => {
         return mintList.filter((one) => one.token_id !== '' && one.token_uri !== '').length.toString();
@@ -281,7 +291,8 @@ const MintPreview = () => {
 
     const onClickMint = () => {
         const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];
-        const feeAmount = mintList.length * 15000;
+        const feeAmount = mintList.length === 1
+        ? Number(craftConfig.DEFAULT_FEE) : mintList.length * Number(craftConfig.BULK_FEE);
 
         for (const mintData of mintList) {
             convertMintList.push({

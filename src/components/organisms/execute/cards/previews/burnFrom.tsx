@@ -15,6 +15,7 @@ import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -200,6 +201,8 @@ const ScrollbarContainer = styled.div`
 `;
 
 const BurnFromPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+    
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
@@ -215,6 +218,11 @@ const BurnFromPreview = () => {
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [availableAmount, setAvailableAmount] = useState<string>("0");
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
     
     const totalBurnBalance = useMemo(() => {
         let totalAmount = '0';
@@ -294,7 +302,8 @@ const BurnFromPreview = () => {
     const onClickBurn = () => {
         const convertWalletList = [];
         let totalAmount = '0';
-        let feeAmount = burnFromList.length * 15000;
+        const feeAmount = burnFromList.length === 1
+        ? Number(craftConfig.DEFAULT_FEE) : burnFromList.length * Number(craftConfig.BULK_FEE);
 
         for (const wallet of burnFromList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());

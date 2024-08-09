@@ -15,6 +15,9 @@ import useFormStore from '@/store/formStore';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import commaNumber from 'comma-number';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -242,6 +245,8 @@ const FromToAddressLine = ({
 };
 
 const TransferFromPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+    
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
@@ -255,7 +260,11 @@ const TransferFromPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    // const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     const totalTransferAmount = useMemo(() => {
         const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
@@ -311,7 +320,8 @@ const TransferFromPreview = () => {
     const onClickTransfer = () => {
         const convertTransferList = [];
         let totalAmount = '0';
-        let feeAmount = transferFromList.length * 15000;
+        const feeAmount = transferFromList.length === 1
+        ? Number(craftConfig.DEFAULT_FEE) : transferFromList.length * Number(craftConfig.BULK_FEE);
 
         for (const transfer of transferFromList) {
             const amount = getUTokenAmountFromToken(transfer.toAmount, tokenInfo.decimals.toString());

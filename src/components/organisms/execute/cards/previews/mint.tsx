@@ -22,6 +22,9 @@ import useExecuteActions from '../../action';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { ExecutePreviewOverlayScroll, StyledOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
+import { CRAFT_CONFIGS } from '@/config';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const Container = styled.div`
     width: 100%;
@@ -244,6 +247,8 @@ const ScrollbarContainer = styled.div`
 `;
 
 const MintPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
+    
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const mintingList = useExecuteStore((state) => state.mintingList);
@@ -256,6 +261,11 @@ const MintPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     const totalMintBalance = useMemo(() => {
         let totalAmount = '0';
@@ -307,7 +317,8 @@ const MintPreview = () => {
     const onClickMint = () => {
         const convertWalletList: IWallet[] = [];
         let totalAmount = '0';
-        let feeAmount = mintingList.length * 15000;
+        const feeAmount = mintingList.length === 1
+        ? Number(craftConfig.DEFAULT_FEE) : mintingList.length * Number(craftConfig.BULK_FEE);
 
         for (const wallet of mintingList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
