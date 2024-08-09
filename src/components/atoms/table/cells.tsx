@@ -8,7 +8,7 @@ import Icons from '../icons';
 import { DefaultTypo, TokenAmountSymbolTypo, TypeCover, TypeTypo, WalletAddressWrap } from './styles';
 import { openLink, parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { format, formatDistanceToNow, parseISO } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 
 const WalletAddress = ({ address, sliceLength }: { address: string; sliceLength?: number }) => {
     const network = useSelector((state: rootState) => state.global.network);
@@ -143,14 +143,18 @@ const TokenAmount = ({ amount, decimals, symbol }: { amount: string; decimals: s
 };
 
 const TimeAgo = ({ timestamp }: { timestamp: string }) => {
+    const utcDate = new Date(timestamp);
+    const timezoneOffset = utcDate.getTimezoneOffset();
+    const localDate = new Date(utcDate.getTime() - timezoneOffset * 60 * 1000);
+
     return (
         <Cell.Default
-            data-tooltip-content={format(timestamp, 'yyyy-MM-dd HH:mm:ss')}
+            data-tooltip-content={format(localDate, 'yyyy-MM-dd HH:mm:ss')}
             data-tooltip-id={TOOLTIP_ID.COMMON}
             data-tooltip-wrapper="span"
             data-tooltip-place="bottom"
         >
-            {formatDistanceToNow(parseISO(timestamp), { addSuffix: true }).replace('about ', '')}
+            {formatDistanceToNow(localDate, { addSuffix: true }).replace('about ', '')}
         </Cell.Default>
     );
 };

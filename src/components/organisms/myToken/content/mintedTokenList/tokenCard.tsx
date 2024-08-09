@@ -18,6 +18,7 @@ import React from 'react';
 import { IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
 import commaNumber from 'comma-number';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import { getTokenAmountFromUToken } from '@/utils/balance';
 
 interface IProps {
     tokenLogoUrl: string;
@@ -57,8 +58,6 @@ const MintedTokenCard = ({
         }
     }, [tokenLogoUrl]);
 
-    const totalSupplyTypo = commaNumber(totalSupply);
-
     return (
         <ItemWrapper
             onClick={() => {
@@ -80,7 +79,7 @@ const MintedTokenCard = ({
             </ItemLeft>
             <ItemRight>
                 <SupplyWrapper>
-                    <TotalSupplyTypo>{totalSupplyTypo}</TotalSupplyTypo>
+                    <TotalSupplyTypo>{commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}</TotalSupplyTypo>
                     <SupplySymbolTypo>{tokenSymbol}</SupplySymbolTypo>
                 </SupplyWrapper>
                 <Icons.RightArrow width={'20px'} height={'20px'} stroke={'#FFFFFF'} />

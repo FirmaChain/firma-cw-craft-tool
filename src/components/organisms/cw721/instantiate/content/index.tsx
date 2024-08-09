@@ -139,7 +139,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                     <TitleIcon src={IC_DOCUMENT} alt={'CW721 Instantiate Title Icon'} />
                 </TitleIconWrapper>
                 <TextGroupWrapper>
-                    <TitleText>NFT CONRACT INFORMATION</TitleText>
+                    <TitleText>NFT CONTRACT INFORMATION</TitleText>
                     <TitleDescription>Input the NFT contract details</TitleDescription>
                 </TextGroupWrapper>
             </TitleWrapper>

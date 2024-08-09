@@ -95,7 +95,7 @@ const WalletSearch = () => {
     };
 
     const fetchWalletSearch = useCallback(async () => {
-        if (Number(new Date()) - Number(lastTime.current) < 2 * 1000) return;
+        if (Number(new Date()) - Number(lastTime.current) < 1 * 1000) return;
         else lastTime.current = new Date();
 
         if (!isLoading && isInit && isValidAddress(searchAddress)) {

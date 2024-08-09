@@ -68,7 +68,7 @@ const TokenWalletSearch = () => {
     const { getWalletSearch } = useTokenDetail();
 
     const getAddressInfo = async () => {
-        if (Number(new Date()) - Number(lastTime.current) < 2 * 1000) return;
+        if (Number(new Date()) - Number(lastTime.current) < 1 * 1000) return;
         else lastTime.current = new Date();
 
         if (keyword.length > 0 && isValidAddress(keyword)) {

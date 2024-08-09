@@ -113,7 +113,7 @@ const Search = () => {
     const lastTime = useRef<null | Date>(null);
 
     const onClickSearch = useCallback(async () => {
-        if (Number(new Date()) - Number(lastTime.current) < 2 * 1000) return;
+        if (Number(new Date()) - Number(lastTime.current) < 1 * 1000) return;
         else lastTime.current = new Date();
 
         try {
