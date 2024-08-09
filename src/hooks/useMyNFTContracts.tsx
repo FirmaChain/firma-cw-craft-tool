@@ -59,7 +59,8 @@ const useMyNFTContracts = () => {
             //     .filter((contractInfo) => contractInfo.contract_info.admin === address)
             //     .map((contractInfo) => contractInfo.address);
 
-            return ["firma1h7kqndzgm0mj6wur0s3ynldnpffgqj8dlsx4q7w66g8xfkhq30asglkqcp", ...myContracts];
+            // return ["firma1h7kqndzgm0mj6wur0s3ynldnpffgqj8dlsx4q7w66g8xfkhq30asglkqcp", ...myContracts];
+            return myContracts;
         } catch (error) {
             enqueueSnackbar(`failed get "CW20 BASIC" contract list`, {
                 variant: 'error',

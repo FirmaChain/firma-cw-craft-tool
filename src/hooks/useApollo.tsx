@@ -23,7 +23,6 @@ const useApollo = () => {
                     headers: {
                         ...headers,
                         'content-type': 'application/json',
-                        'x-hasura-admin-secret': craftConfig.GRAPHQL_API_KEY
                     }
                 };
             });

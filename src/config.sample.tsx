@@ -12,7 +12,6 @@ export const CRAFT_CONFIGS = {
         GRAPHQL_CONFIG: {
             URI: 'https://:8080/v1/graphql'
         },
-        GRAPHQL_API_KEY: '',
         BLOCK_EXPLORER: 'https://explorer.firmachain.dev',
         CW20: {
             BASIC_CODE_ID: '',
@@ -34,7 +33,6 @@ export const CRAFT_CONFIGS = {
         GRAPHQL_CONFIG: {
             URI: 'https://:8080/v1/graphql'
         },
-        GRAPHQL_API_KEY: '',
         BLOCK_EXPLORER: 'https://explorer-testnet.firmachain.dev',
         CW20: {
             BASIC_CODE_ID: '',
