@@ -13,7 +13,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
-import InstantitateModal from '../../modal/instantitateModal';
+import InstantiateModal from '../../modal/instantiateModal';
 import { addStringAmount, compareStringNumbers } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
@@ -122,7 +122,7 @@ const Preview = ({ isBasic }: IProps) => {
 
                 modal.openModal({
                     modalType: 'custom',
-                    _component: ({ id }) => <InstantitateModal module="/cosmwasm/instantiateContract" id={id} params={params} />
+                    _component: ({ id }) => <InstantiateModal module="/cosmwasm/instantiateContract" id={id} params={params} />
                 });
             } else {
                 ModalActions.handleData({

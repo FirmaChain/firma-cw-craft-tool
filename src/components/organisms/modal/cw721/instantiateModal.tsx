@@ -420,7 +420,7 @@ interface ModalDatas {
     }[];
 }
 
-const InstantitateModal = ({
+const InstantiateModal = ({
     id,
     module,
     datas,
@@ -662,4 +662,4 @@ const InstantitateModal = ({
     );
 };
 
-export default InstantitateModal;
+export default InstantiateModal;

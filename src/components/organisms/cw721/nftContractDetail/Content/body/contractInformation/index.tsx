@@ -59,7 +59,7 @@ const ContractInformation = () => {
     };
 
     const [expandTotal, setExpandTotal] = useState(true);
-    const [expandOwned, setExpandOwned] = useState(true);
+    // const [expandOwned, setExpandOwned] = useState(true);
 
     const isBasic = useMemo(() => {
         const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
@@ -138,7 +138,7 @@ const ContractInformation = () => {
                         </NFTTableContainer>
                     </SpecificValueBox>
                 </SpecificItem>
-                <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
+                {/* <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>My NFTs</SpecificLabelTypo>
                     <SpecificValueBox>
                         <IconButton
@@ -168,7 +168,7 @@ const ContractInformation = () => {
                             />
                         </NFTTableContainer>
                     </SpecificValueBox>
-                </SpecificItem>
+                </SpecificItem> */}
             </CardSpecific>
         </ContractCard>
     );

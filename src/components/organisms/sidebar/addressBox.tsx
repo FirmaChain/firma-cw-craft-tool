@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import Skeleton from '@/components/atoms/skeleton';
-import { WalletActions } from '@/redux/actions';
+import { GlobalActions, WalletActions } from '@/redux/actions';
 import { persistor } from '@/redux';
 import useResetStoreData from '@/hooks/useResetStoreData';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -132,7 +132,7 @@ const BalanceAmountTypo = styled.div`
 
 const AddressBox = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
-    const { cwMode, network } = useSelector((state: rootState) => state.global);
+    const { cwMode, network, isFetchedBalance } = useSelector((state: rootState) => state.global);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -194,7 +194,9 @@ const AddressBox = () => {
 
     useEffect(() => {
         getBalance();
-    }, [network]);
+        GlobalActions.handleFetchedBalance(false);
+        console.log(111);
+    }, [network, isFetchedBalance]);
 
     return (
         <div style={{ position: 'relative' }}>

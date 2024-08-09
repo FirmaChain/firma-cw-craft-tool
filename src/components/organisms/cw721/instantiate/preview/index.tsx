@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 import Submit from './submit';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
-import InstantitateModal from '@/components/organisms/modal/cw721/instantiateModal';
+import InstantiateModal from '@/components/organisms/modal/cw721/instantiateModal';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
 
@@ -199,7 +199,7 @@ const Preview = () => {
 
             modal.openModal({
                 modalType: 'custom',
-                _component: ({ id }) => <InstantitateModal module="/cosmwasm/instantiateContract" id={id} datas={datas} params={params} />
+                _component: ({ id }) => <InstantiateModal module="/cosmwasm/instantiateContract" id={id} datas={datas} params={params} />
             });
         } else {
             modal.openModal({ modalType: 'connectWallet' });

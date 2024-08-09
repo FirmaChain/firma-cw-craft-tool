@@ -453,7 +453,7 @@ interface SuccessData {
     type: string;
 }
 
-const InstantitateModal = ({
+const InstantiateModal = ({
     id,
     module,
     params
@@ -787,4 +787,4 @@ const InstantitateModal = ({
     );
 };
 
-export default InstantitateModal;
+export default InstantiateModal;

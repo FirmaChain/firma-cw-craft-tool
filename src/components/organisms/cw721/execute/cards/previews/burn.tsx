@@ -123,6 +123,7 @@ const ButtonWrap = styled.div`
 `;
 
 const BurnPreview = () => {
+    const address = useSelector((state: rootState) => state.wallet.address);
     const network = useSelector((state: rootState) => state.global.network);
     
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
@@ -131,8 +132,9 @@ const BurnPreview = () => {
     const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
     const burnList = useCW721ExecuteStore((state) => state.burnList);
     const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
+    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
-    const { setTotalNfts } = useCW721ExecuteAction();
+    const { setMyNftList } = useCW721ExecuteAction();
 
     const modal = useModalStore();
 
@@ -147,8 +149,8 @@ const BurnPreview = () => {
     }, [burnList]);
 
     const updatedBurnCount = useMemo(() => {
-        return subtractStringAmount(totalSupply, totalBurnCount.toString());
-    }, [totalSupply, totalBurnCount]);
+        return subtractStringAmount(myNftList.length.toString(), totalBurnCount.toString());
+    }, [myNftList, totalBurnCount]);
 
     const isEnableButton = useMemo(() => {
         if (Number(updatedBurnCount) <= -1) return false;
@@ -218,7 +220,7 @@ const BurnPreview = () => {
                     params={params}
                     onClickConfirm={() => {
                         clearBurnForm();
-                        setTotalNfts(contractAddress);
+                        setMyNftList(contractAddress, address);
                     }}
                 />
             )

@@ -327,7 +327,7 @@ const TransferPreview = () => {
                     },
                     {
                         label: 'Total Wallet Count',
-                        value: subtractStringAmount(myNftList.length.toString(), transferIds.length.toString()),
+                        value: userTransferList.length.toString(),
                         type: 'wallet-count'
                     }
                 ]

@@ -64,6 +64,7 @@ import { useNavigate } from 'react-router-dom';
 import { CRAFT_CONFIGS } from '@/config';
 import Divider from '@/components/atoms/divider';
 import Icons from '@/components/atoms/icons';
+import { GlobalActions } from '@/redux/actions';
 
 interface SuccessData {
     addedAt: string;
@@ -158,6 +159,7 @@ const QRCodeModal = ({
                                     console.log('requestData: ', requestData);
                                     setResult(requestData);
                                     setStatus('success');
+                                    GlobalActions.handleFetchedBalance(true);
                                 }}
                                 onFailed={(requestData: any) => {
                                     setResult(requestData);
@@ -167,6 +169,7 @@ const QRCodeModal = ({
                                         variant: 'error',
                                         autoHideDuration: 2000
                                     });
+                                    GlobalActions.handleFetchedBalance(true);
                                 }}
                             />
                         </QrCodeWrap>

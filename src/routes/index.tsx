@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 
 import Cw20Mytoken from '../pages/cw20/myToken';
 import LandingPage from '@/pages/landing';
@@ -32,6 +32,12 @@ const routes: any[] = [
 ];
 
 const AppRoutes = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.pathname]);
+    
     return (
         <Routes>
             {routes.map((route, index) => {

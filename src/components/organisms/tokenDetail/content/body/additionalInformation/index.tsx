@@ -105,7 +105,7 @@ const AdditionalInformation = () => {
                     </SpecificColumnValue>
                 </SpecificItemByStart>
                 <SpecificItem style={{ alignItems: 'flex-start' }}>
-                    <SpecificLabelTypo>{isBasic ? 'Token' : 'Marketing'} Decsription</SpecificLabelTypo>
+                    <SpecificLabelTypo>{isBasic ? 'Token' : 'Marketing'} Description</SpecificLabelTypo>
                     {typeof marketingDescription === 'string' ? (
                         <div className="box-value">
                             {!marketingDescription ? (
