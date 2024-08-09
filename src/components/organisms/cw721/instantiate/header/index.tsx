@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import { CONTRACT_MODES, CONTRACT_MODE_TYPE } from "@/constants/common";
-import { GlobalActions } from "@/redux/actions";
-import ModeSwitch from "@/components/atoms/switch/modeSwitch";
+import { CONTRACT_MODES, CONTRACT_MODE_TYPE } from '@/constants/common';
+import { GlobalActions } from '@/redux/actions';
+import ModeSwitch from '@/components/atoms/switch/modeSwitch';
 
 export const HeaderBox = styled.div`
     width: 100%;
@@ -20,7 +20,6 @@ export const HeaderWrap = styled.div`
     align-items: center;
     gap: 32px;
 `;
-
 
 export const HeaderTitle = styled.div`
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
@@ -47,7 +46,7 @@ const Header = () => {
     return (
         <HeaderBox>
             <HeaderWrap>
-                <HeaderTitle>Instantitate</HeaderTitle>
+                <HeaderTitle>Instantiate</HeaderTitle>
                 <ModeSwitch leftMenu={CONTRACT_MODES[0]} rightMenu={CONTRACT_MODES[1]} onChangeMenu={onChangeMenu} />
             </HeaderWrap>
         </HeaderBox>

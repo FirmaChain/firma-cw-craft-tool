@@ -12,6 +12,7 @@ import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../../instaniateStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { getMaxMinterCap } from '@/utils/balance';
+import { isValidAddress } from '@/utils/address';
 
 interface IProps {
     decimals: string;
@@ -44,7 +45,7 @@ const Minterble = ({ decimals }: IProps) => {
     const handleMinterAddress = (value: string) => {
         useInstantiateStore.getState().setMinterAddress(value); // setMinterAddress(value);
 
-        if (validateAddress(value) || value === '') clearFormError({ id: 'minterAddress', type: 'ADDRESS_VALIDATION' });
+        if (isValidAddress(value) || value === '') clearFormError({ id: 'minterAddress', type: 'ADDRESS_VALIDATION' });
         else {
             setFormError({
                 id: 'minterAddress',
@@ -56,10 +57,6 @@ const Minterble = ({ decimals }: IProps) => {
 
     const handleMinterCap = (value: string) => {
         useInstantiateStore.getState().setMinterCap(value); // setMinterCap(value);
-    };
-
-    const validateAddress = (value: string): boolean => {
-        return FirmaUtil.isValidAddress(value);
     };
 
     useEffect(() => {

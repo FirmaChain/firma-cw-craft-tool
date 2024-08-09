@@ -15,6 +15,7 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../instaniateStore';
 import { DEFAULT_INPUT_REGEX, ENG_NUM_SPACE, HTTP_URI_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { isValidAddress } from '@/utils/address';
 
 interface IProps {
     isBasic: boolean;
@@ -116,7 +117,7 @@ const Information = ({ isBasic }: IProps) => {
     const handleMarketingAddress = (value: string) => {
         setMarketingAddress(value);
 
-        if (FirmaUtil.isValidAddress(value) || value === '') {
+        if (isValidAddress(value) || value === '') {
             clearFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS' });
         } else {
             setFormError({ id: 'marketingAddress', type: 'VALID_ADDRESS', message: 'This is an invalid wallet address.' });

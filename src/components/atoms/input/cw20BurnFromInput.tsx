@@ -10,11 +10,12 @@ import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useSnackbar } from 'notistack';
+import { isValidAddress } from '@/utils/address';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -67,7 +68,6 @@ const CW20BurnFromInput = ({
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
     const { getCw20AllowanceBalance, getCw20Balance } = useExecuteHook();
-    const { enqueueSnackbar } = useSnackbar();
 
     const [addressCW20Balance, setAddressCW20Balance] = useState<string>('0');
 
@@ -75,8 +75,6 @@ const CW20BurnFromInput = ({
         if (address.toLowerCase() === '') return '0';
 
         if (allowanceByAddress[address.toLowerCase()] && addressCW20Balance) {
-            console.log('allowanceByAddress[address.toLowerCase()]', allowanceByAddress[address.toLowerCase()]);
-            console.log('addressCW20Balance', addressCW20Balance);
             const compareStatus = compareStringNumbers(allowanceByAddress[address.toLowerCase()], addressCW20Balance);
 
             if (compareStatus === 1) {
@@ -104,7 +102,7 @@ const CW20BurnFromInput = ({
             return;
         }
 
-        if (FirmaUtil.isValidAddress(value)) clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        if (isValidAddress(value)) clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
     };
 

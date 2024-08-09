@@ -137,10 +137,6 @@ export const determineMsgType = (data: IMsg[]): string[] => {
     });
 };
 
-export const isValidAddress = (address: string) => {
-    return FirmaUtil.isValidAddress(address);
-};
-
 export const compareStringsAsNumbers = (str1: string, str2: string) => {
     const length = Math.max(str1.length, str2.length);
     const paddedStr1 = str1.padStart(length, '0');

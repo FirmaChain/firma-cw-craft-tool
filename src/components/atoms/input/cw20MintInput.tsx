@@ -7,6 +7,7 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { getMaxCW20InitWalletAmount } from '@/utils/balance';
+import { isValidAddress } from '@/utils/address';
 
 interface IProps {
     index: number;
@@ -45,7 +46,7 @@ const CW20MintInput = ({
     const clearFromError = useFormStore((state) => state.clearFormError);
 
     const handleAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        if (isValidAddress(value) || value === '') clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
         onChangeAddress(value);

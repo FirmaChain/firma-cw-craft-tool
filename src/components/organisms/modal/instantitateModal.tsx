@@ -558,7 +558,7 @@ const InstantitateModal = ({
     useEffect(() => {
         try {
             const getBalance = async () => {
-                setBalance(await firmaSDK.Bank.getBalance(params.admin));
+                setBalance(await firmaSDK.Bank.getBalance(params.admin?.toLowerCase()));
             };
 
             getBalance();

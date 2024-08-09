@@ -6,11 +6,12 @@ import { IWallet } from '@/interfaces/wallet';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useEffect, useMemo } from 'react';
 import { addStringAmount, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
-import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
+
 import useFormStore from '@/store/formStore';
 import Cw20BurnFromInputList from '@/components/atoms/walletList/cw20BurnFromInputList';
 import Icons from '@/components/atoms/icons';
 import commaNumber from 'comma-number';
+import { isValidAddress } from '@/utils/address';
 
 const SummeryWrap = styled.div`
     display: flex;

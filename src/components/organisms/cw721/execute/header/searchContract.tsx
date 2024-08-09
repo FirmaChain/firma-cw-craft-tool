@@ -5,12 +5,12 @@ import { enqueueSnackbar } from 'notistack';
 import { rootState } from '@/redux/reducers';
 
 import Icons from '@/components/atoms/icons';
-import { isValidAddress } from '@/utils/common';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import IconButton from '@/components/atoms/buttons/iconButton';
 
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 import { useNavigate } from 'react-router-dom';
+import { isValidAddress } from '@/utils/address';
 
 const EndAdornment = ({
     keyword,

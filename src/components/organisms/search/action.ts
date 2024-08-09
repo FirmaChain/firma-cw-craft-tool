@@ -5,11 +5,12 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
-import { determineMsgTypeAndSpender, isValidAddress } from '@/utils/common';
+import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
 import { CRAFT_CONFIGS } from '@/config';
+import { isValidAddress } from '@/utils/address';
 
 const useSearchActions = () => {
     const { firmaSDK, getCw20Balance } = useExecuteHook();
@@ -48,7 +49,7 @@ const useSearchActions = () => {
     };
 
     const updateMyBalance = async (contractAddress: string) => {
-        const userBalance = await firmaSDK.Cw20.getBalance(contractAddress, userAddress);
+        const userBalance = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), userAddress?.toLowerCase());
         useSearchStore.getState().setUserBalance(userBalance);
     };
 
@@ -62,7 +63,7 @@ const useSearchActions = () => {
                 return;
             }
 
-            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress);
+            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress?.toLowerCase());
             useSearchStore.getState().setContractExist(exist.length > 0);
             await searchTokenInfo(contractAddress);
         } catch (error) {
@@ -81,7 +82,7 @@ const useSearchActions = () => {
             try {
                 //? Try to get token info
                 //? if error occurs in this stage, this contract is not cw20.
-                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(keyword);
+                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(keyword?.toLowerCase());
                 useSearchStore.getState().setTokenInfo(tokenInfo);
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20 contract.' });
@@ -90,13 +91,13 @@ const useSearchActions = () => {
 
             if (userAddress) updateMyBalance(keyword);
 
-            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword?.toLowerCase());
 
-            const minterInfo = await firmaSDK.Cw20.getMinter(keyword);
-            const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(keyword);
-            const contractHistory = await firmaSDK.CosmWasm.getContractHistory(keyword);
-            const allAccounts = await getAllAccounts(keyword);
-            const allTransactions = await getAllTransactinos(keyword);
+            const minterInfo = await firmaSDK.Cw20.getMinter(keyword?.toLowerCase());
+            const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(keyword?.toLowerCase());
+            const contractHistory = await firmaSDK.CosmWasm.getContractHistory(keyword?.toLowerCase());
+            const allAccounts = await getAllAccounts(keyword?.toLowerCase());
+            const allTransactions = await getAllTransactinos(keyword?.toLowerCase());
 
             useSearchStore.getState().setContractInfo(contractInfo);
 
@@ -117,12 +118,12 @@ const useSearchActions = () => {
     };
 
     const getAllAccounts = async (contractAddress: string) => {
-        const allAccounts = await firmaSDK.Cw20.getAllAccounts(contractAddress);
+        const allAccounts = await firmaSDK.Cw20.getAllAccounts(contractAddress?.toLowerCase());
 
         const result = await Promise.all(
             allAccounts.map(async (address) => {
                 try {
-                    const { success, balance } = await getCw20Balance(contractAddress, address);
+                    const { success, balance } = await getCw20Balance(contractAddress?.toLowerCase(), address?.toLowerCase());
                     return { address, balance: success ? balance : 'Error fetching balance' };
                 } catch (error) {
                     enqueueSnackbar({ variant: 'error', message: `Error while fetching blance of ${address}` });

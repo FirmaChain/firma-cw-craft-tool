@@ -5,7 +5,7 @@ import StyledTable, { IColumn } from '@/components/atoms/table';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import { useEffect, useRef, useState } from 'react';
-import { isValidAddress, parseAmountWithDecimal2, parseExpires } from '@/utils/common';
+import { parseAmountWithDecimal2, parseExpires } from '@/utils/common';
 import useTokenDetail from '@/hooks/useTokenDetail';
 import useSearchStore from '../searchStore';
 import Cell from '@/components/atoms/table/cells';
@@ -15,6 +15,7 @@ import Skeleton from '@/components/atoms/skeleton';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import styled from 'styled-components';
 import { getTokenAmountFromUToken } from '@/utils/balance';
+import { isValidAddress } from '@/utils/address';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;

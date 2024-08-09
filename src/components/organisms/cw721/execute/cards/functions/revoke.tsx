@@ -74,7 +74,7 @@ const Revoke = () => {
     }, [nftApprovalInfo, revokeTokenId]);
 
     const handleChangeAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') {
+        if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });

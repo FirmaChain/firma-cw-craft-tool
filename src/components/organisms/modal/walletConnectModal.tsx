@@ -14,6 +14,7 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import StationQR from '@/components/atoms/connectQR/stationQR';
 import { CRAFT_CONFIGS } from '@/config';
 import { openLink } from '@/utils/common';
+import { isValidAddress } from '@/utils/address';
 
 const WalletConnectModal = ({ id }: { id: string }) => {
     const [showStationInfo, setShowStationInfo] = useState(false);
@@ -82,7 +83,7 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                         qrSize={144}
                         module="/login"
                         onSuccess={(requestData: any) => {
-                            if (FirmaUtil.isValidAddress(requestData.signer)) {
+                            if (isValidAddress(requestData.signer)) {
                                 WalletActions.handleInit(true);
                                 WalletActions.handleAddress(requestData.signer);
                                 onCloseModal();

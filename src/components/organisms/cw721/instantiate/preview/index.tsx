@@ -10,8 +10,8 @@ import Submit from './submit';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
 import InstantitateModal from '@/components/organisms/modal/cw721/instantiateModal';
-import { isValidAddress } from '@/utils/common';
 import { useScrollContext } from '@/context/scrollContext';
+import { isValidAddress } from '@/utils/address';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;

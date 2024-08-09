@@ -11,10 +11,10 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { rootState } from '@/redux/reducers';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
-import { shortenAddress } from '@/utils/common';
 import { QRCodeModal } from '@/components/organisms/modal';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
+import { isValidAddress } from '@/utils/address';
 
 const Container = styled.div`
     width: 100%;
@@ -121,7 +121,7 @@ const UpdateMinter = () => {
 
     const errorMessage = useMemo(() => {
         if (minterAddress === '') return 'Please input minter address';
-        if (!FirmaUtil.isValidAddress(minterAddress)) return 'This is an invalid wallet address.';
+        if (!isValidAddress(minterAddress)) return 'This is an invalid wallet address.';
         if (minterAddress === minterInfo?.minter) return 'Same address as before';
         return '';
     }, [minterAddress, minterAddress]);

@@ -21,6 +21,7 @@ import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import AddWalletButton from '../buttons/addWalletButton';
+import { isValidAddress } from '@/utils/address';
 
 interface IProps {
     decimals: string;
@@ -99,14 +100,10 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
         setWalletList(newWalletList);
 
         if (field === 'recipient') {
-            const isValid = validateAddress(value);
+            const isValid = isValidAddress(value);
             const newValidity = validity.map((valid, i) => (i === index ? isValid : valid));
             setValidity(newValidity);
         }
-    };
-
-    const validateAddress = (value: string): boolean => {
-        return FirmaUtil.isValidAddress(value);
     };
 
     const handleDeleteAll = () => {
@@ -156,7 +153,12 @@ const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, address
                     inputId={wallet.id}
                 />
             ))}
-            <AddWalletButton disabled={walletList.length === 20} count={walletList.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
+            <AddWalletButton
+                disabled={walletList.length === 20}
+                count={walletList.length}
+                maxCount={maxWalletCount}
+                onClick={handleAddWallet}
+            />
         </WalletListWrapper>
     );
 };

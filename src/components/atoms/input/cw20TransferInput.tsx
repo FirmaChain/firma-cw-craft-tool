@@ -8,7 +8,8 @@ import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
-import { getMaxCW20InitWalletAmount, getMaxMinterCap } from '@/utils/balance';
+import { getMaxCW20InitWalletAmount } from '@/utils/balance';
+import { isValidAddress } from '@/utils/address';
 
 interface IProps {
     index: number;
@@ -49,7 +50,7 @@ const CW20TransferInput = ({
 
     const checkValidAddress = (value: string) => {
         if (value !== '') {
-            if (!FirmaUtil.isValidAddress(value)) {
+            if (!isValidAddress(value)) {
                 setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
                 return;
             } else clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });

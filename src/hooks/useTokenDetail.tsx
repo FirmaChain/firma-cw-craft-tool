@@ -78,15 +78,15 @@ const useTokenDetail = () => {
             if (!firmaSDK) return resultData;
 
             try {
-                const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress);
-                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
-                const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress);
-                const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress);
-                const addressBalance = await firmaSDK.Cw20.getBalance(contractAddress, address);
-                const allAllowances = await firmaSDK.Cw20.getAllAllowances(contractAddress, address);
-                const allSpenders = await firmaSDK.Cw20.getAllSpenderAllowances(contractAddress, address);
-                const allAccounts = await firmaSDK.Cw20.getAllAccounts(contractAddress);
-                const firstHistory = (await firmaSDK.CosmWasm.getContractHistory(contractAddress))[0];
+                const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
+                const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
+                const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress?.toLowerCase());
+                const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
+                const addressBalance = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), address?.toLowerCase());
+                const allAllowances = await firmaSDK.Cw20.getAllAllowances(contractAddress?.toLowerCase(), address?.toLowerCase());
+                const allSpenders = await firmaSDK.Cw20.getAllSpenderAllowances(contractAddress?.toLowerCase(), address?.toLowerCase());
+                const allAccounts = await firmaSDK.Cw20.getAllAccounts(contractAddress?.toLowerCase());
+                const firstHistory = (await firmaSDK.CosmWasm.getContractHistory(contractAddress?.toLowerCase()))[0];
 
                 resultData.label = contractInfo.contract_info.label;
                 resultData.codeId = contractInfo.contract_info.code_id;
@@ -133,7 +133,7 @@ const useTokenDetail = () => {
 
                 const convertAllAccounts = [];
                 for (const account of allAccounts) {
-                    const balance = await firmaSDK.Cw20.getBalance(contractAddress, account);
+                    const balance = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), account?.toLowerCase());
                     convertAllAccounts.push({
                         'Wallet Address': account,
                         Balance: balance
@@ -167,9 +167,12 @@ const useTokenDetail = () => {
             if (!firmaSDK) return resultData;
 
             try {
-                const balanceAmount = await firmaSDK.Cw20.getBalance(contractAddress, address);
-                const allAllowances = await firmaSDK.Cw20.getAllAllowances(contractAddress, address);
-                const allSpenders: _Cw20SpenderAllowance[] = await firmaSDK.Cw20.getAllSpenderAllowances(contractAddress, address);
+                const balanceAmount = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), address?.toLowerCase());
+                const allAllowances = await firmaSDK.Cw20.getAllAllowances(contractAddress?.toLowerCase(), address?.toLowerCase());
+                const allSpenders: _Cw20SpenderAllowance[] = await firmaSDK.Cw20.getAllSpenderAllowances(
+                    contractAddress?.toLowerCase(),
+                    address?.toLowerCase()
+                );
 
                 resultData.balanceAmount = balanceAmount;
                 const convertAllAllowances = [];

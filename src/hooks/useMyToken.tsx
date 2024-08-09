@@ -45,7 +45,7 @@ const useMyToken = () => {
             allContracts = allContracts.concat(response.dataList);
             nextKey = response.pagination.next_key;
         } while (nextKey);
-    
+
         return allContracts;
     };
 
@@ -59,7 +59,7 @@ const useMyToken = () => {
             const contractLists = await Promise.all(contractListsPromises);
             const allContracts = contractLists.flat();
 
-            const contractInfoPromises = allContracts.map(async (contract) => firmaSDK.CosmWasm.getContractInfo(contract));
+            const contractInfoPromises = allContracts.map(async (contract) => firmaSDK.CosmWasm.getContractInfo(contract?.toLowerCase()));
 
             const contractInfos = await Promise.all(contractInfoPromises);
 
@@ -91,8 +91,8 @@ const useMyToken = () => {
             if (!firmaSDK) return resultData;
 
             try {
-                const contractInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress);
-                const { logo } = await firmaSDK.Cw20.getMarketingInfo(contractAddress);
+                const contractInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
+                const { logo } = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
 
                 resultData.tokenLogoUrl = logo !== null ? logo.url : '';
                 resultData.tokenSymbol = contractInfo.symbol;

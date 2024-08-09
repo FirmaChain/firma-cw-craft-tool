@@ -4,7 +4,7 @@ import { FirmaUtil } from '@firmachain/firma-js';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
@@ -20,6 +20,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import useExecuteActions from '../../action';
 import useExecuteHook from '../../hooks/useExecueteHook';
+import { isValidAddress } from '@/utils/address';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -118,7 +119,7 @@ const DecreaseAllowance = () => {
     }, []);
 
     const checkAddressValid = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') {
+        if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });

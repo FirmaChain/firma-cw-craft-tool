@@ -4,12 +4,13 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
-import { determineMsgTypeAndSpender, isValidAddress } from '@/utils/common';
+import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
 import { CRAFT_CONFIGS } from '@/config';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import { isValidAddress } from '@/utils/address';
 
 const useCW721SearchActions = () => {
     const { firmaSDK } = useFirmaSDKContext();
@@ -49,7 +50,7 @@ const useCW721SearchActions = () => {
 
     const updateMyBalance = async (contractAddress: string) => {
         //! change to user nft ids
-        const userNFTIdList = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress, userAddress);
+        const userNFTIdList = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress?.toLowerCase(), userAddress?.toLowerCase());
         useCW721SearchStore.getState().setUserNftIds(userNFTIdList);
     };
 
@@ -63,7 +64,7 @@ const useCW721SearchActions = () => {
                 return;
             }
 
-            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress);
+            const exist = await firmaSDK.CosmWasm.getContractState(contractAddress?.toLowerCase());
             useCW721SearchStore.getState().setContractExist(exist.length > 0);
             await searchTokenInfo(contractAddress);
         } catch (error) {
@@ -82,7 +83,7 @@ const useCW721SearchActions = () => {
             try {
                 //? Try to get nft info
                 //? if error occurs in this stage, this contract is not cw721.
-                const nftInfo = await firmaSDK.Cw721.getContractInfo(keyword);
+                const nftInfo = await firmaSDK.Cw721.getContractInfo(keyword?.toLowerCase());
                 useCW721SearchStore.getState().setNftInfo(nftInfo);
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721 contract.' });
@@ -91,12 +92,12 @@ const useCW721SearchActions = () => {
 
             if (userAddress) updateMyBalance(keyword);
 
-            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword);
-            const minterInfo = await firmaSDK.Cw721.getMinter(keyword);
-            const ownerInfo = await firmaSDK.Cw721.getOwnerShip(keyword);
-            const nftIdList = await firmaSDK.Cw721.getAllNftIdList(keyword);
-            const totalNfts = await firmaSDK.Cw721.getTotalNfts(keyword);
-            const recentTx = await getAllTransactinos(keyword);
+            const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword?.toLowerCase());
+            const minterInfo = await firmaSDK.Cw721.getMinter(keyword?.toLowerCase());
+            const ownerInfo = await firmaSDK.Cw721.getOwnerShip(keyword?.toLowerCase());
+            const nftIdList = await firmaSDK.Cw721.getAllNftIdList(keyword?.toLowerCase());
+            const totalNfts = await firmaSDK.Cw721.getTotalNfts(keyword?.toLowerCase());
+            const recentTx = await getAllTransactinos(keyword?.toLowerCase());
 
             useCW721SearchStore.getState().setContractInfo(contractInfo);
             useCW721SearchStore.getState().setMinterInfo(minterInfo);

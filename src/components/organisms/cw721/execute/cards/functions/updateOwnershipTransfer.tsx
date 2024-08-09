@@ -11,6 +11,7 @@ import { useModalStore } from '@/hooks/useModal';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { isValidAddress } from '@/utils/address';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -71,7 +72,7 @@ const UpdateOwnershipTransfer = () => {
     const inputId = 'UPDATE_OWNERSHIP_TRANSFER';
 
     const handleChangeAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') {
+        if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });

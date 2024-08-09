@@ -30,7 +30,7 @@ const useMyNFTContracts = () => {
             allContracts = allContracts.concat(response.dataList);
             nextKey = response.pagination.next_key;
         } while (nextKey);
-    
+
         return allContracts;
     };
 
@@ -45,7 +45,7 @@ const useMyNFTContracts = () => {
             const allContracts = contractLists.flat();
 
             const ownershipDataPromises = allContracts.map(async (contract) => {
-                const ownershipInfo = await firmaSDK.Cw721.getOwnerShip(contract);
+                const ownershipInfo = await firmaSDK.Cw721.getOwnerShip(contract?.toLowerCase());
                 return { contract, ownershipInfo };
             });
 
@@ -59,7 +59,7 @@ const useMyNFTContracts = () => {
             //     .filter((contractInfo) => contractInfo.contract_info.admin === address)
             //     .map((contractInfo) => contractInfo.address);
 
-            return ["firma1h7kqndzgm0mj6wur0s3ynldnpffgqj8dlsx4q7w66g8xfkhq30asglkqcp", ...myContracts];
+            return ['firma1h7kqndzgm0mj6wur0s3ynldnpffgqj8dlsx4q7w66g8xfkhq30asglkqcp', ...myContracts];
         } catch (error) {
             enqueueSnackbar(`failed get "CW20 BASIC" contract list`, {
                 variant: 'error',
@@ -83,18 +83,20 @@ const useMyNFTContracts = () => {
             if (!firmaSDK) return resultData;
 
             try {
-                const contractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress);
-                const getTotalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress);
-                const contractInfoFromCW = await firmaSDK.CosmWasm.getContractInfo(contractAddress)
-                const getAllNftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress);
+                const contractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
+                const getTotalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress?.toLowerCase());
+                const contractInfoFromCW = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
+                const getAllNftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase());
 
                 const images = [];
-                const isDeploiedFromFirma = Boolean([basicCodeId, advancedCodeId].find((code) => code === contractInfoFromCW.contract_info.code_id) !== undefined);
+                const isDeploiedFromFirma = Boolean(
+                    [basicCodeId, advancedCodeId].find((code) => code === contractInfoFromCW.contract_info.code_id) !== undefined
+                );
                 for (let i = 0; i < Math.min(3, getAllNftIdList.length); i++) {
                     const id = getAllNftIdList[i];
                     try {
                         const image = await getCW721NFTImage({ contractAddress: contractAddress, tokenId: id });
-                        if (isDeploiedFromFirma && image === "") {
+                        if (isDeploiedFromFirma && image === '') {
                             images.push(IMG_NFT_EMPTY_THUMBNAIL);
                         } else {
                             images.push(image);
@@ -110,8 +112,6 @@ const useMyNFTContracts = () => {
                 resultData.totalNFTs = getTotalNfts;
                 resultData.label = contractInfoFromCW.contract_info.label;
                 resultData.nftThumbnailURI = images;
-
-
             } catch (error) {
                 enqueueSnackbar(`failed get '${contractAddress}' contract info`, {
                     variant: 'error',
@@ -124,19 +124,19 @@ const useMyNFTContracts = () => {
         [firmaSDK]
     );
 
-    const getCW721NFTImage = async ({ contractAddress, tokenId }: { contractAddress: string, tokenId: string }) => {
+    const getCW721NFTImage = async ({ contractAddress, tokenId }: { contractAddress: string; tokenId: string }) => {
         try {
-            const tokenURI = await firmaSDK.Cw721.getNftTokenUri(contractAddress, tokenId);
+            const tokenURI = await firmaSDK.Cw721.getNftTokenUri(contractAddress?.toLowerCase(), tokenId);
             const response = await fetch(tokenURI);
             const metadata = await response.json();
-            const imageURI = metadata.imageURI || "";
+            const imageURI = metadata.imageURI || '';
 
-            return imageURI
+            return imageURI;
         } catch (error) {
             console.log(error);
-            return ''
+            return '';
         }
-    }
+    };
 
     return {
         getCW721ContractList,

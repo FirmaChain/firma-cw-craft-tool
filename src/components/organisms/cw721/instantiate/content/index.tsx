@@ -7,7 +7,7 @@ import { rootState } from '@/redux/reducers';
 import { useEffect } from 'react';
 import { DEFAULT_INPUT_REGEX, ENG_NUM_SPACE, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useFormStore from '@/store/formStore';
-import { isValidAddress } from '@/utils/common';
+import { isValidAddress } from '@/utils/address';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;

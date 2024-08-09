@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import Icons from '@/components/atoms/icons';
-import { isValidAddress } from '@/utils/common';
 import { enqueueSnackbar } from 'notistack';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import IconButton from '@/components/atoms/buttons/iconButton';
@@ -9,6 +8,7 @@ import useExecuteStore from '../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useNavigate } from 'react-router-dom';
+import { isValidAddress } from '@/utils/address';
 
 const EndAdornment = ({
     keyword,

@@ -5,6 +5,7 @@ import useFormStore from '@/store/formStore';
 import { useEffect, useState } from 'react';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { isValidAddress } from '@/utils/address';
 
 const RevokeAll = () => {
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
@@ -27,7 +28,7 @@ const RevokeAll = () => {
     }, []);
 
     const handleChangeAddress = (value: string) => {
-        if (FirmaUtil.isValidAddress(value) || value === '') {
+        if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
