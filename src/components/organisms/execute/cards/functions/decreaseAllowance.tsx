@@ -80,8 +80,6 @@ const DecreaseAllowance = () => {
 
     const { getCw20AllowanceBalance } = useExecuteHook();
 
-    const { firmaSDK } = useFirmaSDKContext();
-
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -94,6 +92,12 @@ const DecreaseAllowance = () => {
     const [expInputValue, setExpInputValue] = useState('');
 
     useEffect(() => {
+        setAllowance({
+            address: '',
+            amount: '',
+            type: 'at_height',
+            expire: ''
+        });
         setExpirationType(ExpirationType.Height);
         setExpInputValue('');
         setIsFetched(false);
@@ -365,6 +369,7 @@ const DecreaseAllowance = () => {
                     readOnly={expirationType === ExpirationType.Forever}
                     decimal={0}
                     onClickDate={handleAllowanceDate}
+                    maxValue="999999999999999"
                 />
             </div>
         </Container>

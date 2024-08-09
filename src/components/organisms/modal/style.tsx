@@ -93,6 +93,7 @@ export const ItemWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
 `;
 
 export const ItemValueWrap = styled.div`
@@ -141,11 +142,13 @@ export const ItemLabel = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 18px; /* 138.462% */
+
+    white-space: pre;
 `;
 
 export const ItemValue = styled.div`
-    color: var(--Gray-700, #807E7E);
-    font-family: "General Sans Variable";
+    color: var(--Gray-700, #807e7e);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;

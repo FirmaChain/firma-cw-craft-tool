@@ -26,24 +26,25 @@ const Cw20TokenDetail = () => {
     const getRequiredInfo = async () => {
         if (isInit && client) {
             const tokenDetail = await getTokenDetail(contractAddress, address);
-            const { messagesByAddress } = await getTransactionsByAddress(client, contractAddress, 15);
+            const transactions = await getTransactionsByAddress(client, contractAddress, 15);
 
             const result: ITransaction[] = [];
 
-            for (const message of messagesByAddress) {
-                const { block, hash, height, messages, success } = message.transaction;
-                const type = determineMsgTypeAndSpender(messages);
+            if (transactions !== null) {
+                for (const message of transactions.messagesByAddress) {
+                    const { block, hash, height, messages, success } = message.transaction;
+                    const type = determineMsgTypeAndSpender(messages);
 
-                result.push({
-                    hash: hash,
-                    height: height.toString(),
-                    timestamp: block.timestamp,
-                    type: type[0].type,
-                    address: type[0].sender,
-                    success: success
-                });
+                    result.push({
+                        hash: hash,
+                        height: height.toString(),
+                        timestamp: block.timestamp,
+                        type: type[0].type,
+                        address: type[0].sender,
+                        success: success
+                    });
+                }
             }
-
             setTokenDetail({ ...tokenDetail, contractAddress });
             setTransactions(result);
         }

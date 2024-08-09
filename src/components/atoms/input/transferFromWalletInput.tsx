@@ -129,9 +129,10 @@ const TransferFromWalletInput = ({
 
         if (success) {
             if (expires['never']) {
-                useExecuteStore
-                    .getState()
-                    .setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: getTokenAmountFromUToken(allowance, decimals) });
+                useExecuteStore.getState().setAllowanceByAddress({
+                    address: ownerAddress.toLowerCase(),
+                    amount: getTokenAmountFromUToken(allowance, decimals)
+                });
                 return;
             }
 

@@ -45,8 +45,7 @@ const WarningTypo = styled.div`
 `;
 
 const UpdateOwnershipRenouncePreview = () => {
-    const WARNING_TEXT: string =
-        'If you renounce ownership of the NFT contract, you will not be able to use NFT Minting and manage the NFT Contract.';
+    const WARNING_TEXT: string = 'If you renounce ownership of the NFT contract, you will no longer be able to use NFT minting.';
     const WARNING_MODAL_TEXT: string =
         'Are you sure you want to renounce ownership of the NFT contract?\nIf you renounce ownership, the contract will be permanently deleted.';
 

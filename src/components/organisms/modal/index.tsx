@@ -34,10 +34,11 @@ export const AmountItem = ({ label, decimals, amount, symbol }: IAmountProps) =>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
                 <ItemAmountValue
-                // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
-                // data-tooltip-id={TOOLTIP_ID.COMMON}
-                // data-tooltip-wrapper="span"
-                // data-tooltip-place="bottom"
+                    className="clamp-single-line"
+                    // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
+                    // data-tooltip-id={TOOLTIP_ID.COMMON}
+                    // data-tooltip-wrapper="span"
+                    // data-tooltip-place="bottom"
                 >
                     {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
@@ -54,10 +55,11 @@ export const ResultAmountItem = ({ label, decimals, amount, symbol }: IAmountPro
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
                 <ResultItemAmountTypo
-                // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
-                // data-tooltip-id={TOOLTIP_ID.COMMON}
-                // data-tooltip-wrapper="span"
-                // data-tooltip-place="bottom"
+                    className="clamp-single-line"
+                    // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
+                    // data-tooltip-id={TOOLTIP_ID.COMMON}
+                    // data-tooltip-wrapper="span"
+                    // data-tooltip-place="bottom"
                 >
                     {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
@@ -78,7 +80,7 @@ export const WalletCount = ({ label, count }: IWalletProps) => {
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemValue>{count}</ItemValue>
+                <ItemValue className="clamp-single-line">{count}</ItemValue>
                 <ItemIcon src={IC_WALLET} alt={'Modal Wallet Icon'} />
             </ItemValueWrap>
         </ItemWrap>
@@ -183,20 +185,20 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
             <ItemValueWrap>
                 {type === 'at_time' && (
                     <ExpirationTypo>
-                        <span className="main-text">{mainText}</span>
+                        <span className="main-text clamp-single-line">{mainText}</span>
                     </ExpirationTypo>
                 )}
 
                 {type === 'at_height' && (
                     <ExpirationTypo style={{ alignItems: 'baseline' }}>
-                        <span className="main-text">{mainText}</span>
+                        <span className="main-text clamp-single-line">{mainText}</span>
                         <span className="sub-text">{subText}</span>
                     </ExpirationTypo>
                 )}
 
                 {type === 'never' && (
                     <ExpirationTypo>
-                        <span className="main-text">{mainText}</span>
+                        <span className="main-text clamp-single-line">{mainText}</span>
                     </ExpirationTypo>
                 )}
             </ItemValueWrap>

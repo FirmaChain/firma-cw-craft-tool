@@ -101,6 +101,12 @@ const IncreaseAllowance = () => {
     const [expInputValue, setExpInputValue] = useState('');
 
     useEffect(() => {
+        setAllowance({
+            address: '',
+            amount: '',
+            type: 'at_height',
+            expire: ''
+        });
         setExpirationType(ExpirationType.Height);
         setExpInputValue('');
         setIsFetched(false);
@@ -332,6 +338,7 @@ const IncreaseAllowance = () => {
                         readOnly={expirationType === ExpirationType.Forever}
                         decimal={0}
                         onClickDate={handleAllowanceDate}
+                        maxValue="999999999999999"
                     />
                 </div>
             </div>

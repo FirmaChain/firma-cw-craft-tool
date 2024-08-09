@@ -446,13 +446,17 @@ const InstantitateModal = ({
     const [balance, setBalance] = useState<null | string>('');
 
     useEffect(() => {
-        const getBalance = async () => {
-            setBalance(await firmaSDK.Bank.getBalance(params.admin));
-        };
+        try {
+            const getBalance = async () => {
+                setBalance(await firmaSDK.Bank.getBalance(params.admin));
+            };
 
-        getBalance();
+            getBalance();
+        } catch (error) {
+            enqueueSnackbar({ variant: 'error', message: 'Failed to get balance.' });
+            setBalance('0');
+        }
     }, []);
-
     useEffect(() => {
         console.log('status', status);
     }, [status]);

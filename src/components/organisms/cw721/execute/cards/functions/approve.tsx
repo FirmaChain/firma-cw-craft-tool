@@ -235,6 +235,7 @@ const Approve = () => {
                         readOnly={approveType === ExpirationType.Forever}
                         decimal={0}
                         onClickDate={handleAllowanceDate}
+                        maxValue="999999999999999"
                     />
                 </div>
             </div>

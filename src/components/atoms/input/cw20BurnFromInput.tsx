@@ -14,6 +14,7 @@ import { isValidAddress, parseAmountWithDecimal2 } from '@/utils/common';
 import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { useSnackbar } from 'notistack';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -66,17 +67,18 @@ const CW20BurnFromInput = ({
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFromError = useFormStore((state) => state.clearFormError);
     const { getCw20AllowanceBalance, getCw20Balance } = useExecuteHook();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const [addressCW20Balance, setAddressCW20Balance] = useState<string>("0");
+    const [addressCW20Balance, setAddressCW20Balance] = useState<string>('0');
 
     const availableAmount = useMemo(() => {
-        if (address.toLowerCase() === "") return "0";
+        if (address.toLowerCase() === '') return '0';
 
         if (allowanceByAddress[address.toLowerCase()] && addressCW20Balance) {
-            console.log("allowanceByAddress[address.toLowerCase()]", allowanceByAddress[address.toLowerCase()]);
-            console.log("addressCW20Balance", addressCW20Balance);
+            console.log('allowanceByAddress[address.toLowerCase()]', allowanceByAddress[address.toLowerCase()]);
+            console.log('addressCW20Balance', addressCW20Balance);
             const compareStatus = compareStringNumbers(allowanceByAddress[address.toLowerCase()], addressCW20Balance);
-            
+
             if (compareStatus === 1) {
                 return addressCW20Balance;
             } else if (compareStatus === 0) {
@@ -85,7 +87,7 @@ const CW20BurnFromInput = ({
                 return allowanceByAddress[address.toLowerCase()];
             }
         } else {
-            return "0";
+            return '0';
         }
     }, [addressCW20Balance, allowanceByAddress]);
 
@@ -121,59 +123,50 @@ const CW20BurnFromInput = ({
     };
 
     const getAllownace = async () => {
-        try {
-            const {
-                success,
-                blockHeight: nowBlockHeight,
-                data: allowance
-            } = await getCw20AllowanceBalance(contractAddress, address, userAddress);
+        const {
+            success,
+            blockHeight: nowBlockHeight,
+            data: allowance
+        } = await getCw20AllowanceBalance(contractAddress, address, userAddress);
 
-            if (success) {
-                if (allowance.expires['never']) {
+        if (success) {
+            if (allowance.expires['never']) {
+                // setAllowance(allowance.allowance);
+                setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
+                return;
+            }
+
+            if (allowance.expires['at_time']) {
+                const nowTimestamp = Number(new Date());
+                const expiresTimestamp = Math.floor(Number(allowance.expires['at_time']) / 1000000);
+
+                if (expiresTimestamp > nowTimestamp) {
                     // setAllowance(allowance.allowance);
                     setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
                     return;
                 }
-
-                if (allowance.expires['at_time']) {
-                    const nowTimestamp = Number(new Date());
-                    const expiresTimestamp = Math.floor(Number(allowance.expires['at_time']) / 1000000);
-
-                    if (expiresTimestamp > nowTimestamp) {
-                        // setAllowance(allowance.allowance);
-                        setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
-                        return;
-                    }
-                }
-
-                if (allowance.expires['at_height']) {
-                    //? at_height
-                    const expiresBlockHeight = allowance.expires['at_height'];
-
-                    if (expiresBlockHeight > nowBlockHeight) {
-                        // setAllowance(allowance.allowance);
-                        setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
-                        return;
-                    }
-                }
-
-                setAllowanceByAddress({ address: address.toLowerCase(), amount: '' });
             }
-        } catch (error) {
-            console.log(error);
+
+            if (allowance.expires['at_height']) {
+                //? at_height
+                const expiresBlockHeight = allowance.expires['at_height'];
+
+                if (expiresBlockHeight > nowBlockHeight) {
+                    // setAllowance(allowance.allowance);
+                    setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
+                    return;
+                }
+            }
         }
+
+        setAllowanceByAddress({ address: address.toLowerCase(), amount: '' });
     };
 
     const getAddressCW20Balance = async () => {
-        try {
-            const { success, balance } = await getCw20Balance(contractAddress, address);
+        const { success, balance } = await getCw20Balance(contractAddress, address);
 
-            if (success) {
-                setAddressCW20Balance(balance);
-            }
-        } catch (error) {
-            console.log(error);
-            setAddressCW20Balance("0");
+        if (success) {
+            setAddressCW20Balance(balance);
         }
     };
 
