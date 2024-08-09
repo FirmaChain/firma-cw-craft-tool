@@ -1,7 +1,7 @@
 import { useSnackbar } from 'notistack';
 import useCW721ExecuteStore from './useCW721ExecuteStore';
 import { GlobalActions } from '@/redux/actions';
-import { Cw721ContractInfo, Cw721NftInfo } from '@firmachain/firma-js';
+import { Cw721Approval, Cw721ContractInfo, Cw721NftInfo } from '@firmachain/firma-js';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -189,9 +189,6 @@ const useCW721ExecuteAction = () => {
 
     const setNftApprovalInfo = async (contractAddress: string, address: string, token_id: string) => {
         try {
-            // console.log("contractAddress", contractAddress);
-            // console.log("address", address);
-            // console.log("token_id", token_id);
             const result = await firmaSDK.Cw721.getApproval(contractAddress, token_id, address, false);
             // console.log("result", result);
             useCW721ExecuteStore.getState().setNftApprovalInfo(result);
@@ -217,40 +214,75 @@ const useCW721ExecuteAction = () => {
     const setNftDatas = async (contractAddress: string, owner: string, nftIds: string) => {
         try {
             const splitNftIds: string[] = nftIds.split(',');
-            const existInfo = validTokens.filter((value) => value.info !== null && splitNftIds.includes(value.tokenId)).map((value) => value.info);
+            const existInfo = validTokens
+                .filter((value) => value.info !== null && splitNftIds.includes(value.tokenId))
+                .map((value) => value.info);
             const newNftInfo: Cw721NftInfo[] = [...existInfo];
 
             for (const splitNftId of splitNftIds) {
                 if (splitNftId === '') continue;
-                const alreadyVerify = validTokens.find((value) => value.tokenId === splitNftId)
+                const alreadyVerify = validTokens.find((value) => value.tokenId === splitNftId);
                 if (alreadyVerify === undefined) {
                     try {
                         const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress, splitNftId);
                         if (contractNftData.access.owner === owner) {
                             newNftInfo.push(contractNftData);
 
-                            setValidTokens(prev => [
+                            setValidTokens((prev) => [
                                 ...(Array.isArray(prev) ? prev : []),
                                 { tokenId: splitNftId, valid: true, info: contractNftData }
                             ]);
                         } else {
+                            console.log('contractNftData.access.owner', contractNftData.access.owner);
+                            const allOperators: Cw721Approval[] = await firmaSDK.Cw721.getAllOperators(
+                                contractAddress,
+                                contractNftData.access.owner,
+                                true,
+                                10,
+                                null
+                            );
                             const approvals = contractNftData.access.approvals;
-                            const approval = approvals.filter((value) => value.spender === owner);
+
+                            const { latest_block_height } = await firmaSDK.BlockChain.getChainSyncInfo();
+
+                            const availableApprovals = approvals.filter(({ spender, expires }) => {
+                                if (spender.toLowerCase() === owner) {
+                                    if (expires) {
+                                        if (expires['never']) {
+                                            return true;
+                                        }
+
+                                        if (expires['at_time']) {
+                                            const expirationTimestamp = BigInt(expires['at_time']) / BigInt(1_000_000);
+                                            if (expirationTimestamp > BigInt(Number(new Date()))) {
+                                                return true;
+                                            }
+                                        }
+
+                                        if (expires['at_height']) {
+                                            //? approved to certain block height. need to check block height
+                                            const expirationBlockHeight = BigInt(expires['at_height']);
+                                            if (expirationBlockHeight > BigInt(latest_block_height)) {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            const approval = [...availableApprovals, ...allOperators].filter((value) => value.spender === owner);
                             const isApproval = approval.length > 0;
 
                             if (isApproval) {
                                 newNftInfo.push(contractNftData);
                             }
-                            setValidTokens(prev => [
+                            setValidTokens((prev) => [
                                 ...(Array.isArray(prev) ? prev : []),
                                 { tokenId: splitNftId, valid: isApproval, info: isApproval ? contractNftData : null }
                             ]);
                         }
                     } catch (error) {
-                        setValidTokens(prev => [
-                            ...(Array.isArray(prev) ? prev : []),
-                            { tokenId: splitNftId, valid: false, info: null }
-                        ]);
+                        setValidTokens((prev) => [...(Array.isArray(prev) ? prev : []), { tokenId: splitNftId, valid: false, info: null }]);
                         console.log('Does not search data by nft id', splitNftId);
                     }
                 }
@@ -261,15 +293,6 @@ const useCW721ExecuteAction = () => {
         }
     };
 
-    const setAllOperators = async (contractAddress: string, owner: string, isIncludeExpired: boolean, limit: number = 10, start_after: string | null) => {
-        try {
-            const operators = await firmaSDK.Cw721.getAllOperators(contractAddress, owner, isIncludeExpired, limit, start_after);
-            useCW721ExecuteStore.getState().setAllOperators(operators);
-        } catch (error) {
-            console.log('error', error);
-        }
-    };
-    
     return {
         checkContractExist,
         setContractInfo,
@@ -282,8 +305,7 @@ const useCW721ExecuteAction = () => {
         setBlockHeight,
         setNftApprovalInfo,
         setMinter,
-        setNftDatas,
-        setAllOperators
+        setNftDatas
     };
 };
 

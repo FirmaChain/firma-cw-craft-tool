@@ -27,7 +27,6 @@ interface FormProps {
     nftApprovalInfo: Cw721Approval;
     minter: string;
     nftDatas: Cw721NftInfo[];
-    allOperators: Cw721Approval[];
 
     setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
@@ -39,7 +38,6 @@ interface FormProps {
     setNftApprovalInfo: (v: Cw721Approval) => void;
     setMinter: (v: string) => void;
     setNftDatas: (v: Cw721NftInfo[]) => void;
-    setAllOperators: (v: Cw721Approval[]) => void;
     clearInfo: () => void;
 
     contractAddress: string;
@@ -145,7 +143,6 @@ const useCW721ExecuteStore = create<FormProps>()(
         nftApprovalInfo: INIT_NFT_APPROVAL,
         minter: '',
         nftDatas: [],
-        allOperators: [],
 
         setFctBalance: (data) =>
             set((state) => {
@@ -186,10 +183,6 @@ const useCW721ExecuteStore = create<FormProps>()(
         setNftDatas: (data) =>
             set((state) => {
                 state.nftDatas = data;
-            }),
-        setAllOperators: (data) =>
-            set((state) => {
-                state.allOperators = data;
             }),
         clearInfo: () =>
             set((state) => {

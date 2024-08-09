@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
@@ -46,6 +46,7 @@ const Burn = () => {
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const burnList = useCW721ExecuteStore((state) => state.burnList);
     const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
+
     const setBurnList = useCW721ExecuteStore((state) => state.setBurnList);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
     const setFormError = useFormStore((v) => v.setFormError);

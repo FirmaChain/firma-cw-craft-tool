@@ -93,7 +93,10 @@ const Transfer = () => {
                     continue;
                 }
 
-                const expiration = nftInfo.access.approvals.find(({ spender }) => spender.toLowerCase() === address.toLowerCase());
+                const allOperators = await firmaSDK.Cw721.getAllOperators(contractAddress, nftInfo.access.owner, true, 10, null);
+                const expiration2 = allOperators.find(({ spender }) => spender.toLowerCase() === address.toLowerCase());
+                const expiration1 = nftInfo.access.approvals.find(({ spender }) => spender.toLowerCase() === address.toLowerCase());
+                const expiration = expiration1 ? expiration1 : expiration2;
                 if (expiration) {
                     //? user is included on approval list, time to validate expiration
                     if (expiration.expires['never']) {
