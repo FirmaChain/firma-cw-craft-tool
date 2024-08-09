@@ -222,7 +222,7 @@ const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     // const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
-    const myNFTList = useCW721ExecuteStore((state) => state.myNftList);
+    const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
     const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
     const notYetMintList = useCW721ExecuteStore((state) => state.notYetMintList);
 
@@ -271,23 +271,12 @@ const MintPreview = () => {
         //! if some ids not included in "not Yet minted list"
         if (mintIds.some((id) => !notYetMintList.includes(id))) return false;
 
-        // //! if empty value includes
-        // if (mintList.length > 0) {
-        //     for (const mintData of mintList) {
-        //         if (mintData.token_id === '') return false;
-        //         if (mintData.token_uri === '') return false;
-        //     }
-        // }
-
-        // //! if using preset and base uri is not valid
-        // if (presetUriInputError > 0) return false;
-
         return true;
     }, [mintRecipientAddress, mintList, alreadyMintList, notYetMintList]);
 
     const willTotalSupply = useMemo(() => {
-        return addStringAmount(mintSupply, myNFTList.length.toString());
-    }, [mintSupply, myNFTList]);
+        return addStringAmount(mintSupply, totalNfts.toString());
+    }, [mintSupply, totalNfts]);
 
     const onClickMint = () => {
         const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];
