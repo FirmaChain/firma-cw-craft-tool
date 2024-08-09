@@ -9,11 +9,13 @@ import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 
 const NFTContractDetail = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const { setContractDetail, setNftsInfo, setTransactions, clearForm } = useNFTContractDetailStore();
+    const address = useSelector((state: rootState) => state.wallet.address);
+
+    const { setContractDetail, setNftsInfo, setTransactions, clearForm, setOwnedNftsInfo } = useNFTContractDetailStore();
 
     const contractAddress = window.location.pathname.replace('/cw721/mynft/detail/', '');
 
-    const { getNFTContractDetail, getNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
+    const { getNFTContractDetail, getNFTsInfo, getOwnedNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
 
     const { client } = useApollo();
 
@@ -22,9 +24,11 @@ const NFTContractDetail = () => {
             const detail = await getNFTContractDetail(contractAddress);
             const nfts = await getNFTsInfo(contractAddress);
             const txData = await getNFTContractTransactions(contractAddress);
+            const ownedNfts = await getOwnedNFTsInfo(contractAddress, address);
 
             setContractDetail(detail);
             setNftsInfo(nfts);
+            setOwnedNftsInfo(ownedNfts);
             setTransactions(txData.txData);
         }
     };
