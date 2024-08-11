@@ -63,7 +63,7 @@ const Dashboard = ({
                 </IconBackground>
                 <TextGroupWrapper>
                     <TitleText>PREVIEW</TitleText>
-                    <TitleDescription>View all token informations at a glance.</TitleDescription>
+                    <TitleDescription>View all token information at a glance.</TitleDescription>
                 </TextGroupWrapper>
             </TitleWrapper>
 

@@ -248,7 +248,10 @@ const BurnPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" />
+                            <IconTooltip
+                                size="14px" 
+                                tooltip={`This is the total supply of NFTs after burning.`}
+                            />
                         </div>
                     </ItemLeftWrap>
                     <ItemRightWrap>

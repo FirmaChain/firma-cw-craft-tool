@@ -195,7 +195,6 @@ const AddressBox = () => {
     useEffect(() => {
         getBalance();
         GlobalActions.handleFetchedBalance(false);
-        console.log(111);
     }, [network, isFetchedBalance]);
 
     return (
