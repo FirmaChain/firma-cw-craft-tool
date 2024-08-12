@@ -156,7 +156,7 @@ const Transfer = () => {
             const currentIds = Array.from(currentIdMap.keys());
 
             if (currentIds.length !== token_ids.length) {
-                setFormError({ id: `${id}_Token ID`, type: 'DUPLICATED_ID', message: `Duplicated NFT id encluded.` });
+                setFormError({ id: `${id}_Token ID`, type: 'DUPLICATED_ID', message: `Some NFT ids are duplicated.` });
                 return;
             } else {
                 clearFormError({ id: `${id}_Token ID`, type: 'DUPLICATED_ID' });
@@ -166,7 +166,7 @@ const Transfer = () => {
             const idsFromOthers = transferInfo.filter(({ id: _id }) => _id !== id).map(({ token_ids }) => token_ids);
             idsFromOthers.forEach((v) => flatList.push(...v));
             if (token_ids.some((nftId) => flatList.includes(nftId))) {
-                setFormError({ id: `${id}_Token ID`, type: 'DUPLICATED_ID', message: `Duplicated NFT id encluded.` });
+                setFormError({ id: `${id}_Token ID`, type: 'DUPLICATED_ID', message: `Some NFT ids are duplicated.` });
                 return;
             } else {
                 clearFormError({ id: `${id}_Token ID`, type: 'DUPLICATED_ID' });
@@ -176,7 +176,7 @@ const Transfer = () => {
                 setFormError({
                     id: `${id}_Token ID`,
                     type: 'NOT_OWN_OR_ALLOWED',
-                    message: 'Contains an NFT ID that is not approved or owned.'
+                    message: `Some NFT ids are not owned, or approved.`
                 });
                 return;
             } else {

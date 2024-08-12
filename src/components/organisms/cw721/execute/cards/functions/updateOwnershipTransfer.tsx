@@ -75,7 +75,7 @@ const UpdateOwnershipTransfer = () => {
         if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
-            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
         }
 
         setApproveRecipientAddress(value);

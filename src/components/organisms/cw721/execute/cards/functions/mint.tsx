@@ -216,7 +216,7 @@ const Mint = () => {
 
             if (id !== '' && (alreadyMintList.includes(BigInt(id).toString()) || userNFTIds.includes(BigInt(id).toString()))) {
                 //! not empty + included already mined list = set error
-                setFormError({ id: `${v.id}_NFT_ID`, type: 'ALREADY_MINTED', message: 'Already minted.' });
+                setFormError({ id: `${v.id}_NFT_ID`, type: 'ALREADY_MINTED', message: 'This token id is minted.' });
             } else {
                 //? clear minted error
                 clearFormError({ id: `${v.id}_NFT_ID`, type: 'ALREADY_MINTED' });
@@ -226,7 +226,7 @@ const Mint = () => {
             const othersIds = exceptSelf.filter((one) => one.token_id !== '').map((one) => BigInt(one.token_id).toString());
             if (id !== '' && othersIds.includes(BigInt(id).toString())) {
                 //! not empty + already included on other id = duplicated error
-                setFormError({ id: `${v.id}_NFT_ID`, type: 'DUPLICATED', message: 'Duplicated ID.' });
+                setFormError({ id: `${v.id}_NFT_ID`, type: 'DUPLICATED', message: 'This token id is duplicated.' });
             } else {
                 //? clear duplicated error
                 clearFormError({ id: `${v.id}_NFT_ID`, type: 'DUPLICATED' });
@@ -424,7 +424,7 @@ const Mint = () => {
 
                                     setMintRecipientAddress(v);
                                 },
-                                emptyErrorMessage: 'Please input wallet address.',
+                                emptyErrorMessage: 'Please input firmachain wallet address.',
                                 regex: WALLET_ADDRESS_REGEX
                             }}
                         />

@@ -202,7 +202,7 @@ const ScrollbarContainer = styled.div`
 
 const BurnFromPreview = () => {
     const network = useSelector((state: rootState) => state.global.network);
-    
+
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
@@ -217,13 +217,13 @@ const BurnFromPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [availableAmount, setAvailableAmount] = useState<string>("0");
+    const [availableAmount, setAvailableAmount] = useState<string>('0');
 
     const craftConfig = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
         return config;
     }, [network]);
-    
+
     const totalBurnBalance = useMemo(() => {
         let totalAmount = '0';
 
@@ -234,48 +234,30 @@ const BurnFromPreview = () => {
         return getUTokenAmountFromToken(totalAmount, tokenInfo.decimals.toString());
     }, [burnFromList, tokenInfo]);
 
-    const checkAmounyByAddress = () => {
-        let result = true;
-
+    const isExceedAllowance = useMemo(() => {
+        let result = false;
         const addressAmountMap: Record<string, bigint> = {};
-
         burnFromList.map((value) => {
             if (isValidAddress(value.recipient)) {
                 const lowerAddress = value.recipient.toLowerCase();
-
                 if (!addressAmountMap[lowerAddress]) {
                     addressAmountMap[lowerAddress] = BigInt(0);
                 }
-
                 const uToken = getUTokenAmountFromToken(value.amount, String(tokenInfo?.decimals));
-
                 addressAmountMap[lowerAddress] = addressAmountMap[lowerAddress] + BigInt(uToken);
             }
         });
-
-        // const checkAddress = Object.keys(addressAmountMap);
-
-        // checkAddress.map((address: string) => {
-        //     const currentAllowance = BigInt(allowanceByAddress[address] || '');
-
-        //     const inputAmount = addressAmountMap[address];
-        //     const formIds = burnFromList.filter((one) => one.recipient.toLowerCase() === address).map((v) => v.id);
-
-        //     //! if total amount is bigger than provided allowance
-        //     if (currentAllowance < inputAmount) {
-        //         result = false;
-        //         formIds.map((id) => setFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED', message: 'Allowance exceed.' }));
-        //     } else {
-        //         formIds.map((id) => clearFormError({ id: `${id}_AMOUNT`, type: 'ALLOWANCE_EXCEED' }));
-        //     }
-        // });
-
+        const checkAddress = Object.keys(addressAmountMap);
+        checkAddress.map((address: string) => {
+            const currentAllowance = BigInt(allowanceByAddress[address] || '');
+            const inputAmount = addressAmountMap[address];
+            //! if total amount is bigger than provided allowance
+            if (currentAllowance < inputAmount) {
+                result = true;
+            }
+        });
         return result;
-    };
-
-    // useEffect(() => {
-    //     checkAmounyByAddress();
-    // }, [allowanceByAddress]);
+    }, [allowanceByAddress, burnFromList, tokenInfo]);
 
     const isEnableButton = useMemo(() => {
         //! if self-address is included
@@ -283,7 +265,7 @@ const BurnFromPreview = () => {
 
         //! check all amount by address is valid
         // const isAmountOK = checkAmounyByAddress();
-        // if (!isAmountOK) return false;
+        if (isExceedAllowance) return false;
 
         //! check all list is filled (empty value check)
         if (
@@ -297,13 +279,12 @@ const BurnFromPreview = () => {
         if (burnFromList.some((value) => !isValidAddress(value.recipient))) return false;
 
         return true;
-    }, [burnFromList, userAddress]);
+    }, [burnFromList, userAddress, isExceedAllowance]);
 
     const onClickBurn = () => {
         const convertWalletList = [];
         let totalAmount = '0';
-        const feeAmount = burnFromList.length === 1
-        ? Number(craftConfig.DEFAULT_FEE) : burnFromList.length * Number(craftConfig.BULK_FEE);
+        const feeAmount = burnFromList.length === 1 ? Number(craftConfig.DEFAULT_FEE) : burnFromList.length * Number(craftConfig.BULK_FEE);
 
         for (const wallet of burnFromList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());

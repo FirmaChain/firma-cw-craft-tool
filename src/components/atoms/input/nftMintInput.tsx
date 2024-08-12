@@ -118,7 +118,7 @@ const NFTMintInput = ({
                             type: 'number',
                             decimal: 0,
                             readOnly: disabled,
-                            emptyErrorMessage: 'Please input NFT ID.',
+                            emptyErrorMessage: 'Please input the token id.',
                             regex: INT_NUMBERS,
                             maxValue: CW721_MAX_MINTABLE_ID
                         }}
@@ -144,7 +144,7 @@ const NFTMintInput = ({
                             placeHolder: rightPlaceholder,
                             disabled: disabled,
                             maxLength: 300,
-                            emptyErrorMessage: 'Please input NFT URI.'
+                            emptyErrorMessage: 'Please input the NFT URI.'
                         }}
                     />
                 </div>

@@ -86,7 +86,7 @@ const Minterble = ({ decimals }: IProps) => {
                             formId: 'minterAddress',
                             placeHolder: 'Input minter address',
                             onChange: handleMinterAddress,
-                            emptyErrorMessage: 'Please input wallet address.',
+                            emptyErrorMessage: 'Please input firmachain wallet address.',
                             regex: WALLET_ADDRESS_REGEX
                         }}
                     />
@@ -99,7 +99,7 @@ const Minterble = ({ decimals }: IProps) => {
                         formId: 'minterCap',
                         placeHolder: '0',
                         onChange: handleMinterCap,
-                        emptyErrorMessage: 'Please input minter cap.',
+                        emptyErrorMessage: 'Please input the minter cap.',
                         type: 'number',
                         decimal: decimals === '' ? 6 : Number(decimals),
                         maxValue: getMaxMinterCap(decimals)

@@ -103,6 +103,8 @@ const ErrorMessage = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 14px; /* 116.667% */
+
+    white-space: pre;
 `;
 
 interface InputProps {
@@ -216,7 +218,7 @@ const VariableInput = ({
                             if (value.includes('-')) return false;
 
                             if (compareStringNumbers(value, maxValue) > 0) {
-                                setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds valid range.' });
+                                setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds the valid range.' });
                                 return false;
                             } else return true;
                         }}

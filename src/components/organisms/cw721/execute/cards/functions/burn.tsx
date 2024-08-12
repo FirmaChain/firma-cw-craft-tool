@@ -59,7 +59,7 @@ const Burn = () => {
 
         if (cleanedText === '') {
             //! if input valid is empty
-            setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'INPUT_IS_EMPTY', message: 'Please input burn NFT id.' });
+            setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'INPUT_IS_EMPTY', message: 'Please input the NFT id.' });
         }
 
         setNftDatas(contractAddress, address, cleanedText);
@@ -70,7 +70,7 @@ const Burn = () => {
         if (burnList !== '') {
             //! if ends with comma
             if (burnList.endsWith(','))
-                setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'ENDS_WITH_COMMA', message: 'Token ID list must end with number.' });
+                setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'ENDS_WITH_COMMA', message: 'NFT id list must end with number.' });
             else clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'ENDS_WITH_COMMA' });
 
             //? get input nft ids array
@@ -88,13 +88,13 @@ const Burn = () => {
                 setFormError({
                     id: 'CW721_NFT_BURN_ID_INPUT',
                     type: 'DOES_NOT_OWNED',
-                    message: `Contains an NFT ID that is not approved or owned.`
+                    message: `Some NFT ids are not owned, or approved.`
                 });
             }
 
             //! if duplicted id included
             if (splited.length > 1 && idMap.size !== splited.length)
-                setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DUPLICATED_IDS', message: 'Duplicated NFT id encluded.' });
+                setFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DUPLICATED_IDS', message: 'Some NFT ids are duplicated.' });
             else clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DUPLICATED_IDS' });
         }
     }, [burnList, nftDatas]);
@@ -141,7 +141,7 @@ const Burn = () => {
                         formId: 'CW721_NFT_BURN_ID_INPUT',
                         onChange: (v) => onChangeBurnId(v),
                         placeHolder: 'Input the numbers : You can input multiple numbers separated by commas (,)',
-                        emptyErrorMessage: 'Please input burn NFT id.',
+                        emptyErrorMessage: 'Please input the NFT id.',
                         regex: NUMBERS_WITH_COMMA
                     }}
                 />

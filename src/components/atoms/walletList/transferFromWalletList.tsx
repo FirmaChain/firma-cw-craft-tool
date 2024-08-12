@@ -20,7 +20,7 @@ import { ITransferFrom } from '@/components/organisms/execute/cards/functions/tr
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import { isValidAddress } from '@/utils/address';
 import { isAtHeight, isAtTime, isNever } from '@/utils/allowance';
-import { addStringAmount, compareStringNumbers } from '@/utils/balance';
+import { addStringAmount, compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 import { getCurrentUTCTimeStamp, removeNanoSeconds } from '@/utils/time';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
@@ -82,14 +82,17 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
                 const ownerBalance = balanceByAddress[_addr] || '0';
                 const ownerAllowance = allowanceByAddress[_addr] || '0';
 
-                if (compareStringNumbers(requiredBalance, ownerBalance) > 0 || compareStringNumbers(requiredBalance, ownerAllowance) > 0) {
-                    setFormError({ id: `${id}_TO_AMOUNT`, type: 'EXCEED_AVAIL_AMOUNT', message: 'Exceed available amount.' });
+                if (
+                    compareStringNumbers(requiredBalance, ownerBalance) > 0 ||
+                    compareStringNumbers(requiredBalance, getTokenAmountFromUToken(ownerAllowance, decimals)) > 0
+                ) {
+                    setFormError({ id: `${id}_TO_AMOUNT`, type: 'EXCEED_AVAIL_AMOUNT', message: 'Input exceeds the allowance.' });
                 } else {
                     clearFormError({ id: `${id}_TO_AMOUNT`, type: 'EXCEED_AVAIL_AMOUNT' });
                 }
             }
         });
-    }, [allowanceByAddress, balanceByAddress, totalAmountByAddress]);
+    }, [allowanceByAddress, balanceByAddress, decimals, totalAmountByAddress, transferList]);
 
     const handleAddWallet = () => {
         if (transferList.length < maxWalletCount) {

@@ -96,7 +96,7 @@ const Burn = () => {
                         decimal: tokenInfo.decimals,
                         // hideErrorMessage: true,
                         maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()),
-                        emptyErrorMessage: 'Please input burn amount.'
+                        emptyErrorMessage: 'Please input the amount.'
                     }}
                 />
 

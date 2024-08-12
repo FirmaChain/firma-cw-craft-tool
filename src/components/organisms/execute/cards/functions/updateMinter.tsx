@@ -63,7 +63,7 @@ const UpdateMinter = () => {
                     value: minterAddress || '',
                     onChange: onChangeMinter,
                     placeHolder: 'Input Wallet Address',
-                    emptyErrorMessage: 'Please input minter address',
+                    emptyErrorMessage: 'Please input firmachain wallet address.',
                     regex: WALLET_ADDRESS_REGEX
                 }}
             />

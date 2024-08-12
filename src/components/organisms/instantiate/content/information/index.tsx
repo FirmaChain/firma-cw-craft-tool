@@ -11,10 +11,9 @@ import {
 } from './style';
 import Icons from '@/components/atoms/icons';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../instaniateStore';
-import { DEFAULT_INPUT_REGEX, ENG_NUM_SPACE, HTTP_URI_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
 
 interface IProps {
@@ -58,12 +57,6 @@ const Information = ({ isBasic }: IProps) => {
     const handleTokenSymbol = (value: string) => {
         setTokenSymbol(value);
 
-        // if (/^[a-zA-Z]+$/.test(value) || value.length === 0) {
-        //     clearFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH' });
-        // } else {
-        //     setFormError({ id: 'tokenSymbol', type: 'ONLY_ENGLISH', message: 'Number is not included.' });
-        // }
-
         if (value.length === 0 || value.length >= 3) {
             clearFormError({ id: 'tokenSymbol', type: 'MINIMAL_SYMBOL_LENGTH' });
         } else {
@@ -73,12 +66,6 @@ const Information = ({ isBasic }: IProps) => {
 
     const handleTokenLogoUrl = (value: string) => {
         setTokenLogoUrl(value);
-
-        // if (isValidUrl(value) || value === '') {
-        //     clearFormError({ id: 'tokenLogoUrl', type: 'VALID_URL' });
-        // } else {
-        //     setFormError({ id: 'tokenLogoUrl', type: 'VALID_URL', message: 'This is an invalid token logo url.' });
-        // }
     };
 
     const handleDescription = (value: string) => {
@@ -134,9 +121,6 @@ const Information = ({ isBasic }: IProps) => {
             handleDecimals('');
             clearFormError({ id: 'tokenDecimal' });
 
-            // handleLabel('');
-            // clearFormError({ id: 'tokenLabel' });
-
             handleMarketingAddress('');
             clearFormError({ id: 'marketingAddress' });
 
@@ -172,7 +156,7 @@ const Information = ({ isBasic }: IProps) => {
                             placeHolder: 'ex) My CW Token',
                             maxLength: 30,
                             onChange: handleTokenName,
-                            emptyErrorMessage: 'Please input token name.',
+                            emptyErrorMessage: 'Please input the token name.',
                             regex: DEFAULT_INPUT_REGEX
                         }}
                     />
@@ -185,7 +169,7 @@ const Information = ({ isBasic }: IProps) => {
                             placeHolder: 'ex) MCT, FCT',
                             maxLength: 12,
                             onChange: handleTokenSymbol,
-                            emptyErrorMessage: 'Please input token symbol.',
+                            emptyErrorMessage: 'Please input the token symbol.',
                             regex: ONLY_ENGLISH
                         }}
                     />
@@ -198,7 +182,7 @@ const Information = ({ isBasic }: IProps) => {
                             formId: 'tokenDecimal',
                             placeHolder: '0 ~ 18',
                             onChange: handleDecimals,
-                            emptyErrorMessage: 'Please input token decimal.',
+                            emptyErrorMessage: 'Please input the token decimal.',
                             type: 'number',
                             decimal: 0,
                             maxValue: '18'
@@ -212,7 +196,7 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenLabel',
                         placeHolder: 'ex) Event reward contract',
                         onChange: handleLabel,
-                        emptyErrorMessage: 'Please input token label.',
+                        emptyErrorMessage: 'Please input the token label.',
                         regex: DEFAULT_INPUT_REGEX,
                         maxLength: 128
                     }}

@@ -122,7 +122,7 @@ const Transfer = () => {
                             <ErrorMessageBox>
                                 <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
                                 <TotalTransferLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
-                                    You have exceeded token balance.
+                                    You have exceeded the token balance.
                                 </TotalTransferLabelTypo>
                             </ErrorMessageBox>
                         )}

@@ -3,7 +3,13 @@ import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_ARROW_WITH_TAIL, IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { addStringAmount, compareStringNumbers, formatWithCommas, getUTokenAmountFromToken } from '@/utils/balance';
+import {
+    addStringAmount,
+    compareStringNumbers,
+    formatWithCommas,
+    getTokenAmountFromUToken,
+    getUTokenAmountFromToken
+} from '@/utils/balance';
 import { getUTokenStrFromTokenStr, parseAmountWithDecimal2, shortenAddress } from '@/utils/common';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
@@ -246,7 +252,7 @@ const FromToAddressLine = ({
 
 const TransferFromPreview = () => {
     const network = useSelector((state: rootState) => state.global.network);
-    
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
@@ -299,7 +305,10 @@ const TransferFromPreview = () => {
             const ownerBalance = balanceByAddress[_addr] || '0';
             const ownerAllowance = allowanceByAddress[_addr] || '0';
 
-            if (compareStringNumbers(requiredBalance, ownerBalance) > 0 || compareStringNumbers(requiredBalance, ownerAllowance) > 0)
+            if (
+                compareStringNumbers(requiredBalance, ownerBalance) > 0 ||
+                compareStringNumbers(requiredBalance, getTokenAmountFromUToken(ownerAllowance, String(tokenInfo?.decimals))) > 0
+            )
                 return true;
         });
 
@@ -320,8 +329,8 @@ const TransferFromPreview = () => {
     const onClickTransfer = () => {
         const convertTransferList = [];
         let totalAmount = '0';
-        const feeAmount = transferFromList.length === 1
-        ? Number(craftConfig.DEFAULT_FEE) : transferFromList.length * Number(craftConfig.BULK_FEE);
+        const feeAmount =
+            transferFromList.length === 1 ? Number(craftConfig.DEFAULT_FEE) : transferFromList.length * Number(craftConfig.BULK_FEE);
 
         for (const transfer of transferFromList) {
             const amount = getUTokenAmountFromToken(transfer.toAmount, tokenInfo.decimals.toString());

@@ -139,7 +139,7 @@ const BurnFrom = () => {
                     {showExceedMessage && (
                         <SummeryWrap>
                             <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
-                            <ErrorTypo>You have exceeded allowance.</ErrorTypo>
+                            <ErrorTypo>You have exceeded the allowance.</ErrorTypo>
                         </SummeryWrap>
                     )}
                 </SummeryCard>

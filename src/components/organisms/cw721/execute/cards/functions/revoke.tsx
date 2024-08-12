@@ -61,14 +61,14 @@ const Revoke = () => {
         } else {
             if (myNftList.includes(revokeTokenId)) {
                 if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
-                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved' });
+                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved.' });
                 } else {
                     if (nftApprovalInfo.spender === revokeAddress) {
                         clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
                     }
                 }
             } else {
-                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
+                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This NFT id is not owned by user.' });
             }
         }
     }, [nftApprovalInfo, revokeTokenId]);
@@ -77,7 +77,7 @@ const Revoke = () => {
         if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
-            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
         }
 
         setRevokeAddress(value);
@@ -88,7 +88,7 @@ const Revoke = () => {
             const parsedId = BigInt(value).toString();
 
             if (!myNftList.includes(parsedId))
-                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN', message: `NFT ID that you don't own.` });
+                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN', message: 'This NFT id is not owned by user.' });
             else clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN' });
         } else {
             clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN' });
@@ -141,7 +141,7 @@ const Revoke = () => {
                                     placeHolder: '0',
                                     textAlign: 'right',
                                     regex: INT_NUMBERS,
-                                    emptyErrorMessage: 'Please input token ID'
+                                    emptyErrorMessage: 'Please input the token id.'
                                 }}
                             />
                         </div>

@@ -143,7 +143,7 @@ const Mint = () => {
                             <MinterCapExceedBox>
                                 <Icons.Tooltip width="16px" height="16px" fill="var(--Status-Alert, #e55250)" />
                                 <TotalMintLabelTypo style={{ color: 'var(--Status-Alert, #e55250)' }}>
-                                    You have exceeded minter cap.
+                                    You have exceeded the minter cap.
                                 </TotalMintLabelTypo>
                             </MinterCapExceedBox>
                         )}

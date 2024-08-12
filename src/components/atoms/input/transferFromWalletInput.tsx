@@ -131,7 +131,7 @@ const TransferFromWalletInput = ({
             if (expires['never']) {
                 useExecuteStore.getState().setAllowanceByAddress({
                     address: ownerAddress.toLowerCase(),
-                    amount: getTokenAmountFromUToken(allowance, decimals)
+                    amount: allowance // getTokenAmountFromUToken(allowance, decimals)
                 });
                 return;
             }
@@ -140,7 +140,7 @@ const TransferFromWalletInput = ({
                 if (BigInt(expires['at_height']) > BigInt(blockHeight)) {
                     useExecuteStore.getState().setAllowanceByAddress({
                         address: ownerAddress.toLowerCase(),
-                        amount: getTokenAmountFromUToken(allowance, decimals)
+                        amount: allowance // getTokenAmountFromUToken(allowance, decimals)
                     });
                     return;
                 }
@@ -153,7 +153,7 @@ const TransferFromWalletInput = ({
                 if (expirationTimestamp > BigInt(Number(new Date()))) {
                     useExecuteStore.getState().setAllowanceByAddress({
                         address: ownerAddress.toLowerCase(),
-                        amount: getTokenAmountFromUToken(allowance, decimals)
+                        amount: allowance //getTokenAmountFromUToken(allowance, decimals)
                     });
                     return;
                 }
@@ -241,7 +241,7 @@ const TransferFromWalletInput = ({
                                     onChange: (v) => handleOnChange(fromAddressId, v),
                                     placeHolder: 'Input address',
                                     regex: WALLET_ADDRESS_REGEX,
-                                    emptyErrorMessage: 'Please input wallet address.'
+                                    emptyErrorMessage: 'Please input firmachain wallet address.'
                                 }}
                             />
                         </div>
@@ -293,7 +293,7 @@ const TransferFromWalletInput = ({
                                     onChange: (v) => handleOnChange(toAddressId, v),
                                     placeHolder: 'Input address',
                                     regex: WALLET_ADDRESS_REGEX,
-                                    emptyErrorMessage: 'Please input wallet address.'
+                                    emptyErrorMessage: 'Please input firmachain wallet address.'
                                 }}
                             />
                         </div>
@@ -319,7 +319,7 @@ const TransferFromWalletInput = ({
                                     type: 'number',
                                     decimal: decimals ? Number(decimals) : 6,
                                     textAlign: 'right',
-                                    emptyErrorMessage: 'Please input amount.',
+                                    emptyErrorMessage: 'Please input the amount.',
                                     // hideErrorMessage: true,
                                     maxValue: getTokenAmountFromUToken(allowance, decimals)
                                 }}

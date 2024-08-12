@@ -191,7 +191,7 @@ const TransferNFTInput = ({
                             onChange: handleAddress,
                             placeHolder: leftPlaceholder,
                             regex: WALLET_ADDRESS_REGEX,
-                            emptyErrorMessage: 'Please input wallet address.'
+                            emptyErrorMessage: 'Please input firmachain wallet address.'
                         }}
                     />
                 </div>
@@ -213,7 +213,7 @@ const TransferNFTInput = ({
                             onChange: handleTokenId,
                             placeHolder: rightPlaceholder,
                             regex: NUMBERS_WITH_COMMA,
-                            emptyErrorMessage: 'Please input token id.'
+                            emptyErrorMessage: 'Please input the token id.'
                         }}
                     />
                 </div>

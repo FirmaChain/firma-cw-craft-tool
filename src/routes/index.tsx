@@ -6,6 +6,7 @@ import LandingPage from '@/pages/landing';
 
 import { CW20Execute, CW20Instantiate, CW20SearchPage, CW20TokenDetail } from '@/pages/cw20';
 import { CW721Instantiate, CW721Search, CW721Execute, CW721MyNFTContracts, CW721NFTContractDetail } from '@/pages/cw721';
+import { scrollToTop } from '@/utils/common';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
     path,
@@ -35,9 +36,10 @@ const AppRoutes = () => {
     const location = useLocation();
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
+        scrollToTop();
     }, [location.pathname]);
-    
+
     return (
         <Routes>
             {routes.map((route, index) => {

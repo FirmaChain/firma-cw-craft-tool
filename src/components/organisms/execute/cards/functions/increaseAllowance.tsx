@@ -131,7 +131,7 @@ const IncreaseAllowance = () => {
         if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
-            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
             return;
         }
 
@@ -284,7 +284,7 @@ const IncreaseAllowance = () => {
                                     placeHolder: '0',
                                     type: 'number',
                                     decimal: tokenInfo?.decimals,
-                                    emptyErrorMessage: 'Please input amount.',
+                                    emptyErrorMessage: 'Please input the amount.',
                                     textAlign: 'right',
                                     maxValue: getMaxMinterCap(tokenInfo?.decimals.toString())
                                     // maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())

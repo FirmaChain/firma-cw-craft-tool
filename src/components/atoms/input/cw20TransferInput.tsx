@@ -100,7 +100,7 @@ const CW20TransferInput = ({
                             value: address,
                             onChange: handleAddress,
                             placeHolder: addressPlaceholder,
-                            emptyErrorMessage: 'Please input wallet address.',
+                            emptyErrorMessage: 'Please input firmachain wallet address.',
                             regex: WALLET_ADDRESS_REGEX
                         }}
                     />
@@ -125,7 +125,7 @@ const CW20TransferInput = ({
                             placeHolder: '0',
                             type: 'number',
                             decimal: decimals ? Number(decimals) : 6,
-                            emptyErrorMessage: 'Please input amount.',
+                            emptyErrorMessage: 'Please input the amount.',
                             textAlign: 'right',
                             maxValue: getMaxCW20InitWalletAmount(decimals)
                         }}

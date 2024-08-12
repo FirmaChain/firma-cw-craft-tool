@@ -153,7 +153,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             placeHolder: 'ex) My CW Token',
                             maxLength: 30,
                             onChange: onNameChange,
-                            emptyErrorMessage: 'Please input token name.',
+                            emptyErrorMessage: 'Please input the token name.',
                             regex: DEFAULT_INPUT_REGEX
                         }}
                     />
@@ -165,7 +165,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             placeHolder: 'ex) MCT, FCT',
                             maxLength: 12,
                             onChange: onSymbolChange,
-                            emptyErrorMessage: 'Please input token symbol.',
+                            emptyErrorMessage: 'Please input the token symbol.',
                             regex: ONLY_ENGLISH
                         }}
                     />
@@ -180,7 +180,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             placeHolder: 'Input wallet Address',
                             onChange: onAdminChange,
                             regex: WALLET_ADDRESS_REGEX,
-                            emptyErrorMessage: 'Please input admin address.'
+                            emptyErrorMessage: 'Please input the admin address.'
                         }}
                     />
                 )}
@@ -193,7 +193,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             placeHolder: 'Input wallet Address',
                             onChange: onMinterChange,
                             regex: WALLET_ADDRESS_REGEX,
-                            emptyErrorMessage: 'Please input minter address.'
+                            emptyErrorMessage: 'Please input the minter address.'
                         }}
                     />
                 )}
@@ -205,7 +205,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                         placeHolder: 'ex) Event reward contract',
                         onChange: setLabel,
                         regex: DEFAULT_INPUT_REGEX,
-                        emptyErrorMessage: 'Please input label.',
+                        emptyErrorMessage: 'Please input the token label.',
                         maxLength: 128
                     }}
                 />

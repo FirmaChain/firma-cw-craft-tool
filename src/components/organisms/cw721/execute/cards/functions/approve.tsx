@@ -86,7 +86,7 @@ const Approve = () => {
         if (isValidAddress(value) || value === '') {
             clearFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         } else {
-            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'Please input valid wallet address' });
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
         }
 
         setApproveRecipientAddress(value);
@@ -110,11 +110,12 @@ const Approve = () => {
         if (value === '' || myNftList.includes(value)) {
             clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
         } else {
-            if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
-                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
-            } else {
-                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
-            }
+            setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This NFT id is not owned by user.' });
+            // if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
+            //     setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
+            // } else {
+            //     setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
+            // }
         }
 
         setApproveTokenId(value);
@@ -194,7 +195,7 @@ const Approve = () => {
                                     placeHolder: '0',
                                     textAlign: 'right',
                                     regex: INT_NUMBERS,
-                                    emptyErrorMessage: 'Please input token ID'
+                                    emptyErrorMessage: 'Please input the token id.'
                                 }}
                             />
                         </div>

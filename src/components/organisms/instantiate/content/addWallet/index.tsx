@@ -12,9 +12,6 @@ const AddWallet = () => {
     const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
     const decimals = useInstantiateStore((v) => v.decimals);
     const setWalletList = useInstantiateStore((v) => v.setWalletList);
-    const setMinterble = useInstantiateStore((v) => v.setMinterble);
-    const setMinterCap = useInstantiateStore((v) => v.setMinterCap);
-    const setMinterAddress = useInstantiateStore((v) => v.setMinterAddress);
 
     return (
         <AddWalletWrapper>
