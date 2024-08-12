@@ -102,6 +102,7 @@ const DecreaseAllowance = () => {
         setExpirationType(ExpirationType.Height);
         setExpInputValue('');
         setIsFetched(false);
+        setAllowAmount('');
     }, [isFetched]);
 
     useEffect(() => {

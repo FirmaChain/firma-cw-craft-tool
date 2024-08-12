@@ -157,7 +157,6 @@ const VariableInput = ({
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
 
-        // try {
         if (inputValue.length > 0) {
             if (type === 'number') {
                 inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
@@ -208,6 +207,8 @@ const VariableInput = ({
             >
                 {type === 'number' ? (
                     <NumericFormat
+                        allowNegative={false}
+                        allowLeadingZeros={false}
                         getInputRef={inputRef}
                         value={value}
                         onChange={handleChange}
@@ -215,12 +216,13 @@ const VariableInput = ({
                         max={maxValue}
                         decimalScale={decimal}
                         isAllowed={({ value }) => {
-                            if (value.includes('-')) return false;
-
                             if (compareStringNumbers(value, maxValue) > 0) {
                                 setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds the valid range.' });
                                 return false;
-                            } else return true;
+                            } else {
+                                clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
+                                return true;
+                            }
                         }}
                         placeholder={placeHolder}
                         readOnly={readOnly}

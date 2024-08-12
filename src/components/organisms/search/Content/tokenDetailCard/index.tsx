@@ -21,7 +21,7 @@ import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/pr
 import Skeleton from '@/components/atoms/skeleton';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import { getTokenAmountFromUToken } from '@/utils/balance';
+import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 
 const TokenInfo = () => {
     const network = useSelector((v: rootState) => v.global.network);
@@ -351,25 +351,17 @@ const AllAccounts = () => {
         }
     ];
 
-    // const filtereRows = allAccounts?.filter((row) => row.address.toLowerCase().includes(keyword.toLowerCase()));
     const rows = useMemo(() => {
-        if (keyword !== '') {
-            return allAccounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
-        } else {
-            if (allAccounts) {
-                let sortedAccounts = [...allAccounts];
-                const sortAccounts = sortedAccounts.sort((a, b) => {
-                    console.log(a.balance);
-                    if (a.balance.length === b.balance.length) {
-                        return b.balance.localeCompare(a.balance);
-                    } else {
-                        return b.balance.length - a.balance.length;
-                    }
-                });
-                return sortAccounts;
-            }
-            return [];
-        }
+        if (!allAccounts || allAccounts.length === 0) return [];
+
+        let result = [];
+
+        if (keyword.length > 0) result = allAccounts.filter((one) => one.address?.toLowerCase().includes(keyword.toLowerCase()));
+        else result = [...allAccounts];
+
+        return result.sort((a, b) => {
+            return compareStringNumbers(b.balance, a.balance);
+        });
     }, [allAccounts, keyword]);
 
     return (

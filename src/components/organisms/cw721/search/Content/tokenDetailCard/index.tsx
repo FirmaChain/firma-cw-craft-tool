@@ -148,37 +148,39 @@ const TokenInfo = () => {
                         </NFTTableContainer>
                     </SpecificValueBox>
                 </SpecificItem>
-                <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
-                    <SpecificLabelTypo>My NFTs</SpecificLabelTypo>
-                    <SpecificValueBox>
-                        <IconButton
-                            onClick={() => setExpandOwned(!expandOwned)}
-                            style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
-                        >
-                            <SpecificValueWrapper>
-                                <SpecificValueTypo>
-                                    {ownedNfts.length}
-                                    <span style={{ paddingLeft: 0 }}>{'NFT'}</span>
-                                </SpecificValueTypo>
-                            </SpecificValueWrapper>
-                            <TableExpandButton $expand={expandOwned} src={IC_EXPAND} alt={'expand'} />
-                        </IconButton>
-                        <NFTTableContainer $expand={expandOwned}>
-                            <NFTsTable
-                                codeId={codeId}
-                                contractAddress={contractAddress}
-                                nftsInfo={ownedNftsInfo}
-                                nfts={ownedNfts}
-                                currentPage={currentOwnedPage}
-                                handleNFTIdList={handleOwnedNFTIdList}
-                                addNFTs={addOwnedNFTs}
-                                updateNFTs={updateOwnedNFTs}
-                                clearListData={clearCW721OwnedNFTListData}
-                                setCurrentPage={setCurrentOwnedPage}
-                            />
-                        </NFTTableContainer>
-                    </SpecificValueBox>
-                </SpecificItem>
+                {address && (
+                    <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
+                        <SpecificLabelTypo>My NFTs</SpecificLabelTypo>
+                        <SpecificValueBox>
+                            <IconButton
+                                onClick={() => setExpandOwned(!expandOwned)}
+                                style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
+                            >
+                                <SpecificValueWrapper>
+                                    <SpecificValueTypo>
+                                        {ownedNfts.length}
+                                        <span style={{ paddingLeft: 0 }}>{'NFT'}</span>
+                                    </SpecificValueTypo>
+                                </SpecificValueWrapper>
+                                <TableExpandButton $expand={expandOwned} src={IC_EXPAND} alt={'expand'} />
+                            </IconButton>
+                            <NFTTableContainer $expand={expandOwned}>
+                                <NFTsTable
+                                    codeId={codeId}
+                                    contractAddress={contractAddress}
+                                    nftsInfo={ownedNftsInfo}
+                                    nfts={ownedNfts}
+                                    currentPage={currentOwnedPage}
+                                    handleNFTIdList={handleOwnedNFTIdList}
+                                    addNFTs={addOwnedNFTs}
+                                    updateNFTs={updateOwnedNFTs}
+                                    clearListData={clearCW721OwnedNFTListData}
+                                    setCurrentPage={setCurrentOwnedPage}
+                                />
+                            </NFTTableContainer>
+                        </SpecificValueBox>
+                    </SpecificItem>
+                )}
             </CardSpecific>
         </SectionContainer>
     );
@@ -334,7 +336,7 @@ const Transactions = () => {
                 <span className="section-title-desc">The lastest 15 records</span>
             </div>
 
-            <StyledTable columns={columns} rows={transactions} rowsPerPage={15} disablePagination />
+            <StyledTable columns={columns} rows={transactions || []} rowsPerPage={15} disablePagination />
         </SectionContainer>
     );
 };

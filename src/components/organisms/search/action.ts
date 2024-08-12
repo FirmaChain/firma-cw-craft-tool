@@ -33,7 +33,7 @@ const useSearchActions = () => {
     useEffect(() => {
         //? update balance info when wallet connected, or changed
         const contractAddress = useSearchStore.getState().contractInfo?.address;
-        if (contractAddress) updateMyBalance(contractAddress);
+        if (contractAddress && isValidAddress(userAddress?.toLowerCase())) updateMyBalance(contractAddress);
     }, [userAddress]);
 
     useEffect(() => {
@@ -64,6 +64,7 @@ const useSearchActions = () => {
             }
 
             const exist = await firmaSDK.CosmWasm.getContractState(contractAddress?.toLowerCase());
+
             useSearchStore.getState().setContractExist(exist.length > 0);
             await searchTokenInfo(contractAddress);
         } catch (error) {

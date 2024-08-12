@@ -7,6 +7,7 @@ import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import IconButton from '@/components/atoms/buttons/iconButton';
+import { compareStringNumbers } from '@/utils/balance';
 
 const AllAccounts = () => {
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
@@ -37,23 +38,16 @@ const AllAccounts = () => {
     ];
 
     const rows = useMemo(() => {
-        if (keyword !== '') {
-            return accounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
-        } else {
-            if (accounts) {
-                let sortedAccounts = [...accounts];
-                const sortAccounts = sortedAccounts.sort((a, b) => {
-                    console.log(a.Balance);
-                    if (a.Balance.length === b.Balance.length) {
-                        return b.Balance.localeCompare(a.Balance);
-                    } else {
-                        return b.Balance.length - a.Balance.length;
-                    }
-                })
-                return sortAccounts;
-            }
-            return [];
-        }
+        if (!accounts || accounts?.length === 0) return [];
+
+        let result = [];
+
+        if (keyword.length > 0) result = accounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
+        else result = [...accounts];
+
+        return result.sort((a, b) => {
+            return compareStringNumbers(b.Balance, a.Balance);
+        });
     }, [accounts, keyword]);
 
     return (

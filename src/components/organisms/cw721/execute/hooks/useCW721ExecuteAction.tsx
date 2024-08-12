@@ -82,7 +82,7 @@ const useCW721ExecuteAction = () => {
             try {
                 nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
             } catch (error) {
-                enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721.' });
+                enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721 contract.' });
                 useCW721ExecuteStore.getState().clearForm();
                 useCW721ExecuteStore.getState().setContractExist(false);
                 return;

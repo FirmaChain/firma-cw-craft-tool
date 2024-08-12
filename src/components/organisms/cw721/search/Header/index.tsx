@@ -67,14 +67,19 @@ const Header = () => {
                     clearForm();
 
                     GlobalActions.handleGlobalLoading(true);
-                    const detail = await getNFTContractDetail(keyword);
-                    const nfts = await getNFTsInfo(keyword);
-                    const ownedNfts = await getOwnedNFTsInfo(keyword, address);
-                    const txData = await getNFTContractTransactions(keyword);
 
+                    const detail = await getNFTContractDetail(keyword);
                     setContractDetail(detail);
+
+                    const nfts = await getNFTsInfo(keyword);
                     setNftsInfo(nfts);
-                    setOwnedNftsInfo(ownedNfts);
+
+                    if (address) {
+                        const ownedNfts = await getOwnedNFTsInfo(keyword, address);
+                        setOwnedNftsInfo(ownedNfts);
+                    }
+
+                    const txData = await getNFTContractTransactions(keyword);
                     setTransactions(txData.txData);
                 } else {
                     prevKeyword.current = null;
