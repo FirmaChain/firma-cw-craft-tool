@@ -101,7 +101,7 @@ const AdditionalInformation = () => {
                 <SpecificItemByStart>
                     <SpecificLabelTypo>{isBasic ? 'Token' : 'Marketing'} Logo</SpecificLabelTypo>
                     <SpecificColumnValue>
-                        <TokenLogo src={validTokenLogoUrl} size="90px" />
+                        <TokenLogo src={validTokenLogoUrl} size="90px" showTooltip />
                     </SpecificColumnValue>
                 </SpecificItemByStart>
                 <SpecificItem style={{ alignItems: 'flex-start' }}>

@@ -19,6 +19,7 @@ import Divider from '@/components/atoms/divider';
 import { TransactionItem } from '..';
 import { getTransactionHash } from '@/utils/transaction';
 import { CRAFT_CONFIGS } from '@/config';
+import { scrollToTop } from '@/utils/common';
 
 const ModalTitleWrap = styled.div`
     width: 100%;
@@ -611,6 +612,7 @@ const InstantiateModal = ({
                         <ResultsGoToMyMintetedTokenButton
                             onClick={() => {
                                 navigate(`/cw721/mynft/detail/${parsedData.contractAddress}`);
+                                scrollToTop();
                                 onCloseModal();
                             }}
                         >

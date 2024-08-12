@@ -65,6 +65,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import Divider from '@/components/atoms/divider';
 import Icons from '@/components/atoms/icons';
 import { GlobalActions } from '@/redux/actions';
+import { scrollToTop } from '@/utils/common';
 
 interface SuccessData {
     addedAt: string;
@@ -300,6 +301,7 @@ const QRCodeModal = ({
                                 const url =
                                     cwMode === 'CW20' ? `/mytoken/detail/${params.contract}` : `/cw721/mynft/detail/${params.contract}`;
                                 navigate(url);
+                                scrollToTop();
                                 onCloseModal();
                             }}
                         >

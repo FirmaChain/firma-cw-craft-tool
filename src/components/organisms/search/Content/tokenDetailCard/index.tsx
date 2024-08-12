@@ -203,7 +203,7 @@ const MoreInfo = () => {
                 <div className="box-row" style={{ alignItems: 'flex-start' }}>
                     {isBasic ? <div className="box-title">Token Logo</div> : <div className="box-title">Marketing Logo</div>}
                     <div className="box-value">
-                        <TokenLogo src={tokenLogo} size="90px" />
+                        <TokenLogo src={tokenLogo} size="90px" showTooltip />
                     </div>
                 </div>
                 <div className="box-row" style={{ alignItems: 'flex-start' }}>
@@ -365,7 +365,7 @@ const AllAccounts = () => {
                     } else {
                         return b.balance.length - a.balance.length;
                     }
-                })
+                });
                 return sortAccounts;
             }
             return [];

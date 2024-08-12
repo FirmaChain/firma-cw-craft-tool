@@ -354,3 +354,11 @@ export const getRandomTimeInMs = (startSecond: number, endSecond: number): numbe
 export function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const scrollToTop = () => {
+    const scrollbarContent = document.getElementsByClassName('main-scrollbar');
+
+    if (scrollbarContent[0]) {
+        scrollbarContent[0].scrollTo({ top: 0, left: 0 });
+    }
+};

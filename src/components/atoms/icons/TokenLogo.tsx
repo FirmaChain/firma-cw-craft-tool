@@ -3,22 +3,30 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Icons from '.';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { IC_LINK_ROUND } from './pngIcons';
 
 interface ITokenLogo {
     src: string; //? Img logo url
     size?: number | string; //? img size, @default 72px, pretend img is square
-    tooltip?: string; //? Hover tooltip, only show up when img is valid. @default "src" value
     emptyPicSize?: string;
+    showTooltip?: boolean; //? if true, show img src tooltip and link icon
 }
 
 const Container = styled.div<{ $size: string | number }>`
     display: flex;
+    position: relative;
 
     min-width: ${({ $size }) => $size};
     max-width: ${({ $size }) => $size};
 
     min-height: ${({ $size }) => $size};
     max-height: ${({ $size }) => $size};
+
+    .token-logo {
+        width: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
 
     .img-placeholder {
         min-width: ${({ $size }) => $size};
@@ -30,10 +38,18 @@ const Container = styled.div<{ $size: string | number }>`
         align-items: center;
         justify-content: center;
     }
+
+    .url-icon {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
 `;
 
-const TokenLogo = ({ src, size = '72px', emptyPicSize = '34px', tooltip }: ITokenLogo) => {
-    const [isValid, setIsValid] = useState(false);
+const TokenLogo = ({ src, size = '72px', emptyPicSize = '34px', showTooltip = false }: ITokenLogo) => {
+    const [isValid, setIsValid] = useState<boolean>(false);
 
     useEffect(() => {
         if (Boolean(src)) {
@@ -46,18 +62,18 @@ const TokenLogo = ({ src, size = '72px', emptyPicSize = '34px', tooltip }: IToke
     }, [src]);
 
     return (
-        <Container $size={size}>
+        <Container
+            $size={size}
+            data-tooltip-content={showTooltip ? src : ''}
+            data-tooltip-id={TOOLTIP_ID.COMMON}
+            data-tooltip-wrapper="span"
+            data-tooltip-place="bottom"
+        >
             {isValid ? (
-                <img
-                    src={src}
-                    alt="token-logo"
-                    data-tooltip-content={tooltip || src}
-                    data-tooltip-id={TOOLTIP_ID.COMMON}
-                    data-tooltip-wrapper="span"
-                    data-tooltip-place="bottom"
-                    style={{ width: '100%', borderRadius: '50%', objectFit: 'cover' }}
-                    onError={() => setIsValid(false)}
-                />
+                <>
+                    <img src={src} className="token-logo" alt="token-logo" onError={() => setIsValid(false)} />
+                    {showTooltip && <img className="url-icon" src={IC_LINK_ROUND} alt="link" />}
+                </>
             ) : (
                 <div className="img-placeholder">
                     <Icons.Picture width={emptyPicSize} height={emptyPicSize} />

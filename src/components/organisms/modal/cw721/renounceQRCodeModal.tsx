@@ -54,6 +54,7 @@ import {
     ResultsTitleWrap
 } from '../style';
 import { TransactionItem } from '..';
+import { scrollToTop } from '@/utils/common';
 
 interface SuccessData {
     addedAt: string;
@@ -161,11 +162,9 @@ const RenounceQRCodeModal = ({
                     </ModalTitleWrap>
                     <ModalContentWrap style={{ marginBottom: '36px' }}>
                         <ModalContentWarningCard>
-                            <ModalContentWarningTypo>{"Warning: "}</ModalContentWarningTypo>
+                            <ModalContentWarningTypo>{'Warning: '}</ModalContentWarningTypo>
                             <ModalContentWarningDesc>
-                                {
-                                    "If you renounce ownership of the NFT contract,\nit cannot be reverted to the previous state."
-                                }
+                                {'If you renounce ownership of the NFT contract,\nit cannot be reverted to the previous state.'}
                             </ModalContentWarningDesc>
                         </ModalContentWarningCard>
                         <ModalContentGrayCard>
@@ -229,6 +228,7 @@ const RenounceQRCodeModal = ({
                         <ResultsGoToMyMintetedTokenButton
                             onClick={() => {
                                 navigate(`/cw721/mynft/detail/${params.contract}`);
+                                scrollToTop();
                                 onCloseModal();
                             }}
                         >

@@ -24,7 +24,6 @@ const RightContainer = styled.div`
     }
 `;
 
-
 const ScrollableContainer = styled.div`
     width: 100%;
     height: 100%;
@@ -33,7 +32,6 @@ const ScrollableContainer = styled.div`
 `;
 
 const Main = () => {
-
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const { setScroll } = useScrollContext();
 
@@ -61,7 +59,7 @@ const Main = () => {
             <ModalRenderer />
             <Sidebar />
             <RightContainer>
-                <ScrollableContainer ref={scrollRef}>
+                <ScrollableContainer className="main-scrollbar" ref={scrollRef}>
                     <AppRoutes />
                 </ScrollableContainer>
                 <GlobalLoader />

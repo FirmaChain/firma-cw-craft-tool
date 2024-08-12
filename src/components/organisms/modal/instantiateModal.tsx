@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Divider from '@/components/atoms/divider';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
-import { openLink, shortenAddress } from '@/utils/common';
+import { openLink, scrollToTop, shortenAddress } from '@/utils/common';
 import useExecuteHook from '../execute/hooks/useExecueteHook';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -553,6 +553,7 @@ const InstantiateModal = ({
     const onClickGoToMyTokens = () => {
         closeModal(id);
         navigate(`/mytoken/detail/${parsedData?.contractAddress}`);
+        scrollToTop();
     };
 
     useEffect(() => {
