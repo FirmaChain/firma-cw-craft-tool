@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import Icons from '@/components/atoms/icons';
 import {
     DashboardBody,
+    DashboardScrollBox,
     DashboardWrapper,
     ExecutePreviewOverlayScroll,
     IconBackground,
@@ -18,6 +19,7 @@ import TokenInfo from './tokenInfo';
 import Amount from './amount';
 import { IWallet } from '@/interfaces/wallet';
 import Marketing from './marketing';
+import Divider from '@/components/atoms/divider';
 
 interface IProps {
     isBasic: boolean;
@@ -68,7 +70,8 @@ const Dashboard = ({
             </TitleWrapper>
 
             <DashboardBody>
-                <ExecutePreviewOverlayScroll defer>
+                <DashboardScrollBox>
+                    {/* <ExecutePreviewOverlayScroll defer> */}
                     <TokenInfo
                         tokenLogoUrl={tokenLogoUrl}
                         tokenName={tokenName}
@@ -76,6 +79,7 @@ const Dashboard = ({
                         tokenDescription={tokenDescription}
                     />
                     {/* {showAdvancedInfo && ( */}
+
                     <Marketing label={label} decimals={decimals} marketingAddress={marketingAddress} marketingProject={marketingProject} />
                     {/* )} */}
                     <Amount
@@ -87,7 +91,8 @@ const Dashboard = ({
                         walletList={walletList}
                         decimals={decimals}
                     />
-                </ExecutePreviewOverlayScroll>
+                    {/* </ExecutePreviewOverlayScroll> */}
+                </DashboardScrollBox>
             </DashboardBody>
         </DashboardWrapper>
     );

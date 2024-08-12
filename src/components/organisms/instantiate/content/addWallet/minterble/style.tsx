@@ -4,7 +4,7 @@ export const MinterbleWrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    // gap: 24px;
 `;
 
 export const MinterbleOption = styled.div`
@@ -22,20 +22,27 @@ export const MinterbleText = styled.div`
     line-height: 22px;
 `;
 
-
 export const MinterbleInputBox = styled.div<{ $isOpen: boolean }>`
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: flex-end;
     flex-direction: column;
     gap: 10px;
     height: fit-content;
+
     overflow: hidden;
     transition: all 0.2s ease;
+    transition-delay: 0.2s;
 
-    ${({ $isOpen }) => $isOpen ? `
-        max-height: 100%;
-    `: `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
+       
+        max-height: 300px;
+        opacity: 1;
+    `
+            : `
         max-height: 0px;
-    `}
-`
+        opacity: 0;
+    `};
+`;

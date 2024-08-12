@@ -54,14 +54,14 @@ export const DashboardBody = styled.div`
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    overflow-y: scroll;
+    // overflow-y: scroll;
 
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
 
-    &::-webkit-scrollbar {
-        display: none;
-    }
+    // &::-webkit-scrollbar {
+    //     display: none;
+    // }
 `;
 
 export const StyledOverlayScrollbar = styled(OverlayScrollbarsComponent)`
@@ -111,4 +111,20 @@ export const ExecutePreviewOverlayScroll = styled(OverlayScrollbarsComponent)`
     .os-scrollbar-vertical {
         padding: 24px 6px;
     }
+`;
+
+export const DashboardScrollBox = styled.div`
+    width: 100%;
+
+    // overflow: hidden;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar-track-piece {
+        margin: 30px 0;
+        // background: #1e1e1e;
+    }
+
+    // &::-webkit-scrollbar-track {
+    //     background: #1e1e1e;
+    // }
 `;

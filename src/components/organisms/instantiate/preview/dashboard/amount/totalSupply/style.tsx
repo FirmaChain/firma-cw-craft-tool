@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 export const TotalSupplyWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    // gap: 20px;
 `;
 
 export const TotalSupplySummery = styled.div`
@@ -35,6 +35,7 @@ export const SummeryRightWrapeer = styled.div`
     display: flex;
     flex-direction: row;
     gap: 12px;
+    overflow: hidden;
 `;
 
 export const SummeryRightTotalSupply = styled.div<{ $disabled?: boolean }>`
@@ -64,20 +65,25 @@ export const WalletListWrapper = styled.div<{ $isOpen: boolean }>`
     background: var(--Gray-150, #141414);
     height: fit-content;
     overflow: hidden;
-    transition: all 0.2s ease;
-    
-    ${({ $isOpen }) => $isOpen ? `
+    transition: all 1s ease;
+
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         opacity: 1;
         padding: 24px 32px;
         max-height: 100%;
+        margin-top: 20px;
 
         > div {
             max-height: 100%; 
         }
-    `: `
+    `
+            : `
         opacity: 0;
-        padding: 0px 32px;
+        // padding: 0px 32px;
         max-height: 0px;
+        margin-top: 0px;
 
         > div {
             max-height: 0px; 

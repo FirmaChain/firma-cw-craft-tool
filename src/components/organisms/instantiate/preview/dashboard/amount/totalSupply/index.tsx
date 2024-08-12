@@ -52,38 +52,42 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                     <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />
                 </SummeryRightWrapeer>
             </TotalSupplySummery>
-            <WalletListWrapper $isOpen={isOpen}>
-                {walletList.length === 0 ? (
-                    <WalletListItem>
-                        <ItemLeftWrapper>
-                            <Icons.Wallet width={'20px'} height={'20px'} />
-                            <ItemLeftAddress>{'-'}</ItemLeftAddress>
-                        </ItemLeftWrapper>
-                        <ItemTokenAmount>{'0'}</ItemTokenAmount>
-                    </WalletListItem>
-                ) : (
-                    <Fragment>
-                        {walletList.map((wallet, index) => (
-                            <WalletListItem key={index}>
-                                <ItemLeftWrapper>
-                                    <Icons.Wallet width={'20px'} height={'20px'} />
-                                    <ItemLeftAddress
-                                        $disabled={!Boolean(wallet.recipient)}
-                                        data-tooltip-content={wallet.recipient.length > 25 ? wallet.recipient : ''}
-                                        data-tooltip-id={TOOLTIP_ID.COMMON}
-                                        data-tooltip-wrapper="span"
-                                        data-tooltip-place="bottom"
-                                    >
-                                        {shortenAddress(wallet.recipient, 12, 12) || 'Wallet Address'}
-                                    </ItemLeftAddress>
-                                </ItemLeftWrapper>
-                                <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
-                                    {commaNumber(wallet.amount) || '0'}
-                                </ItemTokenAmount>
-                            </WalletListItem>
-                        ))}
-                    </Fragment>)}
-            </WalletListWrapper>
+
+            <div style={{ width: '100%', maxHeight: isOpen ? '848px' : '0px', overflow: 'hidden', transition: 'all 0.2s' }}>
+                <WalletListWrapper $isOpen={true}>
+                    {walletList.length === 0 ? (
+                        <WalletListItem>
+                            <ItemLeftWrapper>
+                                <Icons.Wallet width={'20px'} height={'20px'} />
+                                <ItemLeftAddress>{'-'}</ItemLeftAddress>
+                            </ItemLeftWrapper>
+                            <ItemTokenAmount>{'0'}</ItemTokenAmount>
+                        </WalletListItem>
+                    ) : (
+                        <Fragment>
+                            {walletList.map((wallet, index) => (
+                                <WalletListItem key={index}>
+                                    <ItemLeftWrapper>
+                                        <Icons.Wallet width={'20px'} height={'20px'} />
+                                        <ItemLeftAddress
+                                            $disabled={!Boolean(wallet.recipient)}
+                                            data-tooltip-content={wallet.recipient.length > 25 ? wallet.recipient : ''}
+                                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                                            data-tooltip-wrapper="span"
+                                            data-tooltip-place="bottom"
+                                        >
+                                            {shortenAddress(wallet.recipient, 12, 12) || 'Wallet Address'}
+                                        </ItemLeftAddress>
+                                    </ItemLeftWrapper>
+                                    <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
+                                        {commaNumber(wallet.amount) || '0'}
+                                    </ItemTokenAmount>
+                                </WalletListItem>
+                            ))}
+                        </Fragment>
+                    )}
+                </WalletListWrapper>
+            </div>
         </TotalSupplyWrapper>
     );
 };

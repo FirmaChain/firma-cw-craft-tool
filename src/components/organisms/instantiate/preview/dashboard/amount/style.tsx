@@ -10,57 +10,13 @@ export const AmountWrapper = styled.div<{ $isMinterble: boolean }>`
     flex-direction: column;
     // border-radius: 0px 0px 24px 24px;
     border-top: 1px solid var(--Gray-550, #444);
-    transition: all 0.2s ease;
-
-    > div:nth-child(1), > div:nth-child(2){
-        height: fit-content;
-        overflow: hidden;
-        transition: all 0.15s ease;
-    }
-
-    ${({ $isMinterble }) => $isMinterble ? `
-        gap: 24px;
-        > div:nth-child(1), > div:nth-child(2){
-            opacity: 1;
-            max-height: 100%;
-        }
-
-        > div:nth-child(1) {
-            >div:nth-child(2) {
-                padding: 24px 32px;
-                max-height: 100%;
-
-                > div {
-                    max-height: 100%; 
-                }
-            } 
-        }
-    `: `
-        gap: 0px;
-        > div:nth-child(1), > div:nth-child(2){
-            opacity: 0;
-            max-height: 0px !important;
-            min-height: 0px !important;
-        }
-
-        > div:nth-child(1) {
-            >div:nth-child(2) {
-                padding: 0px 32px;
-                max-height: 0px;
-
-                > div {
-                    max-height: 0px; 
-                }
-            } 
-        }
-    `}
-`
+    overflow: hidden;
+`;
 
 export const MinterCapWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 20px;
-
+    // gap: 20px;
 `;
 
 export const MinterCapHeaderWrapper = styled.div`
@@ -126,8 +82,10 @@ export const DetailWrapper = styled.div<{ $isOpen: boolean }>`
     height: fit-content;
     overflow: hidden;
     transition: all 0.2s ease;
-    
-    ${({ $isOpen }) => $isOpen ? `
+
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         opacity: 1 !important;
         padding: 24px 32px !important;
         max-height: 100% !important;
@@ -135,7 +93,8 @@ export const DetailWrapper = styled.div<{ $isOpen: boolean }>`
         > div {
             max-height: 100% !important; 
         }
-    `: `
+    `
+            : `
         opacity: 0 !important;
         padding: 0px 32px !important;
         max-height: 0px !important;
@@ -146,7 +105,6 @@ export const DetailWrapper = styled.div<{ $isOpen: boolean }>`
     `}
 `;
 
-
 export const DetailLeftWrapper = styled.div`
     display: flex;
     flex-direction: row;
@@ -154,7 +112,6 @@ export const DetailLeftWrapper = styled.div`
     height: fit-content;
     overflow: hidden;
     transition: all 0.15s ease;
-    
 `;
 
 export const DetailAddressText = styled.div<{ $disabled?: boolean }>`
@@ -174,4 +131,29 @@ export const DetailMinterCapAmount = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
+`;
+
+export const MinterCapAccordianBox = styled.div<{ $open?: boolean }>`
+    padding: 0;
+    gap: 0;
+    max-height: ${({ $open }) => ($open ? '161px' : 0)};
+    opacity: ${({ $open }) => ($open ? 1 : 0)};
+    transition: all 0.2s;
+    transition-delay: 0.2s;
+`;
+
+export const MinterCapInfoBox = styled.div<{ $open?: boolean }>`
+    width: 100%;
+    height: fit-content;
+    max-height: ${({ $open }) => ($open ? '88px' : '0px')};
+    transition: all 0.2s ease;
+    padding: 0;
+    overflow: hidden;
+`;
+
+export const DividerBox = styled.div`
+    padding: 0;
+    width: 100%;
+    height: 1px;
+    margin: 24px 0px;
 `;

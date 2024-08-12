@@ -78,6 +78,7 @@ const Minterble = ({ decimals }: IProps) => {
                 <SimpleSwitch checked={minterble} onChange={handleMinterble} />
             </MinterbleOption>
             <MinterbleInputBox $isOpen={minterble}>
+                <div style={{ height: '24px' }} />
                 {contractMode === 'ADVANCED' && (
                     <LabelInput
                         labelProps={{ label: 'Minter Address', tooltip: ADDRESS_TOOLTIP_TEXT }}
