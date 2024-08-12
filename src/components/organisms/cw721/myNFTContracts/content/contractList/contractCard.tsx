@@ -1,9 +1,12 @@
 import { IC_LABEL_TAG } from '@/components/atoms/icons/pngIcons';
-import { IContractInfo } from '@/context/cw721MyNFTContractsContext';
+import { IContractInfo, useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import useMyNFTContracts from '@/hooks/useMyNFTContracts';
+import { useCallback } from 'react';
+import FirmaLoading from '@/components/atoms/globalLoader/firmaLoad';
 
 const Container = styled(IconButton)`
     width: 100%;
@@ -169,8 +172,20 @@ interface IProps {
 
 const ContractCard = ({ data }: IProps) => {
     const navigate = useNavigate();
+    const { getCW721NFTsThumbnail } = useMyNFTContracts();
+    const { contracts, updateContractInfo } = useCW721NFTContractsContext()
 
-    const DisplayNFTCount = () => {
+    const handleNFTsThumnnail = useCallback(async () => {
+        try {
+            const result = await getCW721NFTsThumbnail({ contractAddress: data.contractAddress });
+            const newData: IContractInfo = { ...data, nftThumbnailURI: result }
+            updateContractInfo(newData);
+        } catch (error) {
+            console.log(error);
+        }
+    }, [data])
+
+    const DisplayNFTCount = useCallback(() => {
         const totalNFTsCount = data.totalNFTs;
         const thumbnailURIs = data.nftThumbnailURI;
 
@@ -181,6 +196,13 @@ const ContractCard = ({ data }: IProps) => {
                 </PreviewNFTsBox>
             );
         } else {
+            if (thumbnailURIs === null) {
+                handleNFTsThumnnail()
+                return <PreviewNFTsBox style={{ gap: '5px' }}><FirmaLoading size={'20px'} /><TotalNftCountTypo>{`NFTs Data Loading`}</TotalNftCountTypo></PreviewNFTsBox>
+            } else {
+
+            }
+
             const count = totalNFTsCount > 999 ? '+999' : `+${totalNFTsCount}`;
             if (thumbnailURIs.filter((value) => value === '').length >= thumbnailURIs.length) {
                 return (
@@ -203,7 +225,7 @@ const ContractCard = ({ data }: IProps) => {
                 );
             }
         }
-    };
+    }, [data, contracts]);
 
     const handleMoveToDetail = () => {
         navigate(`/cw721/mynft/detail/${data.contractAddress}`);

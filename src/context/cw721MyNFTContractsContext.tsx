@@ -8,7 +8,7 @@ export interface IContractInfo {
     name: string;
     symbol: string;
     totalNFTs: number;
-    nftThumbnailURI: string[];
+    nftThumbnailURI: string[] | null;
     label: string;
 }
 

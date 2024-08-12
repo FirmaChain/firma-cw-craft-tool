@@ -76,7 +76,7 @@ const useMyNFTContracts = () => {
                 totalNFTs: 0,
                 name: '',
                 symbol: '',
-                nftThumbnailURI: []
+                nftThumbnailURI: null
             };
 
             if (!firmaSDK) return resultData;
@@ -85,32 +85,13 @@ const useMyNFTContracts = () => {
                 const contractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
                 const getTotalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress?.toLowerCase());
                 const contractInfoFromCW = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
-                const getAllNftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase());
-
-                const images = [];
-                const isDeploiedFromFirma = Boolean(
-                    [basicCodeId, advancedCodeId].find((code) => code === contractInfoFromCW.contract_info.code_id) !== undefined
-                );
-                for (let i = 0; i < Math.min(3, getAllNftIdList.length); i++) {
-                    const id = getAllNftIdList[i];
-                    try {
-                        const image = await getCW721NFTImage({ contractAddress: contractAddress, tokenId: id });
-                        if (isDeploiedFromFirma && image === '') {
-                            images.push(IMG_NFT_EMPTY_THUMBNAIL);
-                        } else {
-                            images.push(image);
-                        }
-                    } catch (error) {
-                        console.error(`Failed to fetch image for NFT ID: ${id}`, error);
-                    }
-                }
 
                 resultData.contractAddress = contractAddress;
                 resultData.name = contractInfo.name;
                 resultData.symbol = contractInfo.symbol;
                 resultData.totalNFTs = getTotalNfts;
                 resultData.label = contractInfoFromCW.contract_info.label;
-                resultData.nftThumbnailURI = images;
+                resultData.nftThumbnailURI = null;
             } catch (error) {
                 enqueueSnackbar(`failed get '${contractAddress}' contract info`, {
                     variant: 'error',
@@ -123,9 +104,46 @@ const useMyNFTContracts = () => {
         [firmaSDK]
     );
 
+    const getCW721NFTsThumbnail = async ({ contractAddress }: { contractAddress: string }) => {
+        try {
+            const images = [];
+            if (!firmaSDK) return images;
+            const getAllNftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase());
+            const contractInfoFromCW = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
+
+            const isDeploiedFromFirma = Boolean(
+                [basicCodeId, advancedCodeId].find((code) => code === contractInfoFromCW.contract_info.code_id) !== undefined
+            );
+
+            for (let i = 0; i < Math.min(3, getAllNftIdList.length); i++) {
+                const id = getAllNftIdList[i];
+                try {
+                    const image = await getCW721NFTImage({ contractAddress: contractAddress, tokenId: id });
+                    if (isDeploiedFromFirma) {
+                        if (image === '') {
+                            images.push(IMG_NFT_EMPTY_THUMBNAIL);
+                        } else {
+                            images.push(image);
+                        }
+                    } else {
+                        images.push(image);
+                    }
+                } catch (error) {
+                    console.error(`Failed to fetch image for NFT ID: ${id}`, error);
+                }
+            }
+
+            return images;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
     const getCW721NFTImage = async ({ contractAddress, tokenId }: { contractAddress: string; tokenId: string }) => {
         try {
             const tokenURI = await firmaSDK.Cw721.getNftTokenUri(contractAddress?.toLowerCase(), tokenId);
+
             const response = await fetch(tokenURI);
             const metadata = await response.json();
             const imageURI = metadata.imageURI || '';
@@ -140,6 +158,7 @@ const useMyNFTContracts = () => {
     return {
         getCW721ContractList,
         getCW721ContractInfo,
+        getCW721NFTsThumbnail,
         getCW721NFTImage
     };
 };

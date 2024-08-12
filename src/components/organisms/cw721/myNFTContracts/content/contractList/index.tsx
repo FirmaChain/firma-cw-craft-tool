@@ -12,9 +12,6 @@ const MyContractList = () => {
     const { getCW721ContractInfo } = useMyNFTContracts();
     const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW721NFTContractsContext()
 
-
-    console.log(contracts);
-    
     const [pageItems, setPageItems] = useState<IContractInfo[]>([]);
     const [rowsPerPage, setRowsPerPage] = useState<number>(6);
 
@@ -44,7 +41,7 @@ const MyContractList = () => {
                                     symbol: '',
                                     label: '',
                                     totalNFTs: 0,
-                                    nftThumbnailURI: []
+                                    nftThumbnailURI: null
                                 };
                             }
                         } catch (error) {
@@ -55,7 +52,7 @@ const MyContractList = () => {
                                 symbol: '',
                                 label: '',
                                 totalNFTs: 0,
-                                nftThumbnailURI: []
+                                nftThumbnailURI: null
                             };
                         }
                     }
