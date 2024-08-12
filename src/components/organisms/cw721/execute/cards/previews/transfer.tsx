@@ -16,6 +16,7 @@ import { rootState } from '@/redux/reducers';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -225,7 +226,9 @@ const ScrollbarContainer = styled.div`
 `;
 
 const TransferPreview = () => {
+    const network = useSelector((state: rootState) => state.global.network);
     const userAddress = useSelector((state: rootState) => state.wallet.address);
+    
     const approveInfoById = useCW721ExecuteStore((state) => state.approveInfoById);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -237,6 +240,11 @@ const TransferPreview = () => {
     const { setMyNftList } = useCW721ExecuteAction();
 
     const modal = useModalStore();
+
+    const craftConfig = useMemo(() => {
+        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
+        return config;
+    }, [network]);
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -309,7 +317,8 @@ const TransferPreview = () => {
     }, [approveInfoById, myNftList, transferIdsWithEmpty, userTransferList]);
 
     const onClickTransfer = () => {
-        const feeAmount = transferListForModal.length * 15000;
+        const feeAmount = transferListForModal.length === 1
+        ? Number(craftConfig.DEFAULT_FEE) : transferListForModal.length * Number(craftConfig.BULK_FEE);
 
         const params = {
             header: {
@@ -394,7 +403,7 @@ const TransferPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" />
+                            <IconTooltip size="14px" tooltip={"Updated Balance is the number of NFTs held after the transfer."}/>
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>

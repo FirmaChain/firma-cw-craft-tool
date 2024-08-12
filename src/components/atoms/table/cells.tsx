@@ -142,10 +142,14 @@ const TokenAmount = ({ amount, decimals, symbol }: { amount: string; decimals: s
     );
 };
 
-const TimeAgo = ({ timestamp }: { timestamp: string }) => {
+const TimeAgo = ({ timestamp }: { timestamp?: string }) => {
     const utcDate = new Date(timestamp);
     const timezoneOffset = utcDate.getTimezoneOffset();
     const localDate = new Date(utcDate.getTime() - timezoneOffset * 60 * 1000);
+
+    const nowTimeStamp = new Date();
+
+    const isLessThanAMinute = Number(nowTimeStamp) - Number(localDate) < 60 * 1000;
 
     return (
         <Cell.Default
@@ -154,7 +158,7 @@ const TimeAgo = ({ timestamp }: { timestamp: string }) => {
             data-tooltip-wrapper="span"
             data-tooltip-place="bottom"
         >
-            {formatDistanceToNow(localDate, { addSuffix: true }).replace('about ', '')}
+            {isLessThanAMinute ? '< 1 minute ago' : formatDistanceToNow(localDate, { addSuffix: true }).replace('about ', '')}
         </Cell.Default>
     );
 };
