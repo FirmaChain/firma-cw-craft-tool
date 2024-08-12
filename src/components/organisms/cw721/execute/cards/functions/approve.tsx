@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { FirmaUtil } from '@firmachain/firma-js';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
@@ -64,7 +63,6 @@ const Approve = () => {
     const approveTokenId = useCW721ExecuteStore((state) => state.approveTokenId);
     const approveType = useCW721ExecuteStore((state) => state.approveType);
     const approveValue = useCW721ExecuteStore((state) => state.approveValue);
-    const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
 
     const setApproveRecipientAddress = useCW721ExecuteStore((state) => state.setApproveRecipientAddress);
     const setApproveTokenId = useCW721ExecuteStore((state) => state.setApproveTokenId);

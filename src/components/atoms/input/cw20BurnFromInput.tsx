@@ -11,7 +11,7 @@ import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStor
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { parseAmountWithDecimal2 } from '@/utils/common';
-import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
+import { compareStringNumbers, getTokenAmountFromUToken, isZeroStringValue } from '@/utils/balance';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useSnackbar } from 'notistack';
@@ -67,7 +67,7 @@ const CW20BurnFromInput = ({
 
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
     const { getCw20AllowanceBalance, getCw20Balance } = useExecuteHook();
 
     const [addressCW20Balance, setAddressCW20Balance] = useState<string>('0');
@@ -92,18 +92,18 @@ const CW20BurnFromInput = ({
 
     const checkValidAddress = (value: string) => {
         if (value === '') {
-            clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-            clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
             return;
         }
 
-        if (userAddress.toLowerCase() !== value.toLowerCase()) clearFromError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
+        if (userAddress.toLowerCase() !== value.toLowerCase()) clearFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
         else {
             setFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
             return;
         }
 
-        if (isValidAddress(value)) clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+        if (isValidAddress(value)) clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
     };
 
@@ -114,6 +114,9 @@ const CW20BurnFromInput = ({
     };
 
     const handleAmount = (value: string) => {
+        if (!isZeroStringValue(value) || value === '') clearFormError({ id: `${id}_AMOUNT`, type: 'INVALID_WALLET_AMOUNT' });
+        else setFormError({ id: `${id}_AMOUNT`, type: 'INVALID_WALLET_AMOUNT', message: 'Please enter a value other than 0.' });
+        
         onChangeAmount(value);
     };
 

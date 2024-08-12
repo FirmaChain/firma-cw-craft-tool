@@ -45,10 +45,10 @@ const Information = ({ isBasic }: IProps) => {
     const setMinterCap = useInstantiateStore((v) => v.setMinterCap);
 
     const handleTokenName = (value: string) => {
-        if (value.length === 0 || value.length >= 3) {
-            clearFormError({ id: 'tokenName', type: 'MINIMAL_SYMBOL_LENGTH' });
+        if (value.length === 0 || value.trim().length >= 3) {
+            clearFormError({ id: 'tokenName', type: 'MINIMAL_NAME_LENGTH' });
         } else {
-            setFormError({ id: 'tokenName', type: 'MINIMAL_SYMBOL_LENGTH', message: 'Minimum 3 characters required.' });
+            setFormError({ id: 'tokenName', type: 'MINIMAL_NAME_LENGTH', message: 'Minimum 3 characters required.' });
         }
 
         setTokenName(value);
@@ -99,6 +99,12 @@ const Information = ({ isBasic }: IProps) => {
 
     const handleLabel = (value: string) => {
         setLabel(value);
+
+        if (value.trim() === '' && value.length >= 1) {
+            setFormError({ id: 'tokenLabel', type: 'EMPTY_LABEL', message: 'Enter label information other than whitespace.' });
+        } else {
+            clearFormError({ id: 'tokenLabel', type: 'EMPTY_LABEL' });
+        }
     };
 
     const handleMarketingAddress = (value: string) => {

@@ -31,7 +31,23 @@ CW20 is a token standard used in the CosmWasm smart contract platform, providing
 <br/>
 
 ### CW721
-Coming Soon
+
+CW721 is a Non-Fungible Token (NFT) standard used on the CosmWasm smart contract platform, where each token has unique attributes and represents a non-fungible asset. This standard is similar to Ethereum's ERC721 and provides functionalities for issuing, managing, and transferring NFTs. CW721 includes basic features for collection uniqueness, ownership management, and metadata storage, making it applicable to various NFT projects. It offers the following key features and interfaces:
+
+- Instantiate
+  - Deploy an NFT contract by setting the collection name, symbol, and owner. This process registers the collection's basic information and metadata.
+
+- Mint
+  - Create a new NFT with a unique ID and assign it to a specific address. Each NFT can have its own unique metadata.
+
+- Burn
+  - Burn an existing NFT, making it no longer valid. This process permanently deletes the non-fungible asset.
+
+- Transfer
+  - Transfer ownership to a specific address, changing the NFT's owner. This is used to transfer the non-fungible asset to another user.
+
+- Approve
+  - Grant permission for a specific address to transfer the NFT on behalf of the owner. This is used for delegated transfers and is similar to the approve method in ERC721.
 
 <br/>
 

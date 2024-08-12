@@ -8,7 +8,7 @@ import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
-import { getMaxCW20InitWalletAmount } from '@/utils/balance';
+import { getMaxCW20InitWalletAmount, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 
 interface IProps {
@@ -46,22 +46,22 @@ const CW20TransferInput = ({
     const userAddress = useSelector((v: rootState) => v.wallet.address);
 
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
     const checkValidAddress = (value: string) => {
         if (value !== '') {
             if (!isValidAddress(value)) {
                 setFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
                 return;
-            } else clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            } else clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
 
             if (value.toLowerCase() === userAddress.toLowerCase()) {
                 setFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
                 return;
-            } else clearFromError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
+            } else clearFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
         } else {
-            clearFromError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
-            clearFromError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
+            clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            clearFormError({ id: `${id}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
         }
     };
 
@@ -72,6 +72,9 @@ const CW20TransferInput = ({
     };
 
     const handleAmount = (value: string) => {
+        if (!isZeroStringValue(value)) clearFormError({ id: `${id}_AMOUNT`, type: 'TRANSFER_AMOUNT' });
+        else setFormError({ id: `${id}_AMOUNT`, type: 'TRANSFER_AMOUNT', message: 'Please enter a value other than 0.' });
+        
         onChangeAmount(value);
     };
 

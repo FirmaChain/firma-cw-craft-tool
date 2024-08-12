@@ -14,7 +14,6 @@ import {
 
 import { IWallet } from '@/interfaces/wallet';
 import InputAddressAmount from '../input/inputAddressAmount';
-import Icons from '../icons';
 import { useSnackbar } from 'notistack';
 import { IWalletWithID } from '@/components/organisms/instantiate/instaniateStore';
 import { useModalStore } from '@/hooks/useModal';

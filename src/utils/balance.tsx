@@ -279,3 +279,7 @@ export const getMaxCW20InitWalletAmount = (decimals: string) => {
 };
 
 export const CW721_MAX_MINTABLE_ID = '1000000000';
+
+export const isZeroStringValue = (value: string) => {
+    return /^0(\.0*)?$/.test(value);
+}

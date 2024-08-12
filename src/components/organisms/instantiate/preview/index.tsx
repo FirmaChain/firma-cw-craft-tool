@@ -14,7 +14,7 @@ import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
 import InstantiateModal from '../../modal/instantiateModal';
-import { addStringAmount, compareStringNumbers } from '@/utils/balance';
+import { addStringAmount, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
 
@@ -147,7 +147,7 @@ const Preview = ({ isBasic }: IProps) => {
 
         if (!isBasic && decimals === '') return 'Empty Decimals';
 
-        if (!isBasic && label === '') return 'Empty Label';
+        if (label === '' && label.trim() === '') return 'Empty Label';
 
         if (walletList.length === 0) return 'Not add a wallet';
 
@@ -177,15 +177,17 @@ const Preview = ({ isBasic }: IProps) => {
 
             if (!isBasic && decimals === '') return true;
 
-            if (label === '') return true;
+            if (label === '' || label.trim().length <= 1) return true;
 
             if (walletList.length === 0) return true;
 
             for (const wallet of walletList) {
+                if (!isValidAddress(wallet.recipient)) return true;
                 if (wallet.recipient === '') return true;
+
+                if (isZeroStringValue(wallet.amount)) return true;
                 if (wallet.amount === '0') return true;
                 if (wallet.amount === '') return true;
-                if (!isValidAddress(wallet.recipient)) return true;
             }
 
             if (!isBasic && minterble && minterAddress === '') return true;

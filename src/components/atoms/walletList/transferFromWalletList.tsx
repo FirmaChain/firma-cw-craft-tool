@@ -12,21 +12,14 @@ import {
     DeleteAllButton
 } from './style';
 
-import Icons from '../icons';
 import { useSnackbar } from 'notistack';
 import TransferFromWalletInput from '../input/transferFromWalletInput';
 
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
-import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
-import { isValidAddress } from '@/utils/address';
-import { isAtHeight, isAtTime, isNever } from '@/utils/allowance';
 import { addStringAmount, compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
-import { getCurrentUTCTimeStamp, removeNanoSeconds } from '@/utils/time';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import AddWalletButton from '../buttons/addWalletButton';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import useFormStore from '@/store/formStore';
 

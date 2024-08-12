@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
-import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken, isZeroStringValue } from '@/utils/balance';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { parseAmountWithDecimal2 } from '@/utils/common';
@@ -42,7 +42,16 @@ const Burn = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
     const { setCw20Balance } = useExecuteActions();
 
+    const setFormError = useFormStore((state) => state.setFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
+
     const handleBurnAmount = (value: string) => {
+        if (!isZeroStringValue(value)) clearFormError({ id: 'burnAmount', type: 'BURN_AMOUNT' });
+        else setFormError({
+            id: 'burnAmount',
+            type: 'BURN_AMOUNT',
+            message: 'Please enter a value other than 0.'
+        });
         // const truncateDecimals = (value: string) => {
         //     const decimalPlaces = tokenInfo.decimals;
         //     const fractionalPart = value.split('.')[1];
@@ -89,7 +98,7 @@ const Burn = () => {
                     labelProps={{ label: 'Burn Amount' }}
                     inputProps={{
                         value: burnAmount === null ? '' : burnAmount,
-                        formId: 'BURN_AMOUNT',
+                        formId: 'burnAmount',
                         type: 'number',
                         onChange: handleBurnAmount,
                         placeHolder: '0',

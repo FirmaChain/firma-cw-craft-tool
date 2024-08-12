@@ -6,7 +6,7 @@ import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
-import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { useSelector } from 'react-redux';
@@ -191,6 +191,9 @@ const TransferFromWalletInput = ({
                 break;
 
             case transferAmountId:
+                if (!isZeroStringValue(value)) clearFormError({ id: transferAmountId, type: 'INVALID_TRANSFER_FROM_AMOUNT' });
+                else setFormError({ id: transferAmountId, type: 'INVALID_TRANSFER_FROM_AMOUNT', message: 'Please enter a value other than 0.' });
+                
                 _data.toAmount = value;
                 // if (isValidAddress(_data.toAddress)) {
                 //     const compare = compareStringNumbers(getUTokenAmountFromToken(value, decimals), _data.allowanceAmount);

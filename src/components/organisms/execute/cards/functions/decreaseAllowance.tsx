@@ -8,7 +8,7 @@ import { parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
-import { compareStringNumbers, getMaxMinterCap, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { compareStringNumbers, getMaxMinterCap, getTokenAmountFromUToken, getUTokenAmountFromToken, isZeroStringValue } from '@/utils/balance';
 import { addNanoSeconds } from '@/utils/time';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
@@ -185,6 +185,8 @@ const DecreaseAllowance = () => {
     };
 
     const handleChangeAmount = (value: string) => {
+        if (!isZeroStringValue(value)) clearFormError({ id: `${inputId}_AMOUNT`, type: 'DECREASE_AMOUNT' });
+        else setFormError({ id: `${inputId}_AMOUNT`, type: 'DECREASE_AMOUNT', message: 'Please enter a value other than 0.' });
         // const onlyNumbers = value.replace(ONE_TO_MINE, '');
         // if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
         // else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });

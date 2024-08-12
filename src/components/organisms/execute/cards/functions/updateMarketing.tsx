@@ -35,7 +35,7 @@ const UpdateMarketing = () => {
     const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
 
     const setFormError = useFormStore((state) => state.setFormError);
-    const clearFromError = useFormStore((state) => state.clearFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
     const isBasic = useMemo(() => {
         const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
@@ -43,7 +43,7 @@ const UpdateMarketing = () => {
     }, [contractInfo, network]);
 
     const handleAddress = (value: string) => {
-        if (isValidAddress(value) || value === '') clearFromError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
+        if (isValidAddress(value) || value === '') clearFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });
         else setFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
 
         setMarketingAddress(value);

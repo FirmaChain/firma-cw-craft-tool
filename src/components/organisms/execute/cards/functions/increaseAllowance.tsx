@@ -12,7 +12,8 @@ import {
     getMaxCW20InitWalletAmount,
     getMaxMinterCap,
     getTokenAmountFromUToken,
-    getUTokenAmountFromToken
+    getUTokenAmountFromToken,
+    isZeroStringValue
 } from '@/utils/balance';
 import useFormStore from '@/store/formStore';
 import { addNanoSeconds } from '@/utils/time';
@@ -152,6 +153,8 @@ const IncreaseAllowance = () => {
     };
 
     const handleChangeAmount = (value: string) => {
+        if (!isZeroStringValue(value)) clearFormError({ id: `${inputId}_AMOUNT`, type: 'INCREASE_AMOUNT' });
+        else setFormError({ id: `${inputId}_AMOUNT`, type: 'INCREASE_AMOUNT', message: 'Please enter a value other than 0.' });
         // const onlyNumbers = value.replace(ONE_TO_MINE, '');
         // if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
         // else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });

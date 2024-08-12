@@ -11,7 +11,7 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../../instaniateStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
-import { getMaxMinterCap } from '@/utils/balance';
+import { getMaxMinterCap, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 
 interface IProps {
@@ -56,7 +56,10 @@ const Minterble = ({ decimals }: IProps) => {
     };
 
     const handleMinterCap = (value: string) => {
-        useInstantiateStore.getState().setMinterCap(value); // setMinterCap(value);
+        if (!isZeroStringValue(value)) clearFormError({ id: 'minterCap', type: 'MINTER_CAP' });
+        else setFormError({ id: 'minterCap', type: 'MINTER_CAP', message: 'Please enter a value other than 0.' });
+
+        useInstantiateStore.getState().setMinterCap(value);
     };
 
     useEffect(() => {
