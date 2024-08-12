@@ -52,6 +52,22 @@ export const SectionContainer = styled.div`
         flex-direction: row;
         width: 100%;
         justify-content: space-between;
+
+        @media (max-width: 1300px) {
+            flex-direction: column;
+            gap: 20px;
+
+            > div {
+                max-width: unset;
+            }
+        }
+    }
+
+    .section-title-subtitle {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
     }
 
     .section-title {

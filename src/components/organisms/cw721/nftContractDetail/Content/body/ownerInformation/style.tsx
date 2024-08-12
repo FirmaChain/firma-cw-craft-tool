@@ -44,7 +44,7 @@ export const SpecificValueWrapper = styled.div`
 `;
 
 export const SpecificValueTypo = styled.div`
-    display: flex;
+    // display: flex;
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;
@@ -56,7 +56,7 @@ export const SpecificValueTypo = styled.div`
 
 export const SpecificSubValueType = styled.div`
     color: var(--Gray-650, #707070);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

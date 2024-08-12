@@ -86,7 +86,7 @@ const TokenInfo = () => {
                     <SpecificValueWrapper>
                         {contractAddress ? (
                             <>
-                                <SpecificValueTypo>{contractAddress}</SpecificValueTypo>
+                                <SpecificValueTypo className="clamp-single-line">{contractAddress}</SpecificValueTypo>
                                 <CopyIconButton text={contractAddress} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -96,11 +96,19 @@ const TokenInfo = () => {
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Name</SpecificLabelTypo>
-                    {contractName ? <SpecificValueTypo>{contractName}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                    {contractName ? (
+                        <SpecificValueTypo className="clamp-single-line">{contractName}</SpecificValueTypo>
+                    ) : (
+                        <Skeleton width="100px" height="22px" />
+                    )}
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Symbol</SpecificLabelTypo>
-                    {contractSymbol ? <SpecificValueTypo>{contractSymbol}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                    {contractSymbol ? (
+                        <SpecificValueTypo className="clamp-single-line">{contractSymbol}</SpecificValueTypo>
+                    ) : (
+                        <Skeleton width="100px" height="22px" />
+                    )}
                 </SpecificItem>
 
                 {!isBasic && (
@@ -262,7 +270,7 @@ const OwnerInformation = () => {
                     <SpecificValueWrapper>
                         {admin ? (
                             <>
-                                <SpecificValueTypo>{admin}</SpecificValueTypo>
+                                <SpecificValueTypo className="clamp-single-line">{admin}</SpecificValueTypo>
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -275,7 +283,7 @@ const OwnerInformation = () => {
                     <SpecificValueWrapper>
                         {pending_owner ? (
                             <>
-                                <SpecificValueTypo>{pending_owner}</SpecificValueTypo>
+                                <SpecificValueTypo className="clamp-single-line">{pending_owner}</SpecificValueTypo>
                                 <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -294,7 +302,7 @@ const OwnerInformation = () => {
                     <SpecificValueWrapper>
                         {minter ? (
                             <>
-                                <SpecificValueTypo>{minter}</SpecificValueTypo>
+                                <SpecificValueTypo className="clamp-single-line">{minter}</SpecificValueTypo>
                                 <CopyIconButton text={minter} width={'22px'} height={'22px'} />
                             </>
                         ) : (

@@ -14,6 +14,7 @@ root.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
             <SnackbarProvider
+                preventDuplicate
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 maxSnack={5}
                 autoHideDuration={3000}

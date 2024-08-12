@@ -59,14 +59,14 @@ const Header = () => {
     const { checkExistContract, getNFTContractDetail, getNFTsInfo, getOwnedNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
 
     const getRequiredInfo = useCallback(async () => {
+        GlobalActions.handleGlobalLoading(true);
+
         try {
             if (prevKeyword.current === null || prevKeyword.current !== keyword) {
                 const exist = await checkExistContract(keyword);
 
                 if (exist) {
                     clearForm();
-
-                    GlobalActions.handleGlobalLoading(true);
 
                     const detail = await getNFTContractDetail(keyword);
                     setContractDetail(detail);

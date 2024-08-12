@@ -171,6 +171,7 @@ a:active {
 * {
   font-family: "General Sans Variable" !important;
   box-sizing: border-box;
+  outline: unset !important;
 }
 
 .notistack-Snackbar {

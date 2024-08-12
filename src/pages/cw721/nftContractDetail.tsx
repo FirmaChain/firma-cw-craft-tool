@@ -26,10 +26,14 @@ const NFTContractDetail = () => {
             const txData = await getNFTContractTransactions(contractAddress);
             const ownedNfts = await getOwnedNFTsInfo(contractAddress, address);
 
-            setContractDetail(detail);
-            setNftsInfo(nfts);
-            setOwnedNftsInfo(ownedNfts);
-            setTransactions(txData.txData);
+            const currentContractAddress = window.location.pathname.replace('/cw721/mynft/detail/', '').toLowerCase();
+
+            if (currentContractAddress === contractAddress.toLowerCase()) {
+                setContractDetail(detail);
+                setNftsInfo(nfts);
+                setOwnedNftsInfo(ownedNfts);
+                setTransactions(txData.txData);
+            }
         }
     };
 

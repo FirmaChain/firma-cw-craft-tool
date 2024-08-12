@@ -32,7 +32,7 @@ const CopyIconButton = ({ text, width, height }: IProps) => {
         const errorMessage = await copyToClipboard(text);
 
         if (errorMessage) enqueueSnackbar({ variant: 'error', message: errorMessage });
-        else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
+        else enqueueSnackbar({ variant: 'success', message: 'Copied!', key: 'COPIED' });
     };
 
     return (

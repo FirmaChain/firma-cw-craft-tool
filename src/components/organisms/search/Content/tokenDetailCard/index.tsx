@@ -55,13 +55,13 @@ const TokenInfo = () => {
                 <div className="box-row">
                     <div className="box-title">Token Name</div>
                     <div className="box-value">
-                        <div className="white-typo">{tokenName}</div>
+                        <div className="white-typo clamp-single-line">{tokenName}</div>
                     </div>
                 </div>
                 <div className="box-row">
                     <div className="box-title">Token Symbol</div>
                     <div className="box-value">
-                        <div className="white-typo">{symbol}</div>
+                        <div className="white-typo clamp-single-line">{symbol}</div>
                     </div>
                 </div>
                 <div className="box-row">
@@ -76,7 +76,7 @@ const TokenInfo = () => {
                         {label && (
                             <div className="box-value">
                                 <div className="label">
-                                    <div className="label-typo">{label}</div>
+                                    <div className="label-typo clamp-single-line">{label}</div>
                                 </div>
                             </div>
                         )}
@@ -87,7 +87,7 @@ const TokenInfo = () => {
                     {totalSupply && (
                         <div className="box-value">
                             <div
-                                className="white-typo"
+                                className="white-typo clamp-single-line"
                                 // data-tooltip-content={
                                 //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals))) : ''
                                 // }
@@ -116,7 +116,7 @@ const TokenInfo = () => {
 
                         <div className="box-value">
                             <div
-                                className="white-typo"
+                                className="white-typo clamp-single-line"
                                 // data-tooltip-content={decimals > 2 ? commaNumber(parseAmountWithDecimal2(minterCap, String(decimals))) : ''}
                                 // data-tooltip-id={TOOLTIP_ID.COMMON}
                                 // data-tooltip-wrapper="span"
@@ -134,7 +134,7 @@ const TokenInfo = () => {
                         {userBalance ? (
                             <div className="box-value">
                                 <div
-                                    className="white-typo"
+                                    className="white-typo clamp-single-line"
                                     // data-tooltip-content={
                                     //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(userBalance, String(decimals))) : ''
                                     // }
@@ -416,7 +416,7 @@ const Transactions = () => {
 
     return (
         <SectionContainer>
-            <div className="section-title-search" style={{ justifyContent: 'flex-start', alignItems: 'center', gap: '16px' }}>
+            <div className="section-title-subtitle" style={{ justifyContent: 'flex-start', alignItems: 'center', gap: '16px' }}>
                 <div className="section-title">Transactions</div>
                 <span className="section-title-desc">The lastest 15 records</span>
             </div>

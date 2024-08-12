@@ -152,7 +152,7 @@ const AddressBox = () => {
         const errorMessage = await copyToClipboard(address);
 
         if (errorMessage) enqueueSnackbar({ variant: 'error', message: errorMessage });
-        else enqueueSnackbar({ variant: 'success', message: 'Copied!' });
+        else enqueueSnackbar({ variant: 'success', message: 'Copied!', key: 'COPIED' });
     };
 
     const onClickLogout = () => {

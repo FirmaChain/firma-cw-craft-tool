@@ -5,6 +5,7 @@ import Header from '@/components/organisms/execute/header';
 import Contents from '@/components/organisms/execute/contents';
 import { Container } from '@/styles/instantiate';
 import React from 'react';
+import { GlobalActions } from '@/redux/actions';
 
 const CW20Execute = () => {
     const query = new URLSearchParams(useLocation().search);
@@ -15,7 +16,13 @@ const CW20Execute = () => {
     useEffect(() => {
         if (contractAddress === null) return;
         setContractAddress(contractAddress);
-    }, [contractAddress])
+    }, [contractAddress]);
+
+    useEffect(() => {
+        return () => {
+            GlobalActions.handleGlobalLoading(false);
+        };
+    }, []);
 
     return (
         <Container style={{ gap: '0px' }}>

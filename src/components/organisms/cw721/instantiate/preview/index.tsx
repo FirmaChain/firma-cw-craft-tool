@@ -214,7 +214,7 @@ const Preview = () => {
                 </TitleIconWrapper>
                 <TextGroupWrapper>
                     <TitleText>PREVIEW</TitleText>
-                    <TitleDescription>View all token informations for CW721 Contract instantiation</TitleDescription>
+                    <TitleDescription>View all token information for CW721 contract instantiation.</TitleDescription>
                 </TextGroupWrapper>
             </TitleWrapper>
             <BodyCard>

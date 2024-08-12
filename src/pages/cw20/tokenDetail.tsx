@@ -45,8 +45,12 @@ const Cw20TokenDetail = () => {
                     });
                 }
             }
-            setTokenDetail({ ...tokenDetail, contractAddress });
-            setTransactions(result);
+
+            const currentContractAddress = window.location.pathname.replace('/mytoken/detail/', '').toLowerCase();
+            if (currentContractAddress.toLowerCase() === contractAddress?.toLowerCase()) {
+                setTokenDetail({ ...tokenDetail, contractAddress });
+                setTransactions(result);
+            }
         }
     };
 
