@@ -115,7 +115,7 @@ interface InputProps {
     onBlur?: () => void; //
     errorMessage?: string[]; //
     regex?: RegExp; //
-    type?: 'string' | 'number' | 'date' | 'password'; //
+    type?: 'string' | 'number' | 'date'; //
     decimal?: number; //
     maxValue?: string; //
     textAlign?: 'left' | 'center' | 'right'; //

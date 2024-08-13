@@ -1,7 +1,6 @@
 import { FirmaConfig } from '@firmachain/firma-js';
 
 export const CRAFT_CONFIGS = {
-    USE_WALLET_CONNECT: true,
     FIRMACHAIN_CONFIG: FirmaConfig.MainNetConfig,
     DEFAULT_FEE: 30000,
     DEFAULT_GAS: 300000,
@@ -17,14 +16,12 @@ export const CRAFT_CONFIGS = {
     CW20: {
         BASIC_CODE_ID: '',
         ADVANCED_CODE_ID: '',
-        TYPE: 'cw20',
-        MEMO: 'This is a token (CW20) contract instantiated by FIRMA CRAFT.'
+        TYPE: 'cw20'
     },
     CW721: {
         BASIC_CODE_ID: '',
         ADVANCED_CODE_ID: '',
-        TYPE: 'cw721',
-        MEMO: 'This is a NFT (CW721) contract instantiated by FIRMA CRAFT.'
+        TYPE: 'cw721'
     },
     STATION_DOWNLOAD_URL: {
         WEB: '',

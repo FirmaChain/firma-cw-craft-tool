@@ -19,7 +19,7 @@ const ConnectWallet = () => {
 
     const onClickConnectWallet = () => {
         modal.openModal({
-            modalType: CRAFT_CONFIGS.USE_WALLET_CONNECT ? 'connectWallet' : 'loginWallet'
+            modalType: 'connectWallet'
         });
     };
 

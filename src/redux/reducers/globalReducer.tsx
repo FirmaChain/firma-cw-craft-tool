@@ -10,7 +10,6 @@ export interface IGlobalStateProps {
     isFetchedBalance: boolean;
 }
 
-const HANDLE_NETWORK = 'HANDLE_NETWORK';
 const HANDLE_CW_MODE = 'HANDLE_CW_MODE';
 const HANDLE_CONTRACT_MODE = 'HANDLE_CONTRACT_MODE';
 const HANDLE_MENU = 'HANDLE_MENU';

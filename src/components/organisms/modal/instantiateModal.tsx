@@ -21,8 +21,6 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { addStringAmountsArray, getTokenAmountFromUToken } from '@/utils/balance';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import LabelInput from '@/components/atoms/input/labelInput';
-import useFirmaSDKInternal from '@/hooks/useFirmaSDKInternal';
 
 const CloseBtnBox = styled.div`
     display: flex;
@@ -281,40 +279,6 @@ const ResultIcon = styled.img`
     margin-bottom: 2px;
 `;
 
-const ButtonWrap = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-`;
-
-const ConfirmBtn = styled(IconButton)<{ isEnableConfirm: boolean }>`
-    display: flex;
-    width: 100%;
-    height: 40px;
-    padding: 10px;
-    justify-content: center;
-    align-items: center;
-
-    border-radius: 6px;
-    font-weight: 600;
-    /* background: var(--Gray-450, #313131); */
-    background: ${(props) => (props.isEnableConfirm ? '#02E191' : '#313131')};
-    color: ${(props) => (props.isEnableConfirm ? '#222' : '#222')};
-
-    .typo {
-        color: var(--Gray-750, #999);
-
-        /* Body/Body2 - Md */
-        font-family: 'General Sans Variable';
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px; /* 142.857% */
-    }
-`;
-
 const CancelBtn = styled(IconButton)`
     display: flex;
     width: 100%;
@@ -500,8 +464,6 @@ const InstantiateModal = ({
 }) => {
     const { firmaSDK } = useExecuteHook();
     const walletAddress = useSelector((state: rootState) => state.wallet.address);
-    const { userKey, timeKey } = useSelector((state: rootState) => state.wallet);
-    const { getGasEstimationInstantiate, instantiate } = useFirmaSDKInternal();
 
     const explorerUrl = CRAFT_CONFIGS.BLOCK_EXPLORER;
 
@@ -509,8 +471,6 @@ const InstantiateModal = ({
     const [status, setStatus] = useState<'init' | 'success' | 'failure'>('init');
     const [error, setError] = useState<any>(null);
     const [result, setResult] = useState<null | SuccessData>(null);
-    const [inputPassword, setInputPassword] = useState<string>('');
-    const [instantiateFee, setInstantiateFee] = useState<number>(0);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -557,62 +517,28 @@ const InstantiateModal = ({
         };
     }, [result]);
 
-    useEffect(() => {
-        if (userKey === '' && timeKey === '') {
-            const requestData = JSON.parse(params.msg);
-            try {
-                let resultFee = CRAFT_CONFIGS.DEFAULT_FEE;
+    const instantiateFee = useMemo(() => {
+        const requestData = JSON.parse(params.msg);
+        try {
+            let resultFee = CRAFT_CONFIGS.DEFAULT_FEE;
 
-                if (params.totalLength > 1200) {
-                    const multipleCount = (Number(params.totalLength) - 1200) / 100;
-                    console.log(multipleCount);
-                    resultFee = resultFee + multipleCount * Number(CRAFT_CONFIGS.INSTANTIATE_LENGTH_FEE);
-                }
-
-                if (requestData?.initial_balances.length >= 2) {
-                    const defaultLength = Number(requestData?.initial_balances.length) - 1;
-                    const instantiateFee = defaultLength * CRAFT_CONFIGS.INSTANTIATE_WALLET_FEE;
-                    setInstantiateFee(resultFee + instantiateFee);
-                } else {
-                    setInstantiateFee(resultFee);
-                }
-            } catch (error) {
-                setInstantiateFee(0);
+            if (params.totalLength > 1200) {
+                const multipleCount = (Number(params.totalLength) - 1200) / 100;
+                console.log(multipleCount);
+                resultFee = resultFee + multipleCount * Number(CRAFT_CONFIGS.INSTANTIATE_LENGTH_FEE);
             }
-        } else {
-            getGasEstimationInstantiate(params.admin, params.codeId, params.label, params.msg, CRAFT_CONFIGS.CW20.MEMO)
-                .then((result) => {
-                    setInstantiateFee(result);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setInstantiateFee(0);
-                });
+
+            if (requestData?.initial_balances.length >= 2) {
+                const defaultLength = Number(requestData?.initial_balances.length) - 1;
+                const instantiateFee = defaultLength * CRAFT_CONFIGS.INSTANTIATE_WALLET_FEE;
+                return resultFee + instantiateFee;
+            } else {
+                return resultFee;
+            }
+        } catch (error) {
+            return 0;
         }
     }, [params]);
-
-    // const instantiateFee = useMemo(() => {
-    //     const requestData = JSON.parse(params.msg);
-    //     try {
-    //         let resultFee = CRAFT_CONFIGS.DEFAULT_FEE;
-
-    //         if (params.totalLength > 1200) {
-    //             const multipleCount = (Number(params.totalLength) - 1200) / 100;
-    //             console.log(multipleCount);
-    //             resultFee = resultFee + multipleCount * Number(CRAFT_CONFIGS.INSTANTIATE_LENGTH_FEE);
-    //         }
-
-    //         if (requestData?.initial_balances.length >= 2) {
-    //             const defaultLength = Number(requestData?.initial_balances.length) - 1;
-    //             const instantiateFee = defaultLength * CRAFT_CONFIGS.INSTANTIATE_WALLET_FEE;
-    //             return resultFee + instantiateFee;
-    //         } else {
-    //             return resultFee;
-    //         }
-    //     } catch (error) {
-    //         return 0;
-    //     }
-    // }, [params]);
 
     const openContractAddress = () => openLink(`${explorerUrl}/accounts/${parsedData?.contractAddress}`);
     const openHash = () => openLink(`${explorerUrl}/transactions/${parsedData?.transactionHash}`);
@@ -636,13 +562,7 @@ const InstantiateModal = ({
         }
     }, []);
 
-    useEffect(() => {
-
-    }, []);
-
-    const onChangeInputPassword = (v: string) => {
-        setInputPassword(v);
-    };
+    useEffect(() => {}, []);
 
     return (
         <ModalBase style={{ width: '480px', padding: '24px 24px 36px', gap: 0 }}>
@@ -655,34 +575,29 @@ const InstantiateModal = ({
                 <>
                     <SignTitleBox>
                         <SignTitle>CW20 Instantiation</SignTitle>
-                        {userKey === '' && timeKey === '' && (
-                            <SignDesc>{`Scan the QR code\nwith your mobile Firma Station for transaction.`}</SignDesc>
-                        )}
+                        <SignDesc>{`Scan the QR code\nwith your mobile Firma Station for transaction.`}</SignDesc>
                     </SignTitleBox>
-
-                    {userKey === '' && timeKey === '' && (
-                        <RequestQR
-                            isTxModal
-                            qrSize={144}
-                            module={module}
-                            params={params}
-                            signer={walletAddress}
-                            onSuccess={(requestData: any) => {
-                                setResult(requestData);
-                                setStatus('success');
-                                useInstantiateStore.getState().clearForm();
-                                useFormStore.getState().clearForm();
-                            }}
-                            onFailed={(requestData: any) => {
-                                setStatus('failure');
-                                setError({ message: 'Instantiation failed' });
-                                enqueueSnackbar('Instantiation failed', {
-                                    variant: 'error',
-                                    autoHideDuration: 2000
-                                });
-                            }}
-                        />
-                    )}
+                    <RequestQR
+                        isTxModal
+                        qrSize={144}
+                        module={module}
+                        params={params}
+                        signer={walletAddress}
+                        onSuccess={(requestData: any) => {
+                            setResult(requestData);
+                            setStatus('success');
+                            useInstantiateStore.getState().clearForm();
+                            useFormStore.getState().clearForm();
+                        }}
+                        onFailed={(requestData: any) => {
+                            setStatus('failure');
+                            setError({ message: 'Instantiation failed' });
+                            enqueueSnackbar('Instantiation failed', {
+                                variant: 'error',
+                                autoHideDuration: 2000
+                            });
+                        }}
+                    />
                     <InfoBox>
                         <InfoBoxSection>
                             <div className="row">
@@ -763,26 +678,9 @@ const InstantiateModal = ({
                             </div>
                         </div>
                     </FeeBox>
-                    <LabelInput
-                        labelProps={{ label: 'Password' }}
-                        inputProps={{
-                            formId: `INPUT_PASSWORD`,
-                            value: inputPassword,
-                            onChange: onChangeInputPassword,
-                            placeHolder: 'Enter Password',
-                            type: 'password'
-                        }}
-                    />
-                    <ButtonWrap>
-                        {userKey !== '' && timeKey !== '' && (
-                            <ConfirmBtn isEnableConfirm={false} disabled={true}>
-                                <span className="typo">Confirm</span>
-                            </ConfirmBtn>
-                        )}
-                        <CancelBtn onClick={onCloseModal}>
-                            <span className="typo">Cancel</span>
-                        </CancelBtn>
-                    </ButtonWrap>
+                    <CancelBtn onClick={onCloseModal}>
+                        <span className="typo">Cancel</span>
+                    </CancelBtn>
                 </>
             )}
             {status === 'success' && parsedData && (

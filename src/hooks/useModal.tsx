@@ -6,7 +6,6 @@ import { useLocation } from 'react-router';
 import { useKeyPress } from 'react-use';
 import { ModalOverlay } from '@/components/modal/style';
 import WalletConnectModal from '@/components/organisms/modal/walletConnectModal';
-import WalletLoginModal from '@/components/organisms/modal/walletLoginModal';
 
 interface Modal extends ModalContent {
     id: string;
@@ -173,8 +172,6 @@ const Modal: React.FC<ModalProps> = ({
                     <_component id={id} {...props} />
                 ) : modalType === 'connectWallet' ? (
                     <WalletConnectModal id={id} />
-                ) : modalType === 'loginWallet' ? (
-                    <WalletLoginModal id={id} />
                 ) : (
                     <></>
                 )}

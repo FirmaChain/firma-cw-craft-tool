@@ -103,7 +103,7 @@ const Sidebar = () => {
 
     const onClickConnectWallet = () => {
         // ModalActions.handleConnectWallet(true);
-        modal.openModal({ modalType: CRAFT_CONFIGS.USE_WALLET_CONNECT ? 'connectWallet' : 'loginWallet' });
+        modal.openModal({ modalType: 'connectWallet' });
     };
 
     const onClickExternalLink = () => {

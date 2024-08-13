@@ -17,7 +17,6 @@ import InstantiateModal from '../../modal/instantiateModal';
 import { addStringAmount, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
-import useFirmaSDKInternal from '@/hooks/useFirmaSDKInternal';
 
 interface IProps {
     isBasic: boolean;
