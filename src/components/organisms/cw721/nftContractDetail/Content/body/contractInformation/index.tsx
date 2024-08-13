@@ -27,7 +27,6 @@ import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext';
 
 const ContractInformation = () => {
-    const network = useSelector((state: rootState) => state.global.network);
     const { address } = useSelector((state: rootState) => state.wallet);
 
     const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
@@ -62,9 +61,8 @@ const ContractInformation = () => {
     // const [expandOwned, setExpandOwned] = useState(true);
 
     const isBasic = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return codeId === craftConfig.CW20.BASIC_CODE_ID;
-    }, [network, codeId]);
+        return codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
+    }, [codeId]);
 
     return (
         <ContractCard>

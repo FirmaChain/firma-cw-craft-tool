@@ -1,16 +1,13 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
-import React from 'react';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { NETWORKS } from '@/constants/common';
 import { DEFAULT_INPUT_REGEX, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
 
@@ -21,7 +18,6 @@ const ContentWrap = styled.div`
 `;
 
 const UpdateMarketing = () => {
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractInfo = useExecuteStore((state) => state.contractInfo);
@@ -38,9 +34,8 @@ const UpdateMarketing = () => {
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const isBasic = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return contractInfo.contract_info.code_id === config.CW20.BASIC_CODE_ID;
-    }, [contractInfo, network]);
+        return contractInfo.contract_info.code_id === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
+    }, [contractInfo]);
 
     const handleAddress = (value: string) => {
         if (isValidAddress(value) || value === '') clearFormError({ id: `input address`, type: 'INVALID_WALLET_ADDRESS' });

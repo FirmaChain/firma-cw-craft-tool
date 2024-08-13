@@ -1,3 +1,5 @@
+import { CRAFT_CONFIGS } from "@/config";
+
 //? fix invliad typo case of returning 0.0000-1 (expected -0.000001)
 export const getTokenAmountFromUToken = (amount: string, decimals: string) => {
     // Check if the amount is negative
@@ -283,3 +285,9 @@ export const CW721_MAX_MINTABLE_ID = '1000000000';
 export const isZeroStringValue = (value: string) => {
     return /^0(\.0*)?$/.test(value);
 }
+
+export const getFeesFromGas = (estimatedGas: number) => {
+    const fee = Math.ceil(estimatedGas * 0.1);
+  
+    return Math.max(fee, CRAFT_CONFIGS.DEFAULT_FEE);
+};

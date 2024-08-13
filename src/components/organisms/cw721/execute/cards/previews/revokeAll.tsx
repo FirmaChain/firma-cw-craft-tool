@@ -119,8 +119,6 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const RevokeAllPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -137,13 +135,8 @@ const RevokeAllPreview = () => {
         return true;
     }, [revokeAddress]);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
     const onClickRevokeAll = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

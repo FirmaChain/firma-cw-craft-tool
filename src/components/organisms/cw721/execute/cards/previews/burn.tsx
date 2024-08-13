@@ -124,7 +124,6 @@ const ButtonWrap = styled.div`
 
 const BurnPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
     
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -137,11 +136,6 @@ const BurnPreview = () => {
     const { setMyNftList } = useCW721ExecuteAction();
 
     const modal = useModalStore();
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const totalBurnCount = useMemo(() => {
         if (burnList.length === 0) return 0;
@@ -183,7 +177,7 @@ const BurnPreview = () => {
     const onClickBurn = () => {
         const convertList: { token_id: string }[] = [];
         const feeAmount = burnList.length === 1
-        ? Number(craftConfig.DEFAULT_FEE) : burnList.length * Number(craftConfig.BULK_FEE);
+        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         const token_ids = burnList.split(',');
 

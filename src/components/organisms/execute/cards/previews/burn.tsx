@@ -145,7 +145,6 @@ const BurnPreview = () => {
     const clearBurn = useExecuteStore((v) => v.clearBurn);
     const { setCw20Balance } = useExecuteActions();
 
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const modal = useModalStore();
@@ -158,13 +157,8 @@ const BurnPreview = () => {
         return amount;
     }, [cw20Balance, burnAmount]);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
     const onClickBurn = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
         const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
 
         const params = {
@@ -207,7 +201,7 @@ const BurnPreview = () => {
     };
 
     const isEnableButton = useMemo(() => {
-        if (compareStringNumbers(fctBalance, craftConfig.DEFAULT_FEE.toString()) !== 1) return false;
+        if (compareStringNumbers(fctBalance, CRAFT_CONFIGS.DEFAULT_FEE.toString()) !== 1) return false;
 
         if (cw20Balance === '' || cw20Balance === '0') return false;
         if (burnAmount === '' || burnAmount === '0' || Number(burnAmount) === 0) return false;

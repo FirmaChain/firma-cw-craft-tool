@@ -3,7 +3,7 @@ import { CardContainer, SectionContainer } from '../style';
 import useSearchStore from '../../searchStore';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
-import { IC_CLOSE, IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
+import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import JsonViewer from '@/components/atoms/viewer/jsonViewer';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -13,10 +13,8 @@ import SearchInput2 from '@/components/atoms/input/searchInput';
 import Icons from '@/components/atoms/icons';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import { openLink, parseAmountWithDecimal2 } from '@/utils/common';
-import { TOOLTIP_ID } from '@/constants/tooltip';
+import { openLink } from '@/utils/common';
 import commaNumber from 'comma-number';
-import { NETWORKS } from '@/constants/common';
 import { TokenDescriptionClampTypo } from '@/components/organisms/instantiate/preview/dashboard/tokenInfo/style';
 import Skeleton from '@/components/atoms/skeleton';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
@@ -24,7 +22,6 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 
 const TokenInfo = () => {
-    const network = useSelector((v: rootState) => v.global.network);
     const userAddress = useSelector((v: rootState) => v.wallet.address);
 
     const contractAddress = useSearchStore((state) => state.contractInfo?.address);
@@ -37,8 +34,7 @@ const TokenInfo = () => {
     const minterCap = useSearchStore((state) => state.minterInfo?.cap);
     const userBalance = useSearchStore((state) => state.userBalance);
     const codeId = useSearchStore((state) => state.contractInfo?.contract_info.code_id);
-    const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID;
+    const isBasic = codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
 
     return (
         <SectionContainer>
@@ -157,7 +153,6 @@ const TokenInfo = () => {
 };
 
 const MoreInfo = () => {
-    const network = useSelector((v: rootState) => v.global.network);
     const tokenLogo = useSearchStore((v) => v.marketingInfo?.logo?.url);
     const marketingDesc = useSearchStore((v) => v.marketingInfo?.description);
     const marketingAddr = useSearchStore((v) => v.marketingInfo?.marketing);
@@ -165,12 +160,11 @@ const MoreInfo = () => {
     const contractHistory = useSearchStore((v) => v.contractHistory);
     const contractAddress = useSearchStore((v) => v.contractInfo?.address);
     const codeId = useSearchStore((v) => v.contractInfo?.contract_info.code_id);
-    const craftConfig = network === NETWORKS[0] ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    const isBasic = codeId === craftConfig.CW20.BASIC_CODE_ID;
+    const isBasic = codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
 
     const metadata = contractHistory === null ? '' : contractHistory[0];
 
-    const blockExplorerLink = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
+    const blockExplorerLink = CRAFT_CONFIGS.BLOCK_EXPLORER;
 
     const goContractPage = () => {
         openLink(`${blockExplorerLink}/accounts/${contractAddress}`);

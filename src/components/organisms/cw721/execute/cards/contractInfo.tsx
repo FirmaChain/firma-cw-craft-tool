@@ -123,7 +123,6 @@ const basicMenuItems: IMenuItem[] = [
 
 const CW721ContractInfo = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
 
     const selectMenu = useCW721ExecuteStore((state) => state.selectMenu);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);

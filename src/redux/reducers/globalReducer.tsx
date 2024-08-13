@@ -1,8 +1,7 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
-import { CONTRACT_MODE_TYPE, CW_MODE_TYPE, MENU_TYPE, NETWORK_TYPE } from '@/constants/common';
+import { CONTRACT_MODE_TYPE, CW_MODE_TYPE, MENU_TYPE } from '@/constants/common';
 
 export interface IGlobalStateProps {
-    network: NETWORK_TYPE;
     menu: MENU_TYPE;
     cwMode: CW_MODE_TYPE;
     contractMode: CONTRACT_MODE_TYPE;
@@ -22,11 +21,7 @@ const HANDLE_FETCHED_BALANCE = 'HANDLE_FETCHED_BALANCE';
 //? cw mode by current location
 const INITIAL_CW_MODE = window.location.href.toLowerCase().includes('cw721') ? 'CW721' : 'CW20';
 
-//? current network | Defaults to TESTNET to avoid human error
-const INITIAL_NETWORK = localStorage.getItem('network') === 'MAINNET' ? 'MAINNET' : 'TESTNET';
-
 const initialState: IGlobalStateProps = {
-    network: INITIAL_NETWORK,
     menu: 'INSTANTAITE',
     cwMode: INITIAL_CW_MODE,
     contractMode: 'BASIC',
@@ -36,7 +31,6 @@ const initialState: IGlobalStateProps = {
 };
 
 const ACTION_CREATORS = {
-    HANDLE_NETWORK: createAction<NETWORK_TYPE>(HANDLE_NETWORK),
     HANDLE_MENU: createAction<MENU_TYPE>(HANDLE_MENU),
     HANDLE_CW_MODE: createAction<CW_MODE_TYPE>(HANDLE_CW_MODE),
     HANDLE_MODE: createAction<CONTRACT_MODE_TYPE>(HANDLE_CONTRACT_MODE),
@@ -46,7 +40,6 @@ const ACTION_CREATORS = {
 };
 
 export const ACTIONS = {
-    handleNetwork: ACTION_CREATORS.HANDLE_NETWORK,
     handleCw: ACTION_CREATORS.HANDLE_CW_MODE,
     handleMenu: ACTION_CREATORS.HANDLE_MENU,
     handleMode: ACTION_CREATORS.HANDLE_MODE,
@@ -56,11 +49,6 @@ export const ACTIONS = {
 };
 
 const reducer = createReducer(initialState, (builder) => {
-    builder.addCase(ACTION_CREATORS.HANDLE_NETWORK, (state, { payload }) => {
-        state.network = payload;
-        localStorage.setItem('network', payload);
-    });
-
     builder.addCase(ACTION_CREATORS.HANDLE_CW_MODE, (state, { payload }) => {
         state.cwMode = payload;
     });

@@ -132,7 +132,7 @@ const BalanceAmountTypo = styled.div`
 
 const AddressBox = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
-    const { cwMode, network, isFetchedBalance } = useSelector((state: rootState) => state.global);
+    const { cwMode, isFetchedBalance } = useSelector((state: rootState) => state.global);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -195,7 +195,7 @@ const AddressBox = () => {
     useEffect(() => {
         getBalance();
         GlobalActions.handleFetchedBalance(false);
-    }, [network, isFetchedBalance]);
+    }, [isFetchedBalance]);
 
     return (
         <div style={{ position: 'relative' }}>

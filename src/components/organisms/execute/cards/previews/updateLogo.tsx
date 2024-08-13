@@ -92,8 +92,6 @@ const LinkIcon = styled.img`
 `;
 
 const UpdateLogo = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const marketingInfo = useExecuteStore((state) => state.marketingInfo);
@@ -111,11 +109,6 @@ const UpdateLogo = () => {
         return '';
     }, [marketingInfo, marketingLogoUrl]);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
     useEffect(() => {
         if (marketingLogoUrl) {
             const img = new Image();
@@ -132,7 +125,7 @@ const UpdateLogo = () => {
     }, [marketingLogoUrl]);
 
     const onClickUpdateLogo = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

@@ -37,7 +37,6 @@ import { compareStringNumbers } from '@/utils/balance';
 import IconTooltip from '@/components/atoms/tooltip';
 
 const TokenInfo = () => {
-    const network = useSelector((v: rootState) => v.global.network);
     const { address } = useSelector((state: rootState) => state.wallet);
     const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
     const { handleCW721NFTIdList, handleCW721OwnedNFTIdList } = useNFTContractDetail();
@@ -61,9 +60,8 @@ const TokenInfo = () => {
     const totalSupply = nftsInfo?.totalSupply || '0';
 
     const isBasic = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return codeId === craftConfig.CW20.BASIC_CODE_ID;
-    }, [network, codeId]);
+        return codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
+    }, [codeId]);
 
     const [expandTotal, setExpandTotal] = useState(true);
     const [expandOwned, setExpandOwned] = useState(true);

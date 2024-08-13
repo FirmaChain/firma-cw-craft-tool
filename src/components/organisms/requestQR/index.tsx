@@ -20,7 +20,6 @@ interface IProps {
 }
 
 const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFailed, params = {}, signer = '' }: IProps) => {
-    const network = useSelector((state: rootState) => state.global.network);
     const { checkRequest, generateRequestQR } = useAPI();
 
     const [requestKey, setRequestKey] = useState('');
@@ -29,10 +28,7 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
     const [timerText, setTimerText] = useState('02:59');
     const [activeQR, setActiveQR] = useState(false);
 
-    const craftServerURI = useMemo(() => {
-        const craftURI = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.CRAFT_SERVER_URI : CRAFT_CONFIGS.TESTNET.CRAFT_SERVER_URI;
-        return craftURI;
-    }, [network]);
+    const craftServerURI = CRAFT_CONFIGS.CRAFT_SERVER_URI;
 
     useEffect(() => requestQR(), []);
 

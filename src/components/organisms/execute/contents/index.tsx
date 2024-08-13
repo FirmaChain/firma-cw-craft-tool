@@ -57,16 +57,10 @@ const LogoBackground = styled.div`
 
 const Contents = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((v: rootState) => v.global.network);
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
     const { checkContractExist, searchCW20Contract } = useExecuteActions();
     const { contractExist, setContractExist, tokenInfo } = useExecuteStore();
-
-    useEffect(() => {
-        clearForm();
-        setContractExist(null);
-    }, [network]);
 
     const checkExist = async () => {
         const exist = await checkContractExist(contractAddress);

@@ -124,7 +124,6 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 };
 
 const UpdateOwnershipAccept = () => {
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -170,11 +169,6 @@ const UpdateOwnershipAccept = () => {
         return false;
     }, [ownershipInfo, address, blockHeight]);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network, ownershipInfo]);
-
     const onClickOriginOwnerFolding = () => {
         setIsOriginOwnerOpen(!isOriginOwnerOpen);
     };
@@ -184,7 +178,7 @@ const UpdateOwnershipAccept = () => {
     };
 
     const onClickUpdateOwnershipAccept = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

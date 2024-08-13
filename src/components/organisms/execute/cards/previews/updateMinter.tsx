@@ -115,8 +115,6 @@ const UpdateMinter = () => {
     const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
     const { setMinterInfo } = useExecuteActions();
 
-    const network = useSelector((state: rootState) => state.global.network);
-
     const modal = useModalStore();
 
     const errorMessage = useMemo(() => {
@@ -126,13 +124,8 @@ const UpdateMinter = () => {
         return '';
     }, [minterAddress, minterAddress]);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
     const onClickUpdateMinter = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

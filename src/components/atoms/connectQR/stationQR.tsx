@@ -26,7 +26,7 @@ const DownloadQRButton = styled(IconButton)`
     }
 `;
 
-const stationUrl = CRAFT_CONFIGS?.COMMON?.STATION_DOWNLOAD_URL.WEB;
+const stationUrl = CRAFT_CONFIGS.STATION_DOWNLOAD_URL.WEB;
 
 const StationQR = () => {
     const canvasRef = useRef<HTMLDivElement>();

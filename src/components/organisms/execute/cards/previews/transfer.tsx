@@ -250,7 +250,6 @@ const ScrollbarContainer = styled.div`
 `;
 
 const TransferPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
@@ -266,11 +265,6 @@ const TransferPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const updatedAmount = useMemo(() => {
         let calcTransferAmount = '0';
@@ -312,7 +306,7 @@ const TransferPreview = () => {
         const convertWalletList = [];
         let totalAmount = '0';
         const feeAmount = transferList.length === 1
-        ? Number(craftConfig.DEFAULT_FEE) : transferList.length * Number(craftConfig.BULK_FEE);
+        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : transferList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const wallet of transferList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());

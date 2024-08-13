@@ -9,26 +9,16 @@ import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
-import { CRAFT_CONFIGS } from '@/config';
 import { isValidAddress } from '@/utils/address';
 
 const useSearchActions = () => {
     const { firmaSDK, getCw20Balance } = useExecuteHook();
     const { client } = useApollo();
     const userAddress = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
-
-    const currentCodeIds = CRAFT_CONFIGS[network].CW20;
 
     const { enqueueSnackbar } = useSnackbar();
     const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
     const previousKeywordRef = useRef<string | null>(null);
-
-    useEffect(() => {
-        //? reset cached search address & contract exist value when network change
-        previousKeywordRef.current = null;
-        useSearchStore.getState().setContractExist(null);
-    }, [network]);
 
     useEffect(() => {
         //? update balance info when wallet connected, or changed

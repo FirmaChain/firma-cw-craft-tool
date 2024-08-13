@@ -1,7 +1,5 @@
 import CopyIconButton from '../buttons/copyIconButton';
-import { IC_VALID_SHIELD, IC_WALLET_FILL_00827A } from '../icons/pngIcons';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import { IC_WALLET_FILL_00827A } from '../icons/pngIcons';
 import { CRAFT_CONFIGS } from '@/config';
 import commaNumber from 'comma-number';
 import Icons from '../icons';
@@ -11,10 +9,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { format, formatDistanceToNow } from 'date-fns';
 
 const WalletAddress = ({ address, sliceLength }: { address: string; sliceLength?: number }) => {
-    const network = useSelector((state: rootState) => state.global.network);
-    const explorerUrl = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-
-    const onClick = () => openLink(`${explorerUrl}/accounts/${address}`);
+    const onClick = () => openLink(`${CRAFT_CONFIGS.BLOCK_EXPLORER}/accounts/${address}`);
 
     return (
         <WalletAddressWrap>
@@ -39,10 +34,7 @@ const WalletAddress = ({ address, sliceLength }: { address: string; sliceLength?
 };
 
 const Hash = ({ hash, sliceLength = 10 }: { hash: string; sliceLength?: number }) => {
-    const network = useSelector((state: rootState) => state.global.network);
-    const explorerUrl = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-
-    const onClick = () => openLink(`${explorerUrl}/transactions/${hash}`);
+    const onClick = () => openLink(`${CRAFT_CONFIGS.BLOCK_EXPLORER}/transactions/${hash}`);
 
     return (
         <DefaultTypo onClick={onClick} style={{ cursor: 'pointer', color: '#00827A', display: 'flex' }}>
@@ -55,10 +47,7 @@ const Hash = ({ hash, sliceLength = 10 }: { hash: string; sliceLength?: number }
 
 const BlockHeight = ({ block, sliceLength = 12 }: { block: string; sliceLength?: number }) => {
     //? Similar with <Hash />
-    const network = useSelector((state: rootState) => state.global.network);
-    const explorerUrl = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-
-    const onClick = () => openLink(`${explorerUrl}/blocks/${block}`);
+    const onClick = () => openLink(`${CRAFT_CONFIGS.BLOCK_EXPLORER}/blocks/${block}`);
     return (
         <DefaultTypo onClick={onClick} style={{ cursor: 'pointer', color: '#00827A' }}>
             {commaNumber(block)}

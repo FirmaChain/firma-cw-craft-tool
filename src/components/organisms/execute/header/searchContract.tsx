@@ -53,7 +53,6 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const setContractAddress = useExecuteStore((state) => state.setContractAddress);
     const clearForm = useExecuteStore((state) => state.clearForm);
     const clearInfo = useExecuteStore((state) => state.clearInfo);
-    const network = useSelector((v: rootState) => v.global.network);
     const contractInfo = useExecuteStore((v) => v.contractInfo);
 
     const storeContractAddress = useExecuteStore((v) => v.contractAddress);
@@ -102,12 +101,6 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
             setContractAddress(null);
         };
     }, []);
-
-    useEffect(() => {
-        clearInfo();
-        clearForm();
-        previousKeywordRef.current = null;
-    }, [network]);
 
     useEffect(() => {
         if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();

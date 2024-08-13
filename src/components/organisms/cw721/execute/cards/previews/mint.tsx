@@ -216,9 +216,7 @@ const ScrollbarContainer = styled.div`
 
 // const PRESET_BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT';
 
-const MintPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-    
+const MintPreview = () => {    
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     // const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
@@ -237,11 +235,6 @@ const MintPreview = () => {
     // const presetUriInputError = Object.keys(useFormStore((v) => v.formError[PRESET_BASE_URI_FORM_ID]) || {})?.length;
 
     const [isOpen, setIsOpen] = useState<boolean>(true); //? defualt open
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const mintSupply = useMemo(() => {
         return mintList.filter((one) => one.token_id !== '' && one.token_uri !== '').length.toString();
@@ -283,7 +276,7 @@ const MintPreview = () => {
     const onClickMint = () => {
         const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];
         const feeAmount = mintList.length === 1
-        ? Number(craftConfig.DEFAULT_FEE) : mintList.length * Number(craftConfig.BULK_FEE);
+        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const mintData of mintList) {
             convertMintList.push({

@@ -63,7 +63,6 @@ import { getTransactionHash } from '@/utils/transaction';
 import { useNavigate } from 'react-router-dom';
 import { CRAFT_CONFIGS } from '@/config';
 import Divider from '@/components/atoms/divider';
-import Icons from '@/components/atoms/icons';
 import { GlobalActions } from '@/redux/actions';
 import { scrollToTop } from '@/utils/common';
 
@@ -113,7 +112,6 @@ const QRCodeModal = ({
     const { enqueueSnackbar } = useSnackbar();
 
     const cwMode = useSelector((v: rootState) => v.global.cwMode);
-    const network = useSelector((v: rootState) => v.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const [error, setError] = useState<any>(null);
@@ -130,8 +128,7 @@ const QRCodeModal = ({
     };
 
     const onClickTransactionHash = (hash: string) => {
-        const blockExplorerLink = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-        window.open(`${blockExplorerLink}/transactions/${hash}`);
+        window.open(`${CRAFT_CONFIGS.BLOCK_EXPLORER}/transactions/${hash}`);
     };
 
     return (

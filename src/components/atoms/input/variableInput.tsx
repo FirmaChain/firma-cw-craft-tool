@@ -115,7 +115,7 @@ interface InputProps {
     onBlur?: () => void; //
     errorMessage?: string[]; //
     regex?: RegExp; //
-    type?: 'string' | 'number' | 'date'; //
+    type?: 'string' | 'number' | 'date' | 'password'; //
     decimal?: number; //
     maxValue?: string; //
     textAlign?: 'left' | 'center' | 'right'; //
@@ -154,6 +154,7 @@ const VariableInput = ({
     const valueLength = typeof value === 'object' ? 0 : String(value).length;
     const isError = errorMessage.length > 0;
 
+    console.log(type);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
 
@@ -233,7 +234,7 @@ const VariableInput = ({
                     <input
                         ref={inputRef}
                         value={value && type === 'date' ? format(Number(value), 'MMMM-dd-yyyy HH:mm:ss a') : value}
-                        type="text"
+                        type={type === "date" ? "text" : type}
                         onChange={handleChange}
                         placeholder={placeHolder}
                         readOnly={readOnly || type === 'date'}

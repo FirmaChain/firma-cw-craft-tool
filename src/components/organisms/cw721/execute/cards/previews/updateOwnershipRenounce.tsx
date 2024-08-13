@@ -51,22 +51,14 @@ const UpdateOwnershipRenouncePreview = () => {
 
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
-    const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
-    const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
 
     const navigate = useNavigate();
 
     const modal = useModalStore();
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const isEnableButton = useMemo(() => {
         console.log(ownershipInfo.owner);
@@ -77,7 +69,7 @@ const UpdateOwnershipRenouncePreview = () => {
     }, [ownershipInfo, address]);
 
     const onClickRenounce = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

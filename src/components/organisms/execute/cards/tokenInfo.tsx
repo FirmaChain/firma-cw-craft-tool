@@ -1,7 +1,6 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import Icons from '@/components/atoms/icons';
 import Mint from './functions/mint';
 import Burn from './functions/burn';
 import { useSelector } from 'react-redux';
@@ -20,7 +19,6 @@ import useExecuteStore from '../hooks/useExecuteStore';
 import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
-import useFormStore from '@/store/formStore';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
@@ -188,7 +186,6 @@ const advancedMenuItems: IMenuItem[] = [
 
 const TokenInfo = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
 
     const selectMenu = useExecuteStore((state) => state.selectMenu);
     const contractInfo = useExecuteStore((state) => state.contractInfo);
@@ -216,25 +213,18 @@ const TokenInfo = () => {
         }
     }, [marketingInfo]);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
     const ContractTypeLabel = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-
-        if (contractInfo) return contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID ? 'BASIC' : 'ADVANCED';
+        if (contractInfo) return contractInfo.contract_info.code_id === CRAFT_CONFIGS.CW20.BASIC_CODE_ID ? 'BASIC' : 'ADVANCED';
 
         return false;
-    }, [contractInfo, network]);
+    }, [contractInfo]);
 
     const ownerMenus = useMemo(() => {
         let ruleMenus: IMenuItem[] = [];
 
         if (!contractInfo) return [];
 
-        const isBasic = contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID;
+        const isBasic = contractInfo.contract_info.code_id === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
 
         if (isBasic) {
             ruleMenus = [...basicMenuItems];
@@ -281,7 +271,7 @@ const TokenInfo = () => {
         }
 
         return ruleMenus;
-    }, [contractInfo, craftConfig, minterInfo, address, marketingInfo]);
+    }, [contractInfo, minterInfo, address, marketingInfo]);
 
     const handleChangeMenu = (menu: string) => {
         console.log('menu', menu);

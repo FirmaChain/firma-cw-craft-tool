@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import ColorButton from '@/components/atoms/buttons/colorButton';
 import { useModalStore } from '@/hooks/useModal';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`
     width: 100%;
@@ -19,7 +20,7 @@ const ConnectWallet = () => {
     const onClickConnectWallet = () => {
         // ModalActions.handleConnectWallet(true);
         modal.openModal({
-            modalType: 'connectWallet'
+            modalType: CRAFT_CONFIGS.USE_WALLET_CONNECT ? 'connectWallet' : 'loginWallet'
         });
     };
 

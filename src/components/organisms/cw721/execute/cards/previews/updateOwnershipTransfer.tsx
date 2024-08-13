@@ -6,8 +6,6 @@ import { format } from 'date-fns';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import commaNumber from 'comma-number';
 import { IAllowanceInfo } from '@/components/organisms/execute/hooks/useExecuteStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
@@ -141,8 +139,6 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 };
 
 const UpdateOwnershipTransferPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -165,11 +161,6 @@ const UpdateOwnershipTransferPreview = () => {
             setConvertType('never');
         }
     }, [approveType, approveValue]);
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const isEnableButton = useMemo(() => {
         if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
@@ -198,7 +189,7 @@ const UpdateOwnershipTransferPreview = () => {
             convertValue = null;
         }
 
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

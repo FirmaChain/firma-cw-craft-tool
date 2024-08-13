@@ -1,11 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
-import { useSelector } from 'react-redux';
-import { Cw20SpenderAllowance, FirmaSDK } from '@firmachain/firma-js';
+import { Cw20SpenderAllowance } from '@firmachain/firma-js';
 
-import { rootState } from '../redux/reducers';
-import { NETWORKS } from '../constants/common';
-import { CRAFT_CONFIGS } from '../config';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 export interface IAllowances {

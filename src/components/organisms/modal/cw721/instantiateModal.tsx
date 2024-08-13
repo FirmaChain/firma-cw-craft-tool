@@ -434,7 +434,6 @@ const InstantiateModal = ({
 }) => {
     const { firmaSDK } = useExecuteHook();
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
 
     const navigate = useNavigate();
 
@@ -492,8 +491,7 @@ const InstantiateModal = ({
     };
 
     const onClickTransactionHash = (hash: string) => {
-        const blockExplorerLink = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-        window.open(`${blockExplorerLink}/transactions/${hash}`);
+        window.open(`${CRAFT_CONFIGS.BLOCK_EXPLORER}/transactions/${hash}`);
     };
 
     return (

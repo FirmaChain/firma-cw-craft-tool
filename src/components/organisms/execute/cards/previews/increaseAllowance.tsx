@@ -245,18 +245,12 @@ const IncreaseAllowancePreview = () => {
     const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
     const { setAllowanceInfo } = useExecuteActions();
 
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const modal = useModalStore();
 
     const [updatedAmount, setUpdatedAmount] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(true);
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const addressExist = useMemo(() => {
         return isValidAddress(allowance?.address);
@@ -306,7 +300,7 @@ const IncreaseAllowancePreview = () => {
             };
         }
 
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

@@ -1,29 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { TokenCardSpecific } from '../tokenInfomation/style';
 import {
-    IconBackground,
     LessTypo,
-    LogoImage,
     SpecificColumnValue,
     SpecificItem,
     SpecificItemByStart,
     SpecificLabelTypo,
-    SpecificMetadataTypo,
     SpecificMetadataValueWrapper,
     SpecificMetadataWrapper,
     SpecificValueTypo,
     TokenCard,
     TokenCardHeaderTypo
 } from './style';
-import Icons from '@/components/atoms/icons';
 import JsonViewer from '@/components/atoms/viewer/jsonViewer';
-import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
-import { TOOLTIP_ID } from '@/constants/tooltip';
-import { IC_NAVIGATION, IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
+import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Skeleton from '@/components/atoms/skeleton';
 import { openLink } from '@/utils/common';
@@ -31,8 +24,6 @@ import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 
 const AdditionalInformation = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
     const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
     const marketingLogo = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl) || '';
@@ -46,15 +37,13 @@ const AdditionalInformation = () => {
 
     const isBasic = useMemo(() => {
         if (codeId) {
-            const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-            return codeId === craftConfig.CW20.BASIC_CODE_ID;
+            return codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
         }
-    }, [network, codeId]);
+    }, [codeId]);
 
     useEffect(() => {
-        const link = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-        setBlockExplorerLink(link);
-    }, [network]);
+        setBlockExplorerLink(CRAFT_CONFIGS.BLOCK_EXPLORER);
+    }, []);
 
     useEffect(() => {
         if (marketingLogo) {

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -44,7 +44,6 @@ const LogoBackground = styled.div`
 
 const Contents = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((v: rootState) => v.global.network);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const contractExist = useCW721ExecuteStore((state) => state.contractExist);
@@ -56,11 +55,6 @@ const Contents = () => {
     const contractName = useCW721ExecuteStore((state) => state.nftContractInfo.name);
 
     const { checkContractExist } = useCW721ExecuteAction();
-
-    useEffect(() => {
-        clearForm();
-        setContractExist(null);
-    }, [network]);
 
     const checkExist = async () => {
         const exist = await checkContractExist(contractAddress);

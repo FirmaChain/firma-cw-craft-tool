@@ -8,7 +8,6 @@ import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
-import { CRAFT_CONFIGS } from '@/config';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { isValidAddress } from '@/utils/address';
 
@@ -19,16 +18,7 @@ const useCW721SearchActions = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const userAddress = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
     const previousKeywordRef = useRef<string | null>(null);
-
-    const currentCodeIds = CRAFT_CONFIGS[network].CW721;
-
-    useEffect(() => {
-        //? reset cached search address & contract exist value when network change
-        previousKeywordRef.current = null;
-        useCW721SearchStore.getState().setContractExist(null);
-    }, [network]);
 
     useEffect(() => {
         //? update balance info when wallet connected, or changed

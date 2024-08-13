@@ -120,7 +120,6 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 `;
 
 const RevokePreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -153,13 +152,8 @@ const RevokePreview = () => {
         }
     }, [revokeAddress, revokeTokenId, nftApprovalInfo]);
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
     const onClickRevoke = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

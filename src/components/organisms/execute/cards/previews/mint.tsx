@@ -246,9 +246,7 @@ const ScrollbarContainer = styled.div`
     overflow: hidden;
 `;
 
-const MintPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-    
+const MintPreview = () => {    
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const mintingList = useExecuteStore((state) => state.mintingList);
@@ -261,11 +259,6 @@ const MintPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const totalMintBalance = useMemo(() => {
         let totalAmount = '0';
@@ -318,7 +311,7 @@ const MintPreview = () => {
         const convertWalletList: IWallet[] = [];
         let totalAmount = '0';
         const feeAmount = mintingList.length === 1
-        ? Number(craftConfig.DEFAULT_FEE) : mintingList.length * Number(craftConfig.BULK_FEE);
+        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintingList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const wallet of mintingList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());

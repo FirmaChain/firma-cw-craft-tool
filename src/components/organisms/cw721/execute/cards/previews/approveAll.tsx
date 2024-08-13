@@ -144,7 +144,6 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 };
 
 const ApproveAllPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
@@ -168,11 +167,6 @@ const ApproveAllPreview = () => {
             setConvertType('never');
         }
     }, [approveType, approveValue]);
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const isEnableButton = useMemo(() => {
         if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
@@ -201,7 +195,7 @@ const ApproveAllPreview = () => {
             convertValue = null;
         }
 
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
             header: {

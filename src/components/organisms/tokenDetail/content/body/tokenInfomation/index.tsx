@@ -14,17 +14,12 @@ import {
     TokenCardSpecific
 } from './style';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 
 const TokenInformation = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
     const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
 
@@ -38,9 +33,8 @@ const TokenInformation = () => {
     const minterCap = useTokenDetailStore((state) => state.tokenDetail?.minterCap);
 
     const isBasic = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return codeId === craftConfig.CW20.BASIC_CODE_ID;
-    }, [network, codeId]);
+        return codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
+    }, [codeId]);
 
     return (
         <TokenCard>

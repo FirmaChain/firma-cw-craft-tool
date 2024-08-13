@@ -226,7 +226,6 @@ const ScrollbarContainer = styled.div`
 `;
 
 const TransferPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
     const userAddress = useSelector((state: rootState) => state.wallet.address);
     
     const approveInfoById = useCW721ExecuteStore((state) => state.approveInfoById);
@@ -240,11 +239,6 @@ const TransferPreview = () => {
     const { setMyNftList } = useCW721ExecuteAction();
 
     const modal = useModalStore();
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -318,7 +312,7 @@ const TransferPreview = () => {
 
     const onClickTransfer = () => {
         const feeAmount = transferListForModal.length === 1
-        ? Number(craftConfig.DEFAULT_FEE) : transferListForModal.length * Number(craftConfig.BULK_FEE);
+        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : transferListForModal.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         const params = {
             header: {

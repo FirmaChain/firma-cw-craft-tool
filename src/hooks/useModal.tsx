@@ -6,6 +6,7 @@ import { useLocation } from 'react-router';
 import { useKeyPress } from 'react-use';
 import { ModalOverlay } from '@/components/modal/style';
 import WalletConnectModal from '@/components/organisms/modal/walletConnectModal';
+import WalletLoginModal from '@/components/organisms/modal/walletLoginModal';
 
 interface Modal extends ModalContent {
     id: string;
@@ -89,7 +90,7 @@ export interface ModalContent {
         onClose?: (id?: string) => void;
         onConfirm?: (id?: string) => void;
     };
-    modalType?: 'connectWallet' | 'qrConfirm' | 'txConfirm' | 'custom'; // You can define more types if needed
+    modalType?: 'connectWallet' | 'loginWallet' | 'qrConfirm' | 'txConfirm' | 'custom'; // You can define more types if needed
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -168,10 +169,12 @@ const Modal: React.FC<ModalProps> = ({
                     zIndex: 1000
                 }}
             >
-                {modalType == 'custom' ? (
+                {modalType === 'custom' ? (
                     <_component id={id} {...props} />
-                ) : modalType == 'connectWallet' ? (
+                ) : modalType === 'connectWallet' ? (
                     <WalletConnectModal id={id} />
+                ) : modalType === 'loginWallet' ? (
+                    <WalletLoginModal id={id} />
                 ) : (
                     <></>
                 )}

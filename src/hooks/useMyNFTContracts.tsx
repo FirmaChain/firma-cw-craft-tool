@@ -12,14 +12,12 @@ import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 const useMyNFTContracts = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
+
     const { firmaSDK } = useFirmaSDKContext();
 
-    const curSDKConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-
-    const basicCodeId = curSDKConfig.CW721.BASIC_CODE_ID;
-    const advancedCodeId = curSDKConfig.CW721.ADVANCED_CODE_ID;
+    const basicCodeId = CRAFT_CONFIGS.CW721.BASIC_CODE_ID;
+    const advancedCodeId = CRAFT_CONFIGS.CW721.ADVANCED_CODE_ID;
 
     const getAllContracts = async (codeId: string): Promise<string[]> => {
         let allContracts: string[] = [];

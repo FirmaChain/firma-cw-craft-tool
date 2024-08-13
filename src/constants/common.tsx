@@ -1,6 +1,3 @@
-export const NETWORKS = ['MAINNET', 'TESTNET'] as const;
-export type NETWORK_TYPE = (typeof NETWORKS)[number];
-
 export const CW_MODES = ['CW20', 'CW721'] as const;
 export type CW_MODE_TYPE = (typeof CW_MODES)[number];
 

@@ -101,7 +101,6 @@ const ButtonWrap = styled.div`
 `;
 
 const UpdateMarketingPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
@@ -116,26 +115,20 @@ const UpdateMarketingPreview = () => {
 
     const modal = useModalStore();
 
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
-
     const isBasic = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return contractInfo.contract_info.code_id === config.CW20.BASIC_CODE_ID;
-    }, [contractInfo, network]);
+        return contractInfo.contract_info.code_id === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
+    }, [contractInfo]);
 
     const finalDesc = marketingDescription === null ? marketingInfo?.description : marketingDescription;
     const finalAddress = marketingAddress === null ? marketingInfo?.marketing : marketingAddress;
     const finalProejct = marketingProject === null ? marketingInfo?.project : marketingProject;
 
     const onClickUpdateMarketing = () => {
-        const feeAmount = craftConfig.DEFAULT_FEE;
+        const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         let contentList = [];
 
-        if (contractInfo.contract_info.code_id === craftConfig.CW20.BASIC_CODE_ID) {
+        if (contractInfo.contract_info.code_id === CRAFT_CONFIGS.CW20.BASIC_CODE_ID) {
             contentList.push({
                 label: 'Marketing Desc',
                 value: finalDesc,

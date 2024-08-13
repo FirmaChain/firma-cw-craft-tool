@@ -10,16 +10,14 @@ import {
     getTokenAmountFromUToken,
     getUTokenAmountFromToken
 } from '@/utils/balance';
-import { getUTokenStrFromTokenStr, parseAmountWithDecimal2, shortenAddress } from '@/utils/common';
+import { getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { QRCodeModal } from '@/components/organisms/modal';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { isValidAddress } from '@/utils/address';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import useFormStore from '@/store/formStore';
 import { ONE_TO_MINE } from '@/constants/regex';
-import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import commaNumber from 'comma-number';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -251,8 +249,6 @@ const FromToAddressLine = ({
 };
 
 const TransferFromPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
@@ -266,11 +262,6 @@ const TransferFromPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const totalTransferAmount = useMemo(() => {
         const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
@@ -330,7 +321,7 @@ const TransferFromPreview = () => {
         const convertTransferList = [];
         let totalAmount = '0';
         const feeAmount =
-            transferFromList.length === 1 ? Number(craftConfig.DEFAULT_FEE) : transferFromList.length * Number(craftConfig.BULK_FEE);
+            transferFromList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : transferFromList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const transfer of transferFromList) {
             const amount = getUTokenAmountFromToken(transfer.toAmount, tokenInfo.decimals.toString());

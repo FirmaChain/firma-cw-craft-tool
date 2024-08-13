@@ -37,8 +37,10 @@
         "test": "craco test",
         "eject": "craco eject",
         "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-        "deploy-testnet": "aws s3 sync ./build s3://deploy-ecosystem/testnet/firma-cw-craft-tool --profile=firmachain-deploy --delete",
-        "invalidate-testnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E1GWLY1LQSOILF --paths '/*'"
+        "deploy-testnet": "aws s3 sync ./build s3://deploy-ecosystem/mainnet/firma-cw-craft-tool --profile=firmachain-deploy --delete",
+        "invalidate-testnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E1GWLY1LQSOILF --paths '/*'",
+        "deploy-mainnet": "aws s3 sync ./build s3://deploy-ecosystem/mainnet/firma-cw-craft-tool --profile=firmachain-deploy --delete",
+        "invalidate-mainnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E1GWLY1LQSOILF --paths '/*'"
     },
     "eslintConfig": {
         "extends": [

@@ -26,7 +26,7 @@ const WalletConnectModal = ({ id }: { id: string }) => {
         closeModal(id);
     };
 
-    const LINK = CRAFT_CONFIGS.COMMON.STATION_DOWNLOAD_URL;
+    const LINK = CRAFT_CONFIGS.STATION_DOWNLOAD_URL;
 
     const onClickOpenLink = ({ type }: { type: 'android' | 'ios' }) => {
         if (type === 'android') openLink(LINK.ANDROID);

@@ -125,7 +125,6 @@ const Preview = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
-    const network = useSelector((state: rootState) => state.global.network);
 
     const modal = useModalStore();
 
@@ -151,15 +150,9 @@ const Preview = () => {
         return false;
     }, [isInit, nftName, nftSymbol, label, contractMode, admin, minter]);
 
-    const craftConfig = useMemo(() => {
-        return network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    }, [network]);
-
     const codeId = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-
-        return contractMode === 'BASIC' ? craftConfig.CW721.BASIC_CODE_ID : craftConfig.CW721.ADVANCED_CODE_ID;
-    }, [network, contractMode]);
+        return contractMode === 'BASIC' ? CRAFT_CONFIGS.CW721.BASIC_CODE_ID : CRAFT_CONFIGS.CW721.ADVANCED_CODE_ID;
+    }, [contractMode]);
 
     const onClickSubmit = () => {
         if (isInit) {
@@ -174,7 +167,7 @@ const Preview = () => {
                 codeId: codeId,
                 label: label,
                 msg: JSON.stringify(messageData),
-                type: craftConfig.CW721.TYPE
+                type: CRAFT_CONFIGS.CW721.TYPE
             };
 
             const datas: {
@@ -186,7 +179,7 @@ const Preview = () => {
                     title: 'CW721 Instantiate'
                 },
                 amount: {
-                    fee: craftConfig.DEFAULT_FEE.toString(),
+                    fee: CRAFT_CONFIGS.DEFAULT_FEE.toString(),
                     fct: ''
                 },
                 list: [

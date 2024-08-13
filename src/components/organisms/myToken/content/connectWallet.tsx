@@ -1,12 +1,13 @@
 import { useModalStore } from '@/hooks/useModal';
 import ColorButton from '@/components/atoms/buttons/colorButton';
 import { ContentBodyWrapper } from './style';
+import { CRAFT_CONFIGS } from '@/config';
 
 const ConnectWallet = () => {
     const modal = useModalStore();
 
     const onClickConnectWallet = () => {
-        modal.openModal({ modalType: 'connectWallet' });
+        modal.openModal({ modalType: CRAFT_CONFIGS.USE_WALLET_CONNECT ? 'connectWallet' : 'loginWallet' });
     };
 
     return (

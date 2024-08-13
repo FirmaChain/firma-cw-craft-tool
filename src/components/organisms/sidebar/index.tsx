@@ -3,8 +3,6 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import {
-    AddressCard,
-    AddressText,
     CopyrightText,
     CopyrightWrapper,
     DrawerStyled,
@@ -21,18 +19,15 @@ import {
     SocialWrapper,
     SwitchWrapper
 } from './style';
-import CwSwitch from './cwSwitch';
-import { CW_MODE_TYPE, NETWORK_TYPE } from '@/constants/common';
+import CwSwitch from '../../atoms/switch/cwSwitch';
+import { CW_MODE_TYPE } from '@/constants/common';
 import Icons from '@/components/atoms/icons';
 import { MenuItemText } from './style';
 import ColorButton from '@/components/atoms/buttons/colorButton';
 import { rootState } from '@/redux/reducers';
 import { GlobalActions } from '@/redux/actions';
-import NetworkMenu from './network';
 import { CRAFT_CONFIGS } from '@/config';
-import { copyToClipboard, openLink, shortenAddress } from '@/utils/common';
-import IconButton from '@/components/atoms/buttons/iconButton';
-import { useSnackbar } from 'notistack';
+import { openLink } from '@/utils/common';
 import { useModalStore } from '@/hooks/useModal';
 import Divider from '@/components/atoms/divider';
 import { IC_SOCIAL_FIRMACHAIN, IC_SOCIAL_MEDIUM, IC_SOCIAL_TELEGRAM, IC_SOCIAL_TWITTER } from '@/components/atoms/icons/pngIcons';
@@ -47,19 +42,17 @@ const SOCIAL_LIST = [
 
 const Sidebar = () => {
     const { isInit, address } = useSelector((state: rootState) => state.wallet);
-    const { network, cwMode } = useSelector((state: rootState) => state.global);
+    const { cwMode } = useSelector((state: rootState) => state.global);
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { enqueueSnackbar } = useSnackbar();
     const modal = useModalStore();
 
     const [blockExplorerLink, setBlockExplorerLink] = useState<string>();
 
     useEffect(() => {
-        const link = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET.BLOCK_EXPLORER : CRAFT_CONFIGS.TESTNET.BLOCK_EXPLORER;
-        setBlockExplorerLink(link);
-    }, [network]);
+        setBlockExplorerLink(CRAFT_CONFIGS.BLOCK_EXPLORER);
+    }, []);
 
     useEffect(() => {
         if (location.pathname.includes('cw721')) {
@@ -110,19 +103,7 @@ const Sidebar = () => {
 
     const onClickConnectWallet = () => {
         // ModalActions.handleConnectWallet(true);
-        modal.openModal({ modalType: 'connectWallet' });
-    };
-
-    const onClickNetworkMenu = (type: NETWORK_TYPE) => {
-        GlobalActions.handleNetwork(type);
-        enqueueSnackbar({ variant: 'success', message: `${type} change completed` });
-
-        if (location.pathname.includes('mytoken/detail')) {
-            navigate('/mytoken');
-        }
-        if (location.pathname.includes('cw721/mynft/detail')) {
-            navigate('/cw721/mynft');
-        }
+        modal.openModal({ modalType: CRAFT_CONFIGS.USE_WALLET_CONNECT ? 'connectWallet' : 'loginWallet' });
     };
 
     const onClickExternalLink = () => {
@@ -210,7 +191,6 @@ const Sidebar = () => {
                         )}
                     </FeatureWrapper>
                     <FooterWrapper>
-                        <NetworkMenu onChange={onClickNetworkMenu} />
                         <ExternalLinkWrapper>
                             <ExternalLinkButton onClick={onClickExternalLink}>Block Explorer</ExternalLinkButton>
                             <ExternalLinkButton href={'mailto:info@firmachain.org'}>Contact Us</ExternalLinkButton>

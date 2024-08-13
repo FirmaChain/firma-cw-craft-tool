@@ -48,8 +48,6 @@ interface ISearchContractProps {
 const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const navigate = useNavigate();
 
-    const network = useSelector((state: rootState) => state.global.network);
-
     const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
     const storeContractAddress = useCW721ExecuteStore((v) => v.contractAddress);
     const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
@@ -98,12 +96,6 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
             setContractAddress(null);
         };
     }, []);
-
-    useEffect(() => {
-        clearInfo();
-        clearForm();
-        previousKeywordRef.current = null;
-    }, [network]);
 
     useEffect(() => {
         if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();

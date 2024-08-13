@@ -1,21 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
-import { rootState } from '../redux/reducers';
-import { NETWORKS } from '../constants/common';
 import { CRAFT_CONFIGS } from '../config';
 
 const useApollo = () => {
-    const { network } = useSelector((state: rootState) => state.global);
-
     const [client, setClient] = useState<ApolloClient<any> | null>(null);
 
     useEffect(() => {
         const initialize = () => {
-            const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-            const uri = craftConfig.GRAPHQL_CONFIG.URI;
+            const uri = CRAFT_CONFIGS.GRAPHQL_CONFIG.URI;
 
             const httpLink = createHttpLink({ uri: uri });
             const authLink = setContext((_, { headers }) => {
@@ -37,7 +31,7 @@ const useApollo = () => {
         };
 
         initialize();
-    }, [network]);
+    }, []);
 
     return {
         client

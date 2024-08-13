@@ -17,6 +17,7 @@ import InstantiateModal from '../../modal/instantiateModal';
 import { addStringAmount, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
+import useFirmaSDKInternal from '@/hooks/useFirmaSDKInternal';
 
 interface IProps {
     isBasic: boolean;
@@ -27,7 +28,6 @@ const Preview = ({ isBasic }: IProps) => {
 
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
-    const network = useSelector((state: rootState) => state.global.network);
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
 
     const tokenName = useInstantiateStore((v) => v.tokenName);
@@ -50,15 +50,25 @@ const Preview = ({ isBasic }: IProps) => {
     const clearFormError = useFormStore((state) => state.clearFormError);
 
     const codeId = useMemo(() => {
-        const craftConfig = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        const cw20CodeId = contractMode === 'BASIC' ? craftConfig.CW20.BASIC_CODE_ID : craftConfig.CW20.ADVANCED_CODE_ID;
+        const cw20CodeId = contractMode === 'BASIC' ? CRAFT_CONFIGS.CW20.BASIC_CODE_ID : CRAFT_CONFIGS.CW20.ADVANCED_CODE_ID;
+
+        // getGasEstimationInstantiate("firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8", "132", "TEST", `{"decimals":6,"name":"TEST","symbol":"TTTT","initial_balances":[{"address":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","amount":"10000000000"}],"marketing":{"description":"ASDDSA","logo":{"url":""},"marketing":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","project":""}}`, "TEST")
+        // .then((result) => {
+        //     instantiate("firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8", "132", "TEST", `{"decimals":6,"name":"TEST","symbol":"TTTT","initial_balances":[{"address":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","amount":"10000000000"}],"marketing":{"description":"ASDDSA","logo":{"url":""},"marketing":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","project":""}}`, result, "test")
+        //         .then((txResult) => {
+        //             console.log(txResult);
+        //         })
+        //         .catch((txResult) => {
+        //             console.log(txResult);
+        //         })
+        //     console.log(result);
+        // })
+        // .catch((error) => {
+
+        // });
 
         return cw20CodeId;
-    }, [network, contractMode]);
-
-    const craftConfig = useMemo(() => {
-        return network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-    }, [network]);
+    }, [contractMode]);
 
     const handleInstantiate = () => {
         if (isInit) {
@@ -109,13 +119,12 @@ const Preview = ({ isBasic }: IProps) => {
                         project: marketingProject || ''
                     }
                 };
-
                 const params = {
                     admin: address,
                     codeId: codeId,
                     label: label,
                     msg: JSON.stringify(messageData),
-                    type: craftConfig.CW20.TYPE,
+                    type: CRAFT_CONFIGS.CW20.TYPE,
                     totalLength: label.length + JSON.stringify(messageData).length,
                     walletLength: convertWalletList.length
                 };

@@ -201,8 +201,6 @@ const ScrollbarContainer = styled.div`
 `;
 
 const BurnFromPreview = () => {
-    const network = useSelector((state: rootState) => state.global.network);
-
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
@@ -217,12 +215,6 @@ const BurnFromPreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [availableAmount, setAvailableAmount] = useState<string>('0');
-
-    const craftConfig = useMemo(() => {
-        const config = network === 'MAINNET' ? CRAFT_CONFIGS.MAINNET : CRAFT_CONFIGS.TESTNET;
-        return config;
-    }, [network]);
 
     const totalBurnBalance = useMemo(() => {
         let totalAmount = '0';
@@ -284,7 +276,7 @@ const BurnFromPreview = () => {
     const onClickBurn = () => {
         const convertWalletList = [];
         let totalAmount = '0';
-        const feeAmount = burnFromList.length === 1 ? Number(craftConfig.DEFAULT_FEE) : burnFromList.length * Number(craftConfig.BULK_FEE);
+        const feeAmount = burnFromList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnFromList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const wallet of burnFromList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());

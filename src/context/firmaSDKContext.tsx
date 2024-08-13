@@ -1,8 +1,6 @@
 import { CRAFT_CONFIGS } from '@/config';
-import { rootState } from '@/redux/reducers';
 import { FirmaSDK } from '@firmachain/firma-js';
 import { createContext, useContext, ReactNode } from 'react';
-import { useSelector } from 'react-redux';
 
 interface FirmaSDKContextProps {
     firmaSDK: FirmaSDK;
@@ -19,16 +17,12 @@ export const useFirmaSDKContext = () => {
 };
 
 export const FirmaSDKProvider = ({ children }: { children: ReactNode }) => {
-    const network = useSelector((state: rootState) => state.global.network);
-
-    const MAINNET_SDK = new FirmaSDK(CRAFT_CONFIGS.MAINNET.FIRMACHAIN_CONFIG);
-    const TESTNET_SDK = new FirmaSDK(CRAFT_CONFIGS.TESTNET.FIRMACHAIN_CONFIG);
-    const firmaSDK = network === 'MAINNET' ? MAINNET_SDK : TESTNET_SDK;
+    const FIRMA_SDK = new FirmaSDK(CRAFT_CONFIGS.FIRMACHAIN_CONFIG);
 
     return (
         <FirmaSDKContext.Provider
             value={{
-                firmaSDK
+                firmaSDK: FIRMA_SDK
             }}
         >
             {children}
