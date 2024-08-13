@@ -6,7 +6,7 @@ import useFormStore from '@/store/formStore';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
 import { INT_NUMBERS } from '@/constants/regex';
-import { CW721_MAX_MINTABLE_ID } from '@/utils/balance';
+import { CW721_MAX_MINTABLE_ID, isZeroStringValue } from '@/utils/balance';
 // import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
 
 interface IProps {
@@ -44,8 +44,8 @@ const NFTMintInput = ({
     disabled
 }: IProps) => {
     const id = inputId;
-    // const setFormError = useFormStore((state) => state.setFormError);
-    // const clearFormError = useFormStore((state) => state.clearFormError);
+    const setFormError = useFormStore((state) => state.setFormError);
+    const clearFormError = useFormStore((state) => state.clearFormError);
 
     // const mintList = useCW721ExecuteStore((state) => state.mintList);
     // const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
@@ -60,6 +60,13 @@ const NFTMintInput = ({
     // }, [id, mintList]);
 
     const handleNFTId = (value: string) => {
+        if (!isZeroStringValue(value)) clearFormError({ id: `${id}_NFT_ID`, type: 'MINT_NFT_ID' });
+        else
+            setFormError({
+                id: `${id}_NFT_ID`,
+                type: 'MINT_NFT_ID',
+                message: 'Please enter a value other than 0.'
+            });
         onChangeLeft(value);
     };
 

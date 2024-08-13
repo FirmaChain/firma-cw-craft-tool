@@ -59,16 +59,20 @@ const Revoke = () => {
         if (revokeTokenId === '') {
             clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
         } else {
-            if (myNftList.includes(revokeTokenId)) {
-                if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
-                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved.' });
-                } else {
-                    if (nftApprovalInfo.spender === revokeAddress) {
-                        clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
-                    }
-                }
+            if (revokeTokenId === '0') {
+                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: `Please enter a value other than 0.` });
             } else {
-                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This NFT id is not owned by user.' });
+                if (myNftList.includes(revokeTokenId)) {
+                    if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
+                        setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved.' });
+                    } else {
+                        if (nftApprovalInfo.spender === revokeAddress) {
+                            clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
+                        }
+                    }
+                } else {
+                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This NFT id is not owned by user.' });
+                }
             }
         }
     }, [nftApprovalInfo, revokeTokenId]);

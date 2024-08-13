@@ -80,7 +80,6 @@ const Burn = () => {
                 const parsed = BigInt(v).toString();
                 idMap.set(parsed, parsed);
             });
-
             //! if user does not own some ids in burn list
             if (splited.length === nftDatas.length) {
                 clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'DOES_NOT_OWNED' });
@@ -90,6 +89,16 @@ const Burn = () => {
                     type: 'DOES_NOT_OWNED',
                     message: `Some NFT ids are not owned, or approved.`
                 });
+            }
+
+            if (splited.includes('0')) {
+                setFormError({
+                    id: 'CW721_NFT_BURN_ID_INPUT',
+                    type: 'ENTER_THAN_0',
+                    message: 'Please enter a value other than 0.'
+                });
+            } else {
+                clearFormError({ id: 'CW721_NFT_BURN_ID_INPUT', type: 'ENTER_THAN_0' });
             }
 
             //! if duplicted id included

@@ -175,7 +175,7 @@ const ApprovePreview = () => {
 
     const isEnableButton = useMemo(() => {
         if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
-        if (approveTokenId === '') return false;
+        if (approveTokenId === '' || approveTokenId === '0') return false;
         if (approveType === '') return false;
         if (approveType !== 'Forever' && approveValue === '') return false;
 

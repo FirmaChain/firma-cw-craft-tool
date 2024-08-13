@@ -262,6 +262,8 @@ const MintPreview = () => {
         });
         const mintIds = Array.from(idMap.keys());
 
+        if (mintIds.includes('0')) return false;
+        
         //! if some ids are duplicated
         if (mintIds.length !== mintList.length) return false;
 

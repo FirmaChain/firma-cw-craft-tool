@@ -169,6 +169,8 @@ const BurnPreview = () => {
 
         const burnIds = Array.from(idMap.keys());
 
+        if (burnIds.includes('0')) return false;
+        
         //! if tring to burn id that user does not own
         if (burnIds.length !== nftDatas.length) return false;
 

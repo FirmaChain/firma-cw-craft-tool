@@ -138,7 +138,7 @@ const RevokePreview = () => {
     const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
     useEffect(() => {
-        if (revokeTokenId === '') {
+        if (revokeTokenId === '' || revokeTokenId === '0') {
             setIsEnableButton(false);
         } else {
             if (myNftList.includes(revokeTokenId)) {

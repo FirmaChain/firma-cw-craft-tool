@@ -105,15 +105,19 @@ const Approve = () => {
     }, []);
 
     const handleChangeTokenId = (value: string) => {
-        if (value === '' || myNftList.includes(value)) {
-            clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
+        if (value === '0') {
+            setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: `Please enter a value other than 0.` });
         } else {
-            setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This NFT id is not owned by user.' });
-            // if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
-            //     setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
-            // } else {
-            //     setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
-            // }
+            if (value === '' || myNftList.includes(value)) {
+                clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
+            } else {
+                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This NFT id is not owned by user.' });
+                // if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
+                //     setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
+                // } else {
+                //     setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'NFT ID not owned' });
+                // }
+            }
         }
 
         setApproveTokenId(value);
