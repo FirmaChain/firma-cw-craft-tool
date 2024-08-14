@@ -35,7 +35,7 @@ const ContentWrap = styled.div`
 const ItemWrap = styled.div`
     display: flex;
     gap: 32px;
-    align-items: flex-start;
+    align-items: center;
 `;
 
 const ItemLabelWrap = styled.div`
@@ -119,9 +119,9 @@ const UpdateMarketingPreview = () => {
         return contractInfo.contract_info.code_id === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
     }, [contractInfo]);
 
-    const finalDesc = marketingDescription === null ? marketingInfo?.description : marketingDescription;
-    const finalAddress = marketingAddress === null ? marketingInfo?.marketing : marketingAddress;
-    const finalProejct = marketingProject === null ? marketingInfo?.project : marketingProject;
+    const finalDesc = (marketingDescription === null ? marketingInfo?.description : marketingDescription) || '';
+    const finalAddress = (marketingAddress === null ? marketingInfo?.marketing : marketingAddress) || '';
+    const finalProejct = (marketingProject === null ? marketingInfo?.project : marketingProject) || '';
 
     const onClickUpdateMarketing = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
@@ -190,9 +190,11 @@ const UpdateMarketingPreview = () => {
     const isEnableButton = useMemo(() => {
         if (marketingAddress === '' && marketingInfo.marketing !== address) return true;
         if (marketingAddress !== '' && !isValidAddress(marketingAddress)) return false;
-        if ((marketingAddress !== '' && marketingInfo.marketing !== marketingAddress) ||
+        if (
+            (marketingAddress !== '' && marketingInfo.marketing !== marketingAddress) ||
             marketingInfo.description !== marketingDescription ||
-            marketingInfo.project !== marketingProject)
+            marketingInfo.project !== marketingProject
+        )
             return true;
 
         return false;
@@ -206,10 +208,10 @@ const UpdateMarketingPreview = () => {
                         <MarketingIcon src={IC_TALK}></MarketingIcon>
                         <ItemLabelTypo>Marketing Desc</ItemLabelTypo>
                     </ItemLabelWrap>
-                    {marketingDescription !== '' ? (
+                    {finalDesc ? (
                         <ItemValueForDescTypo
                             className="clamp-single-line"
-                            data-tooltip-content={finalDesc.length >= 35 ? finalDesc : ''}
+                            data-tooltip-content={finalDesc?.length >= 35 ? finalDesc : ''}
                             data-tooltip-id={TOOLTIP_ID.COMMON}
                             data-tooltip-wrapper="span"
                             data-tooltip-place="bottom"
@@ -217,7 +219,7 @@ const UpdateMarketingPreview = () => {
                             {finalDesc}
                         </ItemValueForDescTypo>
                     ) : (
-                        marketingDescription === '' && <ItemDefaultTypo>Description</ItemDefaultTypo>
+                        <ItemDefaultTypo>Description</ItemDefaultTypo>
                     )}
                 </ItemWrap>
                 {!isBasic && (
@@ -227,10 +229,10 @@ const UpdateMarketingPreview = () => {
                                 <MarketingIcon src={IC_WALLET_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Address</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {marketingAddress !== '' ? (
+                            {finalAddress ? (
                                 <ItemValueTypo
                                     className="clamp-single-line"
-                                    data-tooltip-content={finalAddress.length >= 35 ? finalAddress : ''}
+                                    data-tooltip-content={finalAddress?.length >= 35 ? finalAddress : ''}
                                     data-tooltip-id={TOOLTIP_ID.COMMON}
                                     data-tooltip-wrapper="span"
                                     data-tooltip-place="bottom"
@@ -246,8 +248,16 @@ const UpdateMarketingPreview = () => {
                                 <MarketingIcon src={IC_LINK_FILL}></MarketingIcon>
                                 <ItemLabelTypo>Marketing Project</ItemLabelTypo>
                             </ItemLabelWrap>
-                            {marketingProject !== '' ? (
-                                <ItemValueTypo className="clamp-single-line">{finalProejct}</ItemValueTypo>
+                            {finalProejct ? (
+                                <ItemValueTypo
+                                    className="clamp-single-line"
+                                    data-tooltip-content={finalProejct?.length >= 35 ? finalProejct : ''}
+                                    data-tooltip-id={TOOLTIP_ID.COMMON}
+                                    data-tooltip-wrapper="span"
+                                    data-tooltip-place="bottom"
+                                >
+                                    {finalProejct}
+                                </ItemValueTypo>
                             ) : (
                                 <ItemDefaultTypo>Project Url</ItemDefaultTypo>
                             )}

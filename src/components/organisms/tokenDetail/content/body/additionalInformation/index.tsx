@@ -22,6 +22,7 @@ import Skeleton from '@/components/atoms/skeleton';
 import { openLink } from '@/utils/common';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import { useMeasure } from 'react-use';
 
 const AdditionalInformation = () => {
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
@@ -31,6 +32,8 @@ const AdditionalInformation = () => {
     const marketingAddress = useTokenDetailStore((state) => state.tokenDetail?.marketing);
     const marketingProject = useTokenDetailStore((state) => state.tokenDetail?.marketingProject);
     const metadata = useTokenDetailStore((state) => state.tokenDetail?.metadata);
+
+    const [ref, { width }] = useMeasure();
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string | null>(null);
     const [blockExplorerLink, setBlockExplorerLink] = useState<string>('');
@@ -60,9 +63,9 @@ const AdditionalInformation = () => {
         }
     }, [marketingLogo]);
 
-    const onClickViewMetadata = () => {
-        openLink(`${blockExplorerLink}/accounts/${contractAddress}`);
-    };
+    // const onClickViewMetadata = () => {
+    //     openLink(`${blockExplorerLink}/accounts/${contractAddress}`);
+    // };
 
     const descRef = useRef<HTMLDivElement>();
     const [needClamp, setNeedClamp] = useState(false);
@@ -81,10 +84,10 @@ const AdditionalInformation = () => {
             if (needClamp) setNeedClamp(false);
             setIsClamped(true);
         }
-    }, [marketingDescription]);
+    }, [marketingDescription, width]);
 
     return (
-        <TokenCard>
+        <TokenCard ref={ref}>
             <TokenCardHeaderTypo>Additional Information</TokenCardHeaderTypo>
             <TokenCardSpecific>
                 <SpecificItemByStart>
@@ -117,8 +120,10 @@ const AdditionalInformation = () => {
                                     </SpecificValueTypo>
                                     <div
                                         style={{
-                                            maxHeight: isClamped ? '66px' : 'unset',
-                                            overflow: isClamped ? 'hidden' : 'visible'
+                                            height: isClamped ? '66px' : descRef.current.scrollHeight,
+                                            // overflow: isClamped ? 'hidden' : 'visible'
+                                            overflow: 'hidden',
+                                            transition: 'all 0.2s'
                                         }}
                                     >
                                         <SpecificValueTypo>
@@ -184,7 +189,9 @@ const AdditionalInformation = () => {
                             <SpecificLabelTypo>Marketing Address</SpecificLabelTypo>
                             {typeof marketingAddress === 'string' ? (
                                 <SpecificMetadataValueWrapper>
-                                    <SpecificValueTypo>{!marketingAddress ? '-' : marketingAddress}</SpecificValueTypo>
+                                    <SpecificValueTypo className="clamp-single-line">
+                                        {!marketingAddress ? '-' : marketingAddress}
+                                    </SpecificValueTypo>
                                     {!marketingAddress === false && (
                                         <CopyIconButton text={marketingAddress} width={'20px'} height={'20px'} />
                                     )}
@@ -197,7 +204,9 @@ const AdditionalInformation = () => {
                         <SpecificItem>
                             <SpecificLabelTypo>Marketing Project</SpecificLabelTypo>
                             {typeof marketingProject === 'string' ? (
-                                <SpecificValueTypo>{!marketingProject ? '-' : marketingProject}</SpecificValueTypo>
+                                <SpecificValueTypo className="clamp-single-line">
+                                    {!marketingProject ? '-' : marketingProject}
+                                </SpecificValueTypo>
                             ) : (
                                 <Skeleton width="100px" height="22px" />
                             )}

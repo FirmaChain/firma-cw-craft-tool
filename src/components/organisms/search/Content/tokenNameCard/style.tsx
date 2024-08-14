@@ -120,6 +120,8 @@ export const TotalSupplyBox = styled.div`
         font-weight: 400;
         line-height: 20px; /* 142.857% */
         opacity: 0.6;
+
+        white-space: pre;
     }
 
     .amount {

@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+export const ContentBox = styled.div`
+    width: 100%;
+    height: fit-content;
+`;
+
 export const ContentWrapper = styled.div`
     box-sizing: border-box;
     width: 100%;
@@ -10,4 +15,12 @@ export const ContentWrapper = styled.div`
     gap: 72px;
     border-radius: 24px;
     background: var(--200, #1e1e1e);
+`;
+
+export const ScrollButtonBox = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 24px;
 `;

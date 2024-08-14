@@ -109,9 +109,9 @@ export const DetailLeftWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 16px;
-    height: fit-content;
-    overflow: hidden;
-    transition: all 0.15s ease;
+    // height: fit-content;
+    // overflow: hidden;
+    // transition: all 0.15s ease;
 `;
 
 export const DetailAddressText = styled.div<{ $disabled?: boolean }>`

@@ -25,6 +25,7 @@ import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { isValidAddress } from '@/utils/address';
+import useExecuteActions from '../../action';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -85,6 +86,7 @@ enum ExpirationType {
 
 const IncreaseAllowance = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
     const isFetched = useExecuteStore((state) => state.isFetched);
     const allowance = useExecuteStore((state) => state.allowance);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
@@ -93,6 +95,8 @@ const IncreaseAllowance = () => {
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
 
     const modal = useModalStore();
+
+    const { setCw20Balance } = useExecuteActions();
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
@@ -103,6 +107,8 @@ const IncreaseAllowance = () => {
     const [expInputValue, setExpInputValue] = useState('');
 
     useEffect(() => {
+        setCw20Balance(contractAddress, userAddress);
+
         setAllowance({
             address: '',
             amount: '',
@@ -115,13 +121,6 @@ const IncreaseAllowance = () => {
     }, [isFetched]);
 
     useEffect(() => {
-        setAllowance({
-            address: '',
-            amount: '',
-            type: 'at_height',
-            expire: ''
-        });
-
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearAllowance();

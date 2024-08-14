@@ -92,7 +92,7 @@ const CW20BurnFromInput = ({
 
     const checkValidAddress = (value: string) => {
         if (value === '') {
-            clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
+            // clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
             clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
             return;
         }
@@ -116,7 +116,7 @@ const CW20BurnFromInput = ({
     const handleAmount = (value: string) => {
         if (!isZeroStringValue(value) || value === '') clearFormError({ id: `${id}_AMOUNT`, type: 'INVALID_WALLET_AMOUNT' });
         else setFormError({ id: `${id}_AMOUNT`, type: 'INVALID_WALLET_AMOUNT', message: 'Please enter a value other than 0.' });
-        
+
         onChangeAmount(value);
     };
 

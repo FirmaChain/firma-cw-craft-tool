@@ -188,7 +188,7 @@ const Information = ({ isBasic }: IProps) => {
                             formId: 'tokenDecimal',
                             placeHolder: '0 ~ 18',
                             onChange: handleDecimals,
-                            emptyErrorMessage: 'Please input the token decimal.',
+                            emptyErrorMessage: 'Please input the token decimals.',
                             type: 'number',
                             decimal: 0,
                             maxValue: '18'

@@ -157,7 +157,7 @@ const TokenWalletSearch = () => {
                                 // data-tooltip-wrapper="span"
                                 // data-tooltip-place="bottom"
                             >
-                                <div className="balance-amount">
+                                <div className="balance-amount clamp-single-line">
                                     {commaNumber(getTokenAmountFromUToken(balanceAmount, String(decimals)))}
                                 </div>
                                 <div className="balance-symbol">{symbol}</div>

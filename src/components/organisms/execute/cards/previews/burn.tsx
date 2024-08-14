@@ -143,7 +143,7 @@ const BurnPreview = () => {
     const burnAmount = useExecuteStore((v) => v.burnAmount) || '0';
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
     const clearBurn = useExecuteStore((v) => v.clearBurn);
-    const { setCw20Balance } = useExecuteActions();
+    const { setCw20Balance, setTokenInfo } = useExecuteActions();
 
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -194,6 +194,7 @@ const BurnPreview = () => {
                     onClickConfirm={() => {
                         clearBurn();
                         setCw20Balance(contractAddress, address);
+                        setTokenInfo(contractAddress);
                     }}
                 />
             )

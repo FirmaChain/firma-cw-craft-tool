@@ -16,6 +16,7 @@ import useFormStore from '@/store/formStore';
 import Divider from '@/components/atoms/divider';
 import Cw20MintInputList from '@/components/atoms/walletList/cw20MintInputList';
 import Icons from '@/components/atoms/icons';
+import useExecuteActions from '../../action';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -72,10 +73,12 @@ const MinterCapExceedBox = styled.div`
 `;
 
 const Mint = () => {
+    const contractAddress = useExecuteStore((state) => state.contractAddress);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const mintingList = useExecuteStore((state) => state.mintingList);
     const setMinterList = useExecuteStore((state) => state.setMinterList);
+    const { setTokenInfo } = useExecuteActions();
 
     //! if minter cap is zero, or no minter info provided, disable mint
     const DISABLE_MINT = !minterInfo || !minterInfo?.cap || BigInt(minterInfo?.cap) === BigInt(0);
@@ -107,6 +110,7 @@ const Mint = () => {
     };
 
     useEffect(() => {
+        setTokenInfo(contractAddress);
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearMinterList();

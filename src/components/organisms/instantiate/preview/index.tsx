@@ -17,10 +17,21 @@ import InstantiateModal from '../../modal/instantiateModal';
 import { addStringAmount, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
+import styled from 'styled-components';
+import { ContentBox } from '../content/style';
+import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
 
 interface IProps {
     isBasic: boolean;
 }
+
+const ScrollButtonBox = styled.div`
+    width: 100%;
+
+    @media (min-width: 1654px) {
+        display: none;
+    }
+`;
 
 const Preview = ({ isBasic }: IProps) => {
     const { scroll } = useScrollContext();
@@ -226,25 +237,31 @@ const Preview = ({ isBasic }: IProps) => {
     }, [minterCap, totalSupply]);
 
     return (
-        <PreviewWrapper style={{ top: `${scroll.y}px` }}>
-            <Dashboard
-                isBasic={isBasic}
-                tokenLogoUrl={tokenLogoUrl}
-                tokenName={tokenName}
-                tokenSymbol={tokenSymbol}
-                tokenDescription={tokenDescription}
-                minterble={minterble}
-                minterCap={minterCap}
-                minterAddress={minterAddress}
-                totalSupply={totalSupply}
-                walletList={walletList}
-                decimals={decimals}
-                label={label}
-                marketingAddress={marketingAddress}
-                marketingProject={marketingProject}
-            />
-            <Submit onClickInstantiate={handleInstantiate} disableButton={disableButton} />
-        </PreviewWrapper>
+        <ContentBox>
+            <PreviewWrapper style={{ top: `${scroll.y}px` }}>
+                <Dashboard
+                    isBasic={isBasic}
+                    tokenLogoUrl={tokenLogoUrl}
+                    tokenName={tokenName}
+                    tokenSymbol={tokenSymbol}
+                    tokenDescription={tokenDescription}
+                    minterble={minterble}
+                    minterCap={minterCap}
+                    minterAddress={minterAddress}
+                    totalSupply={totalSupply}
+                    walletList={walletList}
+                    decimals={decimals}
+                    label={label}
+                    marketingAddress={marketingAddress}
+                    marketingProject={marketingProject}
+                />
+                <Submit onClickInstantiate={handleInstantiate} disableButton={disableButton} />
+            </PreviewWrapper>
+
+            <ScrollButtonBox>
+                <SectionScrollToTopButton />
+            </ScrollButtonBox>
+        </ContentBox>
     );
 };
 

@@ -61,3 +61,4 @@ export const IC_CHECK_SQUARE = PUBLIC_IC_URL + 'ic_check_square.png';
 export const IC_ALERT_YELLOW = PUBLIC_IC_URL + 'ic_alert_yellow.png';
 export const IC_WARNING_SIGN = PUBLIC_IC_URL + 'ic_warning_sign.png';
 export const IC_LINK_ROUND = PUBLIC_IC_URL + 'ic_link_round.png';
+export const IC_ALIGN_TOP_ARROW = PUBLIC_IC_URL + 'ic_align_top_arrow.png';

@@ -16,6 +16,7 @@ import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { CRAFT_CONFIGS } from '@/config';
+import useExecuteActions from '../../action';
 
 const Container = styled.div`
     width: 100%;
@@ -211,6 +212,7 @@ const BurnFromPreview = () => {
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
+    const { setTokenInfo } = useExecuteActions();
 
     const modal = useModalStore();
 
@@ -276,7 +278,8 @@ const BurnFromPreview = () => {
     const onClickBurn = () => {
         const convertWalletList = [];
         let totalAmount = '0';
-        const feeAmount = burnFromList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnFromList.length * Number(CRAFT_CONFIGS.BULK_FEE);
+        const feeAmount =
+            burnFromList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnFromList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const wallet of burnFromList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
@@ -323,6 +326,7 @@ const BurnFromPreview = () => {
                     onClickConfirm={() => {
                         setIsFetched(true);
                         clearBurnFrom();
+                        setTokenInfo(contractAddress);
                     }}
                 />
             )

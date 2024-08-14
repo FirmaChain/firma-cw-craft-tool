@@ -27,7 +27,7 @@ export const SpecificItem = styled.div`
     align-items: center;
 `;
 
-export const SpecificItemByStart = styled.div`
+export const SpecificItemByStart = styled.div<{ $needColumn?: boolean }>`
     width: 100%;
     display: flex;
     gap: 32px;

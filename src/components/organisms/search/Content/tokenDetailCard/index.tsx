@@ -20,6 +20,7 @@ import Skeleton from '@/components/atoms/skeleton';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
+import { useMeasure } from 'react-use';
 
 const TokenInfo = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
@@ -170,6 +171,8 @@ const MoreInfo = () => {
         openLink(`${blockExplorerLink}/accounts/${contractAddress}`);
     };
 
+    const [ref, { width }] = useMeasure();
+
     const descRef = useRef<HTMLDivElement>();
     const [needClamp, setNeedClamp] = useState(false);
     const [isClamped, setIsClamped] = useState(true);
@@ -187,10 +190,10 @@ const MoreInfo = () => {
             if (needClamp) setNeedClamp(false);
             setIsClamped(true);
         }
-    }, [marketingDesc]);
+    }, [marketingDesc, width]);
 
     return (
-        <SectionContainer>
+        <SectionContainer ref={ref}>
             <div className="section-title">Additional Information</div>
 
             <div className="information-box">
@@ -224,8 +227,9 @@ const MoreInfo = () => {
                                 </div>
                                 <div
                                     style={{
-                                        maxHeight: isClamped ? '66px' : 'unset',
-                                        overflow: isClamped ? 'hidden' : 'visible'
+                                        height: isClamped ? '66px' : descRef.current?.scrollHeight,
+                                        overflow: 'hidden',
+                                        transition: 'all 0.2s'
                                     }}
                                 >
                                     <div className="white-typo">
@@ -290,7 +294,10 @@ const MoreInfo = () => {
                                 {!marketingAddr ? (
                                     <div className="white-typo">{'-'}</div>
                                 ) : (
-                                    <div className="white-typo">{marketingAddr}</div>
+                                    <>
+                                        <div className="white-typo clamp-single-line">{marketingAddr}</div>
+                                        {!marketingAddr === false && <CopyIconButton text={marketingAddr} width={'20px'} height={'20px'} />}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -300,7 +307,7 @@ const MoreInfo = () => {
                                 {!marketingProj ? (
                                     <div className="white-typo">{'-'}</div>
                                 ) : (
-                                    <div className="white-typo">{marketingProj}</div>
+                                    <div className="white-typo  clamp-single-line">{marketingProj}</div>
                                 )}
                             </div>
                         </div>

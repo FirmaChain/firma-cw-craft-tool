@@ -14,6 +14,9 @@ import useFormStore from '@/store/formStore';
 import Cw20TransferInputList from '@/components/atoms/walletList/cw20TransferInputList';
 import Icons from '@/components/atoms/icons';
 import Divider from '@/components/atoms/divider';
+import useExecuteActions from '../../action';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -69,10 +72,15 @@ const ErrorMessageBox = styled.div`
 `;
 
 const Transfer = () => {
+    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const contractAddress = useExecuteStore((v) => v.contractAddress);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const isFetched = useExecuteStore((state) => state.isFetched);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const transferList = useExecuteStore((state) => state.transferList);
     const setTransferList = useExecuteStore((state) => state.setTransferList);
+    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
+    const { setCw20Balance } = useExecuteActions();
 
     const totalTransferAmount = useMemo(() => {
         let addAmount = '0';
@@ -96,11 +104,19 @@ const Transfer = () => {
     };
 
     useEffect(() => {
+        setCw20Balance(contractAddress, userAddress);
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearTransfer();
         };
     }, []);
+
+    useEffect(() => {
+        if (isFetched) {
+            setCw20Balance(contractAddress, userAddress);
+            setIsFetched(false);
+        }
+    }, [isFetched]);
 
     return (
         <Container>

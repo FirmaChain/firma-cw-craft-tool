@@ -355,10 +355,12 @@ export function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const scrollToTop = () => {
+export const scrollToTop = (behavior?: ScrollBehavior) => {
+    const _behavior = (behavior || 'instant') as ScrollBehavior;
+
     const scrollbarContent = document.getElementsByClassName('main-scrollbar');
 
     if (scrollbarContent[0]) {
-        scrollbarContent[0].scrollTo({ top: 0, left: 0 });
+        scrollbarContent[0].scrollTo({ top: 0, left: 0, behavior: _behavior });
     }
 };

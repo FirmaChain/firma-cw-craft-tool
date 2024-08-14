@@ -140,12 +140,13 @@ const WalletSearch = () => {
                     balanceAmount !== null && (
                         <BalanceAmountWrapper>
                             <BalanceAmountTypo
-                            // data-tooltip-content={
-                            //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(balanceAmount, decimals)) : ''
-                            // }
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
+                                className="clamp-single-line"
+                                // data-tooltip-content={
+                                //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(balanceAmount, decimals)) : ''
+                                // }
+                                // data-tooltip-id={TOOLTIP_ID.COMMON}
+                                // data-tooltip-wrapper="span"
+                                // data-tooltip-place="bottom"
                             >
                                 {commaNumber(getTokenAmountFromUToken(balanceAmount, decimals))}
                             </BalanceAmountTypo>
