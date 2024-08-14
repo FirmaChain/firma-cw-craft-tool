@@ -227,7 +227,7 @@ const ScrollbarContainer = styled.div`
 
 const TransferPreview = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
-    
+
     const approveInfoById = useCW721ExecuteStore((state) => state.approveInfoById);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -253,10 +253,10 @@ const TransferPreview = () => {
         const ids = userTransferList
             .map((oneData) => oneData.token_ids)
             .flat()
-            .filter((v) => v !== '');
+            .filter((v) => v !== '' && approveInfoById[v] !== true);
 
         return ids;
-    }, [userTransferList]);
+    }, [approveInfoById, userTransferList]);
 
     const transferListForPreview = useMemo(() => {
         //? return transfer nft count with address
@@ -311,8 +311,10 @@ const TransferPreview = () => {
     }, [approveInfoById, myNftList, transferIdsWithEmpty, userTransferList]);
 
     const onClickTransfer = () => {
-        const feeAmount = transferListForModal.length === 1
-        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : transferListForModal.length * Number(CRAFT_CONFIGS.BULK_FEE);
+        const feeAmount =
+            transferListForModal.length === 1
+                ? Number(CRAFT_CONFIGS.DEFAULT_FEE)
+                : transferListForModal.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         const params = {
             header: {
@@ -397,7 +399,7 @@ const TransferPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" tooltip={"Updated Balance is the number of NFTs held after the transfer."}/>
+                            <IconTooltip size="14px" tooltip={'Updated Balance is the number of NFTs held after the transfer.'} />
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>

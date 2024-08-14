@@ -89,8 +89,11 @@ const Transfer = () => {
 
                 if (nftInfo.access.owner.toLowerCase() === address.toLowerCase()) {
                     //? IF owner is connected user
-                    newInfo[id] = true;
-                    continue;
+                    //? it means current user nft id list is not match with one on chain.
+                    //? try to get nft ids and break
+
+                    setMyNftList(contractAddress, address);
+                    break;
                 }
 
                 const allOperators = await firmaSDK.Cw721.getAllOperators(

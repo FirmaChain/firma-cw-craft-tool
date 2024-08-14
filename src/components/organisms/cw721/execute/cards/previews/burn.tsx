@@ -124,7 +124,7 @@ const ButtonWrap = styled.div`
 
 const BurnPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-    
+
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -133,7 +133,7 @@ const BurnPreview = () => {
     const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
-    const { setMyNftList } = useCW721ExecuteAction();
+    const { setMyNftList, setTotalNfts } = useCW721ExecuteAction();
 
     const modal = useModalStore();
 
@@ -142,9 +142,14 @@ const BurnPreview = () => {
         return burnList.split(',').filter((one) => one !== '').length;
     }, [burnList]);
 
+    const userBurnNFTIDs = useMemo(() => {
+        //? number of nft ids owned by user that will burn.
+        return nftDatas.filter((data) => data.access.owner.toLowerCase() === address.toLowerCase());
+    }, [address, nftDatas]);
+
     const updatedBurnCount = useMemo(() => {
-        return subtractStringAmount(myNftList.length.toString(), totalBurnCount.toString());
-    }, [myNftList, totalBurnCount]);
+        return subtractStringAmount(myNftList.length.toString(), userBurnNFTIDs.length.toString());
+    }, [myNftList.length, userBurnNFTIDs.length]);
 
     const isEnableButton = useMemo(() => {
         if (Number(updatedBurnCount) <= -1) return false;
@@ -164,7 +169,7 @@ const BurnPreview = () => {
         const burnIds = Array.from(idMap.keys());
 
         if (burnIds.includes('0')) return false;
-        
+
         //! if tring to burn id that user does not own
         if (burnIds.length !== nftDatas.length) return false;
 
@@ -176,8 +181,7 @@ const BurnPreview = () => {
 
     const onClickBurn = () => {
         const convertList: { token_id: string }[] = [];
-        const feeAmount = burnList.length === 1
-        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnList.length * Number(CRAFT_CONFIGS.BULK_FEE);
+        const feeAmount = burnList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         const token_ids = burnList.split(',');
 
@@ -217,6 +221,7 @@ const BurnPreview = () => {
                     onClickConfirm={() => {
                         clearBurnForm();
                         setMyNftList(contractAddress, address);
+                        setTotalNfts(contractAddress);
                     }}
                 />
             )
@@ -244,10 +249,7 @@ const BurnPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip
-                                size="14px" 
-                                tooltip={`This is the total supply of NFTs after burning.`}
-                            />
+                            <IconTooltip size="14px" tooltip={`This is the total supply of NFTs after burning.`} />
                         </div>
                     </ItemLeftWrap>
                     <ItemRightWrap>

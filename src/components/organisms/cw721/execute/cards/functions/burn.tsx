@@ -52,7 +52,7 @@ const Burn = () => {
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
 
-    const { setFctBalance, setMyNftList, setNftDatas } = useCW721ExecuteAction();
+    const { setFctBalance, setMyNftList, setNftDatas, setTotalNfts } = useCW721ExecuteAction();
 
     const onChangeBurnId = (text: string) => {
         const cleanedText = text.replace(/,+/g, ',').replace(/^,/, '');
@@ -113,6 +113,7 @@ const Burn = () => {
 
         setFctBalance(address);
         setMyNftList(contractAddress, address);
+        setTotalNfts(contractAddress);
 
         //? clear error and input before unmount
         return () => {

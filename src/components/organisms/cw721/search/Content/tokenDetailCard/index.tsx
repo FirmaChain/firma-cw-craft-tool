@@ -131,7 +131,7 @@ const TokenInfo = () => {
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
                             <SpecificValueWrapper>
-                                <SpecificValueTypo>
+                                <SpecificValueTypo style={{ display: 'flex' }}>
                                     {`${totalSupply === null ? 0 : totalSupply}`}
                                     <span>{'NFT'}</span>
                                 </SpecificValueTypo>
@@ -163,7 +163,7 @@ const TokenInfo = () => {
                                 style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                             >
                                 <SpecificValueWrapper>
-                                    <SpecificValueTypo>
+                                    <SpecificValueTypo style={{ display: 'flex' }}>
                                         {ownedNfts.length}
                                         <span style={{ paddingLeft: 0 }}>{'NFT'}</span>
                                     </SpecificValueTypo>

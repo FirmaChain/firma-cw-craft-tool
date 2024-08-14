@@ -6,7 +6,7 @@ import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { sleep } from '@/utils/common';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IValidTokensState {
     tokenId: string;
@@ -17,6 +17,9 @@ interface IValidTokensState {
 const useCW721ExecuteAction = () => {
     const { firmaSDK } = useFirmaSDKContext();
     const userAddress = useSelector((v: rootState) => v.wallet.address);
+
+    const burnList = useCW721ExecuteStore((v) => v.burnList);
+    const nftDatas = useCW721ExecuteStore((v) => v.nftDatas);
 
     const { enqueueSnackbar } = useSnackbar();
     const [validTokens, setValidTokens] = useState<IValidTokensState[]>([]);
@@ -153,6 +156,8 @@ const useCW721ExecuteAction = () => {
             let startAfter: string | undefined = undefined;
             const limit = 150;
 
+            setValidTokens([]);
+
             while (true) {
                 const nftList = await firmaSDK.Cw721.getNFTIdListOfOwner(
                     contractAddress?.toLowerCase(),
@@ -227,6 +232,7 @@ const useCW721ExecuteAction = () => {
             for (const splitNftId of splitNftIds) {
                 if (splitNftId === '') continue;
                 const alreadyVerify = validTokens.find((value) => value.tokenId === splitNftId);
+
                 if (alreadyVerify === undefined) {
                     try {
                         const contractNftData = await firmaSDK.Cw721.getNftData(contractAddress?.toLowerCase(), splitNftId);
@@ -292,11 +298,16 @@ const useCW721ExecuteAction = () => {
                     }
                 }
             }
+
             useCW721ExecuteStore.getState().setNftDatas(newNftInfo);
         } catch (error) {
             console.log('error', error);
         }
     };
+
+    useEffect(() => {
+        if (burnList === '' && nftDatas.length === 0) setValidTokens([]);
+    }, [burnList, nftDatas]);
 
     return {
         checkContractExist,

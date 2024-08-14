@@ -196,8 +196,8 @@ const UpdateOwnershipAccept = () => {
                     },
                     {
                         label: 'Expiration',
-                        value: Object.values(ownershipInfo.pending_expiry)[0],
-                        type: Object.keys(ownershipInfo.pending_expiry)[0]
+                        value: ownershipInfo.pending_expiry === null ? {} : Object.values(ownershipInfo.pending_expiry)[0],
+                        type: ownershipInfo.pending_expiry === null ? 'never' : Object.keys(ownershipInfo.pending_expiry)[0]
                     }
                 ]
             },
