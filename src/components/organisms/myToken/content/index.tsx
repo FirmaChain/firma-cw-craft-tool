@@ -47,33 +47,33 @@ const MyTokenContent = () => {
 
         return () => {
             GlobalActions.handleGlobalLoading(false);
-        }
+        };
     }, [isInit, fetchTokenList]);
 
     const TokenListByInit = useCallback(() => {
         if (isInit) {
-            return <MyMintedTokenList />
+            return <MyMintedTokenList />;
         } else {
-            return <ConnectWallet />
+            return <ConnectWallet />;
         }
-    }, [isInit])
+    }, [isInit]);
 
     return (
         <ContentBox>
             <ContentWrapper>
-                <ContentControlWrapper>
-                    {/* <NetworkSelect
+                {/* <ContentControlWrapper> */}
+                {/* <NetworkSelect
                     value={selectSort.toString()}
                     onChange={(v) => setSelectSort(Number(v))}
                     options={menuItems}
                     minWidth="182px"
                 /> */}
 
-                    <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
+                {/* <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
                         <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                         <TokenTypo>Tokens</TokenTypo>
                     </ContentInfoWrapper>
-                </ContentControlWrapper>
+                </ContentControlWrapper> */}
                 <TokenListByInit />
             </ContentWrapper>
         </ContentBox>

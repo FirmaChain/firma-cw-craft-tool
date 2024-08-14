@@ -96,6 +96,21 @@ const AdditionalInformation = () => {
                         <TokenLogo src={validTokenLogoUrl} size="90px" showTooltip />
                     </SpecificColumnValue>
                 </SpecificItemByStart>
+                {!isBasic && (
+                    <SpecificItem>
+                        <SpecificLabelTypo>Marketing Address</SpecificLabelTypo>
+                        {typeof marketingAddress === 'string' ? (
+                            <SpecificMetadataValueWrapper>
+                                <SpecificValueTypo className="clamp-single-line">
+                                    {!marketingAddress ? '-' : marketingAddress}
+                                </SpecificValueTypo>
+                                {!marketingAddress === false && <CopyIconButton text={marketingAddress} width={'20px'} height={'20px'} />}
+                            </SpecificMetadataValueWrapper>
+                        ) : (
+                            <Skeleton width="100px" height="22px" />
+                        )}
+                    </SpecificItem>
+                )}
                 <SpecificItem style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>{isBasic ? 'Token' : 'Marketing'} Description</SpecificLabelTypo>
                     {typeof marketingDescription === 'string' ? (
@@ -185,22 +200,6 @@ const AdditionalInformation = () => {
                 </SpecificItem>
                 {!isBasic && (
                     <>
-                        <SpecificItem>
-                            <SpecificLabelTypo>Marketing Address</SpecificLabelTypo>
-                            {typeof marketingAddress === 'string' ? (
-                                <SpecificMetadataValueWrapper>
-                                    <SpecificValueTypo className="clamp-single-line">
-                                        {!marketingAddress ? '-' : marketingAddress}
-                                    </SpecificValueTypo>
-                                    {!marketingAddress === false && (
-                                        <CopyIconButton text={marketingAddress} width={'20px'} height={'20px'} />
-                                    )}
-                                </SpecificMetadataValueWrapper>
-                            ) : (
-                                <Skeleton width="100px" height="22px" />
-                            )}
-                        </SpecificItem>
-
                         <SpecificItem>
                             <SpecificLabelTypo>Marketing Project</SpecificLabelTypo>
                             {typeof marketingProject === 'string' ? (

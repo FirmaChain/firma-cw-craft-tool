@@ -21,6 +21,7 @@ import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 import { useMeasure } from 'react-use';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const TokenInfo = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
@@ -203,6 +204,21 @@ const MoreInfo = () => {
                         <TokenLogo src={tokenLogo} size="90px" showTooltip />
                     </div>
                 </div>
+                {!isBasic && (
+                    <div className="box-row">
+                        <div className="box-title">Marketing Address</div>
+                        <div className="box-value">
+                            {!marketingAddr ? (
+                                <div className="white-typo">{'-'}</div>
+                            ) : (
+                                <>
+                                    <div className="white-typo clamp-single-line">{marketingAddr}</div>
+                                    {!marketingAddr === false && <CopyIconButton text={marketingAddr} width={'20px'} height={'20px'} />}
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
                 <div className="box-row" style={{ alignItems: 'flex-start' }}>
                     <div className="box-title">{isBasic ? 'Token' : 'Marketing'} Description</div>
                     <div className="box-value">
@@ -289,19 +305,6 @@ const MoreInfo = () => {
                 {!isBasic && (
                     <>
                         <div className="box-row">
-                            <div className="box-title">Marketing Address</div>
-                            <div className="box-value">
-                                {!marketingAddr ? (
-                                    <div className="white-typo">{'-'}</div>
-                                ) : (
-                                    <>
-                                        <div className="white-typo clamp-single-line">{marketingAddr}</div>
-                                        {!marketingAddr === false && <CopyIconButton text={marketingAddr} width={'20px'} height={'20px'} />}
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                        <div className="box-row">
                             <div className="box-title">Marketing Project</div>
                             <div className="box-value">
                                 {!marketingProj ? (
@@ -355,10 +358,9 @@ const AllAccounts = () => {
     const rows = useMemo(() => {
         if (!allAccounts || allAccounts.length === 0) return [];
 
-        let result = [];
+        let result = allAccounts?.filter((one) => BigInt(one.balance) > BigInt(0));
 
-        if (keyword.length > 0) result = allAccounts.filter((one) => one.address?.toLowerCase().includes(keyword.toLowerCase()));
-        else result = [...allAccounts];
+        if (keyword.length > 0) result = result.filter((one) => one.address?.toLowerCase().includes(keyword.toLowerCase()));
 
         return result.sort((a, b) => {
             return compareStringNumbers(b.balance, a.balance);
@@ -372,7 +374,7 @@ const AllAccounts = () => {
                 <SearchInput2
                     placeHolder={'Search Wallet Address'}
                     value={keyword}
-                    onChange={(v) => setKeyword(v)}
+                    onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     adornment={{
                         end: (
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>

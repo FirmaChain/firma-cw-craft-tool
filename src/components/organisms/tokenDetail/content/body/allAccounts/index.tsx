@@ -8,6 +8,7 @@ import Cell from '@/components/atoms/table/cells';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { compareStringNumbers } from '@/utils/balance';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const AllAccounts = () => {
     const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
@@ -15,10 +16,6 @@ const AllAccounts = () => {
     const symbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
 
     const [keyword, setKeyword] = useState<string>('');
-
-    const handleKeyword = (value: string) => {
-        setKeyword(value);
-    };
 
     const columns: IColumn[] = [
         {
@@ -40,10 +37,9 @@ const AllAccounts = () => {
     const rows = useMemo(() => {
         if (!accounts || accounts?.length === 0) return [];
 
-        let result = [];
+        let result = accounts.filter((one) => BigInt(one['Balance']) > BigInt(0));
 
-        if (keyword.length > 0) result = accounts.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
-        else result = [...accounts];
+        if (keyword.length > 0) result = result.filter((one) => one['Wallet Address'].toLowerCase().includes(keyword.toLowerCase()));
 
         return result.sort((a, b) => {
             return compareStringNumbers(b.Balance, a.Balance);
@@ -57,7 +53,7 @@ const AllAccounts = () => {
                 <SearchInput2
                     placeHolder={'Search Wallet Address'}
                     value={keyword}
-                    onChange={handleKeyword}
+                    onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     adornment={{
                         end: (
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>

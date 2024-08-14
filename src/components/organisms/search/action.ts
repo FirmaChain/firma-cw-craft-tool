@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
-import { determineMsgTypeAndSpender } from '@/utils/common';
+import { determineMsgTypeAndSpender, sleep } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
@@ -45,7 +45,8 @@ const useSearchActions = () => {
 
     const checkContractExist = async (contractAddress: string) => {
         try {
-            if (previousKeywordRef.current === contractAddress) return;
+            GlobalActions.handleGlobalLoading(true);
+            if (previousKeywordRef.current?.toLowerCase() === contractAddress.toLowerCase()) return;
             if (globalLoading) return null;
 
             if (contractAddress.length <= 44 || !isValidAddress(contractAddress)) {
@@ -55,6 +56,8 @@ const useSearchActions = () => {
 
             const exist = await firmaSDK.CosmWasm.getContractState(contractAddress?.toLowerCase());
 
+            await sleep(500);
+
             useSearchStore.getState().setContractExist(exist.length > 0);
             await searchTokenInfo(contractAddress);
         } catch (error) {
@@ -62,6 +65,7 @@ const useSearchActions = () => {
             useSearchStore.getState().setContractExist(false);
         } finally {
             previousKeywordRef.current = contractAddress;
+            GlobalActions.handleGlobalLoading(false);
         }
     };
 

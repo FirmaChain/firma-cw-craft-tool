@@ -6,6 +6,7 @@ import useSearchStore from '../searchStore';
 import React, { useEffect } from 'react';
 import useSearchActions from '../action';
 import { isValidAddress } from '@/utils/address';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const EndAdornment = ({
     keyword,
@@ -72,7 +73,7 @@ const Header = () => {
                 <SearchInputWithButton2
                     value={keyword}
                     placeHolder={'Search by full CW20 Contract Address'}
-                    onChange={(v) => setKeyword(v)}
+                    onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     // onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{
                         end: (

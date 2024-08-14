@@ -16,6 +16,7 @@ import GreenButton from '@/components/atoms/buttons/greenButton';
 import styled from 'styled-components';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -125,7 +126,7 @@ const TokenWalletSearch = () => {
             <SearchInputWithButton2
                 value={keyword}
                 placeHolder={'Search Wallet Address'}
-                onChange={(v) => setKeyword(v)}
+                onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                 onClickEvent={getAddressInfo}
                 adornment={{
                     end: (

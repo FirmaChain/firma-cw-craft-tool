@@ -28,6 +28,7 @@ import GreenButton from '@/components/atoms/buttons/greenButton';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { isValidAddress } from '@/utils/address';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -118,7 +119,7 @@ const WalletSearch = () => {
                 <SearchInputWithButton2
                     value={searchAddress}
                     placeHolder={'Input Wallet Address'}
-                    onChange={setSearchAddress}
+                    onChange={(v) => setSearchAddress(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     onClickEvent={onClickSearch}
                     adornment={{
                         end: (
