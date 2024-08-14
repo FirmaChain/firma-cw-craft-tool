@@ -99,8 +99,7 @@ const UpdateMarketing = () => {
                                 formId: 'input address',
                                 placeHolder: 'Input Wallet Address',
                                 onChange: handleAddress,
-                                regex: WALLET_ADDRESS_REGEX,
-                                emptyErrorMessage: 'Please input firmachain wallet address.'
+                                regex: WALLET_ADDRESS_REGEX
                             }}
                         />
                         <LabelInput

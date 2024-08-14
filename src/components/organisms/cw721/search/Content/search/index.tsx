@@ -22,6 +22,7 @@ import Cell from '@/components/atoms/table/cells';
 import { parseExpires } from '@/utils/common';
 import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import { INT_NUMBERS } from '@/constants/regex';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -140,7 +141,7 @@ const Search = () => {
                 <SearchInputWithButton
                     value={keyword}
                     placeHolder={'Search by Token ID'}
-                    onChange={(v) => setKeyword(v)}
+                    onChange={(v) => setKeyword(v.replace(INT_NUMBERS, ''))}
                     onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{
                         end: (

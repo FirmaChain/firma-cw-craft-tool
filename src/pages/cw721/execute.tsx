@@ -22,6 +22,7 @@ const CW721Execute = () => {
     useEffect(() => {
         return () => {
             GlobalActions.handleGlobalLoading(false);
+            useCW721ExecuteStore.getState().clearForm();
         };
     }, []);
 

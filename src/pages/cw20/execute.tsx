@@ -21,6 +21,7 @@ const CW20Execute = () => {
     useEffect(() => {
         return () => {
             GlobalActions.handleGlobalLoading(false);
+            useExecuteStore.getState().clearForm();
         };
     }, []);
 

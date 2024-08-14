@@ -11,6 +11,7 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 import { useNavigate } from 'react-router-dom';
 import { isValidAddress } from '@/utils/address';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const EndAdornment = ({
     keyword,
@@ -62,7 +63,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     }, [contractAddress]);
 
     const onClickSearch = () => {
-        if (keyword.length === 0 || previousKeywordRef.current === keyword) return;
+        if (!isValidAddress(keyword) || previousKeywordRef.current?.toLowerCase() === keyword.toLowerCase()) return;
 
         const valid = isValidAddress(keyword) && keyword.length > 44;
 
@@ -105,7 +106,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         <SearchInputWithButton2
             placeHolder={'Search CW721 contract address'}
             value={keyword}
-            onChange={(v) => setKeyword(v)}
+            onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
             // onClickEvent={onClickSearch}
             adornment={{
                 end: (

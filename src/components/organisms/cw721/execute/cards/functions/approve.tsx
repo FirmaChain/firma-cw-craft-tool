@@ -108,6 +108,8 @@ const Approve = () => {
         if (value === '0') {
             setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: `Please enter a value other than 0.` });
         } else {
+            clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
+
             if (value === '' || myNftList.includes(value)) {
                 clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
             } else {
@@ -197,7 +199,9 @@ const Approve = () => {
                                     placeHolder: '0',
                                     textAlign: 'right',
                                     regex: INT_NUMBERS,
-                                    emptyErrorMessage: 'Please input the token id.'
+                                    emptyErrorMessage: 'Please input the token id.',
+                                    type: 'number',
+                                    decimal: 0
                                 }}
                             />
                         </div>

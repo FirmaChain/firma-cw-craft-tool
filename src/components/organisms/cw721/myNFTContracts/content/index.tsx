@@ -18,7 +18,7 @@ const MyNFTContent = () => {
         try {
             const contract = await getCW721ContractList();
             console.log('fetchTokenList : ', contract);
-            
+
             addContracts(contract);
             if (contract.length === 0) {
                 GlobalActions.handleGlobalLoading(false);
@@ -37,26 +37,26 @@ const MyNFTContent = () => {
 
         return () => {
             GlobalActions.handleGlobalLoading(false);
-        }
+        };
     }, [isInit, fetchTokenList]);
 
     const ContractListByInit = useCallback(() => {
         if (isInit) {
-            return <MyContractList />
+            return <MyContractList />;
         } else {
-            return <ConnectWallet />
+            return <ConnectWallet />;
         }
-    }, [isInit])
+    }, [isInit]);
 
     return (
         <ContentBox>
             <ContentWrapper>
-                <ContentControlWrapper>
+                {/* <ContentControlWrapper>
                     <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
                         <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                         <ContracTypo>Contracts</ContracTypo>
                     </ContentInfoWrapper>
-                </ContentControlWrapper>
+                </ContentControlWrapper> */}
                 <ContractListByInit />
             </ContentWrapper>
         </ContentBox>

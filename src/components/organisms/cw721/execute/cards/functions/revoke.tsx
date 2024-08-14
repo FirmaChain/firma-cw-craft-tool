@@ -145,7 +145,9 @@ const Revoke = () => {
                                     placeHolder: '0',
                                     textAlign: 'right',
                                     regex: INT_NUMBERS,
-                                    emptyErrorMessage: 'Please input the token id.'
+                                    emptyErrorMessage: 'Please input the token id.',
+                                    type: 'number',
+                                    decimal: 0
                                 }}
                             />
                         </div>

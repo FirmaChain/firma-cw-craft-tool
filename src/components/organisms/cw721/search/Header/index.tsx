@@ -9,6 +9,8 @@ import { GlobalActions } from '@/redux/actions';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { isValidAddress } from '@/utils/address';
+import { sleep } from '@/utils/common';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const EndAdornment = ({
     keyword,
@@ -62,24 +64,25 @@ const Header = () => {
         GlobalActions.handleGlobalLoading(true);
 
         try {
-            if (prevKeyword.current === null || prevKeyword.current !== keyword) {
+            if (prevKeyword.current === null || prevKeyword.current?.toLowerCase() !== keyword.toLowerCase()) {
                 const exist = await checkExistContract(keyword);
+
+                await sleep(500);
 
                 if (exist) {
                     clearForm();
 
+                    const txData = await getNFTContractTransactions(keyword);
                     const detail = await getNFTContractDetail(keyword);
-                    setContractDetail(detail);
-
                     const nfts = await getNFTsInfo(keyword);
-                    setNftsInfo(nfts);
 
                     if (address) {
                         const ownedNfts = await getOwnedNFTsInfo(keyword, address);
                         setOwnedNftsInfo(ownedNfts);
                     }
 
-                    const txData = await getNFTContractTransactions(keyword);
+                    setContractDetail(detail);
+                    setNftsInfo(nfts);
                     setTransactions(txData.txData);
                 } else {
                     prevKeyword.current = null;
@@ -127,7 +130,7 @@ const Header = () => {
                 <SearchInputWithButton2
                     value={keyword}
                     placeHolder={'Search CW721 Contract Address'}
-                    onChange={(v) => setKeyword(v)}
+                    onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     // onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{
                         end: (
