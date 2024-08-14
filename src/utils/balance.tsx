@@ -1,4 +1,4 @@
-import { CRAFT_CONFIGS } from "@/config";
+import { CRAFT_CONFIGS } from '@/config';
 
 //? fix invliad typo case of returning 0.0000-1 (expected -0.000001)
 export const getTokenAmountFromUToken = (amount: string, decimals: string) => {
@@ -236,6 +236,9 @@ export const compareStringNumbers = (amount1: string, amount2: string) => {
         amount2 = amount2.slice(1);
         return -compareStringNumbers(amount1, amount2);
     }
+
+    amount1 = amount1.replace(/^0+/, '') || '0';
+    amount2 = amount2.replace(/^0+/, '') || '0';
 
     const [intPart1, decPart1 = ''] = amount1.split('.');
     const [intPart2, decPart2 = ''] = amount2.split('.');

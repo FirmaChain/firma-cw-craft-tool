@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-export const ContentBox = styled.div`
+export const ContentBox = styled.div<{ $isPreview?: boolean }>`
     width: 100%;
-    height: fit-content;
+    height: ${({ $isPreview }) => ($isPreview ? '100%' : 'fit-content')};
 `;
 
 export const ContentWrapper = styled.div`

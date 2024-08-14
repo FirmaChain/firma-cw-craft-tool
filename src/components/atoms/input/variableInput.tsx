@@ -162,6 +162,13 @@ const VariableInput = ({
                 inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
 
                 if (inputValue.startsWith('.')) inputValue = `${0}${inputValue}`;
+                else {
+                    const [intPart, floatPart] = inputValue.split('.');
+
+                    const _intPart = BigInt(intPart).toString();
+
+                    inputValue = `${_intPart}${floatPart ? '.' : ''}${floatPart ? floatPart : ''}`;
+                }
             } else {
                 //? Filter input string if valid regex provided
                 if (regex) inputValue = inputValue.replace(regex, '');
@@ -207,6 +214,7 @@ const VariableInput = ({
             >
                 {type === 'number' ? (
                     <NumericFormat
+                        type="text"
                         allowNegative={false}
                         allowLeadingZeros={false}
                         getInputRef={inputRef}
@@ -216,13 +224,17 @@ const VariableInput = ({
                         max={maxValue}
                         decimalScale={decimal}
                         isAllowed={({ value }) => {
-                            if (compareStringNumbers(value, maxValue) > 0) {
-                                setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds the valid range.' });
-                                return false;
-                            } else {
-                                clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
-                                return true;
-                            }
+                            if (value.startsWith('00')) return false;
+
+                            if (typeof maxValue === 'string') {
+                                if (compareStringNumbers(value, maxValue) > 0) {
+                                    setFormError({ id: inputId, type: 'OUT_OF_RANGE', message: 'Input exceeds the valid range.' });
+                                    return false;
+                                } else {
+                                    clearFormError({ id: inputId, type: 'OUT_OF_RANGE' });
+                                    return true;
+                                }
+                            } else return true;
                         }}
                         placeholder={placeHolder}
                         readOnly={readOnly}

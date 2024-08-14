@@ -2,13 +2,11 @@ import styled, { keyframes } from 'styled-components';
 
 const loading = keyframes`
   0% {
-    transform: translateX(-150%);
+    transform: translateX(-20%);
   }
-  50% {
-    transform: translateX(-60%);
-  }
+ 
   100% {
-    transform: translateX(150%);
+    transform: translateX(110%);
   }
 `;
 
@@ -27,7 +25,7 @@ const ShimmerBox = styled.div<{ $bgColor?: string; $highlight?: string; $width: 
         width: 100%;
         height: 100%;
         overflow: hidden;
-        animation: ${loading} 2.5s infinite;
+        animation: ${loading} 0.8s infinite;
     }
 
     .shimmer {

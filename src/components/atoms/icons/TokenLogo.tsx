@@ -1,9 +1,11 @@
-import { checkImageUrl } from '@/utils/common';
+import { checkImageUrl, copyToClipboard } from '@/utils/common';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Icons from '.';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { IC_LINK_ROUND } from './pngIcons';
+import IconButton from '../buttons/iconButton';
+import { useSnackbar } from 'notistack';
 
 interface ITokenLogo {
     src: string; //? Img logo url
@@ -49,6 +51,8 @@ const Container = styled.div<{ $size: string | number }>`
 `;
 
 const TokenLogo = ({ src, size = '72px', emptyPicSize = '34px', showTooltip = false }: ITokenLogo) => {
+    const { enqueueSnackbar } = useSnackbar();
+
     const [isValid, setIsValid] = useState<boolean>(false);
 
     useEffect(() => {
@@ -61,18 +65,34 @@ const TokenLogo = ({ src, size = '72px', emptyPicSize = '34px', showTooltip = fa
         }
     }, [src]);
 
+    const onClickCopy = async () => {
+        const errorMsg = await copyToClipboard(src);
+
+        if (errorMsg) {
+            console.log(errorMsg);
+            enqueueSnackbar({ variant: 'error', message: 'Failed to copy url.' });
+        } else enqueueSnackbar({ variant: 'success', message: 'Copied!', key: 'COPIED' });
+    };
+
     return (
-        <Container
-            $size={size}
-            data-tooltip-content={showTooltip ? src : ''}
-            data-tooltip-id={TOOLTIP_ID.COMMON}
-            data-tooltip-wrapper="span"
-            data-tooltip-place="bottom"
-        >
+        <Container $size={size}>
             {isValid ? (
                 <>
-                    <img src={src} className="token-logo" alt="token-logo" onError={() => setIsValid(false)} />
-                    {showTooltip && <img className="url-icon" src={IC_LINK_ROUND} alt="link" />}
+                    <img
+                        src={src}
+                        className="token-logo"
+                        alt="token-logo"
+                        onError={() => setIsValid(false)}
+                        data-tooltip-content={showTooltip ? src : ''}
+                        data-tooltip-id={TOOLTIP_ID.COMMON}
+                        data-tooltip-wrapper="span"
+                        data-tooltip-place="bottom"
+                    />
+                    {showTooltip && (
+                        <IconButton onClick={onClickCopy} className="url-icon" style={{ display: 'flex', padding: 0 }}>
+                            <img className="url-icon" src={IC_LINK_ROUND} alt="link" />
+                        </IconButton>
+                    )}
                 </>
             ) : (
                 <div className="img-placeholder">

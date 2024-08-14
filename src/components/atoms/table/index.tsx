@@ -16,7 +16,8 @@ import {
     TableInnerCell,
     TableRow
 } from './styles';
-import { BarLoader } from 'react-spinners';
+import { FadeLoader } from 'react-spinners';
+import { ColorRing, Oval } from 'react-loader-spinner';
 
 export interface IColumn {
     id: string;
@@ -114,7 +115,17 @@ const StyledTable = ({
 
             {isLoading ? (
                 <LoadingBox>
-                    <BarLoader color="#EFEFEF" />
+                    <Oval
+                        visible={true}
+                        height="40"
+                        width="40"
+                        color="#a7a7a7"
+                        strokeWidth="3"
+                        secondaryColor="#444444"
+                        ariaLabel="oval-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                    />
                 </LoadingBox>
             ) : (
                 <>

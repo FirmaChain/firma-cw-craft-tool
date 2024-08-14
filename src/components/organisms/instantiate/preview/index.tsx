@@ -237,7 +237,7 @@ const Preview = ({ isBasic }: IProps) => {
     }, [minterCap, totalSupply]);
 
     return (
-        <ContentBox>
+        <ContentBox $isPreview>
             <PreviewWrapper style={{ top: `${scroll.y}px` }}>
                 <Dashboard
                     isBasic={isBasic}
