@@ -154,7 +154,6 @@ const VariableInput = ({
     const valueLength = typeof value === 'object' ? 0 : String(value).length;
     const isError = errorMessage.length > 0;
 
-    console.log(type);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
 
@@ -234,7 +233,7 @@ const VariableInput = ({
                     <input
                         ref={inputRef}
                         value={value && type === 'date' ? format(Number(value), 'MMMM-dd-yyyy HH:mm:ss a') : value}
-                        type={type === "date" ? "text" : type}
+                        type={type === 'date' ? 'text' : type}
                         onChange={handleChange}
                         placeholder={placeHolder}
                         readOnly={readOnly || type === 'date'}

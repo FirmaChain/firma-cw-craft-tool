@@ -215,7 +215,7 @@ const AddressBox = () => {
                         {balance ? (
                             <span className="balance">{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</span>
                         ) : (
-                            <Skeleton width="80px" height="14px" />
+                            <Skeleton width="80px" height="12px" />
                         )}
                         <Icons.FirmaChain width="10px" height="10px" fill="#FFFFFF" />
                     </div>

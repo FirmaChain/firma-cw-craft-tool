@@ -699,8 +699,8 @@ export const ExpirationTypo = styled.div`
     }
 `;
 
-export const ItemUrlTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+export const ItemUrlTypo = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? '#444' : 'var(--Gray-900, var(--Primary-Base-White, #fff))')};
     text-align: right;
 
     /* Body/Body3 - Md */
@@ -846,4 +846,99 @@ export const ModalResultAddressTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 18px; /* 138.462% */
+`;
+
+export const WalletConnectWarp = styled(ModalBase)`
+    width: 544px;
+    padding: 0;
+    user-select: none;
+    gap: 0;
+    overflow: hidden;
+`;
+
+export const CloseIcon = styled.img`
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    cursor: pointer;
+`;
+
+export const PrevButton = styled(IconButton)`
+    display: flex;
+    position: absolute;
+    left: 24px;
+    top: 24px;
+`;
+
+export const WalletConnectContentBox = styled.div<{ $isStationInfo?: boolean }>`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: ${({ $isStationInfo }) => ($isStationInfo ? '56px 75px 48px' : '56px 75px 32px')};
+`;
+
+export const WalletConnectTitleBox = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding-bottom: 40px;
+`;
+
+export const WalletConnectDescBox = styled.div<{ $isStationInfo?: boolean }>`
+    position: relative;
+    width: 100%;
+    min-height: 168px;
+    padding: ${({ $isStationInfo }) => ($isStationInfo ? '0' : '32px 0')};
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    background: var(--Gray-200, #1a1a1a);
+`;
+
+export const WalletConnectStepsDivider = styled.div`
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const WalletConnectStepWrap = styled.div`
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 40px;
+    height: 64px;
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100px;
+    }
+`;
+
+export const StationInfoButton = styled.div`
+    width: 100%;
+    height: 86px;
+    background: var(--Gray-200, #1a1a1a);
+    padding-bottom: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 `;

@@ -17,9 +17,9 @@ import {
 import { IC_ID_CIRCLE, IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { shortenAddress } from '@/utils/address';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { parseAmountWithDecimal2 } from '@/utils/common';
 import { useMemo } from 'react';
 import { format } from 'date-fns';
+import commaNumber from 'comma-number';
 
 interface IAmountProps {
     label: string;
@@ -135,7 +135,7 @@ export const UrlItem = ({ label, logo }: IUrlProps) => {
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemUrlTypo>{shortenAddress(logo, 20, 12)}</ItemUrlTypo>
+                <ItemUrlTypo $disabled={!Boolean(logo)}>{logo ? shortenAddress(logo, 20, 12) : '-'}</ItemUrlTypo>
             </ItemValueWrap>
         </ItemWrap>
     );
@@ -168,7 +168,7 @@ export const TransactionItem = ({ label, hash, onClickHash }: IProps) => {
 export const ExpirationItem = ({ value, type }: { value: string; type: string }) => {
     const mainText = useMemo(() => {
         if (type === 'never') return 'Forever';
-        if (type === 'at_height') return value;
+        if (type === 'at_height') return commaNumber(value);
         if (type === 'at_time') {
             const timeInMs = Math.floor(Number(value) / 1000000);
             return format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a');

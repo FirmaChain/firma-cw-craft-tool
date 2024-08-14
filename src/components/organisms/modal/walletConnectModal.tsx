@@ -4,7 +4,23 @@ import { useSnackbar } from 'notistack';
 import { FirmaUtil } from '@firmachain/firma-js';
 
 import { WalletActions } from '@/redux/actions';
-import { DownloadQRButton, MobileAppLinkBox, ModalBase, SignDesc, SignTitle, StationTypo, StepDesc, StepIcon } from './style';
+import {
+    CloseIcon,
+    MobileAppLinkBox,
+    PrevButton,
+    SignDesc,
+    SignTitle,
+    StationInfoButton,
+    StationTypo,
+    StepDesc,
+    StepIcon,
+    WalletConnectContentBox,
+    WalletConnectDescBox,
+    WalletConnectStepWrap,
+    WalletConnectStepsDivider,
+    WalletConnectTitleBox,
+    WalletConnectWarp
+} from './style';
 import RequestQR from '../requestQR';
 import { IC_CLOSE, IC_FIRMA_LOGO, IC_ROUND_ARROW_UP, IC_SCAN, IMG_ANDROID_STORE, IMG_IOS_STORE } from '@/components/atoms/icons/pngIcons';
 import { useModalStore } from '@/hooks/useModal';
@@ -34,47 +50,23 @@ const WalletConnectModal = ({ id }: { id: string }) => {
     };
 
     return (
-        <ModalBase style={{ width: '544px', padding: '0', userSelect: 'none', gap: 0, overflow: 'hidden' }}>
-            <img
-                src={IC_CLOSE}
-                alt="close"
-                onClick={onCloseModal}
-                style={{ width: '24px', height: '24px', position: 'absolute', right: 24, top: 24, cursor: 'pointer' }}
-            />
+        <WalletConnectWarp>
+            <CloseIcon src={IC_CLOSE} alt="close" onClick={onCloseModal} />
 
             {showStationInfo && (
-                <IconButton style={{ display: 'flex', position: 'absolute', left: 24, top: 24 }} onClick={() => setShowStationInfo(false)}>
+                <PrevButton onClick={() => setShowStationInfo(false)}>
                     <Icons.LeftArrow width="24px" height="24px" />
-                </IconButton>
+                </PrevButton>
             )}
-            <div
-                style={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: showStationInfo ? '56px 75px 48px' : '56px 75px 32px'
-                }}
-            >
-                <div
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '12px',
-                        paddingBottom: '40px'
-                    }}
-                >
+            <WalletConnectContentBox $isStationInfo={showStationInfo}>
+                <WalletConnectTitleBox>
                     <SignTitle>{showStationInfo ? 'What is Firma Station?' : 'Connect to Mobile'}</SignTitle>
                     <SignDesc>
                         {showStationInfo
                             ? `Firma Station is a comprehensive blockchain platform\ndeveloped by FIRMACHAIN.`
                             : 'Securely connect your wallet with the firmastation app.'}
                     </SignDesc>
-                </div>
+                </WalletConnectTitleBox>
 
                 {showStationInfo ? (
                     <StationQR />
@@ -103,29 +95,16 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                         }}
                     />
                 )}
-            </div>
-            <div
-                style={{
-                    position: 'relative',
-                    width: '100%',
-                    minHeight: '168px',
-                    padding: showStationInfo ? '0' : '32px 0',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'flex-start',
-                    justifyContent: 'center',
-                    gap: '20px',
-                    background: 'var(--Gray-200, #1A1A1A)'
-                }}
-            >
+            </WalletConnectContentBox>
+            <WalletConnectDescBox $isStationInfo={showStationInfo}>
                 {showStationInfo ? (
                     <MobileAppLinkBox>
                         <div className="icons-row">
                             <IconButton style={{ display: 'flex', padding: 0 }} onClick={() => onClickOpenLink({ type: 'ios' })}>
-                                <img src={IMG_IOS_STORE} alt="apple-store-link" style={{ width: '216px' }} />
+                                <img src={IMG_IOS_STORE} alt="apple-store-link" style={{ width: '216px', height: '64px' }} />
                             </IconButton>
                             <IconButton style={{ display: 'flex', padding: 0 }} onClick={() => onClickOpenLink({ type: 'android' })}>
-                                <img src={IMG_ANDROID_STORE} alt="play-store-link" style={{ width: '216px' }} />
+                                <img src={IMG_ANDROID_STORE} alt="play-store-link" style={{ width: '216px', height: '64px' }} />
                             </IconButton>
                         </div>
                         <div className="help-text">
@@ -137,87 +116,44 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                     </MobileAppLinkBox>
                 ) : (
                     <>
-                        <div style={{ height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <WalletConnectStepsDivider>
                             <img
                                 src={IC_ROUND_ARROW_UP}
                                 alt="arrow"
                                 style={{ width: '16px', aspectRatio: '1/1', transform: 'rotate(90deg)' }}
                             />
-                        </div>
-                        <div
-                            style={{
-                                position: 'absolute',
-                                top: '32px',
-                                left: '50%',
-                                transform: 'translateX(-50%)',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '40px',
-                                height: '64px'
-                            }}
-                        >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '12px',
-                                    width: '100px'
-                                }}
-                            >
+                        </WalletConnectStepsDivider>
+                        <WalletConnectStepWrap>
+                            <div className="step">
                                 <StepIcon>
                                     <img src={IC_FIRMA_LOGO} alt="firma-logo" />
                                 </StepIcon>
                                 <StepDesc>{`1. Station app\nopen`}</StepDesc>
                             </div>
 
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '12px',
-                                    width: '100px'
-                                }}
-                            >
+                            <div className="step">
                                 <StepIcon>
                                     <img src={IC_SCAN} alt="firma-logo" />
                                 </StepIcon>
                                 <StepDesc>{`2. Log in after\nscanning the QR`}</StepDesc>
                             </div>
-                        </div>
+                        </WalletConnectStepWrap>
                     </>
                 )}
-            </div>
+            </WalletConnectDescBox>
             {!showStationInfo && (
                 <>
                     <div style={{ width: '100%', padding: '0 32px' }}>
                         <Divider $direction={'horizontal'} $variant="dash" $color="#444" />
                     </div>
-                    <div
-                        onClick={() => setShowStationInfo(true)}
-                        className="pointer"
-                        style={{
-                            width: '100%',
-                            height: '86px',
-                            background: 'var(--Gray-200, #1A1A1A)',
-                            paddingBottom: '40px',
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            justifyContent: 'center'
-                        }}
-                    >
+                    <StationInfoButton onClick={() => setShowStationInfo(true)} className="pointer">
                         <StationTypo>
                             What is <span className="highlight">‘FIRMA STATION’</span> wallet ?
                         </StationTypo>
-                    </div>
+                    </StationInfoButton>
                 </>
             )}
-        </ModalBase>
+        </WalletConnectWarp>
     );
 };
 

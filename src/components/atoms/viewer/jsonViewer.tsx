@@ -1,4 +1,4 @@
-import { StyledOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
+import { JSONViewerOverlayScrollbar, StyledOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
 import React, { useId } from 'react';
 import { Key, Value, Wrapper, Container } from './styles';
 
@@ -33,13 +33,13 @@ const JsonViewer = ({ data }) => {
     return (
         <div style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
             <Wrapper style={{ maxHeight: '348px', maxWidth: '750px', width: '100%' }}>
-                <StyledOverlayScrollbar defer>
+                <JSONViewerOverlayScrollbar defer>
                     <Container>
                         <div key={`${id}_start`}>{'{'}</div>
                         <>{renderJson(data)}</>
                         <div key={`${id}_end`}>{'}'}</div>
                     </Container>
-                </StyledOverlayScrollbar>
+                </JSONViewerOverlayScrollbar>
             </Wrapper>
         </div>
     );
