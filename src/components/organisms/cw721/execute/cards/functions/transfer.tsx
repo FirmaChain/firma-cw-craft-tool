@@ -75,6 +75,7 @@ const Transfer = () => {
 
     const approvalCheckIds = useMemo(() => {
         //? does not own + not in approval info (undefined) -> check requested
+
         return transferIds.filter((id) => !myNftList.includes(id) && approveInfoById[id] === undefined);
     }, [approveInfoById, myNftList, transferIds]);
 
@@ -177,11 +178,12 @@ const Transfer = () => {
                 clearFormError({ id: `${id}_Token ID`, type: 'DUPLICATED_ID' });
             }
 
-            const filteredList2 = token_ids.filter((v) => v === '0');
-            if (filteredList2.length >= 1) {
+            if (currentIds.includes('0'))
+                //! if parsed id list has '0'
                 setFormError({ id: `${id}_Token ID`, type: 'ENTER_THAN_0', message: `Please enter a value other than 0.` });
-            } else {
+            else {
                 clearFormError({ id: `${id}_Token ID`, type: 'ENTER_THAN_0' });
+
                 if (filteredList3.some((id) => !myNftList.includes(id) && approveInfoById[id] === false)) {
                     setFormError({
                         id: `${id}_Token ID`,

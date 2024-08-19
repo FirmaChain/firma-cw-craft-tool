@@ -124,6 +124,7 @@ const IncreaseAllowance = () => {
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearAllowance();
+            useExecuteStore.getState().clearAllowanceInfo();
         };
     }, []);
 

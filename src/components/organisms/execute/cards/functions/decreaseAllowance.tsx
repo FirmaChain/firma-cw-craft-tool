@@ -8,7 +8,13 @@ import { parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
-import { compareStringNumbers, getMaxMinterCap, getTokenAmountFromUToken, getUTokenAmountFromToken, isZeroStringValue } from '@/utils/balance';
+import {
+    compareStringNumbers,
+    getMaxMinterCap,
+    getTokenAmountFromUToken,
+    getUTokenAmountFromToken,
+    isZeroStringValue
+} from '@/utils/balance';
 import { addNanoSeconds } from '@/utils/time';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
@@ -75,7 +81,7 @@ const DecreaseAllowance = () => {
     const isFetched = useExecuteStore((state) => state.isFetched);
     const allowance = useExecuteStore((state) => state.allowance);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const cw20Balance = useExecuteStore((state) => state.cw20Balance);
+    // const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const setAllowance = useExecuteStore((state) => state.setAllowance);
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
 
@@ -116,6 +122,7 @@ const DecreaseAllowance = () => {
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearAllowance();
+            useExecuteStore.getState().clearAllowanceInfo();
         };
     }, []);
 
@@ -137,6 +144,8 @@ const DecreaseAllowance = () => {
 
     const updateAllowance = async (searchAddress: string) => {
         const { success, blockHeight, data } = await getCw20AllowanceBalance(contractAddress, userAddress, searchAddress);
+
+        useExecuteStore.getState().setAllowanceInfo({ ...data });
 
         if (success) {
             const { allowance, expires } = data;

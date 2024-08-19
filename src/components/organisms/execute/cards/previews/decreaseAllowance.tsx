@@ -240,46 +240,60 @@ const DecreaseAllowancePreview = () => {
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
     const clearAllowance = useExecuteStore((v) => v.clearAllowance);
     const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
-    const { setAllowanceInfo } = useExecuteActions();
+    // const { setAllowanceInfo } = useExecuteActions();
 
-    const address = useSelector((state: rootState) => state.wallet.address);
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
     const modal = useModalStore();
 
-    const [updatedAmount, setUpdatedAmount] = useState<string>('0');
+    // const [updatedAmount, setUpdatedAmount] = useState<string>('0');
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const addressExist = useMemo(() => {
         return isValidAddress(allowance?.address);
     }, [allowance?.address]);
 
-    useEffect(() => {
-        try {
-            if (addressExist) {
-                setAllowanceInfo(contractAddress, address, allowance?.address);
-            } else {
-                setUpdatedAmount('0');
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }, [allowance?.address]);
+    const updatedAmount = useMemo(() => {
+        const _currentAllowance = !isValidAddress(allowance?.address)
+            ? BigInt(0)
+            : allowanceInfo?.allowance
+              ? BigInt(allowanceInfo.allowance)
+              : BigInt(0);
 
-    useEffect(() => {
-        const convertAmount = getUTokenAmountFromToken(
-            allowance === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
-            tokenInfo.decimals.toString()
-        );
-        setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
-    }, [allowance?.amount]);
+        const _reduceAmount = allowance?.amount
+            ? BigInt(getUTokenAmountFromToken(allowance?.amount, String(tokenInfo.decimals)))
+            : BigInt(0);
 
-    useEffect(() => {
-        const convertAmount = getUTokenAmountFromToken(
-            allowanceInfo === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
-            tokenInfo.decimals.toString()
-        );
-        setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
-    }, [allowanceInfo]);
+        return _currentAllowance > _reduceAmount ? String(_currentAllowance - _reduceAmount) : '0';
+    }, [allowance, allowanceInfo, tokenInfo]);
+
+    // useEffect(() => {
+    //     try {
+    //         if (addressExist) {
+    //             setAllowanceInfo(contractAddress, address, allowance?.address);
+    //         } else {
+    //             setUpdatedAmount('0');
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }, [allowance?.address]);
+
+    // useEffect(() => {
+    //     const convertAmount = getUTokenAmountFromToken(
+    //         allowance === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
+    //         tokenInfo.decimals.toString()
+    //     );
+    //     setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
+    // }, [allowance?.amount]);
+
+    // useEffect(() => {
+    //     const convertAmount = getUTokenAmountFromToken(
+    //         allowanceInfo === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
+    //         tokenInfo.decimals.toString()
+    //     );
+    //     setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
+    // }, [allowanceInfo]);
 
     const onClickDecreaseAllowance = () => {
         let expires = {};

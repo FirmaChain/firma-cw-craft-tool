@@ -47,11 +47,12 @@ const Burn = () => {
 
     const handleBurnAmount = (value: string) => {
         if (!isZeroStringValue(value)) clearFormError({ id: 'burnAmount', type: 'BURN_AMOUNT' });
-        else setFormError({
-            id: 'burnAmount',
-            type: 'BURN_AMOUNT',
-            message: 'Please enter a value other than 0.'
-        });
+        else
+            setFormError({
+                id: 'burnAmount',
+                type: 'BURN_AMOUNT',
+                message: 'Please enter a value other than 0.'
+            });
         // const truncateDecimals = (value: string) => {
         //     const decimalPlaces = tokenInfo.decimals;
         //     const fractionalPart = value.split('.')[1];

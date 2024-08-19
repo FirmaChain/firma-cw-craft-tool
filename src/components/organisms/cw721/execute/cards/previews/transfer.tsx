@@ -278,7 +278,7 @@ const TransferPreview = () => {
         const result: { recipient: string; token_id: string }[] = [];
 
         userTransferList.forEach(({ recipient, token_ids }) => {
-            token_ids.filter((v) => v !== '').forEach((id) => result.push({ recipient, token_id: id }));
+            token_ids.filter((v) => v !== '').forEach((id) => result.push({ recipient, token_id: String(BigInt(id)) }));
         });
 
         return result;
@@ -300,7 +300,7 @@ const TransferPreview = () => {
         //! transfer list has duplicated token id
         const idsMap = new Map();
         const realNumber = transferIdsWithEmpty.filter((v) => v !== '');
-        realNumber.forEach((v) => idsMap.set(v, v));
+        realNumber.forEach((v) => idsMap.set(String(BigInt(v)), true));
         const realTransferIds = Array.from(idsMap.keys());
         if (realTransferIds.length !== realNumber.length) return false;
 

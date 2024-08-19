@@ -156,7 +156,7 @@ const useCW721ExecuteAction = () => {
             let startAfter: string | undefined = undefined;
             const limit = 150;
 
-            setValidTokens([]);
+            // setValidTokens([]);
 
             while (true) {
                 const nftList = await firmaSDK.Cw721.getNFTIdListOfOwner(
@@ -223,7 +223,11 @@ const useCW721ExecuteAction = () => {
 
     const setNftDatas = async (contractAddress: string, owner: string, nftIds: string) => {
         try {
-            const splitNftIds: string[] = nftIds.split(',');
+            const splitNftIds: string[] = nftIds
+                .split(',')
+                .filter((v) => v !== '')
+                .map((v) => String(BigInt(v)));
+
             const existInfo = validTokens
                 .filter((value) => value.info !== null && splitNftIds.includes(value.tokenId))
                 .map((value) => value.info);

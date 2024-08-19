@@ -187,7 +187,7 @@ const BurnPreview = () => {
 
         for (const burnData of token_ids) {
             convertList.push({
-                token_id: burnData
+                token_id: String(BigInt(burnData))
             });
         }
 
