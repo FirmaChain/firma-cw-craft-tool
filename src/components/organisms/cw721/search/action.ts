@@ -65,11 +65,18 @@ const useCW721SearchActions = () => {
         }
     };
 
+    const checkCurrentHref = (base: string) => {
+        if (base !== window.location.href) throw Error('NOT_SAME_ADDRESS');
+    };
+
+    const href = window.location.href;
     const searchTokenInfo = async (keyword: string) => {
         useCW721SearchStore.getState().clearSearchInfo();
         GlobalActions.handleGlobalLoading(true);
 
         try {
+            checkCurrentHref(href);
+
             try {
                 //? Try to get nft info
                 //? if error occurs in this stage, this contract is not cw721.
@@ -80,14 +87,31 @@ const useCW721SearchActions = () => {
                 return;
             }
 
-            if (userAddress) updateMyBalance(keyword);
+            checkCurrentHref(href);
+
+            if (userAddress) {
+                const userNFTIdList = await firmaSDK.Cw721.getNFTIdListOfOwner(keyword?.toLowerCase(), userAddress?.toLowerCase());
+                checkCurrentHref(href);
+                useCW721SearchStore.getState().setUserNftIds(userNFTIdList);
+            }
 
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const minterInfo = await firmaSDK.Cw721.getMinter(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const ownerInfo = await firmaSDK.Cw721.getOwnerShip(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const nftIdList = await firmaSDK.Cw721.getAllNftIdList(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const totalNfts = await firmaSDK.Cw721.getTotalNfts(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const recentTx = await getAllTransactinos(keyword?.toLowerCase());
+            checkCurrentHref(href);
 
             useCW721SearchStore.getState().setContractInfo(contractInfo);
             useCW721SearchStore.getState().setMinterInfo(minterInfo);
@@ -97,9 +121,13 @@ const useCW721SearchActions = () => {
             useCW721SearchStore.getState().setAllTransactions(recentTx);
 
             previousKeywordRef.current = keyword;
-        } catch (error) {
-            console.log('error', error);
-            enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
+        } catch (error: any) {
+            if (error.message !== 'NOT_SAME_ADDRESS') {
+                enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
+                console.log('error', error);
+            } else {
+                console.log('CW721 contract search aborted');
+            }
             useCW721SearchStore.getState().clearSearchInfo();
         } finally {
             GlobalActions.handleGlobalLoading(false);

@@ -69,11 +69,18 @@ const useSearchActions = () => {
         }
     };
 
+    const checkCurrentHref = (base: string) => {
+        if (base !== window.location.href) throw Error('NOT_SAME_ADDRESS');
+    };
+
+    const href = window.location.href;
     const searchTokenInfo = async (keyword: string) => {
         useSearchStore.getState().clearSearchInfo();
         GlobalActions.handleGlobalLoading(true);
 
         try {
+            checkCurrentHref(href);
+
             try {
                 //? Try to get token info
                 //? if error occurs in this stage, this contract is not cw20.
@@ -84,18 +91,33 @@ const useSearchActions = () => {
                 return;
             }
 
-            if (userAddress) updateMyBalance(keyword);
+            checkCurrentHref(href);
+
+            if (userAddress) {
+                const userBalance = await firmaSDK.Cw20.getBalance(keyword?.toLowerCase(), userAddress?.toLowerCase());
+                checkCurrentHref(href);
+                useSearchStore.getState().setUserBalance(userBalance);
+            }
 
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword?.toLowerCase());
+            checkCurrentHref(href);
 
             const minterInfo = await firmaSDK.Cw20.getMinter(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const contractHistory = await firmaSDK.CosmWasm.getContractHistory(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const allAccounts = await getAllAccounts(keyword?.toLowerCase());
+            checkCurrentHref(href);
+
             const allTransactions = await getAllTransactinos(keyword?.toLowerCase());
+            checkCurrentHref(href);
 
             useSearchStore.getState().setContractInfo(contractInfo);
-
             useSearchStore.getState().setMinterInfo(minterInfo);
             useSearchStore.getState().setMarketingInfo(marketingInfo);
             useSearchStore.getState().setContractHistory(contractHistory);
@@ -103,9 +125,14 @@ const useSearchActions = () => {
             useSearchStore.getState().setAllTransactions(allTransactions);
 
             previousKeywordRef.current = keyword;
-        } catch (error) {
-            console.log('error', error);
-            enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
+        } catch (error: any) {
+            if (error.message !== 'NOT_SAME_ADDRESS') {
+                enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
+                console.log('error', error);
+            } else {
+                console.log('CW20 contract search aborted');
+            }
+
             useSearchStore.getState().clearSearchInfo();
         } finally {
             GlobalActions.handleGlobalLoading(false);
