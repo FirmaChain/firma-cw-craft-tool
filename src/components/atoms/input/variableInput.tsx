@@ -155,7 +155,7 @@ const VariableInput = ({
     const isError = errorMessage.length > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');
+        let inputValue = event.currentTarget.value; // .replace(DEFAULT_INPUT_REGEX, '');
 
         if (inputValue.length > 0) {
             if (type === 'number') {

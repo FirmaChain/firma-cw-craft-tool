@@ -203,7 +203,7 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) Event reward contract',
                         onChange: handleLabel,
                         emptyErrorMessage: 'Please input the token label.',
-                        regex: DEFAULT_INPUT_REGEX,
+                        // regex: DEFAULT_INPUT_REGEX,
                         maxLength: 128
                     }}
                 />
@@ -227,8 +227,8 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenDescription',
                         placeHolder: 'ex) This is my token',
                         onChange: handleDescription,
-                        maxLength: isBasic ? 100 : 300,
-                        regex: DEFAULT_INPUT_REGEX
+                        maxLength: isBasic ? 100 : 300
+                        // regex: DEFAULT_INPUT_REGEX
                     }}
                 />
                 {!isBasic && (

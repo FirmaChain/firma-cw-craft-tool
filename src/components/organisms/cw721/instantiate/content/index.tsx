@@ -5,7 +5,7 @@ import useInstantiateStore from '../instantiateStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useEffect } from 'react';
-import { DEFAULT_INPUT_REGEX, ENG_NUM_SPACE, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useFormStore from '@/store/formStore';
 import { isValidAddress } from '@/utils/address';
 
@@ -204,7 +204,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                         formId: 'label',
                         placeHolder: 'ex) Event reward contract',
                         onChange: setLabel,
-                        regex: DEFAULT_INPUT_REGEX,
+                        // regex: DEFAULT_INPUT_REGEX,
                         emptyErrorMessage: 'Please input the token label.',
                         maxLength: 128
                     }}
