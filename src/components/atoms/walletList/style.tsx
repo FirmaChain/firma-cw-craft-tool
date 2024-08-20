@@ -73,4 +73,11 @@ export const DeleteAllButton = styled.button<{ $length: number; disabled?: boole
         line-height: 14px; /* 116.667% */
         color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-700, #999)')};
     }
+
+    &:hover {
+        background: ${({ disabled }) => (disabled ? 'var(--200, #1e1e1e)' : 'var(--Gray-700, #999)')};
+        .button-text {
+            color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-800, #222)')};
+        }
+    }
 `;

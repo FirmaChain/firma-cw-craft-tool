@@ -73,7 +73,7 @@ const CW20BurnFromInput = ({
     const [addressCW20Balance, setAddressCW20Balance] = useState<string>('0');
 
     const availableAmount = useMemo(() => {
-        if (address.toLowerCase() === '') return '0';
+        if (address.toLowerCase() === '' || !isValidAddress(address)) return '0';
 
         if (allowanceByAddress[address.toLowerCase()] && addressCW20Balance) {
             const compareStatus = compareStringNumbers(allowanceByAddress[address.toLowerCase()], addressCW20Balance);
@@ -166,7 +166,6 @@ const CW20BurnFromInput = ({
 
     const getAddressCW20Balance = async () => {
         const { success, balance } = await getCw20Balance(contractAddress, address);
-
         if (success) {
             setAddressCW20Balance(balance);
         }
@@ -177,6 +176,8 @@ const CW20BurnFromInput = ({
         if (isValidAddress(address)) {
             getAllownace();
             getAddressCW20Balance();
+        } else {
+            setAddressCW20Balance('0');
         }
     }, [address]);
 

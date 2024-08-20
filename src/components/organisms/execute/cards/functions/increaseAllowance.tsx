@@ -3,16 +3,11 @@ import styled from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import { FirmaUtil } from '@firmachain/firma-js';
-import { getTokenStrFromUTokenStr, parseAmountWithDecimal2 } from '@/utils/common';
+import { parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import {
-    compareStringNumbers,
-    getMaxCW20InitWalletAmount,
     getMaxMinterCap,
-    getTokenAmountFromUToken,
-    getUTokenAmountFromToken,
     isZeroStringValue
 } from '@/utils/balance';
 import useFormStore from '@/store/formStore';
@@ -22,7 +17,7 @@ import { useModalStore } from '@/hooks/useModal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { isValidAddress } from '@/utils/address';
 import useExecuteActions from '../../action';
@@ -121,6 +116,13 @@ const IncreaseAllowance = () => {
     }, [isFetched]);
 
     useEffect(() => {
+        setAllowance({
+            address: '',
+            amount: '',
+            type: 'at_height',
+            expire: ''
+        });
+        
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearAllowance();
