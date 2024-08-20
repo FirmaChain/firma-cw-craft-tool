@@ -748,7 +748,7 @@ const InstantiateModal = ({
                             <span className="typo">Confirm</span>
                         </CloseButton>
                         <ConfirmButton onClick={onClickGoToMyTokens}>
-                            <span className="typo">Go to My Minted Token</span>
+                            <span className="typo">Go to my Token detail</span>
                         </ConfirmButton>
                     </ResultIconBox>
                 </>

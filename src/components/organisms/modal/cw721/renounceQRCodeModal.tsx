@@ -223,7 +223,7 @@ const RenounceQRCodeModal = ({
                         >
                             <ResultsConfirmButtonTypo>Confirm</ResultsConfirmButtonTypo>
                         </ResultsConfirmButton>
-                        <ResultsGoToMyMintetedTokenButton
+                        {/* <ResultsGoToMyMintetedTokenButton
                             onClick={() => {
                                 navigate(`/cw721/mynft/detail/${params.contract}`);
                                 scrollToTop();
@@ -231,7 +231,7 @@ const RenounceQRCodeModal = ({
                             }}
                         >
                             <ResultsGoToMyMintetedTokenButtonTypo>Go to My NFT Contracts</ResultsGoToMyMintetedTokenButtonTypo>
-                        </ResultsGoToMyMintetedTokenButton>
+                        </ResultsGoToMyMintetedTokenButton> */}
                     </ResultsButtonWrap>
                 </div>
             )}

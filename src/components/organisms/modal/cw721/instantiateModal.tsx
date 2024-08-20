@@ -614,7 +614,7 @@ const InstantiateModal = ({
                                 onCloseModal();
                             }}
                         >
-                            <ResultsGoToMyMintetedTokenButtonTypo>Go to My NFT Contracts</ResultsGoToMyMintetedTokenButtonTypo>
+                            <ResultsGoToMyMintetedTokenButtonTypo>Go to my NFT detail</ResultsGoToMyMintetedTokenButtonTypo>
                         </ResultsGoToMyMintetedTokenButton>
                     </ResultsButtonWrap>
                 </div>

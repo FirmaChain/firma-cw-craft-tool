@@ -303,7 +303,7 @@ const QRCodeModal = ({
                             }}
                         >
                             <ResultsGoToMyMintetedTokenButtonTypo>
-                                {cwMode === 'CW20' ? 'Go to My Minted Token' : 'Go to My NFT Contract'}
+                                {cwMode === 'CW20' ? 'Go to my Token detail' : 'Go to my NFT detail'}
                             </ResultsGoToMyMintetedTokenButtonTypo>
                         </ResultsGoToMyMintetedTokenButton>
                     </ResultsButtonWrap>

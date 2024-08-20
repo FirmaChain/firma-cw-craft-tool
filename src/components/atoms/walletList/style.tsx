@@ -80,4 +80,11 @@ export const DeleteAllButton = styled.button<{ $length: number; disabled?: boole
             color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-800, #222)')};
         }
     }
+
+    &:active {
+        background: ${({ disabled }) => (disabled ? 'var(--200, #1e1e1e)' : 'var(--Gray-700, #adadad)')};
+        .button-text {
+            color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-800, #222)')};
+        }
+    }
 `;

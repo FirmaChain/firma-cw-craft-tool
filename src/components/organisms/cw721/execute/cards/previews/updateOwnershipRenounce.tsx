@@ -1,5 +1,4 @@
 import ColorButton from '@/components/atoms/buttons/colorButton';
-import { QRCodeModal } from '@/components/organisms/modal';
 import { useModalStore } from '@/hooks/useModal';
 import styled from 'styled-components';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
@@ -9,7 +8,10 @@ import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { IC_WARNING } from '@/components/atoms/icons/pngIcons';
 import RenounceQRCodeModal from '@/components/organisms/modal/cw721/renounceQRCodeModal';
-import { useNavigate } from 'react-router-dom';
+import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
+import { GlobalActions } from '@/redux/actions';
+import { useSnackbar } from 'notistack';
+import { sleep } from '@/utils/common';
 
 const Container = styled.div`
     width: 100%;
@@ -56,7 +58,31 @@ const UpdateOwnershipRenouncePreview = () => {
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
 
-    const navigate = useNavigate();
+    const { setMinter, setOwnershipInfo } = useCW721ExecuteAction();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const onClickConfirm = async () => {
+        GlobalActions.handleGlobalLoading(true);
+
+        await sleep(200);
+
+        try {
+            useCW721ExecuteStore.getState().setSelectMenu({
+                value: 'select',
+                label: 'Select'
+            });
+            await sleep(400);
+            await setMinter(contractAddress);
+            await sleep(600);
+            await setOwnershipInfo(contractAddress);
+            await sleep(600);
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ variant: 'error', message: 'Update contract info failed.' });
+        } finally {
+            GlobalActions.handleGlobalLoading(false);
+        }
+    };
 
     const modal = useModalStore();
 
@@ -98,20 +124,11 @@ const UpdateOwnershipRenouncePreview = () => {
                     id={id}
                     params={params}
                     onClickConfirm={() => {
-                        resetAllInfo();
+                        onClickConfirm();
                     }}
                 />
             )
         });
-    };
-
-    const resetAllInfo = () => {
-        useCW721ExecuteStore.getState().clearForm();
-        useCW721ExecuteStore.getState().clearInfo();
-        navigate('/cw721/execute', { replace: true });
-
-        const clearAllButton = document.getElementById('clear-all-button');
-        clearAllButton && clearAllButton.click();
     };
 
     return (
