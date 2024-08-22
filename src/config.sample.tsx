@@ -27,5 +27,6 @@ export const CRAFT_CONFIGS = {
         WEB: '',
         IOS: '',
         ANDROID: ''
-    }
+    },
+    TRANSACTION_MEMO: ''
 };

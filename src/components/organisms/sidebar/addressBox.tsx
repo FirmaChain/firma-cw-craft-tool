@@ -71,6 +71,7 @@ const BalanceBox = styled(AddressCard)<{ $isOpen: boolean }>`
         display: flex;
         flex-direction: row;
         align-items: center;
+        gap: 2px;
     }
 
     .balance {
@@ -111,23 +112,22 @@ const DisconnectBtn = styled(IconButton)`
 `;
 
 const BalanceTitleTypo = styled.div`
-    color: var(--Gray-650, #63f6a5);
+    color: var(--Gray-650, #707070);
     text-align: center;
-    font-family: 'General Sans Variable';
-    font-size: 14px;
+    font-family: "General Sans Variable";
+    font-size: 12px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 12px;
+    font-weight: 400;
+    line-height: 14px; /* 116.667% */
 `;
 
 const BalanceAmountTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
-    font-family: 'General Sans Variable';
+    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
+    font-family: "General Sans Variable";
     font-size: 12px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 12px;
-    padding-right: 2px;
+    font-weight: 400;
+    line-height: 14px; /* 116.667% */
 `;
 
 const AddressBox = () => {
@@ -210,14 +210,14 @@ const AddressBox = () => {
             </IconButton>
             <BalanceBox $isOpen={open}>
                 <div className="bg-box" style={{}}>
-                    <div className="title">Balance :</div>
+                    <BalanceTitleTypo>Balance :</BalanceTitleTypo>
                     <div className="balance-box">
                         {balance ? (
-                            <span className="balance">{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</span>
+                            <BalanceAmountTypo>{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</BalanceAmountTypo>
                         ) : (
                             <Skeleton width="80px" height="12px" />
                         )}
-                        <Icons.FirmaChain width="10px" height="10px" fill="#FFFFFF" />
+                        <Icons.FirmaChain width="12px" height="12px" fill="#FFFFFF" />
                     </div>
                 </div>
 
