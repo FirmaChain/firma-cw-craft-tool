@@ -6,10 +6,7 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
-import {
-    getMaxMinterCap,
-    isZeroStringValue
-} from '@/utils/balance';
+import { getMaxMinterCap, isZeroStringValue } from '@/utils/balance';
 import useFormStore from '@/store/formStore';
 import { addNanoSeconds } from '@/utils/time';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
@@ -21,6 +18,7 @@ import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { isValidAddress } from '@/utils/address';
 import useExecuteActions from '../../action';
+import ExpirationTypeButton from '@/components/atoms/buttons/expirationTypeButton';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -48,30 +46,30 @@ const InputTitle = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
-    width: 152px;
-    height: 36px;
-    border-radius: 8px;
-    // padding: 8px 16px;
+// const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
+//     width: 152px;
+//     height: 36px;
+//     border-radius: 8px;
+//     // padding: 8px 16px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--Gray-500, #383838);
-    background: ${({ $selected }) => ($selected ? 'var(--Gray-800, #dcdcdc)' : 'transparent')};
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     border: 1px solid var(--Gray-500, #383838);
+//     background: ${({ $selected }) => ($selected ? 'var(--Gray-800, #dcdcdc)' : 'transparent')};
 
-    span {
-        color: ${({ $selected }) =>
-            $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
+//     span {
+//         color: ${({ $selected }) =>
+//             $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
 
-        /* Body/Body2 - Bd */
-        font-family: 'General Sans Variable';
-        font-size: 14px;
-        font-style: normal;
-        font-weight: ${({ $selected }) => ($selected ? 600 : 400)};
-        line-height: 20px; /* 142.857% */
-    }
-`;
+//         /* Body/Body2 - Bd */
+//         font-family: 'General Sans Variable';
+//         font-size: 14px;
+//         font-style: normal;
+//         font-weight: ${({ $selected }) => ($selected ? 600 : 400)};
+//         line-height: 20px; /* 142.857% */
+//     }
+// `;
 
 enum ExpirationType {
     Height = 'Height',
@@ -122,7 +120,7 @@ const IncreaseAllowance = () => {
             type: 'at_height',
             expire: ''
         });
-        
+
         return () => {
             useFormStore.getState().clearForm();
             useExecuteStore.getState().clearAllowance();
@@ -314,7 +312,7 @@ const IncreaseAllowance = () => {
                     <InputTitle>Expiration</InputTitle>
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
                         {Object.values(ExpirationType).map((type) => (
-                            <ExpirationTypButton
+                            <ExpirationTypeButton
                                 key={`EXPIRATION_TYPE_${type}`}
                                 $selected={expirationType === type}
                                 onClick={() => {
@@ -325,7 +323,7 @@ const IncreaseAllowance = () => {
                                     {type !== ExpirationType.Forever && 'At '}
                                     {type}
                                 </span>
-                            </ExpirationTypButton>
+                            </ExpirationTypeButton>
                         ))}
                     </div>
                 </div>

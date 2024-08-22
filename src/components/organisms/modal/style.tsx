@@ -942,3 +942,94 @@ export const StationInfoButton = styled.div`
     align-items: flex-end;
     justify-content: center;
 `;
+
+export const ModalConfirmButton = styled(IconButton)`
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+    border-radius: 6px;
+    background: var(--Green-500, #02e191);
+    cursor: pointer;
+`;
+
+export const ModalConfirmTypo = styled.div`
+    color: var(--Gray-100, #121212);
+    text-align: center;
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const ModalButtonBox = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+`;
+
+export const LoadingDimBox = styled.div`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #26262690;
+    backdrop-filter: blur(1px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const LoadingBox = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+`;
+
+export const LoadingTypo = styled.div`
+    color: var(--Gray-850, #e6e6e6);
+    text-align: center;
+
+    /* Heading/H5 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 122.222% */
+`;
+
+export const ItemVerticalWrap = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
+
+export const ItemDefaultTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    text-align: right;
+    font-family: 'General Sans Variable';
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 138.462% */
+`;
+
+export const ItemContractAddressValue = styled.div`
+    color: var(--Gray-800, #dcdcdc);
+    text-align: center;
+    font-family: 'General Sans Variable';
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 138.462% */
+`;

@@ -288,3 +288,8 @@ export const CW721_MAX_MINTABLE_ID = '1000000000';
 export const isZeroStringValue = (value: string) => {
     return /^0(\.0*)?$/.test(value);
 };
+
+export const getFeesFromGas = (estimatedGas: number) => {
+    const fee = Math.ceil(estimatedGas * 0.1);
+    return Math.max(fee, CRAFT_CONFIGS.DEFAULT_FEE);
+};

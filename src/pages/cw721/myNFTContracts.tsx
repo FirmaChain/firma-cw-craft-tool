@@ -5,7 +5,8 @@ import { Container } from '@/styles/instantiate';
 
 const CW721MyNFTContracts = () => {
     return (
-        <Container style={{ padding: '68px 96px', gap: '20px', height: '100%' }}>
+        <Container style={{ paddingTop: '68px', gap: '20px', height: '100%' }}>
+            {/* 96px */}
             <Header />
             <MyNFTContent />
         </Container>

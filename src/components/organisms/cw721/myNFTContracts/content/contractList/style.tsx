@@ -8,7 +8,7 @@ export const Container = styled.div`
     flex-direction: column;
     gap: 20px;
     position: relative;
-    overflow: hidden;
+    max-width: 1600px;
 `;
 
 export const IconBackground = styled.div`
@@ -47,16 +47,16 @@ export const CurrentPageNumber = styled.div`
 
 export const ContractCardContainer = styled.div`
     width: 100%;
-    height: 100%;
+    // height: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    overflow: auto;
+    // overflow: auto;
 `;
 
 export const ContractCardBox = styled.div`
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 32px;
 `;

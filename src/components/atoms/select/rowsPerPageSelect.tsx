@@ -172,7 +172,7 @@ const RowsPerPageSelect = ({
                     }}
                 />
             </div>
-            {open && <BGBox onClick={() => setOpen(false)} />}
+            {/* {open && <BGBox onClick={() => setOpen(false)} />} */}
         </>
     );
 };

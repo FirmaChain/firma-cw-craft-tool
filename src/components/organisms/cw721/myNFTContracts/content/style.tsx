@@ -4,10 +4,13 @@ export const ContentBox = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     overflow: hidden;
-`
+
+    gap: 24px;
+`;
 
 export const ContentWrapper = styled.div`
     width: 100%;
@@ -15,14 +18,23 @@ export const ContentWrapper = styled.div`
     flex-direction: column;
     gap: 24px;
     height: 100%;
-    max-width: 1600px;
-    overflow: hidden;
+    padding: 0 90px 0 96px;
+    align-items: center;
+
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar-track {
+        background: #121212;
+    }
 `;
 
 export const ContentControlWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 20px;
+    max-width: 1600px;
+    width: 100%;
 `;
 
 export const ContentInfoWrapper = styled.div`

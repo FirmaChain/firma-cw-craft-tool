@@ -1,9 +1,10 @@
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
-import { rootState } from "@/redux/reducers";
-import styled from "styled-components";
-import GreenButton from "@/components/atoms/buttons/greenButton";
+import { rootState } from '@/redux/reducers';
+import styled from 'styled-components';
+import GreenButton from '@/components/atoms/buttons/greenButton';
+import InstantiateButton from '@/components/atoms/buttons/instantiateButton';
 
 export const SubmitWrapper = styled.div`
     width: 100%;
@@ -27,9 +28,9 @@ const Submit = ({ onClickInstantiate, disableButton }: IProps) => {
 
     return (
         <SubmitWrapper>
-            <GreenButton disabled={disableButton} onClick={onClickInstantiate}>
+            <InstantiateButton disabled={disableButton} onClick={onClickInstantiate}>
                 <span className="button-text">{buttonText}</span>
-            </GreenButton>
+            </InstantiateButton>
         </SubmitWrapper>
     );
 };

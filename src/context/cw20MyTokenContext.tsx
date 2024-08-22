@@ -45,22 +45,18 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
 
     const addContracts = (newContracts: string[]) => {
         if (contracts === null) {
-            setContracts(newContracts.map(address => ({ contractAddress: address })))
+            setContracts(newContracts.map((address) => ({ contractAddress: address })));
         } else {
-            const uniqueNewContracts = newContracts.filter(contract => !contracts.some(c => c.contractAddress === contract));
-            setContracts(prevContracts => [
-                ...prevContracts,
-                ...uniqueNewContracts.map(address => ({ contractAddress: address }))
-            ]);
+            const uniqueNewContracts = newContracts.filter((contract) => !contracts.some((c) => c.contractAddress === contract));
+            setContracts((prevContracts) => [...prevContracts, ...uniqueNewContracts.map((address) => ({ contractAddress: address }))]);
         }
     };
 
     const updateContractInfo = (info: IContractInfo) => {
-        setContracts(prevContracts =>
-            prevContracts.map(contract =>
-                contract.contractAddress === info.contractAddress ? { ...contract, info } : contract
-            )
-        );
+        if (contracts !== null)
+            setContracts((prevContracts) =>
+                prevContracts.map((contract) => (contract.contractAddress === info.contractAddress ? { ...contract, info } : contract))
+            );
     };
 
     useEffect(() => {
@@ -72,11 +68,11 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
     const clearCW20MyTokenData = () => {
         setContracts(null);
         setCurrentPage(1);
-    }
+    };
 
     useEffect(() => {
         clearCW20MyTokenData();
-    }, [address])
+    }, [address]);
 
     return (
         <CW20MyTokenContext.Provider
@@ -93,4 +89,3 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
         </CW20MyTokenContext.Provider>
     );
 };
-

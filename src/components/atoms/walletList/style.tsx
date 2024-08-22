@@ -69,22 +69,22 @@ export const DeleteAllButton = styled.button<{ $length: number; disabled?: boole
     .button-text {
         font-size: 12px;
         font-style: normal;
-        font-weight: 400;
+        font-weight: 500;
         line-height: 14px; /* 116.667% */
         color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-700, #999)')};
     }
 
     &:hover {
-        background: ${({ disabled }) => (disabled ? 'var(--200, #1e1e1e)' : 'var(--Gray-700, #999)')};
+        background: ${({ disabled }) => (disabled ? 'var(--200, #1e1e1e)' : 'var(--Gray-800, #DCDCDC)')};
         .button-text {
-            color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-800, #222)')};
+            color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-250, var(--200, #1E1E1E))')};
         }
     }
 
     &:active {
-        background: ${({ disabled }) => (disabled ? 'var(--200, #1e1e1e)' : 'var(--Gray-700, #adadad)')};
+        background: ${({ disabled }) => (disabled ? 'var(--200, #1e1e1e)' : 'var(--Gray-800, #DCDCDC)')};
         .button-text {
-            color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-800, #222)')};
+            color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-250, var(--200, #1E1E1E))')};
         }
     }
 `;

@@ -8,9 +8,8 @@ import Icons from '@/components/atoms/icons';
 import NoToken from '../noToken';
 import ContractCard from './contractCard';
 import { sleep } from '@/utils/common';
-import { ContentControlWrapper, ContentInfoWrapper, ContracTypo, ContractCountTypo } from '../style';
 
-const MyContractList = () => {
+const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boolean) => void }) => {
     const { getCW721ContractInfo } = useMyNFTContracts();
     const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW721NFTContractsContext();
 
@@ -119,14 +118,18 @@ const MyContractList = () => {
 
     const showValue = pageItems.length > 0;
 
+    useEffect(() => {
+        handleShowCount(showValue);
+    }, [showValue]);
+
     return (
         <>
-            <ContentControlWrapper style={{ opacity: showValue ? 1 : 0, transition: 'all 0.2s' }}>
+            {/* <ContentControlWrapper style={{ opacity: showValue ? 1 : 0, transition: 'all 0.2s' }}>
                 <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
                     <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                     <ContracTypo>Contracts</ContracTypo>
                 </ContentInfoWrapper>
-            </ContentControlWrapper>
+            </ContentControlWrapper> */}
 
             <Container>
                 {contracts !== null && contracts.length === 0 ? (
@@ -157,7 +160,8 @@ const MyContractList = () => {
                                 gap: '10px',
                                 opacity: showValue ? 1 : 0,
                                 filter: fetching ? 'brightness(0.5)' : 'brightness(1)',
-                                transition: 'all 0.2s'
+                                transition: 'all 0.2s',
+                                paddingBottom: '68px'
                             }}
                         >
                             <PaginationContainer style={{ justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>

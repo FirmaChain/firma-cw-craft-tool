@@ -8,6 +8,7 @@ import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { getMaxCW20InitWalletAmount, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
+import WalletRemoveButton from '../buttons/walletRemoveButton';
 
 interface IProps {
     index: number;
@@ -127,13 +128,15 @@ const InputAddressAmount = ({
                     }}
                 >
                     <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', marginTop: '36px' }}>
-                        <IconButton
+                        <WalletRemoveButton size="32px" onClick={handleRemoveWallet} disabled={index === 1 && isLast} />
+                        {/* <IconButton
                             style={{
                                 width: '32px',
                                 height: '32px',
                                 padding: '0',
                                 background: 'transparent',
-                                border: 'unset'
+                                border: 'unset',
+                                filter: 'unset !important'
                             }}
                             disabled={index === 1 && isLast}
                             onClick={handleRemoveWallet}
@@ -143,7 +146,7 @@ const InputAddressAmount = ({
                             ) : (
                                 <Icons.MinusCircle />
                             )}
-                        </IconButton>
+                        </IconButton> */}
                     </div>
                 </div>
             </div>

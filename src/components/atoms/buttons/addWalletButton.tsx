@@ -72,7 +72,7 @@ const AddWalletButton = ({ disabled, count, maxCount, onClick }: IProps) => {
         <Container $disabled={disabled} onClick={() => !disabled && onClick()}>
             <Icons.Add width={'16px'} height={'16px'} />
             <TitleTypo>
-                Add (<span style={{ fontWeight: '600' }}>{count}</span>/{maxCount})
+                <span style={{ fontWeight: 500 }}>Add</span> (<span style={{ fontWeight: '600' }}>{count}</span>/{maxCount})
             </TitleTypo>
         </Container>
     );

@@ -12,7 +12,10 @@ import {
     ResultItemAmountTypo,
     ExpirationTypo,
     ItemUrlTypo,
-    ModalResultAddressTypo
+    ModalResultAddressTypo,
+    ItemVerticalWrap,
+    ItemDefaultTypo,
+    ItemContractAddressValue
 } from './style';
 import { IC_ID_CIRCLE, IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { shortenAddress } from '@/utils/address';
@@ -20,6 +23,9 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useMemo } from 'react';
 import { format } from 'date-fns';
 import commaNumber from 'comma-number';
+import { CRAFT_CONFIGS } from '@/config';
+import { openLink } from '@/utils/common';
+import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 
 interface IAmountProps {
     label: string;
@@ -249,6 +255,44 @@ export const ResultNftIdItem = ({ label, value }: { label: string; value: string
             <ItemValueWrap>
                 <ItemAmountValue style={{ color: '#FFFFFF' }}>{value}</ItemAmountValue>
                 <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
+            </ItemValueWrap>
+        </ItemWrap>
+    );
+};
+
+export const WarningItem = ({ label, value }: { label: string; value: string }) => {
+    return (
+        <ItemVerticalWrap>
+            <ItemLabel style={{ color: '#E55250', fontSize: '14px', fontWeight: '500', lineHeight: '20px' }}>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ItemDefaultTypo style={{ fontSize: '14px', fontWeight: '500', lineHeight: '20px', textAlign: 'center' }}>
+                    {value}
+                </ItemDefaultTypo>
+            </ItemValueWrap>
+        </ItemVerticalWrap>
+    );
+};
+
+export const DefaultItem = ({ label, value }: { label: string; value: string }) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap>
+                <ItemDefaultTypo>{value}</ItemDefaultTypo>
+            </ItemValueWrap>
+        </ItemWrap>
+    );
+};
+
+export const ContractAddressItem = ({ label, contractAddress }: { label: string; contractAddress: string }) => {
+    const explorerUrl = CRAFT_CONFIGS.BLOCK_EXPLORER;
+    const openContractAddress = () => openLink(`${explorerUrl}/accounts/${contractAddress}`);
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap className="pointer select-none" onClick={openContractAddress}>
+                <ItemContractAddressValue>{shortenAddress(contractAddress, 12, 12)}</ItemContractAddressValue>
+                <CopyIconButton text={contractAddress} width={'16px'} height={'16px'} />
             </ItemValueWrap>
         </ItemWrap>
     );

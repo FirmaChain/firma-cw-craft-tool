@@ -6,7 +6,13 @@ import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
-import { compareStringNumbers, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken, isZeroStringValue } from '@/utils/balance';
+import {
+    compareStringNumbers,
+    formatWithCommas,
+    getTokenAmountFromUToken,
+    getUTokenAmountFromToken,
+    isZeroStringValue
+} from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { useSelector } from 'react-redux';
@@ -16,6 +22,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import commaNumber from 'comma-number';
+import WalletRemoveButton from '../buttons/walletRemoveButton';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -192,8 +199,13 @@ const TransferFromWalletInput = ({
 
             case transferAmountId:
                 if (!isZeroStringValue(value)) clearFormError({ id: transferAmountId, type: 'INVALID_TRANSFER_FROM_AMOUNT' });
-                else setFormError({ id: transferAmountId, type: 'INVALID_TRANSFER_FROM_AMOUNT', message: 'Please enter a value other than 0.' });
-                
+                else
+                    setFormError({
+                        id: transferAmountId,
+                        type: 'INVALID_TRANSFER_FROM_AMOUNT',
+                        message: 'Please enter a value other than 0.'
+                    });
+
                 _data.toAmount = value;
                 // if (isValidAddress(_data.toAddress)) {
                 //     const compare = compareStringNumbers(getUTokenAmountFromToken(value, decimals), _data.allowanceAmount);
@@ -359,7 +371,8 @@ const TransferFromWalletInput = ({
                         borderRight: '1px dashed #444444'
                     }}
                 />
-                <IconButton
+                <WalletRemoveButton size={'32px'} disabled={disableRemoveBtn} onClick={handleRemoveWallet} />
+                {/* <IconButton
                     disabled={disableRemoveBtn}
                     style={{
                         width: '32px',
@@ -371,7 +384,7 @@ const TransferFromWalletInput = ({
                     onClick={handleRemoveWallet}
                 >
                     <Icons.MinusCircle fill={disableRemoveBtn ? '#313131' : undefined} stroke={disableRemoveBtn ? '#1E1E1E' : undefined} />
-                </IconButton>
+                </IconButton> */}
                 <div
                     style={{
                         width: '16px',

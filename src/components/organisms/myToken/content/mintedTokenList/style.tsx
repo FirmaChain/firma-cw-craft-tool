@@ -7,8 +7,9 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow: hidden;
     position: relative;
+
+    max-width: 1600px;
 `;
 
 export const ItemWrapper = styled(IconButton)`
@@ -22,6 +23,16 @@ export const ItemWrapper = styled(IconButton)`
     background: #222;
     border-radius: 24px;
     gap: 16px;
+
+    filter: unset !important;
+
+    &:hover {
+        background: var(--Gray-450, #313131);
+    }
+
+    &:active {
+        background: var(--Gray-400, #2c2c2c);
+    }
 `;
 
 export const ItemLeft = styled.div`
@@ -154,10 +165,10 @@ export const CurrentPageNumber = styled.div`
 `;
 
 export const TokenCardBox = styled.div`
-    height: 100%;
+    // height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-    overflow: auto;
+    // overflow: auto;
 `;

@@ -21,6 +21,7 @@ const MyTokenContent = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
     const { contracts, addContracts } = useCW20MyTokenContext();
+    const [showCount, setShowCount] = useState(false);
     // const [selectSort, setSelectSort] = useState<number>(0);
     // const [contractList, setContractList] = useState<null | string[]>(null);
 
@@ -29,6 +30,7 @@ const MyTokenContent = () => {
     const fetchTokenList = useCallback(async () => {
         try {
             const contract = await getCW20ContractList();
+
             addContracts(contract);
             if (contract.length === 0) {
                 GlobalActions.handleGlobalLoading(false);
@@ -41,7 +43,7 @@ const MyTokenContent = () => {
 
     useEffect(() => {
         if (isInit) {
-            GlobalActions.handleGlobalLoading(true);
+            // GlobalActions.handleGlobalLoading(true);
             fetchTokenList();
         }
 
@@ -52,7 +54,7 @@ const MyTokenContent = () => {
 
     const TokenListByInit = useCallback(() => {
         if (isInit) {
-            return <MyMintedTokenList />;
+            return <MyMintedTokenList handleShowCount={(v) => setShowCount(v)} />;
         } else {
             return <ConnectWallet />;
         }
@@ -60,20 +62,13 @@ const MyTokenContent = () => {
 
     return (
         <ContentBox>
+            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 96px' }}>
+                <ContentInfoWrapper style={{ opacity: showCount ? 1 : 0, transition: 'opacity 0.2s' }}>
+                    <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
+                    <TokenTypo>Tokens</TokenTypo>
+                </ContentInfoWrapper>
+            </div>
             <ContentWrapper>
-                {/* <ContentControlWrapper> */}
-                {/* <NetworkSelect
-                    value={selectSort.toString()}
-                    onChange={(v) => setSelectSort(Number(v))}
-                    options={menuItems}
-                    minWidth="182px"
-                /> */}
-
-                {/* <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
-                        <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
-                        <TokenTypo>Tokens</TokenTypo>
-                    </ContentInfoWrapper>
-                </ContentControlWrapper> */}
                 <TokenListByInit />
             </ContentWrapper>
         </ContentBox>

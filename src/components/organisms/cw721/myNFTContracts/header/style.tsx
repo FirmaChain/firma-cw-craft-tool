@@ -5,6 +5,7 @@ export const HeaderBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 96px;
 `;
 
 export const HeaderWrap = styled.div`

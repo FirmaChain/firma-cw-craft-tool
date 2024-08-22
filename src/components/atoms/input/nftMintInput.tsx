@@ -7,6 +7,7 @@ import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
 import { INT_NUMBERS } from '@/constants/regex';
 import { CW721_MAX_MINTABLE_ID, isZeroStringValue } from '@/utils/balance';
+import WalletRemoveButton from '../buttons/walletRemoveButton';
 // import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
 
 interface IProps {
@@ -167,13 +168,15 @@ const NFTMintInput = ({
                     }}
                 >
                     <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', marginTop: '36px' }}>
-                        <IconButton
+                        <WalletRemoveButton size="32px" onClick={handleRemoveWallet} disabled={index === 1 && isLast} />
+                        {/* <IconButton
                             style={{
                                 width: '32px',
                                 height: '32px',
                                 padding: '0',
                                 background: 'transparent',
-                                border: 'unset'
+                                border: 'unset',
+                                filter: 'unset !important'
                             }}
                             disabled={index === 1 && isLast}
                             onClick={handleRemoveWallet}
@@ -183,7 +186,7 @@ const NFTMintInput = ({
                             ) : (
                                 <Icons.MinusCircle />
                             )}
-                        </IconButton>
+                        </IconButton> */}
                     </div>
                 </div>
             </div>

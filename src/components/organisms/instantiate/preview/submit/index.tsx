@@ -4,6 +4,7 @@ import { SubmitWrapper } from './style';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import InstantiateButton from '@/components/atoms/buttons/instantiateButton';
 
 interface IProps {
     onClickInstantiate: () => void;
@@ -19,9 +20,9 @@ const Submit = ({ onClickInstantiate, disableButton }: IProps) => {
 
     return (
         <SubmitWrapper>
-            <GreenButton disabled={disableButton} onClick={onClickInstantiate}>
+            <InstantiateButton disabled={disableButton} onClick={onClickInstantiate}>
                 <span className="button-text">{buttonText}</span>
-            </GreenButton>
+            </InstantiateButton>
         </SubmitWrapper>
     );
 };

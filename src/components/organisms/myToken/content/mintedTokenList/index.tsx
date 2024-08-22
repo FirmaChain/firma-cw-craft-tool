@@ -10,7 +10,6 @@ import NoToken from '../noToken';
 import { GlobalActions } from '@/redux/actions';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { sleep } from '@/utils/common';
-import { ContentControlWrapper, ContentInfoWrapper, ContractCountTypo, TokenTypo } from '../style';
 
 interface IContractItem {
     contractAddress: string;
@@ -21,7 +20,7 @@ interface IContractItem {
     decimals: number;
 }
 
-const MyMintedTokenList = () => {
+const MyMintedTokenList = ({ handleShowCount }: { handleShowCount: (v: boolean) => void }) => {
     const navigate = useNavigate();
 
     const { getCW20ContractInfo } = useMyToken();
@@ -135,14 +134,18 @@ const MyMintedTokenList = () => {
 
     const showValue = pageItems.length > 0;
 
+    useEffect(() => {
+        handleShowCount(showValue);
+    }, [showValue]);
+
     return (
         <>
-            <ContentControlWrapper style={{ opacity: showValue ? 1 : 0, transition: 'opacity 0.2s' }}>
+            {/* <ContentControlWrapper style={{ opacity: showValue ? 1 : 0, transition: 'opacity 0.2s', padding: '0 96px' }}>
                 <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
                     <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                     <TokenTypo>Tokens</TokenTypo>
                 </ContentInfoWrapper>
-            </ContentControlWrapper>
+            </ContentControlWrapper> */}
             <Container>
                 {contracts !== null && contracts.length === 0 ? (
                     <NoToken />
@@ -152,7 +155,8 @@ const MyMintedTokenList = () => {
                             style={{
                                 opacity: showValue ? 1 : 0,
                                 filter: fetching ? 'brightness(0.5)' : 'brightness(1)',
-                                transition: 'all 0.2s'
+                                transition: 'all 0.2s',
+                                width: '100%'
                             }}
                         >
                             {pageItems.map((item, index) => (
@@ -179,7 +183,8 @@ const MyMintedTokenList = () => {
                                 gap: '10px',
                                 opacity: showValue ? 1 : 0,
                                 filter: fetching ? 'brightness(0.5)' : 'brightness(1)',
-                                transition: 'opacity 0.2s'
+                                transition: 'all 0.2s',
+                                paddingBottom: '68px'
                             }}
                         >
                             <PaginationContainer style={{ justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>

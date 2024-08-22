@@ -10,6 +10,7 @@ import { rootState } from '@/redux/reducers';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { getMaxCW20InitWalletAmount, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
+import WalletRemoveButton from '../buttons/walletRemoveButton';
 
 interface IProps {
     index: number;
@@ -74,7 +75,7 @@ const CW20TransferInput = ({
     const handleAmount = (value: string) => {
         if (!isZeroStringValue(value)) clearFormError({ id: `${id}_AMOUNT`, type: 'TRANSFER_AMOUNT' });
         else setFormError({ id: `${id}_AMOUNT`, type: 'TRANSFER_AMOUNT', message: 'Please enter a value other than 0.' });
-        
+
         onChangeAmount(value);
     };
 
@@ -146,13 +147,15 @@ const CW20TransferInput = ({
                     }}
                 >
                     <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', marginTop: '36px' }}>
-                        <IconButton
+                        <WalletRemoveButton size="32px" onClick={handleRemoveWallet} disabled={index === 1 && isLast} />
+                        {/* <IconButton
                             style={{
                                 width: '32px',
                                 height: '32px',
                                 padding: '0',
                                 background: 'transparent',
-                                border: 'unset'
+                                border: 'unset',
+                                filter: 'unset !important'
                             }}
                             disabled={index === 1 && isLast}
                             onClick={handleRemoveWallet}
@@ -162,7 +165,7 @@ const CW20TransferInput = ({
                             ) : (
                                 <Icons.MinusCircle />
                             )}
-                        </IconButton>
+                        </IconButton> */}
                     </div>
                 </div>
             </div>

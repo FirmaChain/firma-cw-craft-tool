@@ -139,6 +139,14 @@ export const GoToExecuteButton = styled(IconButton)`
     border: 1px solid var(--Green-500, #02e191);
     background: var(--Gray-350, #262626);
 
+    &:hover {
+        background: #ffffff;
+        border-color: #ffffff;
+        > * {
+            color: #121212 !important;
+        }
+    }
+
     // cursor: pointer;
     // transition: background-color 0.3s ease;
     // &:hover {

@@ -4,18 +4,29 @@ export const ContentBox = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    overflow: auto;
-`
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+
+    gap: 24px;
+`;
 
 export const ContentWrapper = styled.div`
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 24px;
-    max-width: 1600px;
+    height: 100%;
+    padding: 0 90px 0 96px;
+    align-items: center;
+
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar-track {
+        background: #121212;
+    }
 `;
 
 export const ContentControlWrapper = styled.div`
@@ -29,6 +40,8 @@ export const ContentInfoWrapper = styled.div`
     flex-direction: row;
     gap: 6px;
     align-items: center;
+    max-width: 1600px;
+    width: 100%;
 `;
 
 export const ContractCountTypo = styled.div`

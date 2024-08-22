@@ -18,6 +18,16 @@ const Container = styled(IconButton)`
     border-radius: 24px;
     background: var(--Gray-300, #222);
     overflow: hidden;
+
+    filter: unset !important;
+
+    &:hover {
+        background: var(--Gray-450, #313131);
+    }
+
+    &:active {
+        background: var(--Gray-400, #2c2c2c);
+    }
 `;
 
 const TopBox = styled.div`
@@ -43,7 +53,7 @@ const BottomBox = styled.div`
     gap: 10px;
     align-self: stretch;
     border-top: 1px solid var(--Gray-575, #474747);
-    background: var(--Gray-350, #262626);
+    // background: var(--Gray-350, #262626);
 
     @media only screen and (max-width: 1450px) {
         padding: 22px 34px;
@@ -173,17 +183,17 @@ interface IProps {
 const ContractCard = ({ data }: IProps) => {
     const navigate = useNavigate();
     const { getCW721NFTsThumbnail } = useMyNFTContracts();
-    const { contracts, updateContractInfo } = useCW721NFTContractsContext()
+    const { contracts, updateContractInfo } = useCW721NFTContractsContext();
 
     const handleNFTsThumnnail = useCallback(async () => {
         try {
             const result = await getCW721NFTsThumbnail({ contractAddress: data.contractAddress });
-            const newData: IContractInfo = { ...data, nftThumbnailURI: result }
+            const newData: IContractInfo = { ...data, nftThumbnailURI: result };
             updateContractInfo(newData);
         } catch (error) {
             console.log(error);
         }
-    }, [data])
+    }, [data]);
 
     const DisplayNFTCount = useCallback(() => {
         const totalNFTsCount = data.totalNFTs;
@@ -197,10 +207,14 @@ const ContractCard = ({ data }: IProps) => {
             );
         } else {
             if (thumbnailURIs === null) {
-                handleNFTsThumnnail()
-                return <PreviewNFTsBox style={{ gap: '5px' }}><FirmaLoading size={'20px'} /><TotalNftCountTypo>{`NFTs Data Loading`}</TotalNftCountTypo></PreviewNFTsBox>
+                handleNFTsThumnnail();
+                return (
+                    <PreviewNFTsBox style={{ gap: '5px' }}>
+                        <FirmaLoading size={'20px'} />
+                        <TotalNftCountTypo>{`NFTs Data Loading`}</TotalNftCountTypo>
+                    </PreviewNFTsBox>
+                );
             } else {
-
             }
 
             const count = totalNFTsCount > 999 ? '+999' : `+${totalNFTsCount}`;

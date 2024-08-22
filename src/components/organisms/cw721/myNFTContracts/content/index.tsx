@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ContentBox, ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, ContracTypo } from './style';
 import ConnectWallet from './connectWallet';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,8 @@ const MyNFTContent = () => {
 
     const { contracts, addContracts } = useCW721NFTContractsContext();
     const { getCW721ContractList } = useMyNFTContracts();
+
+    const [showCount, setShowCount] = useState(false);
 
     const fetchTokenList = useCallback(async () => {
         try {
@@ -31,7 +33,7 @@ const MyNFTContent = () => {
 
     useEffect(() => {
         if (isInit) {
-            GlobalActions.handleGlobalLoading(true);
+            // GlobalActions.handleGlobalLoading(true);
             fetchTokenList();
         }
 
@@ -42,7 +44,7 @@ const MyNFTContent = () => {
 
     const ContractListByInit = useCallback(() => {
         if (isInit) {
-            return <MyContractList />;
+            return <MyContractList handleShowCount={(v) => setShowCount(v)} />;
         } else {
             return <ConnectWallet />;
         }
@@ -50,13 +52,15 @@ const MyNFTContent = () => {
 
     return (
         <ContentBox>
-            <ContentWrapper>
-                {/* <ContentControlWrapper>
-                    <ContentInfoWrapper style={{ opacity: contracts !== null && contracts?.length > 0 ? 1 : 0 }}>
+            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 96px' }}>
+                <ContentControlWrapper>
+                    <ContentInfoWrapper style={{ opacity: showCount ? 1 : 0, transition: 'opacity 0.2s' }}>
                         <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                         <ContracTypo>Contracts</ContracTypo>
                     </ContentInfoWrapper>
-                </ContentControlWrapper> */}
+                </ContentControlWrapper>
+            </div>
+            <ContentWrapper>
                 <ContractListByInit />
             </ContentWrapper>
         </ContentBox>
