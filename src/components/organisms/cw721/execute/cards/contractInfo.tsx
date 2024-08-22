@@ -109,13 +109,13 @@ export interface IMenuItem {
 
 const basicMenuItems: IMenuItem[] = [
     { value: 'select', label: 'Select', isDisabled: false },
-    { value: 'mint', label: 'Mint', isDisabled: false },
-    { value: 'burn', label: 'Burn', isDisabled: false },
     { value: 'transfer', label: 'Transfer', isDisabled: false },
     { value: 'approve', label: 'Approve', isDisabled: false },
-    { value: 'revoke', label: 'Revoke', isDisabled: false },
     { value: 'approveAll', label: 'Approve All', isDisabled: false },
+    { value: 'revoke', label: 'Revoke', isDisabled: false },
     { value: 'revokeAll', label: 'Revoke All', isDisabled: false },
+    { value: 'mint', label: 'Mint', isDisabled: false },
+    { value: 'burn', label: 'Burn', isDisabled: false },
     { value: 'updateOwnershipTransfer', label: 'Update Ownership Transfer', isDisabled: false },
     { value: 'updateOwnershipAccept', label: 'Update Ownership Accept', isDisabled: false },
     { value: 'updateOwnershipRenounce', label: 'Update Ownership Renounce', isDisabled: false }

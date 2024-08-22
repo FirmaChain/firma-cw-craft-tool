@@ -159,28 +159,28 @@ export interface IMenuItem {
 
 const basicMenuItems: IMenuItem[] = [
     { value: 'select', label: 'Select', isDisabled: false },
+    { value: 'transfer', label: 'Transfer', isDisabled: false },
+    { value: 'transferFrom', label: 'Transfer From', isDisabled: false },
+    { value: 'increaseAllowance', label: 'Increase Allowance', isDisabled: false },
+    { value: 'decreaseAllowance', label: 'Decrease Allowance', isDisabled: false },
+    { value: 'updateMarketing', label: 'Update Marketing', isDisabled: false },
     { value: 'mint', label: 'Mint', isDisabled: false },
     { value: 'burn', label: 'Burn', isDisabled: false },
     { value: 'burnFrom', label: 'Burn From', isDisabled: false },
-    { value: 'increaseAllowance', label: 'Increase Allowance', isDisabled: false },
-    { value: 'decreaseAllowance', label: 'Decrease Allowance', isDisabled: false },
-    { value: 'transfer', label: 'Transfer', isDisabled: false },
-    { value: 'transferFrom', label: 'Transfer From', isDisabled: false },
     { value: 'updateLogo', label: 'Update Logo', isDisabled: false },
-    { value: 'updateMarketing', label: 'Update Marketing', isDisabled: false },
 ];
 
 const advancedMenuItems: IMenuItem[] = [
     { value: 'select', label: 'Select', isDisabled: false },
+    { value: 'transfer', label: 'Transfer', isDisabled: false },
+    { value: 'transferFrom', label: 'Transfer From', isDisabled: false },
+    { value: 'increaseAllowance', label: 'Increase Allowance', isDisabled: false },
+    { value: 'decreaseAllowance', label: 'Decrease Allowance', isDisabled: false },
+    { value: 'updateMarketing', label: 'Update Marketing', isDisabled: false },
     { value: 'mint', label: 'Mint', isDisabled: false },
     { value: 'burn', label: 'Burn', isDisabled: false },
     { value: 'burnFrom', label: 'Burn From', isDisabled: false },
-    { value: 'increaseAllowance', label: 'Increase Allowance', isDisabled: false },
-    { value: 'decreaseAllowance', label: 'Decrease Allowance', isDisabled: false },
-    { value: 'transfer', label: 'Transfer', isDisabled: false },
-    { value: 'transferFrom', label: 'Transfer From', isDisabled: false },
     { value: 'updateLogo', label: 'Update Logo', isDisabled: false },
-    { value: 'updateMarketing', label: 'Update Marketing', isDisabled: false },
     { value: 'updateMinter', label: 'Update Minter', isDisabled: false }
 ];
 
