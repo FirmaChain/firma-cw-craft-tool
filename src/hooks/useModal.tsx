@@ -116,22 +116,6 @@ const Modal: React.FC<ModalProps> = ({
         }
     };
 
-    // const handleClose = () => {
-    //     if (props?.onClose) {
-    //         props.onClose(id);
-    //     } else {
-    //         closeModal();
-    //     }
-    // };
-
-    // const handleConfirm = () => {
-    //     if (props?.onConfirm) {
-    //         props.onConfirm(id);
-    //     } else {
-    //         closeModal();
-    //     }
-    // };
-
     useEffect(() => {
         return () => {
             if (closeOnRouteChange) {

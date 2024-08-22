@@ -4,15 +4,14 @@ import styled from 'styled-components';
 import { IC_LINK_FILL } from '@/components/atoms/icons/pngIcons';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -91,6 +90,8 @@ const LinkIcon = styled.img`
     height: 24px;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const UpdateLogo = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
@@ -128,6 +129,7 @@ const UpdateLogo = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Logo'
             },
@@ -150,17 +152,29 @@ const UpdateLogo = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/updateLogo"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearLogoUrl();
-                        setMarketingInfo(contractAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw20/updateLogo"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearLogoUrl();
+                            setMarketingInfo(contractAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/updateLogo"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearLogoUrl();
+                            setMarketingInfo(contractAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 

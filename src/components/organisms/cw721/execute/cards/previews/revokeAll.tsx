@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useModalStore } from '@/hooks/useModal';
 import { isValidAddress } from '@/utils/address';
 import { CRAFT_CONFIGS } from '@/config';
-import { QRCodeModal } from '@/components/organisms/modal';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -118,6 +117,8 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const RevokeAllPreview = () => {
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
@@ -139,6 +140,7 @@ const RevokeAllPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Revoke All'
             },
@@ -162,16 +164,27 @@ const RevokeAllPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw721/revokeAll"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearRevokeForm();
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/revokeAll"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearRevokeForm();
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/revokeAll"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearRevokeForm();
+                        }}
+                    />
+                )
+            }
         });
     };
 

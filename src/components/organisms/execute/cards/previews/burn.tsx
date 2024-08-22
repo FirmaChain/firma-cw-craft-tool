@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import { rootState } from '@/redux/reducers';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
 import { CRAFT_CONFIGS } from '@/config';
 
 import { IC_COIN_STACK, IC_COIN_STACK2 } from '@/components/atoms/icons/pngIcons';
@@ -19,6 +18,8 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -136,6 +137,8 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const BurnPreview = () => {
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     const fctBalance = useExecuteStore((v) => v.fctBalance);
@@ -162,6 +165,7 @@ const BurnPreview = () => {
         const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Burn'
             },
@@ -184,20 +188,34 @@ const BurnPreview = () => {
             }
         };
 
+        console.log("USE_WALLET_CONNECT", USE_WALLET_CONNECT);
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/burnToken"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearBurn();
-                        setCw20Balance(contractAddress, address);
-                        setTokenInfo(contractAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        id={id}
+                        module={'/cw20/burnToken'}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearBurn();
+                            setCw20Balance(contractAddress, address);
+                            setTokenInfo(contractAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/burnToken"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearBurn();
+                            setCw20Balance(contractAddress, address);
+                            setTokenInfo(contractAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 

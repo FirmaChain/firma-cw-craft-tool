@@ -1,19 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { IC_CLOCK, IC_COINS_HAND, IC_ID_CIRCLE, IC_WALLET } from '@/components/atoms/icons/pngIcons';
+import { IC_CLOCK, IC_COINS_HAND, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { format } from 'date-fns';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import commaNumber from 'comma-number';
 import { IAllowanceInfo } from '@/components/organisms/execute/hooks/useExecuteStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { CRAFT_CONFIGS } from '@/config';
 import { isValidAddress } from '@/utils/address';
 import { addNanoSeconds } from '@/utils/time';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -143,6 +142,8 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     return <></>;
 };
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const ApproveAllPreview = () => {
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
@@ -198,6 +199,7 @@ const ApproveAllPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Approve All'
             },
@@ -228,16 +230,27 @@ const ApproveAllPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw721/approveAll"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearApproveForm();
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/approveAll"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearApproveForm();
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/approveAll"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearApproveForm();
+                        }}
+                    />
+                )
+            }
         });
     };
 

@@ -243,7 +243,7 @@ const MoreInfo = () => {
                                 </div>
                                 <div
                                     style={{
-                                        height: isClamped ? '66px' : descRef.current?.scrollHeight,
+                                        height: isClamped ? '100%' : descRef.current?.scrollHeight,
                                         overflow: 'hidden',
                                         transition: 'all 0.2s'
                                     }}

@@ -7,11 +7,12 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import { IC_WARNING } from '@/components/atoms/icons/pngIcons';
-import RenounceQRCodeModal from '@/components/organisms/modal/cw721/renounceQRCodeModal';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { GlobalActions } from '@/redux/actions';
 import { useSnackbar } from 'notistack';
 import { sleep } from '@/utils/common';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -45,6 +46,8 @@ const WarningTypo = styled.div`
     line-height: 22px; /* 137.5% */
     white-space: pre-wrap;
 `;
+
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateOwnershipRenouncePreview = () => {
     const WARNING_TEXT: string = 'If you renounce ownership of the NFT contract, you will no longer be able to use NFT minting.';
@@ -87,7 +90,6 @@ const UpdateOwnershipRenouncePreview = () => {
     const modal = useModalStore();
 
     const isEnableButton = useMemo(() => {
-        console.log(ownershipInfo.owner);
         if (ownershipInfo && ownershipInfo.owner === address) return true;
 
         // CHECK DATE & BLOCK HEIGHT
@@ -98,6 +100,7 @@ const UpdateOwnershipRenouncePreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Ownership Renounce'
             },
@@ -108,7 +111,7 @@ const UpdateOwnershipRenouncePreview = () => {
                     {
                         label: 'Warning :',
                         value: WARNING_MODAL_TEXT,
-                        type: 'Warning'
+                        type: 'warning'
                     }
                 ]
             },
@@ -118,16 +121,27 @@ const UpdateOwnershipRenouncePreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <RenounceQRCodeModal
-                    module="/cw721/updateOwnershipRenounce"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        onClickConfirm();
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/updateOwnershipRenounce"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            onClickConfirm();
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/updateOwnershipRenounce"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            onClickConfirm();
+                        }}
+                    />
+                )
+            }
         });
     };
 

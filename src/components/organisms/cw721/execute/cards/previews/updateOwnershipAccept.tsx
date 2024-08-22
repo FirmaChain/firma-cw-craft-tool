@@ -10,12 +10,13 @@ import { IAllowanceInfo } from '@/components/organisms/execute/hooks/useExecuteS
 import commaNumber from 'comma-number';
 import { format } from 'date-fns';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
 import { CRAFT_CONFIGS } from '@/config';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { Cw721Expires } from '@firmachain/firma-js';
 import { addNanoSeconds } from '@/utils/time';
 import { compareStringNumbers } from '@/utils/balance';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -123,6 +124,8 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     return <></>;
 };
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const UpdateOwnershipAccept = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -181,6 +184,7 @@ const UpdateOwnershipAccept = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Ownership Accept'
             },
@@ -209,18 +213,31 @@ const UpdateOwnershipAccept = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw721/updateOwnershipAccept"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        setOwnershipInfo(contractAddress);
-                        setMinter(contractAddress);
-                        clearSelectMenu();
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/updateOwnershipAccept"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            setOwnershipInfo(contractAddress);
+                            setMinter(contractAddress);
+                            clearSelectMenu();
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/updateOwnershipAccept"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            setOwnershipInfo(contractAddress);
+                            setMinter(contractAddress);
+                            clearSelectMenu();
+                        }}
+                    />
+                )
+            }
         });
     };
 

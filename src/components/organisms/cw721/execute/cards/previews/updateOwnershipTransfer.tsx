@@ -11,7 +11,8 @@ import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
 import { isValidAddress } from '@/utils/address';
 import { addNanoSeconds } from '@/utils/time';
-import { QRCodeModal } from '@/components/organisms/modal';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -138,6 +139,8 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
     return <></>;
 };
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const UpdateOwnershipTransferPreview = () => {
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
@@ -192,6 +195,7 @@ const UpdateOwnershipTransferPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Ownership Transfer'
             },
@@ -221,16 +225,27 @@ const UpdateOwnershipTransferPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw721/updateOwnershipTransfer"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearApproveForm();
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/updateOwnershipTransfer"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearApproveForm();
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/updateOwnershipTransfer"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearApproveForm();
+                        }}
+                    />
+                )
+            }
         });
     };
 

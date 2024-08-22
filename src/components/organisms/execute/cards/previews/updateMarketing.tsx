@@ -7,12 +7,13 @@ import { useModalStore } from '@/hooks/useModal';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { isValidAddress } from '@/utils/address';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -100,6 +101,8 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const UpdateMarketingPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -155,6 +158,7 @@ const UpdateMarketingPreview = () => {
         }
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Marketing'
             },
@@ -173,17 +177,29 @@ const UpdateMarketingPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/updateMarketing"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearMarketing();
-                        setMarketingInfo(contractAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw20/updateMarketing"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearMarketing();
+                            setMarketingInfo(contractAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/updateMarketing"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearMarketing();
+                            setMarketingInfo(contractAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
@@ -6,17 +6,16 @@ import { isValidAddress, shortenAddress } from '@/utils/address';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import useFormStore from '@/store/formStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { CRAFT_CONFIGS } from '@/config';
 import useExecuteActions from '../../action';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -201,6 +200,8 @@ const ScrollbarContainer = styled.div`
     overflow: hidden;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const BurnFromPreview = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
@@ -210,8 +211,6 @@ const BurnFromPreview = () => {
     const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
     const clearBurnFrom = useExecuteStore((v) => v.clearBurnFrom);
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
-    const setFormError = useFormStore((v) => v.setFormError);
-    const clearFormError = useFormStore((v) => v.clearFormError);
     const { setTokenInfo } = useExecuteActions();
 
     const modal = useModalStore();
@@ -291,6 +290,7 @@ const BurnFromPreview = () => {
         }
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Burn From'
             },
@@ -318,18 +318,31 @@ const BurnFromPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/burnFrom"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        setIsFetched(true);
-                        clearBurnFrom();
-                        setTokenInfo(contractAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw20/burnFrom"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            setIsFetched(true);
+                            clearBurnFrom();
+                            setTokenInfo(contractAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/burnFrom"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            setIsFetched(true);
+                            clearBurnFrom();
+                            setTokenInfo(contractAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 

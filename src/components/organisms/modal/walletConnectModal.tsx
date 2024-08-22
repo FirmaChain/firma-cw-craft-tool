@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 
-import { FirmaUtil } from '@firmachain/firma-js';
-
 import { WalletActions } from '@/redux/actions';
 import {
     CloseIcon,
@@ -33,7 +31,7 @@ import { openLink } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
 import Connect from './connect/connect';
 
-const IS_MAINNET = false;
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const WalletConnectModal = ({ id }: { id: string }) => {
     const [showStationInfo, setShowStationInfo] = useState(false);
@@ -61,7 +59,7 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                     <Icons.LeftArrow width="24px" height="24px" />
                 </PrevButton>
             )}
-            {IS_MAINNET ? (
+            {!USE_WALLET_CONNECT ? (
                 <Connect closeModal={onCloseModal} />
             ) : (
                 <>

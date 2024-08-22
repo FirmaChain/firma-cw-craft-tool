@@ -7,12 +7,11 @@ import {
     getUTokenAmountFromToken,
     subtractStringAmount
 } from '@/utils/balance';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { shortenAddress } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
@@ -21,8 +20,9 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { CRAFT_CONFIGS } from '@/config';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -249,6 +249,8 @@ const ScrollbarContainer = styled.div`
     overflow: hidden;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const TransferPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -318,6 +320,7 @@ const TransferPreview = () => {
         }
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Transfer'
             },
@@ -345,18 +348,31 @@ const TransferPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/transfer"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearTransfer();
-                        setIsFetched(true);
-                        setCw20Balance(contractAddress, address);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw20/transfer"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearTransfer();
+                            setIsFetched(true);
+                            setCw20Balance(contractAddress, address);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/transfer"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearTransfer();
+                            setIsFetched(true);
+                            setCw20Balance(contractAddress, address);
+                        }}
+                    />
+                )
+            }
         });
     };
 

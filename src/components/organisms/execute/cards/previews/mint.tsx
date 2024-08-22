@@ -13,7 +13,6 @@ import {
 import { IWallet } from '@/interfaces/wallet';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
@@ -21,10 +20,9 @@ import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { ONE_TO_MINE } from '@/constants/regex';
-import { ExecutePreviewOverlayScroll, StyledOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { CRAFT_CONFIGS } from '@/config';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -246,6 +244,8 @@ const ScrollbarContainer = styled.div`
     overflow: hidden;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const MintPreview = () => {    
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
@@ -323,6 +323,7 @@ const MintPreview = () => {
         }
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Mint'
             },
@@ -350,19 +351,33 @@ const MintPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/mintToken"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        isFetched(true);
-                        clearMinterList();
-                        setMinterInfo(contractAddress);
-                        setTokenInfo(contractAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw20/mintToken"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            isFetched(true);
+                            clearMinterList();
+                            setMinterInfo(contractAddress);
+                            setTokenInfo(contractAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/mintToken"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            isFetched(true);
+                            clearMinterList();
+                            setMinterInfo(contractAddress);
+                            setTokenInfo(contractAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 

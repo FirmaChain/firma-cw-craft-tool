@@ -77,7 +77,7 @@ import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 
-type ModalType = 'INSTANTIATE' | 'EXTCUTES';
+type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
 export interface ModalParameters {
     type: ModalType;

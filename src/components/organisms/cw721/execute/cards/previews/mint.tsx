@@ -8,16 +8,12 @@ import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { addStringAmount } from '@/utils/balance';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
-import { QRCodeModal } from '@/components/organisms/modal';
 import { isValidAddress } from '@/utils/address';
-import useFormStore from '@/store/formStore';
-import { shortenAddress } from '@/utils/common';
-import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { CRAFT_CONFIGS } from '@/config';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -25,14 +21,6 @@ const Container = styled.div`
     flex-direction: column;
     gap: 36px;
     justify-content: center;
-    overflow: hidden;
-`;
-
-const ContentScrollWrap = styled.div`
-    display: flex;
-    width: 100%;
-    border-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
     overflow: hidden;
 `;
 
@@ -214,7 +202,7 @@ const ScrollbarContainer = styled.div`
     overflow: hidden;
 `;
 
-// const PRESET_BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT';
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const MintPreview = () => {    
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
@@ -288,6 +276,7 @@ const MintPreview = () => {
         }
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Mint'
             },
@@ -309,17 +298,29 @@ const MintPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw721/mint"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearMintForm();
-                        setTotalNfts(contractAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/mint"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearMintForm();
+                            setTotalNfts(contractAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/mint"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearMintForm();
+                            setTotalNfts(contractAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 

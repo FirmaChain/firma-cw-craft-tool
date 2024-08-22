@@ -6,12 +6,13 @@ import GreenButton from '@/components/atoms/buttons/greenButton';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useMemo } from 'react';
 import { subtractStringAmount } from '@/utils/balance';
-import { QRCodeModal } from '@/components/organisms/modal';
 import { useModalStore } from '@/hooks/useModal';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -122,6 +123,8 @@ const ButtonWrap = styled.div`
     justify-content: center;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const BurnPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -192,6 +195,7 @@ const BurnPreview = () => {
         }
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Burn'
             },
@@ -213,18 +217,31 @@ const BurnPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw721/burn"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearBurnForm();
-                        setMyNftList(contractAddress, address);
-                        setTotalNfts(contractAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/burn"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearBurnForm();
+                            setMyNftList(contractAddress, address);
+                            setTotalNfts(contractAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/burn"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearBurnForm();
+                            setMyNftList(contractAddress, address);
+                            setTotalNfts(contractAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 

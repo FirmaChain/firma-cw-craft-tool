@@ -82,7 +82,7 @@ import RequestQR from '../requestQR';
 import { GlobalActions } from '@/redux/actions';
 import { getTransactionHash } from '@/utils/transaction';
 
-type ModalType = 'INSTANTIATE' | 'EXTCUTES';
+export type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
 export interface ModalParameters {
     type: ModalType;

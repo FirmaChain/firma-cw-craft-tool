@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { addStringAmount, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 
 import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
@@ -12,7 +12,6 @@ import { useModalStore } from '@/hooks/useModal';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { QRCodeModal } from '@/components/organisms/modal';
 
 import Divider from '@/components/atoms/divider';
 import { format } from 'date-fns';
@@ -22,6 +21,8 @@ import commaNumber from 'comma-number';
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { parseAmountWithDecimal2 } from '@/utils/common';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -233,6 +234,8 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
     return <></>;
 };
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const IncreaseAllowancePreview = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
@@ -316,6 +319,7 @@ const IncreaseAllowancePreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Increase Allowance'
             },
@@ -352,18 +356,31 @@ const IncreaseAllowancePreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/increaseAllowance"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearAllowanceInfo();
-                        setIsFetched(true);
-                        clearAllowance();
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw20/increaseAllowance"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearAllowanceInfo();
+                            setIsFetched(true);
+                            clearAllowance();
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/increaseAllowance"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearAllowanceInfo();
+                            setIsFetched(true);
+                            clearAllowance();
+                        }}
+                    />
+                )
+            }
         });
     };
 

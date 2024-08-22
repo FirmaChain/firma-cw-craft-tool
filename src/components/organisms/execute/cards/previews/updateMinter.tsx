@@ -1,20 +1,16 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { FirmaUtil } from '@firmachain/firma-js';
 import styled from 'styled-components';
 
 import { IC_REFRESH, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import useExecuteStore from '../../hooks/useExecuteStore';
-import { TOOLTIP_ID } from '@/constants/tooltip';
-import { rootState } from '@/redux/reducers';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
-import { QRCodeModal } from '@/components/organisms/modal';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import { isValidAddress } from '@/utils/address';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -106,6 +102,8 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const UpdateMinter = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
@@ -128,6 +126,7 @@ const UpdateMinter = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Minter'
             },
@@ -150,18 +149,31 @@ const UpdateMinter = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw20/updateMinter"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearMinter();
-                        setMinterInfo(contractAddress);
-                        setSelectMenu({ value: 'select', label: 'Select' });
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw20/updateMinter"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearMinter();
+                            setMinterInfo(contractAddress);
+                            setSelectMenu({ value: 'select', label: 'Select' });
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw20/updateMinter"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearMinter();
+                            setMinterInfo(contractAddress);
+                            setSelectMenu({ value: 'select', label: 'Select' });
+                        }}
+                    />
+                )
+            }
         });
     };
 

@@ -2,21 +2,19 @@ import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { shortenAddress } from '@/utils/common';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { isValidAddress } from '@/utils/address';
 import { useModalStore } from '@/hooks/useModal';
-import { QRCodeModal } from '@/components/organisms/modal';
 import { subtractStringAmount } from '@/utils/balance';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
-import { ExecutePreviewOverlayScroll } from '@/components/organisms/instantiate/preview/dashboard/style';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 import { CRAFT_CONFIGS } from '@/config';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const Container = styled.div`
     width: 100%;
@@ -225,6 +223,8 @@ const ScrollbarContainer = styled.div`
     overflow: hidden;
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const TransferPreview = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
 
@@ -317,6 +317,7 @@ const TransferPreview = () => {
                 : transferListForModal.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         const params = {
+            type: 'EXECUTES' as ModalType,
             header: {
                 title: 'Transfer'
             },
@@ -343,17 +344,29 @@ const TransferPreview = () => {
 
         modal.openModal({
             modalType: 'custom',
-            _component: ({ id }) => (
-                <QRCodeModal
-                    module="/cw721/transfer"
-                    id={id}
-                    params={params}
-                    onClickConfirm={() => {
-                        clearTransferForm();
-                        setMyNftList(contractAddress, userAddress);
-                    }}
-                />
-            )
+            _component: ({ id }) => {
+                return !USE_WALLET_CONNECT ? (
+                    <TxModal
+                        module="/cw721/transfer"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearTransferForm();
+                            setMyNftList(contractAddress, userAddress);
+                        }}
+                    />
+                ) : (
+                    <QRModal2
+                        module="/cw721/transfer"
+                        id={id}
+                        params={params}
+                        onClickConfirm={() => {
+                            clearTransferForm();
+                            setMyNftList(contractAddress, userAddress);
+                        }}
+                    />
+                )
+            }
         });
     };
 
