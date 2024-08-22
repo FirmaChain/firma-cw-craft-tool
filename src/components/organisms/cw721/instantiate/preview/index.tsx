@@ -12,6 +12,8 @@ import { CRAFT_CONFIGS } from '@/config';
 import InstantiateModal from '@/components/organisms/modal/cw721/instantiateModal';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
+import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
+import TxModal from '@/components/organisms/modal/txModal';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
@@ -120,6 +122,8 @@ const BodyContractInfoWrap = styled.div`
     border: 1px solid var(--Gray-550, #444);
 `;
 
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
+
 const Preview = () => {
     const { scroll } = useScrollContext();
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
@@ -133,6 +137,8 @@ const Preview = () => {
     const admin = useInstantiateStore((v) => v.admin);
     const minter = useInstantiateStore((v) => v.minter);
     const label = useInstantiateStore((v) => v.label);
+
+    const clearForm = useInstantiateStore((v) => v.clearForm);
 
     const disableButton = useMemo(() => {
         if (isInit) {
@@ -163,36 +169,56 @@ const Preview = () => {
             };
 
             const params = {
-                admin: contractMode === 'BASIC' ? address : admin,
-                codeId: codeId,
-                label: label,
-                msg: JSON.stringify(messageData),
-                type: CRAFT_CONFIGS.CW721.TYPE
-            };
-
-            const datas: {
-                header: { title: string };
-                amount: { fee: string; fct: string };
-                list: { label: string; value: string }[];
-            } = {
+                type: 'INSTANTIATE' as ModalType,
                 header: {
-                    title: 'CW721 Instantiate'
+                    title: 'CW721 Instantiation'
                 },
-                amount: {
-                    fee: CRAFT_CONFIGS.DEFAULT_FEE.toString(),
-                    fct: ''
+                instantiate: {
+                    admin: contractMode === 'BASIC' ? address : admin,
+                    codeId: codeId,
+                    label: label,
                 },
-                list: [
-                    { label: 'Contract Name', value: nftName },
-                    { label: 'Contract Symbol', value: nftSymbol }
-                ]
+                content: {
+                    list: [
+                        {
+                            label: 'Contract Name',
+                            value: nftName,
+                            type: 'default'
+                        },
+                        {
+                            label: 'Contract Symbol',
+                            value: nftSymbol,
+                            type: 'default'
+                        },
+                    ]
+                },
+                contract: '',
+                msg: messageData,
             };
-
-            console.log(params);
 
             modal.openModal({
                 modalType: 'custom',
-                _component: ({ id }) => <InstantiateModal module="/cosmwasm/instantiateContract" id={id} datas={datas} params={params} />
+                _component: ({ id }) => {
+                    return !USE_WALLET_CONNECT ? (
+                        <TxModal
+                            module="/cw721/instantiateContract"
+                            id={id}
+                            params={params}
+                            onClickConfirm={() => {
+                                clearForm();
+                            }}
+                        />
+                    ) : (
+                        <QRModal2
+                            module="/cw721/instantiateContract"
+                            id={id}
+                            params={params}
+                            onClickConfirm={() => {
+                                clearForm();
+                            }}
+                        />
+                    )
+                }
             });
         } else {
             modal.openModal({ modalType: 'connectWallet' });

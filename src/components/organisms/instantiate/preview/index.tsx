@@ -14,12 +14,14 @@ import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
 import InstantiateModal from '../../modal/instantiateModal';
-import { addStringAmount, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
+import { addStringAmount, addStringAmountsArray, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
 import styled from 'styled-components';
 import { ContentBox } from '../content/style';
 import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
+import TxModal from '../../modal/txModal';
+import QRModal2, { ModalType } from '../../modal/qrModal2';
 
 interface IProps {
     isBasic: boolean;
@@ -32,6 +34,8 @@ const ScrollButtonBox = styled.div`
         display: none;
     }
 `;
+
+const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const Preview = ({ isBasic }: IProps) => {
     const { scroll } = useScrollContext();
@@ -58,6 +62,7 @@ const Preview = ({ isBasic }: IProps) => {
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
+    const clearForm = useFormStore((state) => state.clearForm);
 
     const codeId = useMemo(() => {
         const cw20CodeId = contractMode === 'BASIC' ? CRAFT_CONFIGS.CW20.BASIC_CODE_ID : CRAFT_CONFIGS.CW20.ADVANCED_CODE_ID;
@@ -109,7 +114,8 @@ const Preview = ({ isBasic }: IProps) => {
             }
 
             const invalidMessageType = checkInstantiate(isBasic, walletList, decimalsTotalSupply, decimalsMinterCap);
-
+            const supplyAmount = convertWalletList.length === 0 ? '0' : addStringAmountsArray([...convertWalletList.map((one) => one.amount)]);
+            
             if (invalidMessageType === '') {
                 const messageData = {
                     decimals: newDecimals,
@@ -130,18 +136,75 @@ const Preview = ({ isBasic }: IProps) => {
                     }
                 };
                 const params = {
-                    admin: address,
-                    codeId: codeId,
-                    label: label,
-                    msg: JSON.stringify(messageData),
-                    type: CRAFT_CONFIGS.CW20.TYPE,
-                    totalLength: label.length + JSON.stringify(messageData).length,
-                    walletLength: convertWalletList.length
+                    type: 'INSTANTIATE' as ModalType,
+                    header: {
+                        title: 'CW20 Instantiation'
+                    },
+                    instantiate: {
+                        admin: address,
+                        codeId: codeId,
+                        label: label
+                    },
+                    content: {
+                        decimals: newDecimals.toString(),
+                        symbol: tokenSymbol,
+                        list: [
+                            {
+                                label: 'Token Name',
+                                value: tokenName,
+                                type: 'default'
+                            },
+                            {
+                                label: 'Symbol',
+                                value: tokenSymbol,
+                                type: 'default'
+                            },
+                            {
+                                label: 'Decimal',
+                                value: newDecimals.toString(),
+                                type: 'default'
+                            }
+                        ],
+                        extraList: [
+                            {
+                                label: 'Supply Amount',
+                                value: supplyAmount,
+                                type: 'amount'
+                            },
+                            minterble && {
+                                label: 'Minter Cap',
+                                value: decimalsMinterCap,
+                                type: 'amount'
+                            }
+                        ]
+                    },
+                    contract: '',
+                    msg: messageData
                 };
 
                 modal.openModal({
                     modalType: 'custom',
-                    _component: ({ id }) => <InstantiateModal module="/cosmwasm/instantiateContract" id={id} params={params} />
+                    _component: ({ id }) => {
+                        return !USE_WALLET_CONNECT ? (
+                            <TxModal
+                                module="/cw20/instantiateContract"
+                                id={id}
+                                params={params}
+                                onClickConfirm={() => {
+                                    clearForm();
+                                }}
+                            />
+                        ) : (
+                            <QRModal2
+                                module="/cw20/instantiateContract"
+                                id={id}
+                                params={params}
+                                onClickConfirm={() => {
+                                    clearForm();
+                                }}
+                            />
+                        )
+                    }
                 });
             } else {
                 ModalActions.handleData({
