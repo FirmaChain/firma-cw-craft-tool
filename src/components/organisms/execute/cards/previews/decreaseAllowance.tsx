@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components/atoms/icons/pngIcons';
-import { getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
+import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
@@ -266,7 +266,7 @@ const DecreaseAllowancePreview = () => {
             ? BigInt(getUTokenAmountFromToken(allowance?.amount, String(tokenInfo.decimals)))
             : BigInt(0);
 
-        return _currentAllowance > _reduceAmount ? String(_currentAllowance - _reduceAmount) : '0';
+        return String(_currentAllowance - _reduceAmount);
     }, [allowance, allowanceInfo, tokenInfo]);
 
     // useEffect(() => {
@@ -387,6 +387,7 @@ const DecreaseAllowancePreview = () => {
         if (!allowance.type || (allowance.type !== 'never' && (!allowance.expire || !allowance.type))) return false;
         if (allowance.address.toLowerCase() === userAddress.toLowerCase()) return false;
         if (!allowance.amount || allowance.amount.replace(ONE_TO_MINE, '') === '') return false;
+        if (compareStringNumbers(updatedAmount, '0') === -1) return false;
 
         return true;
     }, [addressExist, allowanceInfo, allowance, userAddress]);
