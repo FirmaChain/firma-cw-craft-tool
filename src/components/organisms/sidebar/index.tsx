@@ -60,7 +60,7 @@ const Sidebar = () => {
         } else {
             GlobalActions.handleCw('CW20');
         }
-    }, [location])
+    }, [location]);
 
     const onChangeSwitch = (type: CW_MODE_TYPE) => {
         GlobalActions.handleCw(type);
@@ -117,7 +117,7 @@ const Sidebar = () => {
         }
     };
 
-    if (location.pathname === '/') return <></>;
+    if (location.pathname === '/' || location.pathname === '/mobile-guide') return <></>;
     return (
         <div style={{ minWidth: '224px', height: '100vh' }}>
             <DrawerStyled>

@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import Cw20Mytoken from '../pages/cw20/myToken';
 import LandingPage from '@/pages/landing';
 
 import { CW20Execute, CW20Instantiate, CW20SearchPage, CW20TokenDetail } from '@/pages/cw20';
 import { CW721Instantiate, CW721Search, CW721Execute, CW721MyNFTContracts, CW721NFTContractDetail } from '@/pages/cw721';
-import { scrollToTop } from '@/utils/common';
+import { checkMobileDevice, scrollToTop } from '@/utils/common';
+import MobileLanding from '@/pages/mobileGuide';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
     path,
@@ -16,6 +17,7 @@ const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) =
 
 const routes: any[] = [
     routeByAuth('/', <LandingPage />, false),
+    routeByAuth('/mobile-guide', <MobileLanding />, false),
 
     routeByAuth('/instantiate', <CW20Instantiate />, false),
     routeByAuth('/execute', <CW20Execute />, false),
@@ -34,11 +36,17 @@ const routes: any[] = [
 
 const AppRoutes = () => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // window.scrollTo(0, 0);
         scrollToTop();
     }, [location.pathname]);
+
+    useEffect(() => {
+        const isMobileDevice = checkMobileDevice();
+        if (isMobileDevice) navigate('/mobile-guide');
+    }, []);
 
     return (
         <Routes>

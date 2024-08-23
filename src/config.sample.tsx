@@ -28,5 +28,6 @@ export const CRAFT_CONFIGS = {
         IOS: '',
         ANDROID: ''
     },
-    TRANSACTION_MEMO: ''
+    TRANSACTION_MEMO: '',
+    GUIDE_URL: ''
 };

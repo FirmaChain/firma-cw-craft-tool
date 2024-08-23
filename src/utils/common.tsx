@@ -364,3 +364,13 @@ export const scrollToTop = (behavior?: ScrollBehavior) => {
         scrollbarContent[0].scrollTo({ top: 0, left: 0, behavior: _behavior });
     }
 };
+
+export const checkMobileDevice = (): boolean => {
+    const userAgent = navigator.userAgent || navigator.vendor;
+    const isMobileUserAgent =
+        /android|avantgo|blackberry|iemobile|ipad|iphone|ipod|minimo|mobile|opera mini|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|silk|symbian|tablet|up\.browser|up\.link|webos|wos/i.test(
+            userAgent
+        );
+
+    return isMobileUserAgent;
+};

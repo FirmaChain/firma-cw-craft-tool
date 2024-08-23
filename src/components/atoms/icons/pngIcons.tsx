@@ -62,3 +62,14 @@ export const IC_ALERT_YELLOW = PUBLIC_IC_URL + 'ic_alert_yellow.png';
 export const IC_WARNING_SIGN = PUBLIC_IC_URL + 'ic_warning_sign.png';
 export const IC_LINK_ROUND = PUBLIC_IC_URL + 'ic_link_round.png';
 export const IC_ALIGN_TOP_ARROW = PUBLIC_IC_URL + 'ic_align_top_arrow.png';
+
+export const IMG_BACKGROUND = PUBLIC_IMG_URL + 'img_bg.png';
+export const IMG_LOGO = PUBLIC_IMG_URL + 'img_logo.png';
+export const IMG_SMALL_DIVIDER = PUBLIC_IMG_URL + 'img_small_divider.png';
+export const IMG_CAROUSEL_INSTANTIATE = PUBLIC_IMG_URL + 'img_carousel_instantiate.png';
+export const IMG_CAROUSEL_QUERY = PUBLIC_IMG_URL + 'img_carousel_query.png';
+export const IMG_CAROUSEL_EXECUTE = PUBLIC_IMG_URL + 'img_carousel_execute.png';
+
+export const IC_GUIDE = PUBLIC_IC_URL + 'ic_guide.png';
+export const IC_MEDIUM = PUBLIC_IC_URL + 'ic_medium.png';
+export const IC_INFO = PUBLIC_IC_URL + 'ic_info.png';
