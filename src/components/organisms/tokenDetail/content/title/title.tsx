@@ -26,8 +26,11 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { getTokenAmountFromUToken } from '@/utils/balance';
+import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 
 const Title = () => {
+    const setContractAddress = useExecuteStore((state) => state.setContractAddress);
+
     const tokenUrl = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl);
     const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
     const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName);
@@ -60,7 +63,8 @@ const Title = () => {
     }, [tokenUrl]);
 
     const onClickExecute = () => {
-        navigatge(`/execute?contractAddress=${contractAddress}`, { replace: true });
+        setContractAddress(contractAddress);
+        navigatge(`/execute`, { replace: true });
     };
 
     return (

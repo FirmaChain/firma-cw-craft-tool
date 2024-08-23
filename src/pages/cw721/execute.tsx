@@ -9,9 +9,7 @@ import Contents from '@/components/organisms/cw721/execute/contents';
 import { GlobalActions } from '@/redux/actions';
 
 const CW721Execute = () => {
-    const query = new URLSearchParams(useLocation().search);
-    const contractAddress = query.get('contractAddress');
-
+    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
 
     useEffect(() => {

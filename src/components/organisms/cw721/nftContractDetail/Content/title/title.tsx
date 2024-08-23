@@ -18,9 +18,12 @@ import commaNumber from 'comma-number';
 import Divider from '@/components/atoms/divider';
 import Skeleton from '@/components/atoms/skeleton';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
+import { rootState } from '@/redux/reducers';
 
 const Title = () => {
     const { contractDetail, nftsInfo } = useNFTContractDetailStore();
+    const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
 
     const contractAddress = contractDetail?.contractAddress || null;
     const name = contractDetail?.name || null;
@@ -30,7 +33,8 @@ const Title = () => {
     const navigatge = useNavigate();
 
     const onClickExecute = () => {
-        navigatge(`/cw721/execute?contractAddress=${contractAddress}`);
+        setContractAddress(contractAddress);
+        navigatge(`/cw721/execute`);
     };
 
     return (
