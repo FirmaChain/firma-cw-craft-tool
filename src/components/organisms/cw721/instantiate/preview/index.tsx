@@ -210,7 +210,7 @@ const Preview = () => {
                         />
                     ) : (
                         <QRModal2
-                            module="/instantiateContract"
+                            module="/cosmwasm/instantiateContract"
                             id={id}
                             params={params}
                             onClickConfirm={() => {

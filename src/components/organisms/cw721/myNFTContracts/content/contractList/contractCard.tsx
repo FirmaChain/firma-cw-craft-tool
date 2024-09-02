@@ -138,7 +138,7 @@ const LabelTypo = styled.div`
 `;
 
 const TotalNftCountTypo = styled.div`
-    color: var(--Gray-750, #999);
+    color: var(--Gray-750, #606060);
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
