@@ -210,7 +210,7 @@ const Preview = () => {
                         />
                     ) : (
                         <QRModal2
-                            module="/cw721/instantiateContract"
+                            module="/instantiateContract"
                             id={id}
                             params={params}
                             onClickConfirm={() => {

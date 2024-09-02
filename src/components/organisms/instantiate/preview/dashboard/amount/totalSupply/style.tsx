@@ -119,6 +119,11 @@ export const ItemLeftAddress = styled.div<{ $disabled?: boolean }>`
     white-space: pre;
 `;
 
+export const ItemTokenWrap = styled.div`
+    display: flex;
+    gap: 6px
+`;
+
 export const ItemTokenAmount = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #807e7e)')};
     // var(--Gray-650, #807e7e);
@@ -126,5 +131,14 @@ export const ItemTokenAmount = styled.div<{ $disabled?: boolean }>`
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
+    line-height: 20px;
+`;
+
+export const ItemTokenSymbol = styled.div`
+    color: var(--Gray-550, #444);
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
     line-height: 20px;
 `;

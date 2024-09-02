@@ -196,7 +196,7 @@ const Preview = ({ isBasic }: IProps) => {
                             />
                         ) : (
                             <QRModal2
-                                module="/cw20/instantiateContract"
+                                module="/instantiateContract"
                                 id={id}
                                 params={params}
                                 onClickConfirm={() => {

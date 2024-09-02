@@ -242,7 +242,7 @@ export const NftIdItem = ({ label, value }: { label: string; value: string }) =>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
                 <ItemAmountValue>{value}</ItemAmountValue>
-                <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
+                <ItemAmountSymbol>NFT</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
     );

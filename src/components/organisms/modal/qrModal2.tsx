@@ -132,7 +132,7 @@ interface SuccessData {
 }
 
 type ModuleTypes =
-    | '/cw20/instantiateContract'
+    | '/instantiateContract'
     | '/cw20/burnToken'
     | '/cw20/burnFrom'
     | '/cw20/decreaseAllowance'
@@ -143,7 +143,6 @@ type ModuleTypes =
     | '/cw20/updateLogo'
     | '/cw20/updateMarketing'
     | '/cw20/updateMinter'
-    | '/cw721/instantiateContract'
     | '/cw721/approve'
     | '/cw721/approveAll'
     | '/cw721/burn'

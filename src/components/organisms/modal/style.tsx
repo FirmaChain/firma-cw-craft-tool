@@ -104,7 +104,7 @@ export const ItemValueWrap = styled.div`
 `;
 
 export const ItemAmountValue = styled.div`
-    color: #02e191;
+    color: #E6E6E6;
 
     /* Heading/H5 - Bd */
     font-family: 'General Sans Variable';

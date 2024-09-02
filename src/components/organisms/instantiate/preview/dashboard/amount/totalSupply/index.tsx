@@ -4,6 +4,8 @@ import {
     ItemLeftAddress,
     ItemLeftWrapper,
     ItemTokenAmount,
+    ItemTokenSymbol,
+    ItemTokenWrap,
     SummeryLeftText,
     SummeryLeftWrapper,
     SummeryRightTokenSymbol,
@@ -61,7 +63,10 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                 <Icons.Wallet width={'20px'} height={'20px'} />
                                 <ItemLeftAddress>{'-'}</ItemLeftAddress>
                             </ItemLeftWrapper>
-                            <ItemTokenAmount>{'0'}</ItemTokenAmount>
+                            <ItemTokenWrap>
+                                <ItemTokenAmount>{'0'}</ItemTokenAmount>
+                                <ItemTokenSymbol>{tokenSymbol}</ItemTokenSymbol>
+                            </ItemTokenWrap>
                         </WalletListItem>
                     ) : (
                         <Fragment>
@@ -79,9 +84,12 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                             {shortenAddress(wallet.recipient, 12, 12) || 'Wallet Address'}
                                         </ItemLeftAddress>
                                     </ItemLeftWrapper>
-                                    <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
-                                        {commaNumber(wallet.amount) || '0'}
-                                    </ItemTokenAmount>
+                                    <ItemTokenWrap>
+                                        <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
+                                            {commaNumber(wallet.amount) || '0'}
+                                        </ItemTokenAmount>
+                                        <ItemTokenSymbol>{tokenSymbol}</ItemTokenSymbol>
+                                    </ItemTokenWrap>
                                 </WalletListItem>
                             ))}
                         </Fragment>

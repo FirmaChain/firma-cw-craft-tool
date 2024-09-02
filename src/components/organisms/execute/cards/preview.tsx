@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import MintPreview from './previews/mint';
-import { ITokenInfoState } from '../hooks/useExecueteHook';
 import DefaultView from './previews/default';
 import BurnPreview from './previews/burn';
 import BurnFromPreview from './previews/burnFrom';
@@ -26,7 +25,7 @@ const Container = styled.div<{ $isSelectMenu: boolean }>`
     gap: 24px;
     border-radius: 24px;
     /* border: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191)' : '1px solid var(--Green-500, #444)')}; */
-    border: 1px solid var(--Green-500, #444);
+    border: 0px solid var(--Green-500, #444);
     background: var(--200, #1e1e1e);
 
     max-height: 742px;
