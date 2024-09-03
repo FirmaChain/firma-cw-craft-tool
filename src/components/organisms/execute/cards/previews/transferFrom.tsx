@@ -337,11 +337,15 @@ const TransferFromPreview = () => {
         }
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Transfer From'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: convertTransferList
+            },
+            contentParams: {
                 symbol: tokenInfo.symbol,
                 decimals: tokenInfo.decimals.toString(),
                 fctAmount: fctBalance,
@@ -359,8 +363,6 @@ const TransferFromPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: convertTransferList
         };
 
         modal.openModal({

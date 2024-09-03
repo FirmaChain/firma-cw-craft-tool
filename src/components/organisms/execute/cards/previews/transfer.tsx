@@ -320,11 +320,15 @@ const TransferPreview = () => {
         }
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Transfer'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: convertWalletList
+            },
+            contentParams: {
                 symbol: tokenInfo.symbol,
                 decimals: tokenInfo.decimals.toString(),
                 fctAmount: fctBalance,
@@ -342,8 +346,6 @@ const TransferPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: convertWalletList
         };
 
         modal.openModal({

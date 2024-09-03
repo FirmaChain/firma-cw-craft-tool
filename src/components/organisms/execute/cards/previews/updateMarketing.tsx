@@ -158,23 +158,27 @@ const UpdateMarketingPreview = () => {
         }
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Marketing'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                type: 'cw20',
+                msg: {
+                    project: isBasic ? '' : finalProejct,
+                    marketing: finalAddress === '' ? address : finalAddress,
+                    description: finalDesc
+                }
+            },
+            contentParams: {
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: contentList
             },
-            contract: contractAddress,
-            msg: {
-                project: isBasic ? '' : finalProejct,
-                marketing: finalAddress === '' ? address : finalAddress,
-                description: finalDesc
-            }
         };
 
+        console.log(params.txParams);
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => {

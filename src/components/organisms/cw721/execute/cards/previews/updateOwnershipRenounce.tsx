@@ -100,11 +100,15 @@ const UpdateOwnershipRenouncePreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTE' as ModalType,
             header: {
                 title: 'Update Ownership Renounce'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: { update: 'renounce_ownership' }
+            },
+            contentParams: {
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
@@ -115,8 +119,6 @@ const UpdateOwnershipRenouncePreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: { update: 'renounce_ownership' }
         };
 
         modal.openModal({

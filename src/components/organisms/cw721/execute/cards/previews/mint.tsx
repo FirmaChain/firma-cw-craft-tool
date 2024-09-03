@@ -276,11 +276,15 @@ const MintPreview = () => {
         }
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTE' as ModalType,
             header: {
                 title: 'Mint'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: convertMintList
+            },
+            contentParams: {
                 symbol: nftContractInfo.symbol,
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
@@ -292,8 +296,6 @@ const MintPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: convertMintList
         };
 
         modal.openModal({

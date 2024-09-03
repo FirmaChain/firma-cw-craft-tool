@@ -35,8 +35,6 @@ import {
     ResultFailedDesc,
     ModalAlertBox,
     ResultIcon,
-    ModalConfirmButton,
-    ModalConfirmTypo,
     ModalButtonBox,
     LoadingDimBox,
     LoadingBox,
@@ -47,16 +45,13 @@ import {
 import { useModalStore } from '@/hooks/useModal';
 import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
 import { useSnackbar } from 'notistack';
-import useInstantiateStore from '../instantiate/instaniateStore';
-import useFormStore from '@/store/formStore';
 import Divider from '@/components/atoms/divider';
 import { scrollToTop } from '@/utils/common';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { Cw721Expires, Expires, FirmaUtil } from '@firmachain/firma-js';
+import { FirmaUtil } from '@firmachain/firma-js';
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
-import LabelInput from '@/components/atoms/input/labelInput';
 import useFirmaSDKInternal from '@/hooks/useFirmaSDKInternal';
 import {
     AmountItem,
@@ -85,41 +80,42 @@ import { getTransactionHash } from '@/utils/transaction';
 export type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
 export interface ModalParameters {
-    type: ModalType;
-
+    modalType: ModalType;
     header: {
         title: string;
     };
-    instantiate?: {
-        admin: string;
-        label: string;
-        codeId: string;
-    };
-    content: {
-        decimals?: string;
-        symbol?: string;
-        fctAmount?: string;
-        feeAmount?: string;
-        alert?: string;
-        list?: {
-            label: string;
-            value: string;
-            type: string;
-        }[];
-        extraList?: {
-            label: string;
-            value: string;
-            type: string;
-        }[];
-    };
-    contract: string;
-    msg: Record<string, any>;
+    txParams: TransactionParameters;
+    contentParams: ContentParameters;
 }
 
-// interface IResultState {
-//     transactionHash: string;
-//     contractAddress?: string;
-// }
+export interface TransactionParameters {
+    admin?: string;
+    codeId?: string;
+    label?: string;
+    msg: Record<string, any>;
+    type?: string;
+    totalLength?: number;
+    walletLength?: number;
+    contract?: string;
+}
+
+export interface ContentParameters {
+    decimals?: string;
+    symbol?: string;
+    fctAmount?: string;
+    feeAmount?: string;
+    alert?: string;
+    list?: {
+        label: string;
+        value: string;
+        type: string;
+    }[];
+    extraList?: {
+        label: string;
+        value: string;
+        type: string;
+    }[];
+}
 
 interface SuccessData {
     addedAt: string;
@@ -132,7 +128,7 @@ interface SuccessData {
 }
 
 type ModuleTypes =
-    | '/instantiateContract'
+    | '/cw20/instantiateContract'
     | '/cw20/burnToken'
     | '/cw20/burnFrom'
     | '/cw20/decreaseAllowance'
@@ -143,6 +139,7 @@ type ModuleTypes =
     | '/cw20/updateLogo'
     | '/cw20/updateMarketing'
     | '/cw20/updateMinter'
+    | '/cw721/instantiateContract'
     | '/cw721/approve'
     | '/cw721/approveAll'
     | '/cw721/burn'
@@ -174,48 +171,6 @@ const QRModal2 = ({
     const { enqueueSnackbar } = useSnackbar();
     const {
         getFctBalance
-        // getGasEstimationInstantiate,
-        // getGasEstimationCw20Mint,
-        // getGasEstimationCw20Burn,
-        // getGasEstimationCw20BurnFrom,
-        // getGasEstimationCw20IncreaseAllowance,
-        // getGasEstimationCw20DecreaseAllowance,
-        // getGasEstimationCw20Transfer,
-        // getGasEstimationCw20TransferFrom,
-        // getGasEstimationCw20UpdateLogo,
-        // getGasEstimationCw20UpdateMarketing,
-        // getGasEstimationCw20UpdateMinter,
-        // getGasEstimationCw721Mint,
-        // getGasEstimationCw721Burn,
-        // getGasEstimationCw721Transfer,
-        // getGasEstimationCw721Approve,
-        // getGasEstimationCw721ApproveAll,
-        // getGasEstimationCw721Revoke,
-        // getGasEstimationCw721RevokeAll,
-        // getGasEstimationCw721UpdateOwnershipAccept,
-        // getGasEstimationCw721UpdateOwnershipRenounce,
-        // getGasEstimationCw721UpdateOwnershipTransfer,
-        // instantiate,
-        // cw20Mint,
-        // cw20Burn,
-        // cw20BurnFrom,
-        // cw20IncreaseAllowance,
-        // cw20DecreaseAllowance,
-        // cw20Trnasfer,
-        // cw20TrnasferFrom,
-        // cw20UpdateLogo,
-        // cw20UpdateMarketing,
-        // cw20UpdateMinter,
-        // cw721Mint,
-        // cw721Burn,
-        // cw721Transfer,
-        // cw721Approve,
-        // cw721ApproveAll,
-        // cw721Revoke,
-        // cw721RevokeAll,
-        // cw721UpdateOwnerShipAccept,
-        // cw721UpdateOwnerShipRenounce,
-        // cw721UpdateOwnerShipTransfer
     } = useFirmaSDKInternal();
 
     const { getCW20ContractInfo } = useMyToken();
@@ -234,6 +189,27 @@ const QRModal2 = ({
     // const [estimatedGas, setEstimatedGas] = useState<number>(0);
     // const [inputPassword, setInputPassword] = useState<string>('');
 
+    const instantiateFee = useMemo(() => {
+        try {
+            let resultFee = CRAFT_CONFIGS.DEFAULT_FEE;
+
+            if (params.txParams.totalLength > 1200) {
+                const multipleCount = (Number(params.txParams.totalLength.toString().length) - 1200) / 100;
+                resultFee = resultFee + multipleCount * Number(CRAFT_CONFIGS.INSTANTIATE_LENGTH_FEE);
+            }
+
+            if (params.txParams.walletLength >= 2) {
+                const defaultLength = Number(params.txParams.walletLength) - 1;
+                const fee = defaultLength * CRAFT_CONFIGS.INSTANTIATE_WALLET_FEE;
+                return resultFee + fee;
+            } else {
+                return resultFee;
+            }
+        } catch (error) {
+            return 0;
+        }
+    }, [params.txParams]);
+
     const getBalance = () => {
         getFctBalance(address)
             .then((result) => {
@@ -248,14 +224,14 @@ const QRModal2 = ({
     const updateContract = async () => {
         try {
             const isCW20 = module.includes('cw20');
-            if (params.contract === '') return;
-            if (params.type === 'INSTANTIATE') return;
+            if (params.txParams.contract === '') return;
+            if (params.modalType === 'INSTANTIATE') return;
 
             if (isCW20) {
-                const newInfo = await getCW20ContractInfo(params.contract);
+                const newInfo = await getCW20ContractInfo(params.txParams.contract);
                 updateCW20ContractInfo(newInfo);
             } else {
-                const newInfo = await getCW721ContractInfo(params.contract);
+                const newInfo = await getCW721ContractInfo(params.txParams.contract);
                 updateCW721ContractInfo(newInfo);
             }
         } catch (error) {
@@ -269,163 +245,8 @@ const QRModal2 = ({
         }
     }, [status]);
 
-    // const getEstimatedGas = async () => {
-    //     try {
-    //         switch (module) {
-    //             case '/cw20/instantiateContract':
-    //                 const cw20info = params.instantiate;
-    //                 const cw20InstantiateGas = await getGasEstimationInstantiate(
-    //                     cw20info.admin,
-    //                     cw20info.codeId,
-    //                     cw20info.label,
-    //                     JSON.stringify(params.msg),
-    //                     CRAFT_CONFIGS.CW20.MEMO
-    //                 );
-    //                 setEstimatedGas(cw20InstantiateGas);
-    //                 return;
-    //             case '/cw721/instantiateContract':
-    //                 const cw721info = params.instantiate;
-    //                 const cw721InstantiateGas = await getGasEstimationInstantiate(
-    //                     cw721info.admin,
-    //                     cw721info.codeId,
-    //                     cw721info.label,
-    //                     JSON.stringify(params.msg),
-    //                     CRAFT_CONFIGS.CW721.MEMO
-    //                 );
-    //                 setEstimatedGas(cw721InstantiateGas);
-    //                 return;
-    //             case '/cw20/mintToken':
-    //                 const cw20MintGas = await getGasEstimationCw20Mint(params.contract, JSON.parse(JSON.stringify(params.msg)));
-    //                 setEstimatedGas(cw20MintGas);
-    //                 return;
-    //             case '/cw20/burnToken':
-    //                 const amount = JSON.parse(JSON.stringify(params.msg)).amount;
-    //                 const cw20BurnGas = await getGasEstimationCw20Burn(params.contract, amount);
-    //                 setEstimatedGas(cw20BurnGas);
-    //                 return;
-    //             case '/cw20/burnFrom':
-    //                 const cw20BurnFromGas = await getGasEstimationCw20BurnFrom(params.contract, JSON.parse(JSON.stringify(params.msg)));
-    //                 setEstimatedGas(cw20BurnFromGas);
-    //                 return;
-    //             case '/cw20/increaseAllowance':
-    //                 const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
-    //                 const cw20IncreaseGas = await getGasEstimationCw20IncreaseAllowance(
-    //                     params.contract,
-    //                     cw20IncreaseInfo.spender,
-    //                     cw20IncreaseInfo.amount,
-    //                     cw20IncreaseInfo.expires
-    //                 );
-    //                 setEstimatedGas(cw20IncreaseGas);
-    //                 return;
-    //             case '/cw20/decreaseAllowance':
-    //                 const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
-    //                 const cw20DecreaseGas = await getGasEstimationCw20DecreaseAllowance(
-    //                     params.contract,
-    //                     cw20DecreaseInfo.spender,
-    //                     cw20DecreaseInfo.amount,
-    //                     cw20DecreaseInfo.expires
-    //                 );
-    //                 setEstimatedGas(cw20DecreaseGas);
-    //                 return;
-    //             case '/cw20/transfer':
-    //                 const cw20TransferGas = await getGasEstimationCw20Transfer(params.contract, JSON.parse(JSON.stringify(params.msg)));
-    //                 setEstimatedGas(cw20TransferGas);
-    //                 return;
-    //             case '/cw20/transferFrom':
-    //                 const cw20TransferFromGas = await getGasEstimationCw20TransferFrom(
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg))
-    //                 );
-    //                 setEstimatedGas(cw20TransferFromGas);
-    //                 return;
-    //             case '/cw20/updateLogo':
-    //                 const logo = JSON.parse(JSON.stringify(params.msg)).url;
-    //                 const cw20UpdateLogoGas = await getGasEstimationCw20UpdateLogo(params.contract, logo);
-    //                 setEstimatedGas(cw20UpdateLogoGas);
-    //                 return;
-    //             case '/cw20/updateMarketing':
-    //                 const msg = JSON.parse(JSON.stringify(params.msg));
-    //                 const description = msg.description;
-    //                 const marketing = msg.marketing;
-    //                 const project = msg.project;
-    //                 const cw20UpdateMarketingGas = await getGasEstimationCw20UpdateMarketing(
-    //                     params.contract,
-    //                     description,
-    //                     marketing,
-    //                     project
-    //                 );
-    //                 setEstimatedGas(cw20UpdateMarketingGas);
-    //                 return;
-    //             case '/cw20/updateMinter':
-    //                 const newMinter = JSON.parse(JSON.stringify(params.msg)).new_minter;
-    //                 const cw20UpdateMinterGas = await getGasEstimationCw20UpdateMinter(params.contract, newMinter);
-    //                 setEstimatedGas(cw20UpdateMinterGas);
-    //                 return;
-    //             case '/cw721/mint':
-    //                 const cw721MintGas = await getGasEstimationCw721Mint(params.contract, JSON.parse(JSON.stringify(params.msg)));
-    //                 setEstimatedGas(cw721MintGas);
-    //                 return;
-    //             case '/cw721/burn':
-    //                 const cw721BurnGas = await getGasEstimationCw721Burn(params.contract, JSON.parse(JSON.stringify(params.msg)));
-    //                 setEstimatedGas(cw721BurnGas);
-    //                 return;
-    //             case '/cw721/transfer':
-    //                 const cw721TransferGas = await getGasEstimationCw721Transfer(params.contract, JSON.parse(JSON.stringify(params.msg)));
-    //                 setEstimatedGas(cw721TransferGas);
-    //                 return;
-    //             case '/cw721/approve':
-    //                 const approveExpires: Cw721Expires = params.msg.expires;
-    //                 const spender: string = params.msg.spender;
-    //                 const token_id: string = params.msg.token_id;
-    //                 const cw721ApproveGas = await getGasEstimationCw721Approve(params.contract, spender, token_id, approveExpires);
-    //                 setEstimatedGas(cw721ApproveGas);
-    //                 return;
-    //             case '/cw721/approveAll':
-    //                 const approveAllAxpires: Cw721Expires = params.msg.expires;
-    //                 const operator: string = params.msg.operator;
-    //                 const cw721ApproveAllGas = await getGasEstimationCw721ApproveAll(params.contract, operator, approveAllAxpires);
-    //                 setEstimatedGas(cw721ApproveAllGas);
-    //                 return;
-    //             case '/cw721/revoke':
-    //                 const revokeSpender: string = params.msg.spender;
-    //                 const revokeToken_id: string = params.msg.token_id;
-    //                 const cw721RevokeGas = await getGasEstimationCw721Revoke(params.contract, revokeSpender, revokeToken_id);
-    //                 setEstimatedGas(cw721RevokeGas);
-    //                 return;
-    //             case '/cw721/revokeAll':
-    //                 const revokeOperator: string = params.msg.operator;
-    //                 const cw721RevokeAllGas = await getGasEstimationCw721RevokeAll(params.contract, revokeOperator);
-    //                 setEstimatedGas(cw721RevokeAllGas);
-    //                 return;
-    //             case '/cw721/updateOwnershipTransfer':
-    //                 const new_owner: string = params.msg.new_owner;
-    //                 const expiry: Cw721Expires = params.msg.expiry;
-    //                 const cw721UpdateOwnershipTransferGas = await getGasEstimationCw721UpdateOwnershipTransfer(
-    //                     params.contract,
-    //                     new_owner,
-    //                     expiry
-    //                 );
-    //                 setEstimatedGas(cw721UpdateOwnershipTransferGas);
-    //                 return;
-    //             case '/cw721/updateOwnershipAccept':
-    //                 const cw721UpdateOwnershipAcceptGas = await getGasEstimationCw721UpdateOwnershipAccept(params.contract);
-    //                 setEstimatedGas(cw721UpdateOwnershipAcceptGas);
-    //                 return;
-    //             case '/cw721/updateOwnershipRenounce':
-    //                 const cw721UpdateOwnershipRenounceGas = await getGasEstimationCw721UpdateOwnershipRenounce(params.contract);
-    //                 setEstimatedGas(cw721UpdateOwnershipRenounceGas);
-    //                 return;
-    //             default:
-    //                 return;
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
     useEffect(() => {
         getBalance();
-        // getEstimatedGas();
     }, [address]);
 
     const closeModal = useModalStore().closeModal;
@@ -437,276 +258,14 @@ const QRModal2 = ({
         }
     };
 
-    // const onChangeInputPassword = (v: string) => {
-    //     setInputPassword(v);
-    // };
-
     const onClickTransactionHash = (hash: string) => {
         window.open(`${CRAFT_CONFIGS.BLOCK_EXPLORER}/transactions/${hash}`);
     };
 
-    // const handleTransaction = async () => {
-    //     setStatus('loading');
-    //     try {
-    //         switch (module) {
-    //             case '/cw20/instantiateContract':
-    //                 const cw20info = params.instantiate;
-    //                 const cw20InstantiateResult = await instantiate(
-    //                     inputPassword,
-    //                     cw20info.admin,
-    //                     cw20info.codeId,
-    //                     cw20info.label,
-    //                     JSON.stringify(params.msg),
-    //                     estimatedGas,
-    //                     CRAFT_CONFIGS.CW20.MEMO
-    //                 );
-    //                 setResult(cw20InstantiateResult);
-    //                 setStatus('success');
-    //                 useInstantiateStore.getState().clearForm();
-    //                 useFormStore.getState().clearForm();
-    //                 return;
-    //             case '/cw721/instantiateContract':
-    //                 const cw721info = params.instantiate;
-    //                 const cw721nstantiateResult = await instantiate(
-    //                     inputPassword,
-    //                     cw721info.admin,
-    //                     cw721info.codeId,
-    //                     cw721info.label,
-    //                     JSON.stringify(params.msg),
-    //                     estimatedGas,
-    //                     CRAFT_CONFIGS.CW721.MEMO
-    //                 );
-    //                 setResult(cw721nstantiateResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/mintToken':
-    //                 const cw20MintResult = await cw20Mint(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg)),
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw20MintResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/burnToken':
-    //                 const amount = JSON.parse(JSON.stringify(params.msg)).amount;
-    //                 const cw20BurnResult = await cw20Burn(inputPassword, params.contract, amount, estimatedGas);
-    //                 setResult(cw20BurnResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/burnFrom':
-    //                 const cw20BurnFromResult = await cw20BurnFrom(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg)),
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw20BurnFromResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/increaseAllowance':
-    //                 const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
-    //                 const cw20IncreaseResulrt = await cw20IncreaseAllowance(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     cw20IncreaseInfo.spender,
-    //                     cw20IncreaseInfo.amount,
-    //                     cw20IncreaseInfo.expires,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw20IncreaseResulrt);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/decreaseAllowance':
-    //                 const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
-    //                 const cw20DecreaseResulrt = await cw20DecreaseAllowance(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     cw20DecreaseInfo.spender,
-    //                     cw20DecreaseInfo.amount,
-    //                     cw20DecreaseInfo.expires,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw20DecreaseResulrt);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/transfer':
-    //                 const cw20TransferResult = await cw20Trnasfer(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg)),
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw20TransferResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/transferFrom':
-    //                 const cw20TransferFromResult = await cw20TrnasferFrom(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg)),
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw20TransferFromResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/updateLogo':
-    //                 const logo = JSON.parse(JSON.stringify(params.msg)).url;
-    //                 const cw20UpdateLogoResult = await cw20UpdateLogo(inputPassword, params.contract, logo, estimatedGas);
-    //                 setResult(cw20UpdateLogoResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/updateMarketing':
-    //                 const msg = JSON.parse(JSON.stringify(params.msg));
-    //                 const description = msg.description;
-    //                 const marketing = msg.marketing;
-    //                 const project = msg.project;
-    //                 const cw20UpdateMarketingesult = await cw20UpdateMarketing(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     description,
-    //                     marketing,
-    //                     project,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw20UpdateMarketingesult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw20/updateMinter':
-    //                 const newMinter = JSON.parse(JSON.stringify(params.msg)).new_minter;
-    //                 const cw20UpdateMinterResult = await cw20UpdateMinter(inputPassword, params.contract, newMinter, estimatedGas);
-    //                 setResult(cw20UpdateMinterResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/mint':
-    //                 const cw721MintResult = await cw721Mint(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg)),
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721MintResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/burn':
-    //                 const cw721BurnResult = await cw721Burn(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg)),
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721BurnResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/transfer':
-    //                 const cw721TransferResult = await cw721Transfer(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     JSON.parse(JSON.stringify(params.msg)),
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721TransferResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/approve':
-    //                 const approveExpires: Cw721Expires = params.msg.expires;
-    //                 const spender: string = params.msg.spender;
-    //                 const token_id: string = params.msg.token_id;
-    //                 const cw721ApproveResult = await cw721Approve(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     spender,
-    //                     token_id,
-    //                     approveExpires,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721ApproveResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/approveAll':
-    //                 const approveAllExpires: Cw721Expires = params.msg.expires;
-    //                 const operator: string = params.msg.operator;
-    //                 const cw721ApproveAllResult = await cw721ApproveAll(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     operator,
-    //                     approveAllExpires,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721ApproveAllResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/revoke':
-    //                 const revokeSpender: string = params.msg.spender;
-    //                 const revokeToken_id: string = params.msg.token_id;
-    //                 const cw721RevokeResult = await cw721Revoke(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     revokeSpender,
-    //                     revokeToken_id,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721RevokeResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/revokeAll':
-    //                 const revokeOperator: string = params.msg.operator;
-    //                 const cw721RevokeAllResult = await cw721RevokeAll(inputPassword, params.contract, revokeOperator, estimatedGas);
-    //                 setResult(cw721RevokeAllResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/updateOwnershipTransfer':
-    //                 const new_owner: string = params.msg.new_owner;
-    //                 const expiry: Cw721Expires = params.msg.expiry;
-    //                 const cw721UpdateOwnershipTransferResult = await cw721UpdateOwnerShipTransfer(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     new_owner,
-    //                     expiry,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721UpdateOwnershipTransferResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/updateOwnershipAccept':
-    //                 const cw721UpdateOwnershipAcceptResult = await cw721UpdateOwnerShipAccept(inputPassword, params.contract, estimatedGas);
-    //                 setResult(cw721UpdateOwnershipAcceptResult);
-    //                 setStatus('success');
-    //                 return;
-    //             case '/cw721/updateOwnershipRenounce':
-    //                 const cw721UpdateOwnershipRenounceResult = await cw721UpdateOwnerShipRenounce(
-    //                     inputPassword,
-    //                     params.contract,
-    //                     estimatedGas
-    //                 );
-    //                 setResult(cw721UpdateOwnershipRenounceResult);
-    //                 setStatus('success');
-    //                 return;
-    //             default:
-    //                 return;
-    //         }
-    //     } catch (error) {
-    //         enqueueSnackbar('Transaction failed', {
-    //             variant: 'error',
-    //             autoHideDuration: 2000
-    //         });
-    //         setStatus('failure');
-    //     }
-    // };
-
-    // const isConnectedWallet = useMemo(() => {
-    //     return !Boolean(passwordWallet === '' || timeKey === '');
-    // }, [passwordWallet, timeKey]);
-
-    // const isTxButtonDisabled = useMemo(() => {
-    //     return Boolean(inputPassword.length < 8);
-    // }, [inputPassword]);
-
     const RenderItem = useCallback(
         ({ type, label, value }: { type: string; label: string; value: string }) => {
             if (type === 'amount') {
-                return <AmountItem label={label} decimals={params.content.decimals} amount={value} symbol={params.content.symbol} />;
+                return <AmountItem label={label} decimals={params.contentParams.decimals} amount={value} symbol={params.contentParams.symbol} />;
             } else if (type === 'wallet') {
                 return <ResultWalletAdress label={label} address={value} />;
             } else if (type === 'url') {
@@ -716,7 +275,7 @@ const QRModal2 = ({
             } else if (['at_time', 'at_height', 'never'].includes(type)) {
                 return <ExpirationItem value={value} type={type} />;
             } else if (type === 'nft') {
-                return <NftItem label={label} value={value} symbol={params.content.symbol} />;
+                return <NftItem label={label} value={value} symbol={params.contentParams.symbol} />;
             } else if (type === 'nft_id') {
                 return <NftIdItem label={label} value={value} />;
             } else if (type === 'warning') {
@@ -775,8 +334,8 @@ const QRModal2 = ({
                                 <RequestQR
                                     qrSize={144}
                                     isTxModal={true}
-                                    module={module}
-                                    params={params}
+                                    module={module.includes('instantiate') ? '/cosmwasm/instantiateContract' : module}
+                                    params={params.txParams}
                                     signer={address}
                                     onSuccess={(requestData: any) => {
                                         console.log('requestData: ', requestData);
@@ -797,10 +356,10 @@ const QRModal2 = ({
                                 />
                             </QrCodeWrap>
                             <ModalContentWrap style={{ marginBottom: '36px' }}>
-                                {params.content.alert && (
+                                {params.contentParams.alert && (
                                     <ModalAlertBox>
                                         <img src={IC_ALERT_YELLOW} alt="alert" style={{ width: '16px' }} />
-                                        <span className="typo">{params.content.alert}</span>
+                                        <span className="typo">{params.contentParams.alert}</span>
                                     </ModalAlertBox>
                                 )}
                                 <ModalContentBlackCard
@@ -810,13 +369,13 @@ const QRModal2 = ({
                                             : { background: '#141414' }
                                     }
                                 >
-                                    {params.content.list.map((el, index) => {
+                                    {params.contentParams.list.map((el, index) => {
                                         return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
-                                    {params.content.extraList && (
+                                    {params.contentParams.extraList && (
                                         <Fragment>
                                             <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                            {params.content.extraList.map((el, index) => {
+                                            {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}
@@ -833,7 +392,7 @@ const QRModal2 = ({
                                     <ItemWrap>
                                         <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
                                         <ItemValueWrap>
-                                            <FeeAmount>{FirmaUtil.getFCTStringFromUFCT(Number(params.content.feeAmount))}</FeeAmount>
+                                            <FeeAmount>{FirmaUtil.getFCTStringFromUFCT(Number(instantiateFee))}</FeeAmount>
                                             <FCTSymbolIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Icon'} />
                                         </ItemValueWrap>
                                     </ItemWrap>
@@ -894,13 +453,13 @@ const QRModal2 = ({
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    {params.content.list.map((el, index) => {
+                                    {params.contentParams.list.map((el, index) => {
                                         return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
-                                    {params.content.extraList && (
+                                    {params.contentParams.extraList && (
                                         <Fragment>
                                             <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                            {params.content.extraList.map((el, index) => {
+                                            {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}
@@ -914,7 +473,7 @@ const QRModal2 = ({
                                     )}
                                 </ResultsContentSummeryWrap>
                                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
-                                {params.type === 'INSTANTIATE' && parsedData.contractAddress && (
+                                {params.modalType === 'INSTANTIATE' && parsedData.contractAddress && (
                                     <ResultsContentHashWrap>
                                         <ContractAddressItem label={'Contract Address'} contractAddress={parsedData.contractAddress} />
                                     </ResultsContentHashWrap>
@@ -940,7 +499,7 @@ const QRModal2 = ({
                                     <ResultsGoToMyMintetedTokenButton
                                         onClick={() => {
                                             const contract =
-                                                parsedData.contractAddress === undefined ? params.contract : parsedData.contractAddress;
+                                                parsedData.contractAddress === undefined ? params.txParams.contract : parsedData.contractAddress;
                                             const url =
                                                 cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
                                             navigate(url);

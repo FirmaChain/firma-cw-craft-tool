@@ -13,7 +13,6 @@ import { CRAFT_CONFIGS } from '@/config';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
-import InstantiateModal from '../../modal/instantiateModal';
 import { addStringAmount, addStringAmountsArray, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
@@ -67,21 +66,6 @@ const Preview = ({ isBasic }: IProps) => {
     const codeId = useMemo(() => {
         const cw20CodeId = contractMode === 'BASIC' ? CRAFT_CONFIGS.CW20.BASIC_CODE_ID : CRAFT_CONFIGS.CW20.ADVANCED_CODE_ID;
 
-        // getGasEstimationInstantiate("firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8", "132", "TEST", `{"decimals":6,"name":"TEST","symbol":"TTTT","initial_balances":[{"address":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","amount":"10000000000"}],"marketing":{"description":"ASDDSA","logo":{"url":""},"marketing":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","project":""}}`, "TEST")
-        // .then((result) => {
-        //     instantiate("firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8", "132", "TEST", `{"decimals":6,"name":"TEST","symbol":"TTTT","initial_balances":[{"address":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","amount":"10000000000"}],"marketing":{"description":"ASDDSA","logo":{"url":""},"marketing":"firma1gv5rps42l8264y64e7lyvsgutz2pr7cxl68mf8","project":""}}`, result, "test")
-        //         .then((txResult) => {
-        //             console.log(txResult);
-        //         })
-        //         .catch((txResult) => {
-        //             console.log(txResult);
-        //         })
-        //     console.log(result);
-        // })
-        // .catch((error) => {
-
-        // });
-
         return cw20CodeId;
     }, [contractMode]);
 
@@ -112,7 +96,6 @@ const Preview = ({ isBasic }: IProps) => {
                     convertWalletList.push({ address, amount: walletObj[address] });
                 }
             }
-
             const invalidMessageType = checkInstantiate(isBasic, walletList, decimalsTotalSupply, decimalsMinterCap);
             const supplyAmount = convertWalletList.length === 0 ? '0' : addStringAmountsArray([...convertWalletList.map((one) => one.amount)]);
             
@@ -136,16 +119,20 @@ const Preview = ({ isBasic }: IProps) => {
                     }
                 };
                 const params = {
-                    type: 'INSTANTIATE' as ModalType,
+                    modalType: 'INSTANTIATE' as ModalType,
                     header: {
                         title: 'CW20 Instantiation'
                     },
-                    instantiate: {
+                    txParams: {
                         admin: address,
                         codeId: codeId,
-                        label: label
+                        label: label,
+                        type: 'cw20',
+                        msg: messageData,
+                        walletLength: walletList.length,
+                        totalLength: JSON.stringify(messageData).length,
                     },
-                    content: {
+                    contentParams: {
                         decimals: newDecimals.toString(),
                         symbol: tokenSymbol,
                         list: [
@@ -177,9 +164,7 @@ const Preview = ({ isBasic }: IProps) => {
                                 type: 'amount'
                             }
                         ]
-                    },
-                    contract: '',
-                    msg: messageData
+                    }
                 };
 
                 modal.openModal({
@@ -196,7 +181,7 @@ const Preview = ({ isBasic }: IProps) => {
                             />
                         ) : (
                             <QRModal2
-                                module="/cosmwasm/instantiateContract"
+                                module="/cw20/instantiateContract"
                                 id={id}
                                 params={params}
                                 onClickConfirm={() => {

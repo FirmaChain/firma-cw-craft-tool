@@ -317,11 +317,15 @@ const TransferPreview = () => {
                 : transferListForModal.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTE' as ModalType,
             header: {
                 title: 'Transfer'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: transferListForModal
+            },
+            contentParams: {
                 symbol: nftContractInfo.symbol,
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
@@ -338,8 +342,6 @@ const TransferPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: transferListForModal
         };
 
         modal.openModal({

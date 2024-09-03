@@ -199,11 +199,18 @@ const ApproveAllPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTE' as ModalType,
             header: {
                 title: 'Approve All'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: {
+                    expires: expires,
+                    operator: approveRecipientAddress
+                }
+            },
+            contentParams: {
                 symbol: nftContractInfo.symbol,
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
@@ -221,11 +228,6 @@ const ApproveAllPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: {
-                expires: expires,
-                operator: approveRecipientAddress
-            }
         };
 
         modal.openModal({

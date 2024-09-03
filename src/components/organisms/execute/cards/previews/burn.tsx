@@ -165,11 +165,17 @@ const BurnPreview = () => {
         const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Burn'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: {
+                    amount
+                }
+            },
+            contentParams: {
                 symbol: tokenInfo.symbol,
                 decimals: tokenInfo.decimals.toString(),
                 fctAmount: fctBalance,
@@ -182,10 +188,6 @@ const BurnPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: {
-                amount
-            }
         };
 
         console.log("USE_WALLET_CONNECT", USE_WALLET_CONNECT);

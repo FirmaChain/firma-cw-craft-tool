@@ -9,7 +9,6 @@ import { useMemo } from 'react';
 import Submit from './submit';
 import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
-import InstantiateModal from '@/components/organisms/modal/cw721/instantiateModal';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
@@ -169,16 +168,19 @@ const Preview = () => {
             };
 
             const params = {
-                type: 'INSTANTIATE' as ModalType,
+                modalType: 'INSTANTIATE' as ModalType,
                 header: {
                     title: 'CW721 Instantiation'
                 },
-                instantiate: {
+                txParams: {
                     admin: contractMode === 'BASIC' ? address : admin,
                     codeId: codeId,
                     label: label,
+                    type: 'cw721',
+                    msg: messageData,
+                    contract: '',
                 },
-                content: {
+                contentParams: {
                     list: [
                         {
                             label: 'Contract Name',
@@ -192,8 +194,6 @@ const Preview = () => {
                         },
                     ]
                 },
-                contract: '',
-                msg: messageData,
             };
 
             modal.openModal({
@@ -210,7 +210,7 @@ const Preview = () => {
                         />
                     ) : (
                         <QRModal2
-                            module="/cosmwasm/instantiateContract"
+                            module="/cw721/instantiateContract"
                             id={id}
                             params={params}
                             onClickConfirm={() => {

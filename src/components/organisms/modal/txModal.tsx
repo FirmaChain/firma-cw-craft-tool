@@ -80,35 +80,41 @@ import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
 export interface ModalParameters {
-    type: ModalType;
-
+    modalType: ModalType;
     header: {
         title: string;
     };
-    instantiate?: {
-        admin: string;
-        label: string;
-        codeId: string;
-    };
-    content: {
-        decimals?: string;
-        symbol?: string;
-        fctAmount?: string;
-        feeAmount?: string;
-        alert?: string;
-        list?: {
-            label: string;
-            value: string;
-            type: string;
-        }[];
-        extraList?: {
-            label: string;
-            value: string;
-            type: string;
-        }[];
-    };
-    contract: string;
+    txParams: TransactionParameters;
+    contentParams: ContentParameters;
+}
+
+export interface TransactionParameters {
+    admin?: string;
+    codeId?: string;
+    label?: string;
     msg: Record<string, any>;
+    type?: string;
+    totalLength?: number;
+    walletLength?: number;
+    contract?: string;
+}
+
+export interface ContentParameters {
+    decimals?: string;
+    symbol?: string;
+    fctAmount?: string;
+    feeAmount?: string;
+    alert?: string;
+    list?: {
+        label: string;
+        value: string;
+        type: string;
+    }[];
+    extraList?: {
+        label: string;
+        value: string;
+        type: string;
+    }[];
 }
 
 interface IResultState {
@@ -231,14 +237,14 @@ const TxModal = ({
     const updateContract = async () => {
         try {
             const isCW20 = module.includes('cw20');
-            if (params.contract === '') return;
-            if (params.type === 'INSTANTIATE') return;
+            if (params.txParams.contract === '') return;
+            if (params.modalType === 'INSTANTIATE') return;
 
             if (isCW20) {
-                const newInfo = await getCW20ContractInfo(params.contract);
+                const newInfo = await getCW20ContractInfo(params.txParams.contract);
                 updateCW20ContractInfo(newInfo);
             } else {
-                const newInfo = await getCW721ContractInfo(params.contract);
+                const newInfo = await getCW721ContractInfo(params.txParams.contract);
                 updateCW721ContractInfo(newInfo);
             }
         } catch (error) {
@@ -256,44 +262,44 @@ const TxModal = ({
         try {
             switch (module) {
                 case '/cw20/instantiateContract':
-                    const cw20info = params.instantiate;
+                    const cw20info = params.txParams;
                     const cw20InstantiateGas = await getGasEstimationInstantiate(
                         cw20info.admin,
                         cw20info.codeId,
                         cw20info.label,
-                        JSON.stringify(params.msg),
+                        JSON.stringify(cw20info.msg),
                         CRAFT_CONFIGS.CW20.MEMO
                     );
                     setEstimatedGas(cw20InstantiateGas);
                     return;
                 case '/cw721/instantiateContract':
-                    const cw721info = params.instantiate;
+                    const cw721info = params.txParams;
                     const cw721InstantiateGas = await getGasEstimationInstantiate(
                         cw721info.admin,
                         cw721info.codeId,
                         cw721info.label,
-                        JSON.stringify(params.msg),
+                        JSON.stringify(cw721info.msg),
                         CRAFT_CONFIGS.CW721.MEMO
                     );
                     setEstimatedGas(cw721InstantiateGas);
                     return;
                 case '/cw20/mintToken':
-                    const cw20MintGas = await getGasEstimationCw20Mint(params.contract, JSON.parse(JSON.stringify(params.msg)));
+                    const cw20MintGas = await getGasEstimationCw20Mint(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
                     setEstimatedGas(cw20MintGas);
                     return;
                 case '/cw20/burnToken':
-                    const amount = JSON.parse(JSON.stringify(params.msg)).amount;
-                    const cw20BurnGas = await getGasEstimationCw20Burn(params.contract, amount);
+                    const amount = JSON.parse(JSON.stringify(params.txParams.msg)).amount;
+                    const cw20BurnGas = await getGasEstimationCw20Burn(params.txParams.contract, amount);
                     setEstimatedGas(cw20BurnGas);
                     return;
                 case '/cw20/burnFrom':
-                    const cw20BurnFromGas = await getGasEstimationCw20BurnFrom(params.contract, JSON.parse(JSON.stringify(params.msg)));
+                    const cw20BurnFromGas = await getGasEstimationCw20BurnFrom(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
                     setEstimatedGas(cw20BurnFromGas);
                     return;
                 case '/cw20/increaseAllowance':
-                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
+                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
                     const cw20IncreaseGas = await getGasEstimationCw20IncreaseAllowance(
-                        params.contract,
+                        params.txParams.contract,
                         cw20IncreaseInfo.spender,
                         cw20IncreaseInfo.amount,
                         cw20IncreaseInfo.expires
@@ -301,9 +307,9 @@ const TxModal = ({
                     setEstimatedGas(cw20IncreaseGas);
                     return;
                 case '/cw20/decreaseAllowance':
-                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
+                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
                     const cw20DecreaseGas = await getGasEstimationCw20DecreaseAllowance(
-                        params.contract,
+                        params.txParams.contract,
                         cw20DecreaseInfo.spender,
                         cw20DecreaseInfo.amount,
                         cw20DecreaseInfo.expires
@@ -311,28 +317,28 @@ const TxModal = ({
                     setEstimatedGas(cw20DecreaseGas);
                     return;
                 case '/cw20/transfer':
-                    const cw20TransferGas = await getGasEstimationCw20Transfer(params.contract, JSON.parse(JSON.stringify(params.msg)));
+                    const cw20TransferGas = await getGasEstimationCw20Transfer(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
                     setEstimatedGas(cw20TransferGas);
                     return;
                 case '/cw20/transferFrom':
                     const cw20TransferFromGas = await getGasEstimationCw20TransferFrom(
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg))
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg))
                     );
                     setEstimatedGas(cw20TransferFromGas);
                     return;
                 case '/cw20/updateLogo':
-                    const logo = JSON.parse(JSON.stringify(params.msg)).url;
-                    const cw20UpdateLogoGas = await getGasEstimationCw20UpdateLogo(params.contract, logo);
+                    const logo = JSON.parse(JSON.stringify(params.txParams.msg)).url;
+                    const cw20UpdateLogoGas = await getGasEstimationCw20UpdateLogo(params.txParams.contract, logo);
                     setEstimatedGas(cw20UpdateLogoGas);
                     return;
                 case '/cw20/updateMarketing':
-                    const msg = JSON.parse(JSON.stringify(params.msg));
+                    const msg = JSON.parse(JSON.stringify(params.txParams.msg));
                     const description = msg.description;
                     const marketing = msg.marketing;
                     const project = msg.project;
                     const cw20UpdateMarketingGas = await getGasEstimationCw20UpdateMarketing(
-                        params.contract,
+                        params.txParams.contract,
                         description,
                         marketing,
                         project
@@ -340,62 +346,62 @@ const TxModal = ({
                     setEstimatedGas(cw20UpdateMarketingGas);
                     return;
                 case '/cw20/updateMinter':
-                    const newMinter = JSON.parse(JSON.stringify(params.msg)).new_minter;
-                    const cw20UpdateMinterGas = await getGasEstimationCw20UpdateMinter(params.contract, newMinter);
+                    const newMinter = JSON.parse(JSON.stringify(params.txParams.msg)).new_minter;
+                    const cw20UpdateMinterGas = await getGasEstimationCw20UpdateMinter(params.txParams.contract, newMinter);
                     setEstimatedGas(cw20UpdateMinterGas);
                     return;
                 case '/cw721/mint':
-                    const cw721MintGas = await getGasEstimationCw721Mint(params.contract, JSON.parse(JSON.stringify(params.msg)));
+                    const cw721MintGas = await getGasEstimationCw721Mint(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
                     setEstimatedGas(cw721MintGas);
                     return;
                 case '/cw721/burn':
-                    const cw721BurnGas = await getGasEstimationCw721Burn(params.contract, JSON.parse(JSON.stringify(params.msg)));
+                    const cw721BurnGas = await getGasEstimationCw721Burn(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
                     setEstimatedGas(cw721BurnGas);
                     return;
                 case '/cw721/transfer':
-                    const cw721TransferGas = await getGasEstimationCw721Transfer(params.contract, JSON.parse(JSON.stringify(params.msg)));
+                    const cw721TransferGas = await getGasEstimationCw721Transfer(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
                     setEstimatedGas(cw721TransferGas);
                     return;
                 case '/cw721/approve':
-                    const approveExpires: Cw721Expires = params.msg.expires;
-                    const spender: string = params.msg.spender;
-                    const token_id: string = params.msg.token_id;
-                    const cw721ApproveGas = await getGasEstimationCw721Approve(params.contract, spender, token_id, approveExpires);
+                    const approveExpires: Cw721Expires = params.txParams.msg.expires;
+                    const spender: string = params.txParams.msg.spender;
+                    const token_id: string = params.txParams.msg.token_id;
+                    const cw721ApproveGas = await getGasEstimationCw721Approve(params.txParams.contract, spender, token_id, approveExpires);
                     setEstimatedGas(cw721ApproveGas);
                     return;
                 case '/cw721/approveAll':
-                    const approveAllAxpires: Cw721Expires = params.msg.expires;
-                    const operator: string = params.msg.operator;
-                    const cw721ApproveAllGas = await getGasEstimationCw721ApproveAll(params.contract, operator, approveAllAxpires);
+                    const approveAllAxpires: Cw721Expires = params.txParams.msg.expires;
+                    const operator: string = params.txParams.msg.operator;
+                    const cw721ApproveAllGas = await getGasEstimationCw721ApproveAll(params.txParams.contract, operator, approveAllAxpires);
                     setEstimatedGas(cw721ApproveAllGas);
                     return;
                 case '/cw721/revoke':
-                    const revokeSpender: string = params.msg.spender;
-                    const revokeToken_id: string = params.msg.token_id;
-                    const cw721RevokeGas = await getGasEstimationCw721Revoke(params.contract, revokeSpender, revokeToken_id);
+                    const revokeSpender: string = params.txParams.msg.spender;
+                    const revokeToken_id: string = params.txParams.msg.token_id;
+                    const cw721RevokeGas = await getGasEstimationCw721Revoke(params.txParams.contract, revokeSpender, revokeToken_id);
                     setEstimatedGas(cw721RevokeGas);
                     return;
                 case '/cw721/revokeAll':
-                    const revokeOperator: string = params.msg.operator;
-                    const cw721RevokeAllGas = await getGasEstimationCw721RevokeAll(params.contract, revokeOperator);
+                    const revokeOperator: string = params.txParams.msg.operator;
+                    const cw721RevokeAllGas = await getGasEstimationCw721RevokeAll(params.txParams.contract, revokeOperator);
                     setEstimatedGas(cw721RevokeAllGas);
                     return;
                 case '/cw721/updateOwnershipTransfer':
-                    const new_owner: string = params.msg.new_owner;
-                    const expiry: Cw721Expires = params.msg.expiry;
+                    const new_owner: string = params.txParams.msg.new_owner;
+                    const expiry: Cw721Expires = params.txParams.msg.expiry;
                     const cw721UpdateOwnershipTransferGas = await getGasEstimationCw721UpdateOwnershipTransfer(
-                        params.contract,
+                        params.txParams.contract,
                         new_owner,
                         expiry
                     );
                     setEstimatedGas(cw721UpdateOwnershipTransferGas);
                     return;
                 case '/cw721/updateOwnershipAccept':
-                    const cw721UpdateOwnershipAcceptGas = await getGasEstimationCw721UpdateOwnershipAccept(params.contract);
+                    const cw721UpdateOwnershipAcceptGas = await getGasEstimationCw721UpdateOwnershipAccept(params.txParams.contract);
                     setEstimatedGas(cw721UpdateOwnershipAcceptGas);
                     return;
                 case '/cw721/updateOwnershipRenounce':
-                    const cw721UpdateOwnershipRenounceGas = await getGasEstimationCw721UpdateOwnershipRenounce(params.contract);
+                    const cw721UpdateOwnershipRenounceGas = await getGasEstimationCw721UpdateOwnershipRenounce(params.txParams.contract);
                     setEstimatedGas(cw721UpdateOwnershipRenounceGas);
                     return;
                 default:
@@ -433,13 +439,13 @@ const TxModal = ({
         try {
             switch (module) {
                 case '/cw20/instantiateContract':
-                    const cw20info = params.instantiate;
+                    const cw20info = params.txParams;
                     const cw20InstantiateResult = await instantiate(
                         inputPassword,
                         cw20info.admin,
                         cw20info.codeId,
                         cw20info.label,
-                        JSON.stringify(params.msg),
+                        JSON.stringify(params.txParams.msg),
                         estimatedGas,
                         CRAFT_CONFIGS.CW20.MEMO
                     );
@@ -449,13 +455,13 @@ const TxModal = ({
                     useFormStore.getState().clearForm();
                     return;
                 case '/cw721/instantiateContract':
-                    const cw721info = params.instantiate;
+                    const cw721info = params.txParams;
                     const cw721nstantiateResult = await instantiate(
                         inputPassword,
                         cw721info.admin,
                         cw721info.codeId,
                         cw721info.label,
-                        JSON.stringify(params.msg),
+                        JSON.stringify(params.txParams.msg),
                         estimatedGas,
                         CRAFT_CONFIGS.CW721.MEMO
                     );
@@ -465,34 +471,34 @@ const TxModal = ({
                 case '/cw20/mintToken':
                     const cw20MintResult = await cw20Mint(
                         inputPassword,
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg)),
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg)),
                         estimatedGas
                     );
                     setResult(cw20MintResult);
                     setStatus('success');
                     return;
                 case '/cw20/burnToken':
-                    const amount = JSON.parse(JSON.stringify(params.msg)).amount;
-                    const cw20BurnResult = await cw20Burn(inputPassword, params.contract, amount, estimatedGas);
+                    const amount = JSON.parse(JSON.stringify(params.txParams.msg)).amount;
+                    const cw20BurnResult = await cw20Burn(inputPassword, params.txParams.contract, amount, estimatedGas);
                     setResult(cw20BurnResult);
                     setStatus('success');
                     return;
                 case '/cw20/burnFrom':
                     const cw20BurnFromResult = await cw20BurnFrom(
                         inputPassword,
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg)),
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg)),
                         estimatedGas
                     );
                     setResult(cw20BurnFromResult);
                     setStatus('success');
                     return;
                 case '/cw20/increaseAllowance':
-                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
+                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
                     const cw20IncreaseResulrt = await cw20IncreaseAllowance(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         cw20IncreaseInfo.spender,
                         cw20IncreaseInfo.amount,
                         cw20IncreaseInfo.expires,
@@ -502,10 +508,10 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw20/decreaseAllowance':
-                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.msg));
+                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
                     const cw20DecreaseResulrt = await cw20DecreaseAllowance(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         cw20DecreaseInfo.spender,
                         cw20DecreaseInfo.amount,
                         cw20DecreaseInfo.expires,
@@ -517,8 +523,8 @@ const TxModal = ({
                 case '/cw20/transfer':
                     const cw20TransferResult = await cw20Trnasfer(
                         inputPassword,
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg)),
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg)),
                         estimatedGas
                     );
                     setResult(cw20TransferResult);
@@ -527,27 +533,27 @@ const TxModal = ({
                 case '/cw20/transferFrom':
                     const cw20TransferFromResult = await cw20TrnasferFrom(
                         inputPassword,
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg)),
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg)),
                         estimatedGas
                     );
                     setResult(cw20TransferFromResult);
                     setStatus('success');
                     return;
                 case '/cw20/updateLogo':
-                    const logo = JSON.parse(JSON.stringify(params.msg)).url;
-                    const cw20UpdateLogoResult = await cw20UpdateLogo(inputPassword, params.contract, logo, estimatedGas);
+                    const logo = JSON.parse(JSON.stringify(params.txParams.msg)).url;
+                    const cw20UpdateLogoResult = await cw20UpdateLogo(inputPassword, params.txParams.contract, logo, estimatedGas);
                     setResult(cw20UpdateLogoResult);
                     setStatus('success');
                     return;
                 case '/cw20/updateMarketing':
-                    const msg = JSON.parse(JSON.stringify(params.msg));
+                    const msg = JSON.parse(JSON.stringify(params.txParams.msg));
                     const description = msg.description;
                     const marketing = msg.marketing;
                     const project = msg.project;
                     const cw20UpdateMarketingesult = await cw20UpdateMarketing(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         description,
                         marketing,
                         project,
@@ -557,16 +563,16 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw20/updateMinter':
-                    const newMinter = JSON.parse(JSON.stringify(params.msg)).new_minter;
-                    const cw20UpdateMinterResult = await cw20UpdateMinter(inputPassword, params.contract, newMinter, estimatedGas);
+                    const newMinter = JSON.parse(JSON.stringify(params.txParams.msg)).new_minter;
+                    const cw20UpdateMinterResult = await cw20UpdateMinter(inputPassword, params.txParams.contract, newMinter, estimatedGas);
                     setResult(cw20UpdateMinterResult);
                     setStatus('success');
                     return;
                 case '/cw721/mint':
                     const cw721MintResult = await cw721Mint(
                         inputPassword,
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg)),
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg)),
                         estimatedGas
                     );
                     setResult(cw721MintResult);
@@ -575,8 +581,8 @@ const TxModal = ({
                 case '/cw721/burn':
                     const cw721BurnResult = await cw721Burn(
                         inputPassword,
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg)),
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg)),
                         estimatedGas
                     );
                     setResult(cw721BurnResult);
@@ -585,20 +591,20 @@ const TxModal = ({
                 case '/cw721/transfer':
                     const cw721TransferResult = await cw721Transfer(
                         inputPassword,
-                        params.contract,
-                        JSON.parse(JSON.stringify(params.msg)),
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg)),
                         estimatedGas
                     );
                     setResult(cw721TransferResult);
                     setStatus('success');
                     return;
                 case '/cw721/approve':
-                    const approveExpires: Cw721Expires = params.msg.expires;
-                    const spender: string = params.msg.spender;
-                    const token_id: string = params.msg.token_id;
+                    const approveExpires: Cw721Expires = params.txParams.msg.expires;
+                    const spender: string = params.txParams.msg.spender;
+                    const token_id: string = params.txParams.msg.token_id;
                     const cw721ApproveResult = await cw721Approve(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         spender,
                         token_id,
                         approveExpires,
@@ -608,11 +614,11 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw721/approveAll':
-                    const approveAllExpires: Cw721Expires = params.msg.expires;
-                    const operator: string = params.msg.operator;
+                    const approveAllExpires: Cw721Expires = params.txParams.msg.expires;
+                    const operator: string = params.txParams.msg.operator;
                     const cw721ApproveAllResult = await cw721ApproveAll(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         operator,
                         approveAllExpires,
                         estimatedGas
@@ -621,11 +627,11 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw721/revoke':
-                    const revokeSpender: string = params.msg.spender;
-                    const revokeToken_id: string = params.msg.token_id;
+                    const revokeSpender: string = params.txParams.msg.spender;
+                    const revokeToken_id: string = params.txParams.msg.token_id;
                     const cw721RevokeResult = await cw721Revoke(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         revokeSpender,
                         revokeToken_id,
                         estimatedGas
@@ -634,17 +640,17 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw721/revokeAll':
-                    const revokeOperator: string = params.msg.operator;
-                    const cw721RevokeAllResult = await cw721RevokeAll(inputPassword, params.contract, revokeOperator, estimatedGas);
+                    const revokeOperator: string = params.txParams.msg.operator;
+                    const cw721RevokeAllResult = await cw721RevokeAll(inputPassword, params.txParams.contract, revokeOperator, estimatedGas);
                     setResult(cw721RevokeAllResult);
                     setStatus('success');
                     return;
                 case '/cw721/updateOwnershipTransfer':
-                    const new_owner: string = params.msg.new_owner;
-                    const expiry: Cw721Expires = params.msg.expiry;
+                    const new_owner: string = params.txParams.msg.new_owner;
+                    const expiry: Cw721Expires = params.txParams.msg.expiry;
                     const cw721UpdateOwnershipTransferResult = await cw721UpdateOwnerShipTransfer(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         new_owner,
                         expiry,
                         estimatedGas
@@ -653,14 +659,14 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw721/updateOwnershipAccept':
-                    const cw721UpdateOwnershipAcceptResult = await cw721UpdateOwnerShipAccept(inputPassword, params.contract, estimatedGas);
+                    const cw721UpdateOwnershipAcceptResult = await cw721UpdateOwnerShipAccept(inputPassword, params.txParams.contract, estimatedGas);
                     setResult(cw721UpdateOwnershipAcceptResult);
                     setStatus('success');
                     return;
                 case '/cw721/updateOwnershipRenounce':
                     const cw721UpdateOwnershipRenounceResult = await cw721UpdateOwnerShipRenounce(
                         inputPassword,
-                        params.contract,
+                        params.txParams.contract,
                         estimatedGas
                     );
                     setResult(cw721UpdateOwnershipRenounceResult);
@@ -689,7 +695,7 @@ const TxModal = ({
     const RenderItem = useCallback(
         ({ type, label, value }: { type: string; label: string; value: string }) => {
             if (type === 'amount') {
-                return <AmountItem label={label} decimals={params.content.decimals} amount={value} symbol={params.content.symbol} />;
+                return <AmountItem label={label} decimals={params.contentParams.decimals} amount={value} symbol={params.contentParams.symbol} />;
             } else if (type === 'wallet') {
                 return <ResultWalletAdress label={label} address={value} />;
             } else if (type === 'url') {
@@ -699,7 +705,7 @@ const TxModal = ({
             } else if (['at_time', 'at_height', 'never'].includes(type)) {
                 return <ExpirationItem value={value} type={type} />;
             } else if (type === 'nft') {
-                return <NftItem label={label} value={value} symbol={params.content.symbol} />;
+                return <NftItem label={label} value={value} symbol={params.contentParams.symbol} />;
             } else if (type === 'nft_id') {
                 return <NftIdItem label={label} value={value} />;
             } else if (type === 'warning') {
@@ -729,10 +735,10 @@ const TxModal = ({
                                 <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
                             </ModalTitleWrap>
                             <ModalContentWrap style={{ marginBottom: '36px' }}>
-                                {params.content.alert && (
+                                {params.contentParams.alert && (
                                     <ModalAlertBox>
                                         <img src={IC_ALERT_YELLOW} alt="alert" style={{ width: '16px' }} />
-                                        <span className="typo">{params.content.alert}</span>
+                                        <span className="typo">{params.contentParams.alert}</span>
                                     </ModalAlertBox>
                                 )}
                                 <ModalContentBlackCard
@@ -742,13 +748,13 @@ const TxModal = ({
                                             : { background: '#141414' }
                                     }
                                 >
-                                    {params.content.list.map((el, index) => {
+                                    {params.contentParams.list.map((el, index) => {
                                         return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
-                                    {params.content.extraList && (
+                                    {params.contentParams.extraList && (
                                         <Fragment>
                                             <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                            {params.content.extraList.map((el, index) => {
+                                            {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}
@@ -826,13 +832,13 @@ const TxModal = ({
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    {params.content.list.map((el, index) => {
+                                    {params.contentParams.list.map((el, index) => {
                                         return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
-                                    {params.content.extraList && (
+                                    {params.contentParams.extraList && (
                                         <Fragment>
                                             <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                            {params.content.extraList.map((el, index) => {
+                                            {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}
@@ -872,7 +878,7 @@ const TxModal = ({
                                     <ResultsGoToMyMintetedTokenButton
                                         onClick={() => {
                                             const contract =
-                                                result.contractAddress === undefined ? params.contract : result.contractAddress;
+                                                result.contractAddress === undefined ? params.txParams.contract : result.contractAddress;
                                             const url =
                                                 cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
                                             navigate(url);

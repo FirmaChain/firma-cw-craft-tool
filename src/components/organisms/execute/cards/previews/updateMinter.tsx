@@ -126,11 +126,18 @@ const UpdateMinter = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Minter'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                type: 'cw20',
+                msg: {
+                    new_minter: minterAddress
+                }
+            },
+            contentParams: {
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
@@ -141,10 +148,7 @@ const UpdateMinter = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: {
-                new_minter: minterAddress
-            }
+            
         };
 
         modal.openModal({

@@ -524,7 +524,6 @@ const InstantiateModal = ({
 
             if (params.totalLength > 1200) {
                 const multipleCount = (Number(params.totalLength) - 1200) / 100;
-                console.log(multipleCount);
                 resultFee = resultFee + multipleCount * Number(CRAFT_CONFIGS.INSTANTIATE_LENGTH_FEE);
             }
 

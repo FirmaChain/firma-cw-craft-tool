@@ -129,11 +129,18 @@ const UpdateLogo = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Logo'
             },
-            content: {
+            txParams: {
+                type: 'cw20',
+                contract: contractAddress,
+                msg: {
+                    url: marketingLogoUrl
+                }
+            },
+            contentParams: {
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: [
@@ -144,10 +151,6 @@ const UpdateLogo = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: {
-                url: marketingLogoUrl
-            }
         };
 
         modal.openModal({

@@ -195,11 +195,18 @@ const UpdateOwnershipTransferPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTE' as ModalType,
             header: {
                 title: 'Update Ownership Transfer'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: {
+                    expiry: expires,
+                    new_owner: approveRecipientAddress
+                }
+            },
+            contentParams: {
                 symbol: nftContractInfo.symbol,
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
@@ -216,11 +223,6 @@ const UpdateOwnershipTransferPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: {
-                expiry: expires,
-                new_owner: approveRecipientAddress
-            }
         };
 
         modal.openModal({

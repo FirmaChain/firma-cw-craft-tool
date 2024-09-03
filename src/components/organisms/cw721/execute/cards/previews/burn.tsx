@@ -195,11 +195,15 @@ const BurnPreview = () => {
         }
 
         const params = {
-            type: 'EXECUTES' as ModalType,
+            modalType: 'EXECUTE' as ModalType,
             header: {
                 title: 'Burn'
             },
-            content: {
+            txParams: {
+                contract: contractAddress,
+                msg: convertList
+            },
+            contentParams: {
                 symbol: nftContractInfo.symbol,
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
@@ -211,8 +215,6 @@ const BurnPreview = () => {
                     }
                 ]
             },
-            contract: contractAddress,
-            msg: convertList
         };
 
         modal.openModal({
