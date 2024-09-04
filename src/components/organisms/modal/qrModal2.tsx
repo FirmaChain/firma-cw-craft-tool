@@ -520,7 +520,7 @@ const QRModal2 = ({
                                         }}
                                     >
                                         <ResultsGoToMyMintetedTokenButtonTypo>
-                                            {cwMode === 'CW20' ? 'Go to my Token detail' : 'Go to my NFT detail'}
+                                            {cwMode === 'CW20' ? 'Go to MY Token Details' : 'Go to my NFT detail'}
                                         </ResultsGoToMyMintetedTokenButtonTypo>
                                     </ResultsGoToMyMintetedTokenButton>
                                 )}

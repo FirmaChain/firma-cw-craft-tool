@@ -143,7 +143,7 @@ const AddressBox = () => {
     const { firmaSDK } = useFirmaSDKContext();
 
     const [balance, setBalance] = useState<string>('');
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     const onClickAddress = async (evt) => {
         evt.preventDefault();

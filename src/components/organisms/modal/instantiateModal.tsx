@@ -747,7 +747,7 @@ const InstantiateModal = ({
                             <span className="typo">Confirm</span>
                         </CloseButton>
                         <ConfirmButton onClick={onClickGoToMyTokens}>
-                            <span className="typo">Go to my Token detail</span>
+                            <span className="typo">{"Go to MY Token Details"}</span>
                         </ConfirmButton>
                     </ResultIconBox>
                 </>

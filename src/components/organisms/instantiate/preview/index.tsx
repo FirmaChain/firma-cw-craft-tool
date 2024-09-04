@@ -148,11 +148,6 @@ const Preview = ({ isBasic }: IProps) => {
                             }
                         ],
                         extraList: [
-                            {
-                                label: 'Supply Amount',
-                                value: supplyAmount,
-                                type: 'amount'
-                            },
                             minterble && {
                                 label: 'Minter Cap',
                                 value: decimalsMinterCap,

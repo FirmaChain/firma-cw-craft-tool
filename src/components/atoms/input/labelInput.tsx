@@ -137,7 +137,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 style={{
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: 'center',
+                    alignItems: 'flex-end',
                     justifyContent: 'flex-start',
                     gap: '8px',
                     height: labelHeight || '20px'
