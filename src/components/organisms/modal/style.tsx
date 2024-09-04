@@ -4,8 +4,7 @@ import styled from 'styled-components';
 export const ModalTitleWrap = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: column;
-    // gap: 16px;
+    gap: 8px;
     justify-content: center;
 `;
 
@@ -777,7 +776,7 @@ export const MobileAppLinkBox = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 48px;
+    padding: 68px 46px 72px;
 
     align-items: center;
     gap: 32px;
@@ -881,24 +880,24 @@ export const WalletConnectContentBox = styled.div<{ $isStationInfo?: boolean }>`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: ${({ $isStationInfo }) => ($isStationInfo ? '56px 75px 48px' : '56px 75px 32px')};
+    padding: ${({ $isStationInfo }) => ($isStationInfo ? '56px 75px 42px' : '56px 75px 42px')};
 `;
 
-export const WalletConnectTitleBox = styled.div`
+export const WalletConnectTitleBox = styled.div<{ $isStationInfo?: boolean }>`
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding-bottom: 40px;
+    padding-bottom: ${({ $isStationInfo }) => ($isStationInfo ? '24px' : '50px')};
 `;
 
 export const WalletConnectDescBox = styled.div<{ $isStationInfo?: boolean }>`
     position: relative;
     width: 100%;
-    min-height: 168px;
-    padding: ${({ $isStationInfo }) => ($isStationInfo ? '0' : '32px 0')};
+    min-height: 172px;
+    padding: ${({ $isStationInfo }) => ($isStationInfo ? '0' : '32px 0px')};
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -938,12 +937,11 @@ export const WalletConnectStepWrap = styled.div`
 
 export const StationInfoButton = styled.div`
     width: 100%;
-    height: 86px;
     background: var(--Gray-200, #1a1a1a);
-    padding-bottom: 40px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
+    padding: 24px 75px 40px;
 `;
 
 export const ModalConfirmButton = styled(IconButton)`

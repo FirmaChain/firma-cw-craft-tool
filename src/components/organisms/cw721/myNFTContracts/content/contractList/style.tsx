@@ -57,6 +57,6 @@ export const ContractCardContainer = styled.div`
 export const ContractCardBox = styled.div`
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
     gap: 32px;
 `;

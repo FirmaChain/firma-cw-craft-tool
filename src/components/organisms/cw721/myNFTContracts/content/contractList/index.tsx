@@ -14,7 +14,7 @@ const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boole
     const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW721NFTContractsContext();
 
     const [pageItems, setPageItems] = useState<IContractInfo[]>([]);
-    const [rowsPerPage, setRowsPerPage] = useState<number>(6);
+    const [rowsPerPage, setRowsPerPage] = useState<number>(16);
 
     const totalPages = Math.max(Math.ceil(contracts?.length / rowsPerPage), 1);
 

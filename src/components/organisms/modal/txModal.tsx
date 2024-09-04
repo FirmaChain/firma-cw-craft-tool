@@ -40,10 +40,11 @@ import {
     ModalButtonBox,
     LoadingDimBox,
     LoadingBox,
-    LoadingTypo
+    LoadingTypo,
+    ModalTitleHeaderIcon
 } from './style';
 import { useModalStore } from '@/hooks/useModal';
-import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
+import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN, IC_WARNING } from '@/components/atoms/icons/pngIcons';
 import { useSnackbar } from 'notistack';
 import useInstantiateStore from '../instantiate/instaniateStore';
 import useFormStore from '@/store/formStore';
@@ -741,6 +742,7 @@ const TxModal = ({
                             style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', position: 'relative' }}
                         >
                             <ModalTitleWrap>
+                                {module.includes('Renounce') && <ModalTitleHeaderIcon src={IC_WARNING} />}
                                 <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
                             </ModalTitleWrap>
                             <ModalContentWrap style={{ marginBottom: '36px' }}>
@@ -838,16 +840,17 @@ const TxModal = ({
                                     <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                                     <ResultsTitleSuccessTypo>Success</ResultsTitleSuccessTypo>
                                 </ResultsTitleWrap>
-                                <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage>
+                                <ResultsTitleMessage>{`${params.header.title} has been Succeeded.${module.includes('Renounce') && '\nThe contract has been permanently deleted.'}`}</ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
-                                <ResultsContentSummeryWrap>
+                                {!module.includes('Renounce') && <ResultsContentSummeryWrap>
                                     {params.contentParams.list.map((el, index) => {
-                                        return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
+                                        if (el.type !== 'warning')
+                                            return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
                                     {params.contentParams.extraList && (
                                         <Fragment>
-                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
+                                            {<Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />}
                                             {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
@@ -860,8 +863,8 @@ const TxModal = ({
                                             })}
                                         </Fragment>
                                     )}
-                                </ResultsContentSummeryWrap>
-                                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                </ResultsContentSummeryWrap>}
+                                {!module.includes('Renounce') && <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />}
                                 <ResultsContentHashWrap>
                                     {result.contractAddress && (
                                         <ContractAddressItem label={'Contract Address'} contractAddress={result.contractAddress} />
@@ -885,10 +888,8 @@ const TxModal = ({
                                 {!hideGotoDetail && (
                                     <ResultsGoToMyMintetedTokenButton
                                         onClick={() => {
-                                            const contract =
-                                                result.contractAddress === undefined ? params.txParams.contract : result.contractAddress;
-                                            const url =
-                                                cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
+                                            const contract =result.contractAddress === undefined ? params.txParams.contract : result.contractAddress;
+                                            const url = cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
                                             navigate(url);
                                             scrollToTop();
                                             onCloseModal();

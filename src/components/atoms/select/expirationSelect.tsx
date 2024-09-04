@@ -46,7 +46,7 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $maxWidth?: 
 
     box-sizing: border-box;
 
-    background: ${({ $open }) => ($open ? 'var(--Gray-400, #2C2C2C)' : 'transparent')};
+    background: ${({ $open }) => ($open ? 'var(--Gray-400, #1e1e1e)' : 'transparent')};
 
     display: flex;
     align-items: center;

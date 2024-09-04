@@ -10,7 +10,7 @@ const DownloadQRButton = styled(IconButton)`
     align-items: center;
     justify-content: center;
     width: 143px;
-    height: 30px;
+    height: 34px;
     border-radius: 32px;
     border: 1px solid var(--Gray-750, #999);
 
@@ -41,7 +41,7 @@ const StationQR = () => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
             <div
                 style={{
                     padding: '6px',

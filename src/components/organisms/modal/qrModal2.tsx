@@ -40,10 +40,11 @@ import {
     LoadingBox,
     LoadingTypo,
     ModalTitleDescTypo,
-    QrCodeWrap
+    QrCodeWrap,
+    ModalTitleHeaderIcon
 } from './style';
 import { useModalStore } from '@/hooks/useModal';
-import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN } from '@/components/atoms/icons/pngIcons';
+import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN, IC_WARNING } from '@/components/atoms/icons/pngIcons';
 import { useSnackbar } from 'notistack';
 import Divider from '@/components/atoms/divider';
 import { scrollToTop } from '@/utils/common';
@@ -334,6 +335,7 @@ const QRModal2 = ({
                             style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', position: 'relative' }}
                         >
                             <ModalTitleWrap>
+                                {module.includes('Renounce') && <ModalTitleHeaderIcon src={IC_WARNING} />}
                                 <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
                             </ModalTitleWrap>
                             <ModalTitleDescTypo style={{ marginBottom: '24px' }}>
@@ -462,12 +464,13 @@ const QRModal2 = ({
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    {/* {params.contentParams.list.map((el, index) => {
-                                        return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
+                                    {params.contentParams.list.map((el, index) => {
+                                        if (el.type !== 'warning')
+                                            return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
                                     {params.contentParams.extraList && (
                                         <Fragment>
-                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
+                                            {!module.includes('Renounce') && <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />}
                                             {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
@@ -479,7 +482,7 @@ const QRModal2 = ({
                                                 );
                                             })}
                                         </Fragment>
-                                    )} */}
+                                    )}
                                 </ResultsContentSummeryWrap>
                                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
                                 {params.modalType === 'INSTANTIATE' && parsedData.contractAddress && (

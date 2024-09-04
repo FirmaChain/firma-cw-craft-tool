@@ -110,6 +110,10 @@ const Sidebar = () => {
         openLink(blockExplorerLink);
     };
 
+    const onClickGuideLink = () => {
+        openLink(CRAFT_CONFIGS.GUIDE_URL);
+    };
+
     const onClickSocialLink = (e: any, socialLink: string) => {
         if (socialLink !== '') {
             e.preventDefault();
@@ -194,6 +198,7 @@ const Sidebar = () => {
                         <ExternalLinkWrapper>
                             <ExternalLinkButton onClick={onClickExternalLink}>Block Explorer</ExternalLinkButton>
                             <ExternalLinkButton href={'mailto:info@firmachain.org'}>Contact Us</ExternalLinkButton>
+                            <ExternalLinkButton onClick={onClickGuideLink}>Guide</ExternalLinkButton>
                         </ExternalLinkWrapper>
                         <Divider $direction="horizontal" $color={'#383838'} />
                         <SocialWrapper>

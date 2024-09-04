@@ -1,8 +1,5 @@
 import { useSnackbar } from 'notistack';
 
-import { IC_CLOSE } from '@/components/atoms/icons/pngIcons';
-import { useModalStore } from '@/hooks/useModal';
-
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';

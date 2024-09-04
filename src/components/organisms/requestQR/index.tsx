@@ -84,7 +84,7 @@ const RequestQR = ({ qrSize = 198, isTxModal = false, module, onSuccess, onFaile
     };
 
     return (
-        <QRContainer style={{ gap: module === '/login' ? '24px' : '16px' }}>
+        <QRContainer style={{ gap: module === '/login' ? '20px' : '16px' }}>
             <ConnectQR
                 qrSize={qrSize}
                 qrcode={qrcode}

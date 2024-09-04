@@ -9,7 +9,7 @@ import { useCallback } from 'react';
 import FirmaLoading from '@/components/atoms/globalLoader/firmaLoad';
 
 const Container = styled(IconButton)`
-    width: 100%;
+    width: 480px;
     height: fit-content;
     display: flex;
     align-items: flex-start;
