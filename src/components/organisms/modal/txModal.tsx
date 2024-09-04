@@ -223,6 +223,17 @@ const TxModal = ({
     const [estimatedGas, setEstimatedGas] = useState<number>(0);
     const [inputPassword, setInputPassword] = useState<string>('');
 
+    useEffect(() => {
+        if (status === 'success') {
+            updateContract();
+        }
+    }, [status]);
+
+    useEffect(() => {
+        getBalance();
+        getEstimatedGas();
+    }, [address]);
+
     const getBalance = () => {
         getFctBalance(address)
             .then((result) => {
@@ -251,12 +262,6 @@ const TxModal = ({
             console.log(error);
         }
     };
-
-    useEffect(() => {
-        if (status === 'success') {
-            updateContract();
-        }
-    }, [status]);
 
     const getEstimatedGas = async () => {
         try {
@@ -412,10 +417,11 @@ const TxModal = ({
         }
     };
 
-    useEffect(() => {
-        getBalance();
-        getEstimatedGas();
-    }, [address]);
+    const handleClickEnter = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+            handleTransaction();
+        }
+    };
 
     const closeModal = useModalStore().closeModal;
 
@@ -435,7 +441,10 @@ const TxModal = ({
     };
 
     const handleTransaction = async () => {
+        if (isTxButtonDisabled) return ;
+
         setStatus('loading');
+        console.log(222222);
         try {
             switch (module) {
                 case '/cw20/instantiateContract':
@@ -791,6 +800,7 @@ const TxModal = ({
                                         formId: `INPUT_PASSWORD`,
                                         value: inputPassword,
                                         onChange: onChangeInputPassword,
+                                        onKeyDown: handleClickEnter,
                                         placeHolder: 'Enter Password',
                                         type: 'password'
                                     }}
@@ -852,12 +862,10 @@ const TxModal = ({
                                     )}
                                 </ResultsContentSummeryWrap>
                                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
-                                {result.contractAddress && (
-                                    <ResultsContentHashWrap>
-                                        <ContractAddressItem label={'Contract Address'} contractAddress={result.contractAddress} />
-                                    </ResultsContentHashWrap>
-                                )}
                                 <ResultsContentHashWrap>
+                                    {result.contractAddress && (
+                                        <ContractAddressItem label={'Contract Address'} contractAddress={result.contractAddress} />
+                                    )}
                                     <TransactionItem
                                         label={'Transaction Hash'}
                                         hash={result.transactionHash}

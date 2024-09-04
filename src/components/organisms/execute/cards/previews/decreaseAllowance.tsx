@@ -242,13 +242,9 @@ const DecreaseAllowancePreview = () => {
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
     const clearAllowance = useExecuteStore((v) => v.clearAllowance);
     const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
-    // const { setAllowanceInfo } = useExecuteActions();
-
-    // const address = useSelector((state: rootState) => state.wallet.address);
 
     const modal = useModalStore();
 
-    // const [updatedAmount, setUpdatedAmount] = useState<string>('0');
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const addressExist = useMemo(() => {
@@ -269,35 +265,9 @@ const DecreaseAllowancePreview = () => {
         return String(_currentAllowance - _reduceAmount);
     }, [allowance, allowanceInfo, tokenInfo]);
 
-    // useEffect(() => {
-    //     try {
-    //         if (addressExist) {
-    //             setAllowanceInfo(contractAddress, address, allowance?.address);
-    //         } else {
-    //             setUpdatedAmount('0');
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }, [allowance?.address]);
-
-    // useEffect(() => {
-    //     const convertAmount = getUTokenAmountFromToken(
-    //         allowance === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
-    //         tokenInfo.decimals.toString()
-    //     );
-    //     setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
-    // }, [allowance?.amount]);
-
-    // useEffect(() => {
-    //     const convertAmount = getUTokenAmountFromToken(
-    //         allowanceInfo === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
-    //         tokenInfo.decimals.toString()
-    //     );
-    //     setUpdatedAmount(subtractStringAmount(allowanceInfo === null ? '0' : allowanceInfo?.allowance, convertAmount));
-    // }, [allowanceInfo]);
-
     const onClickDecreaseAllowance = () => {
+        if (modal.modals.length >= 1) return ;
+        
         let expires = {};
         if (allowance.type === 'at_height') {
             expires = {

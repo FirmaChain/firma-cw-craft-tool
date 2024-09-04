@@ -127,6 +127,8 @@ const UpdateMarketingPreview = () => {
     const finalProejct = (marketingProject === null ? marketingInfo?.project : marketingProject) || '';
 
     const onClickUpdateMarketing = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         let contentList = [];
@@ -178,7 +180,6 @@ const UpdateMarketingPreview = () => {
             },
         };
 
-        console.log(params.txParams);
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => {

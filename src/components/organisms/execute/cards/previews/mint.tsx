@@ -308,6 +308,8 @@ const MintPreview = () => {
     }, [exceedMinterCap, mintingList]);
 
     const onClickMint = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const convertWalletList: IWallet[] = [];
         let totalAmount = '0';
         const feeAmount = mintingList.length === 1

@@ -311,6 +311,8 @@ const TransferPreview = () => {
     }, [approveInfoById, myNftList, transferIdsWithEmpty, userTransferList]);
 
     const onClickTransfer = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const feeAmount =
             transferListForModal.length === 1
                 ? Number(CRAFT_CONFIGS.DEFAULT_FEE)

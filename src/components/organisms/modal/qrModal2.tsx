@@ -294,17 +294,26 @@ const QRModal2 = ({
         const parsedMessage = JSON.parse(message);
         const { address, chainId, rawData } = JSON.parse(signData);
         const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);
-        const parsedLogs = JSON.parse(rawLog)[0];
+        let tmpParsedLogs = "";
+        let tmpContractAddress = "";
 
-        const _rawData = { code, gasUsed, gasWanted, height, rawLog: parsedLogs, transactionHash };
+        if (code !== 0) {
+            setStatus('failure');
+        } else {
+            // write logs on succesful transactions
+            const parsedLogs = JSON.parse(rawLog)[0]; // would fail on reverted transactions
+            const contractAddress = parsedLogs.events[0].attributes[0].value;
+            tmpParsedLogs = parsedLogs;
+            tmpContractAddress = contractAddress;
+        }
+
+        const _rawData = { code, gasUsed, gasWanted, height, rawLog: tmpParsedLogs, transactionHash };
         const _signData = { address, chainId, rawData: _rawData };
-
-        const contractAddress = parsedLogs.events[0].attributes[0].value;
-
+        
         return {
             message: parsedMessage,
             signData: _signData,
-            contractAddress,
+            contractAddress: tmpContractAddress,
             transactionHash,
             ...rest
         };
@@ -453,7 +462,7 @@ const QRModal2 = ({
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    {params.contentParams.list.map((el, index) => {
+                                    {/* {params.contentParams.list.map((el, index) => {
                                         return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
                                     {params.contentParams.extraList && (
@@ -470,7 +479,7 @@ const QRModal2 = ({
                                                 );
                                             })}
                                         </Fragment>
-                                    )}
+                                    )} */}
                                 </ResultsContentSummeryWrap>
                                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
                                 {params.modalType === 'INSTANTIATE' && parsedData.contractAddress && (

@@ -252,7 +252,6 @@ const IncreaseAllowancePreview = () => {
 
     const modal = useModalStore();
 
-    // const [updatedAmount, setUpdatedAmount] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const addressExist = useMemo(() => {
@@ -284,23 +283,9 @@ const IncreaseAllowancePreview = () => {
         }
     }, [allowance?.address]);
 
-    // useEffect(() => {
-    //     const convertAmount = getUTokenAmountFromToken(
-    //         allowance === null ? '0' : !allowance.amount ? '0' : allowance?.amount,
-    //         tokenInfo.decimals.toString()
-    //     );
-    //     setUpdatedAmount(addStringAmount(convertAmount, allowanceInfo === null ? '0' : allowanceInfo?.allowance));
-    // }, [allowance?.amount]);
-
-    // useEffect(() => {
-    //     const convertAmount = getUTokenAmountFromToken(
-    //         allowanceInfo === null ? '0' : !allowance?.amount ? '0' : allowance?.amount,
-    //         tokenInfo.decimals.toString()
-    //     );
-    //     setUpdatedAmount(addStringAmount(convertAmount, allowanceInfo === null ? '0' : allowanceInfo?.allowance));
-    // }, [allowanceInfo]);
-
     const onClickIncreaseAllowance = () => {
+        if (modal.modals.length >= 1) return ;
+        
         let expires = {};
         if (allowance.type === 'at_height') {
             expires = {

@@ -262,6 +262,8 @@ const MintPreview = () => {
     }, [mintSupply, totalNfts]);
 
     const onClickMint = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];
         const feeAmount = mintList.length === 1
         ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintList.length * Number(CRAFT_CONFIGS.BULK_FEE);

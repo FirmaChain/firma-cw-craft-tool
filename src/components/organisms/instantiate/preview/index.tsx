@@ -142,13 +142,8 @@ const Preview = ({ isBasic }: IProps) => {
                                 type: 'default'
                             },
                             {
-                                label: 'Symbol',
+                                label: 'Token Symbol',
                                 value: tokenSymbol,
-                                type: 'default'
-                            },
-                            {
-                                label: 'Decimal',
-                                value: newDecimals.toString(),
                                 type: 'default'
                             }
                         ],

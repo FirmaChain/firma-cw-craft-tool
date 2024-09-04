@@ -174,6 +174,8 @@ const UpdateOwnershipTransferPreview = () => {
     }, [approveRecipientAddress, approveType, approveValue]);
 
     const onClickUpdateOwnershipTransfer = () => {
+        if (modal.modals.length >= 1) return ;
+        
         let expires = {};
         let convertValue = '';
 

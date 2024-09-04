@@ -9,7 +9,12 @@ import {
     WalletCountWrapper,
     WalletListSummery,
     WalletListWrapper,
-    DeleteAllButton
+    DeleteAllButton,
+    NftListWrap,
+    NftListHeaderWrap,
+    NftListHeaderToken,
+    NftListHeaderTypo,
+    NftListContainer
 } from './style';
 
 import Icons from '../icons';
@@ -94,25 +99,33 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                     <span className="button-text">Delete All</span>
                 </DeleteAllButton>
             </WalletListSummery>
-            {list.map((wallet, index) => (
-                <NftMintInput
-                    disabled={disableInput}
-                    key={index}
-                    index={index + 1}
-                    leftValue={wallet.token_id}
-                    rightValue={wallet.token_uri}
-                    onChangeLeft={(value) => handleChange(index, 'token_id', value)}
-                    onChangeRight={(value) => handleChange(index, 'token_uri', value)}
-                    onRemoveClick={() => handleRemoveWallet(index)}
-                    isLast={index === list.length - 1}
-                    isValid={!Boolean(wallet.isAlreadyMint)}
-                    leftTitle={'Token ID'}
-                    leftPlaceholder={'0'}
-                    rightTitle="NFT URIs"
-                    rightPlaceholder="Input nft uri ends with ‘/’"
-                    inputId={wallet.id}
-                />
-            ))}
+            <NftListContainer>
+                <NftListHeaderWrap>
+                    <NftListHeaderToken>
+                        <NftListHeaderTypo>{"Token ID"}</NftListHeaderTypo>
+                    </NftListHeaderToken>
+                    <NftListHeaderTypo>{"NFT URIs"}</NftListHeaderTypo>
+                </NftListHeaderWrap>
+                <NftListWrap>
+                    {list.map((wallet, index) => (
+                        <NftMintInput
+                            disabled={disableInput}
+                            key={index}
+                            index={index + 1}
+                            leftValue={wallet.token_id}
+                            rightValue={wallet.token_uri}
+                            onChangeLeft={(value) => handleChange(index, 'token_id', value)}
+                            onChangeRight={(value) => handleChange(index, 'token_uri', value)}
+                            onRemoveClick={() => handleRemoveWallet(index)}
+                            isLast={index === list.length - 1}
+                            isValid={!Boolean(wallet.isAlreadyMint)}
+                            leftPlaceholder={'0'}
+                            rightPlaceholder="Input nft uri ends with ‘/’"
+                            inputId={wallet.id}
+                        />
+                    ))}
+                </NftListWrap>
+            </NftListContainer>
             <AddWalletButton disabled={list.length === 20} count={list.length} maxCount={maxWalletCount} onClick={handleAddWallet} />
         </WalletListWrapper>
     );

@@ -104,7 +104,7 @@ export const ItemValueWrap = styled.div`
 `;
 
 export const ItemAmountValue = styled.div`
-    color: #E6E6E6;
+    color: #02E191;
 
     /* Heading/H5 - Bd */
     font-family: 'General Sans Variable';
@@ -608,7 +608,10 @@ export const ResultsItemSymbol = styled.div`
 `;
 
 export const ResultsContentHashWrap = styled.div`
+    display: flex;
+    flex-direction: column;
     padding: 16px 24px 20px 24px;
+    gap: 10px;
     // border-radius: 0px 0px 8px 8px;
     // background: var(--Gray-150, #141414);
 `;

@@ -275,6 +275,8 @@ const BurnFromPreview = () => {
     }, [burnFromList, userAddress, isExceedAllowance]);
 
     const onClickBurn = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const convertWalletList = [];
         let totalAmount = '0';
         const feeAmount =

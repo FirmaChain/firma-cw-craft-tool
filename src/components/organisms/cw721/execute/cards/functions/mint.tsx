@@ -403,9 +403,6 @@ const Mint = () => {
                 </Section>
                 <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" /> */}
                 <Section>
-                    <div className="title-box">
-                        <div className="title-text">Required Informations</div>
-                    </div>
                     <div className="input-box">
                         <LabelInput
                             labelProps={{ label: 'Recipient Address' }}

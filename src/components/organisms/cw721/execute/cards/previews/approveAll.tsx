@@ -178,6 +178,8 @@ const ApproveAllPreview = () => {
     }, [approveRecipientAddress, approveType, approveValue]);
 
     const onClickApproveAll = () => {
+        if (modal.modals.length >= 1) return ;
+        
         let expires = {};
         let convertValue = '';
 

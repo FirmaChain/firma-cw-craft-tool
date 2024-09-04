@@ -1,11 +1,9 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { rootState } from '@/redux/reducers';
 import ExecuteSelect from '@/components/atoms/select/executeSelect';
-import { CRAFT_CONFIGS } from '@/config';
-import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 
@@ -139,7 +137,7 @@ const CW721ContractInfo = () => {
         const ruleMenus = basicMenuItems.map((item, index) => {
             let isDisabled = item.isDisabled;
 
-            if (index === 1) {
+            if (index === 6) {
                 isDisabled = minter === '' || minter !== address;
             }
 

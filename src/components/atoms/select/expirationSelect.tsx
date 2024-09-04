@@ -10,7 +10,7 @@ const customStyles = {
         backgroundColor: '#1E1E1E',
         borderRadius: '8px',
         margin: '6px 0',
-        border: '1px solid var(--Gray-500, #383838)',
+        outline: '1px solid var(--Gray-500, #383838) !important',
         zIndex: 2
     }),
     menuList: (provided) => ({
@@ -39,7 +39,7 @@ const customStyles = {
     })
 };
 
-const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?: boolean }>`
+const Container = styled.div<{ $open?: boolean; $minWidth?: string; $maxWidth?: string; $isDisabled?: boolean }>`
     user-select: none;
 
     height: 36px;
@@ -63,6 +63,7 @@ const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?
               : 'border-color: var(--Gray-500, #383838);'}
 
     ${({ $minWidth }) => $minWidth && `min-width: ${$minWidth};`}
+    ${({ $maxWidth }) => $maxWidth && `max-width: ${$maxWidth};`}
 
     gap: 6px;
 
@@ -129,6 +130,7 @@ const ExpirationSelect = ({
     placeHolder = 'Select input',
     options,
     minWidth,
+    maxWidth,
     onChange,
     disabled = false,
     disabledTooltip
@@ -137,6 +139,7 @@ const ExpirationSelect = ({
     placeHolder?: string;
     options: { label: string; value: string }[];
     minWidth?: string;
+    maxWidth?: string;
     onChange: (v: string) => void;
     disabled?: boolean;
     disabledTooltip?: string;
@@ -168,7 +171,7 @@ const ExpirationSelect = ({
                     components={{
                         Control: ({ children }) => {
                             return (
-                                <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth} $isDisabled={disabled}>
+                                <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth} $maxWidth={maxWidth} $isDisabled={disabled}>
                                     <span className="typo">{selected?.label || placeHolder}</span>
                                     <svg
                                         width="20"

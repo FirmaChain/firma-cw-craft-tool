@@ -23,6 +23,7 @@ interface IInputProps {
     placeHolder: string;
     maxLength?: number;
     onChange: (value: string) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
     onBlur?: () => void;
     emptyErrorMessage?: string;
     imgPreview?: boolean; //? if require preive image
@@ -65,6 +66,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
         placeHolder,
         maxLength,
         onChange,
+        onKeyDown,
         emptyErrorMessage,
         onBlur = () => {},
         imgPreview = false,
@@ -130,7 +132,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: '8px', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: label === "" ? '0px' : '8px', width: '100%' }}>
             <div
                 style={{
                     display: 'flex',
@@ -173,6 +175,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 value={type === 'number' ? commaNumber(value) : value}
                 type={type}
                 onChange={handleChange}
+                onKeyDown={onKeyDown}
                 onBlur={handleBlur}
                 maxLength={maxLength}
                 placeHolder={placeHolder}

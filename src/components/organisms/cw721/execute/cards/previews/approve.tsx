@@ -177,6 +177,8 @@ const ApprovePreview = () => {
     }, [approveRecipientAddress, approveTokenId, approveType, approveValue]);
 
     const onClickApprove = () => {
+        if (modal.modals.length >= 1) return ;
+        
         let expires = {};
         let convertValue = '';
 

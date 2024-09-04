@@ -20,9 +20,7 @@ interface IProps {
     isLast: boolean;
     isValid: boolean;
     // decimals: string;
-    leftTitle: string;
     leftPlaceholder: string;
-    rightTitle: string;
     rightPlaceholder: string;
     inputId: string;
     disabled?: boolean;
@@ -37,9 +35,7 @@ const NFTMintInput = ({
     onRemoveClick,
     isValid,
     isLast,
-    leftTitle,
     leftPlaceholder,
-    rightTitle,
     rightPlaceholder,
     inputId,
     disabled
@@ -104,7 +100,7 @@ const NFTMintInput = ({
     // }, [mintTokenIdsExceptSelf, leftValue]);
 
     return (
-        <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
+        <div style={{ display: 'flex', width: '100%' }}>
             <div style={{ display: 'flex', width: '100%', flexDirection: 'row', gap: '12px' }}>
                 <div
                     style={{
@@ -117,7 +113,7 @@ const NFTMintInput = ({
                     }}
                 >
                     <LabelInput
-                        labelProps={{ label: leftTitle }}
+                        labelProps={{ label: "", labelHeight: "0px" }}
                         inputProps={{
                             formId: `${id}_NFT_ID`,
                             value: leftValue,
@@ -144,7 +140,7 @@ const NFTMintInput = ({
                     }}
                 >
                     <LabelInput
-                        labelProps={{ label: rightTitle }}
+                        labelProps={{ label: "", labelHeight: "0px" }}
                         inputProps={{
                             formId: `${id}_NFT_URI`,
                             value: rightValue,
@@ -167,7 +163,7 @@ const NFTMintInput = ({
                         gap: '8px'
                     }}
                 >
-                    <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', marginTop: '36px' }}>
+                    <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', marginTop: '9px' }}>
                         <WalletRemoveButton size="32px" onClick={handleRemoveWallet} disabled={index === 1 && isLast} />
                         {/* <IconButton
                             style={{

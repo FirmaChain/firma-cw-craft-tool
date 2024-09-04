@@ -88,3 +88,35 @@ export const DeleteAllButton = styled.button<{ $length: number; disabled?: boole
         }
     }
 `;
+
+export const NftListContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+`;
+
+export const NftListHeaderWrap = styled.div`
+    display: flex;
+    gap: 12px;
+`;
+
+export const NftListHeaderToken = styled.div`
+    width: 133px;
+    height: fit-content;
+`;
+
+export const NftListHeaderTypo = styled.div`
+    color: var(--Gray-800, #DCDCDC);
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+`;
+
+export const NftListWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+`;

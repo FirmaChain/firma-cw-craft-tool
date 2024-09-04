@@ -151,6 +151,8 @@ const RevokePreview = () => {
     }, [revokeAddress, revokeTokenId, nftApprovalInfo]);
 
     const onClickRevoke = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {

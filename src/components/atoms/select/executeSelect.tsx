@@ -43,7 +43,7 @@ const customStyles = {
     })
 };
 
-const Container = styled.div<{ $open?: boolean; $minWidth?: string; $isDisabled?: boolean }>`
+const Container = styled.div<{ $open?: boolean; $minWidth?: string; $maxWidth?: string; $isDisabled?: boolean }>`
     user-select: none;
 
     box-sizing: border-box;
@@ -132,6 +132,7 @@ const ExecuteSelect = ({
     placeHolder = 'Select input',
     options,
     minWidth,
+    maxWidth,
     onChange,
     disabled = false,
     disabledTooltip
@@ -140,6 +141,7 @@ const ExecuteSelect = ({
     placeHolder?: string;
     options: { label: string; value: string; isDisabled?: boolean }[];
     minWidth?: string;
+    maxWidth?: string;
     onChange: (v: string) => void;
     disabled?: boolean;
     disabledTooltip?: string;
@@ -172,7 +174,7 @@ const ExecuteSelect = ({
                     components={{
                         Control: ({ children }) => {
                             return (
-                                <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth} $isDisabled={disabled}>
+                                <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth} $maxWidth={maxWidth} $isDisabled={disabled}>
                                     <span className="typo">{selected?.label || placeHolder}</span>
                                     <svg
                                         width="20"

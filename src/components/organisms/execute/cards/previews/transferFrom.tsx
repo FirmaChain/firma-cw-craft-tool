@@ -321,6 +321,8 @@ const TransferFromPreview = () => {
     }, [allowanceByAddress, balanceByAddress, totalAmountByAddress, transferFromList]);
 
     const onClickTransfer = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const convertTransferList = [];
         let totalAmount = '0';
         const feeAmount =

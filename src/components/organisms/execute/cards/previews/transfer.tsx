@@ -305,6 +305,8 @@ const TransferPreview = () => {
     }, [address, cw20Balance, totalTransferAmount, transferList]);
 
     const onClickTransfer = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const convertWalletList = [];
         let totalAmount = '0';
         const feeAmount = transferList.length === 1

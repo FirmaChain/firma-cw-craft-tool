@@ -111,7 +111,8 @@ interface InputProps {
     value: string; //
     placeHolder: string; //
     maxLength?: number; //
-    onChange: (value: string) => void; //
+    onChange?: (value: string) => void; //
+    onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
     onBlur?: () => void; //
     errorMessage?: string[]; //
     regex?: RegExp; //
@@ -130,6 +131,7 @@ const VariableInput = ({
     value,
     type = 'string',
     onChange,
+    onKeyDown,
     onBlur = () => {},
     maxLength,
     placeHolder,
@@ -200,6 +202,7 @@ const VariableInput = ({
         >
             <StyledInput
                 onClick={() => inputRef.current?.focus()}
+                onKeyDown={onKeyDown}
                 onBlur={() => {
                     setIsFocus(false);
                     _onBlur();

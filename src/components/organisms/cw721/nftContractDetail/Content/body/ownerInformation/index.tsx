@@ -27,7 +27,7 @@ const OwnerInformation = () => {
 
     const { setBlockHeight } = useCW721ExecuteAction();
 
-    const admin = contractInfo?.admin || null;
+    const admin = contractInfo?.ownerInfo.owner;
     const pending_owner = contractInfo?.ownerInfo.pending_owner;
     const pending_expiry = contractInfo?.ownerInfo.pending_expiry;
     const minter = contractInfo?.minter;
@@ -99,7 +99,7 @@ const OwnerInformation = () => {
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <Skeleton width="200px" height="22px" />
+                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>

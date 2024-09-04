@@ -296,6 +296,7 @@ const ExpirationDatePicker = ({ setTargetTimestamp }: { setTargetTimestamp: (v: 
 
             <ExpirationSelect
                 minWidth="70px"
+                maxWidth="70px"
                 options={HOURS}
                 onChange={(v) => handleSelected('hour', v)}
                 value={selected.hour}
@@ -303,6 +304,7 @@ const ExpirationDatePicker = ({ setTargetTimestamp }: { setTargetTimestamp: (v: 
             />
             <ExpirationSelect
                 minWidth="70px"
+                maxWidth="70px"
                 options={MINUTES}
                 onChange={(v) => handleSelected('min', v)}
                 value={selected.min}

@@ -161,6 +161,8 @@ const BurnPreview = () => {
     }, [cw20Balance, burnAmount]);
 
     const onClickBurn = () => {
+        if (modal.modals.length >= 1) return ;
+        
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
         const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
 
