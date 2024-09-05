@@ -34,12 +34,14 @@ const ContentWrap = styled.div`
 `;
 
 const ItemWrap = styled.div`
+    height: auto;
     display: flex;
     gap: 32px;
-    align-items: center;
+    align-items: flex-start;
 `;
 
 const ItemLabelWrap = styled.div`
+    height: auto;
     display: flex;
     gap: 16px;
     align-items: center;
@@ -231,7 +233,7 @@ const UpdateMarketingPreview = () => {
                     </ItemLabelWrap>
                     {finalDesc ? (
                         <ItemValueForDescTypo
-                            className="clamp-single-line"
+                            className="clamp-multi-line"
                             data-tooltip-content={finalDesc?.length >= 35 ? finalDesc : ''}
                             data-tooltip-id={TOOLTIP_ID.COMMON}
                             data-tooltip-wrapper="span"

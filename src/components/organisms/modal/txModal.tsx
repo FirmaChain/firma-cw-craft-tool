@@ -64,6 +64,7 @@ import {
     ExpirationItem,
     NftIdItem,
     NftItem,
+    ResultNftIdItem,
     ResultWalletAdress,
     TransactionItem,
     UrlItem,
@@ -714,6 +715,8 @@ const TxModal = ({
                 return <WalletCount label={label} count={value} />;
             } else if (['at_time', 'at_height', 'never'].includes(type)) {
                 return <ExpirationItem value={value} type={type} />;
+            } else if (type === 'nft_icon') {
+                return <ResultNftIdItem label={label} value={value} />;
             } else if (type === 'nft') {
                 return <NftItem label={label} value={value} symbol={params.contentParams.symbol} />;
             } else if (type === 'nft_id') {

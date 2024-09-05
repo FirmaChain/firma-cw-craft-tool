@@ -220,7 +220,7 @@ const ApprovePreview = () => {
                     {
                         label: 'Token ID',
                         value: approveTokenId,
-                        type: 'nft_id'
+                        type: 'nft_icon'
                     },
                     {
                         label: 'Recipient Address',

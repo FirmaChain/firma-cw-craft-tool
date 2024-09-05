@@ -68,7 +68,7 @@ const NFTItemBox = styled.div`
     gap: 6px;
     padding: 12px 12px 8px;
     border-radius: 12px;
-    border: 1px solid var(--Gray-500, #383838);
+    outline: 1px solid var(--Gray-500, #383838) !important;
     overflow: hidden;
 `;
 

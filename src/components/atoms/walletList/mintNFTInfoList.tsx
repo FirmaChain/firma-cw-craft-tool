@@ -120,7 +120,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                             isLast={index === list.length - 1}
                             isValid={!Boolean(wallet.isAlreadyMint)}
                             leftPlaceholder={'0'}
-                            rightPlaceholder="Input nft uri ends with ‘/’"
+                            rightPlaceholder="Input NFT token URI"
                             inputId={wallet.id}
                         />
                     ))}

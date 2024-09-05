@@ -162,7 +162,7 @@ export const CopyrightWrapper = styled.div`
 `;
 
 export const CopyrightText = styled.div`
-    color: #5a5a5a;
+    color: var(--Gray-700, #5A5A5A);
     font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;

@@ -253,7 +253,7 @@ export const ResultNftIdItem = ({ label, value }: { label: string; value: string
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemAmountValue style={{ color: '#FFFFFF' }}>{value}</ItemAmountValue>
+                <ItemAmountValue style={{ color: '#02E191' }}>{value}</ItemAmountValue>
                 <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
             </ItemValueWrap>
         </ItemWrap>

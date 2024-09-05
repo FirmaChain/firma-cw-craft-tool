@@ -87,7 +87,7 @@ const Burn = () => {
                 setFormError({
                     id: 'CW721_NFT_BURN_ID_INPUT',
                     type: 'DOES_NOT_OWNED',
-                    message: `Some NFT ids are not owned, or approved.`
+                    message: `This NFT is not owned or approved.`
                 });
             }
 

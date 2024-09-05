@@ -197,6 +197,12 @@ a:active {
   white-space: unset !important;
 }
 
+.clamp-multi-line {
+  display: -webkit-box;
+  overflow: auto;
+  word-break: break-all;
+}
+
 .address-scrollbar {
 
   /* Scrollbar withd is 6px (for now) */

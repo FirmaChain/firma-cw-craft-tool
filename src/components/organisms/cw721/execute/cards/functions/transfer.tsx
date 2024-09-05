@@ -188,7 +188,7 @@ const Transfer = () => {
                     setFormError({
                         id: `${id}_Token ID`,
                         type: 'NOT_OWN_OR_ALLOWED',
-                        message: `Some NFT ids are not owned, or approved.`
+                        message: `This NFT is not owned or approved.`
                     });
                     return;
                 } else {

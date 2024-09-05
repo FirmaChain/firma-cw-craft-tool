@@ -175,7 +175,7 @@ const RevokePreview = () => {
                     {
                         label: 'Token ID',
                         value: revokeTokenId,
-                        type: 'nft_id'
+                        type: 'nft_icon'
                     },
                     {
                         label: 'Recipient Address',
