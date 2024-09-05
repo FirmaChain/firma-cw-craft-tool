@@ -4,7 +4,9 @@ import { useModalStore } from '@/hooks/useModal';
 import { styled } from 'styled-components';
 import CustomDatePicker from '@/components/atoms/datePicker/datePicker';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { isBefore } from 'date-fns';
+import { useSnackbar } from 'notistack';
 
 const HeaderWrap = styled.div`
     width: 100%;
@@ -117,21 +119,54 @@ const ConfirmBtn = styled(IconButton)`
         font-weight: 600;
         line-height: 20px; /* 142.857% */
     }
+
+    &:disabled {
+        background: var(--Gray-650, #707070);
+        .typo {
+            color: var(--Gray-550, #444);
+        }
+    }
 `;
 
 const ExpirationModal = ({ id, setExpirationDate }: { id: string; setExpirationDate: (timestamp: string) => void }) => {
     const closeModal = useModalStore().closeModal;
+    const { enqueueSnackbar } = useSnackbar();
 
     const [targetTimestamp, setTargetTimestamp] = useState<string>('');
+
+    const [disableButton, setDisableButton] = useState(false);
 
     const onCloseModal = () => {
         closeModal(id);
     };
 
     const onClickOK = () => {
-        setExpirationDate(targetTimestamp);
-        closeModal(id);
+        const isExpired = checkDisabled();
+
+        if (isExpired) {
+            enqueueSnackbar({ variant: 'error', message: 'Time is expired.' });
+        } else {
+            setExpirationDate(targetTimestamp);
+            closeModal(id);
+        }
     };
+
+    const checkDisabled = () => {
+        if (!targetTimestamp) {
+            setDisableButton(true);
+            return true;
+        }
+
+        const now = new Date();
+        const targetDate = new Date(Number(targetTimestamp));
+
+        setDisableButton(isBefore(targetDate, now));
+        return isBefore(targetDate, now);
+    };
+
+    useEffect(() => {
+        checkDisabled();
+    }, [targetTimestamp]);
 
     return (
         <ModalBase
@@ -156,7 +191,7 @@ const ExpirationModal = ({ id, setExpirationDate }: { id: string; setExpirationD
                 <CancelBtn onClick={onCloseModal}>
                     <div className="typo">Cancel</div>
                 </CancelBtn>
-                <ConfirmBtn onClick={onClickOK}>
+                <ConfirmBtn onClick={onClickOK} disabled={disableButton}>
                     <div className="typo">Set</div>
                 </ConfirmBtn>
             </ButtonWrapper>

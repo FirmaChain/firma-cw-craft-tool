@@ -108,7 +108,7 @@ export const ExternalLinkWrapper = styled.div`
 export const ExternalLinkButton = styled.a`
     background: none;
     border: none;
-    color: #999999;
+    color: #707070;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
@@ -162,7 +162,7 @@ export const CopyrightWrapper = styled.div`
 `;
 
 export const CopyrightText = styled.div`
-    color: var(--Gray-700, #999);
+    color: #5a5a5a;
     font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;

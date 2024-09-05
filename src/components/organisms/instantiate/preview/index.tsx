@@ -97,7 +97,7 @@ const Preview = ({ isBasic }: IProps) => {
                 }
             }
             const invalidMessageType = checkInstantiate(isBasic, walletList, decimalsTotalSupply, decimalsMinterCap);
-            
+
             if (invalidMessageType === '') {
                 const messageData = {
                     decimals: newDecimals,
@@ -129,7 +129,7 @@ const Preview = ({ isBasic }: IProps) => {
                         type: 'cw20',
                         msg: messageData,
                         walletLength: walletList.length,
-                        totalLength: JSON.stringify(messageData).length,
+                        totalLength: JSON.stringify(messageData).length
                     },
                     contentParams: {
                         decimals: newDecimals.toString(),
@@ -179,7 +179,7 @@ const Preview = ({ isBasic }: IProps) => {
                                     clearForm();
                                 }}
                             />
-                        )
+                        );
                     }
                 });
             } else {
@@ -277,7 +277,7 @@ const Preview = ({ isBasic }: IProps) => {
 
     return (
         <ContentBox $isPreview>
-            <PreviewWrapper style={{ top: `${scroll.y}px` }}>
+            <PreviewWrapper style={{ top: `${scroll.y > 0 ? 100 : 0}px` }}>
                 <Dashboard
                     isBasic={isBasic}
                     tokenLogoUrl={tokenLogoUrl}
