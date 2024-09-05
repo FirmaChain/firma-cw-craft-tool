@@ -442,10 +442,10 @@ const TxModal = ({
     };
 
     const handleTransaction = async () => {
-        if (isTxButtonDisabled) return ;
+        if (isTxButtonDisabled) return;
 
         setStatus('loading');
-        console.log(222222);
+
         try {
             switch (module) {
                 case '/cw20/instantiateContract':
@@ -809,9 +809,6 @@ const TxModal = ({
                                 />
                             </ModalContentWrap>
                             <ModalButtonBox>
-                                <ModalConfirmButton disabled={isTxButtonDisabled} onClick={handleTransaction}>
-                                    <ModalConfirmTypo>Confirm</ModalConfirmTypo>
-                                </ModalConfirmButton>
                                 <ModalCancelButton
                                     onClick={() => {
                                         onCloseModal();
@@ -819,6 +816,9 @@ const TxModal = ({
                                 >
                                     <ModalCancelTypo>Cancel</ModalCancelTypo>
                                 </ModalCancelButton>
+                                <ModalConfirmButton disabled={isTxButtonDisabled} onClick={handleTransaction}>
+                                    <ModalConfirmTypo>Confirm</ModalConfirmTypo>
+                                </ModalConfirmButton>
                             </ModalButtonBox>
                             {status === 'loading' && (
                                 <LoadingDimBox>
@@ -850,7 +850,7 @@ const TxModal = ({
                                     })}
                                     {params.contentParams.extraList && (
                                         <Fragment>
-                                            {<Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />}
+                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
                                             {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
@@ -888,7 +888,7 @@ const TxModal = ({
                                 {!hideGotoDetail && (
                                     <ResultsGoToMyMintetedTokenButton
                                         onClick={() => {
-                                            const contract =result.contractAddress === undefined ? params.txParams.contract : result.contractAddress;
+                                            const contract = result.contractAddress === undefined ? params.txParams.contract : result.contractAddress;
                                             const url = cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
                                             navigate(url);
                                             scrollToTop();

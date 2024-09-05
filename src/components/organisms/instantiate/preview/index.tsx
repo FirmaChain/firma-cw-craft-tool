@@ -13,7 +13,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import useFormStore from '@/store/formStore';
 import { useModalStore } from '@/hooks/useModal';
 import useInstantiateStore from '../instaniateStore';
-import { addStringAmount, addStringAmountsArray, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
+import { addStringAmount, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
 import styled from 'styled-components';
@@ -97,7 +97,6 @@ const Preview = ({ isBasic }: IProps) => {
                 }
             }
             const invalidMessageType = checkInstantiate(isBasic, walletList, decimalsTotalSupply, decimalsMinterCap);
-            const supplyAmount = convertWalletList.length === 0 ? '0' : addStringAmountsArray([...convertWalletList.map((one) => one.amount)]);
             
             if (invalidMessageType === '') {
                 const messageData = {
@@ -147,8 +146,8 @@ const Preview = ({ isBasic }: IProps) => {
                                 type: 'default'
                             }
                         ],
-                        extraList: [
-                            minterble && {
+                        extraList: minterble && [
+                            {
                                 label: 'Minter Cap',
                                 value: decimalsMinterCap,
                                 type: 'amount'
@@ -175,6 +174,8 @@ const Preview = ({ isBasic }: IProps) => {
                                 id={id}
                                 params={params}
                                 onClickConfirm={() => {
+                                    useInstantiateStore.getState().clearForm();
+                                    useFormStore.getState().clearForm();
                                     clearForm();
                                 }}
                             />

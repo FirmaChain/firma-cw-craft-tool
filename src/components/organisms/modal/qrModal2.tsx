@@ -291,8 +291,22 @@ const QRModal2 = ({
     const parsedData = useMemo(() => {
         if (result === null) return null;
 
-        const { message, signData, ...rest } = result;
+        const { message, signData, status, ...rest } = result;
+        console.log(signData);
+        
         const parsedMessage = JSON.parse(message);
+
+        if (status === "1") {
+            setStatus('failure');
+            return {
+                message: parsedMessage,
+                signData: signData,
+                contractAddress: "",
+                transactionHash: "",
+                ...rest
+            }
+        }
+
         const { address, chainId, rawData } = JSON.parse(signData);
         const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);
         let tmpParsedLogs = "";
@@ -355,6 +369,7 @@ const QRModal2 = ({
                                         GlobalActions.handleFetchedBalance(true);
                                     }}
                                     onFailed={(requestData: any) => {
+                                        console.log(requestData);
                                         setResult(requestData);
                                         setStatus('failure');
                                         setError({ message: `Failed to ${params.header.title}` });
@@ -387,6 +402,7 @@ const QRModal2 = ({
                                         <Fragment>
                                             <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
                                             {params.contentParams.extraList.map((el, index) => {
+                                                console.log(params.contentParams.extraList);
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}
@@ -417,21 +433,8 @@ const QRModal2 = ({
                                         </MyBalanceWrap>
                                     </ItemWrap>
                                 </ModalContentGrayCard>
-                                {/* <LabelInput
-                                    labelProps={{ label: 'Password' }}
-                                    inputProps={{
-                                        formId: `INPUT_PASSWORD`,
-                                        value: inputPassword,
-                                        onChange: onChangeInputPassword,
-                                        placeHolder: 'Enter Password',
-                                        type: 'password'
-                                    }}
-                                /> */}
                             </ModalContentWrap>
                             <ModalButtonBox>
-                                {/* <ModalConfirmButton disabled={isTxButtonDisabled} onClick={() => {}}>
-                                    <ModalConfirmTypo>Confirm</ModalConfirmTypo>
-                                </ModalConfirmButton> */}
                                 <ModalCancelButton
                                     onClick={() => {
                                         onCloseModal();
@@ -463,14 +466,14 @@ const QRModal2 = ({
                                 <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
-                                <ResultsContentSummeryWrap>
+                                {!module.includes('Renounce') && <ResultsContentSummeryWrap>
                                     {params.contentParams.list.map((el, index) => {
                                         if (el.type !== 'warning')
                                             return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
                                     })}
                                     {params.contentParams.extraList && (
                                         <Fragment>
-                                            {!module.includes('Renounce') && <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />}
+                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
                                             {params.contentParams.extraList.map((el, index) => {
                                                 return (
                                                     <RenderItem
@@ -483,14 +486,12 @@ const QRModal2 = ({
                                             })}
                                         </Fragment>
                                     )}
-                                </ResultsContentSummeryWrap>
-                                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
-                                {params.modalType === 'INSTANTIATE' && parsedData.contractAddress && (
-                                    <ResultsContentHashWrap>
-                                        <ContractAddressItem label={'Contract Address'} contractAddress={parsedData.contractAddress} />
-                                    </ResultsContentHashWrap>
-                                )}
+                                </ResultsContentSummeryWrap>}
+                                {!module.includes('Renounce') && <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />}
                                 <ResultsContentHashWrap>
+                                    {params.modalType === 'INSTANTIATE' && parsedData.contractAddress && (
+                                        <ContractAddressItem label={'Contract Address'} contractAddress={parsedData.contractAddress} />
+                                    )}
                                     <TransactionItem
                                         label={'Transaction Hash'}
                                         hash={getTransactionHash(result?.signData)}
@@ -510,10 +511,8 @@ const QRModal2 = ({
                                 {!hideGotoDetail && (
                                     <ResultsGoToMyMintetedTokenButton
                                         onClick={() => {
-                                            const contract =
-                                                parsedData.contractAddress === undefined ? params.txParams.contract : parsedData.contractAddress;
-                                            const url =
-                                                cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
+                                            const contract = parsedData.contractAddress === undefined ? params.txParams.contract : parsedData.contractAddress;
+                                            const url = cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
                                             navigate(url);
                                             scrollToTop();
                                             onCloseModal();
@@ -540,9 +539,9 @@ const QRModal2 = ({
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
                                     <ResultFailedTypo>{`${params.header.title} has been Failed.`}</ResultFailedTypo>
-                                    <ResultFailedDesc>Please try again later.</ResultFailedDesc>
+                                    <ResultFailedDesc>{result.signData !== "" ? "Please try again later." : "The transaction has been rejected."}</ResultFailedDesc>
                                 </ResultsContentSummeryWrap>
-                                {result && (
+                                {result && result.signData !== "" && (
                                     <>
                                         <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
                                         <ResultsContentHashWrap>
