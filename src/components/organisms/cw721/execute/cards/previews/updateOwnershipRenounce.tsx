@@ -96,8 +96,8 @@ const UpdateOwnershipRenouncePreview = () => {
     }, [ownershipInfo, address]);
 
     const onClickRenounce = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
@@ -119,7 +119,7 @@ const UpdateOwnershipRenouncePreview = () => {
                         type: 'warning'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -143,7 +143,7 @@ const UpdateOwnershipRenouncePreview = () => {
                             onClickConfirm();
                         }}
                     />
-                )
+                );
             }
         });
     };

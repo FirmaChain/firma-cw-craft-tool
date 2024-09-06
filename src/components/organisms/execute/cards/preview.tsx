@@ -13,8 +13,9 @@ import DecreaseAllowancePreview from './previews/decreaseAllowance';
 import UpdateLogo from './previews/updateLogo';
 import useExecuteStore from '../hooks/useExecuteStore';
 import { useScrollContext } from '@/context/scrollContext';
+import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
 
-const Container = styled.div<{ $isSelectMenu: boolean }>`
+const Container = styled.div<{ $isSelectMenu: boolean; $scrollY: number }>`
     width: 100%;
     display: flex;
     height: fit-content;
@@ -31,7 +32,14 @@ const Container = styled.div<{ $isSelectMenu: boolean }>`
     max-height: 742px;
     overflow: hidden;
     position: sticky;
-    transition: top 0.2s ease;
+    transition: all 0.2s ease;
+
+    @media (min-width: 1654px) {
+        position: sticky;
+        margin-bottom: 72px;
+        max-height: ${({ $scrollY }) => ($scrollY > 240 ? 'calc(100vh - 200px)' : 'calc(100vh - 340px)')};
+        top: ${({ $scrollY }) => ($scrollY > 0 ? '100px' : 0)};
+    }
 `;
 
 const TitleTypo = styled.div`
@@ -43,6 +51,14 @@ const TitleTypo = styled.div`
     line-height: 22px;
 `;
 
+const ScrollButtonBox = styled.div`
+    width: 100%;
+
+    @media (min-width: 1654px) {
+        display: none;
+    }
+`;
+
 const Preview = () => {
     const { scroll } = useScrollContext();
     const selectMenu = useExecuteStore((v) => v.selectMenu);
@@ -51,20 +67,40 @@ const Preview = () => {
         <>
             {selectMenu?.value === 'select' && <></>}
             {selectMenu && (
-                <Container style={{ top: `${scroll.y + 36}px` }} $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}>
-                    <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
-                    {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
-                    {selectMenu.value === 'mint' && <MintPreview />}
-                    {selectMenu.value === 'burn' && <BurnPreview />}
-                    {selectMenu.value === 'burnFrom' && <BurnFromPreview />}
-                    {selectMenu.value === 'transfer' && <TransferPreview />}
-                    {selectMenu.value === 'transferFrom' && <TransferFromPreview />}
-                    {selectMenu.value === 'updateMarketing' && <UpdateMarketingPreview />}
-                    {selectMenu.value === 'increaseAllowance' && <IncreaseAllowancePreview />}
-                    {selectMenu.value === 'decreaseAllowance' && <DecreaseAllowancePreview />}
-                    {selectMenu.value === 'updateMinter' && <UpdateMinter />}
-                    {selectMenu.value === 'updateLogo' && <UpdateLogo />}
-                </Container>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <Container
+                        // style={{ top: scroll.y > 0 ? '100px' : '0' }}
+                        $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}
+                        $scrollY={scroll.y}
+                    >
+                        <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
+                        {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
+                        {selectMenu.value === 'mint' && <MintPreview />}
+                        {selectMenu.value === 'burn' && <BurnPreview />}
+                        {selectMenu.value === 'burnFrom' && <BurnFromPreview />}
+                        {selectMenu.value === 'transfer' && <TransferPreview />}
+                        {selectMenu.value === 'transferFrom' && <TransferFromPreview />}
+                        {selectMenu.value === 'updateMarketing' && <UpdateMarketingPreview />}
+                        {selectMenu.value === 'increaseAllowance' && <IncreaseAllowancePreview />}
+                        {selectMenu.value === 'decreaseAllowance' && <DecreaseAllowancePreview />}
+                        {selectMenu.value === 'updateMinter' && <UpdateMinter />}
+                        {selectMenu.value === 'updateLogo' && <UpdateLogo />}
+                    </Container>
+                    {![
+                        'select',
+                        '',
+                        'increaseAllowance',
+                        'decreaseAllowance',
+                        'burn',
+                        'updateMarketing',
+                        'updateMinter',
+                        'updateLogo'
+                    ].includes(selectMenu.value) && (
+                        <ScrollButtonBox>
+                            <SectionScrollToTopButton />
+                        </ScrollButtonBox>
+                    )}
+                </div>
             )}
         </>
     );

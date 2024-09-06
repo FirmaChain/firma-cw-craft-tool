@@ -17,6 +17,7 @@ import Revoke from './functions/revoke';
 import ApproveAll from './functions/approveAll';
 import RevokeAll from './functions/revokeAll';
 import UpdateOwnershipTransfer from './functions/updateOwnershipTransfer';
+import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
@@ -99,6 +100,14 @@ const DisabledContainer = styled(Container)`
     }
 `;
 
+const ScrollButtonBox = styled.div`
+    width: 100%;
+
+    @media (max-width: 1653px) {
+        display: none;
+    }
+`;
+
 export interface IMenuItem {
     value: string;
     label: string;
@@ -162,38 +171,56 @@ const CW721ContractInfo = () => {
     };
 
     return selectMenu && contractExist ? (
-        <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
-            <TokenInfoWrap>
-                <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
-                <ContractBox>
-                    <ContractSymbolTypo>{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</ContractSymbolTypo>
-                    <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
-                </ContractBox>
-            </TokenInfoWrap>
-            <ExecuteSelect
-                value={selectMenu?.value}
-                placeHolder="Select"
-                options={ownerMenus}
-                onChange={handleChangeMenu}
-                minWidth="280px"
-            />
-            {selectMenu?.value === 'select' && <></>}
-            {selectMenu?.value !== 'select' && (
-                <Fragment>
-                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
-                </Fragment>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
+                <TokenInfoWrap>
+                    <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
+                    <ContractBox>
+                        <ContractSymbolTypo>{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</ContractSymbolTypo>
+                        <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
+                    </ContractBox>
+                </TokenInfoWrap>
+                <ExecuteSelect
+                    value={selectMenu?.value}
+                    placeHolder="Select"
+                    options={ownerMenus}
+                    onChange={handleChangeMenu}
+                    minWidth="280px"
+                />
+                {selectMenu?.value === 'select' && <></>}
+                {selectMenu?.value !== 'select' && (
+                    <Fragment>
+                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
+                    </Fragment>
+                )}
+                {selectMenu?.value === 'mint' && <Mint />}
+                {selectMenu?.value === 'burn' && <Burn />}
+                {selectMenu?.value === 'transfer' && <Transfer />}
+                {selectMenu?.value === 'approve' && <Approve />}
+                {selectMenu?.value === 'revoke' && <Revoke />}
+                {selectMenu?.value === 'approveAll' && <ApproveAll />}
+                {selectMenu?.value === 'revokeAll' && <RevokeAll />}
+                {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
+                {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
+                {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
+            </Container>
+            {![
+                'select',
+                '',
+                'burn',
+                'approve',
+                'revoke',
+                'approveAll',
+                'revokeAll',
+                'updateOwnershipTransfer',
+                'updateOwnershipAccept',
+                'updateOwnershipRenounce'
+            ].includes(selectMenu.value) && (
+                <ScrollButtonBox>
+                    <SectionScrollToTopButton />
+                </ScrollButtonBox>
             )}
-            {selectMenu?.value === 'mint' && <Mint />}
-            {selectMenu?.value === 'burn' && <Burn />}
-            {selectMenu?.value === 'transfer' && <Transfer />}
-            {selectMenu?.value === 'approve' && <Approve />}
-            {selectMenu?.value === 'revoke' && <Revoke />}
-            {selectMenu?.value === 'approveAll' && <ApproveAll />}
-            {selectMenu?.value === 'revokeAll' && <RevokeAll />}
-            {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
-            {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
-            {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
-        </Container>
+        </div>
     ) : (
         <DisabledContainer>
             <div className="diabled-typo">There is no data</div>
