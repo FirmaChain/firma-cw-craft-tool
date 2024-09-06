@@ -1,5 +1,4 @@
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
-import QRCodeModal from './qrcodeModal';
 import {
     ItemAmountSymbol,
     ItemAmountValue,
@@ -297,5 +296,3 @@ export const ContractAddressItem = ({ label, contractAddress }: { label: string;
         </ItemWrap>
     );
 };
-
-export { QRCodeModal };

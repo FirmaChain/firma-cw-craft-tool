@@ -291,7 +291,10 @@ const TxModal = ({
                     setEstimatedGas(cw721InstantiateGas);
                     return;
                 case '/cw20/mintToken':
-                    const cw20MintGas = await getGasEstimationCw20Mint(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
+                    const cw20MintGas = await getGasEstimationCw20Mint(
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg))
+                    );
                     setEstimatedGas(cw20MintGas);
                     return;
                 case '/cw20/burnToken':
@@ -300,11 +303,16 @@ const TxModal = ({
                     setEstimatedGas(cw20BurnGas);
                     return;
                 case '/cw20/burnFrom':
-                    const cw20BurnFromGas = await getGasEstimationCw20BurnFrom(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
+                    const cw20BurnFromGas = await getGasEstimationCw20BurnFrom(
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg))
+                    );
                     setEstimatedGas(cw20BurnFromGas);
                     return;
                 case '/cw20/increaseAllowance':
-                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
+                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(
+                        JSON.stringify(params.txParams.msg)
+                    );
                     const cw20IncreaseGas = await getGasEstimationCw20IncreaseAllowance(
                         params.txParams.contract,
                         cw20IncreaseInfo.spender,
@@ -314,7 +322,9 @@ const TxModal = ({
                     setEstimatedGas(cw20IncreaseGas);
                     return;
                 case '/cw20/decreaseAllowance':
-                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
+                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(
+                        JSON.stringify(params.txParams.msg)
+                    );
                     const cw20DecreaseGas = await getGasEstimationCw20DecreaseAllowance(
                         params.txParams.contract,
                         cw20DecreaseInfo.spender,
@@ -324,7 +334,10 @@ const TxModal = ({
                     setEstimatedGas(cw20DecreaseGas);
                     return;
                 case '/cw20/transfer':
-                    const cw20TransferGas = await getGasEstimationCw20Transfer(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
+                    const cw20TransferGas = await getGasEstimationCw20Transfer(
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg))
+                    );
                     setEstimatedGas(cw20TransferGas);
                     return;
                 case '/cw20/transferFrom':
@@ -358,15 +371,24 @@ const TxModal = ({
                     setEstimatedGas(cw20UpdateMinterGas);
                     return;
                 case '/cw721/mint':
-                    const cw721MintGas = await getGasEstimationCw721Mint(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
+                    const cw721MintGas = await getGasEstimationCw721Mint(
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg))
+                    );
                     setEstimatedGas(cw721MintGas);
                     return;
                 case '/cw721/burn':
-                    const cw721BurnGas = await getGasEstimationCw721Burn(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
+                    const cw721BurnGas = await getGasEstimationCw721Burn(
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg))
+                    );
                     setEstimatedGas(cw721BurnGas);
                     return;
                 case '/cw721/transfer':
-                    const cw721TransferGas = await getGasEstimationCw721Transfer(params.txParams.contract, JSON.parse(JSON.stringify(params.txParams.msg)));
+                    const cw721TransferGas = await getGasEstimationCw721Transfer(
+                        params.txParams.contract,
+                        JSON.parse(JSON.stringify(params.txParams.msg))
+                    );
                     setEstimatedGas(cw721TransferGas);
                     return;
                 case '/cw721/approve':
@@ -506,7 +528,9 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw20/increaseAllowance':
-                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
+                    const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(
+                        JSON.stringify(params.txParams.msg)
+                    );
                     const cw20IncreaseResulrt = await cw20IncreaseAllowance(
                         inputPassword,
                         params.txParams.contract,
@@ -519,7 +543,9 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw20/decreaseAllowance':
-                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(JSON.stringify(params.txParams.msg));
+                    const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(
+                        JSON.stringify(params.txParams.msg)
+                    );
                     const cw20DecreaseResulrt = await cw20DecreaseAllowance(
                         inputPassword,
                         params.txParams.contract,
@@ -652,7 +678,12 @@ const TxModal = ({
                     return;
                 case '/cw721/revokeAll':
                     const revokeOperator: string = params.txParams.msg.operator;
-                    const cw721RevokeAllResult = await cw721RevokeAll(inputPassword, params.txParams.contract, revokeOperator, estimatedGas);
+                    const cw721RevokeAllResult = await cw721RevokeAll(
+                        inputPassword,
+                        params.txParams.contract,
+                        revokeOperator,
+                        estimatedGas
+                    );
                     setResult(cw721RevokeAllResult);
                     setStatus('success');
                     return;
@@ -670,7 +701,11 @@ const TxModal = ({
                     setStatus('success');
                     return;
                 case '/cw721/updateOwnershipAccept':
-                    const cw721UpdateOwnershipAcceptResult = await cw721UpdateOwnerShipAccept(inputPassword, params.txParams.contract, estimatedGas);
+                    const cw721UpdateOwnershipAcceptResult = await cw721UpdateOwnerShipAccept(
+                        inputPassword,
+                        params.txParams.contract,
+                        estimatedGas
+                    );
                     setResult(cw721UpdateOwnershipAcceptResult);
                     setStatus('success');
                     return;
@@ -706,7 +741,14 @@ const TxModal = ({
     const RenderItem = useCallback(
         ({ type, label, value }: { type: string; label: string; value: string }) => {
             if (type === 'amount') {
-                return <AmountItem label={label} decimals={params.contentParams.decimals} amount={value} symbol={params.contentParams.symbol} />;
+                return (
+                    <AmountItem
+                        label={label}
+                        decimals={params.contentParams.decimals}
+                        amount={value}
+                        symbol={params.contentParams.symbol}
+                    />
+                );
             } else if (type === 'wallet') {
                 return <ResultWalletAdress label={label} address={value} />;
             } else if (type === 'url') {
@@ -843,31 +885,37 @@ const TxModal = ({
                                     <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                                     <ResultsTitleSuccessTypo>Success</ResultsTitleSuccessTypo>
                                 </ResultsTitleWrap>
-                                <ResultsTitleMessage>{`${params.header.title} has been Succeeded.${module.includes('Renounce') && '\nThe contract has been permanently deleted.'}`}</ResultsTitleMessage>
+                                <ResultsTitleMessage>{`${params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}</ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
-                                {!module.includes('Renounce') && <ResultsContentSummeryWrap>
-                                    {params.contentParams.list.map((el, index) => {
-                                        if (el.type !== 'warning')
-                                            return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
-                                    })}
-                                    {params.contentParams.extraList && (
-                                        <Fragment>
-                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                            {params.contentParams.extraList.map((el, index) => {
+                                {!module.includes('Renounce') && (
+                                    <ResultsContentSummeryWrap>
+                                        {params.contentParams.list.map((el, index) => {
+                                            if (el.type !== 'warning')
                                                 return (
-                                                    <RenderItem
-                                                        key={`extra-item-${index}`}
-                                                        type={el.type}
-                                                        label={el.label}
-                                                        value={el.value}
-                                                    />
+                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />
                                                 );
-                                            })}
-                                        </Fragment>
-                                    )}
-                                </ResultsContentSummeryWrap>}
-                                {!module.includes('Renounce') && <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />}
+                                        })}
+                                        {params.contentParams.extraList && (
+                                            <Fragment>
+                                                <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
+                                                {params.contentParams.extraList.map((el, index) => {
+                                                    return (
+                                                        <RenderItem
+                                                            key={`extra-item-${index}`}
+                                                            type={el.type}
+                                                            label={el.label}
+                                                            value={el.value}
+                                                        />
+                                                    );
+                                                })}
+                                            </Fragment>
+                                        )}
+                                    </ResultsContentSummeryWrap>
+                                )}
+                                {!module.includes('Renounce') && (
+                                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                )}
                                 <ResultsContentHashWrap>
                                     {result.contractAddress && (
                                         <ContractAddressItem label={'Contract Address'} contractAddress={result.contractAddress} />
@@ -891,15 +939,17 @@ const TxModal = ({
                                 {!hideGotoDetail && (
                                     <ResultsGoToMyMintetedTokenButton
                                         onClick={() => {
-                                            const contract = result.contractAddress === undefined ? params.txParams.contract : result.contractAddress;
-                                            const url = cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
+                                            const contract =
+                                                result.contractAddress === undefined ? params.txParams.contract : result.contractAddress;
+                                            const url =
+                                                cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
                                             navigate(url);
                                             scrollToTop();
                                             onCloseModal();
                                         }}
                                     >
                                         <ResultsGoToMyMintetedTokenButtonTypo>
-                                            {cwMode === 'CW20' ? 'Go to MY Token Details' : 'Go to my NFT detail'}
+                                            {cwMode === 'CW20' ? 'Go to My Token Details' : 'Go to My NFT detail'}
                                         </ResultsGoToMyMintetedTokenButtonTypo>
                                     </ResultsGoToMyMintetedTokenButton>
                                 )}
@@ -914,11 +964,10 @@ const TxModal = ({
                                     <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                                     <ResultsTitleFailedTypo>Failed</ResultsTitleFailedTypo>
                                 </ResultsTitleWrap>
-                                {/* <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage> */}
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    <ResultFailedTypo>{`${params.header.title} has been Failed.`}</ResultFailedTypo>
+                                    <ResultFailedTypo>{`${params.header.title} has failed.`}</ResultFailedTypo>
                                     <ResultFailedDesc>Please try again later.</ResultFailedDesc>
                                 </ResultsContentSummeryWrap>
                                 {result && (

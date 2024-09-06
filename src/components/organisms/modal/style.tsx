@@ -103,7 +103,7 @@ export const ItemValueWrap = styled.div`
 `;
 
 export const ItemAmountValue = styled.div`
-    color: #02E191;
+    color: #02e191;
 
     /* Heading/H5 - Bd */
     font-family: 'General Sans Variable';
@@ -953,7 +953,15 @@ export const ModalConfirmButton = styled(IconButton)`
     padding: 10px 0px;
     border-radius: 6px;
     background: var(--Green-500, #02e191);
-    cursor: pointer;
+
+    &:disabled {
+        filter: unset;
+        background: var(--Gray-650, #707070);
+
+        > div {
+            color: var(--Gray-550, #444);
+        }
+    }
 `;
 
 export const ModalConfirmTypo = styled.div`

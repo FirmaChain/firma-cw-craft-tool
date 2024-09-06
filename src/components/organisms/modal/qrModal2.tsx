@@ -170,9 +170,7 @@ const QRModal2 = ({
 
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
-    const {
-        getFctBalance
-    } = useFirmaSDKInternal();
+    const { getFctBalance } = useFirmaSDKInternal();
 
     const { getCW20ContractInfo } = useMyToken();
     const { getCW721ContractInfo } = useMyNFTContracts();
@@ -266,7 +264,14 @@ const QRModal2 = ({
     const RenderItem = useCallback(
         ({ type, label, value }: { type: string; label: string; value: string }) => {
             if (type === 'amount') {
-                return <AmountItem label={label} decimals={params.contentParams.decimals} amount={value} symbol={params.contentParams.symbol} />;
+                return (
+                    <AmountItem
+                        label={label}
+                        decimals={params.contentParams.decimals}
+                        amount={value}
+                        symbol={params.contentParams.symbol}
+                    />
+                );
             } else if (type === 'wallet') {
                 return <ResultWalletAdress label={label} address={value} />;
             } else if (type === 'url') {
@@ -293,24 +298,24 @@ const QRModal2 = ({
 
         const { message, signData, status, ...rest } = result;
         console.log(signData);
-        
+
         const parsedMessage = JSON.parse(message);
 
-        if (status === "1") {
+        if (status === '1') {
             setStatus('failure');
             return {
                 message: parsedMessage,
                 signData: signData,
-                contractAddress: "",
-                transactionHash: "",
+                contractAddress: '',
+                transactionHash: '',
                 ...rest
-            }
+            };
         }
 
         const { address, chainId, rawData } = JSON.parse(signData);
         const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);
-        let tmpParsedLogs = "";
-        let tmpContractAddress = "";
+        let tmpParsedLogs = '';
+        let tmpContractAddress = '';
 
         if (code !== 0) {
             setStatus('failure');
@@ -324,7 +329,7 @@ const QRModal2 = ({
 
         const _rawData = { code, gasUsed, gasWanted, height, rawLog: tmpParsedLogs, transactionHash };
         const _signData = { address, chainId, rawData: _rawData };
-        
+
         return {
             message: parsedMessage,
             signData: _signData,
@@ -463,31 +468,37 @@ const QRModal2 = ({
                                     <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                                     <ResultsTitleSuccessTypo>Success</ResultsTitleSuccessTypo>
                                 </ResultsTitleWrap>
-                                <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage>
+                                <ResultsTitleMessage>{`${params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}</ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
-                                {!module.includes('Renounce') && <ResultsContentSummeryWrap>
-                                    {params.contentParams.list.map((el, index) => {
-                                        if (el.type !== 'warning')
-                                            return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
-                                    })}
-                                    {params.contentParams.extraList && (
-                                        <Fragment>
-                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                            {params.contentParams.extraList.map((el, index) => {
+                                {!module.includes('Renounce') && (
+                                    <ResultsContentSummeryWrap>
+                                        {params.contentParams.list.map((el, index) => {
+                                            if (el.type !== 'warning')
                                                 return (
-                                                    <RenderItem
-                                                        key={`extra-item-${index}`}
-                                                        type={el.type}
-                                                        label={el.label}
-                                                        value={el.value}
-                                                    />
+                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />
                                                 );
-                                            })}
-                                        </Fragment>
-                                    )}
-                                </ResultsContentSummeryWrap>}
-                                {!module.includes('Renounce') && <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />}
+                                        })}
+                                        {params.contentParams.extraList && (
+                                            <Fragment>
+                                                <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
+                                                {params.contentParams.extraList.map((el, index) => {
+                                                    return (
+                                                        <RenderItem
+                                                            key={`extra-item-${index}`}
+                                                            type={el.type}
+                                                            label={el.label}
+                                                            value={el.value}
+                                                        />
+                                                    );
+                                                })}
+                                            </Fragment>
+                                        )}
+                                    </ResultsContentSummeryWrap>
+                                )}
+                                {!module.includes('Renounce') && (
+                                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                )}
                                 <ResultsContentHashWrap>
                                     {params.modalType === 'INSTANTIATE' && parsedData.contractAddress && (
                                         <ContractAddressItem label={'Contract Address'} contractAddress={parsedData.contractAddress} />
@@ -511,15 +522,19 @@ const QRModal2 = ({
                                 {!hideGotoDetail && (
                                     <ResultsGoToMyMintetedTokenButton
                                         onClick={() => {
-                                            const contract = parsedData.contractAddress === undefined ? params.txParams.contract : parsedData.contractAddress;
-                                            const url = cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
+                                            const contract =
+                                                parsedData.contractAddress === undefined
+                                                    ? params.txParams.contract
+                                                    : parsedData.contractAddress;
+                                            const url =
+                                                cwMode === 'CW20' ? `/mytoken/detail/${contract}` : `/cw721/mynft/detail/${contract}`;
                                             navigate(url);
                                             scrollToTop();
                                             onCloseModal();
                                         }}
                                     >
                                         <ResultsGoToMyMintetedTokenButtonTypo>
-                                            {cwMode === 'CW20' ? 'Go to MY Token Details' : 'Go to my NFT detail'}
+                                            {cwMode === 'CW20' ? 'Go to My Token Details' : 'Go to My NFT detail'}
                                         </ResultsGoToMyMintetedTokenButtonTypo>
                                     </ResultsGoToMyMintetedTokenButton>
                                 )}
@@ -534,14 +549,15 @@ const QRModal2 = ({
                                     <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                                     <ResultsTitleFailedTypo>Failed</ResultsTitleFailedTypo>
                                 </ResultsTitleWrap>
-                                {/* <ResultsTitleMessage>{`${params.header.title} has been Succeeded.`}</ResultsTitleMessage> */}
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    <ResultFailedTypo>{`${params.header.title} has been Failed.`}</ResultFailedTypo>
-                                    <ResultFailedDesc>{result.signData !== "" ? "Please try again later." : "The transaction has been rejected."}</ResultFailedDesc>
+                                    <ResultFailedTypo>{`${params.header.title} has failed.`}</ResultFailedTypo>
+                                    <ResultFailedDesc>
+                                        {result.signData !== '' ? 'Please try again later.' : 'The transaction has been rejected.'}
+                                    </ResultFailedDesc>
                                 </ResultsContentSummeryWrap>
-                                {result && result.signData !== "" && (
+                                {result && result.signData !== '' && (
                                     <>
                                         <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
                                         <ResultsContentHashWrap>
