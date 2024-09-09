@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { TooltipRefProps } from 'react-tooltip';
 import Slider, { Settings } from 'react-slick';
 import { CAROUSEL_DATA } from '@/constants/mobileLandingData';
@@ -14,10 +14,11 @@ const Container = styled.div`
     min-height: 330px;
     margin: 0 auto;
     padding: 48px 0 36px;
+    position: relative;
 `;
 
 const Slide = styled.div`
-    width: 100%;
+    width: fit-content; // 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -59,8 +60,33 @@ const CustomDots = styled.ul`
     }
 `;
 
-const CarouselSection = () => {
+const CarouselSection = ({ variableCards }: { variableCards?: boolean }) => {
     const tooltipRef = useRef<TooltipRefProps>(null);
+
+    const responsiveOptions = useMemo(() => {
+        if (variableCards)
+            return [
+                {
+                    breakpoint: 1320,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 700,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: true
+                    }
+                }
+            ];
+        else return undefined;
+    }, [variableCards]);
 
     const settings: Settings = {
         dots: true,
@@ -73,7 +99,8 @@ const CarouselSection = () => {
         centerPadding: '0',
         customPaging: (i) => <ul style={{ opacity: 0 }}>{i}</ul>,
         appendDots: (dots: any) => <CustomDots>{dots}</CustomDots>,
-        beforeChange: () => tooltipRef.current?.close()
+        beforeChange: () => tooltipRef.current?.close(),
+        responsive: responsiveOptions
     };
 
     return (
@@ -87,6 +114,7 @@ const CarouselSection = () => {
                     );
                 })}
             </Slider>
+
             <CustomTooltip ref={tooltipRef} />
         </Container>
     );

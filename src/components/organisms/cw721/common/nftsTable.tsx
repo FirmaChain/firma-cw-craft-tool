@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { INFTsInfo } from '@/hooks/useNFTContractDetail';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useMeasure } from 'react-use';
+import { shortenAddress } from '@/utils/common';
 
 const Container = styled.div`
     width: 100%;
@@ -26,27 +27,9 @@ const TableContainer = styled.div<{ $max?: boolean }>`
     width: 100%;
     min-height: 244px;
     display: grid;
-    grid-template-columns: repeat(${({ $max }) => ($max ? '10' : 'auto-fill')}, minmax(80px, 1fr));
+    grid-template-columns: repeat(${({ $max }) => ($max ? '10' : 'auto-fill')}, 88px);
     justify-items: center;
-    gap: 16px;
-
-    // grid-template-columns: repeat(10, minmax(80px, 1fr));
-
-    // @media only screen and (max-width: 1750px) {
-    //     grid-template-columns: repeat(8, minmax(80px, 1fr));
-    // }
-
-    // @media only screen and (max-width: 1550px) {
-    //     grid-template-columns: repeat(6, minmax(80px, 1fr));
-    // }
-
-    // @media only screen and (max-width: 1370px) {
-    //     grid-template-columns: repeat(5, minmax(80px, 1fr));
-    // }
-
-    // @media only screen and (max-width: 1250px) {
-    //     grid-template-columns: repeat(4, minmax(80px, 1fr));
-    // }
+    gap: 12px;
 `;
 
 const LoadingBox = styled.div`
@@ -318,13 +301,12 @@ const NFTsTable = ({
                                     <NFTItemBox key={nft.tokenId}>
                                         <NFTImg src={nft.image} alt={`${contractAddress}-${nft}`} />
                                         <NFTTokenIdTypo
-                                            className="clamp-single-line"
                                             data-tooltip-content={nft.tokenId.length > 7 ? nft.tokenId : ''}
                                             data-tooltip-id={TOOLTIP_ID.COMMON}
                                             data-tooltip-wrapper="span"
                                             data-tooltip-place="bottom"
                                         >
-                                            {nft.tokenId}
+                                            {shortenAddress(nft.tokenId, 3, 3)}
                                         </NFTTokenIdTypo>
                                     </NFTItemBox>
                                 );

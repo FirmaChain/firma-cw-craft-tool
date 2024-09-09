@@ -18,6 +18,7 @@ import {
     ContentBox,
     ContentScreen,
     ContractBtnBase,
+    MobileCardBox,
     ScreenWarpper,
     SubTitle,
     Title,
@@ -28,6 +29,7 @@ import { useModalStore } from '@/hooks/useModal';
 import LoadingModal from '../modal/loadingModal';
 import { GlobalActions } from '@/redux/actions';
 import { getRandomTimeInMs } from '@/utils/common';
+import CarouselSection from './mobile/carouselSection';
 
 const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
     return (
@@ -44,7 +46,6 @@ const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
     );
 };
 
-// const
 const CW20Btn = () => {
     const modal = useModalStore();
     const closeModal = useModalStore().closeModal;
@@ -123,34 +124,47 @@ const Landing = () => {
                 <ContentBox>
                     <TitleBox>
                         <Title>Create your own token</Title>
-                        <SubTitle>Create and manage your CW20 and CW721 tokens with ease and security.</SubTitle>
+                        <SubTitle>{`Create and manage your CW20 and CW721 tokens\nwith ease and security.`}</SubTitle>
                     </TitleBox>
                     <CardBox>
-                        <CardWarp>
-                            <img src={IMG_LANDING_INSTANTIATE} alt="instantiate" style={{ width: '180px' }} />
+                        <CardWarp style={{ gridArea: 'inst' }}>
+                            <img
+                                src={IMG_LANDING_INSTANTIATE}
+                                alt="instantiate"
+                                style={{ minWidth: '180px', maxWidth: '180px', minHeight: '180px' }}
+                            />
                             <CardTitleBox className="title-box">
                                 <CardTitle className="card-title">Instantiate</CardTitle>
                                 <BgColoredTitle>Instantiate</BgColoredTitle>
                                 <TooltipIcon tooltip={`Mint your tokens and\nstart setting them up.`} />
                             </CardTitleBox>
                         </CardWarp>
-                        <CardWarp>
-                            <img src={IMG_LANDING_QUERY} alt="query" style={{ width: '180px' }} />
+                        <CardWarp style={{ gridArea: 'query' }}>
+                            <img src={IMG_LANDING_QUERY} alt="query" style={{ minWidth: '180px', maxWidth: '180px', minHeight: '180px' }} />
                             <CardTitleBox className="title-box">
                                 <CardTitle className="card-title">Query</CardTitle>
                                 <BgColoredTitle>Query</BgColoredTitle>
                                 <TooltipIcon tooltip={`Query the details and balance\nof your minted tokens.`} />
                             </CardTitleBox>
                         </CardWarp>
-                        <CardWarp>
-                            <img src={IMG_LANDING_EXECUTE} alt="execute" style={{ width: '180px' }} />
-                            <CardTitleBox className="title-box">
-                                <CardTitle className="card-title">Execute</CardTitle>
-                                <BgColoredTitle>Execute</BgColoredTitle>
-                                <TooltipIcon tooltip={`Manage your minted tokens:\ntransfer, mint, burn, and more.`} />
-                            </CardTitleBox>
-                        </CardWarp>
+                        <div style={{ gridArea: 'execute', display: 'flex', width: '100%', justifyContent: 'center' }}>
+                            <CardWarp>
+                                <img
+                                    src={IMG_LANDING_EXECUTE}
+                                    alt="execute"
+                                    style={{ minWidth: '180px', maxWidth: '180px', minHeight: '180px' }}
+                                />
+                                <CardTitleBox className="title-box">
+                                    <CardTitle className="card-title">Execute</CardTitle>
+                                    <BgColoredTitle>Execute</BgColoredTitle>
+                                    <TooltipIcon tooltip={`Manage your minted tokens:\ntransfer, mint, burn, and more.`} />
+                                </CardTitleBox>
+                            </CardWarp>
+                        </div>
                     </CardBox>
+                    <MobileCardBox>
+                        <CarouselSection variableCards />
+                    </MobileCardBox>
                     <ButtonBox>
                         <CW20Btn />
                         <CW721Btn />

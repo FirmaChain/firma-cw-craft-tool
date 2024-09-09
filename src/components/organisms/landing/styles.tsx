@@ -19,11 +19,16 @@ export const ContentScreen = styled.div`
     gap: 20px;
 
     padding: 60px 120px;
+
+    @media (max-width: 1200px) {
+        padding: 60px 20px;
+    }
 `;
 
 export const ContentBox = styled.div`
     display: flex;
-    width: 1248px;
+    max-width: 1248px;
+    width: 100%;
     padding: 60px 120px 104px 120px;
     flex-direction: column;
     align-items: center;
@@ -35,6 +40,24 @@ export const ContentBox = styled.div`
     backdrop-filter: blur(3px);
 
     margin-bottom: 90px;
+
+    @media (max-width: 1430px) {
+        padding: 60px 60px 104px 60px;
+    }
+
+    @media (max-width: 1320px) {
+        gap: 0;
+        padding: 60px 20px 104px;
+    }
+
+    @media (max-width: 1200px) {
+        max-width: 960px;
+    }
+
+    @media (max-width: 768px) {
+        padding-bottom: 60px;
+        margin-bottom: 0;
+    }
 `;
 
 export const TitleBox = styled.div`
@@ -65,16 +88,53 @@ export const SubTitle = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 30px; /* 136.364% */
+
+    text-align: center;
+
+    @media (max-width: 840px) {
+        white-space: pre-wrap;
+    }
 `;
 
 export const CardBox = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 56px;
+    display: grid;
+    // width: 100%;
+    // grid-template-columns: repeat(auto-fit, minmax(276px, auto));
+    grid-template-areas: 'inst query execute';
+    justify-content: center;
+    gap: 24px 56px;
+
+    @media (max-width: 1320px) {
+        display: none;
+        // grid-template-rows: auto;
+        // grid-template-columns: 1fr 1fr;
+        // grid-template-areas:
+        //     'inst query'
+        //     'execute execute';
+    }
+
+    // @media (max-width: 1100px) {
+    //     grid-template-rows: auto;
+    //     grid-template-columns: auto;
+    //     grid-template-areas:
+    //         'inst'
+    //         'query'
+    //         'execute';
+    // }
+`;
+
+export const MobileCardBox = styled.div`
+    width: 100%;
+    max-width: 646px;
+
+    @media (min-width: 1321px) {
+        display: none;
+    }
 `;
 
 export const CardWarp = styled.div`
+    width: 276px;
+
     display: flex;
     padding: 40px 48px;
     flex-direction: column;
@@ -167,6 +227,20 @@ export const ButtonBox = styled.div`
 
     position: absolute;
     bottom: -39px;
+
+    @media (max-width: 768px) {
+        position: static;
+        flex-direction: row;
+        gap: 12px;
+        margin-top: 48px;
+    }
+
+    @media (max-width: 520px) {
+        flex-direction: column;
+
+        width: 100%;
+        max-width: 296px;
+    }
 `;
 
 export const ContractBtnBase = styled(IconButton)<{ disabled?: boolean }>`
@@ -227,4 +301,8 @@ export const ContractBtnBase = styled(IconButton)<{ disabled?: boolean }>`
 				}
 			}
 			`}
+
+    @media (max-width: 520px) {
+        width: 100%;
+    }
 `;
