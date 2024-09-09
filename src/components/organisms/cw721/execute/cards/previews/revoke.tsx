@@ -156,7 +156,7 @@ const RevokePreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Revoke'
             },
@@ -175,12 +175,16 @@ const RevokePreview = () => {
                     {
                         label: 'Token ID',
                         value: revokeTokenId,
-                        type: 'nft_icon'
+                        type: 'nft_id',
+                        initColor: '#02E191',
+                        resultColor: '#FFF'
                     },
                     {
                         label: 'Recipient Address',
                         value: revokeAddress,
-                        type: 'wallet'
+                        type: 'wallet',
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     }
                 ]
             },

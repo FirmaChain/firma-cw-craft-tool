@@ -278,7 +278,7 @@ const MintPreview = () => {
         }
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Mint'
             },
@@ -294,7 +294,9 @@ const MintPreview = () => {
                     {
                         label: 'Total Mint Supply',
                         value: mintList.length.toString(),
-                        type: 'nft'
+                        type: 'nft',
+                        initColor: '#02E191',
+                        resultColor: '#E6E6E6'
                     }
                 ]
             },

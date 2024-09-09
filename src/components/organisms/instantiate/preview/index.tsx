@@ -138,19 +138,39 @@ const Preview = ({ isBasic }: IProps) => {
                             {
                                 label: 'Token Name',
                                 value: tokenName,
-                                type: 'default'
+                                type: 'default',
+                                initColor: '#FFF',
+                                resultColor: '#FFF',
                             },
                             {
                                 label: 'Token Symbol',
                                 value: tokenSymbol,
-                                type: 'default'
+                                type: 'default',
+                                initColor: '#FFF',
+                                resultColor: '#FFF',
+                            },
+                            {
+                                label: 'Decimal',
+                                value: decimals === '' ? "6" : decimals,
+                                type: 'default',
+                                initColor: '#FFF',
+                                resultColor: '#FFF',
                             }
                         ],
                         extraList: minterble && [
                             {
+                                label: 'Supply Amount',
+                                value: decimalsTotalSupply,
+                                type: 'amount',
+                                initColor: '#02E191',
+                                resultColor: '#FFF',
+                            },
+                            {
                                 label: 'Minter Cap',
                                 value: decimalsMinterCap,
-                                type: 'amount'
+                                type: 'amount',
+                                initColor: '#FFF',
+                                resultColor: '#FFF',
                             }
                         ]
                     }

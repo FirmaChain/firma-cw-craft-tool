@@ -200,7 +200,7 @@ const ApprovePreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Approve'
             },
@@ -220,17 +220,23 @@ const ApprovePreview = () => {
                     {
                         label: 'Token ID',
                         value: approveTokenId,
-                        type: 'nft_icon'
+                        type: 'nft_id',
+                        initColor: '#02E191',
+                        resultColor: '#FFF'
                     },
                     {
                         label: 'Recipient Address',
                         value: approveRecipientAddress,
-                        type: 'wallet'
+                        type: 'wallet',
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     },
                     {
                         label: 'Expiration',
                         value: convertValue,
-                        type: convertType
+                        type: convertType,
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     }
                 ]
             },

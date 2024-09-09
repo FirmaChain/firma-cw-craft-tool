@@ -146,17 +146,23 @@ const UpdateMarketingPreview = () => {
                 {
                     label: 'Marketing Desc',
                     value: finalDesc,
-                    type: 'url'
+                    type: 'url',
+                    initColor: '#E6E6E6',
+                    resultColor: '#E6E6E6'
                 },
                 {
                     label: 'Marketing Address',
                     value: finalAddress === '' ? address : finalAddress,
-                    type: 'wallet'
+                    type: 'wallet',
+                    initColor: '#E6E6E6',
+                    resultColor: '#E6E6E6'
                 },
                 {
                     label: 'Marketing Project',
                     value: finalProejct,
-                    type: 'url'
+                    type: 'url',
+                    initColor: '#E6E6E6',
+                    resultColor: '#E6E6E6'
                 }
             ];
         }

@@ -41,7 +41,8 @@ import {
     LoadingTypo,
     ModalTitleDescTypo,
     QrCodeWrap,
-    ModalTitleHeaderIcon
+    ModalTitleHeaderIcon,
+    ModalContentCard
 } from './style';
 import { useModalStore } from '@/hooks/useModal';
 import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN, IC_WARNING } from '@/components/atoms/icons/pngIcons';
@@ -58,9 +59,11 @@ import {
     AmountItem,
     ContractAddressItem,
     DefaultItem,
+    ExecuteAmountItem,
     ExpirationItem,
     NftIdItem,
     NftItem,
+    ResultNftIdItem,
     ResultWalletAdress,
     TransactionItem,
     UrlItem,
@@ -110,11 +113,15 @@ export interface ContentParameters {
         label: string;
         value: string;
         type: string;
+        initColor: string;
+        resultColor: string;
     }[];
     extraList?: {
         label: string;
         value: string;
         type: string;
+        initColor: string;
+        resultColor: string;
     }[];
 }
 
@@ -262,7 +269,7 @@ const QRModal2 = ({
     };
 
     const RenderItem = useCallback(
-        ({ type, label, value }: { type: string; label: string; value: string }) => {
+        ({ type, label, value, color }: { type: string; label: string; value: string, color: string }) => {
             if (type === 'amount') {
                 return (
                     <AmountItem
@@ -270,24 +277,35 @@ const QRModal2 = ({
                         decimals={params.contentParams.decimals}
                         amount={value}
                         symbol={params.contentParams.symbol}
+                        color={color}
                     />
                 );
-            } else if (type === 'wallet') {
-                return <ResultWalletAdress label={label} address={value} />;
+            } else if (type === 'execute_amount') {
+                return (
+                    <ExecuteAmountItem
+                        label={label}
+                        decimals={params.contentParams.decimals}
+                        amount={value}
+                        symbol={params.contentParams.symbol}
+                        color={color}
+                    />
+                );
+            }  else if (type === 'wallet') {
+                return <ResultWalletAdress label={label} address={value} color={color} />;
             } else if (type === 'url') {
-                return <UrlItem label={label} logo={value} />;
+                return <UrlItem label={label} logo={value} color={color} />;
             } else if (type === 'wallet-count') {
-                return <WalletCount label={label} count={value} />;
+                return <WalletCount label={label} count={value} color={color} />;
             } else if (['at_time', 'at_height', 'never'].includes(type)) {
-                return <ExpirationItem value={value} type={type} />;
+                return <ExpirationItem value={value} type={type} color={color} />;
             } else if (type === 'nft') {
-                return <NftItem label={label} value={value} symbol={params.contentParams.symbol} />;
+                return <NftItem label={label} value={value} color={color} />;
             } else if (type === 'nft_id') {
-                return <NftIdItem label={label} value={value} />;
+                return <ResultNftIdItem label={label} value={value} color={color} />;
             } else if (type === 'warning') {
                 return <WarningItem label={label} value={value} />;
             } else if (type === 'default') {
-                return <DefaultItem label={label} value={value} />;
+                return <DefaultItem label={label} value={value} color={color} />;
             }
         },
         [params]
@@ -297,11 +315,10 @@ const QRModal2 = ({
         if (result === null) return null;
 
         const { message, signData, status, ...rest } = result;
-        console.log(signData);
 
         const parsedMessage = JSON.parse(message);
 
-        if (status !== "1") {
+        if (status !== "1" || signData === "") {
             setStatus('failure');
             return {
                 message: parsedMessage,
@@ -368,13 +385,11 @@ const QRModal2 = ({
                                     params={params.txParams}
                                     signer={address}
                                     onSuccess={(requestData: any) => {
-                                        console.log('requestData: ', requestData);
                                         setResult(requestData);
                                         setStatus('success');
                                         GlobalActions.handleFetchedBalance(true);
                                     }}
                                     onFailed={(requestData: any) => {
-                                        console.log(requestData);
                                         setResult(requestData);
                                         setStatus('failure');
                                         setError({ message: `Failed to ${params.header.title}` });
@@ -393,33 +408,40 @@ const QRModal2 = ({
                                         <span className="typo">{params.contentParams.alert}</span>
                                     </ModalAlertBox>
                                 )}
-                                <ModalContentBlackCard
-                                    style={
-                                        module === '/cw721/updateOwnershipRenounce'
-                                            ? { background: 'rgba(229, 82, 80, 0.18)' }
-                                            : { background: '#141414' }
-                                    }
-                                >
-                                    {params.contentParams.list.map((el, index) => {
-                                        return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
-                                    })}
+
+                                <ModalContentCard>
+                                    <ModalContentBlackCard
+                                        style={
+                                            params.contentParams.extraList
+                                                ? { borderRadius: '8px 8px 0px 0px', borderBottom: '1px solid var(--Gray-400, #2C2C2C)' }
+                                                : module === '/cw721/updateOwnershipRenounce'
+                                                    ? { background: 'rgba(229, 82, 80, 0.18)' }
+                                                    : { background: '#141414', borderRadius: '8px' }
+                                        }
+                                    >
+                                        {params.contentParams.list.map((el, index) => {
+                                            return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.initColor} />;
+                                        })}
+                                    </ModalContentBlackCard>
                                     {params.contentParams.extraList && (
-                                        <Fragment>
-                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                            {params.contentParams.extraList.map((el, index) => {
-                                                console.log(params.contentParams.extraList);
-                                                return (
-                                                    <RenderItem
-                                                        key={`extra-item-${index}`}
-                                                        type={el.type}
-                                                        label={el.label}
-                                                        value={el.value}
-                                                    />
-                                                );
-                                            })}
-                                        </Fragment>
-                                    )}
-                                </ModalContentBlackCard>
+                                            <ModalContentBlackCard style={{ borderRadius: '0px 0px 8px 8px' }}>
+                                                {/* <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" /> */}
+                                                {params.contentParams.extraList.map((el, index) => {
+                                                    console.log(params.contentParams.extraList);
+                                                    return (
+                                                        <RenderItem
+                                                            key={`extra-item-${index}`}
+                                                            type={el.type}
+                                                            label={el.label}
+                                                            value={el.value}
+                                                            color={el.initColor}
+                                                        />
+                                                    );
+                                                })}
+                                            </ModalContentBlackCard>
+                                        )}
+                                </ModalContentCard>
+                                
                                 <ModalContentGrayCard>
                                     <ItemWrap>
                                         <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
@@ -473,13 +495,13 @@ const QRModal2 = ({
                             <ResultsContentWrap>
                                 {!module.includes('Renounce') && (
                                     <ResultsContentSummeryWrap>
-                                        {params.contentParams.list.map((el, index) => {
+                                        {params.modalType === "EXECUTES" && params.contentParams.list.map((el, index) => {
                                             if (el.type !== 'warning')
                                                 return (
-                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />
+                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.resultColor}/>
                                                 );
                                         })}
-                                        {params.contentParams.extraList && (
+                                        {params.modalType === "EXECUTES" && params.contentParams.extraList && (
                                             <Fragment>
                                                 <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
                                                 {params.contentParams.extraList.map((el, index) => {
@@ -489,6 +511,7 @@ const QRModal2 = ({
                                                             type={el.type}
                                                             label={el.label}
                                                             value={el.value}
+                                                            color={el.resultColor}
                                                         />
                                                     );
                                                 })}

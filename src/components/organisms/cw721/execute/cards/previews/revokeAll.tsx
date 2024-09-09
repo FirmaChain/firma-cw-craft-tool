@@ -142,7 +142,7 @@ const RevokeAllPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Revoke All'
             },
@@ -160,7 +160,9 @@ const RevokeAllPreview = () => {
                     {
                         label: 'Recipient Address',
                         value: revokeAddress,
-                        type: 'wallet'
+                        type: 'wallet',
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     }
                 ]
             },

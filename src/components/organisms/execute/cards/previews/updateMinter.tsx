@@ -146,7 +146,9 @@ const UpdateMinter = () => {
                     {
                         label: 'Minter',
                         value: minterAddress,
-                        type: 'wallet'
+                        type: 'wallet',
+                        initColor: '#E6E6E6',
+                        resultColor: '#E6E6E6'
                     }
                 ]
             },

@@ -101,7 +101,7 @@ const UpdateOwnershipRenouncePreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Ownership Renounce'
             },
@@ -116,7 +116,9 @@ const UpdateOwnershipRenouncePreview = () => {
                     {
                         label: 'Warning :',
                         value: WARNING_MODAL_TEXT,
-                        type: 'warning'
+                        type: 'warning',
+                        initColor: '',
+                        resultColor: ''
                     }
                 ]
             }

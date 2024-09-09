@@ -149,7 +149,9 @@ const UpdateLogo = () => {
                     {
                         label: 'Marketing Logo',
                         value: marketingLogoUrl,
-                        type: 'url'
+                        type: 'url',
+                        initColor: '#E6E6E6',
+                        resultColor: '#E6E6E6'
                     }
                 ]
             },

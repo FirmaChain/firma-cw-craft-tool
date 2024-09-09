@@ -14,7 +14,8 @@ import {
     ModalResultAddressTypo,
     ItemVerticalWrap,
     ItemDefaultTypo,
-    ItemContractAddressValue
+    ItemContractAddressValue,
+    ItemExecuteAmountValue
 } from './style';
 import { IC_ID_CIRCLE, IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { shortenAddress } from '@/utils/address';
@@ -31,15 +32,17 @@ interface IAmountProps {
     decimals: string;
     amount: string;
     symbol: string;
+    color: string;
 }
 
-export const AmountItem = ({ label, decimals, amount, symbol }: IAmountProps) => {
+export const AmountItem = ({ label, decimals, amount, symbol, color }: IAmountProps) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
                 <ItemAmountValue
                     className="clamp-single-line"
+                    $color={color}
                     // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
                     // data-tooltip-id={TOOLTIP_ID.COMMON}
                     // data-tooltip-wrapper="span"
@@ -48,6 +51,28 @@ export const AmountItem = ({ label, decimals, amount, symbol }: IAmountProps) =>
                     {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ItemAmountValue>
+                <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
+            </ItemValueWrap>
+        </ItemWrap>
+    );
+};
+
+export const ExecuteAmountItem = ({ label, decimals, amount, symbol, color }: IAmountProps) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap style={{ alignItems: 'baseline' }}>
+                <ItemExecuteAmountValue
+                    className="clamp-single-line"
+                    $color={color}
+                    // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
+                    // data-tooltip-id={TOOLTIP_ID.COMMON}
+                    // data-tooltip-wrapper="span"
+                    // data-tooltip-place="bottom"
+                >
+                    {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
+                    {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
+                </ItemExecuteAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
@@ -78,9 +103,10 @@ export const ResultAmountItem = ({ label, decimals, amount, symbol }: IAmountPro
 interface IWalletProps {
     label: string;
     count: string;
+    color: string;
 }
 
-export const WalletCount = ({ label, count }: IWalletProps) => {
+export const WalletCount = ({ label, count, color }: IWalletProps) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -110,7 +136,7 @@ export const WalletAdress = ({ label, address }: { label: string; address: strin
     );
 };
 
-export const ResultWalletAdress = ({ label, address }: { label: string; address: string }) => {
+export const ResultWalletAdress = ({ label, address, color }: { label: string; address: string; color: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -131,9 +157,10 @@ export const ResultWalletAdress = ({ label, address }: { label: string; address:
 interface IUrlProps {
     label: string;
     logo: string;
+    color: string
 }
 
-export const UrlItem = ({ label, logo }: IUrlProps) => {
+export const UrlItem = ({ label, logo, color }: IUrlProps) => {
     // const _value = logo.length > 32 ? shortenAddress(logo, 20, 12) : logo;
 
     return (
@@ -145,12 +172,6 @@ export const UrlItem = ({ label, logo }: IUrlProps) => {
         </ItemWrap>
     );
 };
-
-export const FeeItem = () => {
-    return <ItemWrap></ItemWrap>;
-};
-
-export const BalanceItem = () => {};
 
 interface IProps {
     label: string;
@@ -170,7 +191,7 @@ export const TransactionItem = ({ label, hash, onClickHash }: IProps) => {
     );
 };
 
-export const ExpirationItem = ({ value, type }: { value: string; type: string }) => {
+export const ExpirationItem = ({ value, type, color }: { value: string; type: string; color: string }) => {
     const mainText = useMemo(() => {
         if (type === 'never') return 'Forever';
         if (type === 'at_height') return commaNumber(value);
@@ -182,7 +203,7 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
         return '';
     }, [type, value]);
 
-    const subText = 'block';
+    const subText = 'Block';
 
     return (
         <ItemWrap>
@@ -211,19 +232,19 @@ export const ExpirationItem = ({ value, type }: { value: string; type: string })
     );
 };
 
-export const NftItem = ({ label, value, symbol }: { label: string; value: string; symbol: string }) => {
+export const NftItem = ({ label, value, color }: { label: string; value: string; color: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemAmountValue>{value}</ItemAmountValue>
+                <ItemAmountValue $color={color}>{value}</ItemAmountValue>
                 <ItemAmountSymbol>NFT</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
     );
 };
 
-export const NftResultItem = ({ label, value, symbol }: { label: string; value: string; symbol: string }) => {
+export const NftResultItem = ({ label, value }: { label: string; value: string; color: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -235,7 +256,7 @@ export const NftResultItem = ({ label, value, symbol }: { label: string; value: 
     );
 };
 
-export const NftIdItem = ({ label, value }: { label: string; value: string }) => {
+export const NftIdItem = ({ label, value, color }: { label: string; value: string; color: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -247,12 +268,12 @@ export const NftIdItem = ({ label, value }: { label: string; value: string }) =>
     );
 };
 
-export const ResultNftIdItem = ({ label, value }: { label: string; value: string }) => {
+export const ResultNftIdItem = ({ label, value, color }: { label: string; value: string; color: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap>
-                <ItemAmountValue style={{ color: '#02E191' }}>{value}</ItemAmountValue>
+                <ItemAmountValue $color={color}>{value}</ItemAmountValue>
                 <ItemIcon src={IC_ID_CIRCLE} alt="token-id" />
             </ItemValueWrap>
         </ItemWrap>
@@ -272,7 +293,7 @@ export const WarningItem = ({ label, value }: { label: string; value: string }) 
     );
 };
 
-export const DefaultItem = ({ label, value }: { label: string; value: string }) => {
+export const DefaultItem = ({ label, value, color }: { label: string; value: string; color: string }) => {
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -283,7 +304,7 @@ export const DefaultItem = ({ label, value }: { label: string; value: string }) 
     );
 };
 
-export const ContractAddressItem = ({ label, contractAddress }: { label: string; contractAddress: string }) => {
+export const ContractAddressItem = ({ label, contractAddress }: { label: string; contractAddress: string; }) => {
     const explorerUrl = CRAFT_CONFIGS.BLOCK_EXPLORER;
     const openContractAddress = () => openLink(`${explorerUrl}/accounts/${contractAddress}`);
     return (

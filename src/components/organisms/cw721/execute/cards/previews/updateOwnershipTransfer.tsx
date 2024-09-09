@@ -197,7 +197,7 @@ const UpdateOwnershipTransferPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Ownership Transfer'
             },
@@ -216,12 +216,16 @@ const UpdateOwnershipTransferPreview = () => {
                     {
                         label: 'Recipient Address',
                         value: approveRecipientAddress,
-                        type: 'wallet'
+                        type: 'wallet',
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     },
                     {
                         label: 'Expiration',
                         value: convertValue,
-                        type: convertType
+                        type: convertType,
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     }
                 ]
             },

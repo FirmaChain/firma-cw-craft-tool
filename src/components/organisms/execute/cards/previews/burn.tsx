@@ -186,7 +186,9 @@ const BurnPreview = () => {
                     {
                         label: 'Total Burn Amount',
                         value: amount,
-                        type: 'amount'
+                        type: 'execute_amount',
+                        initColor: '#02E191',
+                        resultColor: '#E6E6E6'
                     }
                 ]
             },

@@ -61,6 +61,7 @@ import {
     AmountItem,
     ContractAddressItem,
     DefaultItem,
+    ExecuteAmountItem,
     ExpirationItem,
     NftIdItem,
     NftItem,
@@ -111,11 +112,15 @@ export interface ContentParameters {
         label: string;
         value: string;
         type: string;
+        initColor: string;
+        resultColor: string;
     }[];
     extraList?: {
         label: string;
         value: string;
         type: string;
+        initColor: string;
+        resultColor: string;
     }[];
 }
 
@@ -739,7 +744,7 @@ const TxModal = ({
     }, [inputPassword]);
 
     const RenderItem = useCallback(
-        ({ type, label, value }: { type: string; label: string; value: string }) => {
+        ({ type, label, value, color }: { type: string; label: string; value: string, color: string }) => {
             if (type === 'amount') {
                 return (
                     <AmountItem
@@ -747,26 +752,37 @@ const TxModal = ({
                         decimals={params.contentParams.decimals}
                         amount={value}
                         symbol={params.contentParams.symbol}
+                        color={color}
+                    />
+                );
+            } else if (type === 'execute_amount') {
+                return (
+                    <ExecuteAmountItem
+                        label={label}
+                        decimals={params.contentParams.decimals}
+                        amount={value}
+                        symbol={params.contentParams.symbol}
+                        color={color}
                     />
                 );
             } else if (type === 'wallet') {
-                return <ResultWalletAdress label={label} address={value} />;
+                return <ResultWalletAdress label={label} address={value} color={color} />;
             } else if (type === 'url') {
-                return <UrlItem label={label} logo={value} />;
+                return <UrlItem label={label} logo={value} color={color} />;
             } else if (type === 'wallet-count') {
-                return <WalletCount label={label} count={value} />;
+                return <WalletCount label={label} count={value} color={color} />;
             } else if (['at_time', 'at_height', 'never'].includes(type)) {
-                return <ExpirationItem value={value} type={type} />;
+                return <ExpirationItem value={value} type={type} color={color} />;
             } else if (type === 'nft_icon') {
-                return <ResultNftIdItem label={label} value={value} />;
+                return <ResultNftIdItem label={label} value={value} color={color} />;
             } else if (type === 'nft') {
-                return <NftItem label={label} value={value} symbol={params.contentParams.symbol} />;
+                return <NftItem label={label} value={value} color={color} />;
             } else if (type === 'nft_id') {
-                return <NftIdItem label={label} value={value} />;
+                return <NftIdItem label={label} value={value} color={color} />;
             } else if (type === 'warning') {
                 return <WarningItem label={label} value={value} />;
             } else if (type === 'default') {
-                return <DefaultItem label={label} value={value} />;
+                return <DefaultItem label={label} value={value} color={color} />;
             }
         },
         [params]
@@ -805,7 +821,7 @@ const TxModal = ({
                                     }
                                 >
                                     {params.contentParams.list.map((el, index) => {
-                                        return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />;
+                                        return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.initColor}/>;
                                     })}
                                     {params.contentParams.extraList && (
                                         <Fragment>
@@ -817,6 +833,7 @@ const TxModal = ({
                                                         type={el.type}
                                                         label={el.label}
                                                         value={el.value}
+                                                        color={el.initColor}
                                                     />
                                                 );
                                             })}
@@ -893,7 +910,7 @@ const TxModal = ({
                                         {params.contentParams.list.map((el, index) => {
                                             if (el.type !== 'warning')
                                                 return (
-                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} />
+                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.resultColor} />
                                                 );
                                         })}
                                         {params.contentParams.extraList && (
@@ -906,6 +923,7 @@ const TxModal = ({
                                                             type={el.type}
                                                             label={el.label}
                                                             value={el.value}
+                                                            color={el.resultColor}
                                                         />
                                                     );
                                                 })}

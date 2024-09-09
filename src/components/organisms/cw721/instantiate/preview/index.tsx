@@ -185,12 +185,16 @@ const Preview = () => {
                         {
                             label: 'Contract Name',
                             value: nftName,
-                            type: 'default'
+                            type: 'default',
+                            initColor: '#E6E6E6',
+                            resultColor: '#E6E6E6'
                         },
                         {
                             label: 'Contract Symbol',
                             value: nftSymbol,
-                            type: 'default'
+                            type: 'default',
+                            initColor: '#E6E6E6',
+                            resultColor: '#E6E6E6'
                         },
                     ]
                 },

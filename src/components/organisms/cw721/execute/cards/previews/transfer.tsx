@@ -319,7 +319,7 @@ const TransferPreview = () => {
                 : transferListForModal.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Transfer'
             },
@@ -335,12 +335,16 @@ const TransferPreview = () => {
                     {
                         label: 'Total Transfer Amount',
                         value: transferIds.length.toString(),
-                        type: 'nft'
+                        type: 'nft',
+                        initColor: '#02E191',
+                        resultColor: '#E6E6E6'
                     },
                     {
                         label: 'Total Wallet Count',
                         value: userTransferList.length.toString(),
-                        type: 'wallet-count'
+                        type: 'wallet-count',
+                        initColor: '#807E7E',
+                        resultColor: '#807E7E'
                     }
                 ]
             },

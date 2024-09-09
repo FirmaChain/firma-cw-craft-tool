@@ -78,11 +78,17 @@ export const ModalContentWarningDesc = styled.div`
     text-align: center;
 `;
 
+export const ModalContentCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+`;
+
 export const ModalContentBlackCard = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 20px 24px;
+    padding: 18px 24px 16px;
     border-radius: 8px;
     background: var(--Gray-200, #141414);
 `;
@@ -102,10 +108,17 @@ export const ItemValueWrap = styled.div`
     justify-content: center;
 `;
 
-export const ItemAmountValue = styled.div`
-    color: #02e191;
+export const ItemAmountValue = styled.div<{ $color?: string }>`
+    color: ${({ $color }) => ($color)};
+    font-family: 'General Sans Variable';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 122.222% */
+`;
 
-    /* Heading/H5 - Bd */
+export const ItemExecuteAmountValue = styled.div<{ $color?: string }>`
+    color: ${({ $color }) => ($color)};
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -115,8 +128,6 @@ export const ItemAmountValue = styled.div`
 
 export const ResultItemAmountTypo = styled.div`
     color: #e6e6e6;
-
-    /* Heading/H5 - Bd */
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;

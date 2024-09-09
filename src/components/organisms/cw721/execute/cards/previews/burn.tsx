@@ -197,7 +197,7 @@ const BurnPreview = () => {
         }
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Burn'
             },
@@ -213,7 +213,9 @@ const BurnPreview = () => {
                     {
                         label: 'Total Burn Amount',
                         value: totalBurnCount.toString(),
-                        type: 'nft'
+                        type: 'nft',
+                        initColor: '#02E191',
+                        resultColor: '#E6E6E6'
                     }
                 ]
             },

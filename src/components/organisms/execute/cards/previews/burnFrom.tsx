@@ -309,12 +309,16 @@ const BurnFromPreview = () => {
                     {
                         label: 'Total Burn Amount',
                         value: totalAmount,
-                        type: 'amount'
+                        type: 'execute_amount',
+                        initColor: '#02E191',
+                        resultColor: '#E6E6E6'
                     },
                     {
                         label: 'Total Wallet Count',
                         value: convertWalletList.length.toString(),
-                        type: 'wallet-count'
+                        type: 'wallet-count',
+                        initColor: '#807E7E',
+                        resultColor: '#807E7E'
                     }
                 ]
             },

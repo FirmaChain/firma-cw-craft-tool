@@ -307,17 +307,23 @@ const DecreaseAllowancePreview = () => {
                     {
                         label: 'Decrease Allowance Amount',
                         value: getUTokenAmountFromToken(allowance.amount, tokenInfo.decimals.toString()),
-                        type: 'amount'
+                        type: 'execute_amount',
+                        initColor: '#02E191',
+                        resultColor: '#E6E6E6'
                     },
                     {
                         label: 'Recipient Address',
                         value: allowance.address,
-                        type: 'wallet'
+                        type: 'wallet',
+                        initColor: '#E6E6E6',
+                        resultColor: '#E6E6E6'
                     },
                     {
                         label: 'Expiration',
                         value: allowance.expire,
-                        type: allowance.type
+                        type: allowance.type,
+                        initColor: '#E6E6E6',
+                        resultColor: '#E6E6E6'
                     }
                 ]
             },

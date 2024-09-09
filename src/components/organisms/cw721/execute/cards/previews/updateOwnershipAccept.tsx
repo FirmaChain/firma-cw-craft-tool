@@ -186,7 +186,7 @@ const UpdateOwnershipAccept = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
-            modalType: 'EXECUTE' as ModalType,
+            modalType: 'EXECUTES' as ModalType,
             header: {
                 title: 'Update Ownership Accept'
             },
@@ -204,12 +204,16 @@ const UpdateOwnershipAccept = () => {
                     {
                         label: 'Sender Address',
                         value: ownershipInfo.owner,
-                        type: 'wallet'
+                        type: 'wallet',
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     },
                     {
                         label: 'Expiration',
                         value: ownershipInfo.pending_expiry === null ? {} : Object.values(ownershipInfo.pending_expiry)[0],
-                        type: ownershipInfo.pending_expiry === null ? 'never' : Object.keys(ownershipInfo.pending_expiry)[0]
+                        type: ownershipInfo.pending_expiry === null ? 'never' : Object.keys(ownershipInfo.pending_expiry)[0],
+                        initColor: '#FFF',
+                        resultColor: '#FFF'
                     }
                 ]
             },
