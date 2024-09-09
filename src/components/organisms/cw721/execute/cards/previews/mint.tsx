@@ -359,7 +359,7 @@ const MintPreview = () => {
                                         <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
                                         <WalletItemAddressTypo
                                             className="clamp-single-line"
-                                            $disabled={mintList[0].token_uri === ''}
+                                            $disabled={mintList[index].token_uri === ''}
                                             data-tooltip-content={value.token_uri.length >= 30 ? value.token_uri : ''}
                                             data-tooltip-id={TOOLTIP_ID.COMMON}
                                             data-tooltip-wrapper="span"

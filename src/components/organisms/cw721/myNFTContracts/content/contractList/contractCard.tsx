@@ -234,7 +234,7 @@ const ContractCard = ({ data }: IProps) => {
                                     return <ThumbnailImg key={`${data.contractAddress}-nft-${index}`} src={value} alt={'NFT'} />;
                                 })}
                         </ThumbnailBox>
-                        <TotalNftCountTypo>{count}</TotalNftCountTypo>
+                        {totalNFTsCount > 3 && <TotalNftCountTypo>{count}</TotalNftCountTypo>}
                     </PreviewNFTsBox>
                 );
             }

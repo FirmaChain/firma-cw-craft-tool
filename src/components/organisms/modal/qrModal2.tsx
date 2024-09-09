@@ -301,7 +301,7 @@ const QRModal2 = ({
 
         const parsedMessage = JSON.parse(message);
 
-        if (status === '1') {
+        if (status !== "1") {
             setStatus('failure');
             return {
                 message: parsedMessage,
