@@ -3,7 +3,7 @@ import { IC_LEFT_ARROW_CIRCLE } from '@/components/atoms/icons/pngIcons';
 
 const Container = styled.div`
     width: 100%;
-    height: auto;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -86,7 +86,7 @@ const DisabledContainer = styled(Container)`
     align-items: center;
     justify-content: center;
 
-    min-height: 322px;
+    min-height: 334px;
 
     .diabled-typo {
         color: var(--Gray-800, #dcdcdc);

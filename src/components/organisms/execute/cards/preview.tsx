@@ -30,15 +30,19 @@ const Container = styled.div<{ $isSelectMenu: boolean; $scrollY: number }>`
     background: var(--200, #1e1e1e);
 
     max-height: 742px;
+    min-height: ${({ $isSelectMenu }) => (!$isSelectMenu ? '334px' : 'unset')};
     overflow: hidden;
     position: sticky;
     transition: all 0.2s ease;
 
     @media (min-width: 1654px) {
         position: sticky;
-        margin-bottom: 72px;
-        max-height: ${({ $scrollY }) => ($scrollY > 240 ? 'calc(100vh - 200px)' : 'calc(100vh - 340px)')};
-        top: ${({ $scrollY }) => ($scrollY > 0 ? '100px' : 0)};
+        margin-bottom: ${({ $isSelectMenu }) => ($isSelectMenu ? '72px' : '0')};
+        min-height: ${({ $isSelectMenu }) => (!$isSelectMenu ? '334px' : 'unset')};
+
+        max-height: ${({ $scrollY, $isSelectMenu }) =>
+            !$isSelectMenu ? '100%' : $scrollY > 240 ? 'calc(100vh - 200px)' : 'calc(100vh - 340px)'};
+        top: ${({ $scrollY, $isSelectMenu }) => ($scrollY > 0 && $isSelectMenu ? '100px' : 0)};
     }
 `;
 
