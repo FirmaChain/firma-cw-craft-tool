@@ -132,7 +132,15 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: label === "" ? '0px' : '8px', width: '100%' }}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                gap: label === '' ? '0px' : '8px',
+                width: '100%'
+            }}
+        >
             <div
                 style={{
                     display: 'flex',
@@ -164,7 +172,7 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC', whiteSpace: 'pre' }}>{label}</div>
                 {typeof tooltip === 'string' && tooltip.length > 0 && <IconTooltip tooltip={tooltip} TooltipIcon={TooltipIcon} />}
 
-                <div style={{ width: '100%', textAlign: 'right' }}>
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                     <LabelSubText>{subText}</LabelSubText>
                 </div>
             </div>

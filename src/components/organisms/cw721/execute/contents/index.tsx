@@ -17,7 +17,7 @@ const Container = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 36px 96px 61px; // 115px;
+    padding: 36px 88px 61px 96px; // 115px;
     position: relative;
 `;
 

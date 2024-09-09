@@ -1,182 +1,184 @@
-/*
-# wanted view
-	- nft image list
-	- page number not supported (chain issue)
-	- sorting not supported (chain issue, sort by string)
+export {};
 
-# req
-	- nft id list?
-*/
+// /*
+// # wanted view
+// 	- nft image list
+// 	- page number not supported (chain issue)
+// 	- sorting not supported (chain issue, sort by string)
 
-import styled from 'styled-components';
-import IconButton from '../buttons/iconButton';
-import { useState } from 'react';
-import { NoDataTypo } from './styles';
-import { BarLoader } from 'react-spinners';
-import Icons from '../icons';
-import { StyledOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
+// # req
+// 	- nft id list?
+// */
 
-const TableBackground = styled.div`
-    width: 100%;
-    min-height: 208px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+// import styled from 'styled-components';
+// import IconButton from '../buttons/iconButton';
+// import { useState } from 'react';
+// import { NoDataTypo } from './styles';
+// import { BarLoader } from 'react-spinners';
+// import Icons from '../icons';
+// import { StyledOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
 
-    position: relative;
+// const TableBackground = styled.div`
+//     width: 100%;
+//     min-height: 208px;
+//     display: flex;
+//     flex-direction: column;
+//     gap: 20px;
 
-    padding: 36px 40px 20px 40px;
+//     position: relative;
 
-    justify-content: flex-start;
+//     padding: 36px 40px 20px 40px;
 
-    border-radius: 12px;
-    background: var(--Gray-150, #141414);
-`;
+//     justify-content: flex-start;
 
-const TableGrid = styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+//     border-radius: 12px;
+//     background: var(--Gray-150, #141414);
+// `;
 
-    max-height: 248px;
-    overflow-y: scroll;
+// const TableGrid = styled.div`
+//     width: 100%;
+//     display: grid;
+//     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
 
-    gap: 24px 12px;
-`;
+//     max-height: 248px;
+//     overflow-y: scroll;
 
-const EmptyBoxWrap = styled.div`
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+//     gap: 24px 12px;
+// `;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
+// const EmptyBoxWrap = styled.div`
+//     position: absolute;
+//     left: 50%;
+//     top: 50%;
+//     transform: translate(-50%, -50%);
 
-const NFTCardWrap = styled(IconButton)`
-    display: flex;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+// `;
 
-    width: 88px;
-    height: 112px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
+// const NFTCardWrap = styled(IconButton)`
+//     display: flex;
 
-    border-radius: 12px;
-    border: 1px solid var(--Gray-500, #383838);
+//     width: 88px;
+//     height: 112px;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     gap: 6px;
 
-    .nft-image {
-        display: flex;
-        min-width: 64px;
-        max-width: 64px;
-        min-height: 64px;
-        max-height: 64px;
+//     border-radius: 12px;
+//     border: 1px solid var(--Gray-500, #383838);
 
-        object-fit: cover;
+//     .nft-image {
+//         display: flex;
+//         min-width: 64px;
+//         max-width: 64px;
+//         min-height: 64px;
+//         max-height: 64px;
 
-        justify-content: center;
-        align-items: center;
+//         object-fit: cover;
 
-        border-radius: 8px;
-        border: 1px solid var(--Gray-550, #444);
-    }
+//         justify-content: center;
+//         align-items: center;
 
-    .typo {
-        color: var(--Gray-900, var(--Primary-Base-White, #fff));
-        text-align: center;
+//         border-radius: 8px;
+//         border: 1px solid var(--Gray-550, #444);
+//     }
 
-        /* Body/Body1 - Md */
-        font-family: 'General Sans Variable';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 22px; /* 137.5% */
+//     .typo {
+//         color: var(--Gray-900, var(--Primary-Base-White, #fff));
+//         text-align: center;
 
-        display: -webkit-box;
-        overflow: hidden;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        word-break: break-all;
-    }
-`;
+//         /* Body/Body1 - Md */
+//         font-family: 'General Sans Variable';
+//         font-size: 16px;
+//         font-style: normal;
+//         font-weight: 500;
+//         line-height: 22px; /* 137.5% */
 
-const EmptyBox = ({ isLoading, isEmpty }: { isLoading?: boolean; isEmpty?: boolean }) => {
-    return (
-        <EmptyBoxWrap>
-            {isLoading && <BarLoader color="#EFEFEF" />}
-            {isEmpty && <NoDataTypo className="select-none">There is no data</NoDataTypo>}
-        </EmptyBoxWrap>
-    );
-};
+//         display: -webkit-box;
+//         overflow: hidden;
+//         -webkit-line-clamp: 1;
+//         -webkit-box-orient: vertical;
+//         word-break: break-all;
+//     }
+// `;
 
-const NFTCard = ({ item }: { item: { id: string; imgUrl: string } }) => {
-    return (
-        <NFTCardWrap>
-            <img src={item.imgUrl} alt="" className="nft-image" />
-            <div className="typo">{item.id}</div>
-        </NFTCardWrap>
-    );
-};
+// const EmptyBox = ({ isLoading, isEmpty }: { isLoading?: boolean; isEmpty?: boolean }) => {
+//     return (
+//         <EmptyBoxWrap>
+//             {isLoading && <BarLoader color="#EFEFEF" />}
+//             {isEmpty && <NoDataTypo className="select-none">There is no data</NoDataTypo>}
+//         </EmptyBoxWrap>
+//     );
+// };
 
-const PaginationButton = styled(IconButton)`
-    display: flex;
-    width: 20px;
-    height: 20px;
-    padding: 0;
+// const NFTCard = ({ item }: { item: { id: string; imgUrl: string } }) => {
+//     return (
+//         <NFTCardWrap>
+//             <img src={item.imgUrl} alt="" className="nft-image" />
+//             <div className="typo">{item.id}</div>
+//         </NFTCardWrap>
+//     );
+// };
 
-    outline: unset !important;
-`;
+// const PaginationButton = styled(IconButton)`
+//     display: flex;
+//     width: 20px;
+//     height: 20px;
+//     padding: 0;
 
-const NftTable = ({ items, isLoading }: { items?: { id: string; imgUrl: string }[]; isLoading?: boolean }) => {
-    const [currentPage, setCurrentPage] = useState(0);
+//     outline: unset !important;
+// `;
 
-    const currentItems = items?.slice(currentPage * 20, (currentPage + 1) * 20);
+// const NftTable = ({ items, isLoading }: { items?: { id: string; imgUrl: string }[]; isLoading?: boolean }) => {
+//     const [currentPage, setCurrentPage] = useState(0);
 
-    const endPageNumber = Math.ceil(items?.length / 20);
+//     const currentItems = items?.slice(currentPage * 20, (currentPage + 1) * 20);
 
-    const isEmpty = !items || items.length === 0;
+//     const endPageNumber = Math.ceil(items?.length / 20);
 
-    const setPageNumber = (value: number) => {
-        setCurrentPage(value);
-    };
+//     const isEmpty = !items || items.length === 0;
 
-    return (
-        <TableBackground>
-            {isLoading ? (
-                <EmptyBox isLoading />
-            ) : isEmpty ? (
-                <EmptyBox isEmpty />
-            ) : (
-                <StyledOverlayScrollbar defer>
-                    <TableGrid>
-                        {currentItems.map((item, idx) => (
-                            <NFTCard key={idx} item={item} />
-                        ))}
-                    </TableGrid>
-                </StyledOverlayScrollbar>
-            )}
-            {!isLoading && !isEmpty && (
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <PaginationButton disabled={currentPage === 0} onClick={() => setPageNumber(0)}>
-                        <Icons.LeftDoubleArrow width="20px" height="20px" />
-                    </PaginationButton>
-                    <PaginationButton disabled={currentPage === 0} onClick={() => setPageNumber(currentPage - 1)}>
-                        <Icons.PrevPage width="20px" height="20px" />
-                    </PaginationButton>
-                    <div style={{ width: '12px' }} />
-                    <PaginationButton disabled={currentPage + 1 >= endPageNumber} onClick={() => setPageNumber(currentPage + 1)}>
-                        <Icons.PrevPage width="20px" height="20px" style={{ transform: 'rotate(180deg)' }} />
-                    </PaginationButton>
-                    <PaginationButton disabled={currentPage + 1 >= endPageNumber} onClick={() => setPageNumber(endPageNumber - 1)}>
-                        <Icons.RightDoubleArrow width="20px" height="20px" />
-                    </PaginationButton>
-                </div>
-            )}
-        </TableBackground>
-    );
-};
+//     const setPageNumber = (value: number) => {
+//         setCurrentPage(value);
+//     };
 
-export default NftTable;
+//     return (
+//         <TableBackground>
+//             {isLoading ? (
+//                 <EmptyBox isLoading />
+//             ) : isEmpty ? (
+//                 <EmptyBox isEmpty />
+//             ) : (
+//                 <StyledOverlayScrollbar defer>
+//                     <TableGrid>
+//                         {currentItems.map((item, idx) => (
+//                             <NFTCard key={idx} item={item} />
+//                         ))}
+//                     </TableGrid>
+//                 </StyledOverlayScrollbar>
+//             )}
+//             {!isLoading && !isEmpty && (
+//                 <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+//                     <PaginationButton disabled={currentPage === 0} onClick={() => setPageNumber(0)}>
+//                         <Icons.LeftDoubleArrow width="20px" height="20px" />
+//                     </PaginationButton>
+//                     <PaginationButton disabled={currentPage === 0} onClick={() => setPageNumber(currentPage - 1)}>
+//                         <Icons.PrevPage width="20px" height="20px" />
+//                     </PaginationButton>
+//                     <div style={{ width: '12px' }} />
+//                     <PaginationButton disabled={currentPage + 1 >= endPageNumber} onClick={() => setPageNumber(currentPage + 1)}>
+//                         <Icons.PrevPage width="20px" height="20px" style={{ transform: 'rotate(180deg)' }} />
+//                     </PaginationButton>
+//                     <PaginationButton disabled={currentPage + 1 >= endPageNumber} onClick={() => setPageNumber(endPageNumber - 1)}>
+//                         <Icons.RightDoubleArrow width="20px" height="20px" />
+//                     </PaginationButton>
+//                 </div>
+//             )}
+//         </TableBackground>
+//     );
+// };
+
+// export default NftTable;

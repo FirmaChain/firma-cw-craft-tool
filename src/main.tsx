@@ -3,8 +3,9 @@ import Sidebar from './components/organisms/sidebar';
 import AppRoutes from './routes';
 import { ModalRenderer } from './hooks/useModal';
 import GlobalLoader from './components/atoms/globalLoader';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useScrollContext } from './context/scrollContext';
+import { useLocation } from 'react-router-dom';
 
 const MainContainer = styled.div`
     display: flex;
@@ -24,16 +25,18 @@ const RightContainer = styled.div`
     }
 `;
 
-const ScrollableContainer = styled.div`
+const ScrollableContainer = styled.div<{ $gutter?: boolean }>`
     width: 100%;
     height: 100%;
     overflow: auto;
     z-index: 1;
+    scrollbar-gutter: ${({ $gutter }) => ($gutter ? 'stable' : 'unset')};
 `;
 
 const Main = () => {
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const { setScroll } = useScrollContext();
+    const { pathname } = useLocation();
 
     const handleScroll = () => {
         if (scrollRef.current) {
@@ -54,12 +57,17 @@ const Main = () => {
         };
     }, []);
 
+    const needGutter = useMemo(() => {
+        //? mytoken, mynft page requires different scroll view
+        return !(pathname.includes('mytoken') || pathname.includes('mynft'));
+    }, [pathname]);
+
     return (
         <MainContainer>
             <ModalRenderer />
             <Sidebar />
             <RightContainer>
-                <ScrollableContainer className="main-scrollbar" ref={scrollRef}>
+                <ScrollableContainer className="main-scrollbar" ref={scrollRef} $gutter={needGutter}>
                     <AppRoutes />
                 </ScrollableContainer>
                 <GlobalLoader />

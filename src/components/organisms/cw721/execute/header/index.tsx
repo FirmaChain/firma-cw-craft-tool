@@ -9,7 +9,7 @@ const HeaderBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 68px 96px 36px;
+    padding: 68px 88px 36px 96px;
     border-bottom: 1px solid #222;
 `;
 

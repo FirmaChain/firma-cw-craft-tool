@@ -63,7 +63,7 @@ const Cw20TokenDetail = () => {
     }, []);
 
     return (
-        <Container style={{ padding: '68px 96px', gap: '40px' }}>
+        <Container style={{ padding: '68px 88px 68px 96px', gap: '40px' }}>
             <Header />
             <TokenDetailContent />
         </Container>

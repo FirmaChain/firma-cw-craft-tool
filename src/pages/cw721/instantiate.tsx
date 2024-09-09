@@ -45,7 +45,7 @@ const CW721Instantiate = () => {
     }, [contractMode]);
 
     return (
-        <Container style={{ padding: '61px 96px' }}>
+        <Container style={{ padding: '61px 88px 61px 96px' }}>
             <Header />
             <MainContent>
                 <Box>
