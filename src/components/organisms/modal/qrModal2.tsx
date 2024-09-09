@@ -290,7 +290,7 @@ const QRModal2 = ({
                         color={color}
                     />
                 );
-            }  else if (type === 'wallet') {
+            } else if (type === 'wallet') {
                 return <ResultWalletAdress label={label} address={value} color={color} />;
             } else if (type === 'url') {
                 return <UrlItem label={label} logo={value} color={color} />;

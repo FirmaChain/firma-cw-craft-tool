@@ -104,6 +104,40 @@ export const TokenNameBox = styled.div`
     }
 `;
 
+export const LabelWrap = styled.div`
+    display: flex;
+    padding: 2px 12px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 6px;
+    background: var(--Gray-150, #141414);
+`;
+
+export const LabelBasicTypo = styled.div`
+    color: var(--Gray-650, #707070);
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+`;
+
+export const LabelAdvancedTypo = styled.div`
+    text-align: center;
+    font-family: "General Sans Variable";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    background: linear-gradient(90deg, #00BF7A 0%, #0E9AB0 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+`;
+
 export const TotalSupplyBox = styled.div`
     display: flex;
     flex-direction: row;

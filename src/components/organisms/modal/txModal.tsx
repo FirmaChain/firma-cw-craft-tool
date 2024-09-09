@@ -773,12 +773,10 @@ const TxModal = ({
                 return <WalletCount label={label} count={value} color={color} />;
             } else if (['at_time', 'at_height', 'never'].includes(type)) {
                 return <ExpirationItem value={value} type={type} color={color} />;
-            } else if (type === 'nft_icon') {
-                return <ResultNftIdItem label={label} value={value} color={color} />;
             } else if (type === 'nft') {
                 return <NftItem label={label} value={value} color={color} />;
             } else if (type === 'nft_id') {
-                return <NftIdItem label={label} value={value} color={color} />;
+                return <ResultNftIdItem label={label} value={value} color={color} />;
             } else if (type === 'warning') {
                 return <WarningItem label={label} value={value} />;
             } else if (type === 'default') {

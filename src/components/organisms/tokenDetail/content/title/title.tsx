@@ -4,6 +4,9 @@ import {
     GoToButtonTypo,
     GoToExecuteButton,
     IconBackground,
+    LabelAdvancedTypo,
+    LabelBasicTypo,
+    LabelWrap,
     TitleContainer,
     TitleLogoImage,
     TitleWrapper,
@@ -27,6 +30,7 @@ import Skeleton from '@/components/atoms/skeleton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+import { CRAFT_CONFIGS } from '@/config';
 
 const Title = () => {
     const setContractAddress = useExecuteStore((state) => state.setContractAddress);
@@ -35,6 +39,7 @@ const Title = () => {
     const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
     const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName);
     const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply);
+    const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
     const tokenDecimal = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
 
@@ -83,6 +88,15 @@ const Title = () => {
                         <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />
 
                         {tokenName ? <TokenNameTypo>{tokenName}</TokenNameTypo> : <Skeleton width="50px" />}
+
+                        <LabelWrap>
+                            {codeId ?
+                                codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID
+                                    ? <LabelBasicTypo>{"BASIC"}</LabelBasicTypo>
+                                    : <LabelAdvancedTypo>{"ADVANCED"}</LabelAdvancedTypo>
+                                : <Skeleton width="50px" />
+                            }
+                        </LabelWrap>
                     </TokenInfo>
 
                     <div style={{ padding: '12px 0 8px' }}>

@@ -3,12 +3,14 @@ import Divider from '@/components/atoms/divider';
 import useSearchStore from '../../searchStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { Container, TokenNameBox, TotalSupplyBox } from './style';
+import { Container, LabelAdvancedTypo, LabelBasicTypo, LabelWrap, TokenNameBox, TotalSupplyBox } from './style';
 import commaNumber from 'comma-number';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { getTokenAmountFromUToken } from '@/utils/balance';
+import { CRAFT_CONFIGS } from '@/config';
+import Skeleton from '@/components/atoms/skeleton';
 
 const TokenNameCard = () => {
     const logoUrl = useSearchStore((state) => state.marketingInfo?.logo?.url);
@@ -17,6 +19,7 @@ const TokenNameCard = () => {
     const tokenName = useSearchStore((state) => state.tokenInfo?.name);
     const ownerAddress = useSearchStore((state) => state.contractInfo?.contract_info.admin);
     const totalSupply = useSearchStore((state) => state.tokenInfo?.total_supply) || '';
+    const codeId = useSearchStore((state) => state.contractInfo?.contract_info.code_id);
     const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || 0;
 
     const isOwner = userAddress === ownerAddress;
@@ -40,7 +43,14 @@ const TokenNameCard = () => {
 
                     <div className="divider" />
 
-                    <div className="token-name">{tokenName}</div>
+                    <LabelWrap>
+                            {codeId ?
+                                codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID
+                                    ? <LabelBasicTypo>{"BASIC"}</LabelBasicTypo>
+                                    : <LabelAdvancedTypo>{"ADVANCED"}</LabelAdvancedTypo>
+                                : <Skeleton width="50px" />
+                            }
+                        </LabelWrap>
                 </TokenNameBox>
                 <div style={{ margin: '12px 0 8px' }}>
                     <Divider $color="var(--Gray-400, #2C2C2C)" $direction={'horizontal'} />

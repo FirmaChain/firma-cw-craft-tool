@@ -269,6 +269,7 @@ export const NftIdItem = ({ label, value, color }: { label: string; value: strin
 };
 
 export const ResultNftIdItem = ({ label, value, color }: { label: string; value: string; color: string }) => {
+    console.log(color);
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
