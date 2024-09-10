@@ -326,7 +326,8 @@ const useFirmaSDKInternal = () => {
 
         return {
             contractAddress,
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -345,7 +346,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -357,7 +359,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -376,7 +379,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -395,7 +399,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -414,7 +419,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -432,7 +438,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -450,7 +457,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -462,7 +470,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -481,7 +490,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -493,7 +503,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -512,7 +523,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -525,7 +537,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -543,7 +556,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -561,8 +575,13 @@ const useFirmaSDKInternal = () => {
             fee: getFeesFromGas(gas),
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
+
+        /// Fail = result.code === 5
+        /// Success = result.code === 0
+
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -574,7 +593,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -586,7 +606,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -598,7 +619,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -616,7 +638,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -628,7 +651,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 
@@ -640,7 +664,8 @@ const useFirmaSDKInternal = () => {
             memo: CRAFT_CONFIGS.TRANSACTION_MEMO
         });
         return {
-            transactionHash: result.transactionHash
+            transactionHash: result.transactionHash,
+            code: result.code
         };
     };
 

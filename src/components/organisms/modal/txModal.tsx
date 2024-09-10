@@ -41,7 +41,9 @@ import {
     LoadingDimBox,
     LoadingBox,
     LoadingTypo,
-    ModalTitleHeaderIcon
+    ModalTitleHeaderIcon,
+    ModalContentCard,
+    AcceptIcon
 } from './style';
 import { useModalStore } from '@/hooks/useModal';
 import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN, IC_WARNING } from '@/components/atoms/icons/pngIcons';
@@ -63,6 +65,7 @@ import {
     DefaultItem,
     ExecuteAmountItem,
     ExpirationItem,
+    InstantiateAmount,
     NftIdItem,
     NftItem,
     ResultNftIdItem,
@@ -488,7 +491,14 @@ const TxModal = ({
                         CRAFT_CONFIGS.CW20.MEMO
                     );
                     setResult(cw20InstantiateResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20InstantiateResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     useInstantiateStore.getState().clearForm();
                     useFormStore.getState().clearForm();
                     return;
@@ -504,7 +514,14 @@ const TxModal = ({
                         CRAFT_CONFIGS.CW721.MEMO
                     );
                     setResult(cw721nstantiateResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721nstantiateResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/mintToken':
                     const cw20MintResult = await cw20Mint(
@@ -514,13 +531,27 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw20MintResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20MintResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/burnToken':
                     const amount = JSON.parse(JSON.stringify(params.txParams.msg)).amount;
                     const cw20BurnResult = await cw20Burn(inputPassword, params.txParams.contract, amount, estimatedGas);
                     setResult(cw20BurnResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20BurnResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/burnFrom':
                     const cw20BurnFromResult = await cw20BurnFrom(
@@ -530,7 +561,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw20BurnFromResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20BurnFromResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/increaseAllowance':
                     const cw20IncreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(
@@ -545,7 +583,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw20IncreaseResulrt);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20IncreaseResulrt.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/decreaseAllowance':
                     const cw20DecreaseInfo: { spender: string; amount: string; expires: Expires } = JSON.parse(
@@ -560,7 +605,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw20DecreaseResulrt);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20DecreaseResulrt.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/transfer':
                     const cw20TransferResult = await cw20Trnasfer(
@@ -570,7 +622,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw20TransferResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20TransferResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/transferFrom':
                     const cw20TransferFromResult = await cw20TrnasferFrom(
@@ -580,13 +639,27 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw20TransferFromResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20TransferFromResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/updateLogo':
                     const logo = JSON.parse(JSON.stringify(params.txParams.msg)).url;
                     const cw20UpdateLogoResult = await cw20UpdateLogo(inputPassword, params.txParams.contract, logo, estimatedGas);
                     setResult(cw20UpdateLogoResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20UpdateLogoResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/updateMarketing':
                     const msg = JSON.parse(JSON.stringify(params.txParams.msg));
@@ -602,13 +675,27 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw20UpdateMarketingesult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20UpdateMarketingesult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw20/updateMinter':
                     const newMinter = JSON.parse(JSON.stringify(params.txParams.msg)).new_minter;
                     const cw20UpdateMinterResult = await cw20UpdateMinter(inputPassword, params.txParams.contract, newMinter, estimatedGas);
                     setResult(cw20UpdateMinterResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw20UpdateMinterResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/mint':
                     const cw721MintResult = await cw721Mint(
@@ -618,7 +705,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721MintResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721MintResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/burn':
                     const cw721BurnResult = await cw721Burn(
@@ -628,7 +722,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721BurnResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721BurnResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/transfer':
                     const cw721TransferResult = await cw721Transfer(
@@ -638,7 +739,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721TransferResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721TransferResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/approve':
                     const approveExpires: Cw721Expires = params.txParams.msg.expires;
@@ -652,8 +760,15 @@ const TxModal = ({
                         approveExpires,
                         estimatedGas
                     );
+
                     setResult(cw721ApproveResult);
-                    setStatus('success');
+
+                    if (cw721ApproveResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/approveAll':
                     const approveAllExpires: Cw721Expires = params.txParams.msg.expires;
@@ -666,7 +781,13 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721ApproveAllResult);
-                    setStatus('success');
+
+                    if (cw721ApproveAllResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/revoke':
                     const revokeSpender: string = params.txParams.msg.spender;
@@ -679,7 +800,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721RevokeResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721RevokeResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/revokeAll':
                     const revokeOperator: string = params.txParams.msg.operator;
@@ -690,7 +818,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721RevokeAllResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721RevokeAllResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/updateOwnershipTransfer':
                     const new_owner: string = params.txParams.msg.new_owner;
@@ -703,7 +838,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721UpdateOwnershipTransferResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721UpdateOwnershipTransferResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/updateOwnershipAccept':
                     const cw721UpdateOwnershipAcceptResult = await cw721UpdateOwnerShipAccept(
@@ -712,7 +854,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721UpdateOwnershipAcceptResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721UpdateOwnershipAcceptResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 case '/cw721/updateOwnershipRenounce':
                     const cw721UpdateOwnershipRenounceResult = await cw721UpdateOwnerShipRenounce(
@@ -721,7 +870,14 @@ const TxModal = ({
                         estimatedGas
                     );
                     setResult(cw721UpdateOwnershipRenounceResult);
-                    setStatus('success');
+
+                    // setStatus('success');
+                    if (cw721UpdateOwnershipRenounceResult.code === 0) {
+                        setStatus('success');
+                    } else {
+                        setStatus('failure');
+                    }
+
                     return;
                 default:
                     return;
@@ -744,7 +900,7 @@ const TxModal = ({
     }, [inputPassword]);
 
     const RenderItem = useCallback(
-        ({ type, label, value, color }: { type: string; label: string; value: string, color: string }) => {
+        ({ type, label, value, color }: { type: string; label: string; value: string; color: string }) => {
             if (type === 'amount') {
                 return (
                     <AmountItem
@@ -781,10 +937,26 @@ const TxModal = ({
                 return <WarningItem label={label} value={value} />;
             } else if (type === 'default') {
                 return <DefaultItem label={label} value={value} color={color} />;
+            } else if (type === 'instantiate-amount') {
+                return (
+                    <InstantiateAmount
+                        label={label}
+                        decimals={params.contentParams.decimals}
+                        amount={value}
+                        symbol={params.contentParams.symbol}
+                        color={color}
+                    />
+                );
             }
         },
         [params]
     );
+
+    const hideContractInfo = useMemo(() => {
+        if (module.toLowerCase().includes('renounce')) return true;
+        if (module.toLowerCase().includes('instantiate')) return true;
+        else return false;
+    }, [module]);
 
     return (
         <ModalBase style={{ width: '544px', padding: '52px 28px 36px', gap: 0 }}>
@@ -801,6 +973,7 @@ const TxModal = ({
                             style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', position: 'relative' }}
                         >
                             <ModalTitleWrap>
+                                {module.includes('Accept') && <AcceptIcon src={IC_CEHCK_ROUND} alt={'accept-icon'} />}
                                 {module.includes('Renounce') && <ModalTitleHeaderIcon src={IC_WARNING} />}
                                 <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
                             </ModalTitleWrap>
@@ -811,20 +984,54 @@ const TxModal = ({
                                         <span className="typo">{params.contentParams.alert}</span>
                                     </ModalAlertBox>
                                 )}
-                                <ModalContentBlackCard
-                                    style={
-                                        module === '/cw721/updateOwnershipRenounce'
-                                            ? { background: 'rgba(229, 82, 80, 0.18)' }
-                                            : { background: '#141414' }
-                                    }
-                                >
-                                    {params.contentParams.list.map((el, index) => {
-                                        return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.initColor}/>;
-                                    })}
+
+                                <ModalContentCard>
+                                    {params.contentParams.list && (
+                                        <ModalContentBlackCard
+                                            style={{
+                                                ...(params.contentParams.extraList
+                                                    ? {
+                                                          borderRadius: '8px 8px 0px 0px',
+                                                          borderBottom: '1px solid var(--Gray-400, #2C2C2C)'
+                                                      }
+                                                    : module === '/cw721/updateOwnershipRenounce'
+                                                      ? {
+                                                            background: 'rgba(229, 82, 80, 0.18)',
+                                                            padding: '16px 20px',
+                                                            whiteSpace: 'pre-wrap'
+                                                        }
+                                                      : { background: '#141414', borderRadius: '8px' }),
+                                                ...(params.modalType === 'EXECUTES' &&
+                                                !params.contentParams.extraList &&
+                                                module !== '/cw721/updateOwnershipRenounce'
+                                                    ? { padding: '16px 24px 18px' }
+                                                    : {})
+                                            }}
+                                        >
+                                            {params.contentParams.list.map((el, index) => {
+                                                return (
+                                                    <RenderItem
+                                                        key={`item-${index}`}
+                                                        type={el.type}
+                                                        label={el.label}
+                                                        value={el.value}
+                                                        color={el.initColor}
+                                                    />
+                                                );
+                                            })}
+                                        </ModalContentBlackCard>
+                                    )}
                                     {params.contentParams.extraList && (
-                                        <Fragment>
-                                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
+                                        <ModalContentBlackCard
+                                            style={
+                                                params.contentParams.list
+                                                    ? { borderRadius: '0px 0px 8px 8px', padding: '16px 24px 18px' }
+                                                    : { padding: '16px 24px 18px' }
+                                            }
+                                        >
+                                            {/* <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" /> */}
                                             {params.contentParams.extraList.map((el, index) => {
+                                                console.log(params.contentParams.extraList);
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}
@@ -835,9 +1042,10 @@ const TxModal = ({
                                                     />
                                                 );
                                             })}
-                                        </Fragment>
+                                        </ModalContentBlackCard>
                                     )}
-                                </ModalContentBlackCard>
+                                </ModalContentCard>
+
                                 <ModalContentGrayCard>
                                     <ItemWrap>
                                         <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
@@ -903,34 +1111,41 @@ const TxModal = ({
                                 <ResultsTitleMessage>{`${params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}</ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
-                                {!module.includes('Renounce') && (
-                                    <ResultsContentSummeryWrap>
-                                        {params.contentParams.list.map((el, index) => {
-                                            if (el.type !== 'warning')
-                                                return (
-                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.resultColor} />
-                                                );
-                                        })}
-                                        {params.contentParams.extraList && (
-                                            <Fragment>
-                                                <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                                {params.contentParams.extraList.map((el, index) => {
+                                {!hideContractInfo && (
+                                    <>
+                                        <ResultsContentSummeryWrap style={{ padding: '18px 24px 16px' }}>
+                                            {params.contentParams.list.map((el, index) => {
+                                                if (el.type !== 'warning')
                                                     return (
                                                         <RenderItem
-                                                            key={`extra-item-${index}`}
+                                                            key={`item-${index}`}
                                                             type={el.type}
                                                             label={el.label}
                                                             value={el.value}
                                                             color={el.resultColor}
                                                         />
                                                     );
-                                                })}
-                                            </Fragment>
-                                        )}
-                                    </ResultsContentSummeryWrap>
-                                )}
-                                {!module.includes('Renounce') && (
-                                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                            })}
+                                            {params.contentParams.extraList && (
+                                                <Fragment>
+                                                    <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
+                                                    {params.contentParams.extraList.map((el, index) => {
+                                                        return (
+                                                            <RenderItem
+                                                                key={`extra-item-${index}`}
+                                                                type={el.type}
+                                                                label={el.label}
+                                                                value={el.value}
+                                                                color={el.resultColor}
+                                                            />
+                                                        );
+                                                    })}
+                                                </Fragment>
+                                            )}
+                                        </ResultsContentSummeryWrap>
+
+                                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                    </>
                                 )}
                                 <ResultsContentHashWrap>
                                     {result.contractAddress && (
@@ -965,7 +1180,7 @@ const TxModal = ({
                                         }}
                                     >
                                         <ResultsGoToMyMintetedTokenButtonTypo>
-                                            {cwMode === 'CW20' ? 'Go to My Token Details' : 'Go to My NFT detail'}
+                                            {cwMode === 'CW20' ? 'Go to My Token Details' : 'Go to My NFT Details'}
                                         </ResultsGoToMyMintetedTokenButtonTypo>
                                     </ResultsGoToMyMintetedTokenButton>
                                 )}

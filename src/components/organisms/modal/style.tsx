@@ -109,7 +109,7 @@ export const ItemValueWrap = styled.div`
 `;
 
 export const ItemAmountValue = styled.div<{ $color?: string }>`
-    color: ${({ $color }) => ($color)};
+    color: ${({ $color }) => $color};
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -118,7 +118,7 @@ export const ItemAmountValue = styled.div<{ $color?: string }>`
 `;
 
 export const ItemExecuteAmountValue = styled.div<{ $color?: string }>`
-    color: ${({ $color }) => ($color)};
+    color: ${({ $color }) => $color};
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -620,7 +620,7 @@ export const ResultsItemSymbol = styled.div`
 export const ResultsContentHashWrap = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 16px 24px 20px 24px;
+    padding: 16px 24px 18px;
     gap: 10px;
     // border-radius: 0px 0px 8px 8px;
     // background: var(--Gray-150, #141414);
@@ -1052,4 +1052,27 @@ export const ItemContractAddressValue = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 18px; /* 138.462% */
+`;
+
+export const ItemInstantiateAmountValue = styled.div<{ $color?: string }>`
+    color: ${({ $color }) => $color};
+    font-family: 'General Sans Variable';
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+`;
+
+export const TitleRow = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin-bottom: 20px;
+`;
+
+export const AcceptIcon = styled.img`
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
 `;

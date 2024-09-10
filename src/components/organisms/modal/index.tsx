@@ -15,7 +15,8 @@ import {
     ItemVerticalWrap,
     ItemDefaultTypo,
     ItemContractAddressValue,
-    ItemExecuteAmountValue
+    ItemExecuteAmountValue,
+    ItemInstantiateAmountValue
 } from './style';
 import { IC_ID_CIRCLE, IC_NAVIGATION, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { shortenAddress } from '@/utils/address';
@@ -157,7 +158,7 @@ export const ResultWalletAdress = ({ label, address, color }: { label: string; a
 interface IUrlProps {
     label: string;
     logo: string;
-    color: string
+    color: string;
 }
 
 export const UrlItem = ({ label, logo, color }: IUrlProps) => {
@@ -269,7 +270,6 @@ export const NftIdItem = ({ label, value, color }: { label: string; value: strin
 };
 
 export const ResultNftIdItem = ({ label, value, color }: { label: string; value: string; color: string }) => {
-    console.log(color);
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
@@ -305,7 +305,7 @@ export const DefaultItem = ({ label, value, color }: { label: string; value: str
     );
 };
 
-export const ContractAddressItem = ({ label, contractAddress }: { label: string; contractAddress: string; }) => {
+export const ContractAddressItem = ({ label, contractAddress }: { label: string; contractAddress: string }) => {
     const explorerUrl = CRAFT_CONFIGS.BLOCK_EXPLORER;
     const openContractAddress = () => openLink(`${explorerUrl}/accounts/${contractAddress}`);
     return (
@@ -314,6 +314,20 @@ export const ContractAddressItem = ({ label, contractAddress }: { label: string;
             <ItemValueWrap className="pointer select-none" onClick={openContractAddress}>
                 <ItemContractAddressValue>{shortenAddress(contractAddress, 12, 12)}</ItemContractAddressValue>
                 <CopyIconButton text={contractAddress} width={'16px'} height={'16px'} />
+            </ItemValueWrap>
+        </ItemWrap>
+    );
+};
+
+export const InstantiateAmount = ({ label, decimals, amount, symbol, color }: IAmountProps) => {
+    return (
+        <ItemWrap>
+            <ItemLabel>{label}</ItemLabel>
+            <ItemValueWrap style={{ alignItems: 'baseline' }}>
+                <ItemInstantiateAmountValue className="clamp-single-line" $color={color}>
+                    {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
+                </ItemInstantiateAmountValue>
+                <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
     );

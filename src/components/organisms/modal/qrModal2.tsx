@@ -42,7 +42,9 @@ import {
     ModalTitleDescTypo,
     QrCodeWrap,
     ModalTitleHeaderIcon,
-    ModalContentCard
+    ModalContentCard,
+    AcceptIcon,
+    TitleRow
 } from './style';
 import { useModalStore } from '@/hooks/useModal';
 import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN, IC_WARNING } from '@/components/atoms/icons/pngIcons';
@@ -61,6 +63,7 @@ import {
     DefaultItem,
     ExecuteAmountItem,
     ExpirationItem,
+    InstantiateAmount,
     NftIdItem,
     NftItem,
     ResultNftIdItem,
@@ -269,7 +272,7 @@ const QRModal2 = ({
     };
 
     const RenderItem = useCallback(
-        ({ type, label, value, color }: { type: string; label: string; value: string, color: string }) => {
+        ({ type, label, value, color }: { type: string; label: string; value: string; color: string }) => {
             if (type === 'amount') {
                 return (
                     <AmountItem
@@ -306,6 +309,16 @@ const QRModal2 = ({
                 return <WarningItem label={label} value={value} />;
             } else if (type === 'default') {
                 return <DefaultItem label={label} value={value} color={color} />;
+            } else if (type === 'instantiate-amount') {
+                return (
+                    <InstantiateAmount
+                        label={label}
+                        decimals={params.contentParams.decimals}
+                        amount={value}
+                        symbol={params.contentParams.symbol}
+                        color={color}
+                    />
+                );
             }
         },
         [params]
@@ -318,7 +331,7 @@ const QRModal2 = ({
 
         const parsedMessage = JSON.parse(message);
 
-        if (status !== "1" || signData === "") {
+        if (status !== '1' || signData === '') {
             setStatus('failure');
             return {
                 message: parsedMessage,
@@ -356,6 +369,12 @@ const QRModal2 = ({
         };
     }, [result]);
 
+    const hideContractInfo = useMemo(() => {
+        if (module.toLowerCase().includes('renounce')) return true;
+        if (module.toLowerCase().includes('instantiate')) return true;
+        else return false;
+    }, [module]);
+
     return (
         <ModalBase style={{ width: '544px', padding: '52px 28px 36px', gap: 0 }}>
             <img
@@ -371,9 +390,11 @@ const QRModal2 = ({
                             style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', position: 'relative' }}
                         >
                             <ModalTitleWrap>
+                                {module.includes('Accept') && <AcceptIcon src={IC_CEHCK_ROUND} alt={'accept-icon'} />}
                                 {module.includes('Renounce') && <ModalTitleHeaderIcon src={IC_WARNING} />}
                                 <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
                             </ModalTitleWrap>
+
                             <ModalTitleDescTypo style={{ marginBottom: '24px' }}>
                                 {'Scan the QR code\nwith your mobile Firma Station for transaction.'}
                             </ModalTitleDescTypo>
@@ -410,38 +431,66 @@ const QRModal2 = ({
                                 )}
 
                                 <ModalContentCard>
-                                    <ModalContentBlackCard
-                                        style={
-                                            params.contentParams.extraList
-                                                ? { borderRadius: '8px 8px 0px 0px', borderBottom: '1px solid var(--Gray-400, #2C2C2C)' }
-                                                : module === '/cw721/updateOwnershipRenounce'
-                                                    ? { background: 'rgba(229, 82, 80, 0.18)' }
-                                                    : { background: '#141414', borderRadius: '8px' }
-                                        }
-                                    >
-                                        {params.contentParams.list.map((el, index) => {
-                                            return <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.initColor} />;
-                                        })}
-                                    </ModalContentBlackCard>
+                                    {params.contentParams.list && (
+                                        <ModalContentBlackCard
+                                            style={{
+                                                ...(params.contentParams.extraList
+                                                    ? {
+                                                          borderRadius: '8px 8px 0px 0px',
+                                                          borderBottom: '1px solid var(--Gray-400, #2C2C2C)'
+                                                      }
+                                                    : module === '/cw721/updateOwnershipRenounce'
+                                                      ? {
+                                                            background: 'rgba(229, 82, 80, 0.18)',
+                                                            padding: '16px 20px',
+                                                            whiteSpace: 'pre-wrap'
+                                                        }
+                                                      : { background: '#141414', borderRadius: '8px' }),
+                                                ...(params.modalType === 'EXECUTES' &&
+                                                !params.contentParams.extraList &&
+                                                module !== '/cw721/updateOwnershipRenounce'
+                                                    ? { padding: '16px 24px 18px' }
+                                                    : {})
+                                            }}
+                                        >
+                                            {params.contentParams.list.map((el, index) => {
+                                                return (
+                                                    <RenderItem
+                                                        key={`item-${index}`}
+                                                        type={el.type}
+                                                        label={el.label}
+                                                        value={el.value}
+                                                        color={el.initColor}
+                                                    />
+                                                );
+                                            })}
+                                        </ModalContentBlackCard>
+                                    )}
                                     {params.contentParams.extraList && (
-                                            <ModalContentBlackCard style={{ borderRadius: '0px 0px 8px 8px' }}>
-                                                {/* <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" /> */}
-                                                {params.contentParams.extraList.map((el, index) => {
-                                                    console.log(params.contentParams.extraList);
-                                                    return (
-                                                        <RenderItem
-                                                            key={`extra-item-${index}`}
-                                                            type={el.type}
-                                                            label={el.label}
-                                                            value={el.value}
-                                                            color={el.initColor}
-                                                        />
-                                                    );
-                                                })}
-                                            </ModalContentBlackCard>
-                                        )}
+                                        <ModalContentBlackCard
+                                            style={
+                                                params.contentParams.list
+                                                    ? { borderRadius: '0px 0px 8px 8px', padding: '16px 24px 18px' }
+                                                    : { padding: '16px 24px 18px' }
+                                            }
+                                        >
+                                            {/* <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" /> */}
+                                            {params.contentParams.extraList.map((el, index) => {
+                                                console.log(params.contentParams.extraList);
+                                                return (
+                                                    <RenderItem
+                                                        key={`extra-item-${index}`}
+                                                        type={el.type}
+                                                        label={el.label}
+                                                        value={el.value}
+                                                        color={el.initColor}
+                                                    />
+                                                );
+                                            })}
+                                        </ModalContentBlackCard>
+                                    )}
                                 </ModalContentCard>
-                                
+
                                 <ModalContentGrayCard>
                                     <ItemWrap>
                                         <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
@@ -493,34 +542,42 @@ const QRModal2 = ({
                                 <ResultsTitleMessage>{`${params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}</ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
-                                {!module.includes('Renounce') && (
-                                    <ResultsContentSummeryWrap>
-                                        {params.modalType === "EXECUTES" && params.contentParams.list.map((el, index) => {
-                                            if (el.type !== 'warning')
-                                                return (
-                                                    <RenderItem key={`item-${index}`} type={el.type} label={el.label} value={el.value} color={el.resultColor}/>
-                                                );
-                                        })}
-                                        {params.modalType === "EXECUTES" && params.contentParams.extraList && (
-                                            <Fragment>
-                                                <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
-                                                {params.contentParams.extraList.map((el, index) => {
-                                                    return (
-                                                        <RenderItem
-                                                            key={`extra-item-${index}`}
-                                                            type={el.type}
-                                                            label={el.label}
-                                                            value={el.value}
-                                                            color={el.resultColor}
-                                                        />
-                                                    );
+                                {!hideContractInfo && (
+                                    <>
+                                        <ResultsContentSummeryWrap style={{ padding: '18px 24px 16px' }}>
+                                            {params.modalType === 'EXECUTES' &&
+                                                params.contentParams.list.map((el, index) => {
+                                                    if (el.type !== 'warning')
+                                                        return (
+                                                            <RenderItem
+                                                                key={`item-${index}`}
+                                                                type={el.type}
+                                                                label={el.label}
+                                                                value={el.value}
+                                                                color={el.resultColor}
+                                                            />
+                                                        );
                                                 })}
-                                            </Fragment>
-                                        )}
-                                    </ResultsContentSummeryWrap>
-                                )}
-                                {!module.includes('Renounce') && (
-                                    <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                            {params.modalType === 'EXECUTES' && params.contentParams.extraList && (
+                                                <Fragment>
+                                                    <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" />
+                                                    {params.contentParams.extraList.map((el, index) => {
+                                                        return (
+                                                            <RenderItem
+                                                                key={`extra-item-${index}`}
+                                                                type={el.type}
+                                                                label={el.label}
+                                                                value={el.value}
+                                                                color={el.resultColor}
+                                                            />
+                                                        );
+                                                    })}
+                                                </Fragment>
+                                            )}
+                                        </ResultsContentSummeryWrap>
+
+                                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-400, #2C2C2C)" />
+                                    </>
                                 )}
                                 <ResultsContentHashWrap>
                                     {params.modalType === 'INSTANTIATE' && parsedData.contractAddress && (
@@ -557,7 +614,7 @@ const QRModal2 = ({
                                         }}
                                     >
                                         <ResultsGoToMyMintetedTokenButtonTypo>
-                                            {cwMode === 'CW20' ? 'Go to My Token Details' : 'Go to My NFT detail'}
+                                            {cwMode === 'CW20' ? 'Go to My Token Details' : 'Go to My NFT Details'}
                                         </ResultsGoToMyMintetedTokenButtonTypo>
                                     </ResultsGoToMyMintetedTokenButton>
                                 )}
