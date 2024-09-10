@@ -311,8 +311,8 @@ export const ContractAddressItem = ({ label, contractAddress }: { label: string;
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
-            <ItemValueWrap className="pointer select-none" onClick={openContractAddress}>
-                <ItemContractAddressValue>{shortenAddress(contractAddress, 12, 12)}</ItemContractAddressValue>
+            <ItemValueWrap>
+                <ItemContractAddressValue className="pointer select-none" onClick={openContractAddress}>{shortenAddress(contractAddress, 12, 12)}</ItemContractAddressValue>
                 <CopyIconButton text={contractAddress} width={'16px'} height={'16px'} />
             </ItemValueWrap>
         </ItemWrap>

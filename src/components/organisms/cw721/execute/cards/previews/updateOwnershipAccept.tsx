@@ -109,6 +109,42 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     line-height: 20px; /* 142.857% */
 `;
 
+const AccordionBox = styled.div<{ $isOpen: boolean }>`
+    height: fit-content;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    background: var(--Gray-150, #141414);
+    transition: all 0.15s ease;
+    gap: 20px;
+
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
+        max-height: 100%;
+        padding: 24px 32px;
+        gap: 20px;
+        opacity: 1;
+    `
+            : `
+        max-height: 0px;
+        padding: 0px 32px;
+        gap: 0px;
+        opacity: 0;
+    `}
+`;
+
+const AccordionRow = styled.div({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: '16px',
+
+    img: { width: '20px', height: '20px' }
+});
+
 const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | null }) => {
     if (!allowanceInfo) return <AccordionTypo $disabled>Expiration</AccordionTypo>;
 
@@ -254,28 +290,8 @@ const UpdateOwnershipAccept = () => {
             <ContentWrap>
                 <ContentHeader>
                     <ContentTitleWrap>
-                        <TitleIcon src={IC_CHECK_SQUARE} alt={'Origin Ownership Accept Header Icon'} />
-                        <TitleTypo>Previous Owner</TitleTypo>
-                    </ContentTitleWrap>
-                    <FoldingButton onClick={onClickOriginOwnerFolding}>
-                        <FoldingIcon
-                            src={isOriginOwnerOpen ? IC_ROUND_ARROW_DOWN : IC_ROUND_ARROW_UP}
-                            alt={'Origin Ownership Accept Folding Icon'}
-                        />
-                    </FoldingButton>
-                </ContentHeader>
-                {!isOriginOwnerOpen && (
-                    <ContentBodyWrap>
-                        <ContentItemWrap>
-                            <ContentItemIcon src={IC_WALLET} />
-                            <ContentItemValue $hasData>{ownershipInfo.owner}</ContentItemValue>
-                        </ContentItemWrap>
-                    </ContentBodyWrap>
-                )}
-                <ContentHeader>
-                    <ContentTitleWrap>
                         <TitleIcon src={IC_CHECK_SQUARE} alt={'New Ownership Accept Header Icon'} />
-                        <TitleTypo>New Owner</TitleTypo>
+                        <TitleTypo>Update Ownership Info</TitleTypo>
                     </ContentTitleWrap>
                     <FoldingButton onClick={onClickNewOwnerFolding}>
                         <FoldingIcon
@@ -284,7 +300,29 @@ const UpdateOwnershipAccept = () => {
                         />
                     </FoldingButton>
                 </ContentHeader>
-                {!isNewOwnerOpen && (
+                <AccordionBox $isOpen={!isNewOwnerOpen}>
+                    <AccordionRow>
+                        <img src={IC_WALLET} alt="wallet" />
+                        {ownershipInfo.pending_owner && ownershipInfo.pending_owner === null && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
+                        {ownershipInfo.pending_owner && ownershipInfo.pending_owner !== null && <AccordionTypo $disabled={false}>{ownershipInfo.pending_owner}</AccordionTypo>}
+                    </AccordionRow>
+                    <AccordionRow>
+                        <img src={IC_CLOCK} alt="clock" />
+                        {ownershipInfo && ownershipInfo.pending_owner === null && ownershipInfo.pending_expiry === null && <AccordionTypo $disabled>Expiration</AccordionTypo>}
+                        {ownershipInfo && ownershipInfo.pending_owner !== null && ownershipInfo.pending_expiry === null && <AccordionTypo $disabled={false}>{"Forever"}</AccordionTypo>}
+                        {ownershipInfo && ownershipInfo.pending_expiry !== null && (
+                            <ExpirationBox
+                                allowanceInfo={{
+                                    address: '',
+                                    amount: '',
+                                    type: Object.keys(ownershipInfo.pending_expiry)[0],
+                                    expire: Object.values(ownershipInfo.pending_expiry)[0]
+                                }}
+                            />
+                        )}
+                    </AccordionRow>
+                </AccordionBox>
+                {/* {!isNewOwnerOpen && (
                     <ContentBodyWrap>
                         <ContentItemWrap>
                             <ContentItemIcon src={IC_WALLET} />
@@ -315,11 +353,11 @@ const UpdateOwnershipAccept = () => {
                             )}
                         </ContentItemWrap>
                     </ContentBodyWrap>
-                )}
+                )} */}
             </ContentWrap>
             <ButtonWrap>
                 <GreenButton disabled={isDisableButton} onClick={onClickUpdateOwnershipAccept}>
-                    <div className="button-text">Update Ownership Accept</div>
+                    <div className="button-text">Accept</div>
                 </GreenButton>
             </ButtonWrap>
         </Container>

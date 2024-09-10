@@ -50,8 +50,8 @@ const WarningTypo = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateOwnershipRenouncePreview = () => {
-    const WARNING_TEXT: string = `Are you sure you want to renounce ownership of the NFT contract?\nIf you renounce, you'll lose control, and the Minter role will be removed.`;
-    const WARNING_MODAL_TEXT: string = `Are you sure you want to renounce ownership of the NFT contract?\nBy renouncing, you'll lose control and the Minter role will be removed.`;
+    const WARNING_TEXT: string = `If you renounce ownership of the NFT contract, the contract will stay active,\nbut you’ll lose control, and the Minter role will be removed.`;
+    const WARNING_MODAL_TEXT: string = `Are you sure you want to renounce ownership of the NFT contract?\nBy renouncing, you'll lose control and the Minter role will be removed`;
 
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);

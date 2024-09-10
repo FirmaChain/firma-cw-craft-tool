@@ -197,6 +197,16 @@ const AddressBox = () => {
         GlobalActions.handleFetchedBalance(false);
     }, [isFetchedBalance]);
 
+    useEffect(() => {
+        if (!open) {
+            document.addEventListener('mousedown', () => { setOpen(false); });
+
+            return () => {
+            document.removeEventListener('mousedown', () => { setOpen(false); });
+            };
+        }
+    }, []);
+
     return (
         <div style={{ position: 'relative' }}>
             <IconButton style={{ padding: 0 }} onClick={() => setOpen(!open)}>
