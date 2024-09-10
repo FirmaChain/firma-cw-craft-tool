@@ -140,37 +140,37 @@ const Preview = ({ isBasic }: IProps) => {
                                 value: tokenName,
                                 type: 'default',
                                 initColor: '#FFF',
-                                resultColor: '#FFF',
+                                resultColor: '#FFF'
                             },
                             {
                                 label: 'Token Symbol',
                                 value: tokenSymbol,
                                 type: 'default',
                                 initColor: '#FFF',
-                                resultColor: '#FFF',
+                                resultColor: '#FFF'
                             },
                             {
                                 label: 'Decimal',
-                                value: decimals === '' ? "6" : decimals,
+                                value: decimals === '' ? '6' : decimals,
                                 type: 'default',
                                 initColor: '#FFF',
-                                resultColor: '#FFF',
+                                resultColor: '#FFF'
                             }
                         ],
                         extraList: minterble && [
                             {
                                 label: 'Supply Amount',
                                 value: decimalsTotalSupply,
-                                type: 'amount',
+                                type: 'instantiate-amount',
                                 initColor: '#02E191',
-                                resultColor: '#FFF',
+                                resultColor: '#FFF'
                             },
                             {
                                 label: 'Minter Cap',
                                 value: decimalsMinterCap,
-                                type: 'amount',
-                                initColor: '#FFF',
-                                resultColor: '#FFF',
+                                type: 'instantiate-amount',
+                                initColor: '#999',
+                                resultColor: '#FFF'
                             }
                         ]
                     }

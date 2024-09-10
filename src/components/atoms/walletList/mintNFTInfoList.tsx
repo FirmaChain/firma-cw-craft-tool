@@ -102,9 +102,9 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
             <NftListContainer>
                 <NftListHeaderWrap>
                     <NftListHeaderToken>
-                        <NftListHeaderTypo>{"Token ID"}</NftListHeaderTypo>
+                        <NftListHeaderTypo>{'Token ID'}</NftListHeaderTypo>
                     </NftListHeaderToken>
-                    <NftListHeaderTypo>{"NFT URIs"}</NftListHeaderTypo>
+                    <NftListHeaderTypo>{'NFT URIs'}</NftListHeaderTypo>
                 </NftListHeaderWrap>
                 <NftListWrap>
                     {list.map((wallet, index) => (
@@ -120,7 +120,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                             isLast={index === list.length - 1}
                             isValid={!Boolean(wallet.isAlreadyMint)}
                             leftPlaceholder={'0'}
-                            rightPlaceholder="Input NFT token URI"
+                            rightPlaceholder="Input NFT URI"
                             inputId={wallet.id}
                         />
                     ))}

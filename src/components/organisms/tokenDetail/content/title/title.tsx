@@ -89,14 +89,17 @@ const Title = () => {
 
                         {tokenName ? <TokenNameTypo>{tokenName}</TokenNameTypo> : <Skeleton width="50px" />}
 
-                        <LabelWrap>
-                            {codeId ?
-                                codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID
-                                    ? <LabelBasicTypo>{"BASIC"}</LabelBasicTypo>
-                                    : <LabelAdvancedTypo>{"ADVANCED"}</LabelAdvancedTypo>
-                                : <Skeleton width="50px" />
-                            }
-                        </LabelWrap>
+                        {codeId ? (
+                            <LabelWrap>
+                                {codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID ? (
+                                    <LabelBasicTypo>{'BASIC'}</LabelBasicTypo>
+                                ) : (
+                                    <LabelAdvancedTypo>{'ADVANCED'}</LabelAdvancedTypo>
+                                )}
+                            </LabelWrap>
+                        ) : (
+                            <Skeleton width="50px" />
+                        )}
                     </TokenInfo>
 
                     <div style={{ padding: '12px 0 8px' }}>

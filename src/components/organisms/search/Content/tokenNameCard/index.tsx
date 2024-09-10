@@ -43,14 +43,17 @@ const TokenNameCard = () => {
 
                     <div className="divider" />
 
-                    <LabelWrap>
-                            {codeId ?
-                                codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID
-                                    ? <LabelBasicTypo>{"BASIC"}</LabelBasicTypo>
-                                    : <LabelAdvancedTypo>{"ADVANCED"}</LabelAdvancedTypo>
-                                : <Skeleton width="50px" />
-                            }
+                    {codeId ? (
+                        <LabelWrap>
+                            {codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID ? (
+                                <LabelBasicTypo>{'BASIC'}</LabelBasicTypo>
+                            ) : (
+                                <LabelAdvancedTypo>{'ADVANCED'}</LabelAdvancedTypo>
+                            )}
                         </LabelWrap>
+                    ) : (
+                        <Skeleton width="50px" />
+                    )}
                 </TokenNameBox>
                 <div style={{ margin: '12px 0 8px' }}>
                     <Divider $color="var(--Gray-400, #2C2C2C)" $direction={'horizontal'} />
