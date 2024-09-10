@@ -30,8 +30,7 @@ const Container = styled.div<{ $isSelectMenu?: boolean }>`
     gap: 32px;
     align-self: stretch;
     border-radius: 24px;
-    /* border: ; */
-    border: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191)' : '0px solid var(--Green-500, #444)')};
+    outline: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191) !important' : 'unset')};
     background: var(--200, #1e1e1e);
 `;
 

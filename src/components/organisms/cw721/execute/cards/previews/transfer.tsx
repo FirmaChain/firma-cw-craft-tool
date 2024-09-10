@@ -311,8 +311,8 @@ const TransferPreview = () => {
     }, [approveInfoById, myNftList, transferIdsWithEmpty, userTransferList]);
 
     const onClickTransfer = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const feeAmount =
             transferListForModal.length === 1
                 ? Number(CRAFT_CONFIGS.DEFAULT_FEE)
@@ -347,7 +347,7 @@ const TransferPreview = () => {
                         resultColor: '#807E7E'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -373,7 +373,7 @@ const TransferPreview = () => {
                             setMyNftList(contractAddress, userAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

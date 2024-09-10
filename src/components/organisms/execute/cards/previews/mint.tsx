@@ -246,7 +246,7 @@ const ScrollbarContainer = styled.div`
 
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
-const MintPreview = () => {    
+const MintPreview = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     const fctBalance = useExecuteStore((state) => state.fctBalance);
     const mintingList = useExecuteStore((state) => state.mintingList);
@@ -308,12 +308,12 @@ const MintPreview = () => {
     }, [exceedMinterCap, mintingList]);
 
     const onClickMint = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const convertWalletList: IWallet[] = [];
         let totalAmount = '0';
-        const feeAmount = mintingList.length === 1
-        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintingList.length * Number(CRAFT_CONFIGS.BULK_FEE);
+        const feeAmount =
+            mintingList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintingList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const wallet of mintingList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
@@ -354,7 +354,7 @@ const MintPreview = () => {
                         resultColor: '#807E7E'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -384,7 +384,7 @@ const MintPreview = () => {
                             setTokenInfo(contractAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

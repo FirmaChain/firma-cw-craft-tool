@@ -126,8 +126,8 @@ const UpdateLogo = () => {
     }, [marketingLogoUrl]);
 
     const onClickUpdateLogo = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
@@ -154,7 +154,7 @@ const UpdateLogo = () => {
                         resultColor: '#E6E6E6'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -180,7 +180,7 @@ const UpdateLogo = () => {
                             setMarketingInfo(contractAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

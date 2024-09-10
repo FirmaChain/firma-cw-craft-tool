@@ -266,8 +266,8 @@ const DecreaseAllowancePreview = () => {
     }, [allowance, allowanceInfo, tokenInfo]);
 
     const onClickDecreaseAllowance = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         let expires = {};
         if (allowance.type === 'at_height') {
             expires = {
@@ -326,7 +326,7 @@ const DecreaseAllowancePreview = () => {
                         resultColor: '#E6E6E6'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -354,7 +354,7 @@ const DecreaseAllowancePreview = () => {
                             clearAllowance();
                         }}
                     />
-                )
+                );
             }
         });
     };

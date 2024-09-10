@@ -178,7 +178,7 @@ const Preview = () => {
                     label: label,
                     type: 'cw721',
                     msg: messageData,
-                    contract: '',
+                    contract: ''
                 },
                 contentParams: {
                     list: [
@@ -195,9 +195,9 @@ const Preview = () => {
                             type: 'default',
                             initColor: '#E6E6E6',
                             resultColor: '#E6E6E6'
-                        },
+                        }
                     ]
-                },
+                }
             };
 
             modal.openModal({
@@ -221,7 +221,7 @@ const Preview = () => {
                                 clearForm();
                             }}
                         />
-                    )
+                    );
                 }
             });
         } else {

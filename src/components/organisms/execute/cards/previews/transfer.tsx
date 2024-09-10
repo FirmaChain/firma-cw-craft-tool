@@ -305,12 +305,12 @@ const TransferPreview = () => {
     }, [address, cw20Balance, totalTransferAmount, transferList]);
 
     const onClickTransfer = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const convertWalletList = [];
         let totalAmount = '0';
-        const feeAmount = transferList.length === 1
-        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : transferList.length * Number(CRAFT_CONFIGS.BULK_FEE);
+        const feeAmount =
+            transferList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : transferList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const wallet of transferList) {
             const amount = getUTokenAmountFromToken(wallet.amount, tokenInfo.decimals.toString());
@@ -351,7 +351,7 @@ const TransferPreview = () => {
                         resultColor: '#807E7E'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -379,7 +379,7 @@ const TransferPreview = () => {
                             setCw20Balance(contractAddress, address);
                         }}
                     />
-                )
+                );
             }
         });
     };

@@ -129,8 +129,8 @@ const UpdateMarketingPreview = () => {
     const finalProejct = (marketingProject === null ? marketingInfo?.project : marketingProject) || '';
 
     const onClickUpdateMarketing = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         let contentList = [];
@@ -185,7 +185,7 @@ const UpdateMarketingPreview = () => {
                 fctAmount: fctBalance,
                 feeAmount: feeAmount.toString(),
                 list: contentList
-            },
+            }
         };
 
         modal.openModal({
@@ -211,7 +211,7 @@ const UpdateMarketingPreview = () => {
                             setMarketingInfo(contractAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

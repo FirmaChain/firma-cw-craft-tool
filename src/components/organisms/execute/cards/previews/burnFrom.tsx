@@ -275,8 +275,8 @@ const BurnFromPreview = () => {
     }, [burnFromList, userAddress, isExceedAllowance]);
 
     const onClickBurn = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const convertWalletList = [];
         let totalAmount = '0';
         const feeAmount =
@@ -321,7 +321,7 @@ const BurnFromPreview = () => {
                         resultColor: '#807E7E'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -349,7 +349,7 @@ const BurnFromPreview = () => {
                             setTokenInfo(contractAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

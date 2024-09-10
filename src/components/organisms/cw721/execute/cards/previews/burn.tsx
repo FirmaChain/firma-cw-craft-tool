@@ -183,8 +183,8 @@ const BurnPreview = () => {
     }, [updatedBurnCount, totalBurnCount, burnList, nftDatas]);
 
     const onClickBurn = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const convertList: { token_id: string }[] = [];
         const feeAmount = burnList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
@@ -218,7 +218,7 @@ const BurnPreview = () => {
                         resultColor: '#E6E6E6'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -246,7 +246,7 @@ const BurnPreview = () => {
                             setTotalNfts(contractAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

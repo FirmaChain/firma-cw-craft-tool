@@ -161,8 +161,8 @@ const BurnPreview = () => {
     }, [cw20Balance, burnAmount]);
 
     const onClickBurn = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
         const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
 
@@ -191,10 +191,10 @@ const BurnPreview = () => {
                         resultColor: '#E6E6E6'
                     }
                 ]
-            },
+            }
         };
 
-        console.log("USE_WALLET_CONNECT", USE_WALLET_CONNECT);
+        console.log('USE_WALLET_CONNECT', USE_WALLET_CONNECT);
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => {
@@ -220,7 +220,7 @@ const BurnPreview = () => {
                             setTokenInfo(contractAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

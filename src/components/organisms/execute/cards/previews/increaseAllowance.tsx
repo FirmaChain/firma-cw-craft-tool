@@ -284,8 +284,8 @@ const IncreaseAllowancePreview = () => {
     }, [allowance?.address]);
 
     const onClickIncreaseAllowance = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         let expires = {};
         if (allowance.type === 'at_height') {
             expires = {
@@ -334,7 +334,7 @@ const IncreaseAllowancePreview = () => {
                         value: allowance.address,
                         type: 'wallet',
                         initColor: '#E6E6E6',
-                        resultColor: '#E6E6E6',
+                        resultColor: '#E6E6E6'
                     },
                     {
                         label: 'Expiration',
@@ -344,7 +344,7 @@ const IncreaseAllowancePreview = () => {
                         resultColor: '#E6E6E6'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -372,7 +372,7 @@ const IncreaseAllowancePreview = () => {
                             clearAllowance();
                         }}
                     />
-                )
+                );
             }
         });
     };

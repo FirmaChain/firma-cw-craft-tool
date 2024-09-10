@@ -204,7 +204,7 @@ const ScrollbarContainer = styled.div`
 
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
-const MintPreview = () => {    
+const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     // const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
@@ -244,7 +244,7 @@ const MintPreview = () => {
         const mintIds = Array.from(idMap.keys());
 
         if (mintIds.includes('0')) return false;
-        
+
         //! if some ids are duplicated
         if (mintIds.length !== mintList.length) return false;
 
@@ -262,11 +262,10 @@ const MintPreview = () => {
     }, [mintSupply, totalNfts]);
 
     const onClickMint = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];
-        const feeAmount = mintList.length === 1
-        ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintList.length * Number(CRAFT_CONFIGS.BULK_FEE);
+        const feeAmount = mintList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintList.length * Number(CRAFT_CONFIGS.BULK_FEE);
 
         for (const mintData of mintList) {
             convertMintList.push({
@@ -299,7 +298,7 @@ const MintPreview = () => {
                         resultColor: '#E6E6E6'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -325,7 +324,7 @@ const MintPreview = () => {
                             setTotalNfts(contractAddress);
                         }}
                     />
-                )
+                );
             }
         });
     };

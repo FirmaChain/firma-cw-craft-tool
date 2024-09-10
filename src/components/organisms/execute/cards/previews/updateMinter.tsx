@@ -123,8 +123,8 @@ const UpdateMinter = () => {
     }, [minterAddress, minterAddress]);
 
     const onClickUpdateMinter = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
@@ -151,8 +151,7 @@ const UpdateMinter = () => {
                         resultColor: '#E6E6E6'
                     }
                 ]
-            },
-            
+            }
         };
 
         modal.openModal({
@@ -180,7 +179,7 @@ const UpdateMinter = () => {
                             setSelectMenu({ value: 'select', label: 'Select' });
                         }}
                     />
-                )
+                );
             }
         });
     };

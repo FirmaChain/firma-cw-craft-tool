@@ -145,7 +145,6 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const ApproveAllPreview = () => {
-
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -178,8 +177,8 @@ const ApproveAllPreview = () => {
     }, [approveRecipientAddress, approveType, approveValue]);
 
     const onClickApproveAll = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         let expires = {};
         let convertValue = '';
 
@@ -233,7 +232,7 @@ const ApproveAllPreview = () => {
                         resultColor: '#FFF'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -257,7 +256,7 @@ const ApproveAllPreview = () => {
                             clearApproveForm();
                         }}
                     />
-                )
+                );
             }
         });
     };

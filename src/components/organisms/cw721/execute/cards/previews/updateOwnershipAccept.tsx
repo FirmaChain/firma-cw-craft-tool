@@ -181,8 +181,8 @@ const UpdateOwnershipAccept = () => {
     };
 
     const onClickUpdateOwnershipAccept = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
         const params = {
@@ -216,7 +216,7 @@ const UpdateOwnershipAccept = () => {
                         resultColor: '#FFF'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -244,7 +244,7 @@ const UpdateOwnershipAccept = () => {
                             clearSelectMenu();
                         }}
                     />
-                )
+                );
             }
         });
     };

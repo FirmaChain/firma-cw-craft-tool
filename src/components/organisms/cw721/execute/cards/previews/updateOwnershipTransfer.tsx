@@ -32,9 +32,12 @@ const ContentWrap = styled.div<{ $isOpen: boolean }>`
 
     transition: all 0.2s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         gap: 24px;
-    `: `
+    `
+            : `
         gap: 0px;
     `}
 `;
@@ -80,17 +83,20 @@ const AccordionBox = styled.div<{ $isOpen: boolean }>`
     background: var(--Gray-150, #141414);
     transition: all 0.15s ease;
 
-    ${({ $isOpen }) => $isOpen ? `
+    ${({ $isOpen }) =>
+        $isOpen
+            ? `
         max-height: 100%;
         padding: 24px 32px;
         gap: 20px;
         opacity: 1;
-    `: `
+    `
+            : `
         max-height: 0px;
         padding: 0px 32px;
         gap: 0px;
         opacity: 0;
-    `}  
+    `}
 `;
 
 const ButtonWrap = styled.div`
@@ -129,11 +135,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
         return <AccordionTypo $disabled={false}>{commaNumber(allowanceInfo?.expire)} Block</AccordionTypo>;
     if (allowanceInfo.type === 'at_time') {
         const timeInMs = Math.floor(Number(allowanceInfo.expire));
-        return (
-            <AccordionTypo $disabled={false}>
-                {format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}
-            </AccordionTypo>
-        );
+        return <AccordionTypo $disabled={false}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</AccordionTypo>;
     }
 
     return <></>;
@@ -174,8 +176,8 @@ const UpdateOwnershipTransferPreview = () => {
     }, [approveRecipientAddress, approveType, approveValue]);
 
     const onClickUpdateOwnershipTransfer = () => {
-        if (modal.modals.length >= 1) return ;
-        
+        if (modal.modals.length >= 1) return;
+
         let expires = {};
         let convertValue = '';
 
@@ -228,7 +230,7 @@ const UpdateOwnershipTransferPreview = () => {
                         resultColor: '#FFF'
                     }
                 ]
-            },
+            }
         };
 
         modal.openModal({
@@ -252,7 +254,7 @@ const UpdateOwnershipTransferPreview = () => {
                             clearApproveForm();
                         }}
                     />
-                )
+                );
             }
         });
     };
