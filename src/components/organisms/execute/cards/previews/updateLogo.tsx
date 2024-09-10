@@ -105,8 +105,7 @@ const UpdateLogo = () => {
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
     const errorMessage = useMemo(() => {
-        if (marketingLogoUrl === '') return 'Please input url';
-        if (marketingLogoUrl === marketingInfo.logo.url) return 'Same logo as before';
+        if (String(marketingLogoUrl).trim() === marketingInfo.logo.url) return 'Same logo as before';
         return '';
     }, [marketingInfo, marketingLogoUrl]);
 
@@ -209,7 +208,7 @@ const UpdateLogo = () => {
             </ContentWrap>
             <ButtonWrap>
                 <GreenButton
-                    disabled={!marketingLogoUrl || Boolean(errorMessage) || marketingInfo.logo.url === marketingLogoUrl}
+                    disabled={typeof marketingLogoUrl !== 'string' || Boolean(errorMessage) || marketingInfo.logo.url === marketingLogoUrl}
                     onClick={onClickUpdateLogo}
                 >
                     <div className="button-text">Update Logo</div>

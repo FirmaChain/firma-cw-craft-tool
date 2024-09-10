@@ -896,7 +896,7 @@ const TxModal = ({
     }, [passwordWallet, timeKey]);
 
     const isTxButtonDisabled = useMemo(() => {
-        return Boolean(inputPassword.length < 8);
+        return Boolean(inputPassword.length < 8 || Boolean(estimatedGas === 0));
     }, [inputPassword]);
 
     const RenderItem = useCallback(

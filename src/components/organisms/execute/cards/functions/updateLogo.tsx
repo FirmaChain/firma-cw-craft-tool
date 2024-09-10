@@ -13,7 +13,6 @@ const UpdateLogo = () => {
     const setMarketingLogoUrl = useExecuteStore((state) => state.setMarketingLogoUrl);
 
     const onChangeMarketingLogoUrl = (v: string) => {
-        console.log(v);
         setMarketingLogoUrl(v);
     };
 

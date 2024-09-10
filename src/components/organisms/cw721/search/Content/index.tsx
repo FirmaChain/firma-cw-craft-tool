@@ -22,12 +22,12 @@ const LogoBackground = styled.div`
 `;
 
 const Content = () => {
-    const { contractDetail, nftsInfo } = useNFTContractDetailStore()
+    const { contractDetail, nftsInfo } = useNFTContractDetailStore();
 
     const contractExist = useMemo(() => {
         if (contractDetail === null || nftsInfo === null) return null;
-        return !Boolean(contractDetail.contractAddress === '')
-    }, [contractDetail, nftsInfo])
+        return !Boolean(contractDetail.contractAddress === '');
+    }, [contractDetail, nftsInfo]);
 
     return (
         <Container>
