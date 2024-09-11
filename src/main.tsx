@@ -59,7 +59,7 @@ const Main = () => {
 
     const needGutter = useMemo(() => {
         //? mytoken, mynft page requires different scroll view
-        return !(pathname.includes('mytoken') || pathname.includes('mynft'));
+        return !(pathname.includes('mytoken') || pathname.includes('mynft') || pathname === '/');
     }, [pathname]);
 
     return (

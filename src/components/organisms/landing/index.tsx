@@ -1,12 +1,5 @@
 import Icons from '@/components/atoms/icons';
-import {
-    IC_TOOLTIP_16_50D1E5,
-    IC_TOOLTIP_16_GRAY,
-    IMG_LANDING_EXECUTE,
-    IMG_LANDING_INSTANTIATE,
-    IMG_LANDING_QUERY
-} from '@/components/atoms/icons/pngIcons';
-import { TOOLTIP_ID } from '@/constants/tooltip';
+import { IMG_LANDING_EXECUTE, IMG_LANDING_INSTANTIATE, IMG_LANDING_QUERY } from '@/components/atoms/icons/pngIcons';
 import { useNavigate } from 'react-router-dom';
 import {
     BgColoredTitle,
@@ -18,33 +11,20 @@ import {
     ContentBox,
     ContentScreen,
     ContractBtnBase,
+    GradientTooltipIcon,
     MobileCardBox,
     ScreenWarpper,
     SubTitle,
     Title,
-    TitleBox,
-    TooltipIconBox
+    TitleBox
 } from './styles';
 import { useModalStore } from '@/hooks/useModal';
 import LoadingModal from '../modal/loadingModal';
 import { GlobalActions } from '@/redux/actions';
 import { getRandomTimeInMs } from '@/utils/common';
 import CarouselSection from './mobile/carouselSection';
-
-const TooltipIcon = ({ tooltip }: { tooltip?: string }) => {
-    return (
-        <TooltipIconBox
-            data-tooltip-content={tooltip}
-            data-tooltip-id={TOOLTIP_ID.LIGHT}
-            data-tooltip-wrapper="span"
-            data-tooltip-place="bottom"
-        >
-            <img src={IC_TOOLTIP_16_GRAY} alt="" className="gray-tooltip" style={{ width: '16px', height: '16px' }} />
-
-            <img src={IC_TOOLTIP_16_50D1E5} alt="" className="color-tooltip" style={{ width: '16px', height: '16px' }} />
-        </TooltipIconBox>
-    );
-};
+import Footer from './mobile/footer';
+import DesktopFooter from './footer';
 
 const CW20Btn = () => {
     const modal = useModalStore();
@@ -136,7 +116,7 @@ const Landing = () => {
                             <CardTitleBox className="title-box">
                                 <CardTitle className="card-title">Instantiate</CardTitle>
                                 <BgColoredTitle>Instantiate</BgColoredTitle>
-                                <TooltipIcon tooltip={`Mint your tokens and\nstart setting them up.`} />
+                                <GradientTooltipIcon tooltip={`Mint your tokens and\nstart setting them up.`} />
                             </CardTitleBox>
                         </CardWarp>
                         <CardWarp style={{ gridArea: 'query' }}>
@@ -144,7 +124,7 @@ const Landing = () => {
                             <CardTitleBox className="title-box">
                                 <CardTitle className="card-title">Query</CardTitle>
                                 <BgColoredTitle>Query</BgColoredTitle>
-                                <TooltipIcon tooltip={`Query the details and balance\nof your minted tokens.`} />
+                                <GradientTooltipIcon tooltip={`Query the details and balance\nof your minted tokens.`} />
                             </CardTitleBox>
                         </CardWarp>
                         <div style={{ gridArea: 'execute', display: 'flex', width: '100%', justifyContent: 'center' }}>
@@ -157,13 +137,13 @@ const Landing = () => {
                                 <CardTitleBox className="title-box">
                                     <CardTitle className="card-title">Execute</CardTitle>
                                     <BgColoredTitle>Execute</BgColoredTitle>
-                                    <TooltipIcon tooltip={`Manage your minted tokens:\ntransfer, mint, burn, and more.`} />
+                                    <GradientTooltipIcon tooltip={`Manage your minted tokens:\ntransfer, mint, burn, and more.`} />
                                 </CardTitleBox>
                             </CardWarp>
                         </div>
                     </CardBox>
                     <MobileCardBox>
-                        <CarouselSection variableCards />
+                        <CarouselSection isDesktop variableCards />
                     </MobileCardBox>
                     <ButtonBox>
                         <CW20Btn />
@@ -171,6 +151,7 @@ const Landing = () => {
                     </ButtonBox>
                 </ContentBox>
             </ContentScreen>
+            <DesktopFooter />
         </ScreenWarpper>
     );
 };

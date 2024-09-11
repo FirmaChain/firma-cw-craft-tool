@@ -1,5 +1,6 @@
 import IconButton from '@/components/atoms/buttons/iconButton';
-import { IMG_LANDING_BG } from '@/components/atoms/icons/pngIcons';
+import { IC_TOOLTIP_16_50D1E5, IC_TOOLTIP_16_GRAY, IMG_LANDING_BG } from '@/components/atoms/icons/pngIcons';
+import { TOOLTIP_ID } from '@/constants/tooltip';
 import { Container } from '@/styles/instantiate';
 import styled from 'styled-components';
 
@@ -7,12 +8,15 @@ export const ScreenWarpper = styled(Container)`
     background: linear-gradient(180deg, rgba(33, 33, 33, 0.8) 0%, rgba(33, 33, 33, 0.8) 100%), url(${IMG_LANDING_BG});
     background-size: cover;
     background-position: center center;
+    gap: 0;
+    min-height: 100vh;
 `;
 
 export const ContentScreen = styled.div`
     width: 100%;
-    min-height: 100vh;
+    height: 100%;
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -22,6 +26,10 @@ export const ContentScreen = styled.div`
 
     @media (max-width: 1200px) {
         padding: 60px 20px;
+    }
+
+    @media (max-width: 375px) {
+        padding-bottom: 96px;
     }
 `;
 
@@ -39,7 +47,7 @@ export const ContentBox = styled.div`
     background: rgba(18, 18, 18, 0.8);
     backdrop-filter: blur(3px);
 
-    margin-bottom: 90px;
+    margin-bottom: 50px;
 
     @media (max-width: 1430px) {
         padding: 60px 60px 104px 60px;
@@ -306,3 +314,18 @@ export const ContractBtnBase = styled(IconButton)<{ disabled?: boolean }>`
         width: 100%;
     }
 `;
+
+export const GradientTooltipIcon = ({ tooltip }: { tooltip?: string }) => {
+    return (
+        <TooltipIconBox
+            data-tooltip-content={tooltip}
+            data-tooltip-id={TOOLTIP_ID.LIGHT}
+            data-tooltip-wrapper="span"
+            data-tooltip-place="bottom"
+        >
+            <img src={IC_TOOLTIP_16_GRAY} alt="" className="gray-tooltip" style={{ width: '16px', height: '16px' }} />
+
+            <img src={IC_TOOLTIP_16_50D1E5} alt="" className="color-tooltip" style={{ width: '16px', height: '16px' }} />
+        </TooltipIconBox>
+    );
+};

@@ -60,7 +60,7 @@ const CustomDots = styled.ul`
     }
 `;
 
-const CarouselSection = ({ variableCards }: { variableCards?: boolean }) => {
+const CarouselSection = ({ isDesktop, variableCards }: { isDesktop?: boolean; variableCards?: boolean }) => {
     const tooltipRef = useRef<TooltipRefProps>(null);
 
     const responsiveOptions = useMemo(() => {
@@ -109,7 +109,7 @@ const CarouselSection = ({ variableCards }: { variableCards?: boolean }) => {
                 {CAROUSEL_DATA.map((value) => {
                     return (
                         <Slide key={value.title}>
-                            <Card data={value} />
+                            <Card data={value} isDesktop={isDesktop} />
                         </Slide>
                     );
                 })}

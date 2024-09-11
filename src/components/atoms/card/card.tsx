@@ -1,12 +1,27 @@
 import styled from 'styled-components';
-import { IC_INFO } from '@/components/atoms/icons/pngIcons';
+import { IC_INFO, IC_TOOLTIP_16_GRAY } from '@/components/atoms/icons/pngIcons';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { BgColoredTitle, CardTitle, CardTitleBox, GradientTooltipIcon } from '@/components/organisms/landing/styles';
 
 const Container = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &:hover {
+        .card-title {
+            opacity: 0;
+        }
+
+        .gray-tooltip {
+            opacity: 0;
+        }
+
+        .color-tooltip {
+            opacity: 1;
+        }
+    }
 `;
 
 const Box = styled.div`
@@ -69,20 +84,29 @@ interface IDataSate {
 }
 
 interface IProps {
+    isDesktop?: boolean;
     data: IDataSate;
 }
 
-const Card = ({ data }: IProps) => {
+const Card = ({ isDesktop, data }: IProps) => {
     return (
         <Container>
             <Box>
                 <CardImg src={data.img} alt={data.title} />
-                <TitleWrap>
-                    <TitleText>{data.title}</TitleText>
-                    <TooltipImgWrap data-tooltip-id={TOOLTIP_ID.MOBILE} data-tooltip-content={data.tooltip}>
-                        <TooltipImg src={IC_INFO} alt={data.tooltip} />
-                    </TooltipImgWrap>
-                </TitleWrap>
+                {isDesktop ? (
+                    <CardTitleBox className="title-box">
+                        <CardTitle className="card-title">{data.title}</CardTitle>
+                        <BgColoredTitle>{data.title}</BgColoredTitle>
+                        <GradientTooltipIcon tooltip={data.tooltip} />
+                    </CardTitleBox>
+                ) : (
+                    <TitleWrap>
+                        <TitleText>{data.title}</TitleText>
+                        <TooltipImgWrap data-tooltip-id={TOOLTIP_ID.MOBILE} data-tooltip-content={data.tooltip}>
+                            <TooltipImg src={IC_TOOLTIP_16_GRAY} alt="" />
+                        </TooltipImgWrap>
+                    </TitleWrap>
+                )}
             </Box>
         </Container>
     );
