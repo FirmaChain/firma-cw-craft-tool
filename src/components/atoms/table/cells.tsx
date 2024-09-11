@@ -76,7 +76,7 @@ const TransactionType = ({ type }: { type: string }) => {
         case 'Revoke':
         case 'ApproveAll':
             bgColor = 'rgba(80, 209, 229, 0.10)';
-            typoColor = '#50D1E5';
+            typoColor = 'rgba(80, 209, 229, 0.6)';
             break;
 
         case 'UpdateMinter':

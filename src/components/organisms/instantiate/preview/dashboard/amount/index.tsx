@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Icons from '@/components/atoms/icons';
 import {
     AmountWrapper,
@@ -38,7 +38,7 @@ interface IProps {
     decimals: string;
 }
 
-const CAP_TOOLTIP_TEXT = `Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.\nYou can mint more tokens by subtracting\nthe Total Supply from the Minter Cap.`;
+const CAP_TOOLTIP_TEXT = `Minter Cap = Total Supply +\nAdditional Mintable Token Amount`;
 
 const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply, walletList, decimals }: IProps) => {
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
@@ -64,6 +64,15 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
         if (!isBasic) setIsOpen(true);
     }, [isBasic]);
 
+    const minterCapEllipsisRef = useRef(null);
+    const [mintercapTooltip, setMintercapTooltip] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (minterCapEllipsisRef.current) {
+            setMintercapTooltip(minterCapEllipsisRef.current.isClamped()); // Logs true or false
+        }
+    }, [totalSupply]);
+
     return (
         <AmountWrapper $isMinterble={true} style={{ gap: 0 }}>
             <MinterCapAccordianBox $open={minterble}>
@@ -73,13 +82,14 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                             <Icons.CoinStack2 width={'24px'} height={'24px'} />
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                                 <HeaderMinterCapText>Minter Cap</HeaderMinterCapText>
-                                <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} TooltipIcon={<Icons.Alert />} />
+                                <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} />
                             </div>
                         </HeaderLeftWrapper>
                         <HeaderRightWrapper>
                             <HeaderMinterCapAmount className="clamp-single-line" $disabled={!Boolean(Number(minterCap))}>
                                 {commaNumber(minterCap) || 0}
                             </HeaderMinterCapAmount>
+
                             {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
                             {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}
                         </HeaderRightWrapper>

@@ -12,7 +12,8 @@ export const DefaultTypo = styled.div`
 `;
 
 export const TypeCover = styled.div<{ $bgColor: string }>`
-    padding: 5px 10px;
+    padding: 2px 10px;
+    height: 24px;
     background-color: ${(props) => props.$bgColor};
     border-radius: 4px;
     width: fit-content;
@@ -72,7 +73,7 @@ export const TableRow = styled.tr`
 `;
 
 export const HeaderCell = styled.th`
-    border-bottom: 1px solid #383838;
+    // border-bottom: 1px solid #383838;
     padding: 0;
     padding-bottom: 8px;
     text-align: left;

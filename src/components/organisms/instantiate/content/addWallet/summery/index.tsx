@@ -14,7 +14,8 @@ const Summery = ({ totalSupply, tokenSymbol, decimals }: IProps) => {
             <SummeryAttribute>
                 <SummeryAttributeKey>Total Amount :</SummeryAttributeKey>
                 <SummeryAttributeValue className="clamp-single-line">{commaNumber(totalSupply)}</SummeryAttributeValue>
-                <SummeryAttributeValue>{tokenSymbol}</SummeryAttributeValue>
+
+                <SummeryAttributeValue style={{ fontWeight: 'normal' }}>{tokenSymbol}</SummeryAttributeValue>
             </SummeryAttribute>
         </SummeryContainer>
     );

@@ -27,9 +27,8 @@ const Minterble = ({ decimals }: IProps) => {
     const minterCap = useInstantiateStore((v) => v.minterCap);
     const minterAddress = useInstantiateStore((v) => v.minterAddress);
 
-    const CAP_TOOLTIP_TEXT = `Minter Cap is a value that limits the maximum\nnumber of tokens that can be minted.\nYou can mint more tokens by subtracting\nthe Total Supply from the Minter Cap.`;
-    const ADDRESS_TOOLTIP_TEXT =
-        'If you enter a wallet address, the Minter Cap will be applied\nto that wallet. But if you do not enter a wallet address,\nthe Minter Cap will be applied to your own wallet';
+    const CAP_TOOLTIP_TEXT = `Minter Cap = Total Supply +\nAdditional Mintable Token Amount`;
+    const ADDRESS_TOOLTIP_TEXT = `This is the wallet address with the authority\nto mint additional tokens.`;
 
     const handleMinterble = (value: boolean) => {
         useInstantiateStore.getState().setMinterble(value); // setIsMinterble(value);
@@ -97,7 +96,7 @@ const Minterble = ({ decimals }: IProps) => {
                 )}
 
                 <LabelInput
-                    labelProps={{ label: 'Minter Cap', tooltip: contractMode === 'BASIC' ? CAP_TOOLTIP_TEXT : '' }}
+                    labelProps={{ label: 'Minter Cap', tooltip: CAP_TOOLTIP_TEXT }}
                     inputProps={{
                         value: minterCap,
                         formId: 'minterCap',

@@ -272,7 +272,7 @@ const OwnerInformation = () => {
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <Skeleton width="200px" height="22px" />
+                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>

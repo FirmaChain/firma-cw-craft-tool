@@ -64,14 +64,14 @@ const Revoke = () => {
             } else {
                 if (myNftList.includes(revokeTokenId)) {
                     if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
-                        setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This ID is not approved.' });
+                        setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This token ID is not approved.' });
                     } else {
                         if (nftApprovalInfo.spender === revokeAddress) {
                             clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED' });
                         }
                     }
                 } else {
-                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This NFT id is not owned by user.' });
+                    setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWNED', message: 'This token ID is not owned by the user.' });
                 }
             }
         }
@@ -92,7 +92,7 @@ const Revoke = () => {
             const parsedId = BigInt(value).toString();
 
             if (!myNftList.includes(parsedId))
-                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN', message: 'This NFT id is not owned by user.' });
+                setFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN', message: 'This token ID is not owned by the user.' });
             else clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN' });
         } else {
             clearFormError({ id: `${inputId}_TOKEN_ID`, type: 'DOES_NOT_OWN' });
@@ -145,7 +145,7 @@ const Revoke = () => {
                                     placeHolder: '0',
                                     textAlign: 'right',
                                     regex: INT_NUMBERS,
-                                    emptyErrorMessage: 'Please input the token id.',
+                                    emptyErrorMessage: 'Please input the token ID.',
                                     type: 'number',
                                     decimal: 0
                                 }}

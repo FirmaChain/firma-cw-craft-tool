@@ -75,19 +75,16 @@ const TokenLogo = ({ src, size = '72px', emptyPicSize = '34px', showTooltip = fa
     };
 
     return (
-        <Container $size={size}>
+        <Container
+            $size={size}
+            data-tooltip-content={showTooltip ? src : ''}
+            data-tooltip-id={TOOLTIP_ID.COMMON}
+            data-tooltip-wrapper="span"
+            data-tooltip-place="bottom"
+        >
             {isValid ? (
                 <>
-                    <img
-                        src={src}
-                        className="token-logo"
-                        alt="token-logo"
-                        onError={() => setIsValid(false)}
-                        data-tooltip-content={showTooltip ? src : ''}
-                        data-tooltip-id={TOOLTIP_ID.COMMON}
-                        data-tooltip-wrapper="span"
-                        data-tooltip-place="bottom"
-                    />
+                    <img src={src} className="token-logo" alt="token-logo" onError={() => setIsValid(false)} />
                     {showTooltip && (
                         <IconButton onClick={onClickCopy} className="url-icon" style={{ display: 'flex', padding: 0 }}>
                             <img className="url-icon" src={IC_LINK_ROUND} alt="link" />

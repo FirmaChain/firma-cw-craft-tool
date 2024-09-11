@@ -121,6 +121,8 @@ export const DetailAddressText = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+
+    white-space: pre;
 `;
 
 export const DetailMinterCapAmount = styled.div<{ $disabled?: boolean }>`

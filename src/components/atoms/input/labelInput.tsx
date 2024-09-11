@@ -170,7 +170,9 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                     </div>
                 )}
                 <div style={{ fontSize: '14px', fontWeight: '400', lineHeight: '20px', color: '#DCDCDC', whiteSpace: 'pre' }}>{label}</div>
-                {typeof tooltip === 'string' && tooltip.length > 0 && <IconTooltip tooltip={tooltip} TooltipIcon={TooltipIcon} />}
+                <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {typeof tooltip === 'string' && tooltip.length > 0 && <IconTooltip tooltip={tooltip} />}
+                </div>
 
                 <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                     <LabelSubText>{subText}</LabelSubText>

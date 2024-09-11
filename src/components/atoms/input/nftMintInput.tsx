@@ -113,7 +113,7 @@ const NFTMintInput = ({
                     }}
                 >
                     <LabelInput
-                        labelProps={{ label: "", labelHeight: "0px" }}
+                        labelProps={{ label: '', labelHeight: '0px' }}
                         inputProps={{
                             formId: `${id}_NFT_ID`,
                             value: leftValue,
@@ -122,7 +122,7 @@ const NFTMintInput = ({
                             type: 'number',
                             decimal: 0,
                             readOnly: disabled,
-                            emptyErrorMessage: 'Please input the token id.',
+                            emptyErrorMessage: 'Please input the token ID.',
                             regex: INT_NUMBERS,
                             maxValue: CW721_MAX_MINTABLE_ID
                         }}
@@ -140,7 +140,7 @@ const NFTMintInput = ({
                     }}
                 >
                     <LabelInput
-                        labelProps={{ label: "", labelHeight: "0px" }}
+                        labelProps={{ label: '', labelHeight: '0px' }}
                         inputProps={{
                             formId: `${id}_NFT_URI`,
                             value: rightValue,

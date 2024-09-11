@@ -70,7 +70,7 @@ const NFTImg = styled.img`
     justify-content: center;
     align-items: center;
     border-radius: 8.727px;
-    border: 0.727px solid var(--Gray-550, #444);
+    // border: 0.727px solid var(--Gray-550, #444);
     background: #222;
 `;
 

@@ -77,7 +77,9 @@ const StyledTable = ({
                         <TableRow>
                             {columns.map((column) => (
                                 <HeaderCell key={column.id} style={{ width: column.width || 'auto', minWidth: column.minWidth || 'auto' }}>
-                                    {column.label}
+                                    <div style={{ paddingBottom: '8px', borderBottom: '1px solid #2C2C2C', textAlign: 'left' }}>
+                                        {column.label}
+                                    </div>
                                 </HeaderCell>
                             ))}
                         </TableRow>

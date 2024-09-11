@@ -257,7 +257,8 @@ const MoreInfo = () => {
                                                     background: 'var(--200, #1e1e1e)',
                                                     padding: 0,
                                                     cursor: 'pointer',
-                                                    whiteSpace: 'pre'
+                                                    whiteSpace: 'pre',
+                                                    paddingLeft: '10px'
                                                 }}
                                                 onClick={closeClamp}
                                             >

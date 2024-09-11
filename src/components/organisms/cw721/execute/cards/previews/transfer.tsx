@@ -249,7 +249,7 @@ const TransferPreview = () => {
         return ids;
     }, [userTransferList]);
 
-    const transferIds = useMemo(() => {
+    const userTransferIDs = useMemo(() => {
         const ids = userTransferList
             .map((oneData) => oneData.token_ids)
             .flat()
@@ -257,6 +257,15 @@ const TransferPreview = () => {
 
         return ids;
     }, [approveInfoById, userTransferList]);
+
+    const allTransferIDs = useMemo(() => {
+        const ids = userTransferList
+            .map((oneData) => oneData.token_ids)
+            .flat()
+            .filter((v) => v !== '');
+
+        return ids;
+    }, [userTransferList]);
 
     const transferListForPreview = useMemo(() => {
         //? return transfer nft count with address
@@ -334,7 +343,7 @@ const TransferPreview = () => {
                 list: [
                     {
                         label: 'Total Transfer Amount',
-                        value: transferIds.length.toString(),
+                        value: userTransferIDs.length.toString(),
                         type: 'nft',
                         initColor: '#02E191',
                         resultColor: '#E6E6E6'
@@ -388,7 +397,7 @@ const TransferPreview = () => {
                             <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                         </ItemLabelWrap>
                         <ItemAmountWrap>
-                            <ItemAmountTypo>{transferIds.length}</ItemAmountTypo>
+                            <ItemAmountTypo>{allTransferIDs.length}</ItemAmountTypo>
                             <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>
@@ -425,7 +434,7 @@ const TransferPreview = () => {
                     </ItemLabelWrap>
                     <ItemLabelWrap>
                         <UpdatedBalanceTypo>
-                            {subtractStringAmount(myNftList.length.toString(), transferIds.length.toString())}
+                            {subtractStringAmount(myNftList.length.toString(), userTransferIDs.length.toString())}
                         </UpdatedBalanceTypo>
                         <UpdatedSymbolTypo>NFT</UpdatedSymbolTypo>
                     </ItemLabelWrap>

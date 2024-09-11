@@ -213,7 +213,7 @@ const TransferNFTInput = ({
                             onChange: handleTokenId,
                             placeHolder: rightPlaceholder,
                             regex: NUMBERS_WITH_COMMA,
-                            emptyErrorMessage: 'Please input the token id.'
+                            emptyErrorMessage: 'Please input the token ID.'
                         }}
                     />
                 </div>
