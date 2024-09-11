@@ -337,6 +337,10 @@ const Connect = ({ closeModal }: IProps) => {
         }
     };
 
+    const handleEnterDown = (evt) => {
+        if (isEnableButton && evt.key?.toLowerCase() === 'enter') confirmWallet();
+    };
+
     return (
         <ModalContent>
             <ModalTitle>
@@ -381,7 +385,8 @@ const Connect = ({ closeModal }: IProps) => {
                         type: 'password',
                         placeHolder: 'Enter Password',
                         formId: 'CONNECT_WALLET_PASSWORD_CONFIRM',
-                        onChange: onChangeConfirmPassword
+                        onChange: onChangeConfirmPassword,
+                        onKeyDown: handleEnterDown
                         // emptyErrorMessage: 'Please input password.'
                     }}
                 />

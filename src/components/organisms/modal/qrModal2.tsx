@@ -395,7 +395,7 @@ const QRModal2 = ({
                                 <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
                             </ModalTitleWrap>
 
-                            <ModalTitleDescTypo style={{ marginBottom: '24px' }}>
+                            <ModalTitleDescTypo style={{ marginBottom: '24px', fontSize: '16px' }}>
                                 {'Scan the QR code\nwith your mobile Firma Station for transaction.'}
                             </ModalTitleDescTypo>
                             <QrCodeWrap>
@@ -493,7 +493,7 @@ const QRModal2 = ({
 
                                 <ModalContentGrayCard>
                                     <ItemWrap>
-                                        <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
+                                        <FeeLabel>{`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} Fee`}</FeeLabel>
                                         <ItemValueWrap>
                                             <FeeAmount>{FirmaUtil.getFCTStringFromUFCT(Number(instantiateFee))}</FeeAmount>
                                             <FCTSymbolIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Icon'} />
@@ -539,7 +539,7 @@ const QRModal2 = ({
                                     <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
                                     <ResultsTitleSuccessTypo>Success</ResultsTitleSuccessTypo>
                                 </ResultsTitleWrap>
-                                <ResultsTitleMessage>{`${params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}</ResultsTitleMessage>
+                                <ResultsTitleMessage>{`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}</ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 {!hideContractInfo && (
@@ -632,7 +632,7 @@ const QRModal2 = ({
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    <ResultFailedTypo>{`${params.header.title} has failed.`}</ResultFailedTypo>
+                                    <ResultFailedTypo>{`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} has failed.`}</ResultFailedTypo>
                                     <ResultFailedDesc>
                                         {result.signData !== '' ? 'Please try again later.' : 'The transaction has been rejected.'}
                                     </ResultFailedDesc>

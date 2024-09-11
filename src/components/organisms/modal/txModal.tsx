@@ -975,7 +975,10 @@ const TxModal = ({
                             <ModalTitleWrap>
                                 {module.includes('Accept') && <AcceptIcon src={IC_CEHCK_ROUND} alt={'accept-icon'} />}
                                 {module.includes('Renounce') && <ModalTitleHeaderIcon src={IC_WARNING} />}
-                                <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
+                                <ModalTitleTypo style={{ marginBottom: '20px' }}>
+                                    {/* {params.modalType === 'INSTANTIATE' ? `${params.txParams.type?.toUpperCase()} ` : ''} */}
+                                    {params.header.title}
+                                </ModalTitleTypo>
                             </ModalTitleWrap>
                             <ModalContentWrap style={{ marginBottom: '36px' }}>
                                 {params.contentParams.alert && (
@@ -1048,7 +1051,7 @@ const TxModal = ({
 
                                 <ModalContentGrayCard>
                                     <ItemWrap>
-                                        <FeeLabel>{`${params.header.title} Fee`}</FeeLabel>
+                                        <FeeLabel>{`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} Fee`}</FeeLabel>
                                         <ItemValueWrap>
                                             <FeeAmount>{FirmaUtil.getFCTStringFromUFCT(Number(estimatedGas))}</FeeAmount>
                                             <FCTSymbolIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Icon'} />
@@ -1105,10 +1108,15 @@ const TxModal = ({
                             <ResultsHeader>
                                 <ResultIcon src={IC_CEHCK_ROUND} alt={'Modal Results'} />
                                 <ResultsTitleWrap>
-                                    <ResultsTitleExecuteTypo>{params.header.title}</ResultsTitleExecuteTypo>
+                                    <ResultsTitleExecuteTypo>
+                                        {/* {params.modalType === 'INSTANTIATE' ? `${params.txParams.type?.toUpperCase()} ` : ''} */}
+                                        {params.header.title}
+                                    </ResultsTitleExecuteTypo>
                                     <ResultsTitleSuccessTypo>Success</ResultsTitleSuccessTypo>
                                 </ResultsTitleWrap>
-                                <ResultsTitleMessage>{`${params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}</ResultsTitleMessage>
+                                <ResultsTitleMessage>
+                                    {`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} has succeeded.${module.includes('Renounce') ? '\nYou no longer have control over the contract.' : ''}`}
+                                </ResultsTitleMessage>
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 {!hideContractInfo && (
@@ -1198,7 +1206,7 @@ const TxModal = ({
                             </ResultsHeader>
                             <ResultsContentWrap>
                                 <ResultsContentSummeryWrap>
-                                    <ResultFailedTypo>{`${params.header.title} has failed.`}</ResultFailedTypo>
+                                    <ResultFailedTypo>{`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} has failed.`}</ResultFailedTypo>
                                     <ResultFailedDesc>Please try again later.</ResultFailedDesc>
                                 </ResultsContentSummeryWrap>
                                 {result && (

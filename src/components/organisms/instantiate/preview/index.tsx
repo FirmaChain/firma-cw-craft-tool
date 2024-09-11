@@ -120,7 +120,7 @@ const Preview = ({ isBasic }: IProps) => {
                 const params = {
                     modalType: 'INSTANTIATE' as ModalType,
                     header: {
-                        title: 'Instantiation'
+                        title: 'CW20 Instantiation'
                     },
                     txParams: {
                         admin: address,
@@ -255,7 +255,7 @@ const Preview = ({ isBasic }: IProps) => {
 
             if (!isBasic && decimals === '') return true;
 
-            if (label === '' || label.trim().length <= 1) return true;
+            if (label === '' && label.trim() === '') return true;
 
             if (walletList.length === 0) return true;
 

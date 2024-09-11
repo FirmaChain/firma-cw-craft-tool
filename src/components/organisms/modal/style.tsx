@@ -193,15 +193,15 @@ export const FeeAmount = styled.div`
     color: var(--Gray-750, #999);
     text-align: center;
     font-family: 'General Sans Variable';
-    font-size: 14px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
 `;
 
 export const FCTSymbolIcon = styled.img`
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
 `;
 
 export const MyBalanceWrap = styled.div`
