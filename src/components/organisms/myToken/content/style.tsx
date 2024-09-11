@@ -64,6 +64,7 @@ export const TokenTypo = styled.div`
 
 export const ContentBodyWrapper = styled.div`
     width: 100%;
+    max-width: 1600px;
     height: 200px;
     display: flex;
     flex-direction: column;

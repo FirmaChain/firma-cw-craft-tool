@@ -150,7 +150,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                         inputProps={{
                             value: nftName,
                             formId: 'nftContractName',
-                            placeHolder: 'ex) My CW Token',
+                            placeHolder: 'ex) MY CW NFT Contract',
                             maxLength: 30,
                             onChange: onNameChange,
                             emptyErrorMessage: 'Please input the token name.',

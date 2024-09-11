@@ -21,24 +21,31 @@ const Container = styled.div`
     align-items: center;
     gap: 20px;
     align-self: stretch;
+    min-height: 208px;
+
+    position: relative;
 `;
 
 const TableContainer = styled.div<{ $max?: boolean }>`
     width: 100%;
-    min-height: 244px;
+    min-height: 112px;
     display: grid;
     grid-template-columns: repeat(${({ $max }) => ($max ? '10' : 'auto-fill')}, 88px);
     justify-items: center;
-    gap: 12px;
+    gap: 24px 12px;
 `;
 
 const LoadingBox = styled.div`
     width: 100%;
-    min-height: 244px;
+    min-height: 112px;
+    flex: 1;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    position: absolute;
+    left: 0;
+    top: 0;
 `;
 
 const NFTItemBox = styled.div`
@@ -81,18 +88,23 @@ const NFTTokenIdTypo = styled.div`
 `;
 
 const EmptyNFTsTypo = styled.div`
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 244px;
+    // width: 100%;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // width: 100%;
+    // min-height: 152px;
     color: var(--Gray-800, #dcdcdc);
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 `;
 
 const PaginationContainer = styled.div`
@@ -315,8 +327,10 @@ const NFTsTable = ({
                     )}
                 </Fragment>
             )}
-            {NFTIds.length > 0 && (
-                <PaginationContainer style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
+            {isLoading === false && NFTIds.length > 0 && (
+                <PaginationContainer
+                    style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center', padding: 0 }}
+                >
                     <PaginationButton onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                         <Icons.PrevPage width={'20px'} height={'20px'} stroke={currentPage !== 1 ? '#FFFFFF' : '#707070'} />
                     </PaginationButton>

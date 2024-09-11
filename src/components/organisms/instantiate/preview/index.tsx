@@ -120,7 +120,7 @@ const Preview = ({ isBasic }: IProps) => {
                 const params = {
                     modalType: 'INSTANTIATE' as ModalType,
                     header: {
-                        title: 'CW20 Instantiation'
+                        title: 'Instantiation'
                     },
                     txParams: {
                         admin: address,
@@ -157,7 +157,7 @@ const Preview = ({ isBasic }: IProps) => {
                                 resultColor: '#FFF'
                             }
                         ],
-                        extraList: minterble && [
+                        extraList: [
                             {
                                 label: 'Supply Amount',
                                 value: decimalsTotalSupply,
@@ -165,7 +165,7 @@ const Preview = ({ isBasic }: IProps) => {
                                 initColor: '#02E191',
                                 resultColor: '#FFF'
                             },
-                            {
+                            minterble && {
                                 label: 'Minter Cap',
                                 value: decimalsMinterCap,
                                 type: 'instantiate-amount',
