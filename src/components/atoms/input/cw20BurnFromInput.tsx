@@ -221,8 +221,8 @@ const CW20BurnFromInput = ({
                                 decimal: Number(decimals),
                                 emptyErrorMessage: 'Please input the amount.',
                                 textAlign: 'right',
-                                maxValue: getTokenAmountFromUToken(availableAmount, decimals.toString())
-                                // hideErrorMessage: true
+                                maxValue: getTokenAmountFromUToken(availableAmount, decimals.toString()),
+                                hideErrorMessage: true
                             }}
                         />
 

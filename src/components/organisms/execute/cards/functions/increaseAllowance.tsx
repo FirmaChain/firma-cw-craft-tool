@@ -289,9 +289,9 @@ const IncreaseAllowance = () => {
                                     decimal: tokenInfo?.decimals,
                                     emptyErrorMessage: 'Please input the amount.',
                                     textAlign: 'right',
-                                    maxValue: getMaxMinterCap(tokenInfo?.decimals.toString())
+                                    maxValue: getMaxMinterCap(tokenInfo?.decimals.toString()),
                                     // maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
-                                    // hideErrorMessage: true
+                                    hideErrorMessage: true
                                 }}
                             />
 

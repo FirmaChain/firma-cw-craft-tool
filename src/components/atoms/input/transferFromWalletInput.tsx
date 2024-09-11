@@ -335,7 +335,7 @@ const TransferFromWalletInput = ({
                                     decimal: decimals ? Number(decimals) : 6,
                                     textAlign: 'right',
                                     emptyErrorMessage: 'Please input the amount.',
-                                    // hideErrorMessage: true,
+                                    hideErrorMessage: true,
                                     maxValue: getTokenAmountFromUToken(allowance, decimals)
                                 }}
                             />
