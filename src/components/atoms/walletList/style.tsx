@@ -93,7 +93,7 @@ export const NftListContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 8px
+    gap: 8px;
 `;
 
 export const NftListHeaderWrap = styled.div`
@@ -107,8 +107,8 @@ export const NftListHeaderToken = styled.div`
 `;
 
 export const NftListHeaderTypo = styled.div`
-    color: var(--Gray-800, #DCDCDC);
-    font-family: "General Sans Variable";
+    color: var(--Gray-800, #dcdcdc);
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;

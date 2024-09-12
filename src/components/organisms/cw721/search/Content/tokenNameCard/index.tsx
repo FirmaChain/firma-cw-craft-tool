@@ -9,7 +9,6 @@ import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 const TokenNameCard = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
 
-
     const { contractDetail, nftsInfo } = useNFTContractDetailStore((state) => state);
     const contractAddress = contractDetail?.contractAddress || '';
     const admin = contractDetail?.admin || '';

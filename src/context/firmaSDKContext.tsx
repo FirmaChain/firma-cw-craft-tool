@@ -29,4 +29,3 @@ export const FirmaSDKProvider = ({ children }: { children: ReactNode }) => {
         </FirmaSDKContext.Provider>
     );
 };
-

@@ -136,7 +136,7 @@ const useMyNFTContracts = () => {
             console.log(error);
             return [];
         }
-    }
+    };
 
     const getCW721NFTImage = async ({ contractAddress, tokenId }: { contractAddress: string; tokenId: string }) => {
         try {

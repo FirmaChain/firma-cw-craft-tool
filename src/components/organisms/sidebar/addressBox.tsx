@@ -114,7 +114,7 @@ const DisconnectBtn = styled(IconButton)`
 const BalanceTitleTypo = styled.div`
     color: var(--Gray-650, #707070);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -122,8 +122,8 @@ const BalanceTitleTypo = styled.div`
 `;
 
 const BalanceAmountTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #FFF));
-    font-family: "General Sans Variable";
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -199,10 +199,14 @@ const AddressBox = () => {
 
     useEffect(() => {
         if (!open) {
-            document.addEventListener('mousedown', () => { setOpen(false); });
+            document.addEventListener('mousedown', () => {
+                setOpen(false);
+            });
 
             return () => {
-            document.removeEventListener('mousedown', () => { setOpen(false); });
+                document.removeEventListener('mousedown', () => {
+                    setOpen(false);
+                });
             };
         }
     }, []);

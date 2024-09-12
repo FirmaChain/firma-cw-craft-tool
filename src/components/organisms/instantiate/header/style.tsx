@@ -17,7 +17,6 @@ export const HeaderWrap = styled.div`
     gap: 32px;
 `;
 
-
 export const HeaderTitle = styled.div`
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';

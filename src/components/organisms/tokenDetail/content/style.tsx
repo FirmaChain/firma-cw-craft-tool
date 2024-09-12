@@ -5,7 +5,7 @@ export const ContentBox = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: center;
-`
+`;
 
 export const ContentWrapper = styled.div`
     width: 100%;

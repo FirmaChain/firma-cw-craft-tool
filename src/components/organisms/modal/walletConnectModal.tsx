@@ -64,7 +64,7 @@ const WalletConnectModal = ({ id }: { id: string }) => {
             ) : (
                 <>
                     <WalletConnectContentBox $isStationInfo={showStationInfo}>
-                        <WalletConnectTitleBox  $isStationInfo={showStationInfo}>
+                        <WalletConnectTitleBox $isStationInfo={showStationInfo}>
                             <SignTitle>{showStationInfo ? 'What is Firma Station?' : 'Connect to Mobile'}</SignTitle>
                             <SignDesc>
                                 {showStationInfo

@@ -17,7 +17,7 @@ export const ContractCard = styled.div`
 `;
 
 export const CardHeaderTypo = styled.div`
-    color: #02E191;
+    color: #02e191;
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -31,7 +31,7 @@ export const CardSpecific = styled.div`
     gap: 24px;
 `;
 
-export const SearchButton = styled.div<({ $disabled: boolean }) >`
+export const SearchButton = styled.div<{ $disabled: boolean }>`
     display: flex;
     width: 168px;
     padding: 10px 24px;
@@ -39,10 +39,10 @@ export const SearchButton = styled.div<({ $disabled: boolean }) >`
     align-items: center;
     gap: 10px;
     border-radius: 8px;
-    background: ${({ $disabled }) => $disabled ? `#707070` : `var(--Green-500, #02E191)`};
-    color: ${({ $disabled }) => $disabled ? `#444` : `var(--Green-500, #121212)`};
+    background: ${({ $disabled }) => ($disabled ? `#707070` : `var(--Green-500, #02E191)`)};
+    color: ${({ $disabled }) => ($disabled ? `#444` : `var(--Green-500, #121212)`)};
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -104,9 +104,9 @@ export const SpecificValueTypo = styled.div`
 
 export const SpecificPlaceholderTypo = styled.div`
     color: var(--Gray-500, #383838);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
     line-height: 22px;
-`
+`;

@@ -35,7 +35,7 @@ const ACTION_CREATORS = {
     HANDLE_MODE: createAction<CONTRACT_MODE_TYPE>(HANDLE_CONTRACT_MODE),
     HANDLE_CW20_MINTERBLE: createAction<boolean>(HANDLE_CW20_MINTERBLE),
     HANDLE_GLOBAL_LOADING: createAction<boolean>(HANDLE_GLOBAL_LOADING),
-    HANDLE_FETCHED_BALANCE: createAction<boolean>(HANDLE_FETCHED_BALANCE),
+    HANDLE_FETCHED_BALANCE: createAction<boolean>(HANDLE_FETCHED_BALANCE)
 };
 
 export const ACTIONS = {
@@ -44,7 +44,7 @@ export const ACTIONS = {
     handleMode: ACTION_CREATORS.HANDLE_MODE,
     handleCw20Minterble: ACTION_CREATORS.HANDLE_CW20_MINTERBLE,
     handleGlobalLoading: ACTION_CREATORS.HANDLE_GLOBAL_LOADING,
-    handleFetchedBalance: ACTION_CREATORS.HANDLE_FETCHED_BALANCE,
+    handleFetchedBalance: ACTION_CREATORS.HANDLE_FETCHED_BALANCE
 };
 
 const reducer = createReducer(initialState, (builder) => {

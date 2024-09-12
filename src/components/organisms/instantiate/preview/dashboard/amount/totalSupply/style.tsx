@@ -121,7 +121,7 @@ export const ItemLeftAddress = styled.div<{ $disabled?: boolean }>`
 
 export const ItemTokenWrap = styled.div`
     display: flex;
-    gap: 6px
+    gap: 6px;
 `;
 
 export const ItemTokenAmount = styled.div<{ $disabled?: boolean }>`

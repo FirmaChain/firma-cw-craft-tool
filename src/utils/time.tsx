@@ -47,4 +47,4 @@ export const getNextNearestDate = (): Date => {
     }
 
     return nextTime;
-}
+};

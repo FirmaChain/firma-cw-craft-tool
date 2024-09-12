@@ -3,7 +3,6 @@ import { ITransaction } from '@/interfaces/cw20';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-
 interface FormProps {
     contractDetail: INFTContractInfo | null;
     setContractDetail: (v: INFTContractInfo) => void;

@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import styled from "styled-components";
+import { ReactNode } from 'react';
+import styled from 'styled-components';
 
 const Container = styled.div`
     width: 100%;
@@ -11,18 +11,14 @@ const Container = styled.div`
     z-index: 1;
     padding: 50px 0 0;
     overflow-y: auto;
-`
+`;
 
 interface IProps {
     children: ReactNode;
 }
 
 const Content = ({ children }: IProps) => {
-    return (
-        <Container>
-            {children}
-        </Container>
-    )
-}
+    return <Container>{children}</Container>;
+};
 
 export default Content;

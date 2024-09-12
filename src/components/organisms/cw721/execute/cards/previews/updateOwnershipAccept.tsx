@@ -303,13 +303,21 @@ const UpdateOwnershipAccept = () => {
                 <AccordionBox $isOpen={!isNewOwnerOpen}>
                     <AccordionRow>
                         <img src={IC_WALLET} alt="wallet" />
-                        {ownershipInfo.pending_owner && ownershipInfo.pending_owner === null && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
-                        {ownershipInfo.pending_owner && ownershipInfo.pending_owner !== null && <AccordionTypo $disabled={false}>{ownershipInfo.pending_owner}</AccordionTypo>}
+                        {ownershipInfo.pending_owner && ownershipInfo.pending_owner === null && (
+                            <AccordionTypo $disabled>Wallet Address</AccordionTypo>
+                        )}
+                        {ownershipInfo.pending_owner && ownershipInfo.pending_owner !== null && (
+                            <AccordionTypo $disabled={false}>{ownershipInfo.pending_owner}</AccordionTypo>
+                        )}
                     </AccordionRow>
                     <AccordionRow>
                         <img src={IC_CLOCK} alt="clock" />
-                        {ownershipInfo && ownershipInfo.pending_owner === null && ownershipInfo.pending_expiry === null && <AccordionTypo $disabled>Expiration</AccordionTypo>}
-                        {ownershipInfo && ownershipInfo.pending_owner !== null && ownershipInfo.pending_expiry === null && <AccordionTypo $disabled={false}>{"Forever"}</AccordionTypo>}
+                        {ownershipInfo && ownershipInfo.pending_owner === null && ownershipInfo.pending_expiry === null && (
+                            <AccordionTypo $disabled>Expiration</AccordionTypo>
+                        )}
+                        {ownershipInfo && ownershipInfo.pending_owner !== null && ownershipInfo.pending_expiry === null && (
+                            <AccordionTypo $disabled={false}>{'Forever'}</AccordionTypo>
+                        )}
                         {ownershipInfo && ownershipInfo.pending_expiry !== null && (
                             <ExpirationBox
                                 allowanceInfo={{

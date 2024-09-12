@@ -10,12 +10,13 @@ const storeWalletInternal = (password: string, mnemonic: string, privateKey: str
     };
 
     WalletActions.handleInit(true);
-    
+
     const encryptPasswordData = encryptWallet(password, wallet);
     const encryptTimeKeyData = encryptWallet(timeKey, wallet);
 
     WalletActions.handleTimeKey(timeKey);
-    WalletActions.handlePasswordWallet(encryptPasswordData);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       WalletActions.handleTimeKeyWallet(encryptTimeKeyData);
+    WalletActions.handlePasswordWallet(encryptPasswordData);
+    WalletActions.handleTimeKeyWallet(encryptTimeKeyData);
     WalletActions.handleAddress(wallet.address);
 };
 

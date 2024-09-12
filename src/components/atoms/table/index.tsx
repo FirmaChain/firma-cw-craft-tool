@@ -69,10 +69,12 @@ const StyledTable = ({
         } else return [];
     }, [rows, currentPage, rowsPerPage]);
 
-    const showPagination = !disablePagination && rows.length !== 0
+    const showPagination = !disablePagination && rows.length !== 0;
 
     return (
-        <TableContainer style={{paddingBottom: showPagination ? '20px' : '12px', minHeight: currentPageRows.length > 0 ? 'unset' : '147px'}}>
+        <TableContainer
+            style={{ paddingBottom: showPagination ? '20px' : '12px', minHeight: currentPageRows.length > 0 ? 'unset' : '147px' }}
+        >
             <div style={{ width: '100%', height: '100%', overflowX: 'scroll' }}>
                 <Table>
                     <TableHead>

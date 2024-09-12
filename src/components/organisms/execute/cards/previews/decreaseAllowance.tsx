@@ -414,6 +414,7 @@ const DecreaseAllowancePreview = () => {
                                     data-tooltip-id={TOOLTIP_ID.COMMON}
                                     data-tooltip-wrapper="span"
                                     data-tooltip-place="bottom"
+                                    style={{ whiteSpace: 'pre' }}
                                 >
                                     {allowance === null || allowance?.address === ''
                                         ? 'Wallet Address'

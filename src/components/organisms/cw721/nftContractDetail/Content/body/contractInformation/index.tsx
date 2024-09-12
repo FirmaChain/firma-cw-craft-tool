@@ -40,7 +40,7 @@ const ContractInformation = () => {
         currentPage: currentOwnedPage,
         setCurrentPage: setCurrentOwnedPage
     } = useCW721OwnedNFTListContext();
-    
+
     const contractAddress = contractDetail?.contractAddress || '';
     const codeId = contractDetail?.codeId || '';
     const contractName = contractDetail?.name || '';
@@ -132,7 +132,7 @@ const ContractInformation = () => {
                                 updateNFTs={updateNFTs}
                                 clearListData={clearCW721NFTListData}
                                 setCurrentPage={setCurrentPage}
-                                imageGap={{horizontal:'16px'}}
+                                imageGap={{ horizontal: '16px' }}
                             />
                         </NFTTableContainer>
                     </SpecificValueBox>

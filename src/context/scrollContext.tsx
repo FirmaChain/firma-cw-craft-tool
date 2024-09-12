@@ -38,4 +38,3 @@ export const ScrollProvider = ({ children }: { children: ReactNode }) => {
         </ScrollContext.Provider>
     );
 };
-

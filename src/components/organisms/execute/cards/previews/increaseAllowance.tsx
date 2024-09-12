@@ -430,6 +430,7 @@ const IncreaseAllowancePreview = () => {
                                     data-tooltip-id={TOOLTIP_ID.COMMON}
                                     data-tooltip-wrapper="span"
                                     data-tooltip-place="bottom"
+                                    style={{ whiteSpace: 'pre' }}
                                 >
                                     {!allowance || allowance?.address === ''
                                         ? 'Wallet Address'

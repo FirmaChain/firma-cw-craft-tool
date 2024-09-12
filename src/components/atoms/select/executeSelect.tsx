@@ -174,7 +174,13 @@ const ExecuteSelect = ({
                     components={{
                         Control: ({ children }) => {
                             return (
-                                <Container onClick={() => setOpen(!open)} $open={open} $minWidth={minWidth} $maxWidth={maxWidth} $isDisabled={disabled}>
+                                <Container
+                                    onClick={() => setOpen(!open)}
+                                    $open={open}
+                                    $minWidth={minWidth}
+                                    $maxWidth={maxWidth}
+                                    $isDisabled={disabled}
+                                >
                                     <span className="typo">{selected?.label || placeHolder}</span>
                                     <svg
                                         width="20"

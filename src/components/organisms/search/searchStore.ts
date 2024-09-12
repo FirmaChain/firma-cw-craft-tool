@@ -51,7 +51,7 @@ const useSearchStore = create<FormProps>()(
         setContractExist: (data) => {
             set((state) => {
                 state.contractExist = data;
-            })
+            });
         },
         contractInfo: null,
         setContractInfo: (data) => {

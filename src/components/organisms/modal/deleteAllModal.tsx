@@ -13,7 +13,7 @@ const CloseBtnBox = styled.div`
 
 const CloseButton = styled.div`
     cursor: pointer;
-`
+`;
 
 const TitleBox = styled.div`
     display: flex;

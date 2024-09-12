@@ -26,13 +26,13 @@ const Container = styled.div`
     position: relative;
 `;
 
-const TableContainer = styled.div<{ $max?: boolean, $verticalGap: string, $horizontalGap: string }>`
+const TableContainer = styled.div<{ $max?: boolean; $verticalGap: string; $horizontalGap: string }>`
     width: 100%;
     min-height: 112px;
     display: grid;
     grid-template-columns: repeat(${({ $max }) => ($max ? '10' : 'auto-fill')}, 88px);
     justify-items: center;
-    gap: ${({$verticalGap , $horizontalGap}) => `${$verticalGap} ${$horizontalGap}`};
+    gap: ${({ $verticalGap, $horizontalGap }) => `${$verticalGap} ${$horizontalGap}`};
     // 24px 12px
 `;
 
@@ -138,7 +138,7 @@ interface IProps {
     nftsInfo: INFTsInfo;
     nfts: INFTState[];
     currentPage: number;
-    imageGap?: {vertical?: string, horizontal?: string};
+    imageGap?: { vertical?: string; horizontal?: string };
     handleNFTIdList: (address: string) => void;
     addNFTs: (newNFTs: string[], isDeploiedFromFirma: boolean) => void;
     updateNFTs: (newNft: INFTState) => void;
@@ -310,7 +310,11 @@ const NFTsTable = ({
                     {NFTIds.length === 0 ? (
                         <EmptyNFTsTypo>{'There is no data'}</EmptyNFTsTypo>
                     ) : (
-                        <TableContainer $max={width >= 1070} $verticalGap={imageGap?.vertical || '24px'} $horizontalGap={imageGap?.horizontal || '12px'}>
+                        <TableContainer
+                            $max={width >= 1070}
+                            $verticalGap={imageGap?.vertical || '24px'}
+                            $horizontalGap={imageGap?.horizontal || '12px'}
+                        >
                             {pageItems.map((nft) => {
                                 return (
                                     <NFTItemBox key={nft.tokenId}>

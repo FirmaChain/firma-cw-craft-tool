@@ -16,7 +16,7 @@ const useApollo = () => {
                 return {
                     headers: {
                         ...headers,
-                        'content-type': 'application/json',
+                        'content-type': 'application/json'
                     }
                 };
             });

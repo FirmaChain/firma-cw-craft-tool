@@ -96,7 +96,7 @@ export const LabelWrap = styled.div`
 export const LabelBasicTypo = styled.div`
     color: var(--Gray-650, #707070);
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -105,12 +105,12 @@ export const LabelBasicTypo = styled.div`
 
 export const LabelAdvancedTypo = styled.div`
     text-align: center;
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: 20px;
-    background: linear-gradient(90deg, #00BF7A 0%, #0E9AB0 100%);
+    background: linear-gradient(90deg, #00bf7a 0%, #0e9ab0 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

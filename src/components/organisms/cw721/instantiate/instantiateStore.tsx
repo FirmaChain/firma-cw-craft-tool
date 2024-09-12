@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
 
 interface FormProps {
     nftName: string;
@@ -12,7 +12,7 @@ interface FormProps {
     setAdmin: (v: string) => void;
     setMinter: (v: string) => void;
     setLabel: (v: string) => void;
-    
+
     clearForm: () => void;
 }
 
@@ -27,29 +27,29 @@ const useInstantiateStore = create<FormProps>()(
         setNftName: (v: string) => {
             set((state) => {
                 state.nftName = v;
-            })
+            });
         },
         setNftSymbol: (v: string) => {
             set((state) => {
                 state.nftSymbol = v;
-            })
+            });
         },
         setAdmin: (v: string) => {
             set((state) => {
                 state.admin = v;
-            })
+            });
         },
         setMinter: (v: string) => {
             set((state) => {
                 state.minter = v;
-            })
+            });
         },
         setLabel: (v: string) => {
             set((state) => {
                 state.label = v;
-            })
+            });
         },
-        
+
         clearForm: () => {
             set((state) => {
                 state.nftName = '';
@@ -57,7 +57,7 @@ const useInstantiateStore = create<FormProps>()(
                 state.admin = '';
                 state.minter = '';
                 state.label = '';
-            })
+            });
         }
     }))
 );

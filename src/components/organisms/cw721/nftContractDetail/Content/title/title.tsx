@@ -12,7 +12,7 @@ import {
     TotalSupplySymbolTypo,
     TotalSupplyTypo,
     TotalSupplyWrapper
-} from './style'
+} from './style';
 import { useNavigate } from 'react-router-dom';
 import commaNumber from 'comma-number';
 import Divider from '@/components/atoms/divider';

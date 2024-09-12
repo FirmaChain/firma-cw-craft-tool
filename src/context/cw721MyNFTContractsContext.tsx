@@ -45,23 +45,21 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
 
     const addContracts = (newContracts: string[]) => {
         if (contracts === null || newContracts.length < contracts.length) {
-            setContracts(newContracts.map(address => ({ contractAddress: address })))
+            setContracts(newContracts.map((address) => ({ contractAddress: address })));
         } else {
-            const uniqueNewContracts = newContracts.filter(contract => !contracts.some(c => c.contractAddress === contract));
-            setContracts(prevContracts => [
+            const uniqueNewContracts = newContracts.filter((contract) => !contracts.some((c) => c.contractAddress === contract));
+            setContracts((prevContracts) => [
                 ...(Array.isArray(prevContracts) ? prevContracts : []),
-                ...uniqueNewContracts.map(address => ({ contractAddress: address }))
+                ...uniqueNewContracts.map((address) => ({ contractAddress: address }))
             ]);
         }
     };
 
     const updateContractInfo = (info: IContractInfo) => {
-        console.log("CW721 NFT CONTRACTS CONTEXT", contracts);
+        console.log('CW721 NFT CONTRACTS CONTEXT', contracts);
         if (contracts !== null) {
-            setContracts(prevContracts =>
-                prevContracts.map(contract =>
-                    contract.contractAddress === info.contractAddress ? { ...contract, info } : contract
-                )
+            setContracts((prevContracts) =>
+                prevContracts.map((contract) => (contract.contractAddress === info.contractAddress ? { ...contract, info } : contract))
             );
         } else {
             setContracts([info]);
@@ -77,11 +75,11 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
     const clearCW721NFTContractsData = () => {
         setContracts(null);
         setCurrentPage(1);
-    }
+    };
 
     useEffect(() => {
         clearCW721NFTContractsData();
-    }, [address])
+    }, [address]);
 
     return (
         <CW721NFTContractsContext.Provider
@@ -98,4 +96,3 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
         </CW721NFTContractsContext.Provider>
     );
 };
-
