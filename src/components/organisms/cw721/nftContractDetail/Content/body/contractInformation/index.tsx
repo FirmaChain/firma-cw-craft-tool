@@ -132,6 +132,7 @@ const ContractInformation = () => {
                                 updateNFTs={updateNFTs}
                                 clearListData={clearCW721NFTListData}
                                 setCurrentPage={setCurrentPage}
+                                imageGap={{horizontal:'16px'}}
                             />
                         </NFTTableContainer>
                     </SpecificValueBox>

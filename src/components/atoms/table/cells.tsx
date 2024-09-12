@@ -106,12 +106,12 @@ const ResultStatus = ({ isSuccess, typo }: { isSuccess: boolean; typo?: string }
             {isSuccess ? (
                 <>
                     <Icons.Success width={'16px'} height={'16px'} />
-                    <DefaultTypo>{typo || 'Success'}</DefaultTypo>
+                    <DefaultTypo style={{ color: '#999' }}>{typo || 'Success'}</DefaultTypo>
                 </>
             ) : (
                 <>
                     <Icons.Failed width={'16px'} height={'16px'} />
-                    <DefaultTypo>{typo || 'Failed'}</DefaultTypo>
+                    <DefaultTypo style={{ color: '#999' }}>{typo || 'Failed'}</DefaultTypo>
                 </>
             )}
         </div>
@@ -146,6 +146,7 @@ const TimeAgo = ({ timestamp }: { timestamp?: string }) => {
             data-tooltip-id={TOOLTIP_ID.COMMON}
             data-tooltip-wrapper="span"
             data-tooltip-place="bottom"
+            style={{ color: '#999' }}
         >
             {isLessThanAMinute ? '< 1 minute ago' : formatDistanceToNow(localDate, { addSuffix: true }).replace('about ', '')}
         </Cell.Default>

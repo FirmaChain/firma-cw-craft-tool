@@ -107,7 +107,8 @@ export const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    // padding: 10px;
+    padding-top: 8px;
 `;
 
 export const PaginationButton = styled(IconButton)`

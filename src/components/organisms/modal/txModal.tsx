@@ -1049,7 +1049,7 @@ const TxModal = ({
                                     )}
                                 </ModalContentCard>
 
-                                <ModalContentGrayCard>
+                                <ModalContentGrayCard style={{ paddingBottom: '14px' }}>
                                     <ItemWrap>
                                         <FeeLabel>{`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} Fee`}</FeeLabel>
                                         <ItemValueWrap>

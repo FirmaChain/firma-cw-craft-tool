@@ -69,8 +69,10 @@ const StyledTable = ({
         } else return [];
     }, [rows, currentPage, rowsPerPage]);
 
+    const showPagination = !disablePagination && rows.length !== 0
+
     return (
-        <TableContainer>
+        <TableContainer style={{paddingBottom: showPagination ? '20px' : '12px', minHeight: currentPageRows.length > 0 ? 'unset' : '147px'}}>
             <div style={{ width: '100%', height: '100%', overflowX: 'scroll' }}>
                 <Table>
                     <TableHead>
@@ -137,7 +139,7 @@ const StyledTable = ({
                         </LoadingBox>
                     )}
 
-                    {!disablePagination && rows.length !== 0 && (
+                    {showPagination && (
                         <PaginationContainer style={{ justifyContent: 'flex-end', alignItems: 'center', alignContent: 'center' }}>
                             <PaginationButton onClick={() => handleClick(1)} disabled={currentPage === 1}>
                                 <Icons.LeftDoubleArrow width={'20px'} height={'20px'} stroke={currentPage !== 1 ? '#FFFFFF' : '#707070'} />
