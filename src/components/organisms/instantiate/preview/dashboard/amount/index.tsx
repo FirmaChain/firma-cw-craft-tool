@@ -27,6 +27,7 @@ import commaNumber from 'comma-number';
 import Divider from '@/components/atoms/divider';
 import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 interface IProps {
     minterble: boolean;
@@ -64,14 +65,14 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
         if (!isBasic) setIsOpen(true);
     }, [isBasic]);
 
-    const minterCapEllipsisRef = useRef(null);
-    const [mintercapTooltip, setMintercapTooltip] = useState<boolean>(false);
+    const [isClamped, setIsClamped] = useState(false);
+    const ellipsisRef = useRef(null);
 
     useEffect(() => {
-        if (minterCapEllipsisRef.current) {
-            setMintercapTooltip(minterCapEllipsisRef.current.isClamped()); // Logs true or false
+        if (ellipsisRef.current && ellipsisRef.current.isClamped()) {
+            setIsClamped(true);
         }
-    }, [totalSupply]);
+    }, [minterCap]);
 
     return (
         <AmountWrapper $isMinterble={true} style={{ gap: 0 }}>
@@ -86,9 +87,17 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                             </div>
                         </HeaderLeftWrapper>
                         <HeaderRightWrapper>
-                            <HeaderMinterCapAmount className="clamp-single-line" $disabled={!Boolean(Number(minterCap))}>
+                            <TextEllipsis
+                                CustomDiv={HeaderMinterCapAmount}
+                                text={commaNumber(minterCap) || 0}
+                                breakMode={'letters'}
+                                customDivProps={{
+                                    $disabled: !Boolean(Number(minterCap))
+                                }}
+                            />
+                            {/* <HeaderMinterCapAmount className="clamp-single-line" $disabled={!Boolean(Number(minterCap))}>
                                 {commaNumber(minterCap) || 0}
-                            </HeaderMinterCapAmount>
+                            </HeaderMinterCapAmount> */}
 
                             {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
                             {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}

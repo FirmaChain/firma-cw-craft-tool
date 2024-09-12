@@ -16,6 +16,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import useExecuteActions from '../../action';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -365,9 +366,14 @@ const BurnFromPreview = () => {
                             <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
                         </ItemLabelWrap>
                         <ItemAmountWrap>
-                            <ItemAmountTypo className="clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={ItemAmountTypo}
+                                text={formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
+                                breakMode={'letters'}
+                            />
+                            {/* <ItemAmountTypo className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
-                            </ItemAmountTypo>
+                            </ItemAmountTypo> */}
                             <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>

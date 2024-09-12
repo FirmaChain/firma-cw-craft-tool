@@ -21,6 +21,7 @@ import commaNumber from 'comma-number';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -267,7 +268,7 @@ const TransferFromPreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const totalTransferAmount = useMemo(() => {
-        const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
+        const amounts = transferFromList.map((info) => info.toAmount); // getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
 
         let totalAmount = '0';
         for (const amount of amounts) {
@@ -408,7 +409,8 @@ const TransferFromPreview = () => {
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
                     <ItemAmountWrap>
-                        <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo>
+                        <TextEllipsis CustomDiv={ItemAmountTypo} text={formatWithCommas(totalTransferAmount)} breakMode={'letters'} />
+                        {/* <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo> */}
                         <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                         <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>

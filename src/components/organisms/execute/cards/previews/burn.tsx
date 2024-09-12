@@ -20,6 +20,7 @@ import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -243,9 +244,14 @@ const BurnPreview = () => {
                         <BurnInfoTitleTypo>Total Burn Amount</BurnInfoTitleTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <BurnAmountTypo className="clamp-single-line">
+                        <TextEllipsis
+                            CustomDiv={BurnAmountTypo}
+                            text={formatWithCommas(burnAmount !== null ? burnAmount : '0')}
+                            breakMode={'letters'}
+                        />
+                        {/* <BurnAmountTypo className="clamp-single-line">
                             {formatWithCommas(burnAmount !== null ? burnAmount : '0')}
-                        </BurnAmountTypo>
+                        </BurnAmountTypo> */}
                         <BurnSymbolTypo>{tokenInfo.symbol}</BurnSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>
@@ -256,7 +262,8 @@ const BurnPreview = () => {
                         <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLeftWrap>
                     <ItemRightWrap>
-                        <UpdatedBalanceTypo className="clamp-single-line">{formatWithCommas(updatedBalance)}</UpdatedBalanceTypo>
+                        <TextEllipsis CustomDiv={UpdatedBalanceTypo} text={formatWithCommas(updatedBalance)} breakMode={'letters'} />
+                        {/* <UpdatedBalanceTypo className="clamp-single-line">{formatWithCommas(updatedBalance)}</UpdatedBalanceTypo> */}
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemRightWrap>
                 </ItemWrap>

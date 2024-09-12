@@ -18,6 +18,7 @@ import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -382,9 +383,14 @@ const DecreaseAllowancePreview = () => {
                             <ItemLabelTypo>Decrease Allowance Amount</ItemLabelTypo>
                         </ItemLabelWrap>
                         <ItemAmountWrap>
-                            <ItemAmountTypo className="clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={ItemAmountTypo}
+                                text={commaNumber(!allowance?.amount ? '0' : allowance.amount)}
+                                breakMode={'letters'}
+                            />
+                            {/* <ItemAmountTypo className="clamp-single-line">
                                 {commaNumber(!allowance?.amount ? '0' : allowance.amount)}
-                            </ItemAmountTypo>
+                            </ItemAmountTypo> */}
                             <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>
@@ -414,13 +420,20 @@ const DecreaseAllowancePreview = () => {
                                         : shortenAddress(allowance?.address, 16, 16)}
                                 </AccordionTypo>
                                 <AccordionValueWrap>
-                                    <AccordionTypo
+                                    <TextEllipsis
+                                        CustomDiv={AccordionTypo}
+                                        text={commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
+                                        breakMode={'letters'}
+                                        customDivProps={{
+                                            $disabled: allowance === null || !Number(allowance.amount)
+                                        }}
+                                    />
+                                    {/* <AccordionTypo
                                         className="clamp-single-line"
                                         $disabled={allowance === null || !Number(allowance.amount)}
                                     >
-                                        {/* {commaNumber(allowance === null ? '0' : allowance?.amount) || 0} */}
                                         {commaNumber(!allowance || !allowance.amount ? '0' : allowance?.amount)}
-                                    </AccordionTypo>
+                                    </AccordionTypo> */}
                                     <AccordionSymbolTypo>{tokenInfo.symbol}</AccordionSymbolTypo>
                                 </AccordionValueWrap>
                             </div>
@@ -439,9 +452,14 @@ const DecreaseAllowancePreview = () => {
                         <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo className="clamp-single-line">
+                        <TextEllipsis
+                            CustomDiv={UpdatedBalanceTypo}
+                            text={commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
+                            breakMode={'letters'}
+                        />
+                        {/* <UpdatedBalanceTypo className="clamp-single-line">
                             {commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
-                        </UpdatedBalanceTypo>
+                        </UpdatedBalanceTypo> */}
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>

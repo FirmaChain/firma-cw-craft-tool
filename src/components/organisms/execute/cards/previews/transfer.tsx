@@ -23,6 +23,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -173,6 +174,8 @@ const WalletItemAddressTypo = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
+
+    white-space: pre;
 `;
 
 const WalletItemTokenWrap = styled.div`
@@ -394,9 +397,14 @@ const TransferPreview = () => {
                             <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                         </ItemLabelWrap>
                         <ItemAmountWrap>
-                            <ItemAmountTypo className="clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={ItemAmountTypo}
+                                text={formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
+                                breakMode={'letters'}
+                            />
+                            {/* <ItemAmountTypo className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
-                            </ItemAmountTypo>
+                            </ItemAmountTypo> */}
                             <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>
@@ -439,9 +447,14 @@ const TransferPreview = () => {
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap>
-                        <UpdatedBalanceTypo className="clamp-single-line">
+                        <TextEllipsis
+                            CustomDiv={UpdatedBalanceTypo}
+                            text={formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
+                            breakMode={'letters'}
+                        />
+                        {/* <UpdatedBalanceTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
-                        </UpdatedBalanceTypo>
+                        </UpdatedBalanceTypo> */}
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>

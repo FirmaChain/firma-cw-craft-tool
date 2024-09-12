@@ -23,6 +23,8 @@ import { ONE_TO_MINE } from '@/constants/regex';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { useMeasure } from 'react-use';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -389,6 +391,10 @@ const MintPreview = () => {
         });
     };
 
+    const [totalMintSupplyHidden, { height: supplyHiddenHeight }] = useMeasure();
+    const [totalMintSupplyVisible, { height: supplyVisibleHeigt }] = useMeasure();
+    const showSupplyTooltip = supplyVisibleHeigt !== supplyHiddenHeight;
+
     return (
         <Container>
             <ContentBox>
@@ -399,9 +405,12 @@ const MintPreview = () => {
                             <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
                         </TokenInfoLeft>
                         <TokenInfoRightWrap>
-                            <TokenInfoMintAmountTypo className="clamp-single-line">
-                                {formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
-                            </TokenInfoMintAmountTypo>
+                            <TextEllipsis
+                                CustomDiv={TokenInfoMintAmountTypo}
+                                text={formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
+                                breakMode={'letters'}
+                            />
+
                             <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
@@ -450,14 +459,24 @@ const MintPreview = () => {
                     </TokenInfoLeft>
                     <TokenInfoRightWrap>
                         <TotalSupplyWrap>
-                            <TotalSupplyAmount className="clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={TotalSupplyAmount}
+                                text={formatWithCommas(
+                                    getTokenAmountFromUToken(
+                                        String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),
+                                        tokenInfo.decimals.toString()
+                                    )
+                                )}
+                                breakMode={'letters'}
+                            />
+                            {/* <TotalSupplyAmount className="clamp-single-line">
                                 {formatWithCommas(
                                     getTokenAmountFromUToken(
                                         String(BigInt(tokenInfo.total_supply) + BigInt(totalMintBalance)),
                                         tokenInfo.decimals.toString()
                                     )
                                 )}
-                            </TotalSupplyAmount>
+                            </TotalSupplyAmount> */}
                             <TotalSupplySymbol>{tokenInfo.symbol}</TotalSupplySymbol>
                         </TotalSupplyWrap>
                     </TokenInfoRightWrap>

@@ -22,6 +22,7 @@ import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import commaNumber from 'comma-number';
 import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 interface IProps {
     totalSupply: string;
@@ -46,9 +47,17 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                 </SummeryLeftWrapper>
                 <SummeryRightWrapeer>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                        <SummeryRightTotalSupply className="clamp-single-line" $disabled={!Boolean(Number(totalSupply))}>
+                        <TextEllipsis
+                            CustomDiv={SummeryRightTotalSupply}
+                            text={commaNumber(totalSupply)}
+                            breakMode={'letters'}
+                            customDivProps={{
+                                $disabled: !Boolean(Number(totalSupply))
+                            }}
+                        />
+                        {/* <SummeryRightTotalSupply className="clamp-single-line" $disabled={!Boolean(Number(totalSupply))}>
                             {commaNumber(totalSupply)}
-                        </SummeryRightTotalSupply>
+                        </SummeryRightTotalSupply> */}
                         {tokenSymbol && Number(totalSupply) > 0 && <SummeryRightTokenSymbol>{tokenSymbol}</SummeryRightTokenSymbol>}
                     </div>
                     <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />

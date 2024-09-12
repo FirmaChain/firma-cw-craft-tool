@@ -59,8 +59,11 @@ const TransferFrom = () => {
     const setTransferFromList = useExecuteStore((state) => state.setTransferFromList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
 
+    console.log(transferFromList);
+
     const totalTransferAmount = useMemo(() => {
-        const amounts = transferFromList.map((info) => getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
+        const amounts = transferFromList.map((info) => info.toAmount); // getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
+        console.log('amounts', amounts);
 
         return addStringAmountsArray([...amounts]);
     }, [transferFromList]);
