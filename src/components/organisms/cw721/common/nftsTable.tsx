@@ -195,7 +195,7 @@ const NFTsTable = ({
                             return item;
                         }
                     } catch (error) {
-                        console.error(`Error fetching image for NFT ID: ${tokenId}`, error);
+                        console.error(`Error fetching image for token ID: ${tokenId}`, error);
                     }
                     return { tokenId, image: IMG_NFT_EMPTY_THUMBNAIL };
                 }

@@ -72,7 +72,7 @@ const Header = () => {
                 <Title>Search</Title>
                 <SearchInputWithButton2
                     value={keyword}
-                    placeHolder={'Search by full CW20 Contract Address'}
+                    placeHolder={'Search by the full CW20 Contract Address'}
                     onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     // onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{

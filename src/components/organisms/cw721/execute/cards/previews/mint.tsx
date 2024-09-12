@@ -14,6 +14,7 @@ import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -349,9 +350,14 @@ const MintPreview = () => {
                         <WalletListWrap $isOpen={isOpen} className="address-scrollbar">
                             <WalletLeftItemWrap>
                                 <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
+                                <TextEllipsis
+                                    CustomDiv={WalletItemAddressTypo}
+                                    text={mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
+                                    breakMode={'letters'}
+                                />
+                                {/* <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
                                     {mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
-                                </WalletItemAddressTypo>
+                                </WalletItemAddressTypo> */}
                             </WalletLeftItemWrap>
                             <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                             <WalletItemWrap>

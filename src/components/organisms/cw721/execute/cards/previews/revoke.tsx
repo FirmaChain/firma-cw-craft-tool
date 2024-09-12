@@ -9,6 +9,9 @@ import { useModalStore } from '@/hooks/useModal';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { shortenAddress } from '@/utils/common';
+import { TOOLTIP_ID } from '@/constants/tooltip';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -238,7 +241,16 @@ const RevokePreview = () => {
                     <AccordionRow>
                         <img src={IC_WALLET} alt="wallet" />
                         {revokeAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
-                        {revokeAddress !== '' && <AccordionTypo $disabled={false}>{revokeAddress}</AccordionTypo>}
+                        {revokeAddress !== '' && (
+                            <TextEllipsis CustomDiv={AccordionTypo} text={revokeAddress} breakMode={'letters'} />
+                            // <AccordionTypo
+                            //     $disabled={false}
+                            //     data-tooltip-id={TOOLTIP_ID.COMMON}
+                            //     data-tooltip-content={revokeAddress.length > 24 ? revokeAddress : ''}
+                            // >
+                            //     {shortenAddress(revokeAddress, 12, 12)}
+                            // </AccordionTypo>
+                        )}
                     </AccordionRow>
                     <AccordionRow>
                         <img src={IC_ID_CIRCLE} alt="token-id" />

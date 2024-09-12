@@ -11,6 +11,7 @@ import useExecuteActions from '../../action';
 import { isValidAddress } from '@/utils/address';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -194,9 +195,10 @@ const UpdateMinter = () => {
                 <AccordionBox>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                         <img src={IC_WALLET} alt="wallet" style={{ width: '20px' }} />
-                        <AccordionTypo className="clamp-single-line" $disabled={!Boolean(minterAddress)}>
+                        <TextEllipsis CustomDiv={AccordionTypo} text={minterAddress || 'Wallet Address'} breakMode={'letters'} />
+                        {/* <AccordionTypo className="clamp-single-line" $disabled={!Boolean(minterAddress)}>
                             {minterAddress || 'Wallet Address'}
-                        </AccordionTypo>
+                        </AccordionTypo> */}
                     </div>
                 </AccordionBox>
             </ContentWrap>

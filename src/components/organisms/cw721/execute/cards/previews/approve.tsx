@@ -13,6 +13,9 @@ import { useModalStore } from '@/hooks/useModal';
 import { addNanoSeconds } from '@/utils/time';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { shortenAddress } from '@/utils/common';
+import { TOOLTIP_ID } from '@/constants/tooltip';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -286,7 +289,16 @@ const ApprovePreview = () => {
                     <AccordionRow>
                         <img src={IC_WALLET} alt="wallet" />
                         {approveRecipientAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
-                        {approveRecipientAddress !== '' && <AccordionTypo $disabled={false}>{approveRecipientAddress}</AccordionTypo>}
+                        {approveRecipientAddress !== '' && (
+                            <TextEllipsis CustomDiv={AccordionTypo} text={approveRecipientAddress} breakMode={'letters'} />
+                            // <AccordionTypo
+                            //     $disabled={false}
+                            //     data-tooltip-id={TOOLTIP_ID.COMMON}
+                            //     data-tooltip-content={approveRecipientAddress.length > 24 ? approveRecipientAddress : ''}
+                            // >
+                            //     {shortenAddress(approveRecipientAddress, 12, 12)}
+                            // </AccordionTypo>
+                        )}
                     </AccordionRow>
                     <AccordionRow>
                         <img src={IC_ID_CIRCLE} alt="token-id" />

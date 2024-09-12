@@ -109,7 +109,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
 
     return (
         <SearchInputWithButton2
-            placeHolder={'Search CW20 contract address'}
+            placeHolder={'Search by the full CW20 Contract Address'}
             value={keyword}
             onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
             // onClickEvent={onClickSearch}

@@ -23,6 +23,7 @@ const RevokeAll = () => {
 
     useEffect(() => {
         return () => {
+            clearRevokeForm();
             clearFormError({ id: `${inputId}_ADDRESS` });
         };
     }, []);

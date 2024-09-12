@@ -15,6 +15,9 @@ import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { shortenAddress } from '@/utils/common';
+import { TOOLTIP_ID } from '@/constants/tooltip';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div`
     width: 100%;
@@ -143,6 +146,8 @@ const WalletItemWrap = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+
+    gap: 16px;
 `;
 
 const WalletLeftItemWrap = styled.div`
@@ -409,8 +414,13 @@ const TransferPreview = () => {
                                 <WalletItemWrap key={index}>
                                     <WalletLeftItemWrap>
                                         <WalletItemIcon src={IC_WALLET} alt={'Wallet Item'} />
-                                        <WalletItemAddressTypo $disabled={!value.recipient}>
-                                            {value.recipient ? value.recipient : 'Wallet Address'}
+
+                                        <WalletItemAddressTypo
+                                            $disabled={!value.recipient}
+                                            data-tooltip-id={TOOLTIP_ID.COMMON}
+                                            data-tooltip-content={value.recipient?.length > 24 ? value.recipient : ''}
+                                        >
+                                            {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                         </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
                                     <WalletItemTokenAmount
