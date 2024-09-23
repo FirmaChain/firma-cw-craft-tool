@@ -36,7 +36,7 @@ const CW20Btn = () => {
             modalType: 'custom',
             _component: ({ id }) => (
                 <LoadingModal
-                    delay={getRandomTimeInMs(1.5, 3.8)}
+                    delay={1000}
                     callback={() => {
                         closeModal(id);
                         GlobalActions.handleCw('CW20');
@@ -71,7 +71,7 @@ const CW721Btn = () => {
             modalType: 'custom',
             _component: ({ id }) => (
                 <LoadingModal
-                    delay={getRandomTimeInMs(1.5, 3.8)}
+                    delay={1000}
                     callback={() => {
                         closeModal(id);
                         GlobalActions.handleCw('CW721');

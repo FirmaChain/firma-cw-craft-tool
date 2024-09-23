@@ -36,7 +36,7 @@ import AddressBox from './addressBox';
 const SOCIAL_LIST = [
     { Icon: <SocialIcon src={IC_SOCIAL_FIRMACHAIN} />, socialLink: 'https://firmachain.org' },
     { Icon: <SocialIcon src={IC_SOCIAL_MEDIUM} />, socialLink: 'https://medium.com/firmachain' },
-    { Icon: <SocialIcon src={IC_SOCIAL_TELEGRAM} />, socialLink: 'https://t.me/firmachain_announcement' },
+    { Icon: <SocialIcon src={IC_SOCIAL_TELEGRAM} />, socialLink: 'https://t.me/firmachain_global' },
     { Icon: <SocialIcon src={IC_SOCIAL_TWITTER} />, socialLink: 'https://twitter.com/firmachain' }
 ];
 

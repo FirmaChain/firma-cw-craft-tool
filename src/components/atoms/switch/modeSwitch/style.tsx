@@ -16,7 +16,7 @@ export const SwitchContainer = styled.div`
     box-sizing: border-box;
 `;
 
-export const SwitchButton = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp })<{
+export const SwitchButton = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp }) <{
     $isActive: boolean;
     $position: 'left' | 'right';
 }>`
@@ -30,7 +30,7 @@ export const SwitchButton = styled('div').withConfig({ shouldForwardProp: should
     position: relative;
 `;
 
-export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp })<{ $position: 'left' | 'right' }>`
+export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp }) <{ $position: 'left' | 'right' }>`
     box-sizing: border-box;
     background-color: #e6e6e6;
     border-radius: 6px;
@@ -40,8 +40,8 @@ export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: sho
     top: 50%;
     left: ${({ $position: position }) => (position === 'left' ? '4px' : 'calc(100% - 138px - 4px)')};
     transition:
-        width 0.5s ease,
-        left 0.5s ease;
+        width 0.2s ease,
+        left 0.2s ease;
     transform: translateY(-50%);
 `;
 

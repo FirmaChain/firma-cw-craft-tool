@@ -12,7 +12,7 @@ export const SwitchContainer = styled.div`
     position: relative;
 `;
 
-export const ActiveIndicator = styled('div')<{ $position: 'left' | 'right' }>`
+export const ActiveIndicator = styled('div') <{ $position: 'left' | 'right' }>`
     background-color: #000;
     border-radius: 6px;
     width: 81px;
@@ -22,10 +22,10 @@ export const ActiveIndicator = styled('div')<{ $position: 'left' | 'right' }>`
     position: absolute;
     top: 0;
     left: ${({ $position: position }) => (position === 'left' ? '0' : '50%')};
-    transition: left 0.3s ease;
+    transition: left 0.2s ease;
 `;
 
-export const SwitchButton = styled(IconButton)<{ disabled?: boolean }>`
+export const SwitchButton = styled(IconButton) <{ disabled?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
