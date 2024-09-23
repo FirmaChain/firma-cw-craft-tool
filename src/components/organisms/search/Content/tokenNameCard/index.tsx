@@ -61,13 +61,7 @@ const TokenNameCard = () => {
                 <TotalSupplyBox>
                     <div className="title">Total supply:</div>
                     <div className="amount">
-                        <span
-                            className="bold"
-                            // data-tooltip-content={decimals > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals))) : ''}
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
-                        >
+                        <span className="bold">
                             {commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
                         </span>{' '}
                         <span className="symbol">{symbol}</span>

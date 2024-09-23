@@ -53,9 +53,6 @@ export const SpecificColumnValue = styled.div`
 export const LogoImage = styled.div`
     width: 90px;
     height: 90px;
-    // background-color: #262626;
-    // border-radius: 153.409px;
-    // border: 1px solid #383838;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,12 +78,6 @@ export const SpecificValueTypo = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 500;
     line-height: 22px;
-
-    // display: -webkit-box;
-    // overflow: hidden;
-    // -webkit-line-clamp: 1;
-    // -webkit-box-orient: vertical;
-    // word-break: break-word;
 `;
 
 export const LessTypo = styled.span`

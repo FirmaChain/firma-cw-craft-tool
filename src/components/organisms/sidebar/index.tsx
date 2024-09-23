@@ -102,7 +102,6 @@ const Sidebar = () => {
     };
 
     const onClickConnectWallet = () => {
-        // ModalActions.handleConnectWallet(true);
         modal.openModal({ modalType: 'connectWallet' });
     };
 

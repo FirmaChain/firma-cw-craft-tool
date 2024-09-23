@@ -18,7 +18,6 @@ const ConnectWallet = () => {
     const modal = useModalStore();
 
     const onClickConnectWallet = () => {
-        // ModalActions.handleConnectWallet(true);
         modal.openModal({ modalType: 'connectWallet' });
     };
 

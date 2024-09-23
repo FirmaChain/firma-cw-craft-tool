@@ -14,7 +14,6 @@ interface ISignData {
 }
 
 export const getTransactionStatusCode = (signData: string) => {
-    console.log(JSON.parse(signData));
     const parseSignData = JSON.parse(signData) as ISignData;
     const parseRawData = JSON.parse(parseSignData.rawData) as IRawData;
 

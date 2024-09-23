@@ -39,8 +39,6 @@ const generateId = () => {
 };
 
 const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20, transferList, setTransferList }: IProps) => {
-    // const address = useSelector((state: rootState) => state.wallet.address);
-
     const { enqueueSnackbar } = useSnackbar();
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
@@ -50,7 +48,6 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
     const modal = useModalStore();
 
     const [validity, setValidity] = useState<boolean[]>([true]);
-    // const [updateIndex, setUpdateIndex] = useState<number>(0);
 
     const totalAmountByAddress = useMemo(() => {
         const result: Record<string, string> = {};

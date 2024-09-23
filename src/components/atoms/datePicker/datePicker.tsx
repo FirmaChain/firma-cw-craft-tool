@@ -11,7 +11,6 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    // padding: 20px;
     border-radius: 10px;
     gap: 8px;
 `;
@@ -163,11 +162,6 @@ const MINUTES = new Array(12).fill(null).map((_, idx) => {
     const value = idx * 5;
     return { label: String(value).padStart(2, '0'), value: String(value) };
 });
-
-// const SECONDS = new Array(12).fill(null).map((_, idx) => {
-//     const value = idx * 5;
-//     return { label: String(value).padStart(2, '0'), value: String(value) };
-// });
 
 const BGBox = styled.div`
     position: fixed;

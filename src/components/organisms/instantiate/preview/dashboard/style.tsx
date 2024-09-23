@@ -54,21 +54,14 @@ export const DashboardBody = styled.div`
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    // overflow-y: scroll;
-
     border-radius: 24px;
     border: 1px solid var(--Gray-550, #444);
-
-    // &::-webkit-scrollbar {
-    //     display: none;
-    // }
 `;
 
 export const StyledOverlayScrollbar = styled(OverlayScrollbarsComponent)`
     .os-scrollbar {
         --os-size: 14px !important;
         --os-padding-perpendicular: 5px;
-        // --os-padding-axis: 30px;
         --os-track-border-radius: 50%;
         --os-handle-bg: var(--Gray-550, #444);
         --os-handle-bg-hover: var(--Gray-550, #444);
@@ -84,7 +77,6 @@ export const JSONViewerOverlayScrollbar = styled(OverlayScrollbarsComponent)`
     .os-scrollbar {
         --os-size: 6px !important;
         --os-padding-perpendicular: 0;
-        // --os-padding-axis: 30px;
         --os-track-border-radius: 50%;
         --os-handle-bg: var(--Gray-550, #444);
         --os-handle-bg-hover: var(--Gray-550, #444);
@@ -121,7 +113,6 @@ export const ExecutePreviewOverlayScroll = styled(OverlayScrollbarsComponent)`
     .os-scrollbar {
         --os-size: 18px !important;
         --os-padding-perpendicular: 5px;
-        // --os-padding-axis: 30px;
         --os-track-border-radius: 50%;
         --os-handle-bg: var(--Gray-550, #444);
         --os-handle-bg-hover: var(--Gray-550, #444);
@@ -135,16 +126,9 @@ export const ExecutePreviewOverlayScroll = styled(OverlayScrollbarsComponent)`
 
 export const DashboardScrollBox = styled.div`
     width: 100%;
-
-    // overflow: hidden;
     overflow-y: scroll;
 
     &::-webkit-scrollbar-track-piece {
         margin: 30px 0;
-        // background: #1e1e1e;
     }
-
-    // &::-webkit-scrollbar-track {
-    //     background: #1e1e1e;
-    // }
 `;

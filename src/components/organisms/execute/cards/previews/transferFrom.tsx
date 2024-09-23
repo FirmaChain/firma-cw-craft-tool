@@ -268,7 +268,7 @@ const TransferFromPreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const totalTransferAmount = useMemo(() => {
-        const amounts = transferFromList.map((info) => info.toAmount); // getUTokenStrFromTokenStr(info.toAmount, tokenInfo.decimals.toString()));
+        const amounts = transferFromList.map((info) => info.toAmount);
 
         let totalAmount = '0';
         for (const amount of amounts) {

@@ -41,10 +41,7 @@ const ContentBox = styled.div<{ $isOpen: boolean }>`
     width: 100%;
     height: auto;
     padding: 32px 44px;
-    // border-radius: 24px;
-    // border: 1px solid var(--Gray-550, #444);
     gap: 24px;
-    // overflow: scroll;
     transition: all 0.2s ease;
 
     ${({ $isOpen }) =>
@@ -258,7 +255,6 @@ const BurnFromPreview = () => {
         if (burnFromList.some((v) => v.recipient.toLowerCase() === userAddress)) return false;
 
         //! check all amount by address is valid
-        // const isAmountOK = checkAmounyByAddress();
         if (isExceedAllowance) return false;
 
         //! check all list is filled (empty value check)

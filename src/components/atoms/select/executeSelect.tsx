@@ -167,7 +167,6 @@ const ExecuteSelect = ({
                     styles={customStyles}
                     placeholder={placeHolder}
                     onChange={(newValue) => {
-                        console.log(newValue);
                         onChange(newValue.value);
                         setOpen(false);
                     }}

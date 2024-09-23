@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ContentBox, ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
+import { ContentBox, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
 import ConnectWallet from './connectWallet';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -8,22 +8,12 @@ import useMyToken from '@/hooks/useMyToken';
 import MyMintedTokenList from './mintedTokenList';
 import { GlobalActions } from '@/redux/actions';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
-// import NetworkSelect from '@/components/atoms/select/networkSelect';
-
-// const menuItems = [
-//     { value: '0', label: 'Newest' },
-//     { value: '1', label: 'Oldest' },
-//     { value: '2', label: 'Most Popular' },
-//     { value: '4', label: 'Alphabetical' }
-// ];
 
 const MyTokenContent = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
     const { contracts, addContracts } = useCW20MyTokenContext();
     const [showCount, setShowCount] = useState(false);
-    // const [selectSort, setSelectSort] = useState<number>(0);
-    // const [contractList, setContractList] = useState<null | string[]>(null);
 
     const { getCW20ContractList } = useMyToken();
 
@@ -43,7 +33,6 @@ const MyTokenContent = () => {
 
     useEffect(() => {
         if (isInit) {
-            // GlobalActions.handleGlobalLoading(true);
             fetchTokenList();
         }
 

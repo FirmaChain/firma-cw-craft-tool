@@ -106,29 +106,13 @@ export const SubTitle = styled.div`
 
 export const CardBox = styled.div`
     display: grid;
-    // width: 100%;
-    // grid-template-columns: repeat(auto-fit, minmax(276px, auto));
     grid-template-areas: 'inst query execute';
     justify-content: center;
     gap: 24px 56px;
 
     @media (max-width: 1320px) {
         display: none;
-        // grid-template-rows: auto;
-        // grid-template-columns: 1fr 1fr;
-        // grid-template-areas:
-        //     'inst query'
-        //     'execute execute';
     }
-
-    // @media (max-width: 1100px) {
-    //     grid-template-rows: auto;
-    //     grid-template-columns: auto;
-    //     grid-template-areas:
-    //         'inst'
-    //         'query'
-    //         'execute';
-    // }
 `;
 
 export const MobileCardBox = styled.div`

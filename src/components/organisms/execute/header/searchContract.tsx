@@ -14,14 +14,10 @@ import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 const EndAdornment = ({
     keyword,
     showClearButton,
-    // disableSearch = false,
-    // onClickSearch,
     onClickClear
 }: {
     keyword: string;
     showClearButton?: boolean;
-    // disableSearch?: boolean;
-    // onClickSearch: () => void;
     onClickClear: () => void;
 }) => {
     return (
@@ -31,15 +27,6 @@ const EndAdornment = ({
                     <Icons.XCircle width={'32px'} height={'32px'} />
                 </IconButton>
             )}
-
-            {/* <IconButton style={{ padding: 0, display: 'flex' }} disabled={disableSearch} onClick={onClickSearch}>
-                <Icons.Search
-                    width="28px"
-                    height="28px"
-                    fill={disableSearch ? '#807E7E' : '#E6E6E6'}
-                    stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
-                />
-            </IconButton> */}
         </div>
     );
 };
@@ -76,8 +63,6 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                 clearForm();
             }
 
-            console.log('keyword', keyword);
-
             setContractAddress(keyword);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
@@ -112,13 +97,10 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
             placeHolder={'Search by the full CW20 Contract Address'}
             value={keyword}
             onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
-            // onClickEvent={onClickSearch}
             adornment={{
                 end: (
                     <EndAdornment
                         keyword={keyword}
-                        // disableSearch={keyword.length === 0 || !isValidAddress(keyword)}
-                        // onClickSearch={onClickSearch}
                         onClickClear={onClickClear}
                         showClearButton={Boolean(keyword?.length > 0 || storeContractAddress?.length > 0)}
                     />

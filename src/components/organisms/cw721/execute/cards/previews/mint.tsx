@@ -208,7 +208,6 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    // const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
     const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
     const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
     const notYetMintList = useCW721ExecuteStore((state) => state.notYetMintList);
@@ -221,7 +220,6 @@ const MintPreview = () => {
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
     const { setTotalNfts } = useCW721ExecuteAction();
-    // const presetUriInputError = Object.keys(useFormStore((v) => v.formError[PRESET_BASE_URI_FORM_ID]) || {})?.length;
 
     const [isOpen, setIsOpen] = useState<boolean>(true); //? defualt open
 

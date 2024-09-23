@@ -69,7 +69,6 @@ const MinterCapExceedBox = styled.div`
     flex-direction: row;
     align-items: center;
     gap: 4px;
-    // margin-top: -15px;
 `;
 
 const Mint = () => {
@@ -85,8 +84,6 @@ const Mint = () => {
 
     const mintableAmount = useMemo(() => {
         if (!minterInfo || !tokenInfo) return '';
-
-        // console.log(minterInfo, tokenInfo);
 
         return subtractStringAmount(minterInfo?.cap, tokenInfo?.total_supply);
     }, [minterInfo, tokenInfo]);
@@ -130,14 +127,6 @@ const Mint = () => {
                             <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
                             <TotalMintSupplyBalance
                                 className="clamp-single-line"
-                                // data-tooltip-content={
-                                //     Number(totalMintAmount) > 0
-                                //         ? formatWithCommas(parseAmountWithDecimal2(totalMintAmount, tokenInfo.decimals.toString()))
-                                //         : ''
-                                // }
-                                // data-tooltip-id={TOOLTIP_ID.COMMON}
-                                // data-tooltip-wrapper="span"
-                                // data-tooltip-place="bottom"
                             >
                                 {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
                             </TotalMintSupplyBalance>
@@ -155,17 +144,7 @@ const Mint = () => {
                     <Divider $direction="horizontal" $variant="dash" $color="#444" />
                     <TotalMintWrap>
                         <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                        <TotalMintSubBalance
-                            className="clamp-single-line"
-                            // data-tooltip-content={
-                            //     Number(mintableAmount) > 0
-                            //         ? formatWithCommas(parseAmountWithDecimal2(mintableAmount, tokenInfo.decimals.toString()))
-                            //         : ''
-                            // }
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
-                        >
+                        <TotalMintSubBalance className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}
                         </TotalMintSubBalance>
                         <TotalMintSubBalance>{tokenInfo.symbol}</TotalMintSubBalance>

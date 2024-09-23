@@ -58,8 +58,6 @@ const ContractInformation = () => {
     };
 
     const [expandTotal, setExpandTotal] = useState(true);
-    // const [expandOwned, setExpandOwned] = useState(true);
-
     const isBasic = useMemo(() => {
         return codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
     }, [codeId]);

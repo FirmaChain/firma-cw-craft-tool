@@ -249,7 +249,6 @@ const TransferPreview = () => {
 
     const transferIdsWithEmpty = useMemo(() => {
         const ids = userTransferList.map((oneData) => oneData.token_ids).flat();
-        // .filter((v) => v !== '');
 
         return ids;
     }, [userTransferList]);
@@ -301,9 +300,6 @@ const TransferPreview = () => {
     const enableButton = useMemo(() => {
         //! transfer list has empty value
         if (userTransferList.some((oneData) => oneData.recipient === '' || oneData.token_ids.length === 0)) return false;
-
-        //! some transfer address same with current user address
-        // if (userTransferList.some((v) => v.recipient === userAddress)) return false;
 
         //! some trnasfer address is invalid
         if (!userTransferList.some((v) => isValidAddress(v.recipient))) return false;

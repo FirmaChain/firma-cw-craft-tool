@@ -63,7 +63,6 @@ export const SpecificValueWrapper = styled.div`
 `;
 
 export const SpecificValueTypo = styled.div`
-    // display: flex;
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;

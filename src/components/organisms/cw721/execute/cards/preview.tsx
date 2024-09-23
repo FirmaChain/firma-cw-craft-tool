@@ -74,7 +74,6 @@ const Preview = () => {
             {selectMenu && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <Container
-                        // style={{ top: scroll.y > 0 ? '100px' : '0' }}
                         $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}
                         $scrollY={scroll.y}
                     >

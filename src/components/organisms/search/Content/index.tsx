@@ -24,8 +24,6 @@ const Content = () => {
     const contractExist = useSearchStore((v) => v.contractExist);
     const contractAddress = useSearchStore((v) => v.contractInfo?.address);
 
-    console.log(contractAddress, contractExist);
-
     return (
         <Container>
             {contractExist === null && (

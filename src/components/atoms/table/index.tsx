@@ -16,13 +16,11 @@ import {
     TableInnerCell,
     TableRow
 } from './styles';
-import { FadeLoader } from 'react-spinners';
-import { ColorRing, Oval } from 'react-loader-spinner';
+import { Oval } from 'react-loader-spinner';
 
 export interface IColumn {
     id: string;
     label: string; //? Title visible on header
-    // align?: 'left' | 'center' | 'right'; //? Align direction | default: left
     renderCell?: (id: string, row: any) => React.ReactElement | string; //? If not provided, default text will be rendered.
     width?: string;
     minWidth?: string;

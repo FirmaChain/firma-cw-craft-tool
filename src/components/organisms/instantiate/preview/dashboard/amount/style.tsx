@@ -3,12 +3,10 @@ import styled from 'styled-components';
 export const AmountWrapper = styled.div<{ $isMinterble: boolean }>`
     width: 100%;
     box-sizing: border-box;
-    // width: 552px;
     padding: 32px 44px;
     padding-right: 33px;
     display: flex;
     flex-direction: column;
-    // border-radius: 0px 0px 24px 24px;
     border-top: 1px solid var(--Gray-550, #444);
     overflow: hidden;
 `;
@@ -16,7 +14,6 @@ export const AmountWrapper = styled.div<{ $isMinterble: boolean }>`
 export const MinterCapWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    // gap: 20px;
 `;
 
 export const MinterCapHeaderWrapper = styled.div`
@@ -54,7 +51,6 @@ export const HeaderRightWrapper = styled.div`
 
 export const HeaderMinterCapAmount = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Primary-Base-White, #fff)')};
-    // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -109,9 +105,6 @@ export const DetailLeftWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 16px;
-    // height: fit-content;
-    // overflow: hidden;
-    // transition: all 0.15s ease;
 `;
 
 export const DetailAddressText = styled.div<{ $disabled?: boolean }>`
@@ -127,7 +120,6 @@ export const DetailAddressText = styled.div<{ $disabled?: boolean }>`
 
 export const DetailMinterCapAmount = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-700, #807E7E)')};
-    // var(--Gray-650, #807e7e);
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;

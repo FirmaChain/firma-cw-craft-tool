@@ -20,8 +20,6 @@ export const SwitchButton = styled('div').withConfig({ shouldForwardProp: should
     $isActive: boolean;
     $position: 'left' | 'right';
 }>`
-    // color: ${({ $isActive: isActive, $position: position }) => (isActive ? (position === 'left' ? '#2C2C2C' : '#00BF7A') : '#E6E6E6')};
-    // font-weight: ${({ $isActive: isActive }) => (isActive ? 600 : 400)};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,7 +39,6 @@ export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: sho
     position: absolute;
     top: 50%;
     left: ${({ $position: position }) => (position === 'left' ? '4px' : 'calc(100% - 138px - 4px)')};
-    // margin-left: ${({ $position: position }) => (position === 'left' ? '10px' : '0px')};
     transition:
         width 0.5s ease,
         left 0.5s ease;

@@ -124,7 +124,6 @@ const Section = styled.div`
     }
 `;
 
-// const MINTING_PRESET_TOOLTIP = `You can input a range of numbers using\n"Start" and "End", or specify multiple\nrandom numbers in the 'Token ID' field.`;
 
 const BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT'; //! DO NOT CHANGE | USING ON PREVIEW FOR BUTTON STATE
 
@@ -137,9 +136,6 @@ const Mint = () => {
     const mintEndTokenId = useCW721ExecuteStore((state) => state.mintEndTokenId);
     const mintList = useCW721ExecuteStore((state) => state.mintList);
     const setMintRecipientAddress = useCW721ExecuteStore((state) => state.setMintRecipientAddress);
-    // const setMintBaseURI = useCW721ExecuteStore((state) => state.setMintBaseURI);
-    // const setMintStartTokenId = useCW721ExecuteStore((state) => state.setMintStartTokenId);
-    // const setMintEndTokenId = useCW721ExecuteStore((state) => state.setMintEndTokenId);
     const setMintList = useCW721ExecuteStore((state) => state.setMintList);
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
@@ -237,87 +233,6 @@ const Mint = () => {
     useEffect(() => {
         checkMintList();
     }, [mintList, alreadyMintList, notYetMintList, userNFTIds]);
-
-    // useEffect(() => {
-    //     if (mintBaseURI) {
-    //         if (mintStartTokenId && mintEndTokenId && !isNaN(Number(mintStartTokenId)) && !isNaN(Number(mintEndTokenId))) {
-    //             const parsedStart = parseInt(mintStartTokenId);
-    //             let parsedEnd = parseInt(mintEndTokenId);
-    //             if (parsedEnd > parsedStart + 19) parsedEnd = parsedStart + 19;
-
-    //             if (parsedEnd >= parsedStart) {
-    //                 setMintList(
-    //                     new Array(Number(parsedEnd) - Number(mintStartTokenId) + 1).fill(null).map((_, idx) => ({
-    //                         token_id: (idx + parsedStart).toString(),
-    //                         token_uri: mintBaseURI + (idx + parsedStart),
-    //                         id: v4()
-    //                     }))
-    //                 );
-    //             }
-    //         } else {
-    //             setMintList([{ token_id: '', token_uri: '', id: v4() }]);
-    //         }
-    //     }
-    // }, [mintBaseURI, mintStartTokenId, mintEndTokenId]);
-
-    // useEffect(() => {
-    //     if (mintBaseURI) {
-    //         const validMintStartId = mintStartTokenId !== '' && !isNaN(Number(mintStartTokenId));
-    //         const validMintEndId = mintEndTokenId !== '' && !isNaN(Number(mintEndTokenId));
-
-    //         if (validMintStartId && validMintEndId) {
-    //             const parsedStart = parseInt(mintStartTokenId);
-    //             let parsedEnd = parseInt(mintEndTokenId);
-    //             if (parsedEnd > parsedStart + 19) parsedEnd = parsedStart + 19;
-
-    //             if (parsedEnd >= parsedStart) {
-    //                 const newMintList = Array.from({ length: parsedEnd - parsedStart + 1 }, (_, idx) => ({
-    //                     token_id: (idx + parsedStart).toString(),
-    //                     token_uri: mintBaseURI + (idx + parsedStart),
-    //                     id: v4(),
-    //                     isAlreadyMint: false
-    //                 }));
-
-    //                 console.log(alreadyMintList, notYetMintList);
-
-    //                 const mergeMintList = alreadyMintList.concat(notYetMintList);
-    //                 const fetchPromises = newMintList.map((newMintData) => {
-    //                     const { token_id } = newMintData;
-
-    //                     return new Promise<{ token_id: string; token_uri: string; id: string; isAlreadyMint: boolean }>((resolve) => {
-    //                         if (token_id !== '' && !mergeMintList.includes(token_id)) {
-    //                             firmaSDK.Cw721.getNftData(contractAddress, token_id)
-    //                                 .then(() => {
-    //                                     resolve({ ...newMintData, isAlreadyMint: true });
-    //                                 })
-    //                                 .catch(() => {
-    //                                     resolve({ ...newMintData, isAlreadyMint: false });
-    //                                 });
-    //                         } else {
-    //                             const isAlreadyMint = alreadyMintList.includes(token_id);
-    //                             resolve({ ...newMintData, isAlreadyMint });
-    //                         }
-    //                     });
-    //                 });
-
-    //                 Promise.all(fetchPromises).then((results) => {
-    //                     const updatedAlreadyMintList = results.filter((data) => data.isAlreadyMint).map((data) => data.token_id);
-    //                     const updatedNotYetMintList = results.filter((data) => !data.isAlreadyMint).map((data) => data.token_id);
-
-    //                     const uniqueAlreadyMintList = Array.from(new Set([...alreadyMintList, ...updatedAlreadyMintList]));
-    //                     const uniqueNotYetMintList = Array.from(new Set([...notYetMintList, ...updatedNotYetMintList]));
-
-    //                     setAlreadyMintList(uniqueAlreadyMintList);
-    //                     setNotYetMintList(uniqueNotYetMintList);
-
-    //                     setMintList(results);
-    //                 });
-    //             }
-    //         } else {
-    //             setMintList([{ token_id: '', token_uri: '', id: v4(), isAlreadyMint: false }]);
-    //         }
-    //     }
-    // }, [mintBaseURI, mintStartTokenId, mintEndTokenId, setAlreadyMintList, setNotYetMintList]);
 
     useEffect(() => {
         if (contractAddress === null) return;
@@ -428,24 +343,11 @@ const Mint = () => {
                     </div>
                     <MintNFTInfoList
                         onChangeWalletList={(v) => {
-                            if (mintBaseURI) {
-                                //? if using preset
-                                // setMintBaseURI('');
-                                // setMintStartTokenId('');
-                                // setMintEndTokenId('');
-                                // clearFormError({ id: BASE_URI_FORM_ID });
-                            }
-
                             setMintList(v);
                         }}
                         list={mintList}
                         disableInput={disableMintIntoList}
                         onClickDeleteAll={() => {
-                            // setMintBaseURI('');
-                            // setMintStartTokenId('');
-                            // setMintEndTokenId('');
-                            // setMintRecipientAddress('');
-                            // clearFormError({ id: BASE_URI_FORM_ID });
                         }}
                     />
                 </Section>

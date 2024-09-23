@@ -54,9 +54,6 @@ const Dashboard = ({
     marketingAddress,
     marketingProject
 }: IProps) => {
-    // const contractMode = useSelector((state: rootState) => state.global.contractMode);
-    // const showAdvancedInfo = Boolean(contractMode === 'ADVANCED');
-
     return (
         <DashboardWrapper>
             <TitleWrapper>

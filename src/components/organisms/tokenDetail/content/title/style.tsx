@@ -180,12 +180,6 @@ export const GoToExecuteButton = styled(IconButton)`
             color: #121212 !important;
         }
     }
-
-    // cursor: pointer;
-    // transition: background-color 0.3s ease;
-    // &:hover {
-    //     cursor: pointer;
-    // }
 `;
 
 export const GoToButtonTypo = styled.div`

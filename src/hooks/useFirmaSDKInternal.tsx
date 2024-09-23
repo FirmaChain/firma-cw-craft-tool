@@ -372,7 +372,6 @@ const useFirmaSDKInternal = () => {
     ) => {
         const wallet = await getWallet(password);
         let txList = await getCW20BurnFromTxList(wallet, contractAddress, bulkTargets);
-        console.log(txList);
         const result = await firmaSDK.Cw20.signAndBroadcast(wallet, txList, {
             gas: gas,
             fee: getFeesFromGas(gas),

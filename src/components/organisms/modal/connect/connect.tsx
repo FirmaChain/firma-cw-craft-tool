@@ -214,17 +214,12 @@ const Connect = ({ closeModal }: IProps) => {
     const [inputKetword, setInputKeyword] = useState<string>('');
 
     const [password, setPassword] = useState<string>('');
-    // const [invalidPassword, setInvalidPassword] = useState<boolean>(false);
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    // const [invalidConfirmPassword, setInvalidConfirmPassword] = useState<boolean>(false);
-
-    // const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
     const inputRefMnemonic = useRef<HTMLTextAreaElement>();
     const inputRefPrivateKey = useRef<HTMLTextAreaElement>();
 
     useEffect(() => {
-        // setIsEnableButton(false);
         setInputKeyword('');
         setPassword('');
         setConfirmPassword('');
@@ -238,25 +233,6 @@ const Connect = ({ closeModal }: IProps) => {
                 message: 'Password is not match.'
             });
         } else clearFormError({ id: 'CONNECT_WALLET_PASSWORD_CONFIRM', type: 'PASSWORD_NOT_MATCH' });
-
-        // let validPassword = false;
-        // let validConfirmPassword = false;
-
-        // if (password.length >= 8) {
-        //     validPassword = true;
-        // }
-        // if (password === confirmPassword) {
-        //     validConfirmPassword = true;
-        // }
-
-        // setInvalidPassword(!validPassword && password.length > 0);
-        // setInvalidConfirmPassword(!validConfirmPassword && confirmPassword.length > 0);
-
-        // if (validPassword && validConfirmPassword) {
-        //     setIsEnableButton(true);
-        // } else {
-        //     setIsEnableButton(false);
-        // }
     }, [password, confirmPassword]);
 
     const checkWords = (e: any) => {
@@ -268,7 +244,6 @@ const Connect = ({ closeModal }: IProps) => {
         e.target.value = e.target.value.replace(recoverType === 0 ? /[^A-Za-z\s]/gi : /[^A-Za-z0-9]/gi, '');
 
         const checkValue = e.target.value.replace(/ +/g, ' ').replace(/^\s+|\s+$/g, '');
-        // setIsEnableButton(recoverType === 0 ? checkValue.split(' ').length === 24 : checkValue.length === 66);
         setInputKeyword(checkValue);
     };
 
@@ -374,7 +349,6 @@ const Connect = ({ closeModal }: IProps) => {
                         placeHolder: 'Enter Password',
                         formId: 'CONNECT_WALLET_PASSWORD',
                         onChange: onChangePassword
-                        // emptyErrorMessage: 'Please input password.'
                     }}
                 />
 
@@ -387,7 +361,6 @@ const Connect = ({ closeModal }: IProps) => {
                         formId: 'CONNECT_WALLET_PASSWORD_CONFIRM',
                         onChange: onChangeConfirmPassword,
                         onKeyDown: handleEnterDown
-                        // emptyErrorMessage: 'Please input password.'
                     }}
                 />
             </InputWrap>

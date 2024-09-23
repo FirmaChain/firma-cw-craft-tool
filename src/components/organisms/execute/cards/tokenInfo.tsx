@@ -241,19 +241,12 @@ const TokenInfo = () => {
             if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
                 ruleMenus[6] = { ...ruleMenus[6], isDisabled: true };
             }
-            //  else {
-            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
-            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
-            // }
-
+            
             //! if marketing info not provided or marketing address is not connected address
             if (!marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase()) {
                 ruleMenus[5] = { ...ruleMenus[5], isDisabled: true };
                 ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
             }
-            //  else {
-            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
-            // }
         } else {
             ruleMenus = [...advancedMenuItems];
 
@@ -262,27 +255,18 @@ const TokenInfo = () => {
                 ruleMenus[6] = { ...ruleMenus[6], isDisabled: true };
                 ruleMenus[10] = { ...ruleMenus[10], isDisabled: true };
             }
-            //  else {
-            //     ruleMenus[1] = { ...ruleMenus[1], isDisabled: false };
-            //     ruleMenus[10] = { ...ruleMenus[10], isDisabled: false };
-            // }
 
             //! if marketing info not provided or marketing address is not connected address
             if (!marketingInfo || marketingInfo.marketing !== address) {
                 ruleMenus[5] = { ...ruleMenus[5], isDisabled: true };
                 ruleMenus[9] = { ...ruleMenus[9], isDisabled: true };
             }
-            //  else {
-            //     ruleMenus[8] = { ...ruleMenus[8], isDisabled: false };
-            //     ruleMenus[9] = { ...ruleMenus[9], isDisabled: false };
-            // }
         }
 
         return ruleMenus;
     }, [contractInfo, minterInfo, address, marketingInfo]);
 
     const handleChangeMenu = (menu: string) => {
-        console.log('menu', menu);
         const _selectMenu = ownerMenus.find((item) => item.value === menu);
 
         setSelectMenu(_selectMenu);

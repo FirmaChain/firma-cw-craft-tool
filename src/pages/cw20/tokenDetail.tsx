@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-// import { Header, TokenDetailContent } from '../components/organisms/tokenDetail';
 import { Header, TokenDetailContent } from '@/components/organisms/tokenDetail';
 import { Container } from '@/styles/instantiate';
 import useTokenDetailStore from '@/store/useTokenDetailStore';

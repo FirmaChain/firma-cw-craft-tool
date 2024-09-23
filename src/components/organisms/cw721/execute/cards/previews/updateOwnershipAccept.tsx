@@ -198,8 +198,6 @@ const UpdateOwnershipAccept = () => {
     };
 
     const isDisableButton = useMemo(() => {
-        console.log('pending_owner', ownershipInfo.pending_owner);
-
         if (ownershipInfo) {
             if (ownershipInfo.pending_owner === '' || ownershipInfo.pending_owner !== address) return true;
             if (ownershipInfo.pending_owner === address && isExpiry(ownershipInfo.pending_expiry)) return true;

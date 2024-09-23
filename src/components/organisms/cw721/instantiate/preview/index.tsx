@@ -94,7 +94,6 @@ const BodyNftInfoWrap = styled.div`
 
 const BodyNftNameTypo = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-550, #444)' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))')};
-    // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;

@@ -31,7 +31,7 @@ const Minterble = ({ decimals }: IProps) => {
     const ADDRESS_TOOLTIP_TEXT = `This is the wallet address with the authority\nto mint additional tokens.`;
 
     const handleMinterble = (value: boolean) => {
-        useInstantiateStore.getState().setMinterble(value); // setIsMinterble(value);
+        useInstantiateStore.getState().setMinterble(value);
 
         GlobalActions.handleCw20Minterble(value);
 
@@ -42,7 +42,7 @@ const Minterble = ({ decimals }: IProps) => {
     };
 
     const handleMinterAddress = (value: string) => {
-        useInstantiateStore.getState().setMinterAddress(value); // setMinterAddress(value);
+        useInstantiateStore.getState().setMinterAddress(value);
 
         if (isValidAddress(value) || value === '') clearFormError({ id: 'minterAddress', type: 'ADDRESS_VALIDATION' });
         else {

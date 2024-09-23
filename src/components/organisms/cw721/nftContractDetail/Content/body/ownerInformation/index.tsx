@@ -13,7 +13,8 @@ import {
     SpecificSubValueType,
     ContractCard,
     CardHeaderTypo,
-    CardSpecific
+    CardSpecific,
+    SpecificDefaultTypo
 } from './style';
 import { compareStringNumbers } from '@/utils/balance';
 import IconTooltip from '@/components/atoms/tooltip';
@@ -69,8 +70,6 @@ const OwnerInformation = () => {
             const nowTimestamp = new Date().getTime();
             const timeInMs = Math.floor(Number(expireInfo['at_time']) / 1000000);
 
-            console.log('timeInMs', timeInMs);
-            console.log('nowTimestamp', nowTimestamp);
             if (compareStringNumbers(timeInMs.toString(), nowTimestamp.toString()) === 1) {
                 return <SpecificValueTypo>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>;
             } else {
@@ -99,7 +98,7 @@ const OwnerInformation = () => {
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificDefaultTypo>{'Admin Address'}</SpecificDefaultTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>
@@ -112,7 +111,7 @@ const OwnerInformation = () => {
                                 <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificValueTypo>{'Wallet Address'}</SpecificValueTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>

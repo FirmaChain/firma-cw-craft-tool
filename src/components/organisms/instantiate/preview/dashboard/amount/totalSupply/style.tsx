@@ -3,7 +3,6 @@ import { styled } from 'styled-components';
 export const TotalSupplyWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    // gap: 20px;
 `;
 
 export const TotalSupplySummery = styled.div`
@@ -40,7 +39,6 @@ export const SummeryRightWrapeer = styled.div`
 
 export const SummeryRightTotalSupply = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-900, var(--Primary-Base-White, #02e191))')};
-    // var(--Gray-900, var(--Primary-Base-White, #02e191));
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;
@@ -81,7 +79,6 @@ export const WalletListWrapper = styled.div<{ $isOpen: boolean }>`
     `
             : `
         opacity: 0;
-        // padding: 0px 32px;
         max-height: 0px;
         margin-top: 0px;
 
@@ -109,7 +106,6 @@ export const ItemLeftWrapper = styled.div`
 
 export const ItemLeftAddress = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-600, #707070)')};
-    // var(--Gray-600, #707070);
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -126,7 +122,6 @@ export const ItemTokenWrap = styled.div`
 
 export const ItemTokenAmount = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-500, #383838)' : 'var(--Gray-650, #807e7e)')};
-    // var(--Gray-650, #807e7e);
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;

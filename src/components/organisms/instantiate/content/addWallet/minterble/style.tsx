@@ -4,7 +4,6 @@ export const MinterbleWrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    // gap: 24px;
 `;
 
 export const MinterbleOption = styled.div`

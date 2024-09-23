@@ -10,10 +10,6 @@ export const TokenInfoWrapper = styled.div`
     padding-right: 33px;
 
     gap: 32px;
-    // border-radius: 24px 24px 0px 0px;
-    // border-top: 1px solid var(--Gray-550, #444);
-    // border-right: 1px solid var(--Gray-550, #444);
-    // border-left: 1px solid var(--Gray-550, #444);
 `;
 
 export const TokenInfoLogoImage = styled.div`
@@ -54,7 +50,6 @@ export const DetailTitle = styled.div`
 
 export const TokenNameText = styled.div<{ $disabled?: boolean }>`
     color: ${({ $disabled }) => ($disabled ? 'var(--Gray-550, #444)' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))')};
-    // var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 18px;
     font-style: normal;

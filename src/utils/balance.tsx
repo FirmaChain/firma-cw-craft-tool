@@ -30,24 +30,6 @@ export const getTokenAmountFromUToken = (amount: string, decimals: string) => {
     return result;
 };
 
-// export const getTokenAmountFromUToken = (amount: string, decimals: string) => {
-//     const amountLength = amount.length;
-//     const decimalIndex = amountLength - parseInt(decimals);
-
-//     let result = '0';
-//     if (decimalIndex <= 0) {
-//         result = '0.' + '0'.repeat(Math.abs(decimalIndex)) + amount;
-//     } else {
-//         result = amount.slice(0, decimalIndex) + '.' + amount.slice(decimalIndex);
-//     }
-
-//     if (result.includes('.')) {
-//         result = result.replace(/\.?0+$/, '');
-//     }
-
-//     return result;
-// };
-
 export const getUTokenAmountFromToken = (amount: string, decimals: string) => {
     const [integerPart, decimalPart] = amount.split('.');
     const decimalZeros = parseInt(decimals) - (decimalPart ? decimalPart.length : 0);

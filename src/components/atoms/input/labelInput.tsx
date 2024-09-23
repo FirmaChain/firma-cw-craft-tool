@@ -99,11 +99,9 @@ const LabelInput = ({ labelProps, inputProps }: { labelProps: ILabelProps; input
                 inputValue,
                 () => {
                     setValidTokenLogoUrl(inputValue);
-                    // clearFormError({ id: formId, type: 'INVALID_IMG_URL' });
                 },
                 () => {
                     setValidTokenLogoUrl('');
-                    // setFormError({ id: formId, type: 'INVALID_IMG_URL', message: 'Please input valid img url' });
                 }
             );
         }

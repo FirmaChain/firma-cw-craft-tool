@@ -49,8 +49,6 @@ const StyledInput = styled.div<{
         color: #ffffff;
         border: none;
 
-        // padding: 0 16px;
-
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
@@ -96,18 +94,11 @@ const StyledInput = styled.div<{
 `;
 
 interface InputProps {
-    value: string; //
-    placeHolder: string; //
-    // maxLength?: number; //
-    onChange: (value: string) => void; //
-    // onBlur?: () => void; //
-    // errorMessage?: string[]; //
-    // regex?: RegExp; //
-    // type?: 'string' | 'number' | 'date'; //
-    // decimal?: number; //
-    // maxValue?: number; //
-    textAlign?: 'left' | 'center' | 'right'; //
-    readOnly?: boolean; //
+    value: string;
+    placeHolder: string;
+    onChange: (value: string) => void;
+    textAlign?: 'left' | 'center' | 'right';
+    readOnly?: boolean;
 
     adornment?: {
         start?: React.ReactElement;

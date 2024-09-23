@@ -66,13 +66,11 @@ import {
     ExecuteAmountItem,
     ExpirationItem,
     InstantiateAmount,
-    NftIdItem,
     NftItem,
     ResultNftIdItem,
     ResultWalletAdress,
     TransactionItem,
     UrlItem,
-    // WalletAdress,
     WalletCount,
     WarningItem
 } from '.';
@@ -492,7 +490,6 @@ const TxModal = ({
                     );
                     setResult(cw20InstantiateResult);
 
-                    // setStatus('success');
                     if (cw20InstantiateResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -515,7 +512,6 @@ const TxModal = ({
                     );
                     setResult(cw721nstantiateResult);
 
-                    // setStatus('success');
                     if (cw721nstantiateResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -532,7 +528,6 @@ const TxModal = ({
                     );
                     setResult(cw20MintResult);
 
-                    // setStatus('success');
                     if (cw20MintResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -545,7 +540,6 @@ const TxModal = ({
                     const cw20BurnResult = await cw20Burn(inputPassword, params.txParams.contract, amount, estimatedGas);
                     setResult(cw20BurnResult);
 
-                    // setStatus('success');
                     if (cw20BurnResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -562,7 +556,6 @@ const TxModal = ({
                     );
                     setResult(cw20BurnFromResult);
 
-                    // setStatus('success');
                     if (cw20BurnFromResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -584,7 +577,6 @@ const TxModal = ({
                     );
                     setResult(cw20IncreaseResulrt);
 
-                    // setStatus('success');
                     if (cw20IncreaseResulrt.code === 0) {
                         setStatus('success');
                     } else {
@@ -606,7 +598,6 @@ const TxModal = ({
                     );
                     setResult(cw20DecreaseResulrt);
 
-                    // setStatus('success');
                     if (cw20DecreaseResulrt.code === 0) {
                         setStatus('success');
                     } else {
@@ -623,7 +614,6 @@ const TxModal = ({
                     );
                     setResult(cw20TransferResult);
 
-                    // setStatus('success');
                     if (cw20TransferResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -640,7 +630,6 @@ const TxModal = ({
                     );
                     setResult(cw20TransferFromResult);
 
-                    // setStatus('success');
                     if (cw20TransferFromResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -653,7 +642,6 @@ const TxModal = ({
                     const cw20UpdateLogoResult = await cw20UpdateLogo(inputPassword, params.txParams.contract, logo, estimatedGas);
                     setResult(cw20UpdateLogoResult);
 
-                    // setStatus('success');
                     if (cw20UpdateLogoResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -676,7 +664,6 @@ const TxModal = ({
                     );
                     setResult(cw20UpdateMarketingesult);
 
-                    // setStatus('success');
                     if (cw20UpdateMarketingesult.code === 0) {
                         setStatus('success');
                     } else {
@@ -689,7 +676,6 @@ const TxModal = ({
                     const cw20UpdateMinterResult = await cw20UpdateMinter(inputPassword, params.txParams.contract, newMinter, estimatedGas);
                     setResult(cw20UpdateMinterResult);
 
-                    // setStatus('success');
                     if (cw20UpdateMinterResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -706,7 +692,6 @@ const TxModal = ({
                     );
                     setResult(cw721MintResult);
 
-                    // setStatus('success');
                     if (cw721MintResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -723,7 +708,6 @@ const TxModal = ({
                     );
                     setResult(cw721BurnResult);
 
-                    // setStatus('success');
                     if (cw721BurnResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -740,7 +724,6 @@ const TxModal = ({
                     );
                     setResult(cw721TransferResult);
 
-                    // setStatus('success');
                     if (cw721TransferResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -801,7 +784,6 @@ const TxModal = ({
                     );
                     setResult(cw721RevokeResult);
 
-                    // setStatus('success');
                     if (cw721RevokeResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -819,7 +801,6 @@ const TxModal = ({
                     );
                     setResult(cw721RevokeAllResult);
 
-                    // setStatus('success');
                     if (cw721RevokeAllResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -839,7 +820,6 @@ const TxModal = ({
                     );
                     setResult(cw721UpdateOwnershipTransferResult);
 
-                    // setStatus('success');
                     if (cw721UpdateOwnershipTransferResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -855,7 +835,6 @@ const TxModal = ({
                     );
                     setResult(cw721UpdateOwnershipAcceptResult);
 
-                    // setStatus('success');
                     if (cw721UpdateOwnershipAcceptResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -871,7 +850,6 @@ const TxModal = ({
                     );
                     setResult(cw721UpdateOwnershipRenounceResult);
 
-                    // setStatus('success');
                     if (cw721UpdateOwnershipRenounceResult.code === 0) {
                         setStatus('success');
                     } else {
@@ -1034,7 +1012,6 @@ const TxModal = ({
                                         >
                                             {/* <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" /> */}
                                             {params.contentParams.extraList.map((el, index) => {
-                                                console.log(params.contentParams.extraList);
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}

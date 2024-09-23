@@ -70,11 +70,9 @@ import {
     ResultWalletAdress,
     TransactionItem,
     UrlItem,
-    // WalletAdress,
     WalletCount,
     WarningItem
 } from '.';
-// import Connect from './connect/connect';
 import FirmaLoading from '@/components/atoms/globalLoader/firmaLoad';
 import useMyToken from '@/hooks/useMyToken';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
@@ -187,7 +185,6 @@ const QRModal2 = ({
     const { updateContractInfo: updateCW20ContractInfo } = useCW20MyTokenContext();
     const { updateContractInfo: updateCW721ContractInfo } = useCW721NFTContractsContext();
 
-    // const { passwordWallet, timeKey } = useSelector((state: rootState) => state.wallet);
     const cwMode = useSelector((v: rootState) => v.global.cwMode);
     const address = useSelector((state: rootState) => state.wallet.address);
 
@@ -195,8 +192,6 @@ const QRModal2 = ({
     const [result, setResult] = useState<null | SuccessData>(null);
     const [status, setStatus] = useState<'init' | 'loading' | 'success' | 'failure'>('init');
     const [balance, setBalance] = useState('0');
-    // const [estimatedGas, setEstimatedGas] = useState<number>(0);
-    // const [inputPassword, setInputPassword] = useState<string>('');
 
     const instantiateFee = useMemo(() => {
         try {
@@ -476,7 +471,6 @@ const QRModal2 = ({
                                         >
                                             {/* <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" $variant="line" /> */}
                                             {params.contentParams.extraList.map((el, index) => {
-                                                console.log(params.contentParams.extraList);
                                                 return (
                                                     <RenderItem
                                                         key={`extra-item-${index}`}
@@ -664,7 +658,6 @@ const QRModal2 = ({
                 </Fragment>
             ) : (
                 <></>
-                // <Connect closeModal={() => null} />
             )}
         </ModalBase>
     );

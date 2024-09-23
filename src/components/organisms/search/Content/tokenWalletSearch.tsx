@@ -149,15 +149,7 @@ const TokenWalletSearch = () => {
                         <Skeleton width="100px" height="22px" />
                     ) : (
                         balanceAmount && (
-                            <WalletBalance
-                                className="balance-box"
-                                // data-tooltip-content={
-                                //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(balanceAmount, String(decimals))) : ''
-                                // }
-                                // data-tooltip-id={TOOLTIP_ID.COMMON}
-                                // data-tooltip-wrapper="span"
-                                // data-tooltip-place="bottom"
-                            >
+                            <WalletBalance className="balance-box">
                                 <div className="balance-amount clamp-single-line">
                                     {commaNumber(getTokenAmountFromUToken(balanceAmount, String(decimals)))}
                                 </div>

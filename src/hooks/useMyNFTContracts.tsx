@@ -53,9 +53,6 @@ const useMyNFTContracts = () => {
                 .filter((ownershipData) => ownershipData.ownershipInfo.owner !== null)
                 .filter((ownershipData) => ownershipData.ownershipInfo.owner === address)
                 .map((ownershipData) => ownershipData.contract);
-            // const myContracts = contractInfos
-            //     .filter((contractInfo) => contractInfo.contract_info.admin === address)
-            //     .map((contractInfo) => contractInfo.address);
             return myContracts;
         } catch (error) {
             enqueueSnackbar(`failed get "CW20 BASIC" contract list`, {

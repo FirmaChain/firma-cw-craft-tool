@@ -140,15 +140,7 @@ const WalletSearch = () => {
                 {!isLoading ? (
                     balanceAmount !== null && (
                         <BalanceAmountWrapper>
-                            <BalanceAmountTypo
-                                className="clamp-single-line"
-                                // data-tooltip-content={
-                                //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(balanceAmount, decimals)) : ''
-                                // }
-                                // data-tooltip-id={TOOLTIP_ID.COMMON}
-                                // data-tooltip-wrapper="span"
-                                // data-tooltip-place="bottom"
-                            >
+                            <BalanceAmountTypo className="clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(balanceAmount, decimals))}
                             </BalanceAmountTypo>
                             <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>

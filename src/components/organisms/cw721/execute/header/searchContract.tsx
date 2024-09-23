@@ -107,14 +107,11 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
             placeHolder={'Search by the full CW721 Contract Address'}
             value={keyword}
             onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
-            // onClickEvent={onClickSearch}
             adornment={{
                 end: (
                     <EndAdornment
                         keyword={keyword}
                         showClearButton={Boolean(keyword?.length > 0 || storeContractAddress?.length > 0)}
-                        // disableSearch={(keyword.length === 0 || !isValidAddress(keyword))}
-                        // onClickSearch={onClickSearch}
                         onClickClear={onClickClear}
                     />
                 )

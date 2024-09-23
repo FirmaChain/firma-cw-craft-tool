@@ -13,10 +13,6 @@ export const DrawerStyled = styled('div')`
     padding: 0px;
     background-color: ${({ theme }) => theme.colors.background_navbar};
     width: ${({ theme }) => theme.sizes.navbar_width};
-
-    // @media only screen and (max-width: 1400px) {
-    //     display: none;
-    // }
 `;
 
 export const SidebarWrapper = styled.div`

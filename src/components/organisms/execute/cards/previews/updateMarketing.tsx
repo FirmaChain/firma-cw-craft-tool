@@ -71,7 +71,6 @@ const ItemValueForDescTypo = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
-    // overflow-wrap: break-word;
 `;
 
 const ItemValueTypo = styled.div`

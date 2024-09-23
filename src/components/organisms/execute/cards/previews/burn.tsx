@@ -195,7 +195,6 @@ const BurnPreview = () => {
             }
         };
 
-        console.log('USE_WALLET_CONNECT', USE_WALLET_CONNECT);
         modal.openModal({
             modalType: 'custom',
             _component: ({ id }) => {

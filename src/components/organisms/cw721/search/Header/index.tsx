@@ -16,14 +16,10 @@ const EndAdornment = ({
     keyword,
     clearKeyword,
     showClearButton
-    // disableSearch
-    // onClickSearch
 }: {
     keyword: string;
     clearKeyword: () => void;
     showClearButton?: boolean;
-    // disableSearch?: boolean;
-    // onClickSearch: () => void;
 }) => {
     const disableEventBubbling = (evt) => {
         evt.preventDefault();
@@ -37,15 +33,6 @@ const EndAdornment = ({
                     <Icons.CloseIcon width="32px" height="32px" strokeWidth="2.6" stroke="#1A1A1A" />
                 </IconButton>
             )}
-
-            {/* <IconButton disabled={disableSearch} style={{ display: 'flex', padding: 0 }} onClick={onClickSearch}>
-                <Icons.Search
-                    width="28px"
-                    height="28px"
-                    fill={disableSearch ? '#807E7E' : '#E6E6E6'}
-                    stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
-                />
-            </IconButton> */}
         </div>
     );
 };
@@ -131,15 +118,12 @@ const Header = () => {
                     value={keyword}
                     placeHolder={'Search by the full CW721 Contract Address'}
                     onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
-                    // onClickEvent={disableSearch ? () => null : onClickSearch}
                     adornment={{
                         end: (
                             <EndAdornment
                                 keyword={keyword}
                                 clearKeyword={onClickClearKeyword}
                                 showClearButton={Boolean(keyword?.length > 0 || contractDetail !== null)}
-                                // onClickSearch={onClickSearch}
-                                // disableSearch={disableSearch}
                             />
                         )
                     }}

@@ -165,10 +165,8 @@ export const CurrentPageNumber = styled.div`
 `;
 
 export const TokenCardBox = styled.div`
-    // height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-    // overflow: auto;
 `;

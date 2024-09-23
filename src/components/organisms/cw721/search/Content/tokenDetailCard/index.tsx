@@ -272,7 +272,7 @@ const OwnerInformation = () => {
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificValueTypo>{'Admin Address'}</SpecificValueTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>
@@ -285,7 +285,7 @@ const OwnerInformation = () => {
                                 <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificValueTypo>{'Wallet Address'}</SpecificValueTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>

@@ -3,12 +3,10 @@ import { useEffect, useState } from 'react';
 import {
     GoToButtonTypo,
     GoToExecuteButton,
-    IconBackground,
     LabelAdvancedTypo,
     LabelBasicTypo,
     LabelWrap,
     TitleContainer,
-    TitleLogoImage,
     TitleWrapper,
     TokenInfo,
     TokenInfoWrapper,
@@ -18,14 +16,10 @@ import {
     TotalSupplyTypo,
     TotalSupplyWrapper
 } from './style';
-import Icons from '@/components/atoms/icons';
 import { useNavigate } from 'react-router-dom';
-// import { IC_APPROVED } from '@/components/atoms/icons/pngIcons';
 import commaNumber from 'comma-number';
-import { parseAmountWithDecimal2 } from '@/utils/common';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Divider from '@/components/atoms/divider';
-import { TOOLTIP_ID } from '@/constants/tooltip';
 import Skeleton from '@/components/atoms/skeleton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { getTokenAmountFromUToken } from '@/utils/balance';
@@ -110,14 +104,7 @@ const Title = () => {
                         <TotalSupplyTypo>Total Supply : </TotalSupplyTypo>
 
                         {tokenSymbol ? (
-                            <TotalSupplySymbolTypo
-                            // data-tooltip-content={
-                            //     Number(tokenDecimal) > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, tokenDecimal)) : ''
-                            // }
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
-                            >
+                            <TotalSupplySymbolTypo>
                                 <span className="bold">{commaNumber(getTokenAmountFromUToken(totalSupply, tokenDecimal))}</span>
 
                                 {tokenSymbol}

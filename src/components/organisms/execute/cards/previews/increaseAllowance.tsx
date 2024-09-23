@@ -197,8 +197,6 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
-
-    // white-space: pre;
 `;
 
 const AccordionValueWrap = styled.div`

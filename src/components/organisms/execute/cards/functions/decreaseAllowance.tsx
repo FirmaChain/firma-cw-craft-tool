@@ -48,28 +48,6 @@ const InputTitle = styled.div`
     line-height: 20px; /* 142.857% */
 `;
 
-// const ExpirationTypeButton = styled(IconButton)<{ $selected?: boolean }>`
-//     width: 152px;
-//     height: 36px;
-//     border-radius: 8px;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     border: 1px solid var(--Gray-500, #383838);
-//     background: ${({ $selected }) => ($selected ? 'var(--Gray-800, #dcdcdc)' : 'transparent')};
-
-//     span {
-//         color: ${({ $selected }) =>
-//             $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
-
-//         font-family: 'General Sans Variable';
-//         font-size: 14px;
-//         font-style: normal;
-//         font-weight: ${({ $selected }) => ($selected ? 600 : 400)};
-//         line-height: 20px; /* 142.857% */
-//     }
-// `;
-
 enum ExpirationType {
     Height = 'Height',
     Time = 'Time',
@@ -82,7 +60,6 @@ const DecreaseAllowance = () => {
     const isFetched = useExecuteStore((state) => state.isFetched);
     const allowance = useExecuteStore((state) => state.allowance);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    // const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const setAllowance = useExecuteStore((state) => state.setAllowance);
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
 
@@ -197,31 +174,6 @@ const DecreaseAllowance = () => {
     const handleChangeAmount = (value: string) => {
         if (!isZeroStringValue(value)) clearFormError({ id: `${inputId}_AMOUNT`, type: 'DECREASE_AMOUNT' });
         else setFormError({ id: `${inputId}_AMOUNT`, type: 'DECREASE_AMOUNT', message: 'Please enter a value other than 0.' });
-        // const onlyNumbers = value.replace(ONE_TO_MINE, '');
-        // if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
-        // else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
-
-        // const truncateDecimals = (value: string) => {
-        //     const decimalPlaces = tokenInfo.decimals;
-        //     const fractionalPart = value.split('.')[1];
-
-        //     if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
-        //         return value;
-        //     }
-        //     return cw20Balance;
-        // };
-
-        // const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        // if (!isValidFormat) {
-        //     return;
-        // }
-
-        // const truncatedValue = truncateDecimals(value);
-        // const convertDecreaseAmount = getUTokenAmountFromToken(truncatedValue, tokenInfo.decimals.toString());
-        // const decreaseAmount =
-        //     compareStringNumbers(cw20Balance, convertDecreaseAmount) === 1
-        //         ? truncatedValue
-        //         : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAllowance({
             address: allowance === null ? '' : allowance?.address,
@@ -332,7 +284,6 @@ const DecreaseAllowance = () => {
                                     emptyErrorMessage: 'Please input the amount.',
                                     textAlign: 'right',
                                     maxValue: getMaxMinterCap(tokenInfo.decimals.toString()),
-                                    // getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
                                     hideErrorMessage: true
                                 }}
                             />

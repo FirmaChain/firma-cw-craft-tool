@@ -574,7 +574,6 @@ const RightArrow = (props: any) => {
                 <path
                     id="Icon"
                     d="M9 4L17 12L9 20"
-                    // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
                     stroke={props.stroke || '#707070'}
                     strokeWidth="2"
                     strokeLinecap="round"
@@ -590,7 +589,6 @@ const PrevPage = (props: any) => {
         <svg width={props.width || '20'} height={props.height || '20'} viewBox="0 0 20 20" fill="none" {...props}>
             <path
                 d="M12.334 6L8.33398 9.99999L12.334 14"
-                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
                 stroke={props.stroke || '#707070'}
                 strokeWidth={props.strokeWidth || '1.2'}
                 strokeLinecap="round"
@@ -607,7 +605,6 @@ const LeftArrow = (props: any) => {
                 <path
                     id="Icon"
                     d="M15 4L7 12L15 20"
-                    // stroke={props.stroke || props.$isCheck ? '#FFFFFF' : '#707070'}
                     stroke={props.stroke || '#707070'}
                     strokeWidth={props.strokeWidth || '2'}
                     strokeLinecap="round"
@@ -656,7 +653,6 @@ const LeftDoubleArrow = (props: any) => {
         <svg width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
             <path
                 d="M14.332 14L10.332 10L14.332 6.00002"
-                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
                 stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"
@@ -664,7 +660,6 @@ const LeftDoubleArrow = (props: any) => {
             />
             <path
                 d="M10.3301 14L6.33008 10L10.3301 6.00002"
-                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
                 stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"
@@ -679,7 +674,6 @@ const RightDoubleArrow = (props: any) => {
         <svg width={props.width} height={props.height} viewBox="0 0 20 20" fill="none">
             <path
                 d="M6.33594 6L10.3359 9.99999L6.33594 14"
-                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
                 stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"
@@ -687,7 +681,6 @@ const RightDoubleArrow = (props: any) => {
             />
             <path
                 d="M10.3359 6L14.3359 9.99999L10.3359 14"
-                // stroke={props.$isCheck ? '#FFFFFF' : '#707070'}
                 stroke={props.stroke || '#707070'}
                 strokeWidth="1.2"
                 strokeLinecap="round"

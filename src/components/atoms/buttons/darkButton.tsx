@@ -8,7 +8,6 @@ const SwitchContainer = styled.div`
     align-items: center;
     background-color: #3a3a3a;
     border-radius: 8px;
-    // width: 200px;
     height: 40px;
     position: relative;
 `;

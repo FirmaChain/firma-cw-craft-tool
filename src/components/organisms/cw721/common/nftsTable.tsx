@@ -33,7 +33,6 @@ const TableContainer = styled.div<{ $max?: boolean; $verticalGap: string; $horiz
     grid-template-columns: repeat(${({ $max }) => ($max ? '10' : 'auto-fill')}, 88px);
     justify-items: center;
     gap: ${({ $verticalGap, $horizontalGap }) => `${$verticalGap} ${$horizontalGap}`};
-    // 24px 12px
 `;
 
 const LoadingBox = styled.div`
@@ -71,7 +70,6 @@ const NFTImg = styled.img`
     justify-content: center;
     align-items: center;
     border-radius: 8.727px;
-    // border: 0.727px solid var(--Gray-550, #444);
     background: #222;
 `;
 
@@ -89,12 +87,6 @@ const NFTTokenIdTypo = styled.div`
 `;
 
 const EmptyNFTsTypo = styled.div`
-    // width: 100%;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-    // width: 100%;
-    // min-height: 152px;
     color: var(--Gray-800, #dcdcdc);
     font-family: 'General Sans Variable';
     font-size: 14px;

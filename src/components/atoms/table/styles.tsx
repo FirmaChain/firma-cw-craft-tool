@@ -73,7 +73,6 @@ export const TableRow = styled.tr`
 `;
 
 export const HeaderCell = styled.th`
-    // border-bottom: 1px solid #383838;
     padding: 0;
     padding-bottom: 8px;
     text-align: left;
@@ -107,7 +106,6 @@ export const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    // padding: 10px;
     padding-top: 8px;
 `;
 

@@ -53,27 +53,6 @@ const Burn = () => {
                 type: 'BURN_AMOUNT',
                 message: 'Please enter a value other than 0.'
             });
-        // const truncateDecimals = (value: string) => {
-        //     const decimalPlaces = tokenInfo.decimals;
-        //     const fractionalPart = value.split('.')[1];
-
-        //     if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
-        //         return value;
-        //     }
-        //     return cw20Balance;
-        // };
-
-        // const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        // if (!isValidFormat) {
-        //     return;
-        // }
-
-        // const truncatedValue = truncateDecimals(value);
-        // const convertBurnAmount = getUTokenAmountFromToken(value, tokenInfo.decimals.toString());
-        // const burnAmount =
-        //     compareStringNumbers(cw20Balance, convertBurnAmount) === 1
-        //         ? value
-        //         : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setBurnAmount(value);
     };

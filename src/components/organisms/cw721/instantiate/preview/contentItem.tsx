@@ -109,8 +109,6 @@ interface IProps {
 }
 
 const ContentItem = ({ imagePath, name, value, isCover = false, defaultValue, tooltip }: IProps) => {
-    console.log('defaultValue', defaultValue);
-    console.log('value', value);
     return (
         <ItemWrapper $isCover={isCover}>
             <ItemLeftWrapper>

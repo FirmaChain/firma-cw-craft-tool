@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-    // position: fixed;
-    // bottom: 0;
-    // left: 0;
     width: 100%;
     min-height: 40px;
     background: rgba(0, 0, 0, 0.3);
@@ -25,20 +22,16 @@ const Container = styled.div`
         align-items: flex-start;
         justify-content: flex-start;
         gap: 8px;
-        // padding: 12px 20px;
     }
 `;
 
 const FooterTypo = styled.div`
     color: #aeaeae;
-
-    /* Body/Body4 */
     font-family: 'General Sans Variable';
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
     line-height: 14px; /* 116.667% */
-
     user-select: none;
 `;
 

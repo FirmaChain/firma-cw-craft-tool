@@ -291,13 +291,6 @@ const ApprovePreview = () => {
                         {approveRecipientAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
                         {approveRecipientAddress !== '' && (
                             <TextEllipsis CustomDiv={AccordionTypo} text={approveRecipientAddress} breakMode={'letters'} />
-                            // <AccordionTypo
-                            //     $disabled={false}
-                            //     data-tooltip-id={TOOLTIP_ID.COMMON}
-                            //     data-tooltip-content={approveRecipientAddress.length > 24 ? approveRecipientAddress : ''}
-                            // >
-                            //     {shortenAddress(approveRecipientAddress, 12, 12)}
-                            // </AccordionTypo>
                         )}
                     </AccordionRow>
                     <AccordionRow>

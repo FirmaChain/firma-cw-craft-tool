@@ -86,12 +86,6 @@ const TokenInfo = () => {
                         <div className="box-value">
                             <div
                                 className="white-typo clamp-single-line"
-                                // data-tooltip-content={
-                                //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, String(decimals))) : ''
-                                // }
-                                // data-tooltip-id={TOOLTIP_ID.COMMON}
-                                // data-tooltip-wrapper="span"
-                                // data-tooltip-place="bottom"
                             >
                                 {commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
                             </div>
@@ -113,13 +107,7 @@ const TokenInfo = () => {
                         <div className="box-title">Minter Cap</div>
 
                         <div className="box-value">
-                            <div
-                                className="white-typo clamp-single-line"
-                                // data-tooltip-content={decimals > 2 ? commaNumber(parseAmountWithDecimal2(minterCap, String(decimals))) : ''}
-                                // data-tooltip-id={TOOLTIP_ID.COMMON}
-                                // data-tooltip-wrapper="span"
-                                // data-tooltip-place="bottom"
-                            >
+                            <div className="white-typo clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(minterCap, String(decimals)))}
                             </div>
                             <div className="gray-typo">{symbol}</div>
@@ -131,15 +119,7 @@ const TokenInfo = () => {
                         <div className="box-title">My Balance</div>
                         {userBalance ? (
                             <div className="box-value">
-                                <div
-                                    className="white-typo clamp-single-line"
-                                    // data-tooltip-content={
-                                    //     decimals > 2 ? commaNumber(parseAmountWithDecimal2(userBalance, String(decimals))) : ''
-                                    // }
-                                    // data-tooltip-id={TOOLTIP_ID.COMMON}
-                                    // data-tooltip-wrapper="span"
-                                    // data-tooltip-place="bottom"
-                                >
+                                <div className="white-typo clamp-single-line">
                                     {commaNumber(getTokenAmountFromUToken(userBalance, String(decimals)))}
                                 </div>
                                 <div className="gray-typo">{symbol}</div>

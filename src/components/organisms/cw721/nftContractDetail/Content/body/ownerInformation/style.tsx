@@ -43,8 +43,16 @@ export const SpecificValueWrapper = styled.div`
     gap: 8px;
 `;
 
+export const SpecificDefaultTypo = styled.div`
+    color: var(--Gray-500, #383838);
+    font-family: "General Sans Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+`;
+
 export const SpecificValueTypo = styled.div`
-    // display: flex;
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
     font-family: 'General Sans Variable';
     font-size: 16px;

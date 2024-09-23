@@ -1,16 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import Icons from '../icons';
-import IconButton from '../buttons/iconButton';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
 import {
-    compareStringNumbers,
-    formatWithCommas,
     getTokenAmountFromUToken,
-    getUTokenAmountFromToken,
     isZeroStringValue
 } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
@@ -40,36 +35,22 @@ const AllowanceTypo = styled.div`
 interface IProps {
     index: number;
     transferFromInfo: ITransferFrom;
-    // address: string;
-    // amount: string;
     onChange: (index, value: ITransferFrom) => void;
-    // onChangeAddress: (value: string) => void;
-    // onChangeAmount: (value: string) => void;
     onRemoveClick: () => void;
     isLast: boolean;
     isValid: boolean;
     decimals: string;
-    // addressTitle: string;
-    // addressPlaceholder: string;
-    // amountTitle: string;
     inputId: string;
 }
 
 const TransferFromWalletInput = ({
     index,
     transferFromInfo,
-    // address,
-    // amount,
     onChange,
-    // onChangeAddress,
-    // onChangeAmount,
     onRemoveClick,
     isValid,
     decimals,
     isLast,
-    // addressTitle,
-    // addressPlaceholder,
-    // amountTitle,
     inputId
 }: IProps) => {
     const id = inputId;
@@ -138,7 +119,7 @@ const TransferFromWalletInput = ({
             if (expires['never']) {
                 useExecuteStore.getState().setAllowanceByAddress({
                     address: ownerAddress.toLowerCase(),
-                    amount: allowance // getTokenAmountFromUToken(allowance, decimals)
+                    amount: allowance
                 });
                 return;
             }
@@ -147,7 +128,7 @@ const TransferFromWalletInput = ({
                 if (BigInt(expires['at_height']) > BigInt(blockHeight)) {
                     useExecuteStore.getState().setAllowanceByAddress({
                         address: ownerAddress.toLowerCase(),
-                        amount: allowance // getTokenAmountFromUToken(allowance, decimals)
+                        amount: allowance
                     });
                     return;
                 }
@@ -193,8 +174,6 @@ const TransferFromWalletInput = ({
             case toAddressId:
                 checkRecipientAddress(value);
                 _data.toAddress = value;
-                // _data.allowanceAmount = '';
-                // _data.toAmount = '';
                 break;
 
             case transferAmountId:
@@ -207,14 +186,6 @@ const TransferFromWalletInput = ({
                     });
 
                 _data.toAmount = value;
-                // if (isValidAddress(_data.toAddress)) {
-                //     const compare = compareStringNumbers(getUTokenAmountFromToken(value, decimals), _data.allowanceAmount);
-                //     if (compare === 1) {
-                //         _data.toAmount = getTokenAmountFromUToken(_data.allowanceAmount, decimals);
-                //     } else {
-                //         _data.toAmount = value;
-                //     }
-                // }
                 break;
         }
 
@@ -224,15 +195,6 @@ const TransferFromWalletInput = ({
     const handleRemoveWallet = () => {
         onRemoveClick();
     };
-
-    // useEffect(() => {
-    //     return () => {
-    //         clearFormError({ id: fromAddressId });
-    //         clearFormError({ id: fromBalanceId });
-    //         clearFormError({ id: toAddressId });
-    //         clearFormError({ id: transferAmountId });
-    //     };
-    // }, []);
 
     const addressError = useFormStore((state) => state.formError[`${id}_FROM_ADDRESS`]) || {};
     const amountError = useFormStore((state) => state.formError[`${id}_TO_AMOUNT`]) || {};
@@ -279,7 +241,6 @@ const TransferFromWalletInput = ({
                                     onChange: (v) => handleOnChange(fromBalanceId, v),
                                     placeHolder: '0',
                                     type: 'string',
-                                    // decimal: decimals ? Number(decimals) : 6,
                                     textAlign: 'right',
                                     readOnly: true
                                 }}
@@ -329,7 +290,6 @@ const TransferFromWalletInput = ({
                                     formId: transferAmountId,
                                     value: transferFromInfo.toAmount,
                                     onChange: (v) => handleOnChange(transferAmountId, v),
-                                    //  handleAmount,
                                     placeHolder: '0',
                                     type: 'number',
                                     decimal: decimals ? Number(decimals) : 6,
@@ -353,13 +313,11 @@ const TransferFromWalletInput = ({
             <div
                 style={{
                     display: 'flex',
-                    // height: '100%',
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     justifyContent: 'center',
                     gap: '4px',
                     paddingTop: hasAddrErr && amountError ? 0 : '8px'
-                    // padding: '28px 0 16px'
                 }}
             >
                 <div

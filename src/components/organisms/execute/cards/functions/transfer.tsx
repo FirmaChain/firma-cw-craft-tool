@@ -91,9 +91,6 @@ const Transfer = () => {
     }, [transferList]);
 
     const isBalanceExceed = useMemo(() => {
-        // totalTransferAmount
-        // cw20Balance
-
         if (!totalTransferAmount || !cw20Balance) return false;
 
         return BigInt(totalTransferAmount) > BigInt(cw20Balance);

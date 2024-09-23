@@ -43,7 +43,6 @@ export const ModalTitleDescTypo = styled.div`
 export const QrCodeWrap = styled.div`
     display: flex;
     flex-direction: column;
-    // gap: 16px;
     margin-bottom: 28px;
 `;
 
@@ -473,8 +472,6 @@ export const ResultsHeader = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    // gap: 14px;
-
     margin-bottom: 28px;
 `;
 
@@ -574,9 +571,6 @@ export const ResultsContentSummeryWrap = styled.div`
     align-items: center;
     gap: 10px;
     padding: 20px 24px 16px 24px;
-    // border-radius: 8px 8px 0px 0px;
-    // border-bottom: 1px dashed var(--Gray-400, #2c2c2c);
-    // background: var(--Gray-150, #141414);
 `;
 
 export const ResultsItemWrap = styled.div`
@@ -622,8 +616,6 @@ export const ResultsContentHashWrap = styled.div`
     flex-direction: column;
     padding: 16px 24px 18px;
     gap: 10px;
-    // border-radius: 0px 0px 8px 8px;
-    // background: var(--Gray-150, #141414);
 `;
 
 export const ItemHashValue = styled.div`

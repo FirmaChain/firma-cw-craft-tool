@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const AddWalletWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    // gap: 20px;
 `;
 
 export const TitleWrapper = styled.div`

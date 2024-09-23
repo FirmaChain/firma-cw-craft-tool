@@ -38,7 +38,6 @@ export const decrypt = (encryptMessage: string, pass: string): string => {
             iterations: iterations
         });
 
-        console.log('key', key);
         const decrypted = CryptoJS.AES.decrypt(encrypted, key, {
             iv: iv,
             padding: CryptoJS.pad.Pkcs7,
@@ -57,8 +56,6 @@ export const getRandomKey = () => {
 
 export const decryptWallet = (wallet: string, password: string) => {
     try {
-        console.log('wallet', wallet);
-        console.log('password', password);
         const decrypted = decrypt(wallet, password);
         return JSON.parse(decrypted);
     } catch (err) {

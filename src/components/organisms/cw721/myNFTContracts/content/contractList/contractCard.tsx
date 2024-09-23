@@ -53,7 +53,6 @@ const BottomBox = styled.div`
     gap: 10px;
     align-self: stretch;
     border-top: 1px solid var(--Gray-575, #474747);
-    // background: var(--Gray-350, #262626);
 
     @media only screen and (max-width: 1450px) {
         padding: 22px 34px;

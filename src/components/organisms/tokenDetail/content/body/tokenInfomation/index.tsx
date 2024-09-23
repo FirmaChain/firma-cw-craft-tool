@@ -81,14 +81,7 @@ const TokenInformation = () => {
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     {totalSupply ? (
                         <SpecificValueWrapper>
-                            <SpecificValueTypo
-                            // data-tooltip-content={
-                            //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(totalSupply, decimals)) : ''
-                            // }
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
-                            >
+                            <SpecificValueTypo>
                                 {totalSupply && commaNumber(getTokenAmountFromUToken(totalSupply, decimals))}
                             </SpecificValueTypo>
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
@@ -112,12 +105,7 @@ const TokenInformation = () => {
                         <SpecificLabelTypo>Minter Cap</SpecificLabelTypo>
 
                         <SpecificValueWrapper>
-                            <SpecificValueTypo
-                            // data-tooltip-content={Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(minterCap, decimals)) : ''}
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
-                            >
+                            <SpecificValueTypo>
                                 {minterCap === '' ? '0' : commaNumber(getTokenAmountFromUToken(minterCap, decimals))}
                             </SpecificValueTypo>
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
@@ -129,14 +117,7 @@ const TokenInformation = () => {
                     <SpecificLabelTypo>My Balance</SpecificLabelTypo>
                     {addressBalance ? (
                         <SpecificValueWrapper>
-                            <SpecificValueTypo
-                            // data-tooltip-content={
-                            //     Number(decimals) > 2 ? commaNumber(parseAmountWithDecimal2(addressBalance, decimals)) : ''
-                            // }
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
-                            >
+                            <SpecificValueTypo>
                                 {addressBalance && commaNumber(getTokenAmountFromUToken(addressBalance, decimals))}
                             </SpecificValueTypo>
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>

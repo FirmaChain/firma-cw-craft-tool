@@ -63,10 +63,6 @@ const AdditionalInformation = () => {
         }
     }, [marketingLogo]);
 
-    // const onClickViewMetadata = () => {
-    //     openLink(`${blockExplorerLink}/accounts/${contractAddress}`);
-    // };
-
     const descRef = useRef<HTMLDivElement>();
     const [needClamp, setNeedClamp] = useState(false);
     const [isClamped, setIsClamped] = useState(true);
@@ -136,7 +132,6 @@ const AdditionalInformation = () => {
                                     <div
                                         style={{
                                             height: isClamped ? '100%' : descRef.current.scrollHeight,
-                                            // overflow: isClamped ? 'hidden' : 'visible'
                                             overflow: 'hidden',
                                             transition: 'all 0.2s'
                                         }}

@@ -187,8 +187,6 @@ const useCW721ExecuteAction = () => {
             let startAfter: string | undefined = undefined;
             const limit = 150;
 
-            // setValidTokens([]);
-
             while (true) {
                 const nftList = await firmaSDK.Cw721.getNFTIdListOfOwner(
                     contractAddress?.toLowerCase(),
@@ -231,11 +229,10 @@ const useCW721ExecuteAction = () => {
     const setNftApprovalInfo = async (contractAddress: string, address: string, token_id: string) => {
         try {
             const result = await firmaSDK.Cw721.getApproval(contractAddress?.toLowerCase(), token_id, address?.toLowerCase(), false);
-            // console.log("result", result);
             useCW721ExecuteStore.getState().setNftApprovalInfo(result);
         } catch (error) {
             useCW721ExecuteStore.getState().setNftApprovalInfo({ spender: '', expires: null });
-            // console.log('error', error);
+            console.log('error', error);
         }
     };
 
@@ -279,7 +276,6 @@ const useCW721ExecuteAction = () => {
                                 { tokenId: splitNftId, valid: true, info: contractNftData }
                             ]);
                         } else {
-                            console.log('contractNftData.access.owner', contractNftData.access.owner);
                             const allOperators: Cw721Approval[] = await firmaSDK.Cw721.getAllOperators(
                                 contractAddress?.toLowerCase(),
                                 contractNftData.access.owner?.toLowerCase(),

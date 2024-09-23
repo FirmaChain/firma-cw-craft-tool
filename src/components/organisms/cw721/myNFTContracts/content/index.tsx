@@ -19,7 +19,6 @@ const MyNFTContent = () => {
     const fetchTokenList = useCallback(async () => {
         try {
             const contract = await getCW721ContractList();
-            console.log('fetchTokenList : ', contract);
 
             addContracts(contract);
             if (contract.length === 0) {
@@ -33,7 +32,6 @@ const MyNFTContent = () => {
 
     useEffect(() => {
         if (isInit) {
-            // GlobalActions.handleGlobalLoading(true);
             fetchTokenList();
         }
 

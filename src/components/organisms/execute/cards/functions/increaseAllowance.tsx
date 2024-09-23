@@ -37,39 +37,12 @@ const UserBalanceTypo = styled.div`
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
-
-    /* Body/Body2 - Rg */
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 142.857% */
 `;
-
-// const ExpirationTypButton = styled(IconButton)<{ $selected?: boolean }>`
-//     width: 152px;
-//     height: 36px;
-//     border-radius: 8px;
-//     // padding: 8px 16px;
-
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     border: 1px solid var(--Gray-500, #383838);
-//     background: ${({ $selected }) => ($selected ? 'var(--Gray-800, #dcdcdc)' : 'transparent')};
-
-//     span {
-//         color: ${({ $selected }) =>
-//             $selected ? 'var(--Gray-250, var(--200, #1e1e1e))' : 'var(--Gray-900, var(--Primary-Base-White, #FFF))'};
-
-//         /* Body/Body2 - Bd */
-//         font-family: 'General Sans Variable';
-//         font-size: 14px;
-//         font-style: normal;
-//         font-weight: ${({ $selected }) => ($selected ? 600 : 400)};
-//         line-height: 20px; /* 142.857% */
-//     }
-// `;
 
 enum ExpirationType {
     Height = 'Height',
@@ -155,31 +128,6 @@ const IncreaseAllowance = () => {
     const handleChangeAmount = (value: string) => {
         if (!isZeroStringValue(value)) clearFormError({ id: `${inputId}_AMOUNT`, type: 'INCREASE_AMOUNT' });
         else setFormError({ id: `${inputId}_AMOUNT`, type: 'INCREASE_AMOUNT', message: 'Please enter a value other than 0.' });
-        // const onlyNumbers = value.replace(ONE_TO_MINE, '');
-        // if (onlyNumbers === '') setFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO', message: 'Please input amount' });
-        // else clearFormError({ id: `${inputId}_AMOUNT`, type: 'VALUE_IS_ZERO' });
-
-        // const truncateDecimals = (value: string) => {
-        //     const decimalPlaces = parseInt(tokenInfo.decimals.toString(), 10);
-        //     const fractionalPart = value.split('.')[1];
-
-        //     if (!fractionalPart || fractionalPart.length <= decimalPlaces) {
-        //         return value;
-        //     }
-        //     return cw20Balance;
-        // };
-
-        // const isValidFormat = /^[0-9]*\.?[0-9]*$/.test(value);
-        // if (!isValidFormat) {
-        //     return;
-        // }
-
-        // const truncatedValue = truncateDecimals(value);
-        // const convertIncreaseAmount = getUTokenAmountFromToken(value, tokenInfo.decimals.toString());
-        // const increaseAmount =
-        //     compareStringNumbers(cw20Balance, convertIncreaseAmount) === 1
-        //         ? value
-        //         : getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString());
 
         setAllowance({
             address: allowance === null ? '' : allowance?.address,
@@ -290,7 +238,6 @@ const IncreaseAllowance = () => {
                                     emptyErrorMessage: 'Please input the amount.',
                                     textAlign: 'right',
                                     maxValue: getMaxMinterCap(tokenInfo?.decimals.toString()),
-                                    // maxValue: getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString())
                                     hideErrorMessage: true
                                 }}
                             />

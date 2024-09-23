@@ -144,11 +144,8 @@ const Transfer = () => {
             newInfo[id] = false;
         }
 
-        // console.log('newInfo', newInfo);
         setApproveInfoById({ ...newInfo });
     };
-
-    // console.log('approveInfoById', approveInfoById);
 
     useEffect(() => {
         //? check if un-approved, or un-owned nft id included

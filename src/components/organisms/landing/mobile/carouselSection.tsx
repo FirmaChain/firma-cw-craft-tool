@@ -18,7 +18,7 @@ const Container = styled.div`
 `;
 
 const Slide = styled.div`
-    width: fit-content; // 100%;
+    width: fit-content;
     display: flex;
     align-items: center;
     justify-content: center;

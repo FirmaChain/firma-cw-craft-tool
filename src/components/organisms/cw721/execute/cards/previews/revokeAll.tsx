@@ -221,13 +221,6 @@ const RevokeAllPreview = () => {
                         {revokeAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
                         {revokeAddress !== '' && (
                             <TextEllipsis CustomDiv={AccordionTypo} text={revokeAddress} breakMode={'letters'} />
-                            // <AccordionTypo
-                            //     $disabled={false}
-                            //     data-tooltip-id={TOOLTIP_ID.COMMON}
-                            //     data-tooltip-content={revokeAddress.length > 24 ? revokeAddress : ''}
-                            // >
-                            //     {shortenAddress(revokeAddress, 12, 12)}
-                            // </AccordionTypo>
                         )}
                     </AccordionRow>
                 </AccordionBox>

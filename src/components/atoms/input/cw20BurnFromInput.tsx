@@ -51,12 +51,8 @@ const CW20BurnFromInput = ({
     onChangeAddress,
     onChangeAmount,
     onRemoveClick,
-    // isValid,
     isLast,
     decimals,
-    // addressTitle,
-    // addressPlaceholder,
-    // amountTitle,
     inputId
 }: IProps) => {
     const id = inputId;
@@ -93,7 +89,6 @@ const CW20BurnFromInput = ({
 
     const checkValidAddress = (value: string) => {
         if (value === '') {
-            // clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
             clearFormError({ id: `${id}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS' });
             return;
         }
@@ -134,7 +129,6 @@ const CW20BurnFromInput = ({
 
         if (success) {
             if (allowance.expires['never']) {
-                // setAllowance(allowance.allowance);
                 setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
                 return;
             }
@@ -144,7 +138,6 @@ const CW20BurnFromInput = ({
                 const expiresTimestamp = Math.floor(Number(allowance.expires['at_time']) / 1000000);
 
                 if (expiresTimestamp > nowTimestamp) {
-                    // setAllowance(allowance.allowance);
                     setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
                     return;
                 }
@@ -155,7 +148,6 @@ const CW20BurnFromInput = ({
                 const expiresBlockHeight = allowance.expires['at_height'];
 
                 if (expiresBlockHeight > nowBlockHeight) {
-                    // setAllowance(allowance.allowance);
                     setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
                     return;
                 }

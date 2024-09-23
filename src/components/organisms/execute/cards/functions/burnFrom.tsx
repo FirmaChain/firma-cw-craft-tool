@@ -124,15 +124,8 @@ const BurnFrom = () => {
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
                         <SummeryAmountTypo
                             className="clamp-single-line"
-                            // data-tooltip-content={
-                            //     tokenInfo.decimals > 2 ? parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals)) : ''
-                            // }
-                            // data-tooltip-id={TOOLTIP_ID.COMMON}
-                            // data-tooltip-wrapper="span"
-                            // data-tooltip-place="bottom"
                         >
                             {commaNumber(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
-                            {/* {parseAmountWithDecimal2(totalBurnAmont, String(tokenInfo.decimals), true)} */}
                         </SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>

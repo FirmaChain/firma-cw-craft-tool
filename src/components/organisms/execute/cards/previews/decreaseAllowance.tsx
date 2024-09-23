@@ -371,8 +371,6 @@ const DecreaseAllowancePreview = () => {
         return true;
     }, [addressExist, allowanceInfo, allowance, userAddress]);
 
-    // console.log('allowance', allowance);
-
     return (
         <Container>
             <ContentWrap>

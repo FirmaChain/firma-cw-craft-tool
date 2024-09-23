@@ -5,7 +5,6 @@ const ExpirationTypeButton = styled(IconButton)<{ $selected?: boolean }>`
     width: 152px;
     height: 36px;
     border-radius: 8px;
-    // padding: 8px 16px;
 
     display: flex;
     align-items: center;

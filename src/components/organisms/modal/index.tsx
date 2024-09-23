@@ -44,12 +44,7 @@ export const AmountItem = ({ label, decimals, amount, symbol, color }: IAmountPr
                 <ItemAmountValue
                     className="clamp-single-line"
                     $color={color}
-                    // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
-                    // data-tooltip-id={TOOLTIP_ID.COMMON}
-                    // data-tooltip-wrapper="span"
-                    // data-tooltip-place="bottom"
                 >
-                    {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ItemAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
@@ -66,12 +61,7 @@ export const ExecuteAmountItem = ({ label, decimals, amount, symbol, color }: IA
                 <ItemExecuteAmountValue
                     className="clamp-single-line"
                     $color={color}
-                    // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
-                    // data-tooltip-id={TOOLTIP_ID.COMMON}
-                    // data-tooltip-wrapper="span"
-                    // data-tooltip-place="bottom"
                 >
-                    {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ItemExecuteAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
@@ -87,12 +77,7 @@ export const ResultAmountItem = ({ label, decimals, amount, symbol }: IAmountPro
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
                 <ResultItemAmountTypo
                     className="clamp-single-line"
-                    // data-tooltip-content={parseAmountWithDecimal2(amount, decimals)}
-                    // data-tooltip-id={TOOLTIP_ID.COMMON}
-                    // data-tooltip-wrapper="span"
-                    // data-tooltip-place="bottom"
                 >
-                    {/* {Number(parseAmountWithDecimal2(amount, decimals)) < 0.01 ? '< 0.01' : parseAmountWithDecimal2(amount, decimals, true)} */}
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ResultItemAmountTypo>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
@@ -162,8 +147,6 @@ interface IUrlProps {
 }
 
 export const UrlItem = ({ label, logo, color }: IUrlProps) => {
-    // const _value = logo.length > 32 ? shortenAddress(logo, 20, 12) : logo;
-
     return (
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
