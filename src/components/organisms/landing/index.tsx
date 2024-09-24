@@ -1,5 +1,5 @@
 import Icons from '@/components/atoms/icons';
-import { IMG_LANDING_EXECUTE, IMG_LANDING_INSTANTIATE, IMG_LANDING_QUERY } from '@/components/atoms/icons/pngIcons';
+import { IC_CW20, IC_CW721, IMG_LANDING_EXECUTE, IMG_LANDING_INSTANTIATE, IMG_LANDING_QUERY } from '@/components/atoms/icons/pngIcons';
 import { useNavigate } from 'react-router-dom';
 import {
     BgColoredTitle,
@@ -49,7 +49,8 @@ const CW20Btn = () => {
 
     return (
         <ContractBtnBase onClick={onClickExecute}>
-            <Icons.CW20 />
+            <img src={IC_CW20} alt='cw20' style={{ width: "30px" }} />
+            {/* <Icons.CW20 /> */}
             <div className="typo-box">
                 <div className="variant">Token</div>
                 <div style={{ display: 'flex', gap: '1px' }}>
@@ -84,7 +85,8 @@ const CW721Btn = () => {
 
     return (
         <ContractBtnBase onClick={onClickExecute}>
-            <Icons.CW721 />
+            {/* <Icons.CW721 /> */}
+            <img src={IC_CW721} alt='cw721' style={{ width: "28px" }} />
             <div className="typo-box">
                 <div className="variant">NFT</div>
                 <div style={{ display: 'flex', gap: '1px' }}>
@@ -100,7 +102,7 @@ const Landing = () => {
     return (
         <ScreenWarpper>
             <ContentScreen>
-                <Icons.FirmaCraft width="198px" />
+                <Icons.FirmaCraft width="198px" fill='#DCDCDC' />
                 <ContentBox>
                     <TitleBox>
                         <Title>Create your own token</Title>

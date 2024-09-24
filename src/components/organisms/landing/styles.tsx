@@ -235,10 +235,11 @@ export const ButtonBox = styled.div`
     }
 `;
 
-export const ContractBtnBase = styled(IconButton)<{ disabled?: boolean }>`
+export const ContractBtnBase = styled(IconButton) <{ disabled?: boolean }>`
     width: 204px;
+    min-height: 82px;
     display: flex;
-    padding: 14px 40px 18px 32px;
+    padding: 12px 40px 16px 32px;
     justify-content: center;
     align-items: center;
     gap: 12px;
@@ -267,7 +268,7 @@ export const ContractBtnBase = styled(IconButton)<{ disabled?: boolean }>`
         margin-top: -4px;
         color: ${({ disabled }) => (disabled ? 'var(--Gray-450, #313131)' : 'var(--Gray-300, #222)')};
         font-family: Inter;
-        font-size: 13px;
+        font-size: 10px;
         font-style: normal;
         font-weight: 500;
         line-height: 140%; /* 14px */
