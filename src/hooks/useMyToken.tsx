@@ -50,7 +50,7 @@ const useMyToken = () => {
 
             return myContracts;
         } catch (error) {
-            enqueueSnackbar(`failed get "CW20 BASIC" contract list`, {
+            enqueueSnackbar(`failed get CW20 contract list`, {
                 variant: 'error',
                 autoHideDuration: 2000
             });

@@ -21,7 +21,7 @@ const useFirmaSDKInternal = () => {
             const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
             return fctBalance;
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching FCT Balance'
@@ -151,7 +151,7 @@ const useFirmaSDKInternal = () => {
 
             return result;
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching estimated gas for Instantiate'

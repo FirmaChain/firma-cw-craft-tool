@@ -40,7 +40,7 @@ const useCW721ExecuteAction = () => {
             useCW721ExecuteStore.getState().setContractInfo(contractInfo);
         } catch (error) {
             console.log('error - contractAddress', contractAddress);
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setContractInfo(CW721)'
@@ -53,7 +53,7 @@ const useCW721ExecuteAction = () => {
             const nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setNftContractInfo(nftContractInfo);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setNftContractInfo(CW721)'
@@ -66,7 +66,7 @@ const useCW721ExecuteAction = () => {
             const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
             useCW721ExecuteStore.getState().setFctBalance(fctBalance);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setFctBalance'
@@ -142,7 +142,7 @@ const useCW721ExecuteAction = () => {
             checkCurrentHref(href);
         } catch (error: any) {
             if (error.message !== 'NOT_SAME_ADDRESS') {
-                console.log('error', error);
+                console.log(error);
                 enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
             } else {
                 console.log('CW721 contract search aborted');
@@ -160,7 +160,7 @@ const useCW721ExecuteAction = () => {
             const totalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setTotalNfts(totalNfts.toString());
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setNftContractInfo(CW721)'
@@ -173,7 +173,7 @@ const useCW721ExecuteAction = () => {
             const ownerShip = await firmaSDK.Cw721.getOwnerShip(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setOwnershipInfo(ownerShip);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setOwnership(CW721)'
@@ -205,7 +205,7 @@ const useCW721ExecuteAction = () => {
 
             useCW721ExecuteStore.getState().setMyNftList(completeNftList);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setMyNftList(CW721)'
@@ -218,7 +218,7 @@ const useCW721ExecuteAction = () => {
             const height = (await firmaSDK.BlockChain.getChainSyncInfo()).latest_block_height;
             useCW721ExecuteStore.getState().setBlockHeight(height);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setBlockHeight(CW721)'
@@ -232,7 +232,7 @@ const useCW721ExecuteAction = () => {
             useCW721ExecuteStore.getState().setNftApprovalInfo(result);
         } catch (error) {
             useCW721ExecuteStore.getState().setNftApprovalInfo({ spender: '', expires: null });
-            console.log('error', error);
+            console.log(error);
         }
     };
 
@@ -241,7 +241,7 @@ const useCW721ExecuteAction = () => {
             const minter = await firmaSDK.Cw721.getMinter(contractAddress?.toLowerCase());
             useCW721ExecuteStore.getState().setMinter(minter);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setMinter(CW721)'
@@ -332,7 +332,7 @@ const useCW721ExecuteAction = () => {
 
             useCW721ExecuteStore.getState().setNftDatas(newNftInfo);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
         }
     };
 

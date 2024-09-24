@@ -25,7 +25,7 @@ const useExecuteActions = () => {
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
             useExecuteStore.getState().setContractInfo(contractInfo);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setContractInfo'
@@ -38,7 +38,7 @@ const useExecuteActions = () => {
             const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
             useExecuteStore.getState().setTokenInfo(tokenInfo);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setTokenInfo'
@@ -51,7 +51,7 @@ const useExecuteActions = () => {
             const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress?.toLowerCase());
             useExecuteStore.getState().setMinterInfo(minterInfo);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setMinterInfo'
@@ -64,7 +64,7 @@ const useExecuteActions = () => {
             const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
             useExecuteStore.getState().setMarketingInfo(marketingInfo);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setMarketingInfo'
@@ -77,7 +77,7 @@ const useExecuteActions = () => {
             const cw20Balance = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), address?.toLowerCase());
             useExecuteStore.getState().setCw20Balance(cw20Balance);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setCw20Balance'
@@ -90,7 +90,7 @@ const useExecuteActions = () => {
             const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
             useExecuteStore.getState().setFctBalance(fctBalance);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching setFctBalance'
@@ -107,7 +107,7 @@ const useExecuteActions = () => {
             );
             useExecuteStore.getState().setAllowanceInfo(allowanceInfo);
         } catch (error) {
-            console.log('error', error);
+            console.log(error);
             enqueueSnackbar({
                 variant: 'error',
                 message: 'Error occured while fetching getAllowanceInfo'
@@ -175,7 +175,7 @@ const useExecuteActions = () => {
         } catch (error: any) {
             if (error.message !== 'NOT_SAME_ADDRESS') {
                 enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
-                console.log('error', error);
+                console.log(error);
             } else {
                 console.log('CW20 contract search aborted');
             }

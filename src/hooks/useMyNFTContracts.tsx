@@ -55,7 +55,7 @@ const useMyNFTContracts = () => {
                 .map((ownershipData) => ownershipData.contract);
             return myContracts;
         } catch (error) {
-            enqueueSnackbar(`failed get "CW20 BASIC" contract list`, {
+            enqueueSnackbar(`failed get CW721 contract list`, {
                 variant: 'error',
                 autoHideDuration: 2000
             });
@@ -114,6 +114,7 @@ const useMyNFTContracts = () => {
                 const id = getAllNftIdList[i];
                 try {
                     const image = await getCW721NFTImage({ contractAddress: contractAddress, tokenId: id });
+
                     if (isDeploiedFromFirma) {
                         if (image === '') {
                             images.push(IMG_NFT_EMPTY_THUMBNAIL);
@@ -140,7 +141,9 @@ const useMyNFTContracts = () => {
             const tokenURI = await firmaSDK.Cw721.getNftTokenUri(contractAddress?.toLowerCase(), tokenId);
 
             const response = await fetch(tokenURI);
+
             const metadata = await response.json();
+
             const imageURI = metadata.imageURI || '';
 
             return imageURI;

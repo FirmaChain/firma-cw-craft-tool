@@ -285,7 +285,7 @@ const OwnerInformation = () => {
                                 <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'Wallet Address'}</SpecificValueTypo>
+                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>

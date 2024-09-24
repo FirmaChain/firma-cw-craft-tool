@@ -124,7 +124,7 @@ const useCW721SearchActions = () => {
         } catch (error: any) {
             if (error.message !== 'NOT_SAME_ADDRESS') {
                 enqueueSnackbar({ variant: 'error', message: 'Error occured while fetching contract info' });
-                console.log('error', error);
+                console.log(error);
             } else {
                 console.log('CW721 contract search aborted');
             }

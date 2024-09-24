@@ -199,16 +199,13 @@ export const copyToClipboard = async (text: string): Promise<void | string> => {
             textArea.select();
 
             try {
-                var successful = document.execCommand('copy');
-                var msg = successful ? 'successful' : 'unsuccessful';
-                console.log('Fallback: Copying text command was ' + msg);
+                document.execCommand('copy');
             } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
+                console.error('Fallback copy method failed. Try latest browser.', err);
             }
 
             document.body.removeChild(textArea);
         } catch (error) {
-            console.log('Alternative copy method failed', error);
             return 'Failed to copy text to clipboard';
         }
     } else {

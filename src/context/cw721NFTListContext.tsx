@@ -42,6 +42,7 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
         };
         try {
             const image = await getCW721NFTImage({ contractAddress: contractAddress, tokenId: nft });
+
             if (isDeploiedFromFirma && image === '') {
                 newNFT = { image: IMG_NFT_EMPTY_THUMBNAIL, tokenId: nft };
             } else {
@@ -58,12 +59,12 @@ export const CW721NFTListProvider = ({ children }: { children: ReactNode }) => {
     const addNFTs = (newNFTs: string[], isDeploiedFromFirma: boolean) => {
         try {
             if (nfts === null) {
-                setNfts(newNFTs.map((nft) => ({ tokenId: nft, image: isDeploiedFromFirma ? IMG_NFT_EMPTY_THUMBNAIL : '' })));
+                setNfts(newNFTs.map((nft) => ({ tokenId: nft, image: isDeploiedFromFirma ? '' : '' })));
             } else {
                 const uniqueNewContracts = newNFTs.filter((nft) => !nfts.some((c) => c.tokenId === nft));
                 setNfts((prev) => [
                     ...(Array.isArray(prev) ? prev : []),
-                    ...uniqueNewContracts.map((nft) => ({ tokenId: nft, image: isDeploiedFromFirma ? IMG_NFT_EMPTY_THUMBNAIL : '' }))
+                    ...uniqueNewContracts.map((nft) => ({ tokenId: nft, image: isDeploiedFromFirma ? '' : '' }))
                 ]);
             }
         } catch (error) {
