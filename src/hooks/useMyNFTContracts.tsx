@@ -101,7 +101,7 @@ const useMyNFTContracts = () => {
 
     const getCW721NFTsThumbnail = async ({ contractAddress }: { contractAddress: string }) => {
         try {
-            const images = [];
+            const images: string[] = [];
             if (!firmaSDK) return images;
             const getAllNftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase());
             const contractInfoFromCW = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());

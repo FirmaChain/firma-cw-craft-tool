@@ -125,9 +125,7 @@ const Mint = () => {
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <TotalMintWrap>
                             <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
-                            <TotalMintSupplyBalance
-                                className="clamp-single-line"
-                            >
+                            <TotalMintSupplyBalance className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
                             </TotalMintSupplyBalance>
                             <TotalMintSupplyBalance>{tokenInfo.symbol}</TotalMintSupplyBalance>

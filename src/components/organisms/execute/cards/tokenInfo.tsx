@@ -241,7 +241,7 @@ const TokenInfo = () => {
             if (!minterInfo || minterInfo.minter.toLowerCase() !== address.toLowerCase()) {
                 ruleMenus[6] = { ...ruleMenus[6], isDisabled: true };
             }
-            
+
             //! if marketing info not provided or marketing address is not connected address
             if (!marketingInfo || marketingInfo.marketing.toLowerCase() !== address.toLowerCase()) {
                 ruleMenus[5] = { ...ruleMenus[5], isDisabled: true };

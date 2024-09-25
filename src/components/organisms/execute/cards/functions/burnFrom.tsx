@@ -122,9 +122,7 @@ const BurnFrom = () => {
                 <SummeryCard>
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo
-                            className="clamp-single-line"
-                        >
+                        <SummeryAmountTypo className="clamp-single-line">
                             {commaNumber(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
                         </SummeryAmountTypo>
                         <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import { useCallback } from 'react';
 import FirmaLoading from '@/components/atoms/globalLoader/firmaLoad';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const Container = styled(IconButton)`
     width: 480px;
@@ -181,22 +182,39 @@ interface IProps {
 
 const ContractCard = ({ data }: IProps) => {
     const navigate = useNavigate();
+    const { firmaSDK } = useFirmaSDKContext();
     const { getCW721NFTsThumbnail } = useMyNFTContracts();
-    const { contracts, updateContractInfo } = useCW721NFTContractsContext();
+    const { contracts, updateContractInfo, updateThumbnailInfo, thumbnailInfo } = useCW721NFTContractsContext();
 
     const handleNFTsThumnnail = useCallback(async () => {
         try {
             const result = await getCW721NFTsThumbnail({ contractAddress: data.contractAddress });
-            const newData: IContractInfo = { ...data, nftThumbnailURI: result };
-            updateContractInfo(newData);
+            const totalNFTs = await firmaSDK.Cw721.getTotalNfts(data.contractAddress?.toLowerCase());
+            // const newData: IContractInfo = { ...data, nftThumbnailURI: result };
+            // updateContractInfo(newData);
+
+            updateThumbnailInfo(data.contractAddress, { thumbnails: result, totalNFTs, reqUpdate: false });
         } catch (error) {
             console.log(error);
         }
     }, [data]);
 
     const DisplayNFTCount = useCallback(() => {
-        const totalNFTsCount = data.totalNFTs;
-        const thumbnailURIs = data.nftThumbnailURI;
+        const info = thumbnailInfo[data.contractAddress];
+
+        const totalNFTsCount = info?.totalNFTs;
+        const thumbnailURIs = info?.thumbnails;
+        const reqUpdate = info?.reqUpdate;
+
+        if (!info || reqUpdate || typeof totalNFTsCount !== 'number' || !Array.isArray(thumbnailURIs)) {
+            handleNFTsThumnnail();
+            return (
+                <PreviewNFTsBox style={{ gap: '5px' }}>
+                    <FirmaLoading size={'20px'} />
+                    <TotalNftCountTypo>{`NFTs Data Loading`}</TotalNftCountTypo>
+                </PreviewNFTsBox>
+            );
+        }
 
         if (totalNFTsCount === 0) {
             return (
@@ -205,17 +223,6 @@ const ContractCard = ({ data }: IProps) => {
                 </PreviewNFTsBox>
             );
         } else {
-            if (thumbnailURIs === null) {
-                handleNFTsThumnnail();
-                return (
-                    <PreviewNFTsBox style={{ gap: '5px' }}>
-                        <FirmaLoading size={'20px'} />
-                        <TotalNftCountTypo>{`NFTs Data Loading`}</TotalNftCountTypo>
-                    </PreviewNFTsBox>
-                );
-            } else {
-            }
-
             const count = totalNFTsCount > 999 ? '+999' : `+${totalNFTsCount}`;
             if (thumbnailURIs.filter((value) => value === '').length >= thumbnailURIs.length) {
                 return (
@@ -238,7 +245,7 @@ const ContractCard = ({ data }: IProps) => {
                 );
             }
         }
-    }, [data, contracts]);
+    }, [data, thumbnailInfo[data?.contractAddress]]);
 
     const handleMoveToDetail = () => {
         navigate(`/cw721/mynft/detail/${data.contractAddress}`);

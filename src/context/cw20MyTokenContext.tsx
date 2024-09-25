@@ -1,3 +1,4 @@
+import { ContractInfoFromDB } from '@/interfaces/common';
 import { rootState } from '@/redux/reducers';
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -5,11 +6,11 @@ import { useLocation } from 'react-router-dom';
 
 interface IContractInfo {
     contractAddress: string;
-    tokenLogoUrl: string;
+    tokenLogoUrl?: string;
     tokenSymbol: string;
     tokenName: string;
-    totalSupply: string;
-    decimals: number;
+    totalSupply?: string;
+    decimals?: number;
 }
 
 interface IContractState {
@@ -17,13 +18,23 @@ interface IContractState {
     info?: IContractInfo;
 }
 
+interface TokenAdditionalInfo {
+    imageUrl?: string;
+    totalSupply?: string;
+    decimals?: number;
+    reqUpdate?: boolean;
+}
+
 interface CW20MyTokenContextProps {
     contracts: IContractState[] | null;
-    addContracts: (list: string[]) => void;
+    addContracts: (list: ContractInfoFromDB[]) => void;
     updateContractInfo: (info: IContractInfo) => void;
     currentPage: number;
     setCurrentPage: (page: number) => void;
     clearCW20MyTokenData: () => void;
+
+    tokenAdditionalInfo: Record<string, TokenAdditionalInfo>;
+    updateTokenAdditionalInfo: (address: string, info: TokenAdditionalInfo) => void;
 }
 
 const CW20MyTokenContext = createContext<CW20MyTokenContextProps | undefined>(undefined);
@@ -43,13 +54,32 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
     const [contracts, setContracts] = useState<IContractState[] | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const addContracts = (newContracts: string[]) => {
-        if (contracts === null) {
-            setContracts(newContracts.map((address) => ({ contractAddress: address })));
-        } else {
-            const uniqueNewContracts = newContracts.filter((contract) => !contracts.some((c) => c.contractAddress === contract));
-            setContracts((prevContracts) => [...prevContracts, ...uniqueNewContracts.map((address) => ({ contractAddress: address }))]);
-        }
+    const [tokenAdditionalInfo, setTokenAdditionalInfo] = useState<Record<string, TokenAdditionalInfo>>({});
+
+    const addContracts = (newContracts: ContractInfoFromDB[]) => {
+        // setContracts(newContracts.map((address) => ({ contractAddress: address })));
+
+        setContracts(
+            newContracts.map((v) => ({
+                contractAddress: v.contractAddress,
+                info: {
+                    // ...v,
+                    tokenSymbol: v.symbol,
+                    tokenName: v.name,
+                    contractAddress: v.contractAddress
+                    // tokenLogoUrl: '',
+                    // totalSupply: '',
+                    // decimals: 0
+                }
+            }))
+        );
+
+        // if (contracts === null) {
+        //     setContracts(newContracts.map((address) => ({ contractAddress: address })));
+        // } else {
+        //     const uniqueNewContracts = newContracts.filter((contract) => !contracts.some((c) => c.contractAddress === contract));
+        //     setContracts((prevContracts) => [...prevContracts, ...uniqueNewContracts.map((address) => ({ contractAddress: address }))]);
+        // }
     };
 
     const updateContractInfo = (info: IContractInfo) => {
@@ -57,6 +87,17 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
             setContracts((prevContracts) =>
                 prevContracts.map((contract) => (contract.contractAddress === info.contractAddress ? { ...contract, info } : contract))
             );
+        else {
+            setContracts([info]);
+        }
+    };
+
+    const updateTokenAdditionalInfo = (address: string, info: TokenAdditionalInfo) => {
+        address = address.toLowerCase();
+
+        const currentInfo = tokenAdditionalInfo[address] || {};
+
+        setTokenAdditionalInfo((prev) => ({ ...prev, [address]: { ...currentInfo, ...info } }));
     };
 
     useEffect(() => {
@@ -82,7 +123,10 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
                 updateContractInfo,
                 currentPage,
                 setCurrentPage,
-                clearCW20MyTokenData
+                clearCW20MyTokenData,
+
+                tokenAdditionalInfo,
+                updateTokenAdditionalInfo
             }}
         >
             {children}

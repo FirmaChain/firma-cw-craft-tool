@@ -1,3 +1,4 @@
+import { ContractInfoFromDB } from '@/interfaces/common';
 import { rootState } from '@/redux/reducers';
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -7,7 +8,7 @@ export interface IContractInfo {
     contractAddress: string;
     name: string;
     symbol: string;
-    totalNFTs: number;
+    totalNFTs?: number;
     nftThumbnailURI: string[] | null;
     label: string;
 }
@@ -17,13 +18,22 @@ interface IContractState {
     info?: IContractInfo;
 }
 
+interface ThumbnailInfo {
+    totalNFTs?: number;
+    thumbnails?: string[];
+    reqUpdate?: boolean;
+}
+
 interface CW721NFTContractsContextProps {
     contracts: IContractState[] | null;
-    addContracts: (list: string[]) => void;
+    addContracts: (list: ContractInfoFromDB[]) => void;
     updateContractInfo: (info: IContractInfo) => void;
     currentPage: number;
     setCurrentPage: (page: number) => void;
     clearCW721NFTContractsData: () => void;
+
+    thumbnailInfo: Record<string, ThumbnailInfo>;
+    updateThumbnailInfo: (address: string, info: ThumbnailInfo) => void;
 }
 
 const CW721NFTContractsContext = createContext<CW721NFTContractsContextProps | undefined>(undefined);
@@ -43,16 +53,44 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
     const [contracts, setContracts] = useState<IContractState[] | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const addContracts = (newContracts: string[]) => {
-        if (contracts === null || newContracts.length < contracts.length) {
-            setContracts(newContracts.map((address) => ({ contractAddress: address })));
-        } else {
-            const uniqueNewContracts = newContracts.filter((contract) => !contracts.some((c) => c.contractAddress === contract));
-            setContracts((prevContracts) => [
-                ...(Array.isArray(prevContracts) ? prevContracts : []),
-                ...uniqueNewContracts.map((address) => ({ contractAddress: address }))
-            ]);
-        }
+    const [thumbnailInfo, setThumbnailInfo] = useState<Record<string, ThumbnailInfo>>({});
+
+    const addContracts = (newContracts: ContractInfoFromDB[]) => {
+        setContracts(
+            newContracts.map((v) => ({
+                contractAddress: v.contractAddress,
+                info: {
+                    ...v,
+                    nftThumbnailURI: null
+                }
+            }))
+        );
+        // if (contracts === null || newContracts.length < contracts.length) {
+        //     // setContracts(newContracts.map((address) => ({ contractAddress: address })));
+        //     setContracts(
+        //         newContracts.map((v) => ({
+        //             contractAddress: v.contractAddress,
+        //             info: {
+        //                 ...v,
+        //                 nftThumbnailURI: null
+        //             }
+        //         }))
+        //     );
+        // } else {
+        //     const uniqueNewContracts = newContracts.filter(
+        //         ({ contractAddress }) => !contracts.some((c) => c.contractAddress === contractAddress)
+        //     );
+        //     setContracts((prevContracts) => [
+        //         ...(Array.isArray(prevContracts) ? prevContracts : []),
+        //         ...uniqueNewContracts.map((v) => ({
+        //             contractAddress: v.contractAddress,
+        //             info: {
+        //                 ...v,
+        //                 nftThumbnailURI: null
+        //             }
+        //         }))
+        //     ]);
+        // }
     };
 
     const updateContractInfo = (info: IContractInfo) => {
@@ -63,6 +101,14 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
         } else {
             setContracts([info]);
         }
+    };
+
+    const updateThumbnailInfo = (address: string, info: ThumbnailInfo) => {
+        address = address.toLowerCase(); // do now allow uppercase address.
+
+        const currentInfo = thumbnailInfo[address] || {};
+
+        setThumbnailInfo((prev) => ({ ...prev, [address]: { ...currentInfo, ...info } }));
     };
 
     useEffect(() => {
@@ -88,7 +134,9 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
                 updateContractInfo,
                 currentPage,
                 setCurrentPage,
-                clearCW721NFTContractsData
+                clearCW721NFTContractsData,
+                thumbnailInfo,
+                updateThumbnailInfo
             }}
         >
             {children}

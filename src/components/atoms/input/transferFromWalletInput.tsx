@@ -4,10 +4,7 @@ import styled from 'styled-components';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
-import {
-    getTokenAmountFromUToken,
-    isZeroStringValue
-} from '@/utils/balance';
+import { getTokenAmountFromUToken, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { useSelector } from 'react-redux';
@@ -43,16 +40,7 @@ interface IProps {
     inputId: string;
 }
 
-const TransferFromWalletInput = ({
-    index,
-    transferFromInfo,
-    onChange,
-    onRemoveClick,
-    isValid,
-    decimals,
-    isLast,
-    inputId
-}: IProps) => {
+const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveClick, isValid, decimals, isLast, inputId }: IProps) => {
     const id = inputId;
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);

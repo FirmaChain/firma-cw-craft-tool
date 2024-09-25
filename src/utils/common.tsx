@@ -1,6 +1,7 @@
 import { Expires } from '@firmachain/firma-js';
 import { CW20_TRANSACTION_TYPES, CW721_TRANSACTION_TYPES } from '../constants/transactionTypes';
 import { IMsg } from '../interfaces/cw20';
+import qs from 'qs';
 
 export const addCommasToNumberString = (numberString: string): string => {
     return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -312,4 +313,9 @@ export const checkMobileDevice = (): boolean => {
         );
 
     return isMobileUserAgent;
+};
+
+export const stringifyUrl = ({ url, query }: { url: string; query: Record<string, any> }, options?: qs.IStringifyOptions) => {
+    const q = qs.stringify(query, options);
+    return url + (q ? '?' + q : '');
 };

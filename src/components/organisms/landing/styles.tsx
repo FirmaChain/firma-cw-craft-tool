@@ -37,13 +37,13 @@ export const ContentBox = styled.div`
     display: flex;
     max-width: 1248px;
     width: 100%;
-    padding: 60px 120px 104px 120px;
+    padding: 52px 158px 98px;
     flex-direction: column;
     align-items: center;
-    gap: 48px;
+    gap: 52px;
 
     border-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
+    outline: 1px solid #444 !important;
     background: rgba(18, 18, 18, 0.8);
     backdrop-filter: blur(3px);
 
@@ -72,7 +72,7 @@ export const TitleBox = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
 `;
 
 export const Title = styled.div`
@@ -81,10 +81,10 @@ export const Title = styled.div`
 
     /* Title/Title1 */
     font-family: 'General Sans Variable';
-    font-size: 40px;
+    font-size: 44px;
     font-style: normal;
     font-weight: 600;
-    line-height: 56px; /* 140% */
+    line-height: 66px; /* 140% */
 `;
 
 export const SubTitle = styled.div`
@@ -108,7 +108,7 @@ export const CardBox = styled.div`
     display: grid;
     grid-template-areas: 'inst query execute';
     justify-content: center;
-    gap: 24px 56px;
+    gap: 24px 52px;
 
     @media (max-width: 1320px) {
         display: none;
@@ -135,7 +135,7 @@ export const CardWarp = styled.div`
 
     border-radius: 30px;
     background: var(--Gray-400, #2c2c2c);
-    box-shadow: 0px 6px 40px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 6px 40px 0px rgba(0, 0, 0, 0.1);
 
     transition: transform 0.3s;
 
@@ -215,10 +215,10 @@ export const TooltipIconBox = styled.div`
 export const ButtonBox = styled.div`
     display: flex;
     align-items: center;
-    gap: 56px;
+    gap: 48px;
 
     position: absolute;
-    bottom: -39px;
+    bottom: -36px;
 
     @media (max-width: 768px) {
         position: static;
@@ -235,9 +235,9 @@ export const ButtonBox = styled.div`
     }
 `;
 
-export const ContractBtnBase = styled(IconButton) <{ disabled?: boolean }>`
+export const ContractBtnBase = styled(IconButton)<{ disabled?: boolean }>`
     width: 204px;
-    min-height: 82px;
+    min-height: 78px;
     display: flex;
     padding: 12px 40px 16px 32px;
     justify-content: center;

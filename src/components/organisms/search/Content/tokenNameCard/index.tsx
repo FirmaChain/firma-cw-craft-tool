@@ -61,9 +61,7 @@ const TokenNameCard = () => {
                 <TotalSupplyBox>
                     <div className="title">Total supply:</div>
                     <div className="amount">
-                        <span className="bold">
-                            {commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
-                        </span>{' '}
+                        <span className="bold">{commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}</span>{' '}
                         <span className="symbol">{symbol}</span>
                     </div>
                 </TotalSupplyBox>

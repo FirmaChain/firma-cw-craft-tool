@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
     ItemLeft,
@@ -19,36 +19,59 @@ import { IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
 import commaNumber from 'comma-number';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { getTokenAmountFromUToken } from '@/utils/balance';
+import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import Skeleton from '@/components/atoms/skeleton';
 
 interface IProps {
-    tokenLogoUrl: string;
+    tokenLogoUrl?: string;
     tokenSymbol: string;
     tokenName: string;
-    totalSupply: string;
-    decimals: number;
+    totalSupply?: string;
+    decimals?: number;
     contractAddress: string;
     isVerify?: boolean;
     onClickItem: (contractAddress: string) => void;
 }
 
 const MintedTokenCard = ({
-    tokenLogoUrl,
+    // tokenLogoUrl,
     tokenSymbol,
     tokenName,
-    totalSupply,
-    decimals,
+    // totalSupply,
+    // decimals,
     contractAddress,
     isVerify = false,
     onClickItem
 }: IProps) => {
+    const { firmaSDK } = useFirmaSDKContext();
+
+    const { updateTokenAdditionalInfo } = useCW20MyTokenContext();
+    const additionalInfo = useCW20MyTokenContext().tokenAdditionalInfo[contractAddress?.toLowerCase()] || {};
+
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
+    const handleTokenAdditionalInfo = useCallback(async () => {
+        try {
+            const contractInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
+            const { logo } = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
+
+            updateTokenAdditionalInfo(contractAddress, {
+                imageUrl: logo?.url || '',
+                totalSupply: contractInfo.total_supply,
+                decimals: contractInfo.decimals
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }, [contractAddress]);
+
     useEffect(() => {
-        if (tokenLogoUrl) {
+        if (additionalInfo?.imageUrl) {
             const img = new Image();
-            img.src = tokenLogoUrl;
+            img.src = additionalInfo.imageUrl;
             img.onload = () => {
-                setValidTokenLogoUrl(tokenLogoUrl);
+                setValidTokenLogoUrl(additionalInfo.imageUrl);
             };
             img.onerror = () => {
                 setValidTokenLogoUrl('');
@@ -56,7 +79,11 @@ const MintedTokenCard = ({
         } else {
             setValidTokenLogoUrl('');
         }
-    }, [tokenLogoUrl]);
+    }, [additionalInfo?.imageUrl]);
+
+    useEffect(() => {
+        handleTokenAdditionalInfo();
+    }, [contractAddress]);
 
     return (
         <ItemWrapper
@@ -79,8 +106,16 @@ const MintedTokenCard = ({
             </ItemLeft>
             <ItemRight>
                 <SupplyWrapper>
-                    <TotalSupplyTypo>{commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}</TotalSupplyTypo>
-                    <SupplySymbolTypo>{tokenSymbol}</SupplySymbolTypo>
+                    {typeof additionalInfo?.totalSupply === 'string' && typeof additionalInfo?.decimals === 'number' ? (
+                        <>
+                            <TotalSupplyTypo>
+                                {commaNumber(getTokenAmountFromUToken(additionalInfo.totalSupply, String(additionalInfo.decimals)))}
+                            </TotalSupplyTypo>
+                            <SupplySymbolTypo>{tokenSymbol}</SupplySymbolTypo>
+                        </>
+                    ) : (
+                        <Skeleton width="60px" height="22px" />
+                    )}
                 </SupplyWrapper>
                 <Icons.RightArrow width={'20px'} height={'20px'} stroke={'#FFFFFF'} />
             </ItemRight>

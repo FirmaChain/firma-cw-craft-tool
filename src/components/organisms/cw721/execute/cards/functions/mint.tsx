@@ -124,7 +124,6 @@ const Section = styled.div`
     }
 `;
 
-
 const BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT'; //! DO NOT CHANGE | USING ON PREVIEW FOR BUTTON STATE
 
 const Mint = () => {
@@ -347,8 +346,7 @@ const Mint = () => {
                         }}
                         list={mintList}
                         disableInput={disableMintIntoList}
-                        onClickDeleteAll={() => {
-                        }}
+                        onClickDeleteAll={() => {}}
                     />
                 </Section>
             </BodyContainer>

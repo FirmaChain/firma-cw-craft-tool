@@ -72,10 +72,7 @@ const Preview = () => {
             {selectMenu?.value === 'select' && <></>}
             {selectMenu && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Container
-                        $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')}
-                        $scrollY={scroll.y}
-                    >
+                    <Container $isSelectMenu={!(selectMenu.value === 'select' || selectMenu.value === '')} $scrollY={scroll.y}>
                         <TitleTypo>{'EXECUTION PREVIEW'}</TitleTypo>
                         {(selectMenu.value === 'select' || selectMenu.value === '') && <DefaultView />}
                         {selectMenu.value === 'mint' && <MintPreview />}

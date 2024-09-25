@@ -13,11 +13,11 @@ import { sleep } from '@/utils/common';
 
 interface IContractItem {
     contractAddress: string;
-    tokenLogoUrl: string;
+    tokenLogoUrl?: string;
     tokenSymbol: string;
     tokenName: string;
-    totalSupply: string;
-    decimals: number;
+    totalSupply?: string;
+    decimals?: number;
 }
 
 const MyMintedTokenList = ({ handleShowCount }: { handleShowCount: (v: boolean) => void }) => {
@@ -42,43 +42,44 @@ const MyMintedTokenList = ({ handleShowCount }: { handleShowCount: (v: boolean) 
             const currentContracts = contracts.slice(startIndex, endIndex);
 
             GlobalActions.handleGlobalLoading(true);
-            const fetchedItems = await Promise.all(
-                currentContracts.map(async ({ contractAddress, info }) => {
-                    if (info) {
-                        return info;
-                    } else {
-                        try {
-                            await sleep(1000);
 
-                            const item = await getCW20ContractInfo(contractAddress);
-                            await sleep(500);
-                            if (item) {
-                                updateContractInfo(item);
-                                return { ...item, contractAddress };
-                            } else {
-                                return {
-                                    contractAddress,
-                                    tokenLogoUrl: '',
-                                    tokenSymbol: '',
-                                    tokenName: '',
-                                    totalSupply: '',
-                                    decimals: 0
-                                };
-                            }
-                        } catch (error) {
-                            console.error(`Error fetching info for contract ${contractAddress}:`, error);
-                            return {
-                                contractAddress,
-                                tokenLogoUrl: '',
-                                tokenSymbol: '',
-                                tokenName: '',
-                                totalSupply: '',
-                                decimals: 0
-                            };
-                        }
-                    }
-                })
-            );
+            const fetchedItems = currentContracts.map((v) => v.info);
+
+            // const fetchedItems = await Promise.all(
+            //     currentContracts.map(async ({ contractAddress, info }) => {
+            //         if (info && typeof info.decimals === 'number') {
+            //             return info;
+            //         } else {
+            //             try {
+            //                 const item = await getCW20ContractInfo(contractAddress);
+
+            //                 if (item) {
+            //                     updateContractInfo(item);
+            //                     return { ...info, ...item, contractAddress };
+            //                 } else {
+            //                     return {
+            //                         contractAddress,
+            //                         tokenLogoUrl: '',
+            //                         tokenSymbol: '',
+            //                         tokenName: '',
+            //                         totalSupply: '',
+            //                         decimals: 0
+            //                     };
+            //                 }
+            //             } catch (error) {
+            //                 console.error(`Error fetching info for contract ${contractAddress}:`, error);
+            //                 return {
+            //                     contractAddress,
+            //                     tokenLogoUrl: '',
+            //                     tokenSymbol: '',
+            //                     tokenName: '',
+            //                     totalSupply: '',
+            //                     decimals: 0
+            //                 };
+            //             }
+            //         }
+            //     })
+            // );
 
             setPageItems(fetchedItems);
         } catch (error) {

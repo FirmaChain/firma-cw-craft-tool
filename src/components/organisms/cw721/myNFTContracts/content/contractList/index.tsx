@@ -8,10 +8,12 @@ import Icons from '@/components/atoms/icons';
 import NoToken from '../noToken';
 import ContractCard from './contractCard';
 import { sleep } from '@/utils/common';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boolean) => void }) => {
     const { getCW721ContractInfo } = useMyNFTContracts();
-    const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW721NFTContractsContext();
+    const { firmaSDK } = useFirmaSDKContext();
+    const { contracts, updateContractInfo, currentPage, setCurrentPage, updateThumbnailInfo } = useCW721NFTContractsContext();
 
     const [pageItems, setPageItems] = useState<IContractInfo[]>([]);
     const [rowsPerPage, setRowsPerPage] = useState<number>(6);
@@ -30,43 +32,32 @@ const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boole
 
             GlobalActions.handleGlobalLoading(true);
 
-            const fetchedItems = await Promise.all(
-                currentContracts.map(async ({ contractAddress, info }) => {
-                    if (info) {
-                        return info;
-                    } else {
-                        try {
-                            await sleep(1000);
-                            const item = await getCW721ContractInfo(contractAddress);
-                            await sleep(500);
+            const fetchedItems = currentContracts.map((v) => v.info);
+            // const fetchedItems = await Promise.all(
+            //     currentContracts.map(async ({ contractAddress, info }) => {
 
-                            if (item) {
-                                updateContractInfo(item);
-                                return { ...item, contractAddress };
-                            } else {
-                                return {
-                                    contractAddress,
-                                    name: '',
-                                    symbol: '',
-                                    label: '',
-                                    totalNFTs: 0,
-                                    nftThumbnailURI: null
-                                };
-                            }
-                        } catch (error) {
-                            console.error(`Error fetching info for contract ${contractAddress}:`, error);
-                            return {
-                                contractAddress,
-                                name: '',
-                                symbol: '',
-                                label: '',
-                                totalNFTs: 0,
-                                nftThumbnailURI: null
-                            };
-                        }
-                    }
-                })
-            );
+            //         if (info) {
+            //             return info;
+            //         } else {
+            //             try {
+            //                 // const totalNFTs = await firmaSDK.Cw721.getTotalNfts(contractAddress?.toLowerCase());
+            //                 // updateThumbnailInfo(contractAddress, { totalNFTs });
+            //                 // updateContractInfo({ ...info, totalNFTs });
+            //                 return { ...info };
+            //             } catch (error) {
+            //                 console.error(`Error fetching info for contract ${contractAddress}:`, error);
+            //                 return {
+            //                     contractAddress,
+            //                     name: '',
+            //                     symbol: '',
+            //                     label: '',
+            //                     totalNFTs: 0,
+            //                     nftThumbnailURI: null
+            //                 };
+            //             }
+            //         }
+            //     })
+            // );
 
             setPageItems(fetchedItems);
         } catch (error) {

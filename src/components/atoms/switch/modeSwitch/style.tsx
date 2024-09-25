@@ -16,7 +16,7 @@ export const SwitchContainer = styled.div`
     box-sizing: border-box;
 `;
 
-export const SwitchButton = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp }) <{
+export const SwitchButton = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp })<{
     $isActive: boolean;
     $position: 'left' | 'right';
 }>`
@@ -30,7 +30,7 @@ export const SwitchButton = styled('div').withConfig({ shouldForwardProp: should
     position: relative;
 `;
 
-export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp }) <{ $position: 'left' | 'right' }>`
+export const ActiveIndicator = styled('div').withConfig({ shouldForwardProp: shouldForwardActiveProp })<{ $position: 'left' | 'right' }>`
     box-sizing: border-box;
     background-color: #e6e6e6;
     border-radius: 6px;

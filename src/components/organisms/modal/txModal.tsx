@@ -80,6 +80,7 @@ import useMyToken from '@/hooks/useMyToken';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
+import { useAddContractMutation } from '@/api/mutations';
 
 type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
@@ -218,7 +219,7 @@ const TxModal = ({
     const { getCW20ContractInfo } = useMyToken();
     const { getCW721ContractInfo } = useMyNFTContracts();
     const { updateContractInfo: updateCW20ContractInfo } = useCW20MyTokenContext();
-    const { updateContractInfo: updateCW721ContractInfo } = useCW721NFTContractsContext();
+    const { updateContractInfo: updateCW721ContractInfo, updateThumbnailInfo } = useCW721NFTContractsContext();
 
     const { passwordWallet, timeKey } = useSelector((state: rootState) => state.wallet);
     const cwMode = useSelector((v: rootState) => v.global.cwMode);
@@ -241,6 +242,10 @@ const TxModal = ({
         getBalance();
         getEstimatedGas();
     }, [address]);
+
+    useEffect(() => {
+        if (status === 'success' && params.modalType === 'INSTANTIATE') addContractToDB();
+    }, [result?.contractAddress, status, params.modalType]);
 
     const getBalance = () => {
         getFctBalance(address)
@@ -265,11 +270,30 @@ const TxModal = ({
             } else {
                 const newInfo = await getCW721ContractInfo(params.txParams.contract);
                 updateCW721ContractInfo(newInfo);
+                updateThumbnailInfo(params.txParams.contract, { reqUpdate: true });
             }
         } catch (error) {
             console.log(error);
         }
     };
+
+    const { mutateAsync: addContractToDB } = useAddContractMutation(
+        {
+            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+            address,
+            contractAddress: result?.contractAddress,
+            name: params.txParams.msg.name,
+            symbol: params.txParams.msg.symbol,
+            label: params.txParams.label
+        },
+        {
+            onSuccess: () => {},
+            onError: () => {
+                enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
+            },
+            onSettled: () => {}
+        }
+    );
 
     const getEstimatedGas = async () => {
         try {

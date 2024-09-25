@@ -45,7 +45,7 @@ export const SpecificValueWrapper = styled.div`
 
 export const SpecificDefaultTypo = styled.div`
     color: var(--Gray-500, #383838);
-    font-family: "General Sans Variable";
+    font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 500;

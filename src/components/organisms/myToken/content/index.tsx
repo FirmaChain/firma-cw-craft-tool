@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ContentBox, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
+import { ContentBox, ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
 import ConnectWallet from './connectWallet';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
@@ -8,38 +8,60 @@ import useMyToken from '@/hooks/useMyToken';
 import MyMintedTokenList from './mintedTokenList';
 import { GlobalActions } from '@/redux/actions';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
+import { IMenuItem } from '@/interfaces/common';
+import { useSnackbar } from 'notistack';
+import { useMyContractQuery } from '@/api/queries';
+import NetworkSelect from '@/components/atoms/select/networkSelect';
+
+const sortByItems: IMenuItem[] = [
+    { value: 'name', label: 'Name', isDisabled: false },
+    { value: 'createdAt', label: 'Created At', isDisabled: false }
+];
 
 const MyTokenContent = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const address = useSelector((v: rootState) => v.wallet.address);
 
     const { contracts, addContracts } = useCW20MyTokenContext();
+    const { enqueueSnackbar } = useSnackbar();
+
     const [showCount, setShowCount] = useState(false);
 
-    const { getCW20ContractList } = useMyToken();
+    const [sortBy, setSortBy] = useState(sortByItems[0].value);
 
-    const fetchTokenList = useCallback(async () => {
-        try {
-            const contract = await getCW20ContractList();
+    const { refetch: getMyContracts } = useMyContractQuery(
+        { type: 'cw20', address, sortBy, sortOrder: 'desc' },
+        {
+            enabled: false,
+            onSuccess: ({ success, error, data: contracts }) => {
+                if (!success) {
+                    enqueueSnackbar({ message: 'Failed to get contract list. Please Try again later.', variant: 'error' });
+                    return;
+                }
 
-            addContracts(contract);
-            if (contract.length === 0) {
-                GlobalActions.handleGlobalLoading(false);
+                try {
+                    addContracts(contracts);
+
+                    if (contracts.length === 0) {
+                        GlobalActions.handleGlobalLoading(false);
+                    }
+                } catch (error) {
+                    console.log(error);
+                    GlobalActions.handleGlobalLoading(false);
+                }
             }
-        } catch (error) {
-            console.log(error);
-            GlobalActions.handleGlobalLoading(false);
         }
-    }, [getCW20ContractList]);
+    );
 
     useEffect(() => {
         if (isInit) {
-            fetchTokenList();
+            getMyContracts();
         }
 
         return () => {
             GlobalActions.handleGlobalLoading(false);
         };
-    }, [isInit, fetchTokenList]);
+    }, [isInit, sortBy]);
 
     const TokenListByInit = useCallback(() => {
         if (isInit) {
@@ -49,13 +71,22 @@ const MyTokenContent = () => {
         }
     }, [isInit]);
 
+    const handleChangeMenu = (menu: string) => {
+        const _selectMenu = sortByItems.find((item) => item.value === menu);
+
+        setSortBy(_selectMenu.value);
+    };
+
     return (
         <ContentBox>
             <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 96px' }}>
-                <ContentInfoWrapper style={{ opacity: showCount ? 1 : 0, transition: 'opacity 0.2s' }}>
-                    <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
-                    <TokenTypo>Tokens</TokenTypo>
-                </ContentInfoWrapper>
+                <ContentControlWrapper style={{ opacity: showCount ? 1 : 0, transition: 'opacity 0.2s' }}>
+                    <ContentInfoWrapper style={{ opacity: showCount ? 1 : 0, transition: 'opacity 0.2s' }}>
+                        <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
+                        <TokenTypo>Tokens</TokenTypo>
+                    </ContentInfoWrapper>
+                    <NetworkSelect value={sortBy} options={sortByItems} onChange={handleChangeMenu} minWidth="140px" />
+                </ContentControlWrapper>
             </div>
             <ContentWrapper>
                 <TokenListByInit />

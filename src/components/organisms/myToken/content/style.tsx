@@ -33,6 +33,9 @@ export const ContentControlWrapper = styled.div`
     display: flex;
     flex-direction: row;
     gap: 20px;
+    max-width: 1600px;
+    width: 100%;
+    justify-content: space-between;
 `;
 
 export const ContentInfoWrapper = styled.div`
@@ -40,8 +43,6 @@ export const ContentInfoWrapper = styled.div`
     flex-direction: row;
     gap: 6px;
     align-items: center;
-    max-width: 1600px;
-    width: 100%;
 `;
 
 export const ContractCountTypo = styled.div`

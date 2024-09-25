@@ -35,6 +35,7 @@ export const ContentControlWrapper = styled.div`
     gap: 20px;
     max-width: 1600px;
     width: 100%;
+    justify-content: space-between;
 `;
 
 export const ContentInfoWrapper = styled.div`

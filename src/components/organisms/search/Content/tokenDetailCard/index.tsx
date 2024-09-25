@@ -84,9 +84,7 @@ const TokenInfo = () => {
                     <div className="box-title">Total Supply</div>
                     {totalSupply && (
                         <div className="box-value">
-                            <div
-                                className="white-typo clamp-single-line"
-                            >
+                            <div className="white-typo clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
                             </div>
                             <div className="gray-typo">{symbol}</div>

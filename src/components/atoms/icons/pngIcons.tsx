@@ -74,5 +74,5 @@ export const IC_GUIDE = PUBLIC_IC_URL + 'ic_guide.png';
 export const IC_MEDIUM = PUBLIC_IC_URL + 'ic_medium.png';
 export const IC_INFO = PUBLIC_IC_URL + 'ic_info.png';
 
-export const IC_CW20 = PUBLIC_IC_URL + 'ic_cw20.png'
-export const IC_CW721 = PUBLIC_IC_URL + 'ic_cw721.png'
+export const IC_CW20 = PUBLIC_IC_URL + 'ic_cw20.png';
+export const IC_CW721 = PUBLIC_IC_URL + 'ic_cw721.png';

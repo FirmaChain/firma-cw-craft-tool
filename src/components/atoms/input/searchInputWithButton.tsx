@@ -84,6 +84,7 @@ interface InputProps {
         start?: React.ReactElement;
         end?: React.ReactElement;
     };
+    autoComplete?: boolean;
 }
 
 const SearchInputWithButton2 = ({
@@ -93,7 +94,8 @@ const SearchInputWithButton2 = ({
     placeHolder,
     textAlign = 'left',
     readOnly = false,
-    adornment
+    adornment,
+    autoComplete
 }: InputProps) => {
     const [isFocus, setIsFocus] = useState(false);
 

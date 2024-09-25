@@ -241,9 +241,7 @@ const RevokePreview = () => {
                     <AccordionRow>
                         <img src={IC_WALLET} alt="wallet" />
                         {revokeAddress === '' && <AccordionTypo $disabled>Wallet Address</AccordionTypo>}
-                        {revokeAddress !== '' && (
-                            <TextEllipsis CustomDiv={AccordionTypo} text={revokeAddress} breakMode={'letters'} />
-                        )}
+                        {revokeAddress !== '' && <TextEllipsis CustomDiv={AccordionTypo} text={revokeAddress} breakMode={'letters'} />}
                     </AccordionRow>
                     <AccordionRow>
                         <img src={IC_ID_CIRCLE} alt="token-id" />

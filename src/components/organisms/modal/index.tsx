@@ -41,10 +41,7 @@ export const AmountItem = ({ label, decimals, amount, symbol, color }: IAmountPr
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ItemAmountValue
-                    className="clamp-single-line"
-                    $color={color}
-                >
+                <ItemAmountValue className="clamp-single-line" $color={color}>
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ItemAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
@@ -58,10 +55,7 @@ export const ExecuteAmountItem = ({ label, decimals, amount, symbol, color }: IA
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ItemExecuteAmountValue
-                    className="clamp-single-line"
-                    $color={color}
-                >
+                <ItemExecuteAmountValue className="clamp-single-line" $color={color}>
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ItemExecuteAmountValue>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
@@ -75,9 +69,7 @@ export const ResultAmountItem = ({ label, decimals, amount, symbol }: IAmountPro
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ResultItemAmountTypo
-                    className="clamp-single-line"
-                >
+                <ResultItemAmountTypo className="clamp-single-line">
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
                 </ResultItemAmountTypo>
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>

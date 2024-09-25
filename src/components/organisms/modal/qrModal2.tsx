@@ -81,6 +81,7 @@ import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import RequestQR from '../requestQR';
 import { GlobalActions } from '@/redux/actions';
 import { getTransactionHash } from '@/utils/transaction';
+import { useAddContractMutation } from '@/api/mutations';
 
 export type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
@@ -183,7 +184,7 @@ const QRModal2 = ({
     const { getCW20ContractInfo } = useMyToken();
     const { getCW721ContractInfo } = useMyNFTContracts();
     const { updateContractInfo: updateCW20ContractInfo } = useCW20MyTokenContext();
-    const { updateContractInfo: updateCW721ContractInfo } = useCW721NFTContractsContext();
+    const { updateContractInfo: updateCW721ContractInfo, updateThumbnailInfo } = useCW721NFTContractsContext();
 
     const cwMode = useSelector((v: rootState) => v.global.cwMode);
     const address = useSelector((state: rootState) => state.wallet.address);
@@ -192,6 +193,51 @@ const QRModal2 = ({
     const [result, setResult] = useState<null | SuccessData>(null);
     const [status, setStatus] = useState<'init' | 'loading' | 'success' | 'failure'>('init');
     const [balance, setBalance] = useState('0');
+
+    const parsedData = useMemo(() => {
+        if (result === null) return null;
+
+        const { message, signData, status, ...rest } = result;
+
+        const parsedMessage = JSON.parse(message);
+
+        if (status !== '1' || signData === '') {
+            setStatus('failure');
+            return {
+                message: parsedMessage,
+                signData: signData,
+                contractAddress: '',
+                transactionHash: '',
+                ...rest
+            };
+        }
+
+        const { address, chainId, rawData } = JSON.parse(signData);
+        const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);
+        let tmpParsedLogs = '';
+        let tmpContractAddress = '';
+
+        if (code !== 0) {
+            setStatus('failure');
+        } else {
+            // write logs on succesful transactions
+            const parsedLogs = JSON.parse(rawLog)[0]; // would fail on reverted transactions
+            const contractAddress = parsedLogs.events[0].attributes[0].value;
+            tmpParsedLogs = parsedLogs;
+            tmpContractAddress = contractAddress;
+        }
+
+        const _rawData = { code, gasUsed, gasWanted, height, rawLog: tmpParsedLogs, transactionHash };
+        const _signData = { address, chainId, rawData: _rawData };
+
+        return {
+            message: parsedMessage,
+            signData: _signData,
+            contractAddress: tmpContractAddress,
+            transactionHash,
+            ...rest
+        };
+    }, [result]);
 
     const instantiateFee = useMemo(() => {
         try {
@@ -237,11 +283,30 @@ const QRModal2 = ({
             } else {
                 const newInfo = await getCW721ContractInfo(params.txParams.contract);
                 updateCW721ContractInfo(newInfo);
+                updateThumbnailInfo(params.txParams.contract, { reqUpdate: true });
             }
         } catch (error) {
             console.log(error);
         }
     };
+
+    const { mutateAsync: addContractToDB } = useAddContractMutation(
+        {
+            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+            address,
+            contractAddress: parsedData?.contractAddress,
+            name: params.txParams.msg.name,
+            symbol: params.txParams.msg.symbol,
+            label: params.txParams.label
+        },
+        {
+            onSuccess: () => {},
+            onError: () => {
+                enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
+            },
+            onSettled: () => {}
+        }
+    );
 
     useEffect(() => {
         if (status === 'success') {
@@ -252,6 +317,10 @@ const QRModal2 = ({
     useEffect(() => {
         getBalance();
     }, [address]);
+
+    useEffect(() => {
+        if (status === 'success' && parsedData?.contractAddress && params.modalType === 'INSTANTIATE') addContractToDB();
+    }, [status, parsedData?.contractAddress, params.modalType]);
 
     const closeModal = useModalStore().closeModal;
 
@@ -318,51 +387,6 @@ const QRModal2 = ({
         },
         [params]
     );
-
-    const parsedData = useMemo(() => {
-        if (result === null) return null;
-
-        const { message, signData, status, ...rest } = result;
-
-        const parsedMessage = JSON.parse(message);
-
-        if (status !== '1' || signData === '') {
-            setStatus('failure');
-            return {
-                message: parsedMessage,
-                signData: signData,
-                contractAddress: '',
-                transactionHash: '',
-                ...rest
-            };
-        }
-
-        const { address, chainId, rawData } = JSON.parse(signData);
-        const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);
-        let tmpParsedLogs = '';
-        let tmpContractAddress = '';
-
-        if (code !== 0) {
-            setStatus('failure');
-        } else {
-            // write logs on succesful transactions
-            const parsedLogs = JSON.parse(rawLog)[0]; // would fail on reverted transactions
-            const contractAddress = parsedLogs.events[0].attributes[0].value;
-            tmpParsedLogs = parsedLogs;
-            tmpContractAddress = contractAddress;
-        }
-
-        const _rawData = { code, gasUsed, gasWanted, height, rawLog: tmpParsedLogs, transactionHash };
-        const _signData = { address, chainId, rawData: _rawData };
-
-        return {
-            message: parsedMessage,
-            signData: _signData,
-            contractAddress: tmpContractAddress,
-            transactionHash,
-            ...rest
-        };
-    }, [result]);
 
     const hideContractInfo = useMemo(() => {
         if (module.toLowerCase().includes('renounce')) return true;
