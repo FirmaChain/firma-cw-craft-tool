@@ -8,28 +8,33 @@ import {
     CardTitle,
     CardTitleBox,
     CardWarp,
-    ContentBox,
+    ContentBorderBox,
+    ContentInnerBox,
     ContentScreen,
     ContractBtnBase,
     GradientTooltipIcon,
+    HeaderBox,
     MobileCardBox,
     ScreenWarpper,
     SubTitle,
     Title,
-    TitleBox
+    TitleBox,
+    WalletConnectionIndicator
 } from './styles';
 import { useModalStore } from '@/hooks/useModal';
 import LoadingModal from '../modal/loadingModal';
 import { GlobalActions } from '@/redux/actions';
-import { getRandomTimeInMs } from '@/utils/common';
 import CarouselSection from './mobile/carouselSection';
-import Footer from './mobile/footer';
 import DesktopFooter from './footer';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const CW20Btn = () => {
     const modal = useModalStore();
     const closeModal = useModalStore().closeModal;
     const navigate = useNavigate();
+
+    const address = useSelector((v: rootState) => v.wallet.address);
 
     const onClickExecute = () => {
         modal.openModal({
@@ -40,7 +45,7 @@ const CW20Btn = () => {
                     callback={() => {
                         closeModal(id);
                         GlobalActions.handleCw('CW20');
-                        navigate('/instantiate');
+                        navigate(address ? 'mytoken' : '/instantiate');
                     }}
                 />
             )
@@ -48,12 +53,12 @@ const CW20Btn = () => {
     };
 
     return (
-        <ContractBtnBase onClick={onClickExecute}>
-            <img src={IC_CW20} alt="cw20" style={{ width: '30px' }} />
+        <ContractBtnBase onClick={onClickExecute} $isConnected={Boolean(address)}>
+            <img src={IC_CW20} alt="cw20" style={{ width: '2.8rem', height: '2.8rem' }} />
             {/* <Icons.CW20 /> */}
             <div className="typo-box">
-                <div className="variant">Token</div>
-                <div style={{ display: 'flex', gap: '1px' }}>
+                <div className="variant">{address && 'My '}Token</div>
+                <div style={{ display: 'flex', gap: '0.1rem' }}>
                     <div className="type">CW</div>
                     <div className="type">20</div>
                 </div>
@@ -67,6 +72,8 @@ const CW721Btn = () => {
     const closeModal = useModalStore().closeModal;
     const navigate = useNavigate();
 
+    const address = useSelector((v: rootState) => v.wallet.address);
+
     const onClickExecute = () => {
         modal.openModal({
             modalType: 'custom',
@@ -76,7 +83,7 @@ const CW721Btn = () => {
                     callback={() => {
                         closeModal(id);
                         GlobalActions.handleCw('CW721');
-                        navigate('/cw721/instantiate');
+                        navigate(address ? '/cw721/mynft' : '/cw721/instantiate');
                     }}
                 />
             )
@@ -84,12 +91,11 @@ const CW721Btn = () => {
     };
 
     return (
-        <ContractBtnBase onClick={onClickExecute}>
-            {/* <Icons.CW721 /> */}
-            <img src={IC_CW721} alt="cw721" style={{ width: '28px' }} />
+        <ContractBtnBase onClick={onClickExecute} $isConnected={Boolean(address)}>
+            <img src={IC_CW721} alt="cw721" style={{ width: '2.8rem', height: '2.8rem' }} />
             <div className="typo-box">
-                <div className="variant">NFT</div>
-                <div style={{ display: 'flex', gap: '1px' }}>
+                <div className="variant">{address && 'My '}NFT</div>
+                <div style={{ display: 'flex', gap: '0.1rem' }}>
                     <div className="type">CW</div>
                     <div className="type">721</div>
                 </div>
@@ -99,59 +105,71 @@ const CW721Btn = () => {
 };
 
 const Landing = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+
     return (
         <ScreenWarpper>
+            <HeaderBox>
+                <Icons.FirmaCraft width="13.2rem" height="3.4rem" fill="#707070" />
+                {address && <WalletConnectionIndicator />}
+            </HeaderBox>
+
             <ContentScreen>
-                <Icons.FirmaCraft width="198px" height="52px" fill="#DCDCDC" />
-                <ContentBox>
-                    <TitleBox>
-                        <Title>Create your own token</Title>
-                        <SubTitle>{`Create and manage your CW20 and CW721 tokens\nwith ease and security.`}</SubTitle>
-                    </TitleBox>
-                    <CardBox>
-                        <CardWarp style={{ gridArea: 'inst' }}>
-                            <img
-                                src={IMG_LANDING_INSTANTIATE}
-                                alt="instantiate"
-                                style={{ minWidth: '180px', maxWidth: '180px', minHeight: '180px' }}
-                            />
-                            <CardTitleBox className="title-box">
-                                <CardTitle className="card-title">Instantiate</CardTitle>
-                                <BgColoredTitle>Instantiate</BgColoredTitle>
-                                <GradientTooltipIcon tooltip={`Mint your tokens and\nstart setting them up.`} />
-                            </CardTitleBox>
-                        </CardWarp>
-                        <CardWarp style={{ gridArea: 'query' }}>
-                            <img src={IMG_LANDING_QUERY} alt="query" style={{ minWidth: '180px', maxWidth: '180px', minHeight: '180px' }} />
-                            <CardTitleBox className="title-box">
-                                <CardTitle className="card-title">Query</CardTitle>
-                                <BgColoredTitle>Query</BgColoredTitle>
-                                <GradientTooltipIcon tooltip={`Query the details and balance\nof your minted tokens.`} />
-                            </CardTitleBox>
-                        </CardWarp>
-                        <div style={{ gridArea: 'execute', display: 'flex', width: '100%', justifyContent: 'center' }}>
-                            <CardWarp>
+                <ContentBorderBox>
+                    <ContentInnerBox>
+                        <TitleBox>
+                            <Title>{`FIRMA CRAFT : \nCreate your own token`}</Title>
+                            <SubTitle>{`Create and manage your CW20 and CW721 tokens\nwith ease and security.`}</SubTitle>
+                        </TitleBox>
+                        <CardBox>
+                            <CardWarp style={{ gridArea: 'inst' }}>
                                 <img
-                                    src={IMG_LANDING_EXECUTE}
-                                    alt="execute"
-                                    style={{ minWidth: '180px', maxWidth: '180px', minHeight: '180px' }}
+                                    src={IMG_LANDING_INSTANTIATE}
+                                    alt="instantiate"
+                                    style={{ minWidth: '18rem', maxWidth: '18rem', minHeight: '18rem' }}
                                 />
                                 <CardTitleBox className="title-box">
-                                    <CardTitle className="card-title">Execute</CardTitle>
-                                    <BgColoredTitle>Execute</BgColoredTitle>
-                                    <GradientTooltipIcon tooltip={`Manage your minted tokens:\ntransfer, mint, burn, and more.`} />
+                                    <CardTitle className="card-title">Instantiate</CardTitle>
+                                    <BgColoredTitle>Instantiate</BgColoredTitle>
+                                    <GradientTooltipIcon tooltip={`Mint your tokens and\nstart setting them up.`} />
                                 </CardTitleBox>
                             </CardWarp>
-                        </div>
-                    </CardBox>
-                    <MobileCardBox>
-                        <CarouselSection isDesktop variableCards />
-                    </MobileCardBox>
-                    <ButtonBox>
-                        <CW20Btn />
-                        <CW721Btn />
-                    </ButtonBox>
-                </ContentBox>
+                            <CardWarp style={{ gridArea: 'query' }}>
+                                <img
+                                    src={IMG_LANDING_QUERY}
+                                    alt="query"
+                                    style={{ minWidth: '18rem', maxWidth: '18rem', minHeight: '18rem' }}
+                                />
+                                <CardTitleBox className="title-box">
+                                    <CardTitle className="card-title">Query</CardTitle>
+                                    <BgColoredTitle>Query</BgColoredTitle>
+                                    <GradientTooltipIcon tooltip={`Query the details and balance\nof your minted tokens.`} />
+                                </CardTitleBox>
+                            </CardWarp>
+                            <div style={{ gridArea: 'execute', display: 'flex', width: '100%', justifyContent: 'center' }}>
+                                <CardWarp>
+                                    <img
+                                        src={IMG_LANDING_EXECUTE}
+                                        alt="execute"
+                                        style={{ minWidth: '18rem', maxWidth: '18rem', minHeight: '18rem' }}
+                                    />
+                                    <CardTitleBox className="title-box">
+                                        <CardTitle className="card-title">Execute</CardTitle>
+                                        <BgColoredTitle>Execute</BgColoredTitle>
+                                        <GradientTooltipIcon tooltip={`Manage your minted tokens:\ntransfer, mint, burn, and more.`} />
+                                    </CardTitleBox>
+                                </CardWarp>
+                            </div>
+                        </CardBox>
+                        <MobileCardBox>
+                            <CarouselSection isDesktop variableCards />
+                        </MobileCardBox>
+                        <ButtonBox>
+                            <CW20Btn />
+                            <CW721Btn />
+                        </ButtonBox>
+                    </ContentInnerBox>
+                </ContentBorderBox>
             </ContentScreen>
             <DesktopFooter />
         </ScreenWarpper>

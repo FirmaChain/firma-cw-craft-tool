@@ -46,8 +46,8 @@ export const SummeryRightTotalSupply = styled.div<{ $disabled?: boolean }>`
     line-height: 22px;
 `;
 
-export const SummeryRightTokenSymbol = styled.div`
-    color: var(--Gray-700, #02e191);
+export const SummeryRightTokenSymbol = styled.div<{ $disabled?: boolean }>`
+    color: ${({ $disabled }) => ($disabled ? '#383838' : '#02e191')};
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;

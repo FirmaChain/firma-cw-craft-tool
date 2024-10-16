@@ -21,6 +21,7 @@ import { ContentBox } from '../content/style';
 import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
 import TxModal from '../../modal/txModal';
 import QRModal2, { ModalType } from '../../modal/qrModal2';
+import { useSnackbar } from 'notistack';
 
 interface IProps {
     isBasic: boolean;
@@ -41,6 +42,8 @@ const Preview = ({ isBasic }: IProps) => {
 
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
+    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
+
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
 
     const tokenName = useInstantiateStore((v) => v.tokenName);
@@ -57,6 +60,8 @@ const Preview = ({ isBasic }: IProps) => {
     const walletList = useInstantiateStore((v) => v.walletList);
     const totalSupply = useInstantiateStore((v) => v.totalSupply);
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const modal = useModalStore();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -71,6 +76,11 @@ const Preview = ({ isBasic }: IProps) => {
 
     const handleInstantiate = () => {
         if (isInit) {
+            if (Number(fctBalance) === 0) {
+                enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+                return;
+            }
+
             const newDecimals = isBasic ? 6 : Number(decimals);
 
             let decimalsTotalSupply = getApplyDecimalsAmount(totalSupply, newDecimals.toString());

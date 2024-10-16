@@ -9,14 +9,14 @@ import Divider from '@/components/atoms/divider';
 import styled from 'styled-components';
 import { IC_LOG_OUT } from '@/components/atoms/icons/pngIcons';
 import { useEffect, useState } from 'react';
-
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import Skeleton from '@/components/atoms/skeleton';
 import { GlobalActions, WalletActions } from '@/redux/actions';
 import { persistor } from '@/redux';
 import useResetStoreData from '@/hooks/useResetStoreData';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import useFirmaSDKInternal from '@/hooks/useFirmaSDKInternal';
+import { removeAccessToken } from '@/utils/token';
 
 const BalanceBox = styled(AddressCard)<{ $isOpen: boolean }>`
     position: absolute;
@@ -140,9 +140,10 @@ const AddressBox = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { resetAll } = useResetStoreData();
 
-    const { firmaSDK } = useFirmaSDKContext();
+    const { getFctBalance } = useFirmaSDKInternal();
 
-    const [balance, setBalance] = useState<string>('');
+    // const [fctBalance, setBalance] = useState<string>('');
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const [open, setOpen] = useState(false);
 
     const onClickAddress = async (evt) => {
@@ -159,6 +160,7 @@ const AddressBox = () => {
         persistor.purge();
         resetAll();
         WalletActions.clearStore();
+        removeAccessToken();
 
         switch (cwMode) {
             case 'CW20':
@@ -187,34 +189,23 @@ const AddressBox = () => {
         }
     };
 
-    const getBalance = async () => {
-        const balance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
-        setBalance(balance);
-    };
-
     useEffect(() => {
-        getBalance();
+        getFctBalance(address).then((res) => {
+            WalletActions.handleFCTBalance(res);
+        });
         GlobalActions.handleFetchedBalance(false);
     }, [isFetchedBalance]);
 
-    useEffect(() => {
-        if (!open) {
-            document.addEventListener('mousedown', () => {
-                setOpen(false);
-            });
-
-            return () => {
-                document.removeEventListener('mousedown', () => {
-                    setOpen(false);
-                });
-            };
-        }
-    }, []);
-
     return (
         <div style={{ position: 'relative' }}>
-            <IconButton style={{ padding: 0 }} onClick={() => setOpen(!open)}>
-                {/* <IconButton style={{ padding: 0 }} onClick={onClickAddress}> */}
+            <IconButton
+                style={{ padding: 0 }}
+                onClick={(evt) => {
+                    evt.stopPropagation();
+                    evt.preventDefault();
+                    setOpen(!open);
+                }}
+            >
                 <AddressCard>
                     <AddressText>{shortenAddress(address, 8, 6)}</AddressText>
                     <div style={{ display: 'flex' }} onClick={onClickAddress}>
@@ -226,8 +217,8 @@ const AddressBox = () => {
                 <div className="bg-box" style={{}}>
                     <BalanceTitleTypo>Balance :</BalanceTitleTypo>
                     <div className="balance-box">
-                        {balance ? (
-                            <BalanceAmountTypo>{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</BalanceAmountTypo>
+                        {fctBalance ? (
+                            <BalanceAmountTypo>{formatWithCommas(getTokenAmountFromUToken(fctBalance, '6'))}</BalanceAmountTypo>
                         ) : (
                             <Skeleton width="80px" height="12px" />
                         )}

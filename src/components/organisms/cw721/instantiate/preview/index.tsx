@@ -13,6 +13,7 @@ import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { useSnackbar } from 'notistack';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
@@ -126,7 +127,10 @@ const Preview = () => {
     const { scroll } = useScrollContext();
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const address = useSelector((state: rootState) => state.wallet.address);
+    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
     const contractMode = useSelector((state: rootState) => state.global.contractMode);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -160,6 +164,11 @@ const Preview = () => {
 
     const onClickSubmit = () => {
         if (isInit) {
+            if (Number(fctBalance) === 0) {
+                enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+                return;
+            }
+
             const messageData = {
                 name: nftName,
                 minter: contractMode === 'BASIC' ? address : minter,

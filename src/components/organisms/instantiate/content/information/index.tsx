@@ -214,7 +214,7 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) https://example.thisismy.token.jpg',
                         onChange: handleTokenLogoUrl,
                         imgPreview: true,
-                        regex: DEFAULT_INPUT_REGEX,
+                        // regex: DEFAULT_INPUT_REGEX,
                         maxLength: 300
                     }}
                 />
@@ -249,7 +249,7 @@ const Information = ({ isBasic }: IProps) => {
                                 formId: 'marketingProject',
                                 placeHolder: 'ex) https://firmachain.org',
                                 onChange: handleMarketingProject,
-                                regex: DEFAULT_INPUT_REGEX,
+                                // regex: DEFAULT_INPUT_REGEX,
                                 maxLength: 300
                             }}
                         />
