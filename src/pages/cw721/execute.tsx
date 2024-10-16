@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-
 import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
 import Header from '@/components/organisms/cw721/execute/header';
-
 import { Container } from '../../styles/instantiate';
 import Contents from '@/components/organisms/cw721/execute/contents';
 import { GlobalActions } from '@/redux/actions';

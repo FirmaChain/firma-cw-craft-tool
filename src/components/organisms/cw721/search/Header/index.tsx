@@ -10,7 +10,8 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { isValidAddress } from '@/utils/address';
 import { sleep } from '@/utils/common';
-import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { BYPASS_ALL, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import ConnectWallet from '@/components/organisms/execute/header/connectWallet';
 
 const EndAdornment = ({
     keyword,
@@ -30,7 +31,7 @@ const EndAdornment = ({
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }} onClick={disableEventBubbling}>
             {showClearButton && (
                 <IconButton style={{ display: 'flex', padding: 0 }} onClick={clearKeyword}>
-                    <Icons.CloseIcon width="32px" height="32px" strokeWidth="2.6" stroke="#1A1A1A" />
+                    <Icons.XCircle width={'32px'} height={'32px'} fill="#707070" />
                 </IconButton>
             )}
         </div>
@@ -38,7 +39,8 @@ const EndAdornment = ({
 };
 
 const Header = () => {
-    const { address } = useSelector((state: rootState) => state.wallet);
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const [keyword, setKeyword] = useState<string>('');
     const prevKeyword = useRef<string | null>(null);
 
@@ -47,44 +49,47 @@ const Header = () => {
     const { setContractDetail, setNftsInfo, setOwnedNftsInfo, setTransactions, clearForm } = useNFTContractDetailStore();
     const { checkExistContract, getNFTContractDetail, getNFTsInfo, getOwnedNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
 
-    const getRequiredInfo = useCallback(async () => {
-        GlobalActions.handleGlobalLoading(true);
+    const getRequiredInfo = useCallback(
+        async (searchAddress) => {
+            GlobalActions.handleGlobalLoading(true);
 
-        try {
-            if (prevKeyword.current === null || prevKeyword.current?.toLowerCase() !== keyword.toLowerCase()) {
-                const exist = await checkExistContract(keyword);
+            try {
+                if (prevKeyword.current === null || prevKeyword.current?.toLowerCase() !== searchAddress.toLowerCase()) {
+                    const exist = await checkExistContract(searchAddress);
 
-                await sleep(500);
+                    await sleep(500);
 
-                if (exist) {
-                    clearForm();
+                    if (exist) {
+                        clearForm();
 
-                    const txData = await getNFTContractTransactions(keyword);
-                    const detail = await getNFTContractDetail(keyword);
-                    const nfts = await getNFTsInfo(keyword);
+                        const txData = await getNFTContractTransactions(searchAddress);
+                        const detail = await getNFTContractDetail(searchAddress);
+                        const nfts = await getNFTsInfo(searchAddress);
 
-                    if (address) {
-                        const ownedNfts = await getOwnedNFTsInfo(keyword, address);
-                        setOwnedNftsInfo(ownedNfts);
+                        if (address) {
+                            const ownedNfts = await getOwnedNFTsInfo(searchAddress, address);
+                            setOwnedNftsInfo(ownedNfts);
+                        }
+
+                        setContractDetail(detail);
+                        setNftsInfo(nfts);
+                        setTransactions(txData.txData);
+                    } else {
+                        prevKeyword.current = null;
+                        clearForm();
                     }
-
-                    setContractDetail(detail);
-                    setNftsInfo(nfts);
-                    setTransactions(txData.txData);
+                    prevKeyword.current = searchAddress;
                 } else {
-                    prevKeyword.current = null;
-                    clearForm();
+                    return;
                 }
-                prevKeyword.current = keyword;
-            } else {
-                return;
+            } catch (error) {
+                console.log(error);
+            } finally {
+                GlobalActions.handleGlobalLoading(false);
             }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            GlobalActions.handleGlobalLoading(false);
-        }
-    }, [keyword, prevKeyword]);
+        },
+        [prevKeyword]
+    );
 
     const onClickClearKeyword = () => {
         setKeyword('');
@@ -92,9 +97,9 @@ const Header = () => {
         clearForm();
     };
 
-    const onClickSearch = () => {
-        getRequiredInfo();
-    };
+    // const onClickSearch = () => {
+    //     getRequiredInfo();
+    // };
 
     useEffect(() => {
         return () => {
@@ -106,28 +111,38 @@ const Header = () => {
         onClickClearKeyword();
     }, [address]);
 
-    useEffect(() => {
-        if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
-    }, [keyword]);
+    // useEffect(() => {
+    //     if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
+    // }, [keyword]);
 
     return (
-        <HeaderBox>
+        <HeaderBox $hideBorder={!Boolean(address)}>
             <HeaderWrap>
                 <Title>Search</Title>
-                <SearchInputWithButton2
-                    value={keyword}
-                    placeHolder={'Search by the full CW721 Contract Address'}
-                    onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
-                    adornment={{
-                        end: (
-                            <EndAdornment
-                                keyword={keyword}
-                                clearKeyword={onClickClearKeyword}
-                                showClearButton={Boolean(keyword?.length > 0 || contractDetail !== null)}
-                            />
-                        )
-                    }}
-                />
+                {isInit ? (
+                    <SearchInputWithButton2
+                        value={keyword}
+                        placeHolder={'Search by NFT Contract Name / Symbol / Label / Address'}
+                        onChange={(v) => setKeyword(v)}
+                        adornment={{
+                            end: (
+                                <EndAdornment
+                                    keyword={keyword}
+                                    clearKeyword={onClickClearKeyword}
+                                    showClearButton={Boolean(keyword?.length > 0 || contractDetail !== null)}
+                                />
+                            )
+                        }}
+                        autoComplete
+                        autoCompleteType="cw721"
+                        onClickContract={(v) => getRequiredInfo(v)}
+                        regex={BYPASS_ALL}
+                        usePinList
+                    />
+                ) : (
+                    <ConnectWallet />
+                )}
+                {/*  */}
             </HeaderWrap>
         </HeaderBox>
     );

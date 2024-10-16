@@ -7,6 +7,8 @@ import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import { useMemo } from 'react';
 import Search from './search';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const LogoBackground = styled.div`
     position: fixed;
@@ -22,6 +24,7 @@ const LogoBackground = styled.div`
 `;
 
 const Content = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
     const { contractDetail, nftsInfo } = useNFTContractDetailStore();
 
     const contractExist = useMemo(() => {
@@ -31,7 +34,7 @@ const Content = () => {
 
     return (
         <Container>
-            {contractExist === null && (
+            {contractExist === null && address && (
                 <LogoBackground>
                     <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />
                 </LogoBackground>

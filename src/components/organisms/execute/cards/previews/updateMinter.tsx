@@ -12,6 +12,9 @@ import { isValidAddress } from '@/utils/address';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -107,12 +110,15 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateMinter = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const minterAddress = useExecuteStore((state) => state.minterAddress);
     const clearMinter = useExecuteStore((state) => state.clearMinter);
     const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
     const { setMinterInfo } = useExecuteActions();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -125,6 +131,11 @@ const UpdateMinter = () => {
 
     const onClickUpdateMinter = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 

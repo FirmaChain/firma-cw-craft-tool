@@ -57,7 +57,8 @@ const UpdateOwnershipRenouncePreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
 
     const { setMinter, setOwnershipInfo } = useCW721ExecuteAction();
@@ -97,6 +98,11 @@ const UpdateOwnershipRenouncePreview = () => {
 
     const onClickRenounce = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 

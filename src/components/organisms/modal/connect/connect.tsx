@@ -7,6 +7,8 @@ import { storeWalletFromMnemonic, storeWalletFromPrivateKey } from '@/utils/wall
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
+import { useAuthContext } from '@/context/authContext';
+import { sleep } from '@/utils/common';
 
 const ModalContent = styled.div`
     width: 100%;
@@ -207,6 +209,7 @@ interface IProps {
 const Connect = ({ closeModal }: IProps) => {
     const { enqueueSnackbar } = useSnackbar();
     const { firmaSDK } = useFirmaSDKContext();
+    const { refreshToken } = useAuthContext();
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
 
@@ -279,10 +282,12 @@ const Connect = ({ closeModal }: IProps) => {
         setConfirmPassword(value);
     };
 
-    const confirmWallet = () => {
+    const confirmWallet = async () => {
         if (isEnableButton) {
             storeWallet()
-                .then(() => {
+                .then(async () => {
+                    await refreshToken();
+
                     enqueueSnackbar('Success Recovered Your Wallet', {
                         variant: 'success',
                         autoHideDuration: 2000

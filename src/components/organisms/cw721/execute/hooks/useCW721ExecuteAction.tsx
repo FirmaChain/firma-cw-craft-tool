@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import useCW721ExecuteStore from './useCW721ExecuteStore';
-import { GlobalActions } from '@/redux/actions';
+import { GlobalActions, WalletActions } from '@/redux/actions';
 import { Cw721Approval, Cw721ContractInfo, Cw721NftInfo } from '@firmachain/firma-js';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { useSelector } from 'react-redux';
@@ -64,7 +64,8 @@ const useCW721ExecuteAction = () => {
     const setFctBalance = async (address: string) => {
         try {
             const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
-            useCW721ExecuteStore.getState().setFctBalance(fctBalance);
+            // useCW721ExecuteStore.getState().setFctBalance(fctBalance);
+            WalletActions.handleFCTBalance(fctBalance);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({

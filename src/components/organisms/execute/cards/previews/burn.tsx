@@ -21,6 +21,7 @@ import useExecuteActions from '../../action';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -142,7 +143,8 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const BurnPreview = () => {
     const contractAddress = useExecuteStore((v) => v.contractAddress);
-    const fctBalance = useExecuteStore((v) => v.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const cw20Balance = useExecuteStore((v) => v.cw20Balance);
     const burnAmount = useExecuteStore((v) => v.burnAmount) || '0';
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
@@ -150,6 +152,8 @@ const BurnPreview = () => {
     const { setCw20Balance, setTokenInfo } = useExecuteActions();
 
     const address = useSelector((state: rootState) => state.wallet.address);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -163,6 +167,11 @@ const BurnPreview = () => {
 
     const onClickBurn = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
         const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     width: 100%;
+    height: 100%;
     padding: 36px 88px 115px 96px;
     display: flex;
     flex-direction: column;
@@ -71,13 +72,13 @@ export const SectionContainer = styled.div`
     }
 
     .section-title {
-        color: var(--Gray-900, var(--Primary-Base-White, #fff));
+        color: #999999;
 
         /* Heading/H5 - Bd */
         font-family: 'General Sans Variable';
-        font-size: 18px;
+        font-size: 16px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         line-height: 22px; /* 122.222% */
     }
 
@@ -183,19 +184,19 @@ export const SectionContainer = styled.div`
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 16px;
+        gap: 12px;
         align-self: stretch;
     }
 
     .table-title {
-        color: var(--Gray-750, #999);
+        color: #707070;
 
         /* Body/Body1 - Rg */
         font-family: 'General Sans Variable';
-        font-size: 16px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 400;
-        line-height: 22px; /* 137.5% */
+        line-height: 20px; /* 137.5% */
     }
 
     .single-line-clamp {
@@ -221,6 +222,17 @@ export const WalletBalance = styled.div`
     display: flex;
     align-items: flex-start;
     gap: 8px;
+
+    .default {
+        color: var(--Gray-500, #383838);
+
+        /* Body/Body1 - Md */
+        font-family: 'General Sans Variable';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 22px; /* 137.5% */
+    }
 
     .balance-amount {
         color: var(--Gray-900, var(--Primary-Base-White, #fff));

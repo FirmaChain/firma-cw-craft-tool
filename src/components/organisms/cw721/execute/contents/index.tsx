@@ -94,7 +94,7 @@ const Contents = () => {
                     </Box>
                 )}
 
-                {contractExist === null && (
+                {address && contractExist === null && (
                     <LogoBackground>
                         <img src={FIRMA_DIM_LOGO} alt="logo" className="logo" />
                     </LogoBackground>

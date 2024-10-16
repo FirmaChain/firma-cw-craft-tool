@@ -12,6 +12,9 @@ import TxModal from '@/components/organisms/modal/txModal';
 import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -131,12 +134,15 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 const RevokePreview = () => {
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
     const revokeTokenId = useCW721ExecuteStore((state) => state.revokeTokenId);
     const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -161,6 +167,11 @@ const RevokePreview = () => {
 
     const onClickRevoke = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 

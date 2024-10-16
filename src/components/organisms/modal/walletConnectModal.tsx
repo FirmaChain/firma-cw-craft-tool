@@ -30,6 +30,8 @@ import { CRAFT_CONFIGS } from '@/config';
 import { openLink } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
 import Connect from './connect/connect';
+import { setAccessToken } from '@/utils/token';
+import { add } from 'date-fns';
 
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
@@ -80,6 +82,10 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                                 qrSize={144}
                                 module="/login"
                                 onSuccess={(requestData: any) => {
+                                    if (requestData.token) {
+                                        setAccessToken(requestData.token, { minutes: 14 });
+                                    }
+
                                     if (isValidAddress(requestData.signer)) {
                                         WalletActions.handleInit(true);
                                         WalletActions.handleAddress(requestData.signer);

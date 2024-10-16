@@ -101,6 +101,8 @@ export const TokenNameBox = styled.div`
         font-style: normal;
         font-weight: 400;
         line-height: 22px; /* 137.5% */
+
+        margin-right: 16px;
     }
 `;
 

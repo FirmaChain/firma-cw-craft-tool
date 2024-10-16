@@ -24,6 +24,7 @@ import { parseAmountWithDecimal2 } from '@/utils/common';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -238,7 +239,8 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 const IncreaseAllowancePreview = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((v) => v.contractAddress);
-    const fctBalance = useExecuteStore((v) => v.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const allowanceInfo = useExecuteStore((v) => v.allowanceInfo);
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
     const allowance = useExecuteStore((v) => v.allowance);
@@ -248,6 +250,8 @@ const IncreaseAllowancePreview = () => {
     const { setAllowanceInfo } = useExecuteActions();
 
     const address = useSelector((state: rootState) => state.wallet.address);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -284,6 +288,11 @@ const IncreaseAllowancePreview = () => {
 
     const onClickIncreaseAllowance = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         let expires = {};
         if (allowance.type === 'at_height') {
@@ -472,7 +481,7 @@ const IncreaseAllowancePreview = () => {
 
                         <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLabelWrap>
-                    <ItemLabelWrap>
+                    <ItemLabelWrap style={{ gap: '8px' }}>
                         <TextEllipsis
                             CustomDiv={UpdatedBalanceTypo}
                             text={commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}

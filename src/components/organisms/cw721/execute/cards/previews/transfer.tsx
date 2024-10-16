@@ -18,6 +18,7 @@ import TxModal from '@/components/organisms/modal/txModal';
 import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -235,13 +236,16 @@ const TransferPreview = () => {
 
     const approveInfoById = useCW721ExecuteStore((state) => state.approveInfoById);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const userTransferList = useCW721ExecuteStore((state) => state.transfer);
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearTransferForm = useCW721ExecuteStore((state) => state.clearTransferForm);
 
     const { setMyNftList } = useCW721ExecuteAction();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -322,6 +326,11 @@ const TransferPreview = () => {
 
     const onClickTransfer = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const feeAmount =
             transferListForModal.length === 1
@@ -438,7 +447,7 @@ const TransferPreview = () => {
                             <IconTooltip size="14px" tooltip={'Updated Balance is the number of NFTs held after the transfer.'} />
                         </div>
                     </ItemLabelWrap>
-                    <ItemLabelWrap>
+                    <ItemLabelWrap style={{ gap: '8px' }}>
                         <UpdatedBalanceTypo>
                             {subtractStringAmount(myNftList.length.toString(), userTransferIDs.length.toString())}
                         </UpdatedBalanceTypo>

@@ -39,7 +39,7 @@ const EndAdornment = ({
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
                 <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
-                    <Icons.XCircle width={'32px'} height={'32px'} />
+                    <Icons.XCircle width={'32px'} height={'32px'} fill="#707070" />
                 </IconButton>
             )}
 
@@ -96,9 +96,9 @@ const TokenWalletSearch = () => {
         setAllReceives([]);
     }, [contractAddress]);
 
-    const columns: IColumn[] = [
+    const toOtherTablecolumns: IColumn[] = [
         {
-            id: 'Receiver',
+            id: 'Spender',
             label: 'Receiver',
             renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />,
             width: '55%',
@@ -120,12 +120,38 @@ const TokenWalletSearch = () => {
         }
     ];
 
+    const receivedTablecolumns: IColumn[] = [
+        {
+            id: 'Spender',
+            label: 'Spender',
+            renderCell: (id, row) => <Cell.WalletAddress address={row[id]} />,
+            width: '55%',
+            minWidth: '450px'
+        },
+        {
+            id: 'Amount',
+            label: 'Amount',
+            renderCell: (id, row) => <Cell.TokenAmount amount={row[id]} decimals={String(decimals)} symbol={symbol} />,
+            width: '20%',
+            minWidth: '200px'
+        },
+        {
+            id: 'Expires',
+            label: 'Expires',
+            renderCell: (id, row) => parseExpires(JSON.stringify(row['Expires'])),
+            width: '25%',
+            minWidth: '200px'
+        }
+    ];
+
     return (
-        <CardContainer>
-            <CardTitle className="card-title">Wallet Address Search</CardTitle>
+        <CardContainer style={{ gap: 0 }}>
+            <CardTitle className="card-title" style={{ marginBottom: '28px' }}>
+                Wallet Address Search
+            </CardTitle>
             <SearchInputWithButton2
                 value={keyword}
-                placeHolder={'Search Wallet Address'}
+                placeHolder={'Search by CW20 Wallet Address'}
                 onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                 onClickEvent={getAddressInfo}
                 adornment={{
@@ -139,36 +165,40 @@ const TokenWalletSearch = () => {
                     )
                 }}
             />
-            <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
-            <SectionContainer className="section-horizontal">
+            <div style={{ width: '100%', margin: '32px 0' }}>
+                <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
+            </div>
+            <SectionContainer className="section-horizontal" style={{ marginBottom: '24px' }}>
                 <div className="box-row">
                     <div className="section-title" style={{ minWidth: '224px' }}>
-                        Balance
+                        Balances
                     </div>
                     {balanceAmount === null ? (
                         <Skeleton width="100px" height="22px" />
+                    ) : balanceAmount === '' ? (
+                        <WalletBalance>
+                            <div className="default">Balances</div>
+                        </WalletBalance>
                     ) : (
-                        balanceAmount && (
-                            <WalletBalance className="balance-box">
-                                <div className="balance-amount clamp-single-line">
-                                    {commaNumber(getTokenAmountFromUToken(balanceAmount, String(decimals)))}
-                                </div>
-                                <div className="balance-symbol">{symbol}</div>
-                            </WalletBalance>
-                        )
+                        <WalletBalance className="balance-box">
+                            <div className="balance-amount clamp-single-line">
+                                {commaNumber(getTokenAmountFromUToken(balanceAmount, String(decimals)))}
+                            </div>
+                            <div className="balance-symbol">{symbol}</div>
+                        </WalletBalance>
                     )}
                 </div>
             </SectionContainer>
-            <SectionContainer className="section-vertical">
-                <div className="section-title">Allowance</div>
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '24px' }}>
+            <SectionContainer className="section-vertical" style={{ gap: '20px' }}>
+                <div className="section-title">Allowances</div>
+                <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '16px' }}>
                     <div className="table-box">
                         <div className="table-title">Allowances to others</div>
-                        <StyledTable columns={columns} rows={allAllowances || []} isLoading={!allAllowances} />
+                        <StyledTable columns={toOtherTablecolumns} rows={allAllowances || []} isLoading={!allAllowances} />
                     </div>
                     <div className="table-box">
                         <div className="table-title">Received Allowances</div>
-                        <StyledTable columns={columns} rows={allReceives || []} isLoading={!allReceives} />
+                        <StyledTable columns={receivedTablecolumns} rows={allReceives || []} isLoading={!allReceives} />
                     </div>
                 </div>
             </SectionContainer>

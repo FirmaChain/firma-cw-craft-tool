@@ -20,18 +20,24 @@ import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
+import { getTokenAmountFromUToken } from '@/utils/balance';
+import commaNumber from 'comma-number';
+import usePinContractStore from '@/store/pinContractStore';
+import IconButton from '@/components/atoms/buttons/iconButton';
+import { TOOLTIP_ID } from '@/constants/tooltip';
+import PinButton from '@/components/atoms/buttons/pinButton';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
     display: flex;
-    padding: 48px;
+    // padding: 48px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 32px;
+    gap: 24px;
     align-self: stretch;
-    border-radius: 24px;
-    outline: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191) !important' : 'unset')};
-    background: var(--200, #1e1e1e);
+    // border-radius: 24px;
+    // outline: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191) !important' : 'unset')};
+    // background: var(--200, #1e1e1e);
 `;
 
 const TokenInfoWrap = styled.div`
@@ -55,7 +61,7 @@ const TokenBox = styled.div`
     padding: 20px 24px;
     align-items: center;
     justify-content: flex-start;
-    gap: 32px;
+    gap: 28px;
     align-self: stretch;
     border-radius: 16px;
     background: var(--Gray-150, #141414);
@@ -73,35 +79,70 @@ const ImageWrap = styled.div`
 `;
 
 const TokenInfoBox = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 8px;
+    // gap: 8px;
 `;
 
 const TokenTitleWrap = styled.div`
+    width: 100%;
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 12px;
 `;
 
 const TokenSymbolTypo = styled.div`
     color: var(--Gray-900, var(--Primary-Base-White, #fff));
+
+    /* Heading/H4 - Bd */
     font-family: 'General Sans Variable';
-    font-size: 22px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 600;
     line-height: 24px; /* 109.091% */
 `;
 
 const TokenNameTypo = styled.div`
-    color: var(--Gray-700, #999);
+    color: var(--Gray-650, #707070);
+
+    /* Body/Body1 - Rg */
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+`;
+
+const TotalAmountTypo = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    .total-supply-typo {
+        color: var(--Gray-650, #707070);
+        font-family: 'General Sans Variable';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+    }
+
+    .total-supply-value {
+        color: #707070;
+
+        /* Body/Body1 - Bd */
+        font-family: 'General Sans Variable';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 22px; /* 137.5% */
+    }
 `;
 
 const ValidShieldIcon = styled.img`
@@ -116,13 +157,15 @@ const ContractTypeLabelWrap = styled.div`
     justify-content: center;
     align-items: center;
     gap: 10px;
-    border-radius: 24px;
-    border: 1px solid var(--Gray-550, #444);
+    border-radius: 6px;
+    background: var(--200, #1e1e1e);
 `;
 
 const ContractTypeTypo = styled.div`
-    color: var(--Gray-700, #999);
+    color: var(--Gray-700, #807e7e);
     text-align: center;
+
+    /* Body/Body2 - Md */
     font-family: 'General Sans Variable';
     font-size: 14px;
     font-style: normal;
@@ -194,15 +237,18 @@ const advancedMenuItems: IMenuItem[] = [
 
 const TokenInfo = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-
     const selectMenu = useExecuteStore((state) => state.selectMenu);
     const contractInfo = useExecuteStore((state) => state.contractInfo);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const marketingInfo = useExecuteStore((state) => state.marketingInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
-
     const contractExist = useExecuteStore((v) => v.contractExist);
+
+    const { pinList, addPin, removePin } = usePinContractStore();
+    const userPinList = pinList[address.toLowerCase()]?.filter((v) => v.type === 'cw20') || [];
+
+    const isPinned = Boolean(userPinList?.find((v) => v.contractAddress.toLowerCase() === contractInfo?.address.toLowerCase()));
 
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
 
@@ -272,54 +318,122 @@ const TokenInfo = () => {
         setSelectMenu(_selectMenu);
     };
 
+    const handleOnClickPin = (evt) => {
+        if (address && contractInfo && tokenInfo) {
+            if (isPinned) removePin(address, contractInfo.address);
+            else
+                addPin(address, {
+                    type: 'cw20',
+                    address: address,
+                    contractAddress: contractInfo.address,
+                    name: tokenInfo.name,
+                    symbol: tokenInfo.symbol,
+                    label: contractInfo.contract_info.label,
+                    tokenLogoUrl: marketingInfo.logo.url
+                });
+        }
+    };
+
     return selectMenu && contractExist ? (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
-                <TokenInfoWrap>
-                    <TitleTypo>{'TOKEN INFO'}</TitleTypo>
-                    <TokenBox>
-                        <TokenLogo src={validTokenLogoUrl} size="72px" />
-                        <TokenInfoBox>
-                            <TokenTitleWrap>
-                                {tokenInfo ? (
-                                    <TokenSymbolTypo>{tokenInfo?.symbol}</TokenSymbolTypo>
-                                ) : (
-                                    <Skeleton width="120px" height="24px" />
-                                )}
-                                {/* <ValidShieldIcon src={IC_VALID_SHIELD} alt={'Firmachain Valid Contract'} /> */}
-                                {ContractTypeLabel && (
-                                    <ContractTypeLabelWrap>
-                                        <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
-                                    </ContractTypeLabelWrap>
-                                )}
-                            </TokenTitleWrap>
-                            {tokenInfo ? <TokenNameTypo>{tokenInfo?.name}</TokenNameTypo> : <Skeleton width="80px" height="22px" />}
-                        </TokenInfoBox>
-                    </TokenBox>
-                </TokenInfoWrap>
-                <ExecuteSelect
-                    value={selectMenu?.value}
-                    placeHolder="Select"
-                    options={ownerMenus}
-                    onChange={handleChangeMenu}
-                    minWidth="214px"
-                />
-                {selectMenu?.value === 'select' && <></>}
-                {selectMenu?.value !== 'select' && (
-                    <Fragment>
-                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
-                        {selectMenu?.value === 'mint' && <Mint />}
-                        {selectMenu?.value === 'burn' && <Burn />}
-                        {selectMenu?.value === 'burnFrom' && <BurnFrom />}
-                        {selectMenu?.value === 'transfer' && <Transfer />}
-                        {selectMenu?.value === 'transferFrom' && <TransferFrom />}
-                        {selectMenu?.value === 'increaseAllowance' && <IncreaseAllowance />}
-                        {selectMenu?.value === 'decreaseAllowance' && <DecreaseAllowance />}
-                        {selectMenu?.value === 'updateMarketing' && <UpdateMarketing />}
-                        {selectMenu?.value === 'updateMinter' && <UpdateMinter />}
-                        {selectMenu?.value === 'updateLogo' && <UpdateLogo />}
-                    </Fragment>
-                )}
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '44px 48px',
+                        borderRadius: '24px',
+                        gap: '24px',
+                        background: 'var(--200, #1E1E1E)',
+                        width: '100%',
+                        outline: selectMenu?.value === 'select' ? '1px solid var(--Green-500, #02e191) !important' : 'unset'
+                    }}
+                >
+                    <TokenInfoWrap>
+                        <TitleTypo>{'TOKEN INFO'}</TitleTypo>
+                        <TokenBox style={{ position: 'relative' }}>
+                            <TokenLogo src={validTokenLogoUrl} size="72px" />
+                            <TokenInfoBox>
+                                <TokenTitleWrap>
+                                    {tokenInfo ? (
+                                        <TokenSymbolTypo>{tokenInfo?.symbol}</TokenSymbolTypo>
+                                    ) : (
+                                        <Skeleton width="120px" height="24px" />
+                                    )}
+
+                                    <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />
+
+                                    {tokenInfo ? (
+                                        <TokenNameTypo className="clamp-single-line">{tokenInfo?.name}</TokenNameTypo>
+                                    ) : (
+                                        <Skeleton width="120px" height="24px" />
+                                    )}
+                                    {/* <ValidShieldIcon src={IC_VALID_SHIELD} alt={'Firmachain Valid Contract'} /> */}
+                                    {ContractTypeLabel && (
+                                        <ContractTypeLabelWrap style={{ marginRight: '40px' }}>
+                                            <ContractTypeTypo>{ContractTypeLabel}</ContractTypeTypo>
+                                        </ContractTypeLabelWrap>
+                                    )}
+                                    <div style={{ position: 'absolute', display: 'flex', right: '24px', top: '20px' }}>
+                                        <PinButton isPinned={isPinned} isBlocked={userPinList.length >= 10} onClick={handleOnClickPin} />
+                                    </div>
+                                </TokenTitleWrap>
+
+                                <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" />
+                                <div style={{ marginTop: '8px' }}>
+                                    {tokenInfo ? (
+                                        <TotalAmountTypo>
+                                            <div className="total-supply-typo">Total Supply :</div>
+                                            <div className="total-supply-value">
+                                                {commaNumber(
+                                                    getTokenAmountFromUToken(tokenInfo?.total_supply, String(tokenInfo?.decimals))
+                                                )}
+                                            </div>
+                                        </TotalAmountTypo>
+                                    ) : (
+                                        <Skeleton width="80px" height="22px" />
+                                    )}
+                                </div>
+                            </TokenInfoBox>
+                        </TokenBox>
+                    </TokenInfoWrap>
+
+                    <ExecuteSelect
+                        value={selectMenu?.value}
+                        placeHolder="Select"
+                        options={ownerMenus}
+                        onChange={handleChangeMenu}
+                        minWidth="214px"
+                        maxWidth="214px"
+                    />
+                </div>
+                <div
+                    style={{
+                        display: selectMenu?.value === 'select' ? 'none' : 'flex',
+                        flexDirection: 'column',
+                        padding: '44px 48px',
+                        borderRadius: '24px',
+                        gap: '24px',
+                        background: 'var(--200, #1E1E1E)',
+                        width: '100%'
+                    }}
+                >
+                    {selectMenu?.value !== 'select' && (
+                        <Fragment>
+                            {/* <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" /> */}
+                            {selectMenu?.value === 'mint' && <Mint />}
+                            {selectMenu?.value === 'burn' && <Burn />}
+                            {selectMenu?.value === 'burnFrom' && <BurnFrom />}
+                            {selectMenu?.value === 'transfer' && <Transfer />}
+                            {selectMenu?.value === 'transferFrom' && <TransferFrom />}
+                            {selectMenu?.value === 'increaseAllowance' && <IncreaseAllowance />}
+                            {selectMenu?.value === 'decreaseAllowance' && <DecreaseAllowance />}
+                            {selectMenu?.value === 'updateMarketing' && <UpdateMarketing />}
+                            {selectMenu?.value === 'updateMinter' && <UpdateMinter />}
+                            {selectMenu?.value === 'updateLogo' && <UpdateLogo />}
+                        </Fragment>
+                    )}
+                </div>
             </Container>
             {!['select', '', 'increaseAllowance', 'decreaseAllowance', 'burn', 'updateMarketing', 'updateMinter', 'updateLogo'].includes(
                 selectMenu.value

@@ -18,20 +18,23 @@ import ApproveAll from './functions/approveAll';
 import RevokeAll from './functions/revokeAll';
 import UpdateOwnershipTransfer from './functions/updateOwnershipTransfer';
 import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
+import { CRAFT_CONFIGS } from '@/config';
+import commaNumber from 'comma-number';
+import PinButton from '@/components/atoms/buttons/pinButton';
+import usePinContractStore from '@/store/pinContractStore';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
     height: fit-content;
     display: flex;
-    padding: 48px;
+    // padding: 48px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 32px;
+    gap: 24px;
     align-self: stretch;
-    border-radius: 24px;
-    /* border: ; */
-    outline: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191) !important' : 'unset')};
-    background: var(--200, #1e1e1e);
+    // border-radius: 24px;
+    // outline: ${(props) => (props.$isSelectMenu ? '1px solid var(--Green-500, #02e191) !important' : 'unset')};
+    // background: var(--200, #1e1e1e);
 `;
 
 const TokenInfoWrap = styled.div`
@@ -53,30 +56,87 @@ const TitleTypo = styled.div`
 const ContractBox = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 28px 36px;
-    justify-content: flex-start;
-    gap: 8px;
+    padding: 20px 24px 20px 28px;
+    justify-content: center;
+    // gap: 8px;
     align-self: stretch;
     border-radius: 16px;
     background: var(--Gray-150, #141414);
+
+    min-height: 112px;
 `;
 
 const ContractSymbolTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
-    font-family: 'General Sans Variable';
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px; /* 109.091% */
-`;
-
-const ContractNameTypo = styled.div`
     color: var(--Gray-650, #707070);
+
+    /* Body/Body1 - Rg */
     font-family: 'General Sans Variable';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 22px; /* 137.5% */
+`;
+
+const ContractNameTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+
+    /* Heading/H4 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 109.091% */
+`;
+
+const TotalSupplyTypo = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 8px;
+
+    .total-supply-value {
+        color: #707070;
+
+        /* Body/Body1 - Bd */
+        font-family: 'General Sans Variable';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 22px; /* 137.5% */
+    }
+
+    .total-supply-typo {
+        color: var(--Gray-650, #707070);
+        font-family: 'General Sans Variable';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+    }
+`;
+
+const ContractTypeLabel = styled.div`
+    display: flex;
+    padding: 2px 12px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 6px;
+    background: var(--200, #1e1e1e);
+
+    color: var(--Gray-700, #807e7e);
+    text-align: center;
+
+    /* Body/Body2 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
 `;
 
 const DisabledContainer = styled(Container)`
@@ -130,15 +190,20 @@ const basicMenuItems: IMenuItem[] = [
 
 const CW721ContractInfo = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-
+    const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
     const selectMenu = useCW721ExecuteStore((state) => state.selectMenu);
+    const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
     const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
     const minter = useCW721ExecuteStore((state) => state.minter);
     const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
-
     const contractExist = useCW721ExecuteStore((v) => v.contractExist);
+
+    const { pinList, addPin, removePin } = usePinContractStore();
+    const userPinList = pinList[address.toLowerCase()]?.filter((v) => v.type === 'cw721') || [];
+
+    const isPinned = Boolean(userPinList?.find((v) => v.contractAddress.toLowerCase() === contractInfo?.address.toLowerCase()));
 
     const [ownerMenus, setOwnerMenus] = useState<IMenuItem[]>(basicMenuItems);
 
@@ -170,39 +235,104 @@ const CW721ContractInfo = () => {
         setSelectMenu(_selectMenu);
     };
 
+    const handleOnClickPin = (evt) => {
+        if (address && contractInfo && nftContractInfo) {
+            if (isPinned) removePin(address, contractInfo.address);
+            else
+                addPin(address, {
+                    type: 'cw721',
+                    address: address,
+                    contractAddress: contractInfo.address,
+                    name: nftContractInfo.name,
+                    symbol: nftContractInfo.symbol,
+                    label: contractInfo.contract_info.label,
+                    tokenLogoUrl: ''
+                });
+        }
+    };
+
     return selectMenu && contractExist ? (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Container $isSelectMenu={selectMenu.value === 'select' || selectMenu.value === ''}>
-                <TokenInfoWrap>
-                    <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
-                    <ContractBox>
-                        <ContractSymbolTypo>{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</ContractSymbolTypo>
-                        <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
-                    </ContractBox>
-                </TokenInfoWrap>
-                <ExecuteSelect
-                    value={selectMenu?.value}
-                    placeHolder="Select"
-                    options={ownerMenus}
-                    onChange={handleChangeMenu}
-                    minWidth="280px"
-                />
-                {selectMenu?.value === 'select' && <></>}
-                {selectMenu?.value !== 'select' && (
-                    <Fragment>
-                        <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
-                    </Fragment>
-                )}
-                {selectMenu?.value === 'mint' && <Mint />}
-                {selectMenu?.value === 'burn' && <Burn />}
-                {selectMenu?.value === 'transfer' && <Transfer />}
-                {selectMenu?.value === 'approve' && <Approve />}
-                {selectMenu?.value === 'revoke' && <Revoke />}
-                {selectMenu?.value === 'approveAll' && <ApproveAll />}
-                {selectMenu?.value === 'revokeAll' && <RevokeAll />}
-                {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
-                {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
-                {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '44px 48px',
+                        borderRadius: '24px',
+                        gap: '24px',
+                        background: 'var(--200, #1E1E1E)',
+                        width: '100%',
+                        outline: selectMenu?.value === 'select' ? '1px solid var(--Green-500, #02e191) !important' : 'unset'
+                    }}
+                >
+                    <TokenInfoWrap>
+                        <TitleTypo>{'NFT CONTRACT INFO'}</TitleTypo>
+                        <ContractBox style={{ position: 'relative' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                                <ContractNameTypo>{nftContractInfo ? nftContractInfo.name : 'NAME'}</ContractNameTypo>
+
+                                <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />
+
+                                <ContractSymbolTypo className="clamp-single-line" style={{ marginRight: '40px' }}>
+                                    {nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}
+                                </ContractSymbolTypo>
+
+                                {/* <ContractTypeLabel>
+                                    {contractInfo?.contract_info?.code_id === CRAFT_CONFIGS.CW721.ADVANCED_CODE_ID ? 'ADVANCED' : 'BASIC'}
+                                </ContractTypeLabel> */}
+
+                                <div style={{ position: 'absolute', display: 'flex', right: '24px', top: '20px' }}>
+                                    <PinButton isPinned={isPinned} isBlocked={userPinList.length >= 10} onClick={handleOnClickPin} />
+                                </div>
+                            </div>
+
+                            <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" />
+
+                            <TotalSupplyTypo>
+                                <div className="total-supply-typo">Total Supply :</div>
+                                <div className="total-supply-value">{commaNumber(totalSupply)}</div>
+                                {/* <div className="token-symbol">{nftContractInfo ? nftContractInfo.symbol : 'SYMBOL'}</div> */}
+                            </TotalSupplyTypo>
+                        </ContractBox>
+                    </TokenInfoWrap>
+                    <ExecuteSelect
+                        value={selectMenu?.value}
+                        placeHolder="Select"
+                        options={ownerMenus}
+                        onChange={handleChangeMenu}
+                        minWidth="280px"
+                        maxWidth="280px"
+                    />
+                </div>
+                <div
+                    style={{
+                        display: selectMenu?.value === 'select' ? 'none' : 'flex',
+                        flexDirection: 'column',
+                        padding: '44px 48px',
+                        borderRadius: '24px',
+                        gap: '24px',
+                        background: 'var(--200, #1E1E1E)',
+                        width: '100%'
+                    }}
+                >
+                    {/* {selectMenu?.value === 'select' && <></>}
+                    {selectMenu?.value !== 'select' && (
+                        <Fragment>
+                            <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-750, #999)" />
+                        </Fragment>
+                    )} */}
+                    {selectMenu?.value === 'mint' && <Mint />}
+                    {selectMenu?.value === 'burn' && <Burn />}
+                    {selectMenu?.value === 'transfer' && <Transfer />}
+                    {selectMenu?.value === 'approve' && <Approve />}
+                    {selectMenu?.value === 'revoke' && <Revoke />}
+                    {selectMenu?.value === 'approveAll' && <ApproveAll />}
+                    {selectMenu?.value === 'revokeAll' && <RevokeAll />}
+                    {selectMenu?.value === 'updateOwnershipTransfer' && <UpdateOwnershipTransfer />}
+                    {selectMenu?.value === 'updateOwnershipAccept' && <UpdateOwnershipAccept />}
+                    {selectMenu?.value === 'updateOwnershipRenounce' && <UpdateOwnershipRenounce />}
+                </div>
             </Container>
             {![
                 'select',

@@ -19,6 +19,7 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -235,7 +236,8 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 const DecreaseAllowancePreview = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const allowanceInfo = useExecuteStore((state) => state.allowanceInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const allowance = useExecuteStore((state) => state.allowance);
@@ -243,6 +245,8 @@ const DecreaseAllowancePreview = () => {
     const setIsFetched = useExecuteStore((v) => v.setIsFetched);
     const clearAllowance = useExecuteStore((v) => v.clearAllowance);
     const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -268,6 +272,11 @@ const DecreaseAllowancePreview = () => {
 
     const onClickDecreaseAllowance = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         let expires = {};
         if (allowance.type === 'at_height') {
@@ -450,7 +459,7 @@ const DecreaseAllowancePreview = () => {
 
                         <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                     </ItemLabelWrap>
-                    <ItemLabelWrap>
+                    <ItemLabelWrap style={{ gap: '8px' }}>
                         <TextEllipsis
                             CustomDiv={UpdatedBalanceTypo}
                             text={commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}

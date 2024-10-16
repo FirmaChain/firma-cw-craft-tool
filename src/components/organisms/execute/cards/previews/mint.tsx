@@ -25,6 +25,9 @@ import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import { useMeasure } from 'react-use';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -250,13 +253,16 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const MintPreview = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const mintingList = useExecuteStore((state) => state.mintingList);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const isFetched = useExecuteStore((state) => state.setIsFetched);
     const clearMinterList = useExecuteStore((state) => state.clearMinterList);
     const { setMinterInfo, setTokenInfo } = useExecuteActions();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -311,6 +317,11 @@ const MintPreview = () => {
 
     const onClickMint = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const convertWalletList: IWallet[] = [];
         let totalAmount = '0';

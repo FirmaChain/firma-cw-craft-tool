@@ -83,7 +83,7 @@ const TransferFrom = () => {
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Transfer Amount :</SummeryLabelTypo>
                         <SummeryAmountTypo className="clamp-single-line">{commaNumber(totalTransferAmount)}</SummeryAmountTypo>
-                        <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
+                        <SummerySymbolTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                 </SummeryCard>
             </HeaderWrap>

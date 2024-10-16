@@ -22,6 +22,9 @@ import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -254,7 +257,8 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const TransferFromPreview = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const transferFromList = useExecuteStore((state) => state.transferFromList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
     const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
@@ -262,6 +266,8 @@ const TransferFromPreview = () => {
 
     const setIsFetched = useExecuteStore((state) => state.setIsFetched);
     const clearTransferFrom = useExecuteStore((state) => state.clearTransferFrom);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -323,6 +329,11 @@ const TransferFromPreview = () => {
 
     const onClickTransfer = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const convertTransferList = [];
         let totalAmount = '0';

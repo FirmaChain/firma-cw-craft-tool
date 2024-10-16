@@ -12,6 +12,9 @@ import useExecuteActions from '../../action';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -94,11 +97,14 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateLogo = () => {
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const marketingInfo = useExecuteStore((state) => state.marketingInfo);
     const marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
     const clearLogoUrl = useExecuteStore((state) => state.clearLogoUrl);
     const { setMarketingInfo } = useExecuteActions();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -126,6 +132,11 @@ const UpdateLogo = () => {
 
     const onClickUpdateLogo = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 

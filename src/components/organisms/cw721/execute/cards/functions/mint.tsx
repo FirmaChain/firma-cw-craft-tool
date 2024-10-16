@@ -257,7 +257,7 @@ const Mint = () => {
                     <TotalMintWrap>
                         <TotalMintLabelTypo>Total Mint Count :</TotalMintLabelTypo>
                         <TotalMintSupplyBalance>{totalMintCount}</TotalMintSupplyBalance>
-                        <TotalMintSupplyBalance>NFT</TotalMintSupplyBalance>
+                        <TotalMintSupplyBalance style={{ fontWeight: '400' }}>NFT</TotalMintSupplyBalance>
                     </TotalMintWrap>
                 </SummeryCard>
             </HeaderWrap>

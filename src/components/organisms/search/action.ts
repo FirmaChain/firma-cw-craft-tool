@@ -3,17 +3,19 @@ import useExecuteHook from '../execute/hooks/useExecueteHook';
 import useSearchStore from './searchStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import useApollo from '@/hooks/useApollo';
+// import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender, sleep } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
 import { isValidAddress } from '@/utils/address';
+import { useApolloClientContext } from '@/context/apolloClientContext';
 
 const useSearchActions = () => {
     const { firmaSDK, getCw20Balance } = useExecuteHook();
-    const { client } = useApollo();
+    const { client } = useApolloClientContext();
+    // const { client } = useApollo();
     const userAddress = useSelector((state: rootState) => state.wallet.address);
 
     const { enqueueSnackbar } = useSnackbar();

@@ -80,7 +80,11 @@ import useMyToken from '@/hooks/useMyToken';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
-import { useAddContractMutation } from '@/api/mutations';
+// import { useAddContractMutation, useUpdateTokenLogo } from '@/api/mutations';
+import { WalletActions } from '@/redux/actions';
+// import { useDeleteContractFromDB } from '@/api/queries';
+import { AddContractInfo, AddContractReq, DeleteContractFromDBReq, UpdateContractOwnerReq, UpdateTokenLogo } from '@/interfaces/common';
+import ContractApi from '@/api/contractApi';
 
 type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
@@ -129,6 +133,7 @@ export interface ContentParameters {
 interface IResultState {
     transactionHash: string;
     contractAddress?: string;
+    code?: number;
 }
 
 type ModuleTypes =
@@ -224,11 +229,13 @@ const TxModal = ({
     const { passwordWallet, timeKey } = useSelector((state: rootState) => state.wallet);
     const cwMode = useSelector((v: rootState) => v.global.cwMode);
     const address = useSelector((state: rootState) => state.wallet.address);
+    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
 
     const [error, setError] = useState<any>(null);
     const [result, setResult] = useState<null | IResultState>(null);
+
     const [status, setStatus] = useState<'init' | 'loading' | 'success' | 'failure'>('init');
-    const [balance, setBalance] = useState('0');
+    // const [fctBalance, setBalance] = useState('0');
     const [estimatedGas, setEstimatedGas] = useState<number>(0);
     const [inputPassword, setInputPassword] = useState<string>('');
 
@@ -243,18 +250,16 @@ const TxModal = ({
         getEstimatedGas();
     }, [address]);
 
-    useEffect(() => {
-        if (status === 'success' && params.modalType === 'INSTANTIATE') addContractToDB();
-    }, [result?.contractAddress, status, params.modalType]);
-
     const getBalance = () => {
         getFctBalance(address)
             .then((result) => {
-                setBalance(result);
+                WalletActions.handleFCTBalance(result);
+                // setBalance(result);
             })
             .catch((error) => {
                 console.log(error);
-                setBalance('0');
+                WalletActions.handleFCTBalance('0');
+                // setBalance('0');
             });
     };
 
@@ -277,23 +282,108 @@ const TxModal = ({
         }
     };
 
-    const { mutateAsync: addContractToDB } = useAddContractMutation(
-        {
-            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
-            address,
-            contractAddress: result?.contractAddress,
-            name: params.txParams.msg.name,
-            symbol: params.txParams.msg.symbol,
-            label: params.txParams.label
-        },
-        {
-            onSuccess: () => {},
-            onError: () => {
+    // const { mutateAsync: addContractToDB } = useAddContractMutation(
+    //     {
+    //         type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+    //         address,
+    //         contractAddress: result?.contractAddress,
+    //         name: params.txParams.msg.name,
+    //         symbol: params.txParams.msg.symbol,
+    //         label: params.txParams.label,
+    //         tokenLogoUrl: params.txParams.msg?.marketing?.logo?.url || ''
+    //     },
+    //     {
+    //         onSuccess: ({ data }) => {
+    //             if (data === null) {
+    //                 enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
+    //             }
+    //         },
+    //         onError: (error: any) => {
+    //             console.log(error);
+    //             enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
+    //         },
+    //         onSettled: () => {
+    //             setStatus('success');
+    //         }
+    //     }
+    // );
+    const addContractToDB = async (params: AddContractReq) => {
+        try {
+            const data = await ContractApi.addContractToDB({ ...params });
+
+            if (!data.success) {
                 enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
-            },
-            onSettled: () => {}
+            }
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
         }
-    );
+    };
+
+    // const { mutateAsync: updateTokenLogo } = useUpdateTokenLogo(
+    //     {
+    //         type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+    //         contractAddress: params.txParams.contract,
+    //         tokenLogoUrl: params.txParams.msg?.url || ''
+    //     },
+    //     {
+    //         onSuccess: ({ data }) => {
+    //             if (data === null) {
+    //                 enqueueSnackbar({ message: 'Failed to update token logo.', variant: 'error' });
+    //             }
+    //         },
+    //         onError: (error: any) => {
+    //             console.log(error);
+    //             enqueueSnackbar({ message: 'Failed to update token logo.', variant: 'error' });
+    //         },
+    //         onSettled: () => {
+    //             setStatus('success');
+    //         }
+    //     }
+    // );
+
+    const updateTokenLogo = async (reqData: UpdateTokenLogo) => {
+        try {
+            const data = await ContractApi.updateTokenLogo({
+                ...reqData
+            });
+
+            if (!data.success) {
+                enqueueSnackbar({ message: 'Failed to update token logo.', variant: 'error' });
+            }
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ message: 'Failed to update token logo.', variant: 'error' });
+        }
+    };
+
+    const deleteContractFromDB = async (reqData: DeleteContractFromDBReq) => {
+        try {
+            const data = await ContractApi.deleteContractFromDB({
+                ...reqData
+            });
+
+            if (!data.success) {
+                enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+            }
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+        }
+    };
+
+    const updateContractOwner = async (reqData: UpdateContractOwnerReq) => {
+        try {
+            const data = await ContractApi.updateContractOwner({ ...reqData });
+
+            if (!data.success) {
+                enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+            }
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+        }
+    };
 
     const getEstimatedGas = async () => {
         try {
@@ -515,6 +605,16 @@ const TxModal = ({
                     setResult(cw20InstantiateResult);
 
                     if (cw20InstantiateResult.code === 0) {
+                        await addContractToDB({
+                            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+                            address,
+                            contractAddress: cw20InstantiateResult?.contractAddress
+                            // name: params.txParams.msg.name,
+                            // symbol: params.txParams.msg.symbol,
+                            // label: params.txParams.label,
+                            // tokenLogoUrl: params.txParams.msg?.marketing?.logo?.url || ''
+                        });
+
                         setStatus('success');
                     } else {
                         setStatus('failure');
@@ -537,6 +637,16 @@ const TxModal = ({
                     setResult(cw721nstantiateResult);
 
                     if (cw721nstantiateResult.code === 0) {
+                        await addContractToDB({
+                            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+                            address,
+                            contractAddress: cw721nstantiateResult?.contractAddress
+                            // name: params.txParams.msg.name,
+                            // symbol: params.txParams.msg.symbol,
+                            // label: params.txParams.label,
+                            // tokenLogoUrl: params.txParams.msg?.marketing?.logo?.url || ''
+                        });
+
                         setStatus('success');
                     } else {
                         setStatus('failure');
@@ -667,6 +777,12 @@ const TxModal = ({
                     setResult(cw20UpdateLogoResult);
 
                     if (cw20UpdateLogoResult.code === 0) {
+                        await updateTokenLogo({
+                            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+                            contractAddress: params.txParams.contract
+                            // tokenLogoUrl: params.txParams.msg?.url || ''
+                        });
+
                         setStatus('success');
                     } else {
                         setStatus('failure');
@@ -860,6 +976,12 @@ const TxModal = ({
                     setResult(cw721UpdateOwnershipAcceptResult);
 
                     if (cw721UpdateOwnershipAcceptResult.code === 0) {
+                        await updateContractOwner({
+                            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+                            contractAddress: params.txParams.contract,
+                            address
+                        });
+
                         setStatus('success');
                     } else {
                         setStatus('failure');
@@ -875,6 +997,13 @@ const TxModal = ({
                     setResult(cw721UpdateOwnershipRenounceResult);
 
                     if (cw721UpdateOwnershipRenounceResult.code === 0) {
+                        await deleteContractFromDB({
+                            type: cwMode.toLowerCase() as 'cw20' | 'cw721',
+                            contractAddress: params.txParams.contract,
+                            address,
+                            hash: cw721UpdateOwnershipRenounceResult?.transactionHash
+                        });
+
                         setStatus('success');
                     } else {
                         setStatus('failure');
@@ -977,7 +1106,7 @@ const TxModal = ({
                             <ModalTitleWrap>
                                 {module.includes('Accept') && <AcceptIcon src={IC_CEHCK_ROUND} alt={'accept-icon'} />}
                                 {module.includes('Renounce') && <ModalTitleHeaderIcon src={IC_WARNING} />}
-                                <ModalTitleTypo style={{ marginBottom: '20px' }}>
+                                <ModalTitleTypo style={{ marginBottom: '28px' }}>
                                     {/* {params.modalType === 'INSTANTIATE' ? `${params.txParams.type?.toUpperCase()} ` : ''} */}
                                     {params.header.title}
                                 </ModalTitleTypo>
@@ -1062,23 +1191,25 @@ const TxModal = ({
                                         <FeeLabel>{'(FCT)'}</FeeLabel>
                                         <MyBalanceWrap>
                                             <MyBalanceValue>{`(My Balance :`}</MyBalanceValue>
-                                            <MyBalanceValue>{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</MyBalanceValue>
+                                            <MyBalanceValue>{formatWithCommas(getTokenAmountFromUToken(fctBalance, '6'))}</MyBalanceValue>
                                             <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Mini Icon'} />
                                             <MyBalanceValue style={{ marginLeft: '-4px' }}>{`)`}</MyBalanceValue>
                                         </MyBalanceWrap>
                                     </ItemWrap>
                                 </ModalContentGrayCard>
-                                <LabelInput
-                                    labelProps={{ label: 'Password' }}
-                                    inputProps={{
-                                        formId: `INPUT_PASSWORD`,
-                                        value: inputPassword,
-                                        onChange: onChangeInputPassword,
-                                        onKeyDown: handleClickEnter,
-                                        placeHolder: 'Enter Password',
-                                        type: 'password'
-                                    }}
-                                />
+                                <div style={{ marginTop: '14px', width: '100%' }}>
+                                    <LabelInput
+                                        labelProps={{ label: 'Password' }}
+                                        inputProps={{
+                                            formId: `INPUT_PASSWORD`,
+                                            value: inputPassword,
+                                            onChange: onChangeInputPassword,
+                                            onKeyDown: handleClickEnter,
+                                            placeHolder: 'Enter Password',
+                                            type: 'password'
+                                        }}
+                                    />
+                                </div>
                             </ModalContentWrap>
                             <ModalButtonBox>
                                 <ModalCancelButton

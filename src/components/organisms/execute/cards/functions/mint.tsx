@@ -128,7 +128,7 @@ const Mint = () => {
                             <TotalMintSupplyBalance className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
                             </TotalMintSupplyBalance>
-                            <TotalMintSupplyBalance>{tokenInfo.symbol}</TotalMintSupplyBalance>
+                            <TotalMintSupplyBalance style={{ fontWeight: '400' }}>{tokenInfo.symbol}</TotalMintSupplyBalance>
                         </TotalMintWrap>
                         {exceedMinterCap && (
                             <MinterCapExceedBox>
@@ -145,7 +145,7 @@ const Mint = () => {
                         <TotalMintSubBalance className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}
                         </TotalMintSubBalance>
-                        <TotalMintSubBalance>{tokenInfo.symbol}</TotalMintSubBalance>
+                        <TotalMintSubBalance style={{ fontWeight: '400' }}>{tokenInfo.symbol}</TotalMintSubBalance>
                         <IconTooltip size="14px" tooltip={`Additional Mintable Token Amount\n=  Minter Cap - Total Supply`} />
                     </TotalMintWrap>
                 </SummeryCard>

@@ -13,6 +13,7 @@ import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -129,7 +130,8 @@ const BurnPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
     const burnList = useCW721ExecuteStore((state) => state.burnList);
@@ -137,6 +139,8 @@ const BurnPreview = () => {
     const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
     const { setMyNftList, setTotalNfts } = useCW721ExecuteAction();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -184,6 +188,11 @@ const BurnPreview = () => {
 
     const onClickBurn = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const convertList: { token_id: string }[] = [];
         const feeAmount = burnList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : burnList.length * Number(CRAFT_CONFIGS.BULK_FEE);

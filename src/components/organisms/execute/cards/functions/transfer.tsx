@@ -129,7 +129,7 @@ const Transfer = () => {
                             <TotalTransferAmountTypo className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
                             </TotalTransferAmountTypo>
-                            <TotalTransferAmountTypo>{tokenInfo.symbol}</TotalTransferAmountTypo>
+                            <TotalTransferAmountTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</TotalTransferAmountTypo>
                         </ItemWrap>
                         {isBalanceExceed && (
                             <ErrorMessageBox>
@@ -146,7 +146,7 @@ const Transfer = () => {
                         <MyWalletAmountTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}
                         </MyWalletAmountTypo>
-                        <MyWalletAmountTypo>{tokenInfo.symbol}</MyWalletAmountTypo>
+                        <MyWalletAmountTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</MyWalletAmountTypo>
                     </ItemWrap>
                 </SummeryCard>
             </HeaderWrap>

@@ -3,10 +3,12 @@ import { HeaderBox, HeaderWrap, Title } from './styles';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import useSearchStore from '../searchStore';
-import React, { useEffect } from 'react';
+import React from 'react';
 import useSearchActions from '../action';
-import { isValidAddress } from '@/utils/address';
-import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { BYPASS_ALL } from '@/constants/regex';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import ConnectWallet from '../../execute/header/connectWallet';
 
 const EndAdornment = ({
     keyword,
@@ -26,7 +28,7 @@ const EndAdornment = ({
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }} onClick={disableEventBubbling}>
             {showClearButton && (
                 <IconButton style={{ display: 'flex', padding: 0 }} onClick={clearKeyword}>
-                    <Icons.CloseIcon width="32px" height="32px" strokeWidth="2.6" stroke="#1A1A1A" />
+                    <Icons.XCircle width={'32px'} height={'32px'} fill="#707070" />
                 </IconButton>
             )}
         </div>
@@ -34,6 +36,9 @@ const EndAdornment = ({
 };
 
 const Header = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+
     const keyword = useSearchStore((state) => state.keyword);
     const setKeyword = useSearchStore((state) => state.setKeyword);
     const clearAll = useSearchStore((state) => state.clearAll);
@@ -49,28 +54,37 @@ const Header = () => {
         clearSearchKeywordRef();
     };
 
-    useEffect(() => {
-        if (keyword.length > 44 && isValidAddress(keyword)) checkContractExist(keyword);
-    }, [keyword]);
+    // useEffect(() => {
+    //     if (keyword.length > 44 && isValidAddress(keyword)) checkContractExist(keyword);
+    // }, [keyword]);
 
     return (
-        <HeaderBox>
+        <HeaderBox $hideBorder={!Boolean(address)}>
             <HeaderWrap>
                 <Title>Search</Title>
-                <SearchInputWithButton2
-                    value={keyword}
-                    placeHolder={'Search by the full CW20 Contract Address'}
-                    onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
-                    adornment={{
-                        end: (
-                            <EndAdornment
-                                keyword={keyword}
-                                clearKeyword={onClickClearKeyword}
-                                showClearButton={Boolean(keyword?.length > 0 || storeContractInfo !== null)}
-                            />
-                        )
-                    }}
-                />
+                {isInit ? (
+                    <SearchInputWithButton2
+                        value={keyword}
+                        // placeHolder={'Search by the full CW20 Contract Address'}
+                        placeHolder={'Search by Token Name / Symbol / Label / Address'}
+                        onChange={(v) => setKeyword(v)}
+                        adornment={{
+                            end: (
+                                <EndAdornment
+                                    keyword={keyword}
+                                    clearKeyword={onClickClearKeyword}
+                                    showClearButton={Boolean(keyword?.length > 0 || storeContractInfo !== null)}
+                                />
+                            )
+                        }}
+                        autoComplete={Boolean(address)}
+                        onClickContract={(v) => checkContractExist(v)}
+                        regex={BYPASS_ALL}
+                        usePinList
+                    />
+                ) : (
+                    <ConnectWallet />
+                )}
             </HeaderWrap>
         </HeaderBox>
     );

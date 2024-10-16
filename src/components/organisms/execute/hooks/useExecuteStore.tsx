@@ -31,7 +31,7 @@ interface FormProps {
     minterInfo: Cw20Minter | null;
     marketingInfo: Cw20MarketingInfo | null;
     cw20Balance: string | null;
-    fctBalance: string | null;
+    // fctBalance: string | null;
     allowanceInfo: Cw20Allowance | null;
 
     setContractExist: (v: boolean) => void;
@@ -41,7 +41,7 @@ interface FormProps {
     setMinterInfo: (v: Cw20Minter) => void;
     setMarketingInfo: (v: Cw20MarketingInfo) => void;
     setCw20Balance: (v: string) => void;
-    setFctBalance: (v: string) => void;
+    // setFctBalance: (v: string) => void;
     setAllowanceInfo: (v: Cw20Allowance) => void;
 
     clearInfo: () => void;
@@ -113,7 +113,7 @@ const useExecuteStore = create<FormProps>()(
         minterInfo: null,
         marketingInfo: null,
         cw20Balance: null,
-        fctBalance: null,
+        // fctBalance: null,
         allowanceInfo: null,
 
         setContractExist: (data) =>
@@ -141,10 +141,10 @@ const useExecuteStore = create<FormProps>()(
             set((state) => {
                 state.cw20Balance = data;
             }),
-        setFctBalance: (data) =>
-            set((state) => {
-                state.fctBalance = data;
-            }),
+        // setFctBalance: (data) =>
+        //     set((state) => {
+        //         state.fctBalance = data;
+        //     }),
         setAllowanceInfo: (data) =>
             set((state) => {
                 state.allowanceInfo = data;
@@ -156,7 +156,7 @@ const useExecuteStore = create<FormProps>()(
                 state.minterInfo = null;
                 state.marketingInfo = null;
                 state.cw20Balance = null;
-                state.fctBalance = null;
+                // state.fctBalance = null;
                 state.allowanceInfo = null;
             }),
         isFetched: false,
@@ -300,7 +300,7 @@ const useExecuteStore = create<FormProps>()(
                 state.minterInfo = null;
                 state.marketingInfo = null;
                 state.cw20Balance = null;
-                state.fctBalance = null;
+                // state.fctBalance = null;
                 state.allowance = null;
 
                 state.isFetched = false;

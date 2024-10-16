@@ -15,6 +15,9 @@ import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -207,7 +210,8 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const MintPreview = () => {
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
     const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
     const notYetMintList = useCW721ExecuteStore((state) => state.notYetMintList);
@@ -215,6 +219,8 @@ const MintPreview = () => {
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
     const mintList = useCW721ExecuteStore((state) => state.mintList);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
     const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
@@ -262,6 +268,11 @@ const MintPreview = () => {
 
     const onClickMint = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const convertMintList: { owner: string; token_id: string; extension: {}; token_uri: string }[] = [];
         const feeAmount = mintList.length === 1 ? Number(CRAFT_CONFIGS.DEFAULT_FEE) : mintList.length * Number(CRAFT_CONFIGS.BULK_FEE);

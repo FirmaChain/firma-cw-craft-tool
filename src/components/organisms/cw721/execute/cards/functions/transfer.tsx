@@ -239,13 +239,13 @@ const Transfer = () => {
                     <ItemWrap>
                         <TotalTransferLabelTypo>Total Transfer Amount :</TotalTransferLabelTypo>
                         <TotalTransferAmountTypo>{transferIds.length}</TotalTransferAmountTypo>
-                        <TotalTransferAmountTypo>NFT</TotalTransferAmountTypo>
+                        <TotalTransferAmountTypo style={{ fontWeight: '400' }}>NFT</TotalTransferAmountTypo>
                     </ItemWrap>
                     <Divider $direction={'horizontal'} $variant="dash" $color="#444" />
                     <ItemWrap>
                         <MyWalletLabelTypo>My Wallet Balance :</MyWalletLabelTypo>
                         <MyWalletAmountTypo>{myNftList?.length}</MyWalletAmountTypo>
-                        <MyWalletAmountTypo>NFT</MyWalletAmountTypo>
+                        <MyWalletAmountTypo style={{ fontWeight: '400' }}>NFT</MyWalletAmountTypo>
                     </ItemWrap>
                 </SummeryCard>
             </HeaderWrap>

@@ -10,9 +10,10 @@ interface IProps {
 
 const Header = ({ contractAddress }: IProps) => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
     return (
-        <HeaderBox>
+        <HeaderBox $hideBoder={!Boolean(address)}>
             <HeaderWrap>
                 <HeaderTitle>Execute</HeaderTitle>
                 {isInit ? <SearchContract contractAddress={contractAddress} /> : <ConnectWallet />}

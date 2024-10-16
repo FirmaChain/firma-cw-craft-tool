@@ -35,6 +35,8 @@ import useCW721ExecuteAction from '../../../execute/hooks/useCW721ExecuteAction'
 import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
 import { compareStringNumbers } from '@/utils/balance';
 import IconTooltip from '@/components/atoms/tooltip';
+import { isValidAddress } from '@/utils/address';
+import { SpecificDefaultTypo } from '../../../nftContractDetail/Content/body/ownerInformation/style';
 
 const TokenInfo = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
@@ -73,6 +75,13 @@ const TokenInfo = () => {
             console.log(error);
         }
     };
+
+    const myNFTsCountTypo = useMemo(() => {
+        if (!ownedNftsInfo) return null;
+
+        if (ownedNftsInfo.totalNftIds.length > 99) return '99+';
+        else return ownedNftsInfo.totalNftIds.length;
+    }, [ownedNftsInfo]);
 
     return (
         <SectionContainer>
@@ -125,65 +134,105 @@ const TokenInfo = () => {
                 </SpecificItem> */}
                 <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
-                    <SpecificValueBox>
+                    <SpecificValueBox style={{ gap: 0 }}>
                         <IconButton
                             onClick={() => setExpandTotal(!expandTotal)}
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
                             <SpecificValueWrapper>
-                                <SpecificValueTypo style={{ display: 'flex' }}>
-                                    {`${totalSupply === null ? 0 : totalSupply}`}
-                                    <span>{'NFT'}</span>
-                                </SpecificValueTypo>
+                                {nftsInfo === null ? (
+                                    <Skeleton width="80px" height="22px" />
+                                ) : (
+                                    <SpecificValueTypo style={{ display: 'flex' }}>
+                                        {totalSupply}
+                                        <span>{'NFT'}</span>
+                                    </SpecificValueTypo>
+                                )}
                             </SpecificValueWrapper>
                             <TableExpandButton $expand={expandTotal} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
-                        <NFTTableContainer $expand={expandTotal}>
-                            <NFTsTable
-                                codeId={codeId}
-                                contractAddress={contractAddress}
-                                nftsInfo={nftsInfo}
-                                nfts={nfts}
-                                currentPage={currentPage}
-                                handleNFTIdList={handleCW721NFTIdList}
-                                addNFTs={addNFTs}
-                                updateNFTs={updateNFTs}
-                                clearListData={clearCW721NFTListData}
-                                setCurrentPage={setCurrentPage}
+                        <div
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                maxHeight: expandTotal ? '1500px' : '0px',
+                                overflow: 'hidden',
+                                transition: 'all 0.5s ease'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    minHeight: '16px'
+                                }}
                             />
-                        </NFTTableContainer>
+                            <NFTTableContainer $expand={expandTotal}>
+                                <NFTsTable
+                                    codeId={codeId}
+                                    contractAddress={contractAddress}
+                                    nftsInfo={nftsInfo}
+                                    nfts={nfts}
+                                    currentPage={currentPage}
+                                    handleNFTIdList={handleCW721NFTIdList}
+                                    addNFTs={addNFTs}
+                                    updateNFTs={updateNFTs}
+                                    clearListData={clearCW721NFTListData}
+                                    setCurrentPage={setCurrentPage}
+                                />
+                            </NFTTableContainer>
+                        </div>
                     </SpecificValueBox>
                 </SpecificItem>
                 {address && (
                     <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                         <SpecificLabelTypo>My NFTs</SpecificLabelTypo>
-                        <SpecificValueBox>
+                        <SpecificValueBox style={{ gap: 0 }}>
                             <IconButton
                                 onClick={() => setExpandOwned(!expandOwned)}
                                 style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                             >
                                 <SpecificValueWrapper>
-                                    <SpecificValueTypo style={{ display: 'flex' }}>
-                                        {ownedNfts.length}
-                                        <span style={{ paddingLeft: 0 }}>{'NFT'}</span>
-                                    </SpecificValueTypo>
+                                    {myNFTsCountTypo === null ? (
+                                        <Skeleton width="80px" height="22px" />
+                                    ) : (
+                                        <SpecificValueTypo>
+                                            {myNFTsCountTypo}
+                                            <span>{'NFT'}</span>
+                                        </SpecificValueTypo>
+                                    )}
                                 </SpecificValueWrapper>
                                 <TableExpandButton $expand={expandOwned} src={IC_EXPAND} alt={'expand'} />
                             </IconButton>
-                            <NFTTableContainer $expand={expandOwned}>
-                                <NFTsTable
-                                    codeId={codeId}
-                                    contractAddress={contractAddress}
-                                    nftsInfo={ownedNftsInfo}
-                                    nfts={ownedNfts}
-                                    currentPage={currentOwnedPage}
-                                    handleNFTIdList={handleOwnedNFTIdList}
-                                    addNFTs={addOwnedNFTs}
-                                    updateNFTs={updateOwnedNFTs}
-                                    clearListData={clearCW721OwnedNFTListData}
-                                    setCurrentPage={setCurrentOwnedPage}
+                            <div
+                                style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    maxHeight: expandOwned ? '1500px' : '0px',
+                                    overflow: 'hidden',
+                                    transition: 'all 0.5s ease'
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        minHeight: '16px'
+                                    }}
                                 />
-                            </NFTTableContainer>
+                                <NFTTableContainer $expand={expandOwned}>
+                                    <NFTsTable
+                                        codeId={codeId}
+                                        contractAddress={contractAddress}
+                                        nftsInfo={ownedNftsInfo}
+                                        nfts={ownedNfts}
+                                        currentPage={currentOwnedPage}
+                                        handleNFTIdList={handleOwnedNFTIdList}
+                                        addNFTs={addOwnedNFTs}
+                                        updateNFTs={updateOwnedNFTs}
+                                        clearListData={clearCW721OwnedNFTListData}
+                                        setCurrentPage={setCurrentOwnedPage}
+                                    />
+                                </NFTTableContainer>
+                            </div>
                         </SpecificValueBox>
                     </SpecificItem>
                 )}
@@ -216,7 +265,7 @@ const OwnerInformation = () => {
         expireInfo: Cw721Expires | null;
         expireBlockHeight: string;
     }) => {
-        if (!pendingOwner && !expireInfo) return <SpecificValueTypo>-</SpecificValueTypo>;
+        if (!pendingOwner && !expireInfo) return <SpecificDefaultTypo>Expires</SpecificDefaultTypo>;
 
         if (!expireInfo) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
@@ -266,46 +315,83 @@ const OwnerInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>{'Admin'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {admin ? (
+                        {/*//! if ownership is renounced, admin value will be "None Assigned" so validation is requried */}
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : admin ? (
                             <>
                                 <SpecificValueTypo className="clamp-single-line">{admin}</SpecificValueTypo>
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'Admin Address'}</SpecificValueTypo>
+                            <SpecificValueTypo style={{ color: '#707070' }}>{'None Assigned'}</SpecificValueTypo>
                         )}
+                        {/* {admin && isValidAddress(admin) ? (
+                            <>
+                                <SpecificValueTypo className="clamp-single-line">{admin}</SpecificValueTypo>
+                                <CopyIconButton text={admin} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <SpecificDefaultTypo>{admin || 'Admin Address'}</SpecificDefaultTypo>
+                        )} */}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Owner'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {pending_owner ? (
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : pending_owner ? (
                             <>
                                 <SpecificValueTypo className="clamp-single-line">{pending_owner}</SpecificValueTypo>
                                 <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificDefaultTypo>{'Wallet Address'}</SpecificDefaultTypo>
                         )}
+                        {/* {pending_owner ? (
+                            <>
+                                <SpecificValueTypo className="clamp-single-line">{pending_owner}</SpecificValueTypo>
+                                <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <SpecificDefaultTypo>{'Pending Owner'}</SpecificDefaultTypo>
+                        )} */}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} expireBlockHeight={blockHeight} />
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : (
+                            <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} expireBlockHeight={blockHeight} />
+                        )}
+                        {/* <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} expireBlockHeight={blockHeight} /> */}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>{'Minter'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {minter ? (
+                        {/*//! if ownership is renounced, admin value will be "None Assigned" so validation is requried */}
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : minter ? (
                             <>
                                 <SpecificValueTypo className="clamp-single-line">{minter}</SpecificValueTypo>
                                 <CopyIconButton text={minter} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificDefaultTypo style={{ color: '#707070' }}>{'None Assigned'}</SpecificDefaultTypo>
                         )}
+                        {/* {minter && isValidAddress(minter) ? (
+                            <>
+                                <SpecificValueTypo className="clamp-single-line">{minter}</SpecificValueTypo>
+                                <CopyIconButton text={minter} width={'22px'} height={'22px'} />
+                            </>
+                        ) : (
+                            <SpecificDefaultTypo>{minter || 'Minter Address'}</SpecificDefaultTypo>
+                        )} */}
                     </SpecificValueWrapper>
                 </SpecificItem>
             </CardSpecific>
@@ -342,7 +428,7 @@ const Transactions = () => {
                 <span className="section-title-desc">The lastest 15 records</span>
             </div>
 
-            <StyledTable columns={columns} rows={transactions || []} rowsPerPage={15} disablePagination />
+            <StyledTable columns={columns} rows={transactions || []} rowsPerPage={15} disablePagination slim />
         </SectionContainer>
     );
 };

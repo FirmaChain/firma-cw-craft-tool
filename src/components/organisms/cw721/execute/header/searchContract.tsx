@@ -1,17 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { enqueueSnackbar } from 'notistack';
-
-import { rootState } from '@/redux/reducers';
-
 import Icons from '@/components/atoms/icons';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import IconButton from '@/components/atoms/buttons/iconButton';
-
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 import { useNavigate } from 'react-router-dom';
 import { isValidAddress } from '@/utils/address';
-import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { BYPASS_ALL } from '@/constants/regex';
 
 const EndAdornment = ({
     keyword,
@@ -26,18 +21,9 @@ const EndAdornment = ({
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {showClearButton && (
                 <IconButton id="clear-all-button" style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
-                    <Icons.XCircle width={'32px'} height={'32px'} />
+                    <Icons.XCircle width={'32px'} height={'32px'} fill="#707070" />
                 </IconButton>
             )}
-
-            {/* <IconButton style={{ padding: 0, display: 'flex' }} disabled={disableSearch} onClick={onClickSearch}>
-                <Icons.Search
-                    width="28px"
-                    height="28px"
-                    fill={disableSearch ? '#807E7E' : '#E6E6E6'}
-                    stroke={disableSearch ? '#807E7E' : '#E6E6E6'}
-                />
-            </IconButton> */}
         </div>
     );
 };
@@ -62,25 +48,25 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         previousKeywordRef.current = keyword;
     }, [contractAddress]);
 
-    const onClickSearch = () => {
-        if (!isValidAddress(keyword) || previousKeywordRef.current?.toLowerCase() === keyword.toLowerCase()) return;
+    const onClickSearch = (contractAddress: string) => {
+        if (!isValidAddress(contractAddress) || previousKeywordRef.current?.toLowerCase() === contractAddress.toLowerCase()) return;
 
-        const valid = isValidAddress(keyword) && keyword.length > 44;
+        const valid = isValidAddress(contractAddress) && contractAddress.length > 44;
 
         if (valid) {
-            if (contractInfo?.address !== keyword) {
+            if (contractInfo?.address !== contractAddress) {
                 clearInfo();
                 clearForm();
             }
 
-            setContractAddress(keyword);
+            setContractAddress(contractAddress);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
                 variant: 'error',
                 autoHideDuration: 2000
             });
         }
-        previousKeywordRef.current = keyword;
+        previousKeywordRef.current = contractAddress;
     };
 
     const onClickClear = () => {
@@ -98,15 +84,16 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         };
     }, []);
 
-    useEffect(() => {
-        if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
-    }, [keyword]);
+    // useEffect(() => {
+    //     if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
+    // }, [keyword]);
 
     return (
         <SearchInputWithButton2
-            placeHolder={'Search by the full CW721 Contract Address'}
+            // placeHolder={'Search by the full CW721 Contract Address'}
+            placeHolder={'Search by NFT Contract Name / Symbol / Label / Address'}
             value={keyword}
-            onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
+            onChange={(v) => setKeyword(v)}
             adornment={{
                 end: (
                     <EndAdornment
@@ -116,6 +103,11 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                     />
                 )
             }}
+            autoComplete
+            autoCompleteType="cw721"
+            onClickContract={(v) => onClickSearch(v)}
+            regex={BYPASS_ALL}
+            usePinList
         />
     );
 };

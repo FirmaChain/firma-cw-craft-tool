@@ -1,41 +1,44 @@
-import { useEffect, useState } from 'react';
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+export {};
 
-import { CRAFT_CONFIGS } from '../config';
+// import { useEffect, useState } from 'react';
+// import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+// import { setContext } from '@apollo/client/link/context';
 
-const useApollo = () => {
-    const [client, setClient] = useState<ApolloClient<any> | null>(null);
+// import { CRAFT_CONFIGS } from '../config';
 
-    useEffect(() => {
-        const initialize = () => {
-            const uri = CRAFT_CONFIGS.GRAPHQL_CONFIG.URI;
+// const useApollo = () => {
+//     const [client, setClient] = useState<ApolloClient<any> | null>(null);
 
-            const httpLink = createHttpLink({ uri: uri });
-            const authLink = setContext((_, { headers }) => {
-                return {
-                    headers: {
-                        ...headers,
-                        'content-type': 'application/json'
-                    }
-                };
-            });
+//     useEffect(() => {
+//         const initialize = () => {
 
-            const apolloClient = new ApolloClient({
-                uri: uri,
-                link: authLink.concat(httpLink),
-                cache: new InMemoryCache()
-            });
+//             const uri = CRAFT_CONFIGS.GRAPHQL_CONFIG.URI;
 
-            setClient(apolloClient);
-        };
+//             const httpLink = createHttpLink({ uri: uri });
+//             const authLink = setContext((_, { headers }) => {
+//                 return {
+//                     headers: {
+//                         ...headers,
+//                         'content-type': 'application/json'
+//                     }
+//                 };
+//             });
 
-        initialize();
-    }, []);
+//             const apolloClient = new ApolloClient({
+//                 uri: uri,
+//                 link: authLink.concat(httpLink),
+//                 cache: new InMemoryCache()
+//             });
 
-    return {
-        client
-    };
-};
+//             setClient(apolloClient);
+//         };
 
-export default useApollo;
+//         initialize();
+//     }, []);
+
+//     return {
+//         client
+//     };
+// };
+
+// export default useApollo;

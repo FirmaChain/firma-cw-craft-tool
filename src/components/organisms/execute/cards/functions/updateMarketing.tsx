@@ -110,7 +110,7 @@ const UpdateMarketing = () => {
                                 formId: 'input project',
                                 placeHolder: 'ex) https://firmachain.org',
                                 onChange: setMarketingProject,
-                                regex: DEFAULT_INPUT_REGEX,
+                                // regex: DEFAULT_INPUT_REGEX,
                                 maxLength: 300
                             }}
                         />

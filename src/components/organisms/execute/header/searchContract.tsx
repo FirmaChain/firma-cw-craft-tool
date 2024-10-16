@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useNavigate } from 'react-router-dom';
 import { isValidAddress } from '@/utils/address';
-import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { BYPASS_ALL, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const EndAdornment = ({
     keyword,
@@ -24,7 +24,7 @@ const EndAdornment = ({
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {showClearButton && (
                 <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
-                    <Icons.XCircle width={'32px'} height={'32px'} />
+                    <Icons.XCircle width={'32px'} height={'32px'} fill="#707070" />
                 </IconButton>
             )}
         </div>
@@ -52,25 +52,25 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         previousKeywordRef.current = keyword;
     }, [contractAddress]);
 
-    const onClickSearch = () => {
-        if (!isValidAddress(keyword) || previousKeywordRef.current?.toLowerCase() === keyword.toLowerCase()) return;
-        const valid = isValidAddress(keyword) && keyword.length > 44;
+    const onClickSearch = (contractAddress: string) => {
+        if (!isValidAddress(contractAddress) || previousKeywordRef.current?.toLowerCase() === contractAddress.toLowerCase()) return;
+        const valid = isValidAddress(contractAddress) && contractAddress.length > 44;
 
         if (valid) {
             //? fix: once search and try again with same address -> info will be gone and error occur
-            if (contractInfo?.address.toLowerCase() !== keyword.toLowerCase()) {
+            if (contractInfo?.address.toLowerCase() !== contractAddress.toLowerCase()) {
                 clearInfo();
                 clearForm();
             }
 
-            setContractAddress(keyword);
+            setContractAddress(contractAddress);
         } else {
             enqueueSnackbar(`Invalid contract address.`, {
                 variant: 'error',
                 autoHideDuration: 2000
             });
         }
-        previousKeywordRef.current = keyword;
+        previousKeywordRef.current = contractAddress;
     };
 
     const onClickClear = () => {
@@ -88,15 +88,16 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
         };
     }, []);
 
-    useEffect(() => {
-        if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
-    }, [keyword]);
+    // useEffect(() => {
+    //     if (keyword.length > 44 && isValidAddress(keyword)) onClickSearch();
+    // }, [keyword]);
 
     return (
         <SearchInputWithButton2
-            placeHolder={'Search by the full CW20 Contract Address'}
+            // placeHolder={'Search by the full CW20 Contract Address'}
+            placeHolder={'Search by Token Name / Symbol / Label / Address'}
             value={keyword}
-            onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
+            onChange={(v) => setKeyword(v)}
             adornment={{
                 end: (
                     <EndAdornment
@@ -106,6 +107,11 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
                     />
                 )
             }}
+            autoComplete
+            autoCompleteType="cw20"
+            onClickContract={(v) => onClickSearch(v)}
+            regex={BYPASS_ALL}
+            usePinList
         />
     );
 };

@@ -1,12 +1,12 @@
 import { styled } from 'styled-components';
 
-export const HeaderBox = styled.div`
+export const HeaderBox = styled.div<{ $hideBoder: boolean }>`
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 68px 88px 36px 96px;
-    border-bottom: 1px solid #222;
+    border-bottom: ${({ $hideBoder }) => ($hideBoder ? 'unset' : '1px solid #222')};
 `;
 
 export const HeaderWrap = styled.div`

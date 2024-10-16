@@ -138,7 +138,7 @@ const Burn = () => {
                     <TotalMintWrap>
                         <TotalMintLabelTypo>Total Burn Amount :</TotalMintLabelTypo>
                         <TotalMintSupplyBalance>{totalBurnCount}</TotalMintSupplyBalance>
-                        <TotalMintSupplyBalance>NFT</TotalMintSupplyBalance>
+                        <TotalMintSupplyBalance style={{ fontWeight: '400' }}>NFT</TotalMintSupplyBalance>
                     </TotalMintWrap>
                 </SummeryCard>
             </HeaderWrap>

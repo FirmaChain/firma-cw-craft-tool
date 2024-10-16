@@ -68,18 +68,18 @@ const TokenInfo = () => {
                         <div className="white-typo">{decimals}</div>
                     </div>
                 </div>
-                {!isBasic && (
-                    <div className="box-row" style={{ height: '28px' }}>
-                        <div className="box-title">Label</div>
-                        {label && (
-                            <div className="box-value">
-                                <div className="label">
-                                    <div className="label-typo clamp-single-line">{label}</div>
-                                </div>
+
+                <div className="box-row" style={{ height: '28px' }}>
+                    <div className="box-title">Label</div>
+                    {label && (
+                        <div className="box-value">
+                            <div className="label">
+                                <div className="label-typo clamp-single-line">{label}</div>
                             </div>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
+                </div>
+
                 <div className="box-row">
                     <div className="box-title">Total Supply</div>
                     {totalSupply && (
@@ -187,7 +187,7 @@ const MoreInfo = () => {
                         <div className="box-title">Marketing Address</div>
                         <div className="box-value">
                             {!marketingAddr ? (
-                                <div className="white-typo">{'-'}</div>
+                                <div className="disabled-typo">Marketing Address</div>
                             ) : (
                                 <>
                                     <div className="white-typo clamp-single-line">{marketingAddr}</div>
@@ -201,83 +201,9 @@ const MoreInfo = () => {
                     <div className="box-title">{isBasic ? 'Token' : 'Marketing'} Description</div>
                     <div className="box-value">
                         {!marketingDesc ? (
-                            <div className="white-typo">{'-'}</div>
+                            <div className="disabled-typo">{isBasic ? 'Token' : 'Marketing'} Description</div>
                         ) : (
-                            <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>
-                                {/* //? hidden description typo for more/less button */}
-                                <div
-                                    className="white-typo"
-                                    ref={descRef}
-                                    style={{
-                                        zIndex: -1,
-                                        position: 'absolute',
-                                        opacity: 0,
-                                        maxHeight: '70px',
-                                        overflow: 'hidden',
-                                        wordBreak: 'break-all'
-                                    }}
-                                >
-                                    {marketingDesc === '' ? '-' : marketingDesc}
-                                </div>
-                                <div
-                                    style={{
-                                        height: isClamped ? '100%' : descRef.current?.scrollHeight,
-                                        overflow: 'hidden',
-                                        transition: 'all 0.2s'
-                                    }}
-                                >
-                                    <div className="white-typo">
-                                        <span>{marketingDesc || 'Description'} </span>
-
-                                        {needClamp && !isClamped && (
-                                            <span
-                                                style={{
-                                                    background: 'var(--200, #1e1e1e)',
-                                                    padding: 0,
-                                                    cursor: 'pointer',
-                                                    whiteSpace: 'pre',
-                                                    paddingLeft: '10px'
-                                                }}
-                                                onClick={closeClamp}
-                                            >
-                                                <TokenDescriptionClampTypo>less</TokenDescriptionClampTypo>
-                                                <img
-                                                    src={IC_ROUND_ARROW_UP}
-                                                    alt="arrow"
-                                                    style={{ width: '16px', height: '16px', transform: 'translateY(2px)' }}
-                                                />
-                                            </span>
-                                        )}
-                                    </div>
-                                    {needClamp && isClamped && (
-                                        <span
-                                            style={{
-                                                width: 'fit-content',
-                                                height: '20px',
-                                                position: 'absolute',
-                                                right: 0,
-                                                bottom: 0,
-                                                background: 'var(--200, #1e1e1e)',
-                                                padding: 0,
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'center',
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={openClamp}
-                                        >
-                                            <TokenDescriptionClampTypo>
-                                                <span>... </span>more
-                                            </TokenDescriptionClampTypo>
-                                            <img
-                                                src={IC_ROUND_ARROW_UP}
-                                                alt="arrow"
-                                                style={{ width: '16px', height: '16px', transform: 'rotate(180deg)' }}
-                                            />
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
+                            <div className="white-typo">{marketingDesc || 'Description'}</div>
                         )}
                     </div>
                 </div>
@@ -287,7 +213,7 @@ const MoreInfo = () => {
                             <div className="box-title">Marketing Project</div>
                             <div className="box-value">
                                 {!marketingProj ? (
-                                    <div className="white-typo">{'-'}</div>
+                                    <div className="disabled-typo">Marketing Project</div>
                                 ) : (
                                     <div className="white-typo  clamp-single-line">{marketingProj}</div>
                                 )}
@@ -351,7 +277,7 @@ const AllAccounts = () => {
             <div className="section-title-search">
                 <div className="section-title">All Accounts</div>
                 <SearchInput2
-                    placeHolder={'Search Wallet Address'}
+                    placeHolder={'Search by CW20 Wallet Address'}
                     value={keyword}
                     onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     adornment={{
@@ -403,7 +329,7 @@ const Transactions = () => {
                 <span className="section-title-desc">The lastest 15 records</span>
             </div>
 
-            <StyledTable columns={columns} rows={allTransactions} rowsPerPage={15} disablePagination />
+            <StyledTable columns={columns} rows={allTransactions} rowsPerPage={15} disablePagination slim />
         </SectionContainer>
     );
 };

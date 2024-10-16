@@ -26,7 +26,7 @@ const ConnectWallet = () => {
     return (
         <Container>
             <ColorButton
-                width={'168px'}
+                width={'220px'}
                 height={'40px'}
                 color={'#02E191'}
                 text={'Connect Wallet'}

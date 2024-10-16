@@ -16,7 +16,7 @@ interface FormProps {
     contractExist: boolean | null;
     setContractExist: (v: boolean) => void;
 
-    fctBalance: string;
+    // fctBalance: string;
     contractInfo: ContractInfo;
     nftContractInfo: Cw721ContractInfo;
     totalNfts: string;
@@ -28,7 +28,7 @@ interface FormProps {
     minter: string;
     nftDatas: Cw721NftInfo[];
 
-    setFctBalance: (v: string) => void;
+    // setFctBalance: (v: string) => void;
     setContractInfo: (v: ContractInfo) => void;
     setNftContractInfo: (v: Cw721ContractInfo) => void;
     setTotalNfts: (v: string) => void;
@@ -132,7 +132,7 @@ const useCW721ExecuteStore = create<FormProps>()(
                 state.contractExist = data;
             }),
 
-        fctBalance: '',
+        // fctBalance: '',
         contractInfo: INIT_CONTRACT_INFO,
         nftContractInfo: INIT_NFT_CONTRACT_INFO,
         totalNfts: '',
@@ -144,10 +144,10 @@ const useCW721ExecuteStore = create<FormProps>()(
         minter: '',
         nftDatas: [],
 
-        setFctBalance: (data) =>
-            set((state) => {
-                state.fctBalance = data;
-            }),
+        // setFctBalance: (data) =>
+        //     set((state) => {
+        //         state.fctBalance = data;
+        //     }),
         setContractInfo: (data) =>
             set((state) => {
                 state.contractInfo = data;

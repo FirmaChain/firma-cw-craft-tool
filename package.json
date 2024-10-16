@@ -9,10 +9,13 @@
         "@reduxjs/toolkit": "^1.9.5",
         "@tanstack/react-query": "^4.33.0",
         "@tanstack/react-query-devtools": "^4.33.0",
+        "@types/js-cookie": "^3.0.6",
         "axios": "^1.7.7",
         "comma-number": "^2.1.0",
         "date-fns": "^3.6.0",
         "framer-motion": "^11.3.2",
+        "immer": "^10.1.1",
+        "js-cookie": "^3.0.5",
         "notistack": "^3.0.1",
         "overlayscrollbars-react": "^0.5.6",
         "react": "^18.3.1",
@@ -31,6 +34,7 @@
         "react-use": "^17.5.0",
         "redux": "^4.2.1",
         "redux-persist": "^6.0.0",
+        "sass": "^1.79.3",
         "slick-carousel": "^1.8.1",
         "styled-components": "^6.1.11",
         "uuid": "^10.0.0",
@@ -45,7 +49,7 @@
         "deploy-testnet": "aws s3 sync ./build s3://deploy-ecosystem/testnet/firma-cw-craft-tool --profile=firmachain-deploy --delete",
         "invalidate-testnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E1GWLY1LQSOILF --paths '/*'",
         "deploy-mainnet": "aws s3 sync ./build s3://deploy-ecosystem/mainnet/firma-cw-craft-tool --profile=firmachain-deploy --delete",
-        "invalidate-mainnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E1GWLY1LQSOILF --paths '/*'"
+        "invalidate-mainnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E24C7PNS1BNJWM --paths '/*'"
     },
     "eslintConfig": {
         "extends": [

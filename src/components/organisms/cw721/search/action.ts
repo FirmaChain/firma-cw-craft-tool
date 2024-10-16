@@ -2,7 +2,7 @@ import { useSnackbar } from 'notistack';
 import useCW721SearchStore from './cw721SearchStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import useApollo from '@/hooks/useApollo';
+// import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
@@ -10,10 +10,12 @@ import { useEffect, useRef } from 'react';
 import { GlobalActions } from '@/redux/actions';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { isValidAddress } from '@/utils/address';
+import { useApolloClientContext } from '@/context/apolloClientContext';
 
 const useCW721SearchActions = () => {
     const { firmaSDK } = useFirmaSDKContext();
-    const { client } = useApollo();
+    const { client } = useApolloClientContext();
+    // const { client } = useApollo();
     const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
     const { enqueueSnackbar } = useSnackbar();
 

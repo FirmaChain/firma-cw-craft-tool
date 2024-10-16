@@ -23,7 +23,6 @@ const NoSelectCommentTypo = styled.div`
 const NoSelectCommentWrap = styled.div`
     display: flex;
     gap: 12px;
-    padding: 85px;
 `;
 
 const LeftArrowCircleIcon = styled.img`

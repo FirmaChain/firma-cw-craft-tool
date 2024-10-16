@@ -4,13 +4,13 @@ import ConnectWallet from './connectWallet';
 import SearchContract from './searchContract';
 import styled from 'styled-components';
 
-const HeaderBox = styled.div`
+const HeaderBox = styled.div<{ $hideBorder: boolean }>`
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 68px 88px 36px 96px;
-    border-bottom: 1px solid #222;
+    border-bottom: ${({ $hideBorder }) => ($hideBorder ? 'unset' : '1px solid #222')};
 `;
 
 const HeaderWrap = styled.div`
@@ -36,9 +36,10 @@ interface IProps {
 
 const Header = ({ contractAddress }: IProps) => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const address = useSelector((state: rootState) => state.wallet.address);
 
     return (
-        <HeaderBox>
+        <HeaderBox $hideBorder={!Boolean(address)}>
             <HeaderWrap>
                 <HeaderTitle>Execute</HeaderTitle>
                 {isInit ? <SearchContract contractAddress={contractAddress} /> : <ConnectWallet />}

@@ -125,7 +125,7 @@ const BurnFrom = () => {
                         <SummeryAmountTypo className="clamp-single-line">
                             {commaNumber(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
                         </SummeryAmountTypo>
-                        <SummerySymbolTypo>{tokenInfo.symbol}</SummerySymbolTypo>
+                        <SummerySymbolTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                     {showExceedMessage && (
                         <SummeryWrap>

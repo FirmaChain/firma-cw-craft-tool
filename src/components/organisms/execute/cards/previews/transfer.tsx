@@ -24,6 +24,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useSnackbar } from 'notistack';
 
 const Container = styled.div`
     width: 100%;
@@ -258,7 +259,8 @@ const TransferPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const transferList = useExecuteStore((state) => state.transferList);
     const tokenInfo = useExecuteStore((state) => state.tokenInfo);
@@ -266,6 +268,8 @@ const TransferPreview = () => {
     const clearTransfer = useExecuteStore((state) => state.clearTransfer);
 
     const { setCw20Balance } = useExecuteActions();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -309,6 +313,11 @@ const TransferPreview = () => {
 
     const onClickTransfer = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const convertWalletList = [];
         let totalAmount = '0';
@@ -446,7 +455,7 @@ const TransferPreview = () => {
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
                         </div>
                     </ItemLabelWrap>
-                    <ItemLabelWrap>
+                    <ItemLabelWrap style={{ gap: '8px' }}>
                         <TextEllipsis
                             CustomDiv={UpdatedBalanceTypo}
                             text={formatWithCommas(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}

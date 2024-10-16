@@ -31,6 +31,10 @@ const ScrollableContainer = styled.div<{ $gutter?: boolean }>`
     overflow: auto;
     z-index: 1;
     scrollbar-gutter: ${({ $gutter }) => ($gutter ? 'stable' : 'unset')};
+
+    > div {
+        min-width: 800px;
+    }
 `;
 
 const Main = () => {

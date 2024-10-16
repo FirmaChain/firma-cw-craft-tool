@@ -17,6 +17,7 @@ import { addNanoSeconds } from '@/utils/time';
 import { compareStringNumbers } from '@/utils/balance';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { useSnackbar } from 'notistack';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -167,7 +168,8 @@ const UpdateOwnershipAccept = () => {
 
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
+    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
     const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
     const clearSelectMenu = useCW721ExecuteStore((state) => state.clearSelectMenu);
@@ -176,6 +178,8 @@ const UpdateOwnershipAccept = () => {
 
     const [isOriginOwnerOpen, setIsOriginOwnerOpen] = useState<boolean>(false);
     const [isNewOwnerOpen, setIsNewOwnerOpen] = useState<boolean>(false);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
@@ -216,6 +220,11 @@ const UpdateOwnershipAccept = () => {
 
     const onClickUpdateOwnershipAccept = () => {
         if (modal.modals.length >= 1) return;
+
+        if (Number(fctBalance) === 0) {
+            enqueueSnackbar({ message: 'Insufficient funds. Please check your account balance.', variant: 'error' });
+            return;
+        }
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 

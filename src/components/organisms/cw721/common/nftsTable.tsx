@@ -1,6 +1,4 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { rootState } from '@/redux/reducers';
-import { useSelector } from 'react-redux';
 import { CRAFT_CONFIGS } from '@/config';
 import { IMG_NFT_EMPTY_THUMBNAIL } from '@/components/atoms/icons/pngIcons';
 import { INFTState, useCW721NFTListContext } from '@/context/cw721NFTListContext';
@@ -162,6 +160,7 @@ const NFTsTable = ({
 
     const [pageItems, setPageItems] = useState<INFTState[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
     const itemsPerPage = 20;
 
     const NFTIds = useMemo(() => {
@@ -169,15 +168,25 @@ const NFTsTable = ({
         return nftsInfo.totalNftIds;
     }, [nftsInfo]);
 
-    const fetchItems = useCallback(async () => {
-        if (!nftsInfo) return;
+    const currentIds = useMemo(() => {
+        if (!nftsInfo) return [];
 
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const currentNfts = nfts.slice(startIndex, endIndex);
 
+        return currentNfts;
+    }, [nftsInfo, currentPage, itemsPerPage, nfts]);
+
+    const fetchItems = useCallback(async () => {
+        if (!nftsInfo) return;
+
+        // const startIndex = (currentPage - 1) * itemsPerPage;
+        // const endIndex = startIndex + itemsPerPage;
+        // const currentNfts = nfts.slice(startIndex, endIndex);
+
         const fetchedItems = await Promise.all(
-            currentNfts.map(async ({ tokenId, image }) => {
+            currentIds.map(async ({ tokenId, image }) => {
                 if (image) {
                     return { tokenId, image };
                 } else {
@@ -189,6 +198,7 @@ const NFTsTable = ({
                     } catch (error) {
                         console.error(`Error fetching image for token ID: ${tokenId}`, error);
                     }
+
                     return { tokenId, image: IMG_NFT_EMPTY_THUMBNAIL };
                 }
             })
@@ -200,8 +210,51 @@ const NFTsTable = ({
             }
             return prevItems;
         });
+
         setIsLoading(false);
-    }, [isDeploiedFromFirma, contractAddress, nftsInfo, currentPage, nfts]);
+    }, [currentIds]);
+
+    useEffect(() => {
+        if (Boolean(nftsInfo) && nftsInfo.totalNftIds.length === 0) setIsLoading(false);
+    }, [nftsInfo]);
+
+    // const fetchItems = useCallback(async () => {
+    //     if (!nftsInfo) return;
+
+    //     // setIsLoading(true);
+
+    //     const startIndex = (currentPage - 1) * itemsPerPage;
+    //     const endIndex = startIndex + itemsPerPage;
+    //     const currentNfts = nfts.slice(startIndex, endIndex);
+
+    //     const fetchedItems = await Promise.all(
+    //         currentNfts.map(async ({ tokenId, image }) => {
+    //             if (image) {
+    //                 return { tokenId, image };
+    //             } else {
+    //                 try {
+    //                     const item = await fetchNFTImage(tokenId, contractAddress, isDeploiedFromFirma);
+    //                     if (item) {
+    //                         return item;
+    //                     }
+    //                 } catch (error) {
+    //                     console.error(`Error fetching image for token ID: ${tokenId}`, error);
+    //                 }
+
+    //                 return { tokenId, image: IMG_NFT_EMPTY_THUMBNAIL };
+    //             }
+    //         })
+    //     );
+
+    //     setPageItems((prevItems) => {
+    //         if (JSON.stringify(prevItems) !== JSON.stringify(fetchedItems)) {
+    //             return fetchedItems;
+    //         }
+    //         return prevItems;
+    //     });
+
+    //     setIsLoading(false);
+    // }, [isDeploiedFromFirma, contractAddress, nftsInfo, currentPage, nfts]);
 
     const existItemsOnPage = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
@@ -247,9 +300,10 @@ const NFTsTable = ({
             totalPages = Math.ceil(nftsInfo.totalSupply / itemsPerPage);
         }
         if (totalPages <= 1) return [1];
-        if (currentPage <= 1) return [1, 2, 3].filter((page) => page <= totalPages);
-        if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
-        return [currentPage - 1, currentPage, currentPage + 1].filter((page) => page <= totalPages);
+        if (currentPage <= 3) return [1, 2, 3, 4, 5].filter((page) => page <= totalPages);
+        if (currentPage >= totalPages - 1)
+            return [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
+        return [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2].filter((page) => page <= totalPages);
     }, [nftsInfo, currentPage, itemsPerPage]);
 
     useEffect(() => {
@@ -262,12 +316,16 @@ const NFTsTable = ({
         const totalRequired = currentPage * itemsPerPage;
 
         if (nftsInfo.totalSupply === 0) {
-            if (totalFetched < totalRequired && (prevNftsLength.current === null || prevNftsLength.current < nftsInfo.totalNftIds.length)) {
+            // if this table is used for my nft
+            if (
+                totalFetched < totalRequired + 100 &&
+                (prevNftsLength.current === null || prevNftsLength.current < nftsInfo.totalNftIds.length)
+            ) {
                 handleNFTIdList(contractAddress);
                 prevNftsLength.current = nftsInfo.totalNftIds.length;
             }
         } else {
-            if (totalFetched < totalRequired && totalFetched < nftsInfo.totalSupply) {
+            if (totalFetched < totalRequired + 100 && totalFetched < nftsInfo.totalSupply) {
                 handleNFTIdList(contractAddress);
             }
         }
@@ -281,7 +339,7 @@ const NFTsTable = ({
 
     useEffect(() => {
         fetchItems();
-    }, [updateNFTs, nftsInfo, contractAddress, currentPage]);
+    }, [currentIds[0]?.tokenId]);
 
     useEffect(() => {
         return () => {
@@ -293,7 +351,7 @@ const NFTsTable = ({
     return (
         <Container ref={ref}>
             {isLoading === true && (
-                <LoadingBox>
+                <LoadingBox style={{ zIndex: 1 }}>
                     <FirmaLoading size={'40px'} />
                 </LoadingBox>
             )}
@@ -307,10 +365,25 @@ const NFTsTable = ({
                             $verticalGap={imageGap?.vertical || '24px'}
                             $horizontalGap={imageGap?.horizontal || '12px'}
                         >
-                            {pageItems.map((nft) => {
+                            {currentIds.map((nft) => {
                                 return (
                                     <NFTItemBox key={nft.tokenId}>
-                                        <NFTImg src={nft.image} alt={`${contractAddress}-${nft}`} />
+                                        {nft.image ? (
+                                            <NFTImg src={nft.image} alt={`${contractAddress}-${nft}`} />
+                                        ) : (
+                                            <div
+                                                style={{
+                                                    width: '64px',
+                                                    height: '64px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    filter: 'brightness(70%)'
+                                                }}
+                                            >
+                                                <FirmaLoading size="24px" />
+                                            </div>
+                                        )}
                                         <NFTTokenIdTypo
                                             data-tooltip-content={nft.tokenId.length > 7 ? nft.tokenId : ''}
                                             data-tooltip-id={TOOLTIP_ID.COMMON}

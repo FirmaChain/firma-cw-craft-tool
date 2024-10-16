@@ -19,7 +19,7 @@ const Container = styled.div<{ $isSelectMenu: boolean; $scrollY: number }>`
     width: 100%;
     display: flex;
     height: fit-content;
-    padding: 48px 48px 40px;
+    padding: ${({ $isSelectMenu }) => ($isSelectMenu ? '44px 48px 40px' : '44px 48px')};
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
@@ -30,15 +30,17 @@ const Container = styled.div<{ $isSelectMenu: boolean; $scrollY: number }>`
     background: var(--200, #1e1e1e);
 
     max-height: 742px;
-    min-height: ${({ $isSelectMenu }) => (!$isSelectMenu ? '334px' : 'unset')};
+    min-height: ${({ $isSelectMenu }) => (!$isSelectMenu ? '316px' : 'unset')};
     overflow: hidden;
     position: sticky;
-    transition: all 0.2s ease;
+    transition:
+        all 0.2s ease,
+        padding 0s;
 
     @media (min-width: 1654px) {
         position: sticky;
         margin-bottom: ${({ $isSelectMenu }) => ($isSelectMenu ? '72px' : '0')};
-        min-height: ${({ $isSelectMenu }) => (!$isSelectMenu ? '334px' : 'unset')};
+        min-height: ${({ $isSelectMenu }) => (!$isSelectMenu ? '316px' : 'unset')};
 
         max-height: ${({ $scrollY, $isSelectMenu }) =>
             !$isSelectMenu ? '100%' : $scrollY > 240 ? 'calc(100vh - 200px)' : 'calc(100vh - 340px)'};

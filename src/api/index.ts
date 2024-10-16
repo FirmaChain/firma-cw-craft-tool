@@ -1,27 +1,40 @@
 import { stringifyUrl } from '@/utils/common';
+import { getAccessToken, setAccessToken } from '@/utils/token';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
+import { CRAFT_CONFIGS } from '@/config';
+import { store } from '@/redux';
+import ContractApi from './contractApi';
 
-const REQUEST_TIMEOUT_MS = 60000;
-
-export const apiRequestConfig = {
-    timeout: REQUEST_TIMEOUT_MS,
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    withCredentials: true
-};
+export interface CustomApiOptions extends AxiosRequestConfig {
+    withJWT?: boolean;
+}
 
 const axiosInstance: AxiosInstance = axios.create();
 
-const requestInterceptors: any[] = [];
-const responseInterceptors: any[] = [];
+axiosInstance.interceptors.request.use(
+    async (config) => {
+        let token = getAccessToken();
 
-requestInterceptors.forEach((interceptor) => {
-    axiosInstance.interceptors.request.use(interceptor as any);
-});
+        if (!config.url.replace(CRAFT_CONFIGS.CRAFT_SERVER_URI, '').startsWith(`/connect/sign/refreshToken`)) {
+            if (!token) {
+                const walletAddress = store.getState().wallet.address;
+                const data = await ContractApi.refreshToken({ walletAddress });
 
-axiosInstance.interceptors.response.use(...responseInterceptors);
+                setAccessToken(data.result.token, { minutes: 14 });
+                token = data.result.token;
+            }
+
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+    (error) => {
+        // Do something with request error
+        return Promise.reject(error);
+    }
+);
 
 class Api {
     static async get({ url, query, config }: { url: string; query?: any; config?: AxiosRequestConfig }) {

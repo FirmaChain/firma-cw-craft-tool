@@ -69,7 +69,14 @@ export const SpecificValueTypo = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 22px;
-    gap: 8px;
+    // gap: 8px;
+
+    > span {
+        padding-left: 5px;
+        color: var(--Gray-650, #707070);
+        font-size: 16px;
+        font-weight: 400;
+    }
 `;
 
 export const SpecificSubValueType = styled.div`
@@ -114,16 +121,16 @@ export const NFTTableContainer = styled.div<{ $expand: boolean }>`
     border-radius: 12px;
     background: var(--Gray-150, #141414);
     transition: all 0.5s ease;
-    ${({ $expand }) =>
-        $expand
-            ? `
-        max-height: 1500px;
-    `
-            : `
-        max-height: 0px;
-    `}
-    overflow: hidden;
 `;
+// ${({ $expand }) =>
+//     $expand
+//         ? `
+//     max-height: 1500px;
+// `
+//         : `
+//     max-height: 0px;
+// `}
+// overflow: hidden;
 
 export const TableExpandButton = styled.img<{ $expand: boolean }>`
     width: 20px;

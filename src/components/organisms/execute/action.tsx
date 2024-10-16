@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import useExecuteStore from './hooks/useExecuteStore';
-import { GlobalActions } from '@/redux/actions';
+import { GlobalActions, WalletActions } from '@/redux/actions';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { Cw20TokenInfo } from '@firmachain/firma-js';
 import { sleep } from '@/utils/common';
@@ -88,7 +88,8 @@ const useExecuteActions = () => {
     const setFctBalance = async (address: string) => {
         try {
             const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
-            useExecuteStore.getState().setFctBalance(fctBalance);
+            // useExecuteStore.getState().setFctBalance(fctBalance);
+            WalletActions.handleFCTBalance(fctBalance);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -168,7 +169,8 @@ const useExecuteActions = () => {
             useExecuteStore.getState().setMarketingInfo(marketingInfo);
             useExecuteStore.getState().setMinterInfo(minterInfo);
             useExecuteStore.getState().setCw20Balance(cw20Balance);
-            useExecuteStore.getState().setFctBalance(fctBalance);
+            // useExecuteStore.getState().setFctBalance(fctBalance);
+            WalletActions.handleFCTBalance(fctBalance);
             useExecuteStore.getState().setTokenInfo(tokenInfo);
 
             checkCurrentHref(href);

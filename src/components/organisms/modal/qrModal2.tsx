@@ -79,9 +79,11 @@ import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import RequestQR from '../requestQR';
-import { GlobalActions } from '@/redux/actions';
+import { GlobalActions, WalletActions } from '@/redux/actions';
 import { getTransactionHash } from '@/utils/transaction';
-import { useAddContractMutation } from '@/api/mutations';
+import { useAddContractMutation, useUpdateTokenLogo } from '@/api/mutations';
+import { DeleteContractFromDBReq, UpdateContractOwnerReq } from '@/interfaces/common';
+import ContractApi from '@/api/contractApi';
 
 export type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
@@ -135,6 +137,7 @@ interface SuccessData {
     signer: string;
     status: string;
     type: string;
+    _signData: any;
 }
 
 type ModuleTypes =
@@ -188,11 +191,12 @@ const QRModal2 = ({
 
     const cwMode = useSelector((v: rootState) => v.global.cwMode);
     const address = useSelector((state: rootState) => state.wallet.address);
+    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
 
     const [error, setError] = useState<any>(null);
     const [result, setResult] = useState<null | SuccessData>(null);
     const [status, setStatus] = useState<'init' | 'loading' | 'success' | 'failure'>('init');
-    const [balance, setBalance] = useState('0');
+    // const [fctBalance, setBalance] = useState('0');
 
     const parsedData = useMemo(() => {
         if (result === null) return null;
@@ -232,9 +236,9 @@ const QRModal2 = ({
 
         return {
             message: parsedMessage,
-            signData: _signData,
             contractAddress: tmpContractAddress,
             transactionHash,
+            _signData,
             ...rest
         };
     }, [result]);
@@ -263,11 +267,13 @@ const QRModal2 = ({
     const getBalance = () => {
         getFctBalance(address)
             .then((result) => {
-                setBalance(result);
+                WalletActions.handleFCTBalance(result);
+                // setBalance(result);
             })
             .catch((error) => {
                 console.log(error);
-                setBalance('0');
+                WalletActions.handleFCTBalance('0');
+                // setBalance('0');
             });
     };
 
@@ -294,19 +300,81 @@ const QRModal2 = ({
         {
             type: cwMode.toLowerCase() as 'cw20' | 'cw721',
             address,
-            contractAddress: parsedData?.contractAddress,
-            name: params.txParams.msg.name,
-            symbol: params.txParams.msg.symbol,
-            label: params.txParams.label
+            contractAddress: parsedData?.contractAddress
+            // name: params.txParams.msg.name,
+            // symbol: params.txParams.msg.symbol,
+            // label: params.txParams.label,
+            // tokenLogoUrl: params.txParams.msg?.marketing?.logo?.url || ''
         },
         {
-            onSuccess: () => {},
-            onError: () => {
+            onSuccess: ({ data }) => {
+                if (data === null) {
+                    enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
+                }
+            },
+            onError: (error: any) => {
+                console.log(error);
                 enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
             },
-            onSettled: () => {}
+            onSettled: () => {
+                setStatus('success');
+            }
         }
     );
+
+    const { mutateAsync: updateTokenLogo } = useUpdateTokenLogo(
+        {
+            type: 'cw20',
+            contractAddress: params.txParams.contract
+            // tokenLogoUrl: params.txParams.msg?.url || ''
+        },
+        {
+            onSuccess: ({ data }) => {
+                if (data === null) {
+                    enqueueSnackbar({ message: 'Failed to update token logo.', variant: 'error' });
+                }
+            },
+            onError: (error: any) => {
+                console.log(error);
+                enqueueSnackbar({ message: 'Failed to update token logo.', variant: 'error' });
+            },
+            onSettled: () => {
+                setStatus('success');
+            }
+        }
+    );
+
+    const deleteContractFromDB = async (reqData: DeleteContractFromDBReq) => {
+        try {
+            const data = await ContractApi.deleteContractFromDB({
+                ...reqData
+            });
+
+            if (!data.success) {
+                enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+            }
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+        } finally {
+            setStatus('success');
+        }
+    };
+
+    const updateContractOwner = async (reqData: UpdateContractOwnerReq) => {
+        try {
+            const data = await ContractApi.updateContractOwner({ ...reqData });
+
+            if (!data.success) {
+                enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+            }
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ message: 'Failed to update contract information.', variant: 'error' });
+        } finally {
+            setStatus('success');
+        }
+    };
 
     useEffect(() => {
         if (status === 'success') {
@@ -319,8 +387,31 @@ const QRModal2 = ({
     }, [address]);
 
     useEffect(() => {
-        if (status === 'success' && parsedData?.contractAddress && params.modalType === 'INSTANTIATE') addContractToDB();
-    }, [status, parsedData?.contractAddress, params.modalType]);
+        const code = typeof parsedData?._signData?.rawData?.code === 'number' ? parsedData?._signData?.rawData?.code : -1;
+
+        if (code === 0) {
+            if ((module === '/cw20/instantiateContract' || module === '/cw721/instantiateContract') && parsedData?.contractAddress) {
+                addContractToDB();
+            }
+
+            if (module === '/cw20/updateLogo') updateTokenLogo();
+
+            if (module === '/cw721/updateOwnershipAccept')
+                updateContractOwner({
+                    type: 'cw721',
+                    contractAddress: params.txParams.contract,
+                    address
+                });
+
+            if (module === '/cw721/updateOwnershipRenounce')
+                deleteContractFromDB({
+                    type: 'cw721',
+                    contractAddress: params.txParams.contract,
+                    address,
+                    hash: parsedData.transactionHash
+                });
+        }
+    }, [parsedData, module]);
 
     const closeModal = useModalStore().closeModal;
 
@@ -411,7 +502,7 @@ const QRModal2 = ({
                             <ModalTitleWrap>
                                 {module.includes('Accept') && <AcceptIcon src={IC_CEHCK_ROUND} alt={'accept-icon'} />}
                                 {module.includes('Renounce') && <ModalTitleHeaderIcon src={IC_WARNING} />}
-                                <ModalTitleTypo style={{ marginBottom: '20px' }}>{params.header.title}</ModalTitleTypo>
+                                <ModalTitleTypo style={{ marginBottom: '28px' }}>{params.header.title}</ModalTitleTypo>
                             </ModalTitleWrap>
 
                             <ModalTitleDescTypo style={{ marginBottom: '24px', fontSize: '16px' }}>
@@ -426,7 +517,16 @@ const QRModal2 = ({
                                     signer={address}
                                     onSuccess={(requestData: any) => {
                                         setResult(requestData);
-                                        setStatus('success');
+                                        if (
+                                            ![
+                                                '/cw20/instantiateContract',
+                                                '/cw721/instantiateContract',
+                                                '/cw20/updateLogo',
+                                                '/cw721/updateOwnershipRenounce',
+                                                '/cw721/updateOwnershipAccept'
+                                            ].includes(module)
+                                        )
+                                            setStatus('success');
                                         GlobalActions.handleFetchedBalance(true);
                                     }}
                                     onFailed={(requestData: any) => {
@@ -521,7 +621,7 @@ const QRModal2 = ({
                                         <FeeLabel>{'(FCT)'}</FeeLabel>
                                         <MyBalanceWrap>
                                             <MyBalanceValue>{`(My Balance :`}</MyBalanceValue>
-                                            <MyBalanceValue>{formatWithCommas(getTokenAmountFromUToken(balance, '6'))}</MyBalanceValue>
+                                            <MyBalanceValue>{formatWithCommas(getTokenAmountFromUToken(fctBalance, '6'))}</MyBalanceValue>
                                             <FCTSymbolMiniIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Mini Icon'} />
                                             <MyBalanceValue style={{ marginLeft: '-4px' }}>{`)`}</MyBalanceValue>
                                         </MyBalanceWrap>
