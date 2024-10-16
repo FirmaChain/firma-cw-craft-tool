@@ -18,7 +18,7 @@ export const ContentWrapper = styled.div`
     flex-direction: column;
     gap: 24px;
     height: 100%;
-    padding: 0 90px 0 96px;
+    padding: 0 88px 0 96px;
     align-items: center;
 
     overflow-y: scroll;
@@ -35,7 +35,7 @@ export const ContentControlWrapper = styled.div`
     gap: 20px;
     max-width: 1600px;
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
 `;
 
 export const ContentInfoWrapper = styled.div`

@@ -32,7 +32,14 @@ const Transactions = () => {
                 <HeaderSubTitleTypo>The lastest 15 records</HeaderSubTitleTypo>
             </CradHeaderWrapper>
             <TransactionContent>
-                <StyledTable columns={columns} rows={transactions || []} rowsPerPage={15} isLoading={!transactions} disablePagination />
+                <StyledTable
+                    columns={columns}
+                    rows={transactions || []}
+                    rowsPerPage={15}
+                    isLoading={!transactions}
+                    disablePagination
+                    slim
+                />
             </TransactionContent>
         </TransactionsCard>
     );

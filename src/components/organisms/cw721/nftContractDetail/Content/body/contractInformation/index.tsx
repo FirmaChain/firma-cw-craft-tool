@@ -28,7 +28,6 @@ import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext'
 
 const ContractInformation = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
-
     const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
     const { handleCW721NFTIdList, handleCW721OwnedNFTIdList } = useNFTContractDetail();
     const { nfts, addNFTs, updateNFTs, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
@@ -40,6 +39,8 @@ const ContractInformation = () => {
         currentPage: currentOwnedPage,
         setCurrentPage: setCurrentOwnedPage
     } = useCW721OwnedNFTListContext();
+
+    const [expandOwned, setExpandOwned] = useState(true);
 
     const contractAddress = contractDetail?.contractAddress || '';
     const codeId = contractDetail?.codeId || '';
@@ -61,6 +62,13 @@ const ContractInformation = () => {
     const isBasic = useMemo(() => {
         return codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
     }, [codeId]);
+
+    const myNFTsCountTypo = useMemo(() => {
+        if (!ownedNftsInfo) return null;
+
+        if (ownedNftsInfo.totalNftIds.length > 99) return '99+';
+        else return ownedNftsInfo.totalNftIds.length;
+    }, [ownedNftsInfo]);
 
     return (
         <ContractCard>
@@ -105,67 +113,107 @@ const ContractInformation = () => {
 
                 <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
-                    <SpecificValueBox>
+                    <SpecificValueBox style={{ gap: 0 }}>
                         <IconButton
                             onClick={() => setExpandTotal(!expandTotal)}
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
                             <SpecificValueWrapper>
-                                <SpecificValueTypo>
-                                    {`${totalSupply}`}
-                                    <span>{'NFT'}</span>
-                                </SpecificValueTypo>
+                                {nftsInfo === null ? (
+                                    <Skeleton width="80px" height="22px" />
+                                ) : (
+                                    <SpecificValueTypo style={{ display: 'flex' }}>
+                                        {totalSupply}
+                                        <span>{'NFT'}</span>
+                                    </SpecificValueTypo>
+                                )}
                             </SpecificValueWrapper>
                             <TableExpandButton $expand={expandTotal} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
-                        <NFTTableContainer $expand={expandTotal}>
-                            <NFTsTable
-                                codeId={codeId}
-                                contractAddress={contractAddress}
-                                nftsInfo={nftsInfo}
-                                nfts={nfts}
-                                currentPage={currentPage}
-                                handleNFTIdList={handleCW721NFTIdList}
-                                addNFTs={addNFTs}
-                                updateNFTs={updateNFTs}
-                                clearListData={clearCW721NFTListData}
-                                setCurrentPage={setCurrentPage}
-                                imageGap={{ horizontal: '16px' }}
+                        <div
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                maxHeight: expandTotal ? '1500px' : '0px',
+                                overflow: 'hidden',
+                                transition: 'all 0.5s ease'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    minHeight: '16px'
+                                }}
                             />
-                        </NFTTableContainer>
+                            <NFTTableContainer $expand={expandTotal}>
+                                <NFTsTable
+                                    codeId={codeId}
+                                    contractAddress={contractAddress}
+                                    nftsInfo={nftsInfo}
+                                    nfts={nfts}
+                                    currentPage={currentPage}
+                                    handleNFTIdList={handleCW721NFTIdList}
+                                    addNFTs={addNFTs}
+                                    updateNFTs={updateNFTs}
+                                    clearListData={clearCW721NFTListData}
+                                    setCurrentPage={setCurrentPage}
+                                    imageGap={{ horizontal: '16px' }}
+                                />
+                            </NFTTableContainer>
+                        </div>
                     </SpecificValueBox>
                 </SpecificItem>
-                {/* <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
+                <SpecificItem $isNFTList style={{ alignItems: 'flex-start' }}>
                     <SpecificLabelTypo>My NFTs</SpecificLabelTypo>
-                    <SpecificValueBox>
+                    <SpecificValueBox style={{ gap: 0 }}>
                         <IconButton
                             onClick={() => setExpandOwned(!expandOwned)}
                             style={{ padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}
                         >
                             <SpecificValueWrapper>
-                                <SpecificValueTypo>
-                                    {`${ownedNfts.length}`}
-                                    <span>{'NFT'}</span>
-                                </SpecificValueTypo>
+                                {myNFTsCountTypo === null ? (
+                                    <Skeleton width="80px" height="22px" />
+                                ) : (
+                                    <SpecificValueTypo>
+                                        {myNFTsCountTypo}
+                                        <span>{'NFT'}</span>
+                                    </SpecificValueTypo>
+                                )}
                             </SpecificValueWrapper>
                             <TableExpandButton $expand={expandOwned} src={IC_EXPAND} alt={'expand'} />
                         </IconButton>
-                        <NFTTableContainer $expand={expandOwned}>
-                            <NFTsTable
-                                codeId={codeId}
-                                contractAddress={contractAddress}
-                                nftsInfo={ownedNftsInfo}
-                                nfts={ownedNfts}
-                                currentPage={currentOwnedPage}
-                                handleNFTIdList={handleOwnedNFTIdList}
-                                addNFTs={addOwnedNFTs}
-                                updateNFTs={updateOwnedNFTs}
-                                clearListData={clearCW721OwnedNFTListData}
-                                setCurrentPage={setCurrentOwnedPage}
+                        <div
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                maxHeight: expandOwned ? '1500px' : '0px',
+                                overflow: 'hidden',
+                                transition: 'all 0.5s ease'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    minHeight: '16px'
+                                }}
                             />
-                        </NFTTableContainer>
+                            <NFTTableContainer $expand={expandOwned}>
+                                <NFTsTable
+                                    codeId={codeId}
+                                    contractAddress={contractAddress}
+                                    nftsInfo={ownedNftsInfo}
+                                    nfts={ownedNfts}
+                                    currentPage={currentOwnedPage}
+                                    handleNFTIdList={handleOwnedNFTIdList}
+                                    addNFTs={addOwnedNFTs}
+                                    updateNFTs={updateOwnedNFTs}
+                                    clearListData={clearCW721OwnedNFTListData}
+                                    setCurrentPage={setCurrentOwnedPage}
+                                />
+                            </NFTTableContainer>
+                        </div>
                     </SpecificValueBox>
-                </SpecificItem> */}
+                </SpecificItem>
             </CardSpecific>
         </ContractCard>
     );

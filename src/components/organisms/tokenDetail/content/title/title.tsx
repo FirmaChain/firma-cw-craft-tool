@@ -88,7 +88,8 @@ const Title = () => {
                                 {codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID ? (
                                     <LabelBasicTypo>{'BASIC'}</LabelBasicTypo>
                                 ) : (
-                                    <LabelAdvancedTypo>{'ADVANCED'}</LabelAdvancedTypo>
+                                    //? Replace LabelAdvancedTypo with LabelBasicTypo by request (same text color)
+                                    <LabelBasicTypo>{'ADVANCED'}</LabelBasicTypo>
                                 )}
                             </LabelWrap>
                         ) : (

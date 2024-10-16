@@ -729,14 +729,14 @@ const Close = (props: any) => {
 
 const XCircle = (props: any) => {
     return (
-        <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none">
+        <svg width={props.width} height={props.height} viewBox="0 0 32 32" fill="none" {...props}>
             <path
                 d="M16.0013 29.3327C23.3651 29.3327 29.3346 23.3631 29.3346 15.9993C29.3346 8.63555 23.3651 2.66602 16.0013 2.66602C8.63751 2.66602 2.66797 8.63555 2.66797 15.9993C2.66797 23.3631 8.63751 29.3327 16.0013 29.3327Z"
-                fill="#707070"
+                fill={props?.fill || '#707070'}
             />
             <path
                 d="M20.0013 11.9993L12.0013 19.9993M12.0013 11.9993L20.0013 19.9993M29.3346 15.9993C29.3346 23.3631 23.3651 29.3327 16.0013 29.3327C8.63751 29.3327 2.66797 23.3631 2.66797 15.9993C2.66797 8.63555 8.63751 2.66602 16.0013 2.66602C23.3651 2.66602 29.3346 8.63555 29.3346 15.9993Z"
-                stroke="#1A1A1A"
+                stroke={props?.stroke || '#1A1A1A'}
                 strokeWidth="2.66667"
                 strokeLinecap="round"
                 strokeLinejoin="round"

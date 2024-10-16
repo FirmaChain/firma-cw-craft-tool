@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { HeaderBox, HeaderTitle, HeaderWrap } from './style';
 import Icons from '@/components/atoms/icons';
 import SearchInput2 from '@/components/atoms/input/searchInput';
+import axios from 'axios';
+import { CRAFT_CONFIGS } from '@/config';
+import { getAccessToken } from '@/utils/token';
 
 const Header = () => {
     const [searchValue, setSearchValue] = useState<string>('');

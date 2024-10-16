@@ -1,7 +1,7 @@
 import AdditionalInformation from './additionalInformation';
 import { ContentBodyContainer } from './style';
 import TokenInformation from './tokenInfomation';
-import MyAllowances from './myAllowances';
+// import MyAllowances from './myAllowances';
 import AllAccounts from './allAccounts';
 import Transactions from './transactions';
 import Divider from '@/components/atoms/divider';

@@ -5,10 +5,13 @@ import { Container } from '@/styles/instantiate';
 import useTokenDetailStore from '@/store/useTokenDetailStore';
 import { rootState } from '@/redux/reducers';
 import useTokenDetail from '@/hooks/useTokenDetail';
-import useApollo from '@/hooks/useApollo';
+// import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
+import { useApolloClientContext } from '@/context/apolloClientContext';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 const Cw20TokenDetail = () => {
     const isInit = useSelector((state: rootState) => state.wallet.isInit);
@@ -19,12 +22,21 @@ const Cw20TokenDetail = () => {
     const contractAddress = window.location.pathname.replace('/mytoken/detail/', '');
 
     const { getTokenDetail } = useTokenDetail();
+    const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const { client } = useApollo();
+    const { client } = useApolloClientContext();
+    // const { client } = useApollo();
 
     const getRequiredInfo = async () => {
         if (isInit && client) {
             const tokenDetail = await getTokenDetail(contractAddress, address);
+
+            if (tokenDetail.admin.toLowerCase() !== address.toLowerCase()) {
+                enqueueSnackbar({ message: 'This contract is not owned by the connected wallet.', variant: 'error' });
+                navigate('/myToken');
+            }
+
             const transactions = await getTransactionsByAddress(client, contractAddress, 15);
 
             const result: ITransaction[] = [];
@@ -58,14 +70,20 @@ const Cw20TokenDetail = () => {
     }, [client, isInit]);
 
     useEffect(() => {
+        if (!address) {
+            navigate('/mytoken');
+            enqueueSnackbar({ message: 'Connect your wallet first!', variant: 'error' });
+        }
         return () => useTokenDetailStore.getState().clearForm();
     }, []);
 
     return (
-        <Container style={{ padding: '68px 88px 68px 96px', gap: '40px' }}>
-            <Header />
-            <TokenDetailContent />
-        </Container>
+        address && (
+            <Container style={{ padding: '68px 88px 68px 96px', gap: '40px' }}>
+                <Header />
+                <TokenDetailContent />
+            </Container>
+        )
     );
 };
 

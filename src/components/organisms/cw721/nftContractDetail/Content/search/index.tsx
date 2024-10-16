@@ -79,7 +79,7 @@ const EndAdornment = ({
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }} onClick={disableEventBubbling}>
             {keyword.length > 0 && (
                 <IconButton style={{ display: 'flex', padding: 0 }} onClick={clearKeyword}>
-                    <Icons.CloseIcon width="32px" height="32px" strokeWidth="2.6" stroke="#1A1A1A" />
+                    <Icons.XCircle width={'32px'} height={'32px'} fill="#707070" />
                 </IconButton>
             )}
 
@@ -137,7 +137,7 @@ const Search = () => {
     return (
         <ContentBodyContainer>
             <ContractCard>
-                <CardHeaderTypo>{'Search'}</CardHeaderTypo>
+                <CardHeaderTypo>{'Token ID Search'}</CardHeaderTypo>
                 <SearchInputWithButton2
                     value={keyword}
                     placeHolder={'Search by Token ID'}
@@ -155,8 +155,10 @@ const Search = () => {
                     }}
                 />
             </ContractCard>
-            <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
-            <SpecificItem>
+            <div style={{ width: '100%', margin: '32px 0' }}>
+                <Divider $direction="horizontal" $color={'#383838'} $variant="dash" />
+            </div>
+            {/* <SpecificItem>
                 <SpecificLabelTypo>{'Token ID'}</SpecificLabelTypo>
                 <SpecificValueWrapper>
                     {isSearched ? (
@@ -165,8 +167,8 @@ const Search = () => {
                         <SpecificPlaceholderTypo>{'Token ID'}</SpecificPlaceholderTypo>
                     )}
                 </SpecificValueWrapper>
-            </SpecificItem>
-            <SpecificItem>
+            </SpecificItem> */}
+            <SpecificItem style={{ marginBottom: '24px' }}>
                 <SpecificLabelTypo>{'Owner'}</SpecificLabelTypo>
                 <SpecificValueWrapper>
                     {isSearched ? (
@@ -179,12 +181,12 @@ const Search = () => {
                     )}
                 </SpecificValueWrapper>
             </SpecificItem>
-            <SpecificItem>
+            <SpecificItem style={{ marginBottom: '24px' }}>
                 <SpecificLabelTypo>{'Token URI'}</SpecificLabelTypo>
                 <SpecificValueWrapper>
                     {isSearched ? (
                         <Fragment>
-                            <SpecificValueTypo>{fetchData.tokenURI}</SpecificValueTypo>
+                            <SpecificValueTypo style={{ wordBreak: 'break-all' }}>{fetchData.tokenURI}</SpecificValueTypo>
                             <CopyIconButton text={fetchData.tokenURI} width={'22px'} height={'22px'} />
                         </Fragment>
                     ) : (
@@ -192,7 +194,7 @@ const Search = () => {
                     )}
                 </SpecificValueWrapper>
             </SpecificItem>
-            <ContractCard>
+            <ContractCard style={{ gap: '20px' }}>
                 <SpecificItem>
                     <SpecificLabelTypo>{'Approvals'}</SpecificLabelTypo>
                 </SpecificItem>

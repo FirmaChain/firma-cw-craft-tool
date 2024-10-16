@@ -3,15 +3,16 @@ import { useSnackbar } from 'notistack';
 import { Cw20SpenderAllowance } from '@firmachain/firma-js';
 
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import { useNavigate } from 'react-router-dom';
 
 export interface IAllowances {
-    Receiver: string;
+    Spender: string;
     Amount: string;
     Expires: string;
 }
 
 export interface ISpenders {
-    Receiver: string;
+    Spender: string;
     Amount: string;
     Expires: string;
 }
@@ -22,6 +23,7 @@ export interface IAccounts {
 }
 
 export interface ITokenDetailState {
+    admin: string;
     label: string;
     codeId: string;
     decimals: string;
@@ -48,10 +50,12 @@ interface _Cw20SpenderAllowance extends Cw20SpenderAllowance {
 const useTokenDetail = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { firmaSDK } = useFirmaSDKContext();
+    const navigate = useNavigate();
 
     const getTokenDetail = useCallback(
         async (contractAddress: string, address: string) => {
             const resultData: ITokenDetailState = {
+                admin: '',
                 label: '',
                 codeId: '',
                 decimals: '',
@@ -84,6 +88,8 @@ const useTokenDetail = () => {
                 const allAccounts = await firmaSDK.Cw20.getAllAccounts(contractAddress?.toLowerCase());
                 const firstHistory = (await firmaSDK.CosmWasm.getContractHistory(contractAddress?.toLowerCase()))[0];
 
+                resultData.admin = contractInfo.contract_info.admin;
+
                 resultData.label = contractInfo.contract_info.label;
                 resultData.codeId = contractInfo.contract_info.code_id;
 
@@ -107,7 +113,7 @@ const useTokenDetail = () => {
                 const convertAllAllowances = [];
                 for (const allowance of allAllowances) {
                     convertAllAllowances.push({
-                        Receiver: allowance.spender,
+                        Spender: allowance.spender,
                         Amount: allowance.allowance,
                         Expires: allowance.expires
                     });
@@ -119,7 +125,7 @@ const useTokenDetail = () => {
                 if (allSpenders.length > 0) {
                     for (const spenders of allSpenders) {
                         convertAllSpenders.push({
-                            Receiver: spenders['owner'],
+                            Spender: spenders['owner'],
                             Amount: spenders.allowance,
                             Expires: spenders.expires
                         });
@@ -174,7 +180,7 @@ const useTokenDetail = () => {
                 const convertAllAllowances = [];
                 for (const allowance of allAllowances) {
                     convertAllAllowances.push({
-                        Receiver: allowance.spender,
+                        Spender: allowance.spender,
                         Amount: allowance.allowance,
                         Expires: allowance.expires
                     });
@@ -185,7 +191,7 @@ const useTokenDetail = () => {
 
                 for (const spenders of allSpenders) {
                     convertAllSpenders.push({
-                        Receiver: spenders.owner,
+                        Spender: spenders.owner,
                         Amount: spenders.allowance,
                         Expires: spenders.expires
                     });

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContentBox, ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
 import ConnectWallet from './connectWallet';
 import { useSelector } from 'react-redux';
@@ -14,8 +14,9 @@ import { useMyContractQuery } from '@/api/queries';
 import NetworkSelect from '@/components/atoms/select/networkSelect';
 
 const sortByItems: IMenuItem[] = [
-    { value: 'name', label: 'Name', isDisabled: false },
-    { value: 'createdAt', label: 'Created At', isDisabled: false }
+    { value: 'newest', label: 'Newest', isDisabled: false },
+    { value: 'oldest', label: 'Oldest', isDisabled: false },
+    { value: 'alphabetical', label: 'Alphabetical', isDisabled: false }
 ];
 
 const MyTokenContent = () => {
@@ -29,8 +30,18 @@ const MyTokenContent = () => {
 
     const [sortBy, setSortBy] = useState(sortByItems[0].value);
 
+    const sortInfo = useMemo(() => {
+        if (sortBy === 'alphabetical') {
+            return { sortBy: 'name', sortOrder: 'asc' };
+        } else if (sortBy === 'newest') {
+            return { sortBy: 'createdAt', sortOrder: 'desc' };
+        } else {
+            return { sortBy: 'createdAt', sortOrder: 'asc' };
+        }
+    }, [sortBy]);
+
     const { refetch: getMyContracts } = useMyContractQuery(
-        { type: 'cw20', address, sortBy, sortOrder: 'desc' },
+        { type: 'cw20', address, sortBy: sortInfo.sortBy, sortOrder: sortInfo.sortOrder as 'asc' | 'desc' },
         {
             enabled: false,
             onSuccess: ({ success, error, data: contracts }) => {
@@ -49,6 +60,10 @@ const MyTokenContent = () => {
                     console.log(error);
                     GlobalActions.handleGlobalLoading(false);
                 }
+            },
+            onError: (error: any) => {
+                console.log(error);
+                enqueueSnackbar({ message: 'Failed to get CW20 contract list.', variant: 'error' });
             }
         }
     );
@@ -79,13 +94,21 @@ const MyTokenContent = () => {
 
     return (
         <ContentBox>
-            <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 96px' }}>
+            <div
+                style={{
+                    width: '100%',
+                    display: address ? 'flex' : 'none',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0 96px'
+                }}
+            >
                 <ContentControlWrapper style={{ opacity: showCount ? 1 : 0, transition: 'opacity 0.2s' }}>
+                    <NetworkSelect value={sortBy} options={sortByItems} onChange={handleChangeMenu} minWidth="150px" />
                     <ContentInfoWrapper style={{ opacity: showCount ? 1 : 0, transition: 'opacity 0.2s' }}>
                         <ContractCountTypo>{contracts === null ? 0 : contracts.length}</ContractCountTypo>
                         <TokenTypo>Tokens</TokenTypo>
                     </ContentInfoWrapper>
-                    <NetworkSelect value={sortBy} options={sortByItems} onChange={handleChangeMenu} minWidth="140px" />
                 </ContentControlWrapper>
             </div>
             <ContentWrapper>

@@ -16,6 +16,7 @@ const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boole
     const { contracts, updateContractInfo, currentPage, setCurrentPage, updateThumbnailInfo } = useCW721NFTContractsContext();
 
     const [pageItems, setPageItems] = useState<IContractInfo[]>([]);
+
     const [rowsPerPage, setRowsPerPage] = useState<number>(6);
 
     const totalPages = Math.max(Math.ceil(contracts?.length / rowsPerPage), 1);
@@ -99,11 +100,12 @@ const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boole
 
             if (totalPages <= 1) return [1];
 
-            if (currentPage <= 1) return [1, 2, 3].filter((page) => page <= totalPages);
+            if (currentPage <= 3) return [1, 2, 3, 4, 5].filter((page) => page <= totalPages);
 
-            if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
+            if (currentPage >= totalPages - 1)
+                return [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
 
-            return [currentPage - 1, currentPage, currentPage + 1].filter((page) => page <= totalPages);
+            return [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2].filter((page) => page <= totalPages);
         } else return [];
     }, [contracts, currentPage, rowsPerPage]);
 
@@ -136,7 +138,7 @@ const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boole
                                 }}
                             >
                                 {pageItems.map((item, index) => {
-                                    return <ContractCard key={`${item.contractAddress}-${index}`} data={item} />;
+                                    return <ContractCard key={`${item?.contractAddress}-${index}`} data={item} />;
                                 })}
                             </ContractCardBox>
                         </ContractCardContainer>

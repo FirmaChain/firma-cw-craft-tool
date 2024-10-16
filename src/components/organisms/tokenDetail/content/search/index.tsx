@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import {
     BalanceAmountTypo,
     BalanceAmountWrapper,
+    BalanceDefaultTypo,
     BalanceLabelTypo,
     BalanceSymbolTypo,
     BalanceWrapper,
@@ -13,7 +14,6 @@ import {
 import Allowances from './allowances';
 import useTokenDetail from '@/hooks/useTokenDetail';
 import { rootState } from '@/redux/reducers';
-import { parseAmountWithDecimal2 } from '@/utils/common';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 
 import IconButton from '@/components/atoms/buttons/iconButton';
@@ -63,7 +63,7 @@ const EndAdornment = ({
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {keyword && (
                 <IconButton style={{ padding: 0, display: 'flex' }} onClick={onClickClear}>
-                    <Icons.XCircle width={'32px'} height={'32px'} />
+                    <Icons.XCircle width={'32px'} height={'32px'} fill="#707070" />
                 </IconButton>
             )}
 
@@ -85,7 +85,7 @@ const WalletSearch = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [searchAddress, setSearchAddress] = useState<string>('');
-    const [balanceAmount, setBalanceAmount] = useState<string | null>(null);
+    const [balanceAmount, setBalanceAmount] = useState<string | null>('');
     const [allAllowances, setAllAllowances] = useState<any[]>([]);
     const [allReceives, setAllReceives] = useState<any[]>([]);
 
@@ -118,7 +118,7 @@ const WalletSearch = () => {
                 <WalletTitleTypo>Wallet Address Search</WalletTitleTypo>
                 <SearchInputWithButton2
                     value={searchAddress}
-                    placeHolder={'Input Wallet Address'}
+                    placeHolder={'Search by CW20 Wallet Address'}
                     onChange={(v) => setSearchAddress(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     onClickEvent={onClickSearch}
                     adornment={{
@@ -133,18 +133,25 @@ const WalletSearch = () => {
                     }}
                 />
             </div>
-            <Divider $direction="horizontal" $color="#383838" $variant="dash" />
 
-            <BalanceWrapper>
+            <div style={{ width: '100%', margin: '32px 0' }}>
+                <Divider $direction="horizontal" $color="#383838" $variant="dash" />
+            </div>
+
+            <BalanceWrapper style={{ marginBottom: '24px' }}>
                 <BalanceLabelTypo>Balances</BalanceLabelTypo>
                 {!isLoading ? (
-                    balanceAmount !== null && (
+                    balanceAmount === '' ? (
+                        <BalanceDefaultTypo>Balances</BalanceDefaultTypo>
+                    ) : balanceAmount !== null ? (
                         <BalanceAmountWrapper>
                             <BalanceAmountTypo className="clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(balanceAmount, decimals))}
                             </BalanceAmountTypo>
                             <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
                         </BalanceAmountWrapper>
+                    ) : (
+                        <></>
                     )
                 ) : (
                     <Skeleton width="100px" height="22px" />

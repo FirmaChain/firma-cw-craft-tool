@@ -45,7 +45,7 @@ export const UPDATE_MARKETING = {
 
 export const UPLOAD_LOGO = {
     key: 'upload_logo',
-    value: 'UploadLogo'
+    value: 'UpdateLogo'
 };
 
 export const CW20_TRANSACTION_TYPES = [
@@ -64,12 +64,12 @@ export const CW20_TRANSACTION_TYPES = [
 //? For CW721 TX types, may be wrong
 export const TRANSFER_NFT = {
     key: 'transfer_nft',
-    value: 'TransferNFT'
+    value: 'Transfer'
 };
 
 export const SEND_NFT = {
     key: 'send_nft',
-    value: 'SendNFT'
+    value: 'Send'
 };
 
 export const APPROVE = {

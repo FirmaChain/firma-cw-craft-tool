@@ -51,7 +51,7 @@ const AllAccounts = () => {
             <AllAccountsCardWrapper>
                 <AllAccountsCardHeaderTypo>All Accounts</AllAccountsCardHeaderTypo>
                 <SearchInput2
-                    placeHolder={'Search Wallet Address'}
+                    placeHolder={'Search by CW20 Wallet Address'}
                     value={keyword}
                     onChange={(v) => setKeyword(v.replace(WALLET_ADDRESS_REGEX, ''))}
                     adornment={{

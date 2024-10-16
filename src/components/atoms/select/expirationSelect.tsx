@@ -1,6 +1,6 @@
 import { DropDownOverlayScrollbar } from '@/components/organisms/instantiate/preview/dashboard/style';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import styled from 'styled-components';
 
@@ -31,7 +31,7 @@ const customStyles = {
         },
         borderRadius: '6px',
         padding: '8px 12px',
-        color: state.isDisabled ? '#434343' : state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
+        color: state.isDisabled ? '#383838' : state.isSelected ? '#fff' : 'var(--Gray-650, #707070)',
         width: '100%',
         cursor: 'pointer',
         fontSize: '14px',
@@ -148,70 +148,80 @@ const ExpirationSelect = ({
 
     const selected = options.find((one) => one.value === value);
 
+    const divRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const outSideClick = (e) => {
+            const { target } = e;
+            if (divRef.current && !divRef.current.contains(target)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', outSideClick);
+    }, []);
+
     return (
-        <>
-            <div
-                data-tooltip-content={disabled ? disabledTooltip : ''}
-                data-tooltip-id={TOOLTIP_ID.COMMON}
-                data-tooltip-wrapper="span"
-                data-tooltip-place="bottom"
-            >
-                <Select
-                    value={selected}
-                    menuIsOpen={open}
-                    isDisabled={disabled}
-                    menuPlacement="auto"
-                    options={options}
-                    styles={customStyles}
-                    placeholder={placeHolder}
-                    onChange={(newValue) => {
-                        onChange(newValue.value);
-                        setOpen(false);
-                    }}
-                    components={{
-                        Control: ({ children }) => {
-                            return (
-                                <Container
-                                    onClick={() => setOpen(!open)}
-                                    $open={open}
-                                    $minWidth={minWidth}
-                                    $maxWidth={maxWidth}
-                                    $isDisabled={disabled}
+        <div
+            ref={divRef}
+            data-tooltip-content={disabled ? disabledTooltip : ''}
+            data-tooltip-id={TOOLTIP_ID.COMMON}
+            data-tooltip-wrapper="span"
+            data-tooltip-place="bottom"
+        >
+            <Select
+                value={selected}
+                menuIsOpen={open}
+                isDisabled={disabled}
+                menuPlacement="auto"
+                options={options}
+                styles={customStyles}
+                placeholder={placeHolder}
+                onChange={(newValue) => {
+                    onChange(newValue.value);
+                    setOpen(false);
+                }}
+                components={{
+                    Control: ({ children }) => {
+                        return (
+                            <Container
+                                onClick={() => setOpen(!open)}
+                                $open={open}
+                                $minWidth={minWidth}
+                                $maxWidth={maxWidth}
+                                $isDisabled={disabled}
+                            >
+                                <span className="typo">{selected?.label || placeHolder}</span>
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                    style={{ transform: open ? 'rotate(180deg)' : 'unset' }}
                                 >
-                                    <span className="typo">{selected?.label || placeHolder}</span>
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 20 20"
-                                        fill="none"
-                                        style={{ transform: open ? 'rotate(180deg)' : 'unset' }}
-                                    >
-                                        <path
-                                            className="open-indicater-stroke"
-                                            d="M6 8L10 12L14 8"
-                                            stroke="#999999"
-                                            strokeWidth="1.6"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </Container>
-                            );
-                        },
-                        MenuList: ({ children }) => {
-                            return (
-                                <SelectListBox>
-                                    <DropDownOverlayScrollbar defer>
-                                        <div className="list">{children}</div>
-                                    </DropDownOverlayScrollbar>
-                                </SelectListBox>
-                            );
-                        }
-                    }}
-                />
-            </div>
-            {open && <BGBox onClick={() => setOpen(false)} />}
-        </>
+                                    <path
+                                        className="open-indicater-stroke"
+                                        d="M6 8L10 12L14 8"
+                                        stroke="#999999"
+                                        strokeWidth="1.6"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </Container>
+                        );
+                    },
+                    MenuList: ({ children }) => {
+                        return (
+                            <SelectListBox>
+                                <DropDownOverlayScrollbar defer>
+                                    <div className="list">{children}</div>
+                                </DropDownOverlayScrollbar>
+                            </SelectListBox>
+                        );
+                    }
+                }}
+            />
+        </div>
     );
 };
 

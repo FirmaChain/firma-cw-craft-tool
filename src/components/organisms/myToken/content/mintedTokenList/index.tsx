@@ -125,11 +125,12 @@ const MyMintedTokenList = ({ handleShowCount }: { handleShowCount: (v: boolean) 
 
             if (totalPages <= 1) return [1];
 
-            if (currentPage <= 1) return [1, 2, 3].filter((page) => page <= totalPages);
+            if (currentPage <= 3) return [1, 2, 3, 4, 5].filter((page) => page <= totalPages);
 
-            if (currentPage >= totalPages) return [totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
+            if (currentPage >= totalPages - 1)
+                return [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages].filter((page) => page > 0);
 
-            return [currentPage - 1, currentPage, currentPage + 1].filter((page) => page <= totalPages);
+            return [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2].filter((page) => page <= totalPages);
         } else return [];
     }, [contracts, currentPage, rowsPerPage]);
 

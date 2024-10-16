@@ -3,9 +3,10 @@ import ColorButton from './colorButton';
 
 const Base = styled(ColorButton)`
     &:hover {
-        background: #ffffff !important;
-        border-color: #ffffff !important;
+        background: #02e191 !important;
+        border-color: #02e191 !important;
         color: var(--Gray-100, #121212) !important;
+        filter: unset;
     }
 `;
 

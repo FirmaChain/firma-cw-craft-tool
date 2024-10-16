@@ -7,19 +7,20 @@ import { rootState } from '../redux/reducers';
 import { CRAFT_CONFIGS } from '../config';
 import { ITransaction } from '@/interfaces/cw20';
 import { getTransactionsByAddress } from '@/apollo/queries';
-import { determineMsgTypeAndSpender } from '@/utils/common';
-import useApollo from './useApollo';
+import { determineMsgTypeAndSpender, sleep } from '@/utils/common';
+// import useApollo from './useApollo';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import { useApolloClientContext } from '@/context/apolloClientContext';
 
 export interface IAllowances {
-    Receiver: string;
+    Spender: string;
     Amount: string;
     Expires: string;
 }
 
 export interface ISpenders {
-    Receiver: string;
+    Spender: string;
     Amount: string;
     Expires: string;
 }
@@ -62,7 +63,9 @@ const useNFTContractDetail = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const { firmaSDK } = useFirmaSDKContext();
-    const { client } = useApollo();
+    const { client } = useApolloClientContext();
+    // const { client } = useApollo();
+
     const { nftsInfo, setNftsInfo, ownedNftsInfo, setOwnedNftsInfo } = useNFTContractDetailStore();
 
     const checkExistContract = async (contractAddress: string) => {
@@ -96,7 +99,7 @@ const useNFTContractDetail = () => {
 
             try {
                 const totalNftsCount = await firmaSDK.Cw721.getTotalNfts(contractAddress?.toLowerCase());
-                const nftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase(), 20);
+                const nftIdList = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase(), 40);
 
                 nftInfo.totalSupply = totalNftsCount;
                 nftInfo.totalNftIds = nftIdList;
@@ -122,9 +125,21 @@ const useNFTContractDetail = () => {
             if (!firmaSDK) return nftInfo;
 
             try {
-                const nftIdList = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress?.toLowerCase(), address?.toLowerCase(), 99);
+                const nftIdList = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress?.toLowerCase(), address?.toLowerCase(), 100);
 
                 nftInfo.totalNftIds = nftIdList;
+
+                // Check if next page exist
+                // await sleep(200);
+                // const lastIndex = nftIdList[nftIdList.length - 1];
+                // const nextPage = await firmaSDK.Cw721.getNFTIdListOfOwner(
+                //     contractAddress?.toLowerCase(),
+                //     address?.toLowerCase(),
+                //     1,
+                //     lastIndex
+                // );
+
+                // if (nextPage.length > 0) nftInfo.hasNextPage = true;
             } catch (error) {
                 console.log(error);
                 enqueueSnackbar(`failed get NFT List info`, {
@@ -190,7 +205,7 @@ const useNFTContractDetail = () => {
             try {
                 const nftIdList = nftsInfo.totalNftIds;
                 const lastNftId = nftsInfo.totalNftIds[nftsInfo.totalNftIds.length - 1];
-                const result = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase(), 20, lastNftId);
+                const result = await firmaSDK.Cw721.getAllNftIdList(contractAddress?.toLowerCase(), 40, lastNftId);
 
                 const newNftIdList = result.filter((nft) => nftIdList.some((existNft) => existNft === nft) === false);
                 setNftsInfo({
@@ -212,19 +227,30 @@ const useNFTContractDetail = () => {
         async (contractAddress: string, address: string) => {
             try {
                 const nftIdList = ownedNftsInfo.totalNftIds;
+
                 if (nftIdList.length > 0) {
                     const lastNftId = ownedNftsInfo.totalNftIds[ownedNftsInfo.totalNftIds.length - 1];
+
                     const result = await firmaSDK.Cw721.getNFTIdListOfOwner(
                         contractAddress?.toLowerCase(),
                         address?.toLowerCase(),
-                        99,
+                        100,
                         lastNftId
                     );
 
                     const newNftIdList = result.filter((nft) => nftIdList.some((existNft) => existNft === nft) === false);
+                    const totalNftIds = [...nftIdList, ...newNftIdList];
+
+                    // const nextPage = await firmaSDK.Cw721.getNFTIdListOfOwner(
+                    //     contractAddress?.toLowerCase(),
+                    //     address?.toLowerCase(),
+                    //     1,
+                    //     totalNftIds[totalNftIds.length - 1]
+                    // );
+
                     setOwnedNftsInfo({
                         ...ownedNftsInfo,
-                        totalNftIds: [...nftIdList, ...newNftIdList]
+                        totalNftIds
                     });
                 }
             } catch (error) {
@@ -239,6 +265,8 @@ const useNFTContractDetail = () => {
     );
 
     const getAllTransactinos = async (contractAddress: string): Promise<ITransaction[]> => {
+        console.log(client);
+
         const { messagesByAddress } = await getTransactionsByAddress(client, contractAddress, 15);
 
         const result = messagesByAddress.map((message) => {

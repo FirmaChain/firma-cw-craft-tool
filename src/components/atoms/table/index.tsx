@@ -17,6 +17,7 @@ import {
     TableRow
 } from './styles';
 import { Oval } from 'react-loader-spinner';
+import FirmaLoading from '../globalLoader/firmaLoad';
 
 export interface IColumn {
     id: string;
@@ -33,13 +34,15 @@ const StyledTable = ({
     rows,
     rowsPerPage = 5,
     isLoading,
-    disablePagination
+    disablePagination,
+    slim = false
 }: {
     columns: IColumn[];
     rows: Record<string, any>[];
     rowsPerPage?: number;
     isLoading?: boolean;
     disablePagination?: boolean;
+    slim?: boolean;
 }) => {
     const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -70,9 +73,7 @@ const StyledTable = ({
     const showPagination = !disablePagination && rows.length !== 0;
 
     return (
-        <TableContainer
-            style={{ paddingBottom: showPagination ? '20px' : '12px', minHeight: currentPageRows.length > 0 ? 'unset' : '147px' }}
-        >
+        <TableContainer style={{ paddingBottom: showPagination ? '20px' : '12px', minHeight: '106px' /* 147px */ }}>
             <div style={{ width: '100%', height: '100%', overflowX: 'scroll' }}>
                 <Table>
                     <TableHead>
@@ -118,23 +119,24 @@ const StyledTable = ({
             </div>
 
             {isLoading ? (
-                <LoadingBox>
-                    <Oval
+                <LoadingBox $slim={slim}>
+                    <FirmaLoading size="30px" />
+                    {/* <Oval
                         visible={true}
-                        height="40"
-                        width="40"
+                        height="30"
+                        width="30"
                         color="#a7a7a7"
                         strokeWidth="3"
                         secondaryColor="#444444"
                         ariaLabel="oval-loading"
                         wrapperStyle={{}}
                         wrapperClass=""
-                    />
+                    /> */}
                 </LoadingBox>
             ) : (
                 <>
                     {rows.length === 0 && (
-                        <LoadingBox>
+                        <LoadingBox $slim={slim}>
                             <NoDataTypo className="select-none">There is no data</NoDataTypo>
                         </LoadingBox>
                     )}

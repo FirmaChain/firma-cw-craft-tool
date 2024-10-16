@@ -24,6 +24,10 @@ const Container = styled(IconButton)`
 
     &:hover {
         background: var(--Gray-450, #313131);
+
+        .bottom-box {
+            background: var(--Gray-450, #313131);
+        }
     }
 
     &:active {
@@ -54,6 +58,7 @@ const BottomBox = styled.div`
     gap: 10px;
     align-self: stretch;
     border-top: 1px solid var(--Gray-575, #474747);
+    background: #262626;
 
     @media only screen and (max-width: 1450px) {
         padding: 22px 34px;
@@ -219,7 +224,8 @@ const ContractCard = ({ data }: IProps) => {
         if (totalNFTsCount === 0) {
             return (
                 <PreviewNFTsBox>
-                    <TotalNftCountTypo>{'No NFTs have been minted.'}</TotalNftCountTypo>
+                    <TotalNftCountTypo>{'No NFTs'}</TotalNftCountTypo>
+                    {/* <TotalNftCountTypo>{'No NFTs have been minted.'}</TotalNftCountTypo> */}
                 </PreviewNFTsBox>
             );
         } else {
@@ -266,7 +272,7 @@ const ContractCard = ({ data }: IProps) => {
                     <LabelTypo className="clamp-single-line">{data.label}</LabelTypo>
                 </LabelBox>
             </TopBox>
-            <BottomBox>
+            <BottomBox className="bottom-box">
                 <DisplayNFTCount />
             </BottomBox>
         </Container>

@@ -3,15 +3,15 @@ import styled from 'styled-components';
 export const SearchAllowancesWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 20px;
 `;
 
 export const SearchAllowancesTitleTypo = styled.div`
-    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+    color: #999999;
     font-family: 'General Sans Variable';
-    font-size: 18px;
+    font-size: 16px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 22px;
 `;
 
@@ -24,16 +24,16 @@ export const AllowanceWrapper = styled.div`
 export const AllowanceContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 `;
 
 export const ItemLabel = styled.div`
     width: 224px;
-    color: var(--Gray-700, #999);
+    color: #707070;
     font-family: 'General Sans Variable';
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 22px;
+    line-height: 20px;
     white-space: pre-wrap;
 `;

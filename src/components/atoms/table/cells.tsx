@@ -66,7 +66,7 @@ const TransactionType = ({ type }: { type: string }) => {
         case 'Burn':
         case 'BurnFrom':
         case 'Approve':
-        case 'TransferNFT':
+        case 'Transfer':
             bgColor = 'rgba(80, 110, 229, 0.20)';
             typoColor = '#506EE5';
             break;
@@ -81,7 +81,7 @@ const TransactionType = ({ type }: { type: string }) => {
 
         case 'UpdateMinter':
         case 'UpdateMarketing':
-        case 'UploadLogo':
+        case 'UpdateLogo':
         case 'Revoke All':
         case 'UpdateOwnerShipTransfer':
         case 'UpdateOwnerShipAccept':

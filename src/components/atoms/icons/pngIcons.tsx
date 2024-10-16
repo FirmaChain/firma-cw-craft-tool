@@ -29,7 +29,7 @@ export const IC_ARROW_WITH_TAIL = PUBLIC_IC_URL + 'ic_arrow_with_tail.png';
 export const IC_REFRESH = PUBLIC_IC_URL + 'ic_refresh.png';
 export const IC_FIRMACHAIN = PUBLIC_IC_URL + 'ic_firmachain.png';
 export const IC_ROUND_ARROW_DOWN = PUBLIC_IC_URL + 'ic_round_arrow_down.png';
-export const IMG_LANDING_BG = PUBLIC_IMG_URL + 'img_landing_bg.png';
+export const IMG_LANDING_BG = PUBLIC_IMG_URL + 'img_landing_page_background.png';
 export const IMG_LANDING_INSTANTIATE = PUBLIC_IMG_URL + 'img_landing_instantiate.png';
 export const IMG_LANDING_QUERY = PUBLIC_IMG_URL + 'img_landing_query.png';
 export const IMG_LANDING_EXECUTE = PUBLIC_IMG_URL + 'img_landing_execute.png';
@@ -73,6 +73,8 @@ export const IMG_CAROUSEL_EXECUTE = PUBLIC_IMG_URL + 'img_carousel_execute.png';
 export const IC_GUIDE = PUBLIC_IC_URL + 'ic_guide.png';
 export const IC_MEDIUM = PUBLIC_IC_URL + 'ic_medium.png';
 export const IC_INFO = PUBLIC_IC_URL + 'ic_info.png';
+
+export const IMG_LANDING_CONTENT_BG = PUBLIC_IMG_URL + 'img_landing_content_background.png';
 
 export const IC_CW20 = PUBLIC_IC_URL + 'ic_cw20.png';
 export const IC_CW721 = PUBLIC_IC_URL + 'ic_cw721.png';

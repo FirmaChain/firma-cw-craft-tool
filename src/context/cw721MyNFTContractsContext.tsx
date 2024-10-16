@@ -94,13 +94,15 @@ export const CW721NFTContractsProvider = ({ children }: { children: ReactNode })
     };
 
     const updateContractInfo = (info: IContractInfo) => {
-        if (contracts !== null) {
-            setContracts((prevContracts) =>
-                prevContracts.map((contract) => (contract.contractAddress === info.contractAddress ? { ...contract, info } : contract))
-            );
-        } else {
-            setContracts([info]);
-        }
+        if (contracts === null) return;
+
+        setContracts((prevContracts) => {
+            return prevContracts.map((contract) => (contract.contractAddress === info.contractAddress ? { ...contract, info } : contract));
+        });
+
+        //  else {
+        //     setContracts([info]);
+        // }
     };
 
     const updateThumbnailInfo = (address: string, info: ThumbnailInfo) => {

@@ -66,7 +66,8 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
                     // ...v,
                     tokenSymbol: v.symbol,
                     tokenName: v.name,
-                    contractAddress: v.contractAddress
+                    contractAddress: v.contractAddress,
+                    tokenLogoUrl: v.tokenLogoUrl
                     // tokenLogoUrl: '',
                     // totalSupply: '',
                     // decimals: 0
@@ -83,13 +84,15 @@ export const CW20MyTokenProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const updateContractInfo = (info: IContractInfo) => {
-        if (contracts !== null)
-            setContracts((prevContracts) =>
-                prevContracts.map((contract) => (contract.contractAddress === info.contractAddress ? { ...contract, info } : contract))
-            );
-        else {
-            setContracts([info]);
-        }
+        if (contracts === null) return;
+
+        // if (contracts !== null)
+        setContracts((prevContracts) =>
+            prevContracts.map((contract) => (contract.contractAddress === info.contractAddress ? { ...contract, info } : contract))
+        );
+        // else {
+        //     setContracts([info]);
+        // }
     };
 
     const updateTokenAdditionalInfo = (address: string, info: TokenAdditionalInfo) => {

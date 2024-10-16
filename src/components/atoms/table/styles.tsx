@@ -34,14 +34,18 @@ export const WalletAddressWrap = styled.div`
     align-items: center;
 `;
 
-export const LoadingBox = styled.div`
+export const LoadingBox = styled.div<{ $slim: boolean }>`
     width: 100%;
-    height: 72px;
+    height: ${({ $slim }) => ($slim ? '38px' : '72px')};
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 36px;
-    padding-bottom: 16px;
+
+    ${({ $slim }) =>
+        $slim &&
+        `
+    padding-top: 6px;
+        `}
 `;
 
 export const TableContainer = styled.div`
@@ -74,7 +78,7 @@ export const TableRow = styled.tr`
 
 export const HeaderCell = styled.th`
     padding: 0;
-    padding-bottom: 8px;
+    padding-bottom: 7px;
     text-align: left;
     color: var(--Gray-700, #807e7e);
     font-family: 'General Sans Variable';

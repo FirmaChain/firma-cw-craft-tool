@@ -66,16 +66,14 @@ const TokenInformation = () => {
                     {decimals ? <SpecificValueTypo>{decimals}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
                 </SpecificItem>
 
-                {!isBasic && (
-                    <SpecificItem style={{ height: '28px' }}>
-                        <SpecificLabelTypo>Label</SpecificLabelTypo>
-                        {typeof label === 'string' ? (
-                            <SpecificValueCover>{label}</SpecificValueCover>
-                        ) : (
-                            <Skeleton width="100px" height="22px" />
-                        )}
-                    </SpecificItem>
-                )}
+                <SpecificItem style={{ height: '28px' }}>
+                    <SpecificLabelTypo>Label</SpecificLabelTypo>
+                    {typeof label === 'string' ? (
+                        <SpecificValueCover>{label}</SpecificValueCover>
+                    ) : (
+                        <Skeleton width="100px" height="22px" />
+                    )}
+                </SpecificItem>
 
                 <SpecificItem>
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>

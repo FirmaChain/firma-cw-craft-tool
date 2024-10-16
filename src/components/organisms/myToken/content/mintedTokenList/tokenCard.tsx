@@ -35,7 +35,7 @@ interface IProps {
 }
 
 const MintedTokenCard = ({
-    // tokenLogoUrl,
+    tokenLogoUrl,
     tokenSymbol,
     tokenName,
     // totalSupply,
@@ -54,10 +54,10 @@ const MintedTokenCard = ({
     const handleTokenAdditionalInfo = useCallback(async () => {
         try {
             const contractInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
-            const { logo } = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
+            // const { logo } = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
 
             updateTokenAdditionalInfo(contractAddress, {
-                imageUrl: logo?.url || '',
+                imageUrl: tokenLogoUrl || '',
                 totalSupply: contractInfo.total_supply,
                 decimals: contractInfo.decimals
             });

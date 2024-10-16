@@ -163,7 +163,7 @@ export const TotalSupplySymbolTypo = styled.div`
     }
 `;
 
-export const GoToExecuteButton = styled(IconButton)`
+export const GoToExecuteButton = styled(IconButton)<{ disabled?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -173,13 +173,26 @@ export const GoToExecuteButton = styled(IconButton)`
     border: 1px solid var(--Green-500, #02e191);
     background: var(--Gray-350, #262626);
 
+    filter: unset !important;
+
     &:hover {
-        background: #ffffff;
-        border-color: #ffffff;
+        background: #02e191;
+        border-color: #02e191;
         > * {
-            color: #121212 !important;
+            color: ${({ disabled }) => (disabled ? 'var(--Gray-500, #383838) !important' : '#121212 !important')};
         }
     }
+
+    ${({ disabled }) =>
+        disabled &&
+        `
+    
+    border-color: var(--Gray-450, #313131) !important;
+    background: var(--200, #1E1E1E) !important;
+    > * {
+        color: var(--Gray-500, #383838) !important;
+    }
+    `}
 `;
 
 export const GoToButtonTypo = styled.div`

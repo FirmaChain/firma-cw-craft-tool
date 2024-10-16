@@ -21,6 +21,7 @@ import IconTooltip from '@/components/atoms/tooltip';
 import { IC_WARNING_SIGN } from '@/components/atoms/icons/pngIcons';
 import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
 import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
+import { isValidAddress } from '@/utils/address';
 
 const OwnerInformation = () => {
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
@@ -42,7 +43,7 @@ const OwnerInformation = () => {
         expireInfo: Cw721Expires | null;
         expireBlockHeight: string;
     }) => {
-        if (!pendingOwner && !expireInfo) return <SpecificValueTypo>-</SpecificValueTypo>;
+        if (!pendingOwner && !expireInfo) return <SpecificDefaultTypo>Expires</SpecificDefaultTypo>;
 
         if (!expireInfo) return <SpecificValueTypo>Forever</SpecificValueTypo>;
 
@@ -92,45 +93,57 @@ const OwnerInformation = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>{'Admin'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {admin ? (
+                        {/*//! if ownership is renounced, admin value will be "None Assigned" so validation is requried */}
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : admin ? (
                             <>
                                 <SpecificValueTypo className="clamp-single-line">{admin}</SpecificValueTypo>
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificDefaultTypo>{'Admin Address'}</SpecificDefaultTypo>
+                            <SpecificValueTypo style={{ color: '#707070' }}>{'None Assigned'}</SpecificValueTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Owner'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {pending_owner ? (
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : pending_owner ? (
                             <>
                                 <SpecificValueTypo className="clamp-single-line">{pending_owner}</SpecificValueTypo>
                                 <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificDefaultTypo>{'Wallet Address'}</SpecificDefaultTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>{'Pending Expiry'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} expireBlockHeight={blockHeight} />
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : (
+                            <PendingExpiery pendingOwner={pending_owner} expireInfo={pending_expiry} expireBlockHeight={blockHeight} />
+                        )}
                     </SpecificValueWrapper>
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>{'Minter'}</SpecificLabelTypo>
                     <SpecificValueWrapper>
-                        {minter ? (
+                        {/*//! if ownership is renounced, minter value will be "None Assigned" so validation is requried */}
+                        {!contractInfo ? (
+                            <Skeleton width="100px" height="22px" />
+                        ) : minter ? (
                             <>
                                 <SpecificValueTypo className="clamp-single-line">{minter}</SpecificValueTypo>
                                 <CopyIconButton text={minter} width={'22px'} height={'22px'} />
                             </>
                         ) : (
-                            <SpecificValueTypo>{'-'}</SpecificValueTypo>
+                            <SpecificDefaultTypo style={{ color: '#707070' }}>{'None Assigned'}</SpecificDefaultTypo>
                         )}
                     </SpecificValueWrapper>
                 </SpecificItem>
