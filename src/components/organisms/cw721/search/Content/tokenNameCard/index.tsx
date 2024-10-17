@@ -1,11 +1,12 @@
 import Divider from '@/components/atoms/divider';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { Container, TokenNameBox, TotalSupplyBox } from './style';
+import { Container, TokenName, TokenNameBox, TotalSupplyBox } from './style';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import PinButton from '@/components/atoms/buttons/pinButton';
 import usePinContractStore from '@/store/pinContractStore';
 import useCW721SearchStore from '../../cw721SearchStore';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const TokenNameCard = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
@@ -55,7 +56,8 @@ const TokenNameCard = () => {
 
                     <div className="divider" />
 
-                    <div className="token-name">{contractName}</div>
+                    <TextEllipsis CustomDiv={TokenName} text={contractName} breakMode={'letters'} />
+                    {/* <div className="token-name">{contractName}</div> */}
 
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
                         <PinButton isPinned={isPinned} isBlocked={userPinList.length >= 10} onClick={handleOnClickPin} />

@@ -17,6 +17,7 @@ import Divider from '@/components/atoms/divider';
 import useExecuteActions from '../../action';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -126,9 +127,14 @@ const Transfer = () => {
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <ItemWrap>
                             <TotalTransferLabelTypo>Total Transfer Amount :</TotalTransferLabelTypo>
-                            <TotalTransferAmountTypo className="clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={TotalTransferAmountTypo}
+                                text={formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
+                                breakMode={'letters'}
+                            />
+                            {/* <TotalTransferAmountTypo className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalTransferAmount, tokenInfo.decimals.toString()))}
-                            </TotalTransferAmountTypo>
+                            </TotalTransferAmountTypo> */}
                             <TotalTransferAmountTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</TotalTransferAmountTypo>
                         </ItemWrap>
                         {isBalanceExceed && (
@@ -143,9 +149,14 @@ const Transfer = () => {
                     <Divider $direction={'horizontal'} $variant="dash" $color="#444" />
                     <ItemWrap>
                         <MyWalletLabelTypo>My Wallet Balance :</MyWalletLabelTypo>
-                        <MyWalletAmountTypo className="clamp-single-line">
+                        <TextEllipsis
+                            CustomDiv={MyWalletAmountTypo}
+                            text={formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}
+                            breakMode={'letters'}
+                        />
+                        {/* <MyWalletAmountTypo className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(cw20Balance, tokenInfo.decimals.toString()))}
-                        </MyWalletAmountTypo>
+                        </MyWalletAmountTypo> */}
                         <MyWalletAmountTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</MyWalletAmountTypo>
                     </ItemWrap>
                 </SummeryCard>

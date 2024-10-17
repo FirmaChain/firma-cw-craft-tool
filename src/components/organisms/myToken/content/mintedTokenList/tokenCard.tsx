@@ -22,6 +22,7 @@ import { getTokenAmountFromUToken } from '@/utils/balance';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import Skeleton from '@/components/atoms/skeleton';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 interface IProps {
     tokenLogoUrl?: string;
@@ -108,9 +109,14 @@ const MintedTokenCard = ({
                 <SupplyWrapper>
                     {typeof additionalInfo?.totalSupply === 'string' && typeof additionalInfo?.decimals === 'number' ? (
                         <>
-                            <TotalSupplyTypo>
+                            <TextEllipsis
+                                CustomDiv={TotalSupplyTypo}
+                                text={commaNumber(getTokenAmountFromUToken(additionalInfo.totalSupply, String(additionalInfo.decimals)))}
+                                breakMode={'letters'}
+                            />
+                            {/* <TotalSupplyTypo>
                                 {commaNumber(getTokenAmountFromUToken(additionalInfo.totalSupply, String(additionalInfo.decimals)))}
-                            </TotalSupplyTypo>
+                            </TotalSupplyTypo> */}
                             <SupplySymbolTypo>{tokenSymbol}</SupplySymbolTypo>
                         </>
                     ) : (

@@ -37,6 +37,7 @@ import { compareStringNumbers } from '@/utils/balance';
 import IconTooltip from '@/components/atoms/tooltip';
 import { isValidAddress } from '@/utils/address';
 import { SpecificDefaultTypo } from '../../../nftContractDetail/Content/body/ownerInformation/style';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const TokenInfo = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
@@ -93,7 +94,8 @@ const TokenInfo = () => {
                     <SpecificValueWrapper>
                         {contractAddress ? (
                             <>
-                                <SpecificValueTypo className="clamp-single-line">{contractAddress}</SpecificValueTypo>
+                                {/* <SpecificValueTypo className="clamp-single-line">{contractAddress}</SpecificValueTypo> */}
+                                <TextEllipsis CustomDiv={SpecificValueTypo} text={contractAddress} breakMode={'letters'} />
                                 <CopyIconButton text={contractAddress} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -104,7 +106,8 @@ const TokenInfo = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Name</SpecificLabelTypo>
                     {contractName ? (
-                        <SpecificValueTypo className="clamp-single-line">{contractName}</SpecificValueTypo>
+                        // <SpecificValueTypo className="clamp-single-line">{contractName}</SpecificValueTypo>
+                        <TextEllipsis CustomDiv={SpecificValueTypo} text={contractName} breakMode={'letters'} />
                     ) : (
                         <Skeleton width="100px" height="22px" />
                     )}
@@ -112,7 +115,8 @@ const TokenInfo = () => {
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Symbol</SpecificLabelTypo>
                     {contractSymbol ? (
-                        <SpecificValueTypo className="clamp-single-line">{contractSymbol}</SpecificValueTypo>
+                        // <SpecificValueTypo className="clamp-single-line">{contractSymbol}</SpecificValueTypo>
+                        <TextEllipsis CustomDiv={SpecificValueTypo} text={contractSymbol} breakMode={'letters'} />
                     ) : (
                         <Skeleton width="100px" height="22px" />
                     )}
@@ -122,7 +126,8 @@ const TokenInfo = () => {
                     <SpecificItem style={{ height: '28px' }}>
                         <SpecificLabelTypo>Label</SpecificLabelTypo>
                         {typeof label === 'string' ? (
-                            <SpecificValueCover>{label}</SpecificValueCover>
+                            // <SpecificValueCover>{label}</SpecificValueCover>
+                            <TextEllipsis CustomDiv={SpecificValueCover} text={label} breakMode={'letters'} />
                         ) : (
                             <Skeleton width="100px" height="22px" />
                         )}
@@ -284,7 +289,8 @@ const OwnerInformation = () => {
                     return (
                         <SpecificValueWrapper>
                             <IconTooltip size={'24px'} tooltip={'The height has expired.'} TooltipIcon={IC_WARNING_SIGN} />
-                            <SpecificValueTypo style={{ color: '#5A5A5A' }}>{expireInfo['at_height']}</SpecificValueTypo>
+                            <TextEllipsis CustomDiv={SpecificValueTypo} text={expireInfo['at_height']} breakMode={'letters'} />
+                            {/* <SpecificValueTypo style={{ color: '#5A5A5A' }}>{expireInfo['at_height']}</SpecificValueTypo> */}
                         </SpecificValueWrapper>
                     );
                 }
@@ -301,7 +307,17 @@ const OwnerInformation = () => {
                 return (
                     <SpecificValueWrapper>
                         <IconTooltip size={'24px'} tooltip={'The time has expired.'} TooltipIcon={IC_WARNING_SIGN} />
-                        <SpecificValueTypo style={{ color: '#5A5A5A' }}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo>
+                        <TextEllipsis
+                            CustomDiv={SpecificValueTypo}
+                            text={format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}
+                            breakMode={'letters'}
+                            customDivProps={{
+                                style: {
+                                    color: '#5A5A5A'
+                                }
+                            }}
+                        />
+                        {/* <SpecificValueTypo style={{ color: '#5A5A5A' }}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo> */}
                     </SpecificValueWrapper>
                 );
             }
@@ -322,7 +338,8 @@ const OwnerInformation = () => {
                             <Skeleton width="100px" height="22px" />
                         ) : admin ? (
                             <>
-                                <SpecificValueTypo className="clamp-single-line">{admin}</SpecificValueTypo>
+                                <TextEllipsis CustomDiv={SpecificValueTypo} text={admin} breakMode={'letters'} />
+                                {/* <SpecificValueTypo className="clamp-single-line">{admin}</SpecificValueTypo> */}
                                 <CopyIconButton text={admin} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -345,7 +362,8 @@ const OwnerInformation = () => {
                             <Skeleton width="100px" height="22px" />
                         ) : pending_owner ? (
                             <>
-                                <SpecificValueTypo className="clamp-single-line">{pending_owner}</SpecificValueTypo>
+                                {/* <SpecificValueTypo className="clamp-single-line">{pending_owner}</SpecificValueTypo> */}
+                                <TextEllipsis CustomDiv={SpecificValueTypo} text={pending_owner} breakMode={'letters'} />
                                 <CopyIconButton text={pending_owner} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -380,7 +398,8 @@ const OwnerInformation = () => {
                             <Skeleton width="100px" height="22px" />
                         ) : minter ? (
                             <>
-                                <SpecificValueTypo className="clamp-single-line">{minter}</SpecificValueTypo>
+                                {/* <SpecificValueTypo className="clamp-single-line">{minter}</SpecificValueTypo> */}
+                                <TextEllipsis CustomDiv={SpecificValueTypo} text={minter} breakMode={'letters'} />
                                 <CopyIconButton text={minter} width={'22px'} height={'22px'} />
                             </>
                         ) : (

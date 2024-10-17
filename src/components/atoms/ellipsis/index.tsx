@@ -23,7 +23,7 @@ const TextEllipsis = ({
     const isEllipsis = visibleHeight !== hiddenHeight;
 
     return (
-        <div style={{ width: 'fit-content', position: 'relative' }}>
+        <div style={{ width: 'fit-content', position: 'relative', overflow: 'hidden' }}>
             <CustomDiv
                 ref={visibleRef}
                 className={`clamp-single-line ${className}`}

@@ -16,6 +16,7 @@ import usePinContractStore from '@/store/pinContractStore';
 import IconButton from '../buttons/iconButton';
 import Divider from '../divider';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
+import ContractApi from '@/api/contractApi';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -475,42 +476,85 @@ const AutoCompleteBox = ({
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const { data } = useContractSearchQuery(
-        {
-            type: autoCompleteType,
-            keyword: searchValue,
-            filter: isValidAddress(searchValue) && searchValue.length > 44 ? 'address' : 'any'
-        },
-        {
-            enabled: searchValue.replaceAll(' ', '').length > 0,
-            onSuccess: ({ data, success, error }) => {
-                if (success) {
-                    const flattenList = Object.values(data)
-                        .flat()
-                        .filter((v) => v !== null);
+    const [data, setData] = useState<Record<string, ContractInfoFromDB[] | null>>(null);
 
-                    if (Array.isArray(flattenList) && flattenList.length > 0) {
-                        flattenList.forEach((v) => {
-                            const checkTarget = pinnedList.find(
-                                (one) => one.contractAddress?.toLowerCase() === v.contractAddress?.toLowerCase()
-                            );
+    const searchContracts = async (keyword: string) => {
+        try {
+            const {
+                data: contracts,
+                success,
+                error
+            }: { data: Record<string, ContractInfoFromDB[] | null>; success: boolean; error: any } = await ContractApi.getSearchContracts({
+                type: autoCompleteType,
+                keyword: keyword,
+                filter: isValidAddress(keyword) && keyword.length > 44 ? 'address' : 'any'
+            });
 
-                            if (checkTarget && v.tokenLogoUrl !== checkTarget.tokenLogoUrl) {
-                                updatePin(address, { ...checkTarget, tokenLogoUrl: v.tokenLogoUrl });
-                            }
-                        });
-                    }
-                } else {
-                    console.log(error);
-                    enqueueSnackbar({ message: 'Failed to get search result.', variant: 'error' });
+            if (success) {
+                const flattenList = Object.values(contracts)
+                    .flat()
+                    .filter((v) => v !== null);
+
+                if (Array.isArray(flattenList) && flattenList.length > 0) {
+                    flattenList.forEach((v) => {
+                        const checkTarget = pinnedList.find(
+                            (one) => one.contractAddress?.toLowerCase() === v.contractAddress?.toLowerCase()
+                        );
+
+                        if (checkTarget && v.tokenLogoUrl !== checkTarget.tokenLogoUrl) {
+                            updatePin(address, { ...checkTarget, tokenLogoUrl: v.tokenLogoUrl });
+                        }
+                    });
                 }
-            },
 
-            onSettled: () => {
-                setIsLoading(false);
+                setData(contracts);
+            } else {
+                throw new Error(error);
             }
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar({ message: 'Failed to get search result.', variant: 'error' });
+        } finally {
+            setIsLoading(false);
         }
-    );
+    };
+
+    // const { data, isFetching } = useContractSearchQuery(
+    //     {
+    //         type: autoCompleteType,
+    //         keyword: searchValue,
+    //         filter: isValidAddress(searchValue) && searchValue.length > 44 ? 'address' : 'any'
+    //     },
+    //     {
+    //         enabled: searchValue.replaceAll(' ', '').length > 0,
+    //         onSuccess: ({ data, success, error }) => {
+    //             if (success) {
+    //                 const flattenList = Object.values(data)
+    //                     .flat()
+    //                     .filter((v) => v !== null);
+
+    //                 if (Array.isArray(flattenList) && flattenList.length > 0) {
+    //                     flattenList.forEach((v) => {
+    //                         const checkTarget = pinnedList.find(
+    //                             (one) => one.contractAddress?.toLowerCase() === v.contractAddress?.toLowerCase()
+    //                         );
+
+    //                         if (checkTarget && v.tokenLogoUrl !== checkTarget.tokenLogoUrl) {
+    //                             updatePin(address, { ...checkTarget, tokenLogoUrl: v.tokenLogoUrl });
+    //                         }
+    //                     });
+    //                 }
+    //             } else {
+    //                 console.log(error);
+    //                 enqueueSnackbar({ message: 'Failed to get search result.', variant: 'error' });
+    //             }
+    //         },
+
+    //         onSettled: () => {
+    //             setIsLoading(false);
+    //         }
+    //     }
+    // );
 
     const sortedPinList = useMemo(() => {
         if (!searchValue) return pinnedList;
@@ -565,12 +609,12 @@ const AutoCompleteBox = ({
         return [...nameSorted, ...symbolSorted, ...labelSorted];
     }, [pinnedList, searchValue]);
 
-    const contractList = data?.data || {};
+    const contractList = data || {};
 
     const isEmptyRes = Object.values(contractList).every((v) => v === null || v?.length === 0);
 
     useDebounce(
-        () => {
+        async () => {
             queryClient.invalidateQueries(['CONTRACT_SEARCH']);
 
             if (keyword.replaceAll(' ', '').length > 0 && selectedAddress.toLowerCase() !== keyword.toLowerCase()) {
@@ -582,6 +626,7 @@ const AutoCompleteBox = ({
                     else setFilter('name');
                 }
 
+                await searchContracts(keyword);
                 setSearchValue((prev) => keyword);
             } else {
                 setIsLoading(false);

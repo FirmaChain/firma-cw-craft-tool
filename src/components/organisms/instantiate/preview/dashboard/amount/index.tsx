@@ -118,9 +118,10 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                 </DetailAddressText>
                             </DetailLeftWrapper>
                             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                                <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
+                                <TextEllipsis CustomDiv={DetailMinterCapAmount} text={commaNumber(minterCap) || 0} breakMode={'letters'} />
+                                {/* <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
                                     {commaNumber(minterCap) || 0}
-                                </DetailMinterCapAmount>
+                                </DetailMinterCapAmount> */}
                                 {tokenSymbol && <ItemTokenSymbol>{tokenSymbol}</ItemTokenSymbol>}
                             </div>
                         </DetailWrapper>

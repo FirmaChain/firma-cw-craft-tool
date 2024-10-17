@@ -206,7 +206,6 @@ const BurnFromPreview = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
 
     const contractAddress = useExecuteStore((v) => v.contractAddress);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const burnFromList = useExecuteStore((v) => v.burnFromList);
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
@@ -405,9 +404,14 @@ const BurnFromPreview = () => {
                                         </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
                                     <WalletItemTokenWrap>
-                                        <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
+                                        <TextEllipsis
+                                            CustomDiv={WalletItemTokenAmount}
+                                            text={value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                            breakMode={'letters'}
+                                        />
+                                        {/* <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
                                             {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                        </WalletItemTokenAmount>
+                                        </WalletItemTokenAmount> */}
                                         <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
                                     </WalletItemTokenWrap>
                                 </WalletItemWrap>

@@ -12,6 +12,7 @@ import Cw20BurnFromInputList from '@/components/atoms/walletList/cw20BurnFromInp
 import Icons from '@/components/atoms/icons';
 import commaNumber from 'comma-number';
 import { isValidAddress } from '@/utils/address';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -121,10 +122,15 @@ const BurnFrom = () => {
                 </TitleWrap>
                 <SummeryCard>
                     <SummeryWrap>
-                        <SummeryLabelTypo>Total Burn Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo className="clamp-single-line">
+                        <SummeryLabelTypo>Total Burn Amount : </SummeryLabelTypo>
+                        <TextEllipsis
+                            CustomDiv={SummeryAmountTypo}
+                            text={commaNumber(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
+                            breakMode={'letters'}
+                        />
+                        {/* <SummeryAmountTypo className="clamp-single-line">
                             {commaNumber(getTokenAmountFromUToken(totalBurnAmont, String(tokenInfo.decimals)))}
-                        </SummeryAmountTypo>
+                        </SummeryAmountTypo> */}
                         <SummerySymbolTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                     {showExceedMessage && (

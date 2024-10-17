@@ -18,6 +18,7 @@ import { useMemo } from 'react';
 import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
 import { getTokenAmountFromUToken } from '@/utils/balance';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const TokenInformation = () => {
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
@@ -45,7 +46,8 @@ const TokenInformation = () => {
                     <SpecificValueWrapper>
                         {contractAddress ? (
                             <>
-                                <SpecificValueTypo>{contractAddress}</SpecificValueTypo>
+                                <TextEllipsis CustomDiv={SpecificValueTypo} text={contractAddress} breakMode={'letters'} />
+                                {/* <SpecificValueTypo>{contractAddress}</SpecificValueTypo> */}
                                 <CopyIconButton text={contractAddress} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -79,9 +81,14 @@ const TokenInformation = () => {
                     <SpecificLabelTypo>Total Supply</SpecificLabelTypo>
                     {totalSupply ? (
                         <SpecificValueWrapper>
-                            <SpecificValueTypo>
+                            <TextEllipsis
+                                CustomDiv={SpecificValueTypo}
+                                text={totalSupply && commaNumber(getTokenAmountFromUToken(totalSupply, decimals))}
+                                breakMode={'letters'}
+                            />
+                            {/* <SpecificValueTypo>
                                 {totalSupply && commaNumber(getTokenAmountFromUToken(totalSupply, decimals))}
-                            </SpecificValueTypo>
+                            </SpecificValueTypo> */}
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                         </SpecificValueWrapper>
                     ) : (
@@ -93,7 +100,8 @@ const TokenInformation = () => {
                     <SpecificItem>
                         <SpecificLabelTypo>Minter Address</SpecificLabelTypo>
                         <SpecificValueWrapper>
-                            <SpecificValueTypo>{minterAddress}</SpecificValueTypo>
+                            <TextEllipsis CustomDiv={SpecificValueTypo} text={minterAddress} breakMode={'letters'} />
+                            {/* <SpecificValueTypo>{minterAddress}</SpecificValueTypo> */}
                             {minterAddress && <CopyIconButton text={minterAddress} width={'22px'} height={'22px'} />}
                         </SpecificValueWrapper>
                     </SpecificItem>
@@ -103,9 +111,14 @@ const TokenInformation = () => {
                         <SpecificLabelTypo>Minter Cap</SpecificLabelTypo>
 
                         <SpecificValueWrapper>
-                            <SpecificValueTypo>
+                            <TextEllipsis
+                                CustomDiv={SpecificValueTypo}
+                                text={minterCap === '' ? '0' : commaNumber(getTokenAmountFromUToken(minterCap, decimals))}
+                                breakMode={'letters'}
+                            />
+                            {/* <SpecificValueTypo>
                                 {minterCap === '' ? '0' : commaNumber(getTokenAmountFromUToken(minterCap, decimals))}
-                            </SpecificValueTypo>
+                            </SpecificValueTypo> */}
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                         </SpecificValueWrapper>
                     </SpecificItem>
@@ -115,9 +128,14 @@ const TokenInformation = () => {
                     <SpecificLabelTypo>My Balance</SpecificLabelTypo>
                     {addressBalance ? (
                         <SpecificValueWrapper>
-                            <SpecificValueTypo>
+                            <TextEllipsis
+                                CustomDiv={SpecificValueTypo}
+                                text={addressBalance && commaNumber(getTokenAmountFromUToken(addressBalance, decimals))}
+                                breakMode={'letters'}
+                            />
+                            {/* <SpecificValueTypo>
                                 {addressBalance && commaNumber(getTokenAmountFromUToken(addressBalance, decimals))}
-                            </SpecificValueTypo>
+                            </SpecificValueTypo> */}
                             <SpecificValueSymbol>{tokenSymbol}</SpecificValueSymbol>
                         </SpecificValueWrapper>
                     ) : (

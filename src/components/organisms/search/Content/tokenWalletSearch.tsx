@@ -1,5 +1,5 @@
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
-import { CardContainer, CardTitle, SearchButton, SectionContainer, WalletBalance } from './style';
+import { BalanceAmount, CardContainer, CardTitle, SearchButton, SectionContainer, WalletBalance } from './style';
 import Divider from '@/components/atoms/divider';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import IconButton from '@/components/atoms/buttons/iconButton';
@@ -17,6 +17,7 @@ import styled from 'styled-components';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -181,9 +182,14 @@ const TokenWalletSearch = () => {
                         </WalletBalance>
                     ) : (
                         <WalletBalance className="balance-box">
-                            <div className="balance-amount clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={BalanceAmount}
+                                text={commaNumber(getTokenAmountFromUToken(balanceAmount, String(decimals)))}
+                                breakMode={'letters'}
+                            />
+                            {/* <div className="balance-amount clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(balanceAmount, String(decimals)))}
-                            </div>
+                            </div> */}
                             <div className="balance-symbol">{symbol}</div>
                         </WalletBalance>
                     )}

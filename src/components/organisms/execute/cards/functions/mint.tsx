@@ -17,6 +17,7 @@ import Divider from '@/components/atoms/divider';
 import Cw20MintInputList from '@/components/atoms/walletList/cw20MintInputList';
 import Icons from '@/components/atoms/icons';
 import useExecuteActions from '../../action';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -124,10 +125,15 @@ const Mint = () => {
                 <SummeryCard>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <TotalMintWrap>
-                            <TotalMintLabelTypo>Total Mint Supply :</TotalMintLabelTypo>
-                            <TotalMintSupplyBalance className="clamp-single-line">
+                            <TotalMintLabelTypo>Total Mint Supply : </TotalMintLabelTypo>
+                            <TextEllipsis
+                                CustomDiv={TotalMintSupplyBalance}
+                                text={formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
+                                breakMode={'letters'}
+                            />
+                            {/* <TotalMintSupplyBalance className="clamp-single-line">
                                 {formatWithCommas(getTokenAmountFromUToken(totalMintAmount, tokenInfo.decimals.toString()))}
-                            </TotalMintSupplyBalance>
+                            </TotalMintSupplyBalance> */}
                             <TotalMintSupplyBalance style={{ fontWeight: '400' }}>{tokenInfo.symbol}</TotalMintSupplyBalance>
                         </TotalMintWrap>
                         {exceedMinterCap && (
@@ -142,9 +148,14 @@ const Mint = () => {
                     <Divider $direction="horizontal" $variant="dash" $color="#444" />
                     <TotalMintWrap>
                         <TotalMintSubLabelTypo>Additional Mintable Token Amount :</TotalMintSubLabelTypo>
-                        <TotalMintSubBalance className="clamp-single-line">
+                        <TextEllipsis
+                            CustomDiv={TotalMintSubBalance}
+                            text={formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}
+                            breakMode={'letters'}
+                        />
+                        {/* <TotalMintSubBalance className="clamp-single-line">
                             {formatWithCommas(getTokenAmountFromUToken(mintableAmount, tokenInfo.decimals.toString()))}
-                        </TotalMintSubBalance>
+                        </TotalMintSubBalance> */}
                         <TotalMintSubBalance style={{ fontWeight: '400' }}>{tokenInfo.symbol}</TotalMintSubBalance>
                         <IconTooltip size="14px" tooltip={`Additional Mintable Token Amount\n=  Minter Cap - Total Supply`} />
                     </TotalMintWrap>

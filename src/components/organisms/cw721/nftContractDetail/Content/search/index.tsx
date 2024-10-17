@@ -23,6 +23,7 @@ import { parseExpires } from '@/utils/common';
 import { INT_NUMBERS } from '@/constants/regex';
 import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -173,7 +174,8 @@ const Search = () => {
                 <SpecificValueWrapper>
                     {isSearched ? (
                         <Fragment>
-                            <SpecificValueTypo>{fetchData.owner}</SpecificValueTypo>
+                            <TextEllipsis CustomDiv={SpecificValueTypo} text={fetchData.owner} breakMode={'letters'} />
+                            {/* <SpecificValueTypo>{fetchData.owner}</SpecificValueTypo> */}
                             <CopyIconButton text={fetchData.owner} width={'22px'} height={'22px'} />
                         </Fragment>
                     ) : (
@@ -186,7 +188,8 @@ const Search = () => {
                 <SpecificValueWrapper>
                     {isSearched ? (
                         <Fragment>
-                            <SpecificValueTypo style={{ wordBreak: 'break-all' }}>{fetchData.tokenURI}</SpecificValueTypo>
+                            <TextEllipsis CustomDiv={SpecificValueTypo} text={fetchData.tokenURI} breakMode={'letters'} />
+                            {/* <SpecificValueTypo style={{ wordBreak: 'break-all' }}>{fetchData.tokenURI}</SpecificValueTypo> */}
                             <CopyIconButton text={fetchData.tokenURI} width={'22px'} height={'22px'} />
                         </Fragment>
                     ) : (

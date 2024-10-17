@@ -102,7 +102,8 @@ const AdditionalInformation = () => {
                                 <SpecificDefaultTypo>Marketing Address</SpecificDefaultTypo>
                             ) : (
                                 <SpecificMetadataValueWrapper>
-                                    <SpecificValueTypo className="clamp-single-line">{marketingAddress}</SpecificValueTypo>
+                                    <TextEllipsis CustomDiv={SpecificValueTypo} text={marketingAddress} breakMode={'letters'} />
+                                    {/* <SpecificValueTypo className="clamp-single-line">{marketingAddress}</SpecificValueTypo> */}
                                     <CopyIconButton text={marketingAddress} width={'20px'} height={'20px'} />
                                 </SpecificMetadataValueWrapper>
                             )

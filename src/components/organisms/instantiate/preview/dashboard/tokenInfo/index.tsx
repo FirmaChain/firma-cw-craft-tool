@@ -13,6 +13,7 @@ import {
 import Icons from '@/components/atoms/icons';
 import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 interface IProps {
     tokenLogoUrl: string;
@@ -64,7 +65,21 @@ const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: I
 
             <TokenInfoDetail>
                 <DetailTitle>
-                    <TokenNameText $disabled={tokenName === ''}>{tokenName || 'Name'}</TokenNameText>
+                    <TextEllipsis
+                        CustomDiv={TokenNameText}
+                        text={tokenName || 'Name'}
+                        breakMode={'letters'}
+                        customDivProps={{ $disabled: tokenName === '' }}
+                    />
+                    {/* <TextEllipsis
+                        CustomDiv={TokenSymbolText}
+                        text={tokenSymbol || 'Symbol'}
+                        breakMode={'letters'}
+                        customDivProps={{
+                            $disabled: tokenSymbol === ''
+                        }}
+                    /> */}
+                    {/* <TokenNameText $disabled={tokenName === ''}>{tokenName || 'Name'}</TokenNameText> */}
                     <TokenSymbolText $disabled={tokenSymbol === ''}>{tokenSymbol || 'Symbol'}</TokenSymbolText>
                 </DetailTitle>
                 <div style={{ width: '100%', textAlign: 'left', position: 'relative' }}>

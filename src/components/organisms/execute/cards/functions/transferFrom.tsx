@@ -8,6 +8,7 @@ import { getUTokenStrFromTokenStr } from '@/utils/common';
 import useFormStore from '@/store/formStore';
 import { addStringAmountsArray } from '@/utils/balance';
 import commaNumber from 'comma-number';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -82,7 +83,8 @@ const TransferFrom = () => {
                 <SummeryCard>
                     <SummeryWrap>
                         <SummeryLabelTypo>Total Transfer Amount :</SummeryLabelTypo>
-                        <SummeryAmountTypo className="clamp-single-line">{commaNumber(totalTransferAmount)}</SummeryAmountTypo>
+                        <TextEllipsis CustomDiv={SummeryAmountTypo} text={commaNumber(totalTransferAmount)} breakMode={'letters'} />
+                        {/* <SummeryAmountTypo className="clamp-single-line">{commaNumber(totalTransferAmount)}</SummeryAmountTypo> */}
                         <SummerySymbolTypo style={{ fontWeight: '400' }}>{tokenInfo.symbol}</SummerySymbolTypo>
                     </SummeryWrap>
                 </SummeryCard>

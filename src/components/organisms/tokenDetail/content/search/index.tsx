@@ -29,6 +29,7 @@ import { getTokenAmountFromUToken } from '@/utils/balance';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -145,9 +146,14 @@ const WalletSearch = () => {
                         <BalanceDefaultTypo>Balances</BalanceDefaultTypo>
                     ) : balanceAmount !== null ? (
                         <BalanceAmountWrapper>
-                            <BalanceAmountTypo className="clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={BalanceAmountTypo}
+                                text={commaNumber(getTokenAmountFromUToken(balanceAmount, decimals))}
+                                breakMode={'letters'}
+                            />
+                            {/* <BalanceAmountTypo className="clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(balanceAmount, decimals))}
-                            </BalanceAmountTypo>
+                            </BalanceAmountTypo> */}
                             <BalanceSymbolTypo>{tokenSymbol}</BalanceSymbolTypo>
                         </BalanceAmountWrapper>
                     ) : (

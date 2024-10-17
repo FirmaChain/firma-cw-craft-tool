@@ -256,7 +256,6 @@ const MintPreview = () => {
     const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const mintingList = useExecuteStore((state) => state.mintingList);
     const minterInfo = useExecuteStore((state) => state.minterInfo);
@@ -409,9 +408,9 @@ const MintPreview = () => {
         });
     };
 
-    const [totalMintSupplyHidden, { height: supplyHiddenHeight }] = useMeasure();
-    const [totalMintSupplyVisible, { height: supplyVisibleHeigt }] = useMeasure();
-    const showSupplyTooltip = supplyVisibleHeigt !== supplyHiddenHeight;
+    // const [totalMintSupplyHidden, { height: supplyHiddenHeight }] = useMeasure();
+    // const [totalMintSupplyVisible, { height: supplyVisibleHeigt }] = useMeasure();
+    // const showSupplyTooltip = supplyVisibleHeigt !== supplyHiddenHeight;
 
     return (
         <Container>
@@ -453,9 +452,17 @@ const MintPreview = () => {
                                         </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
                                     <WalletItemTokenWrap>
-                                        <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
+                                        <TextEllipsis
+                                            CustomDiv={WalletItemTokenAmount}
+                                            text={value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                            breakMode={'letters'}
+                                            customDivProps={{
+                                                $disabled: !Number(value.amount)
+                                            }}
+                                        />
+                                        {/* <WalletItemTokenAmount $disabled={!Number(value.amount)} className="clamp-single-line">
                                             {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                        </WalletItemTokenAmount>
+                                        </WalletItemTokenAmount> */}
                                         <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
                                     </WalletItemTokenWrap>
                                 </WalletItemWrap>

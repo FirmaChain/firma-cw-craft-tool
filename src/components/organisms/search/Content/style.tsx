@@ -72,13 +72,13 @@ export const SectionContainer = styled.div`
     }
 
     .section-title {
-        color: #999999;
+        color: var(--Gray-900, var(--Primary-Base-White, #fff));
 
         /* Heading/H5 - Bd */
         font-family: 'General Sans Variable';
-        font-size: 16px;
+        font-size: 18px;
         font-style: normal;
-        font-weight: 400;
+        font-weight: 600;
         line-height: 22px; /* 122.222% */
     }
 
@@ -300,4 +300,136 @@ export const TokenDescriptionClampTypo = styled.span`
     font-style: normal;
     font-weight: 500;
     line-height: 20px; /* 142.857% */
+`;
+
+export const SectionTitleSearch = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+
+    @media (max-width: 1300px) {
+        flex-direction: column;
+        gap: 20px;
+
+        > div {
+            max-width: unset;
+        }
+    }
+`;
+
+export const SectionTitleSubTitle = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+`;
+
+export const SectionTitle = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+
+    /* Heading/H5 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 122.222% */
+`;
+
+export const SectionTitleDesc = styled.div`
+    color: var(--Gray-650, #707070);
+
+    /* Body/Body2 - Rg */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const InformationBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+`;
+
+export const BoxRow = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+`;
+
+export const BoxValue = styled.div`
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+`;
+
+export const BoxTitle = styled.div`
+    min-width: 224px;
+    max-width: 224px;
+    color: var(--Gray-750, #999);
+
+    /* Body/Body1 - Rg */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+`;
+
+export const WhiteTypo = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+
+    /* Body/Body1 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px; /* 137.5% */
+
+    word-break: break-all;
+`;
+
+export const DisabledTypo = styled.div`
+    color: var(--Gray-500, #383838);
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+`;
+
+export const LabelBox = styled.div`
+    display: flex;
+    padding: 3px 12px;
+
+    border-radius: 100px;
+    border: 1px solid var(--Gray-500, #383838);
+    background: var(--Gray-400, #2c2c2c);
+`;
+
+export const LabelTypo = styled.div`
+    color: var(--Gray-750, #999);
+
+    /* Body/Body2 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+`;
+
+export const BalanceAmount = styled.div`
+    color: var(--Gray-900, var(--Primary-Base-White, #fff));
+
+    /* Body/Body1 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px; /* 137.5% */
 `;

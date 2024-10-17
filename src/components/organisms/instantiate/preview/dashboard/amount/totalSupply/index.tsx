@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react';
-
 import {
     ItemLeftAddress,
     ItemLeftWrapper,
@@ -93,9 +92,17 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                         </ItemLeftAddress>
                                     </ItemLeftWrapper>
                                     <ItemTokenWrap>
-                                        <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
+                                        <TextEllipsis
+                                            CustomDiv={ItemTokenAmount}
+                                            text={commaNumber(wallet.amount) || '0'}
+                                            breakMode={'letters'}
+                                            customDivProps={{
+                                                $disabled: !Boolean(Number(wallet.amount))
+                                            }}
+                                        />
+                                        {/* <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
                                             {commaNumber(wallet.amount) || '0'}
-                                        </ItemTokenAmount>
+                                        </ItemTokenAmount> */}
                                         {tokenSymbol && <ItemTokenSymbol>{tokenSymbol}</ItemTokenSymbol>}
                                     </ItemTokenWrap>
                                 </WalletListItem>

@@ -260,7 +260,6 @@ const TransferPreview = () => {
     const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const cw20Balance = useExecuteStore((state) => state.cw20Balance);
     const transferList = useExecuteStore((state) => state.transferList);
@@ -269,7 +268,6 @@ const TransferPreview = () => {
     const clearTransfer = useExecuteStore((state) => state.clearTransfer);
 
     const { setCw20Balance } = useExecuteActions();
-
     const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
@@ -440,9 +438,17 @@ const TransferPreview = () => {
                                         </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
                                     <WalletItemTokenWrap>
-                                        <WalletItemTokenAmount className="clamp-single-line" $disabled={!Number(value.amount)}>
+                                        <TextEllipsis
+                                            CustomDiv={WalletItemTokenAmount}
+                                            text={value.amount === '' ? '0' : formatWithCommas(value.amount)}
+                                            breakMode={'letters'}
+                                            customDivProps={{
+                                                $disabled: !Number(value.amount)
+                                            }}
+                                        />
+                                        {/* <WalletItemTokenAmount className="clamp-single-line" $disabled={!Number(value.amount)}>
                                             {value.amount === '' ? '0' : formatWithCommas(value.amount)}
-                                        </WalletItemTokenAmount>
+                                        </WalletItemTokenAmount> */}
                                         <WalletItemTokenSymbol>{tokenInfo.symbol}</WalletItemTokenSymbol>
                                     </WalletItemTokenWrap>
                                 </WalletItemWrap>

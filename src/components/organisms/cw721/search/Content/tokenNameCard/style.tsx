@@ -104,6 +104,19 @@ export const TokenNameBox = styled.div`
     }
 `;
 
+export const TokenName = styled.div`
+    color: var(--Gray-650, #707070);
+
+    /* Body/Body1 - Rg */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+
+    margin-right: 16px;
+`;
+
 export const TotalSupplyBox = styled.div`
     display: flex;
     flex-direction: row;

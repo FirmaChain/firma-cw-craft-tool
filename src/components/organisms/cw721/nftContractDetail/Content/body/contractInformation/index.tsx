@@ -25,6 +25,7 @@ import NFTsTable from '@/components/organisms/cw721/common/nftsTable';
 import { useCW721NFTListContext } from '@/context/cw721NFTListContext';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const ContractInformation = () => {
     const { address } = useSelector((state: rootState) => state.wallet);
@@ -79,7 +80,8 @@ const ContractInformation = () => {
                     <SpecificValueWrapper>
                         {contractAddress ? (
                             <>
-                                <SpecificValueTypo>{contractAddress}</SpecificValueTypo>
+                                <TextEllipsis CustomDiv={SpecificValueTypo} text={contractAddress} breakMode={'letters'} />
+                                {/* <SpecificValueTypo>{contractAddress}</SpecificValueTypo> */}
                                 <CopyIconButton text={contractAddress} width={'22px'} height={'22px'} />
                             </>
                         ) : (
@@ -89,19 +91,30 @@ const ContractInformation = () => {
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Name</SpecificLabelTypo>
-                    {contractName ? <SpecificValueTypo>{contractName}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                    {contractName ? (
+                        <TextEllipsis CustomDiv={SpecificValueTypo} text={contractName} breakMode={'letters'} />
+                    ) : (
+                        //  <SpecificValueTypo>{contractName}</SpecificValueTypo>
+                        <Skeleton width="100px" height="22px" />
+                    )}
                 </SpecificItem>
                 <SpecificItem>
                     <SpecificLabelTypo>Contract Symbol</SpecificLabelTypo>
-                    {contractSymbol ? <SpecificValueTypo>{contractSymbol}</SpecificValueTypo> : <Skeleton width="100px" height="22px" />}
+                    {contractSymbol ? (
+                        <TextEllipsis CustomDiv={SpecificValueTypo} text={contractSymbol} breakMode={'letters'} />
+                    ) : (
+                        // <SpecificValueTypo>{contractSymbol}</SpecificValueTypo>
+                        <Skeleton width="100px" height="22px" />
+                    )}
                 </SpecificItem>
 
                 {!isBasic && (
                     <SpecificItem style={{ height: '28px' }}>
                         <SpecificLabelTypo>Label</SpecificLabelTypo>
                         {typeof label === 'string' ? (
-                            <SpecificValueCover className="clamp-single-line">{label}</SpecificValueCover>
+                            <TextEllipsis CustomDiv={SpecificValueCover} text={label} breakMode={'letters'} />
                         ) : (
+                            // <SpecificValueCover className="clamp-single-line">{label}</SpecificValueCover>
                             <Skeleton width="100px" height="22px" />
                         )}
                     </SpecificItem>

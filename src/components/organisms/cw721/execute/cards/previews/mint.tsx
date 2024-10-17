@@ -212,7 +212,6 @@ const MintPreview = () => {
     const address = useSelector((v: rootState) => v.wallet.address);
     const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
     const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
@@ -378,7 +377,15 @@ const MintPreview = () => {
                                 {mintList.map((value, index) => (
                                     <WalletLeftItemWrap key={index}>
                                         <WalletItemIcon src={IC_LINK_GRAY} alt={'Wallet Item'} />
-                                        <WalletItemAddressTypo
+                                        <TextEllipsis
+                                            CustomDiv={WalletItemAddressTypo}
+                                            text={value.token_uri || 'NFT Url'}
+                                            breakMode={'letters'}
+                                            customDivProps={{
+                                                $disabled: mintList[index].token_uri === ''
+                                            }}
+                                        />
+                                        {/* <WalletItemAddressTypo
                                             className="clamp-single-line"
                                             $disabled={mintList[index].token_uri === ''}
                                             data-tooltip-content={value.token_uri.length >= 30 ? value.token_uri : ''}
@@ -387,7 +394,7 @@ const MintPreview = () => {
                                             data-tooltip-place="bottom"
                                         >
                                             {value.token_uri || 'NFT Url'}
-                                        </WalletItemAddressTypo>
+                                        </WalletItemAddressTypo> */}
                                     </WalletLeftItemWrap>
                                 ))}
                             </WalletItemWrap>

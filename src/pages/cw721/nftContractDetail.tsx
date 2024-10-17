@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Container } from '@/styles/instantiate';
 import { rootState } from '@/redux/reducers';
-// import useApollo from '@/hooks/useApollo';
 import { Content, Header } from '@/components/organisms/cw721/nftContractDetail';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
@@ -24,7 +23,6 @@ const NFTContractDetail = () => {
     const { getNFTContractDetail, getNFTsInfo, getOwnedNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
 
     const { client } = useApolloClientContext();
-    // const { client } = useApollo();
 
     const getRequiredInfo = async () => {
         if (isInit && client) {

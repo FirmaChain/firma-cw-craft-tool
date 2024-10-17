@@ -115,6 +115,8 @@ export const LabelWrap = styled.div`
     gap: 10px;
     border-radius: 6px;
     background: var(--Gray-150, #141414);
+
+    margin-right: 16px;
 `;
 
 export const LabelBasicTypo = styled.div`
@@ -174,4 +176,31 @@ export const TotalSupplyBox = styled.div`
     .bold {
         font-weight: 600;
     }
+`;
+
+export const TotalSupplyTitle = styled.div`
+    color: #02e191;
+
+    /* Body/Body2 - Rg */
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+    opacity: 0.6;
+
+    white-space: pre;
+`;
+
+export const TotalSupplyAmount = styled.div`
+    color: var(--Green-500, #02e191);
+
+    /* Body/Body1 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+
+    font-weight: 600;
 `;

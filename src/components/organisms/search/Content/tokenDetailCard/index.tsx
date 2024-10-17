@@ -1,5 +1,5 @@
 import Divider from '@/components/atoms/divider';
-import { CardContainer, SectionContainer } from '../style';
+import { CardContainer, LabelTypo, SectionContainer, WhiteTypo } from '../style';
 import useSearchStore from '../../searchStore';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
@@ -48,26 +48,30 @@ const TokenInfo = () => {
                 <div className="box-row">
                     <div className="box-title">Contract Address</div>
                     <div className="box-value">
-                        <div className="white-typo single-line-clamp">{contractAddress}</div>
+                        <TextEllipsis CustomDiv={WhiteTypo} text={contractAddress} breakMode={'letters'} />
+                        {/* <div className="white-typo single-line-clamp">{contractAddress}</div> */}
                         {contractAddress && <CopyIconButton width="22px" height="22px" text={contractAddress} />}
                     </div>
                 </div>
                 <div className="box-row">
                     <div className="box-title">Token Name</div>
                     <div className="box-value">
-                        <div className="white-typo clamp-single-line">{tokenName}</div>
+                        <TextEllipsis CustomDiv={WhiteTypo} text={tokenName} breakMode={'letters'} />
+                        {/* <div className="white-typo clamp-single-line">{tokenName}</div> */}
                     </div>
                 </div>
                 <div className="box-row">
                     <div className="box-title">Token Symbol</div>
                     <div className="box-value">
-                        <div className="white-typo clamp-single-line">{symbol}</div>
+                        <TextEllipsis CustomDiv={WhiteTypo} text={symbol} breakMode={'letters'} />
+                        {/* <div className="white-typo clamp-single-line">{symbol}</div> */}
                     </div>
                 </div>
                 <div className="box-row">
                     <div className="box-title">Decimals</div>
                     <div className="box-value">
-                        <div className="white-typo">{decimals}</div>
+                        <TextEllipsis CustomDiv={WhiteTypo} text={String(decimals)} breakMode={'letters'} />
+                        {/* <div className="white-typo">{decimals}</div> */}
                     </div>
                 </div>
 
@@ -76,7 +80,8 @@ const TokenInfo = () => {
                     {label && (
                         <div className="box-value">
                             <div className="label">
-                                <div className="label-typo clamp-single-line">{label}</div>
+                                <TextEllipsis CustomDiv={LabelTypo} text={label} breakMode={'letters'} />
+                                {/* <div className="label-typo clamp-single-line">{label}</div> */}
                             </div>
                         </div>
                     )}
@@ -86,9 +91,14 @@ const TokenInfo = () => {
                     <div className="box-title">Total Supply</div>
                     {totalSupply && (
                         <div className="box-value">
-                            <div className="white-typo clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={WhiteTypo}
+                                text={commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
+                                breakMode={'letters'}
+                            />
+                            {/* <div className="white-typo clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
-                            </div>
+                            </div> */}
                             <div className="gray-typo">{symbol}</div>
                         </div>
                     )}
@@ -97,7 +107,8 @@ const TokenInfo = () => {
                     <div className="box-row">
                         <div className="box-title">Minter Address</div>
                         <div className="box-value">
-                            <div className="white-typo single-line-clamp">{minterAddress}</div>
+                            <TextEllipsis CustomDiv={WhiteTypo} text={minterAddress} breakMode={'letters'} />
+                            {/* <div className="white-typo single-line-clamp">{minterAddress}</div> */}
                             {minterAddress && <CopyIconButton width="22px" height="22px" text={minterAddress} />}
                         </div>
                     </div>
@@ -107,9 +118,14 @@ const TokenInfo = () => {
                         <div className="box-title">Minter Cap</div>
 
                         <div className="box-value">
-                            <div className="white-typo clamp-single-line">
+                            <TextEllipsis
+                                CustomDiv={WhiteTypo}
+                                text={commaNumber(getTokenAmountFromUToken(minterCap, String(decimals)))}
+                                breakMode={'letters'}
+                            />
+                            {/* <div className="white-typo clamp-single-line">
                                 {commaNumber(getTokenAmountFromUToken(minterCap, String(decimals)))}
-                            </div>
+                            </div> */}
                             <div className="gray-typo">{symbol}</div>
                         </div>
                     </div>
@@ -119,9 +135,14 @@ const TokenInfo = () => {
                         <div className="box-title">My Balance</div>
                         {userBalance ? (
                             <div className="box-value">
-                                <div className="white-typo clamp-single-line">
+                                <TextEllipsis
+                                    CustomDiv={WhiteTypo}
+                                    text={commaNumber(getTokenAmountFromUToken(userBalance, String(decimals)))}
+                                    breakMode={'letters'}
+                                />
+                                {/* <div className="white-typo clamp-single-line">
                                     {commaNumber(getTokenAmountFromUToken(userBalance, String(decimals)))}
-                                </div>
+                                </div> */}
                                 <div className="gray-typo">{symbol}</div>
                             </div>
                         ) : (
@@ -133,17 +154,6 @@ const TokenInfo = () => {
         </SectionContainer>
     );
 };
-
-const WhiteTypo = styled.div`
-    color: var(--Primary-Base-White, #fff);
-
-    /* Body/Body1 - Md */
-    font-family: 'General Sans Variable';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 22px; /* 137.5% */
-`;
 
 const MoreInfo = () => {
     const tokenLogo = useSearchStore((v) => v.marketingInfo?.logo?.url);
@@ -203,7 +213,8 @@ const MoreInfo = () => {
                                 <div className="disabled-typo">Marketing Address</div>
                             ) : (
                                 <>
-                                    <div className="white-typo clamp-single-line">{marketingAddr}</div>
+                                    <TextEllipsis CustomDiv={WhiteTypo} text={marketingAddr} breakMode={'letters'} />
+                                    {/* <div className="white-typo clamp-single-line">{marketingAddr}</div> */}
                                     {!marketingAddr === false && <CopyIconButton text={marketingAddr} width={'20px'} height={'20px'} />}
                                 </>
                             )}

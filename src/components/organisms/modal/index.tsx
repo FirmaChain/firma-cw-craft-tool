@@ -27,6 +27,7 @@ import commaNumber from 'comma-number';
 import { CRAFT_CONFIGS } from '@/config';
 import { openLink } from '@/utils/common';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 interface IAmountProps {
     label: string;
@@ -41,9 +42,17 @@ export const AmountItem = ({ label, decimals, amount, symbol, color }: IAmountPr
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ItemAmountValue className="clamp-single-line" $color={color}>
+                <TextEllipsis
+                    CustomDiv={ItemAmountValue}
+                    text={formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
+                    breakMode={'letters'}
+                    customDivProps={{
+                        $color: color
+                    }}
+                />
+                {/* <ItemAmountValue className="clamp-single-line" $color={color}>
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
-                </ItemAmountValue>
+                </ItemAmountValue> */}
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
@@ -55,9 +64,17 @@ export const ExecuteAmountItem = ({ label, decimals, amount, symbol, color }: IA
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ItemExecuteAmountValue className="clamp-single-line" $color={color}>
+                <TextEllipsis
+                    CustomDiv={ItemExecuteAmountValue}
+                    text={formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
+                    breakMode={'letters'}
+                    customDivProps={{
+                        $color: color
+                    }}
+                />
+                {/* <ItemExecuteAmountValue className="clamp-single-line" $color={color}>
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
-                </ItemExecuteAmountValue>
+                </ItemExecuteAmountValue> */}
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
@@ -69,9 +86,14 @@ export const ResultAmountItem = ({ label, decimals, amount, symbol }: IAmountPro
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ResultItemAmountTypo className="clamp-single-line">
+                <TextEllipsis
+                    CustomDiv={ResultItemAmountTypo}
+                    text={formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
+                    breakMode={'letters'}
+                />
+                {/* <ResultItemAmountTypo className="clamp-single-line">
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
-                </ResultItemAmountTypo>
+                </ResultItemAmountTypo> */}
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>
@@ -301,9 +323,17 @@ export const InstantiateAmount = ({ label, decimals, amount, symbol, color }: IA
         <ItemWrap>
             <ItemLabel>{label}</ItemLabel>
             <ItemValueWrap style={{ alignItems: 'baseline' }}>
-                <ItemInstantiateAmountValue className="clamp-single-line" $color={color}>
+                <TextEllipsis
+                    CustomDiv={ItemInstantiateAmountValue}
+                    text={formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
+                    breakMode={'letters'}
+                    customDivProps={{
+                        $color: color
+                    }}
+                />
+                {/* <ItemInstantiateAmountValue className="clamp-single-line" $color={color}>
                     {formatWithCommas(getTokenAmountFromUToken(amount, decimals))}
-                </ItemInstantiateAmountValue>
+                </ItemInstantiateAmountValue> */}
                 <ItemAmountSymbol>{symbol}</ItemAmountSymbol>
             </ItemValueWrap>
         </ItemWrap>

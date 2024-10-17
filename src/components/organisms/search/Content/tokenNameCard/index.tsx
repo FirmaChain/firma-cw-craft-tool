@@ -3,7 +3,16 @@ import Divider from '@/components/atoms/divider';
 import useSearchStore from '../../searchStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { Container, LabelAdvancedTypo, LabelBasicTypo, LabelWrap, TokenNameBox, TotalSupplyBox } from './style';
+import {
+    Container,
+    LabelAdvancedTypo,
+    LabelBasicTypo,
+    LabelWrap,
+    TokenNameBox,
+    TotalSupplyAmount,
+    TotalSupplyBox,
+    TotalSupplyTitle
+} from './style';
 import commaNumber from 'comma-number';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
@@ -13,6 +22,7 @@ import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
 import PinButton from '@/components/atoms/buttons/pinButton';
 import usePinContractStore from '@/store/pinContractStore';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const TokenNameCard = () => {
     const logoUrl = useSearchStore((state) => state.marketingInfo?.logo?.url);
@@ -69,7 +79,7 @@ const TokenNameCard = () => {
 
                     <div className="divider" />
 
-                    <div className="token-name">{tokenName}</div>
+                    <div className="token-name clamp-single-line">{tokenName}</div>
 
                     {codeId ? (
                         <LabelWrap>
@@ -92,10 +102,15 @@ const TokenNameCard = () => {
                     <Divider $color="var(--Gray-400, #2C2C2C)" $direction={'horizontal'} />
                 </div>
                 <TotalSupplyBox>
-                    <div className="title">Total supply :</div>
-                    <div className="amount">
-                        <span className="bold">{commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}</span>{' '}
-                        <span className="symbol">{symbol}</span>
+                    <TotalSupplyTitle>Total supply :</TotalSupplyTitle>
+                    <div className="amount" style={{ display: 'flex', gap: '8px' }}>
+                        <TextEllipsis
+                            CustomDiv={TotalSupplyAmount}
+                            text={commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}
+                            breakMode={'letters'}
+                        />
+                        {/* <TotalSupplyAmount>{commaNumber(getTokenAmountFromUToken(totalSupply, String(decimals)))}</TotalSupplyAmount>{' '} */}
+                        <TotalSupplyAmount style={{ fontWeight: 400 }}>{symbol}</TotalSupplyAmount>
                     </div>
                 </TotalSupplyBox>
             </div>

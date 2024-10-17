@@ -102,16 +102,18 @@ const Title = () => {
                     </div>
 
                     <TotalSupplyWrapper style={{ height: '22px' }}>
-                        <TotalSupplyTypo>Total Supply : </TotalSupplyTypo>
+                        <TotalSupplyTypo style={{ whiteSpace: 'pre' }}>Total Supply : </TotalSupplyTypo>
 
                         {tokenSymbol ? (
                             <TotalSupplySymbolTypo>
-                                <span className="bold">{commaNumber(getTokenAmountFromUToken(totalSupply, tokenDecimal))}</span>
+                                <span className="bold clamp-single-line">
+                                    {commaNumber(getTokenAmountFromUToken(totalSupply, tokenDecimal))}
+                                </span>
 
                                 {tokenSymbol}
                             </TotalSupplySymbolTypo>
                         ) : (
-                            <Skeleton width="200px" height="22px" />
+                            <Skeleton width="120px" height="22px" />
                         )}
                     </TotalSupplyWrapper>
                 </TokenInfoWrapper>

@@ -88,11 +88,11 @@ export const SpecificValueTypo = styled.div`
     font-weight: 500;
     line-height: 22px;
 
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    word-break: break-word;
+    // display: -webkit-box;
+    // overflow: hidden;
+    // -webkit-line-clamp: 1;
+    // -webkit-box-orient: vertical;
+    // word-break: break-word;
 
     > span {
         padding-left: 5px;

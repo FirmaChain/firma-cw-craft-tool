@@ -26,6 +26,7 @@ import usePinContractStore from '@/store/pinContractStore';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import PinButton from '@/components/atoms/buttons/pinButton';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
@@ -118,31 +119,33 @@ const TokenNameTypo = styled.div`
     line-height: 22px; /* 137.5% */
 `;
 
-const TotalAmountTypo = styled.div`
+const TotalAmountBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 8px;
+`;
 
-    .total-supply-typo {
-        color: var(--Gray-650, #707070);
-        font-family: 'General Sans Variable';
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px; /* 142.857% */
-    }
+const TotalAmountTypo = styled.div`
+    color: var(--Gray-650, #707070);
+    font-family: 'General Sans Variable';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
 
-    .total-supply-value {
-        color: #707070;
+    white-space: pre;
+`;
 
-        /* Body/Body1 - Bd */
-        font-family: 'General Sans Variable';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 22px; /* 137.5% */
-    }
+const TotalAmountValue = styled.div`
+    color: #707070;
+
+    /* Body/Body1 - Bd */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 137.5% */
 `;
 
 const ValidShieldIcon = styled.img`
@@ -382,14 +385,22 @@ const TokenInfo = () => {
                                 <Divider $direction={'horizontal'} $color="var(--Gray-400, #2C2C2C)" />
                                 <div style={{ marginTop: '8px' }}>
                                     {tokenInfo ? (
-                                        <TotalAmountTypo>
-                                            <div className="total-supply-typo">Total Supply :</div>
-                                            <div className="total-supply-value">
+                                        <TotalAmountBox>
+                                            <TotalAmountTypo>Total Supply :</TotalAmountTypo>
+                                            <TextEllipsis
+                                                CustomDiv={TotalAmountValue}
+                                                text={commaNumber(
+                                                    getTokenAmountFromUToken(tokenInfo?.total_supply, String(tokenInfo?.decimals))
+                                                )}
+                                                breakMode={'letters'}
+                                                className="total-supply-value"
+                                            />
+                                            {/* <div className="total-supply-value clamp-single-line">
                                                 {commaNumber(
                                                     getTokenAmountFromUToken(tokenInfo?.total_supply, String(tokenInfo?.decimals))
                                                 )}
-                                            </div>
-                                        </TotalAmountTypo>
+                                            </div> */}
+                                        </TotalAmountBox>
                                     ) : (
                                         <Skeleton width="80px" height="22px" />
                                     )}

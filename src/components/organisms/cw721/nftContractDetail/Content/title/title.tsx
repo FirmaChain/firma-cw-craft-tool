@@ -20,6 +20,7 @@ import Skeleton from '@/components/atoms/skeleton';
 import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
 import { rootState } from '@/redux/reducers';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const Title = () => {
     const { contractDetail, nftsInfo } = useNFTContractDetailStore();
@@ -47,7 +48,7 @@ const Title = () => {
                         </div>
                         <div style={{ width: '1px', height: '12px', background: 'var(--Gray-400, #2C2C2C)' }} />
 
-                        {name ? <NameTypo>{name}</NameTypo> : <Skeleton width="50px" />}
+                        {name ? <TextEllipsis CustomDiv={NameTypo} text={name} breakMode={'letters'} /> : <Skeleton width="50px" />}
                     </TokenInfo>
 
                     <div style={{ padding: '12px 0 8px' }}>
