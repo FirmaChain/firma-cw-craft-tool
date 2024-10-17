@@ -150,6 +150,7 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateOwnershipTransferPreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -177,12 +178,17 @@ const UpdateOwnershipTransferPreview = () => {
     }, [approveType, approveValue]);
 
     const isEnableButton = useMemo(() => {
-        if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
+        if (
+            approveRecipientAddress === '' ||
+            !isValidAddress(approveRecipientAddress) ||
+            approveRecipientAddress.toLowerCase() === address.toLowerCase()
+        )
+            return false;
         if (approveType === '') return false;
         if (approveType !== 'Forever' && approveValue === '') return false;
 
         return true;
-    }, [approveRecipientAddress, approveType, approveValue]);
+    }, [approveRecipientAddress, approveType, approveValue, address]);
 
     const onClickUpdateOwnershipTransfer = () => {
         if (modal.modals.length >= 1) return;
@@ -258,6 +264,7 @@ const UpdateOwnershipTransferPreview = () => {
                         onClickConfirm={() => {
                             clearApproveForm();
                         }}
+                        hideGotoDetail={false}
                     />
                 ) : (
                     <QRModal2
@@ -267,6 +274,7 @@ const UpdateOwnershipTransferPreview = () => {
                         onClickConfirm={() => {
                             clearApproveForm();
                         }}
+                        hideGotoDetail={false}
                     />
                 );
             }

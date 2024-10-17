@@ -8,7 +8,7 @@ import GreenButton from '@/components/atoms/buttons/greenButton';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { isValidAddress } from '@/utils/address';
 import { useModalStore } from '@/hooks/useModal';
-import { subtractStringAmount } from '@/utils/balance';
+import { formatWithCommas, subtractStringAmount } from '@/utils/balance';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
@@ -233,6 +233,7 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const TransferPreview = () => {
     const userAddress = useSelector((state: rootState) => state.wallet.address);
+    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
 
     const approveInfoById = useCW721ExecuteStore((state) => state.approveInfoById);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
@@ -302,6 +303,8 @@ const TransferPreview = () => {
     }, [userTransferList]);
 
     const enableButton = useMemo(() => {
+        if (userTransferList.some((v) => v.recipient.toLowerCase() === userAddress.toLowerCase())) return false;
+
         //! transfer list has empty value
         if (userTransferList.some((oneData) => oneData.recipient === '' || oneData.token_ids.length === 0)) return false;
 
@@ -322,7 +325,9 @@ const TransferPreview = () => {
         if (realTransferIds.some((id) => !myNftList.includes(id) && !approveInfoById[id])) return false;
 
         return true;
-    }, [approveInfoById, myNftList, transferIdsWithEmpty, userTransferList]);
+    }, [approveInfoById, myNftList, transferIdsWithEmpty, userTransferList, userAddress]);
+
+    const hideGotoDetail = userAddress !== owner;
 
     const onClickTransfer = () => {
         if (modal.modals.length >= 1) return;
@@ -353,7 +358,7 @@ const TransferPreview = () => {
                 list: [
                     {
                         label: 'Total Transfer Amount',
-                        value: userTransferIDs.length.toString(),
+                        value: allTransferIDs.length.toString(),
                         type: 'nft',
                         initColor: '#02E191',
                         resultColor: '#E6E6E6'
@@ -381,6 +386,7 @@ const TransferPreview = () => {
                             clearTransferForm();
                             setMyNftList(contractAddress, userAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -391,6 +397,7 @@ const TransferPreview = () => {
                             clearTransferForm();
                             setMyNftList(contractAddress, userAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -406,9 +413,12 @@ const TransferPreview = () => {
                             <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
                             <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                         </ItemLabelWrap>
-                        <ItemAmountWrap>
-                            <ItemAmountTypo>{allTransferIDs.length}</ItemAmountTypo>
-                            <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
+                        <ItemAmountWrap style={{ gap: '12px', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'content', gap: '8px' }}>
+                                <ItemAmountTypo>{allTransferIDs.length}</ItemAmountTypo>
+
+                                <ItemAmountSymbolTypo>NFT</ItemAmountSymbolTypo>
+                            </div>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>
                     </ItemWrap>
@@ -428,10 +438,15 @@ const TransferPreview = () => {
                                             {value.recipient ? shortenAddress(value.recipient, 12, 12) : 'Wallet Address'}
                                         </WalletItemAddressTypo>
                                     </WalletLeftItemWrap>
-                                    <WalletItemTokenAmount
-                                        $disabled={value.count === 0}
-                                        $isError={false}
-                                    >{`${value.count} NFT`}</WalletItemTokenAmount>
+
+                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '6px' }}>
+                                        <WalletItemTokenAmount $disabled={value.count === 0} $isError={false}>
+                                            {value.count}
+                                        </WalletItemTokenAmount>
+                                        <WalletItemTokenAmount style={{ color: '#444444' }} $disabled={value.count === 0} $isError={false}>
+                                            NFT
+                                        </WalletItemTokenAmount>
+                                    </div>
                                 </WalletItemWrap>
                             ))}
                         </WalletListWrap>
@@ -444,7 +459,12 @@ const TransferPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" tooltip={'Updated Balance is the number of NFTs held after the transfer.'} />
+                            <IconTooltip
+                                size="14px"
+                                tooltip={
+                                    'Updated Balance is the number of NFTs held after the transfer.\nFor approved NFTs (not owned), the number is not displayed.'
+                                }
+                            />
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap style={{ gap: '8px' }}>

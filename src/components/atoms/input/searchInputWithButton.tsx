@@ -15,6 +15,7 @@ import { queryClient } from '@/constants/query-client';
 import usePinContractStore from '@/store/pinContractStore';
 import IconButton from '../buttons/iconButton';
 import Divider from '../divider';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -472,6 +473,8 @@ const AutoCompleteBox = ({
     const updatePin = usePinContractStore((v) => v.updatePin);
     const pinnedList = fullList[address.toLowerCase()]?.filter((one) => one.type === cwMode.toLowerCase()) || [];
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const { data } = useContractSearchQuery(
         {
             type: autoCompleteType,
@@ -479,22 +482,27 @@ const AutoCompleteBox = ({
             filter: isValidAddress(searchValue) && searchValue.length > 44 ? 'address' : 'any'
         },
         {
-            enabled: searchValue.length > 0, // && filter !== 'pinned',
-            onSuccess: ({ data }) => {
-                const flattenList = Object.values(data)
-                    .flat()
-                    .filter((v) => v !== null);
+            enabled: searchValue.replaceAll(' ', '').length > 0,
+            onSuccess: ({ data, success, error }) => {
+                if (success) {
+                    const flattenList = Object.values(data)
+                        .flat()
+                        .filter((v) => v !== null);
 
-                if (Array.isArray(flattenList) && flattenList.length > 0) {
-                    flattenList.forEach((v) => {
-                        const checkTarget = pinnedList.find(
-                            (one) => one.contractAddress?.toLowerCase() === v.contractAddress?.toLowerCase()
-                        );
+                    if (Array.isArray(flattenList) && flattenList.length > 0) {
+                        flattenList.forEach((v) => {
+                            const checkTarget = pinnedList.find(
+                                (one) => one.contractAddress?.toLowerCase() === v.contractAddress?.toLowerCase()
+                            );
 
-                        if (checkTarget && v.tokenLogoUrl !== checkTarget.tokenLogoUrl) {
-                            updatePin(address, { ...checkTarget, tokenLogoUrl: v.tokenLogoUrl });
-                        }
-                    });
+                            if (checkTarget && v.tokenLogoUrl !== checkTarget.tokenLogoUrl) {
+                                updatePin(address, { ...checkTarget, tokenLogoUrl: v.tokenLogoUrl });
+                            }
+                        });
+                    }
+                } else {
+                    console.log(error);
+                    enqueueSnackbar({ message: 'Failed to get search result.', variant: 'error' });
                 }
             },
 
@@ -565,7 +573,7 @@ const AutoCompleteBox = ({
         () => {
             queryClient.invalidateQueries(['CONTRACT_SEARCH']);
 
-            if (keyword.length > 0 && selectedAddress.toLowerCase() !== keyword.toLowerCase()) {
+            if (keyword.replaceAll(' ', '').length > 0 && selectedAddress.toLowerCase() !== keyword.toLowerCase()) {
                 setIsLoading(true);
 
                 if (isValidAddress(keyword.toLowerCase())) setFilter((prev) => 'address');
@@ -649,14 +657,18 @@ const AutoCompleteBox = ({
             const containerTop = scrollBaseRef.current.getBoundingClientRect().top;
 
             sectionRefs.current.forEach((section, index) => {
-                const sectionRect = section.getBoundingClientRect();
-                const sectionTop = sectionRect.top;
-                const sectionBottom = sectionRect.bottom;
+                try {
+                    const sectionRect = section.getBoundingClientRect();
+                    const sectionTop = sectionRect.top;
+                    const sectionBottom = sectionRect.bottom;
 
-                if (containerTop >= sectionTop && containerTop <= sectionBottom) {
-                    const filterName = section.dataset?.section;
+                    if (containerTop >= sectionTop && containerTop <= sectionBottom) {
+                        const filterName = section.dataset?.section;
 
-                    setFilter(filterName);
+                        setFilter(filterName);
+                    }
+                } catch (error) {
+                    console.warn(error);
                 }
             });
         };
@@ -985,207 +997,6 @@ const AutoCompleteBox = ({
                         <NoContractBox>Start typing to search</NoContractBox>
                     )}
                 </TokenListWarp>
-                {/* <NoContractBox style={{ display: isLoading ? 'flex' : 'none' }}>
-                    <FirmaLoading size="40px" />
-                </NoContractBox>
-
-                <TokenListWarp
-                    ref={scrollBaseRef}
-                    onWheel={() => {
-                        scrollByJSRef.current = false;
-                    }}
-                >
-                    <div style={{ width: '100%', display: sortedPinList.length > 0 ? 'flex' : 'none', flexDirection: 'column' }}>
-                        <div
-                            data-section="pinned"
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                                gap: '4px'
-                            }}
-                            ref={(el) => {
-                                sectionRefs.current[0] = el;
-                                pinRef.current = el;
-                            }}
-                        >
-                            <CWTokenTypo>Pinned</CWTokenTypo>
-                            {sortedPinList?.map((info, index) => (
-                                <TokenCard
-                                    tokenInfo={{ type: autoCompleteType, ...info }}
-                                    key={`token_card_${info.contractAddress}`}
-                                    keyword={searchValue}
-                                    filter="pinned"
-                                    onClick={onClickCard}
-                                    autoCompleteType={autoCompleteType}
-                                />
-                            ))}
-                        </div>
-                        {contractList['name']?.length > 0 ||
-                        contractList['symbol']?.length > 0 ||
-                        contractList['label']?.length > 0 ||
-                        contractList['contractAddress']?.length > 0 ? (
-                            <div style={{ width: '100%', margin: '12px 0' }}>
-                                <Divider $direction={'horizontal'} $color="var(--Gray-500, #383838)" />
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-
-                    <div style={{ width: '100%', display: contractList['name']?.length > 0 ? 'flex' : 'none', flexDirection: 'column' }}>
-                        <div
-                            data-section="name"
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                                gap: '4px'
-                            }}
-                            ref={(el) => {
-                                sectionRefs.current[1] = el;
-                                nameRef.current = el;
-                            }}
-                        >
-                            <CWTokenTypo>Name</CWTokenTypo>
-                            {contractList['name']?.map((info, index) => (
-                                <TokenCard
-                                    tokenInfo={{ type: autoCompleteType, ...info }}
-                                    key={`token_card_${info.contractAddress}`}
-                                    keyword={searchValue}
-                                    filter={'name'}
-                                    onClick={onClickCard}
-                                    autoCompleteType={autoCompleteType}
-                                />
-                            ))}
-                        </div>
-                        {contractList['symbol']?.length > 0 ||
-                        contractList['label']?.length > 0 ||
-                        contractList['contractAddress']?.length > 0 ? (
-                            <div style={{ width: '100%', margin: '12px 0' }}>
-                                <Divider $direction={'horizontal'} $color="var(--Gray-500, #383838)" />
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-
-                    <div
-                        style={{
-                            width: '100%',
-                            display: contractList['symbol']?.length > 0 ? 'flex' : 'none',
-                            flexDirection: 'column'
-                        }}
-                    >
-                        <div
-                            data-section="symbol"
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                                gap: '4px'
-                            }}
-                            ref={(el) => {
-                                sectionRefs.current[2] = el;
-                                symbolRef.current = el;
-                            }}
-                        >
-                            <CWTokenTypo>Symbol</CWTokenTypo>
-                            {contractList['symbol']?.map((info, index) => (
-                                <TokenCard
-                                    tokenInfo={{ type: autoCompleteType, ...info }}
-                                    key={`token_card_${info.contractAddress}`}
-                                    keyword={searchValue}
-                                    filter={'symbol'}
-                                    onClick={onClickCard}
-                                    autoCompleteType={autoCompleteType}
-                                />
-                            ))}
-                        </div>
-                        {contractList['label']?.length > 0 || contractList['contractAddress']?.length > 0 ? (
-                            <div style={{ width: '100%', margin: '12px 0' }}>
-                                <Divider $direction={'horizontal'} $color="var(--Gray-500, #383838)" />
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-
-                    <div
-                        style={{
-                            width: '100%',
-                            display: contractList['label']?.length > 0 ? 'flex' : 'none',
-                            flexDirection: 'column'
-                        }}
-                    >
-                        <div
-                            data-section="label"
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                                gap: '4px'
-                            }}
-                            ref={(el) => {
-                                sectionRefs.current[3] = el;
-                                labelRef.current = el;
-                            }}
-                        >
-                            <CWTokenTypo>Label</CWTokenTypo>
-                            {contractList['label']?.map((info, index) => (
-                                <TokenCard
-                                    tokenInfo={{ type: autoCompleteType, ...info }}
-                                    key={`token_card_${info.contractAddress}`}
-                                    keyword={searchValue}
-                                    filter={'label'}
-                                    onClick={onClickCard}
-                                    autoCompleteType={autoCompleteType}
-                                />
-                            ))}
-                        </div>
-                        {contractList['contractAddress']?.length > 0 ? (
-                            <div style={{ width: '100%', margin: '12px 0' }}>
-                                <Divider $direction={'horizontal'} $color="var(--Gray-500, #383838)" />
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-                    </div>
-
-                    <div
-                        data-section="address"
-                        style={{
-                            display: contractList['contractAddress']?.length > 0 ? 'flex' : 'none',
-                            flexDirection: 'column',
-                            width: '100%',
-                            gap: '4px'
-                        }}
-                        ref={(el) => {
-                            sectionRefs.current[4] = el;
-                            addrRef.current = el;
-                        }}
-                    >
-                        <CWTokenTypo>Address</CWTokenTypo>
-                        {contractList['contractAddress']?.map((info, index) => (
-                            <TokenCard
-                                tokenInfo={{ type: autoCompleteType, ...info }}
-                                key={`token_card_${info.contractAddress}`}
-                                keyword={searchValue}
-                                filter={'address'}
-                                onClick={onClickCard}
-                                autoCompleteType={autoCompleteType}
-                            />
-                        ))}
-                    </div>
-                </TokenListWarp>
-
-                <NoContractBox style={{ display: !isLoading && isEmptyRes && sortedPinList.length === 0 ? 'flex' : 'none' }}>
-                    {isEmptyRes && sortedPinList.length === 0 && searchValue === ''
-                        ? 'Start typing to search'
-                        : filter === 'pinned'
-                          ? `There is no pinned ${cwMode === 'CW20' ? 'tokens' : 'NFTs'}`
-                          : `No results found.`}
-                </NoContractBox> */}
             </div>
         </div>
     );

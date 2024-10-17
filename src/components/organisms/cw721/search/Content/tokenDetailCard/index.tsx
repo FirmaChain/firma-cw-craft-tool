@@ -178,6 +178,7 @@ const TokenInfo = () => {
                                     updateNFTs={updateNFTs}
                                     clearListData={clearCW721NFTListData}
                                     setCurrentPage={setCurrentPage}
+                                    imageGap={{ horizontal: '16px' }}
                                 />
                             </NFTTableContainer>
                         </div>
@@ -230,6 +231,7 @@ const TokenInfo = () => {
                                         updateNFTs={updateOwnedNFTs}
                                         clearListData={clearCW721OwnedNFTListData}
                                         setCurrentPage={setCurrentOwnedPage}
+                                        imageGap={{ horizontal: '16px' }}
                                     />
                                 </NFTTableContainer>
                             </div>

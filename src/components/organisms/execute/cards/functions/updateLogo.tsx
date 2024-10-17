@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import useExecuteStore from '../../hooks/useExecuteStore';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
+import { DEFAULT_INPUT_REGEX } from '@/constants/regex';
 
 const LOGO_URL_INPUT_FORM_ID = 'EXECUTE_UPDATE_LOGO_URL';
 const LOGO_URL_ERROR_TYPE = 'INVALID_ADDRESS';
@@ -44,7 +45,8 @@ const UpdateLogo = () => {
                     value: marketingLogoUrl === null ? '' : marketingLogoUrl,
                     onChange: onChangeMarketingLogoUrl,
                     placeHolder: 'ex) https://example.thisismy.token.jpg',
-                    maxLength: 300
+                    maxLength: 300,
+                    regex: DEFAULT_INPUT_REGEX
                 }}
             />
         </Container>

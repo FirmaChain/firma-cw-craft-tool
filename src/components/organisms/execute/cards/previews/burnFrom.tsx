@@ -202,7 +202,9 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const BurnFromPreview = () => {
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
     const userAddress = useSelector((v: rootState) => v.wallet.address);
+
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -275,6 +277,8 @@ const BurnFromPreview = () => {
         return true;
     }, [burnFromList, userAddress, isExceedAllowance]);
 
+    const hideGotoDetail = userAddress !== admin;
+
     const onClickBurn = () => {
         if (modal.modals.length >= 1) return;
 
@@ -343,6 +347,7 @@ const BurnFromPreview = () => {
                             clearBurnFrom();
                             setTokenInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -354,6 +359,7 @@ const BurnFromPreview = () => {
                             clearBurnFrom();
                             setTokenInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -370,16 +376,15 @@ const BurnFromPreview = () => {
                             <ItemLabelIcon src={IC_COIN_STACK} alt={'Burn From Title Icon'} />
                             <ItemLabelTypo>Total Burn Amount</ItemLabelTypo>
                         </ItemLabelWrap>
-                        <ItemAmountWrap>
-                            <TextEllipsis
-                                CustomDiv={ItemAmountTypo}
-                                text={formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
-                                breakMode={'letters'}
-                            />
-                            {/* <ItemAmountTypo className="clamp-single-line">
-                                {formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
-                            </ItemAmountTypo> */}
-                            <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                        <ItemAmountWrap style={{ alignItems: 'center', gap: '12px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                <TextEllipsis
+                                    CustomDiv={ItemAmountTypo}
+                                    text={formatWithCommas(getTokenAmountFromUToken(totalBurnBalance, tokenInfo.decimals.toString()))}
+                                    breakMode={'letters'}
+                                />
+                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                            </div>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>
                     </ItemWrap>

@@ -186,7 +186,7 @@ const useCW721ExecuteAction = () => {
         try {
             let completeNftList: string[] = [];
             let startAfter: string | undefined = undefined;
-            const limit = 150;
+            const limit = 100;
 
             while (true) {
                 const nftList = await firmaSDK.Cw721.getNFTIdListOfOwner(
@@ -195,13 +195,14 @@ const useCW721ExecuteAction = () => {
                     limit,
                     startAfter
                 );
+
                 completeNftList = completeNftList.concat(nftList);
 
                 if (nftList.length < limit) {
                     break;
                 }
 
-                startAfter = nftList[nftList.length - 1];
+                startAfter = completeNftList[completeNftList.length - 1];
             }
 
             useCW721ExecuteStore.getState().setMyNftList(completeNftList);

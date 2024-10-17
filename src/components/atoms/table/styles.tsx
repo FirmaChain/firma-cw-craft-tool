@@ -41,11 +41,7 @@ export const LoadingBox = styled.div<{ $slim: boolean }>`
     align-items: center;
     justify-content: center;
 
-    ${({ $slim }) =>
-        $slim &&
-        `
     padding-top: 6px;
-        `}
 `;
 
 export const TableContainer = styled.div`

@@ -307,8 +307,8 @@ const QRModal2 = ({
             // tokenLogoUrl: params.txParams.msg?.marketing?.logo?.url || ''
         },
         {
-            onSuccess: ({ data }) => {
-                if (data === null) {
+            onSuccess: ({ data, success }) => {
+                if (data === null || !success) {
                     enqueueSnackbar({ message: 'Failed to save the contract address.', variant: 'error' });
                 }
             },
@@ -329,8 +329,8 @@ const QRModal2 = ({
             // tokenLogoUrl: params.txParams.msg?.url || ''
         },
         {
-            onSuccess: ({ data }) => {
-                if (data === null) {
+            onSuccess: ({ data, success }) => {
+                if (data === null || !success) {
                     enqueueSnackbar({ message: 'Failed to update token logo.', variant: 'error' });
                 }
             },

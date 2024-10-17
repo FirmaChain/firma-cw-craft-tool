@@ -141,6 +141,7 @@ const UpdateOwnershipRenouncePreview = () => {
                         onClickConfirm={() => {
                             onClickConfirm();
                         }}
+                        hideGotoDetail={true}
                     />
                 ) : (
                     <QRModal2
@@ -150,6 +151,7 @@ const UpdateOwnershipRenouncePreview = () => {
                         onClickConfirm={() => {
                             onClickConfirm();
                         }}
+                        hideGotoDetail={true}
                     />
                 );
             }

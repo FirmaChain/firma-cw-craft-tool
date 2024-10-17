@@ -61,6 +61,10 @@ const Approve = () => {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
         }
 
+        if (value.toLowerCase() === address.toLowerCase())
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
+        else clearFormError({ id: `${inputId}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
+
         setApproveRecipientAddress(value);
     };
 

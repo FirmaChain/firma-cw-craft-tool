@@ -256,6 +256,9 @@ const FromToAddressLine = ({
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const TransferFromPreview = () => {
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -327,6 +330,8 @@ const TransferFromPreview = () => {
         return true;
     }, [allowanceByAddress, balanceByAddress, totalAmountByAddress, transferFromList]);
 
+    const hideGotoDetail = address !== admin;
+
     const onClickTransfer = () => {
         if (modal.modals.length >= 1) return;
 
@@ -395,6 +400,7 @@ const TransferFromPreview = () => {
                             setIsFetched(true);
                             clearTransferFrom();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -405,6 +411,7 @@ const TransferFromPreview = () => {
                             setIsFetched(true);
                             clearTransferFrom();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -419,10 +426,11 @@ const TransferFromPreview = () => {
                         <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
                         <ItemLabelTypo>Total Transfer Amount</ItemLabelTypo>
                     </ItemLabelWrap>
-                    <ItemAmountWrap>
-                        <TextEllipsis CustomDiv={ItemAmountTypo} text={formatWithCommas(totalTransferAmount)} breakMode={'letters'} />
-                        {/* <ItemAmountTypo className="clamp-single-line">{formatWithCommas(totalTransferAmount)}</ItemAmountTypo> */}
-                        <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                    <ItemAmountWrap style={{ gap: '12px', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <TextEllipsis CustomDiv={ItemAmountTypo} text={formatWithCommas(totalTransferAmount)} breakMode={'letters'} />
+                            <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                        </div>
                         <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                     </ItemAmountWrap>
                 </ItemWrap>

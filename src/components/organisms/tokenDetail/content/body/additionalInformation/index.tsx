@@ -24,6 +24,7 @@ import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { useMeasure } from 'react-use';
 import { SpecificDefaultTypo } from '@/components/organisms/cw721/nftContractDetail/Content/body/ownerInformation/style';
+import TextEllipsis from '@/components/atoms/ellipsis';
 
 const AdditionalInformation = () => {
     const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
@@ -117,7 +118,9 @@ const AdditionalInformation = () => {
                             {!marketingDescription ? (
                                 <SpecificDefaultTypo>{isBasic ? 'Token' : 'Marketing'} Description</SpecificDefaultTypo>
                             ) : (
-                                <SpecificValueTypo>{marketingDescription || 'Description'}</SpecificValueTypo>
+                                <SpecificValueTypo style={{ wordBreak: 'break-word' }}>
+                                    {marketingDescription || 'Description'}
+                                </SpecificValueTypo>
                             )}
                         </div>
                     ) : (
@@ -126,13 +129,17 @@ const AdditionalInformation = () => {
                 </SpecificItem>
                 {!isBasic && (
                     <>
-                        <SpecificItem>
+                        <SpecificItem style={{ alignItems: 'flex-start' }}>
                             <SpecificLabelTypo>Marketing Project</SpecificLabelTypo>
                             {typeof marketingProject === 'string' ? (
                                 !marketingProject ? (
                                     <SpecificDefaultTypo>Marketing Project</SpecificDefaultTypo>
                                 ) : (
-                                    <SpecificValueTypo className="clamp-single-line">{marketingProject}</SpecificValueTypo>
+                                    <SpecificMetadataValueWrapper style={{ alignItems: 'center' }}>
+                                        {/* <SpecificValueTypo>{marketingProject}</SpecificValueTypo> */}
+                                        <TextEllipsis CustomDiv={SpecificValueTypo} text={marketingProject} breakMode={'letters'} />
+                                        <CopyIconButton text={marketingProject} width={'20px'} height={'20px'} />
+                                    </SpecificMetadataValueWrapper>
                                 )
                             ) : (
                                 <Skeleton width="100px" height="22px" />

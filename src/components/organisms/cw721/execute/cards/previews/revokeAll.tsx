@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
-
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import GreenButton from '@/components/atoms/buttons/greenButton';
@@ -132,6 +131,8 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const RevokeAllPreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -146,10 +147,12 @@ const RevokeAllPreview = () => {
     const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const isEnableButton = useMemo(() => {
-        if (revokeAddress === '' || !isValidAddress(revokeAddress)) return false;
+        if (revokeAddress === '' || !isValidAddress(revokeAddress) || revokeAddress.toLowerCase() === address.toLowerCase()) return false;
 
         return true;
-    }, [revokeAddress]);
+    }, [revokeAddress, address]);
+
+    const hideGotoDetail = address !== owner;
 
     const onClickRevokeAll = () => {
         if (modal.modals.length >= 1) return;
@@ -199,6 +202,7 @@ const RevokeAllPreview = () => {
                         onClickConfirm={() => {
                             clearRevokeForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -208,6 +212,7 @@ const RevokeAllPreview = () => {
                         onClickConfirm={() => {
                             clearRevokeForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

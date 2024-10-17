@@ -106,7 +106,6 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
             autoComplete
             autoCompleteType="cw721"
             onClickContract={(v) => onClickSearch(v)}
-            regex={BYPASS_ALL}
             usePinList
         />
     );

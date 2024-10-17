@@ -6,14 +6,9 @@ const baseUri = CRAFT_CONFIGS.CRAFT_SERVER_URI;
 
 class ContractApi {
     static async getMyContracts(params: { type: 'cw20' | 'cw721'; address: string }, options?: CustomApiOptions) {
-        // const accessToken = getAccessToken();
-
         return await Api.get({
             url: `${baseUri}/api/my-contracts`,
             query: { ...params }
-            // config: {
-            //     headers: { Authorization: `Bearer ${accessToken}` }
-            // }
         }).then((res) => res.data);
     }
 
@@ -34,23 +29,16 @@ class ContractApi {
     }
 
     static async addContractToDB(params: AddContractReq, options?: CustomApiOptions) {
-        // const accessToken = getAccessToken();
-
         return await Api.post({
             url: `${baseUri}/api/create`,
             body: params,
             config: {
                 ...options
             }
-            // config: {
-            //     headers: { Authorization: `Bearer ${accessToken}` }
-            // }
         }).then((res) => res.data);
     }
 
     static async updateTokenLogo(params: UpdateTokenLogo, options?: CustomApiOptions) {
-        // const accessToken = getAccessToken();
-
         return await Api.put({
             url: `${baseUri}/api/token-logo-url`,
             body: params,
@@ -61,8 +49,6 @@ class ContractApi {
     }
 
     static async refreshToken(params: { walletAddress: string }, options?: CustomApiOptions) {
-        // const accessToken = getAccessToken();
-
         return await Api.get({
             url: `${baseUri}/connect/sign/refreshToken`,
             query: { ...params },

@@ -205,7 +205,8 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                         placeHolder: 'ex) Event reward contract',
                         onChange: setLabel,
                         emptyErrorMessage: 'Please input the token label.',
-                        maxLength: 128
+                        maxLength: 128,
+                        regex: DEFAULT_INPUT_REGEX
                     }}
                 />
             </InformationBody>

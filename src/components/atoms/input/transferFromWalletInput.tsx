@@ -184,17 +184,11 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
         onRemoveClick();
     };
 
-    const addressError = useFormStore((state) => state.formError[`${id}_FROM_ADDRESS`]) || {};
-    const amountError = useFormStore((state) => state.formError[`${id}_TO_AMOUNT`]) || {};
-
-    const hasAddrErr = Object.keys(addressError).length > 0;
-    const hasAmountErr = Object.keys(amountError).length > 0;
-
     return (
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px', position: 'relative' }}>
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '20px' }}>
                 {/*  height: '190px', */}
-                <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
+                <div style={{ display: 'flex', width: '100%', minHeight: '76px', position: 'relative', paddingRight: '44px' }}>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', width: '100%', gap: '8px' }}>
@@ -235,9 +229,23 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
                             />
                         </div>
                     </div>
+
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: '50px',
+                            right: '16px',
+                            width: '16px',
+                            height: '60px',
+
+                            borderTopRightRadius: '8px',
+                            borderTop: '1px dashed #444444',
+                            borderRight: '1px dashed #444444'
+                        }}
+                    />
                 </div>
 
-                <div style={{ display: 'flex', width: '100%', minHeight: '76px' }}>
+                <div style={{ display: 'flex', width: '100%', minHeight: '76px', position: 'relative', paddingRight: '44px' }}>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '12px' }}>
                         {/* Wallet Address */}
                         <div
@@ -296,50 +304,34 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
                             >{`Allowance : ${parseAmountWithDecimal2(allowance, decimals, true)}`}</AllowanceTypo>
                         </div>
                     </div>
+
+                    <div
+                        style={{
+                            position: 'absolute',
+                            width: '16px',
+                            height: '60px',
+                            right: '16px',
+                            top: '-4px',
+                            borderBottomRightRadius: '8px',
+                            borderBottom: '1px dashed #444444',
+                            borderRight: '1px dashed #444444'
+                        }}
+                    />
                 </div>
             </div>
+
             <div
                 style={{
+                    position: 'absolute',
+                    padding: '6px 0',
+                    background: '#1E1E1E',
                     display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'center',
-                    gap: '4px',
-                    paddingTop: hasAddrErr && amountError ? 0 : '8px'
+                    right: '0px',
+                    top: 'calc(50% + 6px)',
+                    transform: 'translateY(-50%)'
                 }}
             >
-                <div
-                    style={{
-                        width: '16px',
-                        height: hasAddrErr && !hasAmountErr ? '28px' : hasAddrErr && amountError ? '40px' : '28px',
-                        borderTopRightRadius: '8px',
-                        borderTop: '1px dashed #444444',
-                        borderRight: '1px dashed #444444'
-                    }}
-                />
                 <WalletRemoveButton size={'32px'} disabled={disableRemoveBtn} onClick={handleRemoveWallet} />
-                {/* <IconButton
-                    disabled={disableRemoveBtn}
-                    style={{
-                        width: '32px',
-                        height: '32px',
-                        padding: '0',
-                        background: 'transparent',
-                        border: 'unset'
-                    }}
-                    onClick={handleRemoveWallet}
-                >
-                    <Icons.MinusCircle fill={disableRemoveBtn ? '#313131' : undefined} stroke={disableRemoveBtn ? '#1E1E1E' : undefined} />
-                </IconButton> */}
-                <div
-                    style={{
-                        width: '16px',
-                        height: !hasAddrErr && hasAmountErr ? '46px' : hasAddrErr && amountError ? '40px' : '28px',
-                        borderBottomRightRadius: '8px',
-                        borderBottom: '1px dashed #444444',
-                        borderRight: '1px dashed #444444'
-                    }}
-                />
             </div>
         </div>
     );

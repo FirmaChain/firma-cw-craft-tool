@@ -109,6 +109,9 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateMinter = () => {
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -128,6 +131,8 @@ const UpdateMinter = () => {
         if (minterAddress === minterInfo?.minter) return 'Same address as before';
         return '';
     }, [minterAddress, minterAddress]);
+
+    const hideGotoDetail = address !== admin;
 
     const onClickUpdateMinter = () => {
         if (modal.modals.length >= 1) return;
@@ -179,6 +184,7 @@ const UpdateMinter = () => {
                             setMinterInfo(contractAddress);
                             setSelectMenu({ value: 'select', label: 'Select' });
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -190,6 +196,7 @@ const UpdateMinter = () => {
                             setMinterInfo(contractAddress);
                             setSelectMenu({ value: 'select', label: 'Select' });
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

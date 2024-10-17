@@ -151,6 +151,8 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const ApprovePreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -159,6 +161,7 @@ const ApprovePreview = () => {
     const approveTokenId = useCW721ExecuteStore((state) => state.approveTokenId);
     const approveType = useCW721ExecuteStore((state) => state.approveType);
     const approveValue = useCW721ExecuteStore((state) => state.approveValue);
+    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
     const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
 
     const { enqueueSnackbar } = useSnackbar();
@@ -179,13 +182,21 @@ const ApprovePreview = () => {
     }, [approveType, approveValue]);
 
     const isEnableButton = useMemo(() => {
-        if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
+        if (
+            approveRecipientAddress === '' ||
+            !isValidAddress(approveRecipientAddress) ||
+            approveRecipientAddress.toLowerCase() === address.toLowerCase()
+        )
+            return false;
         if (approveTokenId === '' || approveTokenId === '0') return false;
         if (approveType === '') return false;
         if (approveType !== 'Forever' && approveValue === '') return false;
+        if (myNftList.indexOf(approveTokenId) === -1) return false;
 
         return true;
-    }, [approveRecipientAddress, approveTokenId, approveType, approveValue]);
+    }, [approveRecipientAddress, approveTokenId, approveType, approveValue, address]);
+
+    const hideGotoDetail = address !== owner;
 
     const onClickApprove = () => {
         if (modal.modals.length >= 1) return;
@@ -269,6 +280,7 @@ const ApprovePreview = () => {
                         onClickConfirm={() => {
                             clearApproveForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -278,6 +290,7 @@ const ApprovePreview = () => {
                         onClickConfirm={() => {
                             clearApproveForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

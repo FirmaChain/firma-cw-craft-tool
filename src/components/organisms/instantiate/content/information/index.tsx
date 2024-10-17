@@ -203,7 +203,8 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) Event reward contract',
                         onChange: handleLabel,
                         emptyErrorMessage: 'Please input the token label.',
-                        maxLength: 128
+                        maxLength: 128,
+                        regex: DEFAULT_INPUT_REGEX
                     }}
                 />
                 <LabelInput
@@ -214,7 +215,7 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) https://example.thisismy.token.jpg',
                         onChange: handleTokenLogoUrl,
                         imgPreview: true,
-                        // regex: DEFAULT_INPUT_REGEX,
+                        regex: DEFAULT_INPUT_REGEX,
                         maxLength: 300
                     }}
                 />
@@ -226,7 +227,8 @@ const Information = ({ isBasic }: IProps) => {
                         formId: 'tokenDescription',
                         placeHolder: 'ex) This is my token',
                         onChange: handleDescription,
-                        maxLength: isBasic ? 100 : 300
+                        maxLength: isBasic ? 100 : 300,
+                        regex: DEFAULT_INPUT_REGEX
                     }}
                 />
                 {!isBasic && (
@@ -249,7 +251,7 @@ const Information = ({ isBasic }: IProps) => {
                                 formId: 'marketingProject',
                                 placeHolder: 'ex) https://firmachain.org',
                                 onChange: handleMarketingProject,
-                                // regex: DEFAULT_INPUT_REGEX,
+                                regex: DEFAULT_INPUT_REGEX,
                                 maxLength: 300
                             }}
                         />

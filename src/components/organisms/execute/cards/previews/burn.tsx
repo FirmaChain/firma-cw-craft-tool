@@ -142,6 +142,9 @@ const ButtonWrap = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const BurnPreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -150,8 +153,6 @@ const BurnPreview = () => {
     const tokenInfo = useExecuteStore((v) => v.tokenInfo);
     const clearBurn = useExecuteStore((v) => v.clearBurn);
     const { setCw20Balance, setTokenInfo } = useExecuteActions();
-
-    const address = useSelector((state: rootState) => state.wallet.address);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -164,6 +165,8 @@ const BurnPreview = () => {
 
         return amount;
     }, [cw20Balance, burnAmount]);
+
+    const hideGotoDetail = address !== admin;
 
     const onClickBurn = () => {
         if (modal.modals.length >= 1) return;
@@ -217,6 +220,7 @@ const BurnPreview = () => {
                             setCw20Balance(contractAddress, address);
                             setTokenInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -228,6 +232,7 @@ const BurnPreview = () => {
                             setCw20Balance(contractAddress, address);
                             setTokenInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

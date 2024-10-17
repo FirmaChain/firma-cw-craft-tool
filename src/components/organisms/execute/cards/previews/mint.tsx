@@ -252,6 +252,9 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const MintPreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -314,6 +317,8 @@ const MintPreview = () => {
 
         return true;
     }, [exceedMinterCap, mintingList]);
+
+    const hideGotoDetail = address !== admin;
 
     const onClickMint = () => {
         if (modal.modals.length >= 1) return;
@@ -384,6 +389,7 @@ const MintPreview = () => {
                             setMinterInfo(contractAddress);
                             setTokenInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -396,6 +402,7 @@ const MintPreview = () => {
                             setMinterInfo(contractAddress);
                             setTokenInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -415,14 +422,15 @@ const MintPreview = () => {
                             <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
                             <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
                         </TokenInfoLeft>
-                        <TokenInfoRightWrap>
-                            <TextEllipsis
-                                CustomDiv={TokenInfoMintAmountTypo}
-                                text={formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
-                                breakMode={'letters'}
-                            />
-
-                            <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
+                        <TokenInfoRightWrap style={{ gap: '12px', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                <TextEllipsis
+                                    CustomDiv={TokenInfoMintAmountTypo}
+                                    text={formatWithCommas(getTokenAmountFromUToken(totalMintBalance, tokenInfo.decimals.toString()))}
+                                    breakMode={'letters'}
+                                />
+                                <TokeInfoMintSymbolTypo>{tokenInfo.symbol}</TokeInfoMintSymbolTypo>
+                            </div>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>

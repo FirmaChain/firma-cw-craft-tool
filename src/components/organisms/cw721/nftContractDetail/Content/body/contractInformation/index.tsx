@@ -209,6 +209,7 @@ const ContractInformation = () => {
                                     updateNFTs={updateOwnedNFTs}
                                     clearListData={clearCW721OwnedNFTListData}
                                     setCurrentPage={setCurrentOwnedPage}
+                                    imageGap={{ horizontal: '16px' }}
                                 />
                             </NFTTableContainer>
                         </div>

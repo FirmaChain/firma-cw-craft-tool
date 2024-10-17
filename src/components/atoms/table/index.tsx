@@ -16,7 +16,6 @@ import {
     TableInnerCell,
     TableRow
 } from './styles';
-import { Oval } from 'react-loader-spinner';
 import FirmaLoading from '../globalLoader/firmaLoad';
 
 export interface IColumn {
@@ -73,7 +72,7 @@ const StyledTable = ({
     const showPagination = !disablePagination && rows.length !== 0;
 
     return (
-        <TableContainer style={{ paddingBottom: showPagination ? '20px' : '12px', minHeight: '106px' /* 147px */ }}>
+        <TableContainer style={{ paddingBottom: showPagination ? '20px' : '12px', minHeight: slim ? '106px' : '142px' /* 147px */ }}>
             <div style={{ width: '100%', height: '100%', overflowX: 'scroll' }}>
                 <Table>
                     <TableHead>

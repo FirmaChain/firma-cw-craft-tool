@@ -234,7 +234,9 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const DecreaseAllowancePreview = () => {
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -269,6 +271,8 @@ const DecreaseAllowancePreview = () => {
 
         return String(_currentAllowance - _reduceAmount);
     }, [allowance, allowanceInfo, tokenInfo]);
+
+    const hideGotoDetail = address !== admin;
 
     const onClickDecreaseAllowance = () => {
         if (modal.modals.length >= 1) return;
@@ -352,6 +356,7 @@ const DecreaseAllowancePreview = () => {
                             setIsFetched(true);
                             clearAllowance();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -363,6 +368,7 @@ const DecreaseAllowancePreview = () => {
                             setIsFetched(true);
                             clearAllowance();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -373,12 +379,12 @@ const DecreaseAllowancePreview = () => {
         if (!addressExist || allowanceInfo === null) return false;
         if (!allowance) return false;
         if (!allowance.type || (allowance.type !== 'never' && (!allowance.expire || !allowance.type))) return false;
-        if (allowance.address.toLowerCase() === userAddress.toLowerCase()) return false;
+        if (allowance.address.toLowerCase() === address.toLowerCase()) return false;
         if (!allowance.amount || allowance.amount.replace(ONE_TO_MINE, '') === '') return false;
         if (compareStringNumbers(updatedAmount, '0') === -1) return false;
 
         return true;
-    }, [addressExist, allowanceInfo, allowance, userAddress]);
+    }, [addressExist, allowanceInfo, allowance, address]);
 
     return (
         <Container>
@@ -389,16 +395,15 @@ const DecreaseAllowancePreview = () => {
                             <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
                             <ItemLabelTypo>Decrease Allowance Amount</ItemLabelTypo>
                         </ItemLabelWrap>
-                        <ItemAmountWrap>
-                            <TextEllipsis
-                                CustomDiv={ItemAmountTypo}
-                                text={commaNumber(!allowance?.amount ? '0' : allowance.amount)}
-                                breakMode={'letters'}
-                            />
-                            {/* <ItemAmountTypo className="clamp-single-line">
-                                {commaNumber(!allowance?.amount ? '0' : allowance.amount)}
-                            </ItemAmountTypo> */}
-                            <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                        <ItemAmountWrap style={{ alignItems: 'center', gap: '12px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                <TextEllipsis
+                                    CustomDiv={ItemAmountTypo}
+                                    text={commaNumber(!allowance?.amount ? '0' : allowance.amount)}
+                                    breakMode={'letters'}
+                                />
+                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                            </div>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>
                     </ItemWrap>

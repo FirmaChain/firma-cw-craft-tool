@@ -237,7 +237,9 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const IncreaseAllowancePreview = () => {
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+
     const contractAddress = useExecuteStore((v) => v.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -248,8 +250,6 @@ const IncreaseAllowancePreview = () => {
     const clearAllowance = useExecuteStore((v) => v.clearAllowance);
     const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
     const { setAllowanceInfo } = useExecuteActions();
-
-    const address = useSelector((state: rootState) => state.wallet.address);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -285,6 +285,8 @@ const IncreaseAllowancePreview = () => {
             useExecuteStore.getState().setAllowanceInfo(null);
         }
     }, [allowance?.address]);
+
+    const hideGotoDetail = address !== admin;
 
     const onClickIncreaseAllowance = () => {
         if (modal.modals.length >= 1) return;
@@ -368,6 +370,7 @@ const IncreaseAllowancePreview = () => {
                             setIsFetched(true);
                             clearAllowance();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -379,6 +382,7 @@ const IncreaseAllowancePreview = () => {
                             setIsFetched(true);
                             clearAllowance();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -389,11 +393,11 @@ const IncreaseAllowancePreview = () => {
         if (!addressExist || allowanceInfo === null) return false;
         if (!allowance) return false;
         if (!allowance.type || (allowance.type !== 'never' && (!allowance.expire || !allowance.type))) return false;
-        if (allowance.address.toLowerCase() === userAddress.toLowerCase()) return false;
+        if (allowance.address.toLowerCase() === address.toLowerCase()) return false;
         if (!allowance.amount || allowance.amount.replace(ONE_TO_MINE, '') === '') return false;
 
         return true;
-    }, [addressExist, allowanceInfo, allowance, userAddress]);
+    }, [addressExist, allowanceInfo, allowance, address]);
 
     return (
         <Container>
@@ -404,16 +408,15 @@ const IncreaseAllowancePreview = () => {
                             <ItemLabelIcon src={IC_COIN_STACK} alt={'Transfer Title Icon'} />
                             <ItemLabelTypo>Increase Allowance Amount</ItemLabelTypo>
                         </ItemLabelWrap>
-                        <ItemAmountWrap>
-                            <TextEllipsis
-                                CustomDiv={ItemAmountTypo}
-                                text={allowance === null ? '0' : commaNumber(!allowance?.amount ? '0' : allowance.amount)}
-                                breakMode={'letters'}
-                            />
-                            {/* <ItemAmountTypo className="clamp-single-line">
-                                {allowance === null ? '0' : commaNumber(!allowance?.amount ? '0' : allowance.amount)}
-                            </ItemAmountTypo> */}
-                            <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                        <ItemAmountWrap style={{ gap: '12px', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                <TextEllipsis
+                                    CustomDiv={ItemAmountTypo}
+                                    text={allowance === null ? '0' : commaNumber(!allowance?.amount ? '0' : allowance.amount)}
+                                    breakMode={'letters'}
+                                />
+                                <ItemAmountSymbolTypo>{tokenInfo.symbol}</ItemAmountSymbolTypo>
+                            </div>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </ItemAmountWrap>
                     </ItemWrap>

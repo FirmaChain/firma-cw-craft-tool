@@ -107,6 +107,7 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateMarketingPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
 
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -130,6 +131,8 @@ const UpdateMarketingPreview = () => {
     const finalDesc = (marketingDescription === null ? marketingInfo?.description : marketingDescription) || '';
     const finalAddress = (marketingAddress === null ? marketingInfo?.marketing : marketingAddress) || '';
     const finalProejct = (marketingProject === null ? marketingInfo?.project : marketingProject) || '';
+
+    const hideGotoDetail = address !== admin;
 
     const onClickUpdateMarketing = () => {
         if (modal.modals.length >= 1) return;
@@ -208,6 +211,7 @@ const UpdateMarketingPreview = () => {
                             clearMarketing();
                             setMarketingInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -218,6 +222,7 @@ const UpdateMarketingPreview = () => {
                             clearMarketing();
                             setMarketingInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

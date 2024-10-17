@@ -136,7 +136,6 @@ const Header = () => {
                         autoComplete
                         autoCompleteType="cw721"
                         onClickContract={(v) => getRequiredInfo(v)}
-                        regex={BYPASS_ALL}
                         usePinList
                     />
                 ) : (

@@ -13,6 +13,8 @@ import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
 import ExpirationTypeButton from '@/components/atoms/buttons/expirationTypeButton';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -32,6 +34,7 @@ enum ExpirationType {
 }
 
 const UpdateOwnershipTransfer = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
     const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
     const approveType = useCW721ExecuteStore((state) => state.approveType);
     const approveValue = useCW721ExecuteStore((state) => state.approveValue);
@@ -53,6 +56,10 @@ const UpdateOwnershipTransfer = () => {
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
         }
+
+        if (value.toLowerCase() === address.toLowerCase())
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
+        else clearFormError({ id: `${inputId}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
 
         setApproveRecipientAddress(value);
     };

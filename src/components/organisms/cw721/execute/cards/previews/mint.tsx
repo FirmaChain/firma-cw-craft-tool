@@ -209,6 +209,8 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const MintPreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -265,6 +267,8 @@ const MintPreview = () => {
     const willTotalSupply = useMemo(() => {
         return addStringAmount(mintSupply, totalNfts.toString());
     }, [mintSupply, totalNfts]);
+
+    const hideGotoDetail = address !== owner;
 
     const onClickMint = () => {
         if (modal.modals.length >= 1) return;
@@ -323,6 +327,7 @@ const MintPreview = () => {
                             clearMintForm();
                             setTotalNfts(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -333,6 +338,7 @@ const MintPreview = () => {
                             clearMintForm();
                             setTotalNfts(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -348,9 +354,11 @@ const MintPreview = () => {
                             <TokenInfoIcon src={IC_COIN_STACK} alt={'Mint Execute Title Icon'} />
                             <TokenInfoTitleTypo>Total Mint Supply</TokenInfoTitleTypo>
                         </TokenInfoLeft>
-                        <TokenInfoRightWrap>
-                            <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
-                            <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
+                        <TokenInfoRightWrap style={{ gap: '12px', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                <TokenInfoMintAmountTypo>{mintSupply}</TokenInfoMintAmountTypo>
+                                <TokeInfoMintSymbolTypo>NFT</TokeInfoMintSymbolTypo>
+                            </div>
                             <ArrowToggleButton open={isOpen} onToggle={setIsOpen} />
                         </TokenInfoRightWrap>
                     </TokenInfoWrap>
@@ -364,9 +372,6 @@ const MintPreview = () => {
                                     text={mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
                                     breakMode={'letters'}
                                 />
-                                {/* <WalletItemAddressTypo className="clamp-single-line" $disabled={mintRecipientAddress === ''}>
-                                    {mintRecipientAddress === '' ? 'Wallet Address' : mintRecipientAddress}
-                                </WalletItemAddressTypo> */}
                             </WalletLeftItemWrap>
                             <Divider $direction={'horizontal'} $variant="dash" $color="var(--Gray-500, #383838)" />
                             <WalletItemWrap>

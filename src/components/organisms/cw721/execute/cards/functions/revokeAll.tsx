@@ -6,8 +6,11 @@ import { useEffect, useState } from 'react';
 import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
+import { useSelector } from 'react-redux';
+import { rootState } from '@/redux/reducers';
 
 const RevokeAll = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
     const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
     const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
     const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
@@ -34,6 +37,10 @@ const RevokeAll = () => {
         } else {
             setFormError({ id: `${inputId}_ADDRESS`, type: 'INVALID_WALLET_ADDRESS', message: 'This is an invalid wallet address.' });
         }
+
+        if (value.toLowerCase() === address.toLowerCase())
+            setFormError({ id: `${inputId}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
+        else clearFormError({ id: `${inputId}_ADDRESS`, type: 'CANNOT_USE_SELF_ADDRESS' });
 
         setRevokeAddress(value);
     };

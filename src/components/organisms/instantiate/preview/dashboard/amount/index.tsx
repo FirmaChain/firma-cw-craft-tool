@@ -28,6 +28,7 @@ import Divider from '@/components/atoms/divider';
 import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { ItemTokenSymbol } from './totalSupply/style';
 
 interface IProps {
     minterble: boolean;
@@ -86,20 +87,18 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                 <IconTooltip size="14px" tooltip={CAP_TOOLTIP_TEXT} />
                             </div>
                         </HeaderLeftWrapper>
-                        <HeaderRightWrapper>
-                            <TextEllipsis
-                                CustomDiv={HeaderMinterCapAmount}
-                                text={commaNumber(minterCap) || 0}
-                                breakMode={'letters'}
-                                customDivProps={{
-                                    $disabled: !Boolean(Number(minterCap))
-                                }}
-                            />
-                            {/* <HeaderMinterCapAmount className="clamp-single-line" $disabled={!Boolean(Number(minterCap))}>
-                                {commaNumber(minterCap) || 0}
-                            </HeaderMinterCapAmount> */}
-
-                            {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
+                        <HeaderRightWrapper style={{ gap: '12px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                <TextEllipsis
+                                    CustomDiv={HeaderMinterCapAmount}
+                                    text={commaNumber(minterCap) || 0}
+                                    breakMode={'letters'}
+                                    customDivProps={{
+                                        $disabled: !Boolean(Number(minterCap))
+                                    }}
+                                />
+                                {minterCap && tokenSymbol && <HeaderMinterCapTokenSymbol>{tokenSymbol || ''}</HeaderMinterCapTokenSymbol>}
+                            </div>
                             {!isBasic && <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />}
                         </HeaderRightWrapper>
                     </MinterCapHeaderWrapper>
@@ -118,9 +117,12 @@ const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply,
                                     {shortenAddress(currentMinterAddress, 12, 12) || 'Wallet Address'}
                                 </DetailAddressText>
                             </DetailLeftWrapper>
-                            <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
-                                {commaNumber(minterCap) || 0}
-                            </DetailMinterCapAmount>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                                <DetailMinterCapAmount $disabled={!Boolean(Number(minterCap))} className="clamp-single-line">
+                                    {commaNumber(minterCap) || 0}
+                                </DetailMinterCapAmount>
+                                {tokenSymbol && <ItemTokenSymbol>{tokenSymbol}</ItemTokenSymbol>}
+                            </div>
                         </DetailWrapper>
                     </MinterCapInfoBox>
                 </MinterCapWrapper>

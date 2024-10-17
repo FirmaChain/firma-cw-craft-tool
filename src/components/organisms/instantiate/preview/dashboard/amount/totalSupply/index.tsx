@@ -55,7 +55,9 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                 $disabled: !Boolean(Number(totalSupply))
                             }}
                         />
-                        <SummeryRightTokenSymbol $disabled={Number(totalSupply) <= 0}>{tokenSymbol}</SummeryRightTokenSymbol>
+                        {tokenSymbol && (
+                            <SummeryRightTokenSymbol $disabled={Number(totalSupply) <= 0}>{tokenSymbol}</SummeryRightTokenSymbol>
+                        )}
                     </div>
                     <ArrowToggleButton open={isOpen} onToggle={onClickOpen} />
                 </SummeryRightWrapeer>
@@ -94,7 +96,7 @@ const TotalSupply = ({ totalSupply, tokenSymbol, walletList, decimals }: IProps)
                                         <ItemTokenAmount $disabled={!Boolean(Number(wallet.amount))} className="clamp-single-line">
                                             {commaNumber(wallet.amount) || '0'}
                                         </ItemTokenAmount>
-                                        <ItemTokenSymbol>{tokenSymbol}</ItemTokenSymbol>
+                                        {tokenSymbol && <ItemTokenSymbol>{tokenSymbol}</ItemTokenSymbol>}
                                     </ItemTokenWrap>
                                 </WalletListItem>
                             ))}

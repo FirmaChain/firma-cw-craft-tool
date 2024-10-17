@@ -151,9 +151,10 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const ApproveAllPreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
     const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
     const approveType = useCW721ExecuteStore((state) => state.approveType);
@@ -178,12 +179,19 @@ const ApproveAllPreview = () => {
     }, [approveType, approveValue]);
 
     const isEnableButton = useMemo(() => {
-        if (approveRecipientAddress === '' || !isValidAddress(approveRecipientAddress)) return false;
+        if (
+            approveRecipientAddress === '' ||
+            !isValidAddress(approveRecipientAddress) ||
+            approveRecipientAddress.toLowerCase() === address.toLocaleLowerCase()
+        )
+            return false;
         if (approveType === '') return false;
         if (approveType !== 'Forever' && approveValue === '') return false;
 
         return true;
-    }, [approveRecipientAddress, approveType, approveValue]);
+    }, [approveRecipientAddress, approveType, approveValue, address]);
+
+    const hideGotoDetail = address !== owner;
 
     const onClickApproveAll = () => {
         if (modal.modals.length >= 1) return;
@@ -260,6 +268,7 @@ const ApproveAllPreview = () => {
                         onClickConfirm={() => {
                             clearApproveForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -269,6 +278,7 @@ const ApproveAllPreview = () => {
                         onClickConfirm={() => {
                             clearApproveForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

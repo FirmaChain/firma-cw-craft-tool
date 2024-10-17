@@ -22,6 +22,8 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import { compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
 import { useMeasure } from 'react-use';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import TextEllipsis from '@/components/atoms/ellipsis';
+import styled from 'styled-components';
 
 const TokenInfo = () => {
     const userAddress = useSelector((v: rootState) => v.wallet.address);
@@ -132,6 +134,17 @@ const TokenInfo = () => {
     );
 };
 
+const WhiteTypo = styled.div`
+    color: var(--Primary-Base-White, #fff);
+
+    /* Body/Body1 - Md */
+    font-family: 'General Sans Variable';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px; /* 137.5% */
+`;
+
 const MoreInfo = () => {
     const tokenLogo = useSearchStore((v) => v.marketingInfo?.logo?.url);
     const marketingDesc = useSearchStore((v) => v.marketingInfo?.description);
@@ -209,13 +222,16 @@ const MoreInfo = () => {
                 </div>
                 {!isBasic && (
                     <>
-                        <div className="box-row">
+                        <div className="box-row" style={{ alignItems: 'flex-start' }}>
                             <div className="box-title">Marketing Project</div>
                             <div className="box-value">
                                 {!marketingProj ? (
                                     <div className="disabled-typo">Marketing Project</div>
                                 ) : (
-                                    <div className="white-typo  clamp-single-line">{marketingProj}</div>
+                                    <>
+                                        <TextEllipsis CustomDiv={WhiteTypo} text={marketingProj} breakMode={'letters'} />
+                                        {marketingProj && <CopyIconButton text={marketingProj} width={'20px'} height={'20px'} />}
+                                    </>
                                 )}
                             </div>
                         </div>

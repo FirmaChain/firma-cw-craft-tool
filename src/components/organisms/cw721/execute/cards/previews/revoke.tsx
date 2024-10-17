@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
@@ -15,6 +15,7 @@ import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useSnackbar } from 'notistack';
+import { isValidAddress } from '@/utils/address';
 
 const Container = styled.div`
     width: 100%;
@@ -132,6 +133,9 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const RevokePreview = () => {
+    const address = useSelector((v: rootState) => v.wallet.address);
+    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
+
     const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
@@ -147,23 +151,43 @@ const RevokePreview = () => {
     const modal = useModalStore();
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
+    // const [isEnableButton, setIsEnableButton] = useState<boolean>(false);
 
-    useEffect(() => {
+    // useEffect(() => {
+    //     if (revokeTokenId === '' || revokeTokenId === '0') {
+    //         setIsEnableButton(false);
+    //     } else {
+    //         if (myNftList.includes(revokeTokenId)) {
+    //             if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
+    //                 setIsEnableButton(false);
+    //             } else if (nftApprovalInfo.spender === revokeAddress && nftApprovalInfo.expires !== null) {
+    //                 setIsEnableButton(true);
+    //             }
+    //         } else {
+    //             setIsEnableButton(false);
+    //         }
+    //     }
+    // }, [revokeAddress, revokeTokenId, nftApprovalInfo]);
+
+    const isEnableButton = useMemo(() => {
+        if (!revokeAddress || !isValidAddress(revokeAddress) || revokeAddress.toLowerCase() === address.toLocaleLowerCase()) return false;
+
         if (revokeTokenId === '' || revokeTokenId === '0') {
-            setIsEnableButton(false);
+            return false;
         } else {
             if (myNftList.includes(revokeTokenId)) {
                 if (nftApprovalInfo.spender === '' && nftApprovalInfo.expires === null) {
-                    setIsEnableButton(false);
+                    return false;
                 } else if (nftApprovalInfo.spender === revokeAddress && nftApprovalInfo.expires !== null) {
-                    setIsEnableButton(true);
+                    return true;
                 }
             } else {
-                setIsEnableButton(false);
+                return false;
             }
         }
-    }, [revokeAddress, revokeTokenId, nftApprovalInfo]);
+    }, [revokeAddress, revokeTokenId, nftApprovalInfo, address]);
+
+    const hideGotoDetail = address !== owner;
 
     const onClickRevoke = () => {
         if (modal.modals.length >= 1) return;
@@ -221,6 +245,7 @@ const RevokePreview = () => {
                         onClickConfirm={() => {
                             clearRevokeForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -230,6 +255,7 @@ const RevokePreview = () => {
                         onClickConfirm={() => {
                             clearRevokeForm();
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

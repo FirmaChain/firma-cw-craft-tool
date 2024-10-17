@@ -79,7 +79,6 @@ const Header = () => {
                         }}
                         autoComplete={Boolean(address)}
                         onClickContract={(v) => checkContractExist(v)}
-                        regex={BYPASS_ALL}
                         usePinList
                     />
                 ) : (

@@ -7,13 +7,15 @@ const TextEllipsis = ({
     customDivProps,
     text,
     breakMode,
-    tooltip
+    tooltip,
+    className
 }: {
     CustomDiv: React.ComponentType<any>;
     text: string;
     breakMode: 'words' | 'letters';
     tooltip?: string;
     customDivProps?: any;
+    className?: string;
 }) => {
     const [visibleRef, { height: visibleHeight }] = useMeasure();
     const [hiddenRef, { height: hiddenHeight }] = useMeasure();
@@ -24,7 +26,7 @@ const TextEllipsis = ({
         <div style={{ width: 'fit-content', position: 'relative' }}>
             <CustomDiv
                 ref={visibleRef}
-                className="clamp-single-line"
+                className={`clamp-single-line ${className}`}
                 style={{ wordBreak: breakMode === 'words' ? 'break-word ' : 'break-all' }}
                 data-tooltip-id={TOOLTIP_ID.COMMON}
                 data-tooltip-content={isEllipsis ? tooltip || text : ''}

@@ -96,6 +96,9 @@ const LinkIcon = styled.img`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateLogo = () => {
+    const address = useSelector((state: rootState) => state.wallet.address);
+    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+
     const contractAddress = useExecuteStore((state) => state.contractAddress);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -129,6 +132,8 @@ const UpdateLogo = () => {
             setValidTokenLogoUrl('');
         }
     }, [marketingLogoUrl]);
+
+    const hideGotoDetail = address !== admin;
 
     const onClickUpdateLogo = () => {
         if (modal.modals.length >= 1) return;
@@ -179,6 +184,7 @@ const UpdateLogo = () => {
                             clearLogoUrl();
                             setMarketingInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -189,6 +195,7 @@ const UpdateLogo = () => {
                             clearLogoUrl();
                             setMarketingInfo(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }

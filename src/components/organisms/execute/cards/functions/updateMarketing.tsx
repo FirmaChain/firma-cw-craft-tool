@@ -84,7 +84,8 @@ const UpdateMarketing = () => {
                         formId: 'input description',
                         placeHolder: 'This is token Description',
                         onChange: setMarketingDescription,
-                        maxLength: isBasic ? 100 : 300
+                        maxLength: isBasic ? 100 : 300,
+                        regex: DEFAULT_INPUT_REGEX
                     }}
                 />
                 {!isBasic && address === marketingInfo?.marketing && (
@@ -110,7 +111,7 @@ const UpdateMarketing = () => {
                                 formId: 'input project',
                                 placeHolder: 'ex) https://firmachain.org',
                                 onChange: setMarketingProject,
-                                // regex: DEFAULT_INPUT_REGEX,
+                                regex: DEFAULT_INPUT_REGEX,
                                 maxLength: 300
                             }}
                         />

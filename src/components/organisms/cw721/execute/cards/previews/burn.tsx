@@ -128,7 +128,7 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const BurnPreview = () => {
     const address = useSelector((state: rootState) => state.wallet.address);
-
+    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
     const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
     const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
@@ -185,6 +185,8 @@ const BurnPreview = () => {
 
         return true;
     }, [updatedBurnCount, totalBurnCount, burnList, nftDatas]);
+
+    const hideGotoDetail = address !== owner;
 
     const onClickBurn = () => {
         if (modal.modals.length >= 1) return;
@@ -243,6 +245,7 @@ const BurnPreview = () => {
                             setMyNftList(contractAddress, address);
                             setTotalNfts(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 ) : (
                     <QRModal2
@@ -254,6 +257,7 @@ const BurnPreview = () => {
                             setMyNftList(contractAddress, address);
                             setTotalNfts(contractAddress);
                         }}
+                        hideGotoDetail={hideGotoDetail}
                     />
                 );
             }
@@ -281,7 +285,10 @@ const BurnPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" tooltip={`This is the total supply of NFTs after burning.`} />
+                            <IconTooltip
+                                size="14px"
+                                tooltip={`Updated Balance is the number of NFTs held after burning.\nFor approved NFTs (not owned), the number is not displayed.`}
+                            />
                         </div>
                     </ItemLeftWrap>
                     <ItemRightWrap>

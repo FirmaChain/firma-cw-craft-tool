@@ -275,6 +275,7 @@ const UpdateOwnershipAccept = () => {
                             setMinter(contractAddress);
                             clearSelectMenu();
                         }}
+                        hideGotoDetail={false}
                     />
                 ) : (
                     <QRModal2
@@ -286,6 +287,7 @@ const UpdateOwnershipAccept = () => {
                             setMinter(contractAddress);
                             clearSelectMenu();
                         }}
+                        hideGotoDetail={false}
                     />
                 );
             }

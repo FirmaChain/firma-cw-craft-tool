@@ -1,7 +1,7 @@
 import React from 'react';
 import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
-import { INT_NUMBERS } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, INT_NUMBERS } from '@/constants/regex';
 import { CW721_MAX_MINTABLE_ID, isZeroStringValue } from '@/utils/balance';
 import WalletRemoveButton from '../buttons/walletRemoveButton';
 
@@ -106,7 +106,8 @@ const NFTMintInput = ({
                             placeHolder: rightPlaceholder,
                             disabled: disabled,
                             maxLength: 300,
-                            emptyErrorMessage: 'Please input the NFT URI.'
+                            emptyErrorMessage: 'Please input the NFT URI.',
+                            regex: DEFAULT_INPUT_REGEX
                         }}
                     />
                 </div>
