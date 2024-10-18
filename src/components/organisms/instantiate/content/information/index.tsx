@@ -13,7 +13,7 @@ import Icons from '@/components/atoms/icons';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import useInstantiateStore from '../../instaniateStore';
-import { DEFAULT_INPUT_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, NORMAL_TEXT, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
 
 interface IProps {
@@ -163,7 +163,7 @@ const Information = ({ isBasic }: IProps) => {
                             maxLength: 30,
                             onChange: handleTokenName,
                             emptyErrorMessage: 'Please input the token name.',
-                            regex: DEFAULT_INPUT_REGEX
+                            regex: NORMAL_TEXT
                         }}
                     />
 
@@ -204,7 +204,7 @@ const Information = ({ isBasic }: IProps) => {
                         onChange: handleLabel,
                         emptyErrorMessage: 'Please input the token label.',
                         maxLength: 128,
-                        regex: DEFAULT_INPUT_REGEX
+                        regex: NORMAL_TEXT
                     }}
                 />
                 <LabelInput
@@ -228,7 +228,7 @@ const Information = ({ isBasic }: IProps) => {
                         placeHolder: 'ex) This is my token',
                         onChange: handleDescription,
                         maxLength: isBasic ? 100 : 300,
-                        regex: DEFAULT_INPUT_REGEX
+                        regex: NORMAL_TEXT
                     }}
                 />
                 {!isBasic && (

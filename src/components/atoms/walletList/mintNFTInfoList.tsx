@@ -16,13 +16,14 @@ import {
     NftListHeaderTypo,
     NftListContainer
 } from './style';
-
-import Icons from '../icons';
+// import Icons from '../icons';
 import { useSnackbar } from 'notistack';
 import { useModalStore } from '@/hooks/useModal';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import NftMintInput from '../input/nftMintInput';
 import AddWalletButton from '../buttons/addWalletButton';
+// import { TooltipIconBox } from '@/components/organisms/landing/styles';
+// import IconTooltip from '../tooltip';
 
 interface IMintInfo {
     token_id: string;
@@ -104,7 +105,10 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                     <NftListHeaderToken>
                         <NftListHeaderTypo>{'Token ID'}</NftListHeaderTypo>
                     </NftListHeaderToken>
-                    <NftListHeaderTypo>{'NFT URIs'}</NftListHeaderTypo>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                        <NftListHeaderTypo>{'NFT URIs'}</NftListHeaderTypo>
+                        {/* <IconTooltip tooltip={`Please provide the NFT Metadata URI.\nFor fore details, refer to the FIRMACRAFT guide.`} /> */}
+                    </div>
                 </NftListHeaderWrap>
                 <NftListWrap>
                     {list.map((wallet, index) => (
@@ -120,7 +124,7 @@ const MintNFTInfoList = ({ list, maxWalletCount = 20, onChangeWalletList, disabl
                             isLast={index === list.length - 1}
                             isValid={!Boolean(wallet.isAlreadyMint)}
                             leftPlaceholder={'0'}
-                            rightPlaceholder="Input NFT URI"
+                            rightPlaceholder="Input NFT Metadata URI"
                             inputId={wallet.id}
                         />
                     ))}

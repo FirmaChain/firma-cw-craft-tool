@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { isValidAddress } from '@/utils/address';
 import { sleep } from '@/utils/common';
-import { BYPASS_ALL, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { BYPASS_ALL, NORMAL_TEXT, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import ConnectWallet from '@/components/organisms/execute/header/connectWallet';
 
 const EndAdornment = ({
@@ -137,6 +137,7 @@ const Header = () => {
                         autoCompleteType="cw721"
                         onClickContract={(v) => getRequiredInfo(v)}
                         usePinList
+                        regex={NORMAL_TEXT}
                     />
                 ) : (
                     <ConnectWallet />

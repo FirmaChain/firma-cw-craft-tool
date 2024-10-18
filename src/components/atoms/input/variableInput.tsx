@@ -157,11 +157,14 @@ const VariableInput = ({
     const isError = errorMessage.length > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let origInput = event.currentTarget.value;
         let inputValue = event.currentTarget.value;
 
         if (inputValue.length > 0) {
             if (type === 'number') {
                 inputValue = inputValue.replace(decimal === 0 ? INT_NUMBERS : FLOAT_NUMBER, '');
+
+                // if (origInput !== inputValue) return;
 
                 if (inputValue.startsWith('.')) inputValue = `${0}${inputValue}`;
                 else {
@@ -174,6 +177,8 @@ const VariableInput = ({
             } else {
                 //? Filter input string if valid regex provided
                 if (regex) inputValue = inputValue.replace(regex, '');
+
+                // if (origInput !== inputValue) return;
 
                 //? Slice remaining string if maxLength provided
                 if (typeof maxLength === 'number') inputValue = inputValue.slice(0, maxLength);

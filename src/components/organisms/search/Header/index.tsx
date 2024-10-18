@@ -5,7 +5,7 @@ import Icons from '@/components/atoms/icons';
 import useSearchStore from '../searchStore';
 import React from 'react';
 import useSearchActions from '../action';
-import { BYPASS_ALL } from '@/constants/regex';
+import { BYPASS_ALL, NORMAL_TEXT } from '@/constants/regex';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import ConnectWallet from '../../execute/header/connectWallet';
@@ -80,6 +80,7 @@ const Header = () => {
                         autoComplete={Boolean(address)}
                         onClickContract={(v) => checkContractExist(v)}
                         usePinList
+                        regex={NORMAL_TEXT}
                     />
                 ) : (
                     <ConnectWallet />

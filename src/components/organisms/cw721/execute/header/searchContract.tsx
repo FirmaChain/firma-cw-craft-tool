@@ -6,7 +6,7 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 import { useNavigate } from 'react-router-dom';
 import { isValidAddress } from '@/utils/address';
-import { BYPASS_ALL } from '@/constants/regex';
+import { BYPASS_ALL, NORMAL_TEXT } from '@/constants/regex';
 
 const EndAdornment = ({
     keyword,
@@ -107,6 +107,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
             autoCompleteType="cw721"
             onClickContract={(v) => onClickSearch(v)}
             usePinList
+            regex={NORMAL_TEXT}
         />
     );
 };

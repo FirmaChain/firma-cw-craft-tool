@@ -8,7 +8,7 @@ import useExecuteStore from '../../hooks/useExecuteStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import { DEFAULT_INPUT_REGEX, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, NORMAL_TEXT, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
 
 const ContentWrap = styled.div`
@@ -85,7 +85,7 @@ const UpdateMarketing = () => {
                         placeHolder: 'This is token Description',
                         onChange: setMarketingDescription,
                         maxLength: isBasic ? 100 : 300,
-                        regex: DEFAULT_INPUT_REGEX
+                        regex: NORMAL_TEXT
                     }}
                 />
                 {!isBasic && address === marketingInfo?.marketing && (

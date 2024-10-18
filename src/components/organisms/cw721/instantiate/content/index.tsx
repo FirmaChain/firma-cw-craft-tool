@@ -5,7 +5,7 @@ import useInstantiateStore from '../instantiateStore';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useEffect } from 'react';
-import { DEFAULT_INPUT_REGEX, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { DEFAULT_INPUT_REGEX, NORMAL_TEXT, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useFormStore from '@/store/formStore';
 import { isValidAddress } from '@/utils/address';
 
@@ -154,7 +154,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                             maxLength: 30,
                             onChange: onNameChange,
                             emptyErrorMessage: 'Please input the token name.',
-                            regex: DEFAULT_INPUT_REGEX
+                            regex: NORMAL_TEXT
                         }}
                     />
                     <LabelInput
@@ -206,7 +206,7 @@ const Content = ({ isBasic }: { isBasic: boolean }) => {
                         onChange: setLabel,
                         emptyErrorMessage: 'Please input the token label.',
                         maxLength: 128,
-                        regex: DEFAULT_INPUT_REGEX
+                        regex: NORMAL_TEXT
                     }}
                 />
             </InformationBody>

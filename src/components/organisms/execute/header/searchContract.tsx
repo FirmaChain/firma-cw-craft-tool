@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
 import { useNavigate } from 'react-router-dom';
 import { isValidAddress } from '@/utils/address';
-import { BYPASS_ALL, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { BYPASS_ALL, NORMAL_TEXT, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 const EndAdornment = ({
     keyword,
@@ -111,6 +111,7 @@ const SearchContract = ({ contractAddress }: ISearchContractProps) => {
             autoCompleteType="cw20"
             onClickContract={(v) => onClickSearch(v)}
             usePinList
+            regex={NORMAL_TEXT}
         />
     );
 };

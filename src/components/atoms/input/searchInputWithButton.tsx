@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { rootState } from '@/redux/reducers';
-import { useContractSearchQuery } from '@/api/queries';
 import { ContractInfoFromDB } from '@/interfaces/common';
 import { useDebounce } from 'react-use';
 import FirmaLoading from '../globalLoader/firmaLoad';
@@ -15,7 +14,7 @@ import { queryClient } from '@/constants/query-client';
 import usePinContractStore from '@/store/pinContractStore';
 import IconButton from '../buttons/iconButton';
 import Divider from '../divider';
-import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 import ContractApi from '@/api/contractApi';
 
 const StyledInput = styled.div<{
@@ -507,6 +506,14 @@ const AutoCompleteBox = ({
                     });
                 }
 
+                if (sortedPinList.length > 0 || Object.values(data).flat().length === 0) setFilter('pinned');
+                else {
+                    if (contracts['name']?.length > 0) setFilter('name');
+                    if (contracts['symbol']?.length > 0) setFilter('symbol');
+                    if (contracts['label']?.length > 0) setFilter('label');
+                    if (contracts['contractAddress']?.length > 0) setFilter('address');
+                }
+
                 setData(contracts);
             } else {
                 throw new Error(error);
@@ -518,43 +525,6 @@ const AutoCompleteBox = ({
             setIsLoading(false);
         }
     };
-
-    // const { data, isFetching } = useContractSearchQuery(
-    //     {
-    //         type: autoCompleteType,
-    //         keyword: searchValue,
-    //         filter: isValidAddress(searchValue) && searchValue.length > 44 ? 'address' : 'any'
-    //     },
-    //     {
-    //         enabled: searchValue.replaceAll(' ', '').length > 0,
-    //         onSuccess: ({ data, success, error }) => {
-    //             if (success) {
-    //                 const flattenList = Object.values(data)
-    //                     .flat()
-    //                     .filter((v) => v !== null);
-
-    //                 if (Array.isArray(flattenList) && flattenList.length > 0) {
-    //                     flattenList.forEach((v) => {
-    //                         const checkTarget = pinnedList.find(
-    //                             (one) => one.contractAddress?.toLowerCase() === v.contractAddress?.toLowerCase()
-    //                         );
-
-    //                         if (checkTarget && v.tokenLogoUrl !== checkTarget.tokenLogoUrl) {
-    //                             updatePin(address, { ...checkTarget, tokenLogoUrl: v.tokenLogoUrl });
-    //                         }
-    //                     });
-    //                 }
-    //             } else {
-    //                 console.log(error);
-    //                 enqueueSnackbar({ message: 'Failed to get search result.', variant: 'error' });
-    //             }
-    //         },
-
-    //         onSettled: () => {
-    //             setIsLoading(false);
-    //         }
-    //     }
-    // );
 
     const sortedPinList = useMemo(() => {
         if (!searchValue) return pinnedList;
@@ -620,12 +590,6 @@ const AutoCompleteBox = ({
             if (keyword.replaceAll(' ', '').length > 0 && selectedAddress.toLowerCase() !== keyword.toLowerCase()) {
                 setIsLoading(true);
 
-                if (isValidAddress(keyword.toLowerCase())) setFilter((prev) => 'address');
-                else {
-                    if (usePinList) setFilter('pinned');
-                    else setFilter('name');
-                }
-
                 await searchContracts(keyword);
                 setSearchValue((prev) => keyword);
             } else {
@@ -648,7 +612,6 @@ const AutoCompleteBox = ({
             const isEmptyRes = Object.values(contractList).every((v) => v === null);
 
             if (searchValue === '' && isEmptyRes) {
-                // setContractList([]);
                 if (usePinList) setFilter('pinned');
                 else setFilter('name');
             }
@@ -658,6 +621,7 @@ const AutoCompleteBox = ({
     useEffect(() => {
         if (keyword.length === 0) {
             setSearchValue('');
+            setData({});
 
             if (!usePinList) setVisible(false);
         }
@@ -666,7 +630,6 @@ const AutoCompleteBox = ({
     const onClickCard = (address: string) => {
         setSelectedAddress(address);
         setKeyword(address);
-        // setSearchValue('');
         setVisible(false);
         onClickContract(address);
     };
@@ -681,16 +644,12 @@ const AutoCompleteBox = ({
         scrollByJSRef.current = true;
         setFilter(filterType);
 
-        if (filterType === 'pinned') pinRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        if (filterType === 'name') nameRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        if (filterType === 'symbol') symbolRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        if (filterType === 'label') labelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        if (filterType === 'address') addrRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (filterType === 'pinned') pinRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (filterType === 'name') nameRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (filterType === 'symbol') symbolRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (filterType === 'label') labelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (filterType === 'address') addrRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
-
-    // useEffect(() => {
-    //     if (usePinList) setVisible(true);
-    // }, []);
 
     const sectionRefs = useRef([]);
     const scrollBaseRef = useRef<HTMLDivElement>();
@@ -1131,7 +1090,6 @@ const SearchInputWithButton2 = React.forwardRef(
                             position: 'absolute',
                             top: '66px',
                             display: autoComplete && isVisible ? 'flex' : 'none'
-                            // display: autoComplete ? 'flex' : 'none'
                         }}
                     >
                         <AutoCompleteBox
