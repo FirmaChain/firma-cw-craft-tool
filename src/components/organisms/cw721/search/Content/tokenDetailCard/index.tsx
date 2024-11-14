@@ -280,7 +280,7 @@ const OwnerInformation = () => {
             if (expireInfo['at_height'] !== '0' && expireBlockHeight !== '0') {
                 if (compareStringNumbers(expireInfo['at_height'].toString(), expireBlockHeight) === 1) {
                     return (
-                        <SpecificValueTypo>
+                        <SpecificValueTypo style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
                             {expireInfo['at_height']}
                             <SpecificSubValueType>Block</SpecificSubValueType>
                         </SpecificValueTypo>
@@ -289,7 +289,13 @@ const OwnerInformation = () => {
                     return (
                         <SpecificValueWrapper>
                             <IconTooltip size={'24px'} tooltip={'The height has expired.'} TooltipIcon={IC_WARNING_SIGN} />
-                            <TextEllipsis CustomDiv={SpecificValueTypo} text={expireInfo['at_height']} breakMode={'letters'} />
+                            <TextEllipsis
+                                CustomDiv={SpecificValueTypo}
+                                text={expireInfo['at_height']}
+                                breakMode={'letters'}
+                                customDivProps={{ style: { color: '#5a5a5a' } }}
+                            />
+                            <SpecificSubValueType>Block</SpecificSubValueType>
                             {/* <SpecificValueTypo style={{ color: '#5A5A5A' }}>{expireInfo['at_height']}</SpecificValueTypo> */}
                         </SpecificValueWrapper>
                     );

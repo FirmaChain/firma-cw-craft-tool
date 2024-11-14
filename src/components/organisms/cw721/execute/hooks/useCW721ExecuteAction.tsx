@@ -314,7 +314,32 @@ const useCW721ExecuteAction = () => {
                                 }
                             });
 
-                            const approval = [...availableApprovals, ...allOperators].filter((value) => value.spender === owner);
+                            const availableOperators = allOperators.filter(({ spender, expires }) => {
+                                if (spender.toLowerCase() === owner) {
+                                    if (expires) {
+                                        if (expires['never']) {
+                                            return true;
+                                        }
+
+                                        if (expires['at_time']) {
+                                            const expirationTimestamp = BigInt(expires['at_time']) / BigInt(1_000_000);
+                                            if (expirationTimestamp > BigInt(Number(new Date()))) {
+                                                return true;
+                                            }
+                                        }
+
+                                        if (expires['at_height']) {
+                                            //? approved to certain block height. need to check block height
+                                            const expirationBlockHeight = BigInt(expires['at_height']);
+                                            if (expirationBlockHeight > BigInt(latest_block_height)) {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            const approval = [...availableApprovals, ...availableOperators].filter((value) => value.spender === owner);
                             const isApproval = approval.length > 0;
 
                             if (isApproval) {

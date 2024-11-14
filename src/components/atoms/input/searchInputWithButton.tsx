@@ -41,11 +41,11 @@ const StyledInput = styled.div<{
     //? Set border color by state
     border: 1px solid
         ${({ $isFocus, $error, $readOnly }) =>
-        $error
-            ? 'var(--Status-Alert, #E55250) !important'
-            : $isFocus && !$readOnly
-                ? 'var(--Gray-550, #FFFFFF) !important'
-                : 'var(--Gray-550, #444)'};
+            $error
+                ? 'var(--Status-Alert, #E55250) !important'
+                : $isFocus && !$readOnly
+                  ? 'var(--Gray-550, #FFFFFF) !important'
+                  : 'var(--Gray-550, #444)'};
     border-radius: 12px;
     cursor: text;
     box-sizing: border-box;
@@ -195,7 +195,8 @@ const TokenCardWarp = styled.div`
         }
 
         & .highlight {
-            color: var(--Green-500, #02e191);
+            //? Remove highlight by request
+            // color: var(--Green-500, #02e191);
         }
 
         & .is-verified {
@@ -506,7 +507,12 @@ const AutoCompleteBox = ({
                     });
                 }
 
-                if (sortedPinList?.length > 0 || Object.values(contracts).every(one => one === null) || Object.values(contracts).flat().length === 0) setFilter('pinned');
+                if (
+                    sortedPinList?.length > 0 ||
+                    Object.values(contracts).every((one) => one === null) ||
+                    Object.values(contracts).flat().length === 0
+                )
+                    setFilter('pinned');
                 else {
                     if (contracts['name']?.length > 0) setFilter('name');
                     if (contracts['symbol']?.length > 0) setFilter('symbol');
@@ -800,9 +806,9 @@ const AutoCompleteBox = ({
                                         ))}
                                     </div>
                                     {contractList['name']?.length > 0 ||
-                                        contractList['symbol']?.length > 0 ||
-                                        contractList['label']?.length > 0 ||
-                                        contractList['contractAddress']?.length > 0 ? (
+                                    contractList['symbol']?.length > 0 ||
+                                    contractList['label']?.length > 0 ||
+                                    contractList['contractAddress']?.length > 0 ? (
                                         <div style={{ width: '100%', margin: '12px 0' }}>
                                             <Divider $direction={'horizontal'} $color="var(--Gray-500, #383838)" />
                                         </div>
@@ -844,8 +850,8 @@ const AutoCompleteBox = ({
                                         ))}
                                     </div>
                                     {contractList['symbol']?.length > 0 ||
-                                        contractList['label']?.length > 0 ||
-                                        contractList['contractAddress']?.length > 0 ? (
+                                    contractList['label']?.length > 0 ||
+                                    contractList['contractAddress']?.length > 0 ? (
                                         <div style={{ width: '100%', margin: '12px 0' }}>
                                             <Divider $direction={'horizontal'} $color="var(--Gray-500, #383838)" />
                                         </div>
@@ -991,9 +997,9 @@ const AutoCompleteBox = ({
                                 ))}
                             </div>
                             {contractList['name']?.length > 0 ||
-                                contractList['symbol']?.length > 0 ||
-                                contractList['label']?.length > 0 ||
-                                contractList['contractAddress']?.length > 0 ? (
+                            contractList['symbol']?.length > 0 ||
+                            contractList['label']?.length > 0 ||
+                            contractList['contractAddress']?.length > 0 ? (
                                 <div style={{ width: '100%', margin: '12px 0' }}>
                                     <Divider $direction={'horizontal'} $color="var(--Gray-500, #383838)" />
                                 </div>
@@ -1024,7 +1030,7 @@ const SearchInputWithButton2 = React.forwardRef(
             autoComplete,
             autoCompleteType = 'cw20',
             usePinList = false,
-            onClickContract = () => { }
+            onClickContract = () => {}
         }: InputProps,
         ref
     ) => {

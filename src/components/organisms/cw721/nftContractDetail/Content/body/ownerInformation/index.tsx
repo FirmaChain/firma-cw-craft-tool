@@ -23,6 +23,7 @@ import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/use
 import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
 import { isValidAddress } from '@/utils/address';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useEffect } from 'react';
 
 const OwnerInformation = () => {
     const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
@@ -52,7 +53,7 @@ const OwnerInformation = () => {
             if (expireInfo['at_height'] !== '0' && expireBlockHeight !== '0') {
                 if (compareStringNumbers(expireInfo['at_height'].toString(), expireBlockHeight) === 1) {
                     return (
-                        <SpecificValueTypo>
+                        <SpecificValueTypo style={{ display: 'flex', flexDirection: 'row' }}>
                             {expireInfo['at_height']}
                             <SpecificSubValueType>Block</SpecificSubValueType>
                         </SpecificValueTypo>
@@ -65,10 +66,9 @@ const OwnerInformation = () => {
                                 CustomDiv={SpecificValueTypo}
                                 text={expireInfo['at_height']}
                                 breakMode={'letters'}
-                                customDivProps={{
-                                    style: { color: '#5A5A5A' }
-                                }}
+                                customDivProps={{ style: { color: '#5a5a5a' } }}
                             />
+                            <SpecificSubValueType>Block</SpecificSubValueType>
                             {/* <SpecificValueTypo style={{ color: '#5A5A5A' }}>{expireInfo['at_height']}</SpecificValueTypo> */}
                         </SpecificValueWrapper>
                     );
@@ -86,15 +86,17 @@ const OwnerInformation = () => {
                 return (
                     <SpecificValueWrapper>
                         <IconTooltip size={'24px'} tooltip={'The time has expired.'} TooltipIcon={IC_WARNING_SIGN} />
-                        {/* <SpecificValueTypo style={{ color: '#5A5A5A' }}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo> */}
                         <TextEllipsis
                             CustomDiv={SpecificValueTypo}
                             text={format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}
                             breakMode={'letters'}
                             customDivProps={{
-                                style: { color: '#5A5A5A' }
+                                style: {
+                                    color: '#5A5A5A'
+                                }
                             }}
                         />
+                        {/* <SpecificValueTypo style={{ color: '#5A5A5A' }}>{format(timeInMs, 'MMMM-dd-yyyy HH:mm:ss a')}</SpecificValueTypo> */}
                     </SpecificValueWrapper>
                 );
             }
@@ -102,6 +104,10 @@ const OwnerInformation = () => {
 
         return <SpecificValueTypo></SpecificValueTypo>;
     };
+
+    useEffect(() => {
+        setBlockHeight();
+    }, []);
 
     return (
         <ContractCard>
