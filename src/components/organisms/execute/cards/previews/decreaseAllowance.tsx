@@ -20,6 +20,7 @@ import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSnackbar } from 'notistack';
+import IconTooltip from '@/components/atoms/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -269,7 +270,8 @@ const DecreaseAllowancePreview = () => {
             ? BigInt(getUTokenAmountFromToken(allowance?.amount, String(tokenInfo.decimals)))
             : BigInt(0);
 
-        return String(_currentAllowance - _reduceAmount);
+        if (_currentAllowance <= _reduceAmount) return '0';
+        else return String(_currentAllowance - _reduceAmount);
     }, [allowance, allowanceInfo, tokenInfo]);
 
     const hideGotoDetail = address !== admin;
@@ -381,7 +383,6 @@ const DecreaseAllowancePreview = () => {
         if (!allowance.type || (allowance.type !== 'never' && (!allowance.expire || !allowance.type))) return false;
         if (allowance.address.toLowerCase() === address.toLowerCase()) return false;
         if (!allowance.amount || allowance.amount.replace(ONE_TO_MINE, '') === '') return false;
-        if (compareStringNumbers(updatedAmount, '0') === -1) return false;
 
         return true;
     }, [addressExist, allowanceInfo, allowance, address]);
@@ -462,7 +463,10 @@ const DecreaseAllowancePreview = () => {
                     <ItemLabelWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
 
-                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                            <IconTooltip size="14px" tooltip={`This is the final balance after the transaction.`} />
+                        </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap style={{ gap: '8px' }}>
                         <TextEllipsis
@@ -470,9 +474,6 @@ const DecreaseAllowancePreview = () => {
                             text={commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
                             breakMode={'letters'}
                         />
-                        {/* <UpdatedBalanceTypo className="clamp-single-line">
-                            {commaNumber(getTokenAmountFromUToken(updatedAmount, tokenInfo.decimals.toString()))}
-                        </UpdatedBalanceTypo> */}
                         <UpdatedSymbolTypo>{tokenInfo.symbol}</UpdatedSymbolTypo>
                     </ItemLabelWrap>
                 </ItemWrap>
