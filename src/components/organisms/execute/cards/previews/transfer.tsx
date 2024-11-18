@@ -25,6 +25,7 @@ import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSnackbar } from 'notistack';
+import IconTooltip from '@/components/atoms/tooltip';
 
 const Container = styled.div`
     width: 100%;
@@ -463,6 +464,10 @@ const TransferPreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                             <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                            <IconTooltip
+                                size="14px"
+                                tooltip={'This is the expected balance after the transaction. Make sure to double check before execution.'}
+                            />
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap style={{ gap: '8px' }}>

@@ -484,8 +484,12 @@ const IncreaseAllowancePreview = () => {
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Update Balance Icon'} />
 
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
-                            <IconTooltip size="14px" tooltip={`This is the final balance after the transaction.`} />
+                            <UpdatedBalanceLabelTypo>Updated Allowance</UpdatedBalanceLabelTypo>
+                            <IconTooltip
+                                size="14px"
+                                tooltip={`This is the expected allowance after the transaction. Make sure to double check before execution.
+`}
+                            />
                         </div>
                     </ItemLabelWrap>
                     <ItemLabelWrap style={{ gap: '8px' }}>
