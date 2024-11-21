@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 
-import { WalletActions } from '@/redux/actions';
+// import { WalletActions } from '@/redux/actions';
 import {
     CloseIcon,
     MobileAppLinkBox,
@@ -21,7 +21,7 @@ import {
 } from './style';
 import RequestQR from '../requestQR';
 import { IC_CLOSE, IC_FIRMA_LOGO, IC_ROUND_ARROW_UP, IC_SCAN, IMG_ANDROID_STORE, IMG_IOS_STORE } from '@/components/atoms/icons/pngIcons';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import Divider from '@/components/atoms/divider';
 import Icons from '@/components/atoms/icons';
 import IconButton from '@/components/atoms/buttons/iconButton';
@@ -32,6 +32,7 @@ import { isValidAddress } from '@/utils/address';
 import Connect from './connect/connect';
 import { setAccessToken } from '@/utils/token';
 import { add } from 'date-fns';
+import useWalletStore from '@/store/walletStore';
 
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
@@ -40,6 +41,8 @@ const WalletConnectModal = ({ id }: { id: string }) => {
 
     const { enqueueSnackbar } = useSnackbar();
     const closeModal = useModalStore((state) => state.closeModal);
+
+    const { handleInit, handleAddress } = useWalletStore();
 
     const onCloseModal = () => {
         closeModal(id);
@@ -87,8 +90,8 @@ const WalletConnectModal = ({ id }: { id: string }) => {
                                     }
 
                                     if (isValidAddress(requestData.signer)) {
-                                        WalletActions.handleInit(true);
-                                        WalletActions.handleAddress(requestData.signer);
+                                        handleInit(true);
+                                        handleAddress(requestData.signer);
                                         onCloseModal();
                                     } else {
                                         enqueueSnackbar('Successfully connected to wallet.', {

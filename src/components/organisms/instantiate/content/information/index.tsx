@@ -12,9 +12,10 @@ import {
 import Icons from '@/components/atoms/icons';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
-import useInstantiateStore from '../../instaniateStore';
+// import useInstantiateStore from '../../instaniateStore';
 import { DEFAULT_INPUT_REGEX, NORMAL_TEXT, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
+import { useCW20Instantiate } from '@/context/cw20InstantiateContext';
 
 interface IProps {
     isBasic: boolean;
@@ -24,25 +25,27 @@ const Information = ({ isBasic }: IProps) => {
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const tokenName = useInstantiateStore((v) => v.tokenName);
-    const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
-    const tokenLogoUrl = useInstantiateStore((v) => v.tokenLogoUrl);
-    const tokenDescription = useInstantiateStore((v) => v.tokenDescription);
-    const decimals = useInstantiateStore((v) => v.decimals);
-    const label = useInstantiateStore((v) => v.label);
-    const marketingAddress = useInstantiateStore((v) => v.marketingAddress);
-    const marketingProject = useInstantiateStore((v) => v.marketingProject);
-    const walletList = useInstantiateStore((v) => v.walletList);
-    const setTokenName = useInstantiateStore((v) => v.setTokenName);
-    const setTokenSymbol = useInstantiateStore((v) => v.setTokenSymbol);
-    const setTokenLogoUrl = useInstantiateStore((v) => v.setTokenLogoUrl);
-    const setTokenDescription = useInstantiateStore((v) => v.setTokenDescription);
-    const setDecimals = useInstantiateStore((v) => v.setDecimals);
-    const setLabel = useInstantiateStore((v) => v.setLabel);
-    const setMarketingAddress = useInstantiateStore((v) => v.setMarketingAddress);
-    const setMarketingProject = useInstantiateStore((v) => v.setMarketingProject);
-    const setWalletList = useInstantiateStore((v) => v.setWalletList);
-    const setMinterCap = useInstantiateStore((v) => v.setMinterCap);
+    const context = useCW20Instantiate();
+
+    const tokenName = context.tokenName;
+    const tokenSymbol = context.tokenSymbol;
+    const tokenLogoUrl = context.tokenLogoUrl;
+    const tokenDescription = context.tokenDescription;
+    const decimals = context.decimals;
+    const label = context.label;
+    const marketingAddress = context.marketingAddress;
+    const marketingProject = context.marketingProject;
+    const walletList = context.walletList;
+    const setTokenName = context.setTokenName;
+    const setTokenSymbol = context.setTokenSymbol;
+    const setTokenLogoUrl = context.setTokenLogoUrl;
+    const setTokenDescription = context.setTokenDescription;
+    const setDecimals = context.setDecimals;
+    const setLabel = context.setLabel;
+    const setMarketingAddress = context.setMarketingAddress;
+    const setMarketingProject = context.setMarketingProject;
+    const setWalletList = context.setWalletList;
+    const setMinterCap = context.setMinterCap;
 
     const handleTokenName = (value: string) => {
         if (value.length === 0 || value.trim().length >= 3) {

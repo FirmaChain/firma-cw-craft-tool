@@ -1,16 +1,17 @@
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+
 import { FirmaSDK } from '@firmachain/firma-js';
 
-import { rootState } from '../redux/reducers';
 import { CRAFT_CONFIGS } from '../config';
 import { useSnackbar } from 'notistack';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import useWalletStore from '@/store/walletStore';
 
 const useMyToken = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { address } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
     const { firmaSDK } = useFirmaSDKContext();
 

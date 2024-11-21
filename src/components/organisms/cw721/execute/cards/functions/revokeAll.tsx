@@ -3,17 +3,21 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import { FirmaUtil } from '@firmachain/firma-js';
 import useFormStore from '@/store/formStore';
 import { useEffect, useState } from 'react';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const RevokeAll = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
-    const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
-    const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+    const address = useWalletStore((v) => v.address);
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW721Execute();
+    const revokeAddress = context.revokeAddress;
+    const setRevokeAddress = context.setRevokeAddress;
+    const clearRevokeForm = context.clearRevokeForm;
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);

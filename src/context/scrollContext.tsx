@@ -1,8 +1,4 @@
-import { CRAFT_CONFIGS } from '@/config';
-import { rootState } from '@/redux/reducers';
-import { FirmaSDK } from '@firmachain/firma-js';
 import { createContext, useContext, ReactNode, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 interface IScrollState {
     x: number;

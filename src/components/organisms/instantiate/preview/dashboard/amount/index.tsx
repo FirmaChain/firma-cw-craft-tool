@@ -20,8 +20,7 @@ import {
 import TotalSupply from './totalSupply';
 import { IWallet } from '@/interfaces/wallet';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import IconTooltip from '@/components/atoms/tooltip';
 import commaNumber from 'comma-number';
 import Divider from '@/components/atoms/divider';
@@ -29,6 +28,7 @@ import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { ItemTokenSymbol } from './totalSupply/style';
+import useGlobalStore from '@/store/globalStore';
 
 interface IProps {
     minterble: boolean;
@@ -43,7 +43,8 @@ interface IProps {
 const CAP_TOOLTIP_TEXT = `Minter Cap = Total Supply +\nAdditional Mintable Token Amount`;
 
 const Amount = ({ minterble, minterCap, tokenSymbol, minterAddress, totalSupply, walletList, decimals }: IProps) => {
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    const contractMode = useGlobalStore((v) => v.contractMode);
+    // useSelector((state: rootState) => state.global.contractMode);
 
     const [isOpen, setIsOpen] = useState<boolean>(true);
 

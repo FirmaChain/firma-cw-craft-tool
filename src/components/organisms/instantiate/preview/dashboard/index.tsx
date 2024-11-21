@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 import Icons from '@/components/atoms/icons';
 import {
@@ -14,7 +13,7 @@ import {
     TitleText,
     TitleWrapper
 } from './style';
-import { rootState } from '@/redux/reducers';
+
 import TokenInfo from './tokenInfo';
 import Amount from './amount';
 import { IWallet } from '@/interfaces/wallet';

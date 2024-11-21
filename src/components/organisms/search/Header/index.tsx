@@ -2,13 +2,14 @@ import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButt
 import { HeaderBox, HeaderWrap, Title } from './styles';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
-import useSearchStore from '../searchStore';
+// import useSearchStore from '../searchStore';
 import React from 'react';
 import useSearchActions from '../action';
 import { BYPASS_ALL, NORMAL_TEXT } from '@/constants/regex';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import ConnectWallet from '../../execute/header/connectWallet';
+import { useCW20Search } from '@/context/cw20SearchContext';
+import useWalletStore from '@/store/walletStore';
 
 const EndAdornment = ({
     keyword,
@@ -36,14 +37,17 @@ const EndAdornment = ({
 };
 
 const Header = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const { address, isInit } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
-    const keyword = useSearchStore((state) => state.keyword);
-    const setKeyword = useSearchStore((state) => state.setKeyword);
-    const clearAll = useSearchStore((state) => state.clearAll);
-    const clearSearchInfo = useSearchStore((state) => state.clearSearchInfo);
-    const storeContractInfo = useSearchStore((v) => v.contractInfo);
+    const { keyword, setKeyword, clearAll, clearSearchInfo, contractInfo: storeContractInfo } = useCW20Search();
+
+    // const keyword = useSearchStore((state) => state.keyword);
+    // const setKeyword = useSearchStore((state) => state.setKeyword);
+    // const clearAll = useSearchStore((state) => state.clearAll);
+    // const clearSearchInfo = useSearchStore((state) => state.clearSearchInfo);
+    // const storeContractInfo = useSearchStore((v) => v.contractInfo);
 
     const { checkContractExist, clearSearchKeywordRef } = useSearchActions();
 

@@ -1,14 +1,12 @@
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { rootState } from '@/redux/reducers';
 import useFormStore from '@/store/formStore';
 
-import useInstantiateStore from '@/components/organisms/instantiate/instaniateStore';
 import { Container } from '@/styles/instantiate';
 import { Content, Header, Preview } from '@/components/organisms/cw721/instantiate';
 import React, { useEffect, useMemo } from 'react';
-import { GlobalActions } from '@/redux/actions';
+import { useCW721Instantiate } from '@/context/cw721InstantiateContext';
+import useGlobalStore from '@/store/globalStore';
 
 export const MainContent = styled.div`
     width: 100%;
@@ -27,14 +25,14 @@ export const Box = styled.div`
 `;
 
 const CW721Instantiate = () => {
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    const { contractMode, handleMode } = useGlobalStore();
 
     const clearForm = useFormStore((state) => state.clearForm);
-    const clearInput = useInstantiateStore((v) => v.clearForm);
+    const { clearForm: clearInput } = useCW721Instantiate();
 
     useEffect(() => {
         return () => {
-            GlobalActions.handleMode('BASIC');
+            handleMode('BASIC');
             clearForm();
             clearInput();
         };

@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { HeaderBox, HeaderTitle, HeaderWrap } from './style';
 import Icons from '@/components/atoms/icons';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Skeleton from '@/components/atoms/skeleton';
+import { useCW20Detail } from '@/context/cw20DetailStore';
 
 const Header = () => {
-    const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName);
+    const { tokenDetail } = useCW20Detail();
+    const tokenName = tokenDetail?.tokenName;
 
     const navigate = useNavigate();
 

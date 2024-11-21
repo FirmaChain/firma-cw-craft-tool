@@ -1,12 +1,11 @@
 import Divider from '@/components/atoms/divider';
 import { CardContainer, LabelTypo, SectionContainer, WhiteTypo } from '../style';
-import useSearchStore from '../../searchStore';
+// import useSearchStore from '../../searchStore';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
 import JsonViewer from '@/components/atoms/viewer/jsonViewer';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { CRAFT_CONFIGS } from '@/config';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SearchInput2 from '@/components/atoms/input/searchInput';
@@ -24,20 +23,24 @@ import { useMeasure } from 'react-use';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import styled from 'styled-components';
+import { useCW20Search } from '@/context/cw20SearchContext';
+import useWalletStore from '@/store/walletStore';
 
 const TokenInfo = () => {
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const { contractInfo, tokenInfo, minterInfo, userBalance } = useCW20Search();
 
-    const contractAddress = useSearchStore((state) => state.contractInfo?.address);
-    const minterAddress = useSearchStore((state) => state.minterInfo?.minter);
-    const tokenName = useSearchStore((state) => state.tokenInfo?.name);
-    const symbol = useSearchStore((state) => state.tokenInfo?.symbol);
-    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || 0;
-    const label = useSearchStore((state) => state.contractInfo?.contract_info?.label);
-    const totalSupply = useSearchStore((state) => state.tokenInfo?.total_supply);
-    const minterCap = useSearchStore((state) => state.minterInfo?.cap);
-    const userBalance = useSearchStore((state) => state.userBalance);
-    const codeId = useSearchStore((state) => state.contractInfo?.contract_info.code_id);
+    const contractAddress = contractInfo?.address;
+    const minterAddress = minterInfo?.minter;
+    const tokenName = tokenInfo?.name;
+    const symbol = tokenInfo?.symbol;
+    const decimals = tokenInfo?.decimals || 0;
+    const label = contractInfo?.contract_info?.label;
+    const totalSupply = tokenInfo?.total_supply;
+    const minterCap = minterInfo?.cap;
+    // const userBalance = useSearchStore((state) => state.userBalance);
+    const codeId = contractInfo?.contract_info.code_id;
     const isBasic = codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
 
     return (
@@ -156,13 +159,15 @@ const TokenInfo = () => {
 };
 
 const MoreInfo = () => {
-    const tokenLogo = useSearchStore((v) => v.marketingInfo?.logo?.url);
-    const marketingDesc = useSearchStore((v) => v.marketingInfo?.description);
-    const marketingAddr = useSearchStore((v) => v.marketingInfo?.marketing);
-    const marketingProj = useSearchStore((v) => v.marketingInfo?.project);
-    const contractHistory = useSearchStore((v) => v.contractHistory);
-    const contractAddress = useSearchStore((v) => v.contractInfo?.address);
-    const codeId = useSearchStore((v) => v.contractInfo?.contract_info.code_id);
+    const { marketingInfo, contractHistory, contractInfo } = useCW20Search();
+
+    const tokenLogo = marketingInfo?.logo?.url;
+    const marketingDesc = marketingInfo?.description;
+    const marketingAddr = marketingInfo?.marketing;
+    const marketingProj = marketingInfo?.project;
+    // const contractHistory = useSearchStore((v) => v.contractHistory);
+    const contractAddress = contractInfo?.address;
+    const codeId = contractInfo?.contract_info.code_id;
     const isBasic = codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;
 
     const metadata = contractHistory === null ? '' : contractHistory[0];
@@ -264,9 +269,11 @@ const MoreInfo = () => {
 };
 
 const AllAccounts = () => {
-    const allAccounts = useSearchStore((v) => v.allAccounts);
-    const decimals = useSearchStore((v) => v.tokenInfo?.decimals) || '0';
-    const symbol = useSearchStore((v) => v.tokenInfo?.symbol);
+    const { allAccounts, tokenInfo } = useCW20Search();
+
+    // const allAccounts = useSearchStore((v) => v.allAccounts);
+    const decimals = tokenInfo?.decimals || '0';
+    const symbol = tokenInfo?.symbol;
 
     const [keyword, setKeyword] = useState<string>('');
 
@@ -328,7 +335,8 @@ const AllAccounts = () => {
 };
 
 const Transactions = () => {
-    const allTransactions = useSearchStore((v) => v.allTransactions) || [];
+    const { allTransactions = [] } = useCW20Search();
+    //useSearchStore((v) => v.allTransactions) || [];
 
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },

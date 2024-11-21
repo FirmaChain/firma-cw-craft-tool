@@ -1,5 +1,4 @@
 import { useCallback, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
     BalanceAmountTypo,
@@ -13,12 +12,12 @@ import {
 } from './style';
 import Allowances from './allowances';
 import useTokenDetail from '@/hooks/useTokenDetail';
-import { rootState } from '@/redux/reducers';
+
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Divider from '@/components/atoms/divider';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
@@ -30,6 +29,8 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Detail } from '@/context/cw20DetailStore';
+import useWalletStore from '@/store/walletStore';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -76,11 +77,13 @@ const EndAdornment = ({
 };
 
 const WalletSearch = () => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const { isInit } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
-    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
-    const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
-    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
+    const { tokenDetail } = useCW20Detail();
+    const contractAddress = tokenDetail?.contractAddress;
+    const tokenSymbol = tokenDetail?.tokenSymbol;
+    const decimals = tokenDetail?.decimals || '';
 
     const { getWalletSearch } = useTokenDetail();
 

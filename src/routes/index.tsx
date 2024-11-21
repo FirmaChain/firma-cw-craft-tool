@@ -8,6 +8,14 @@ import { CW20Execute, CW20Instantiate, CW20SearchPage, CW20TokenDetail } from '@
 import { CW721Instantiate, CW721Search, CW721Execute, CW721MyNFTContracts, CW721NFTContractDetail } from '@/pages/cw721';
 import { checkMobileDevice, scrollToTop } from '@/utils/common';
 import MobileLanding from '@/pages/mobileGuide';
+import { CW721SearchProvider } from '@/context/cw721SearchContext';
+import { CW20SearchProvider } from '@/context/cw20SearchContext';
+import { CW721DetailProvider } from '@/context/cw721DetailStore';
+import { CW20DetailProvider } from '@/context/cw20DetailStore';
+import { CW721InstantiateProvider } from '@/context/cw721InstantiateContext';
+import { CW20InstantiateProvider } from '@/context/cw20InstantiateContext';
+import { CW721ExecuteProvider } from '@/context/cw721ExecuteContext';
+import { CW20ExecuteProvider } from '@/context/cw20ExecuteContext';
 
 const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) => ({
     path,
@@ -16,22 +24,73 @@ const routeByAuth = (path: string, element: React.ReactElement, auth: boolean) =
 });
 
 const routes: any[] = [
+    // Landing
     routeByAuth('/', <LandingPage />, false),
     routeByAuth('/mobile-guide', <MobileLanding />, false),
 
-    routeByAuth('/instantiate', <CW20Instantiate />, false),
-    routeByAuth('/execute', <CW20Execute />, false),
-    routeByAuth('/execute/:contractAddress', <CW20Execute />, false),
-    routeByAuth('/search', <CW20SearchPage />, false),
+    // CW20
+    routeByAuth(
+        '/instantiate',
+        <CW20InstantiateProvider>
+            <CW20Instantiate />
+        </CW20InstantiateProvider>,
+        false
+    ),
+    routeByAuth(
+        '/execute',
+        <CW20ExecuteProvider>
+            <CW20Execute />
+        </CW20ExecuteProvider>,
+        false
+    ),
+    routeByAuth(
+        '/search',
+        <CW20SearchProvider>
+            <CW20SearchPage />
+        </CW20SearchProvider>,
+        false
+    ),
     routeByAuth('/mytoken', <Cw20Mytoken />, false),
-    routeByAuth('/mytoken/detail/:contractAddress', <CW20TokenDetail />, false),
+    routeByAuth(
+        '/mytoken/detail/:contractAddress',
+        <CW20DetailProvider>
+            <CW20TokenDetail />
+        </CW20DetailProvider>,
+        false
+    ),
 
-    routeByAuth('/cw721/instantiate', <CW721Instantiate />, false),
-    routeByAuth('/cw721/execute', <CW721Execute />, false),
-    routeByAuth('/cw721/execute/:contractAddress', <CW721Execute />, false),
-    routeByAuth('/cw721/search', <CW721Search />, false),
+    // CW721
+    routeByAuth(
+        '/cw721/instantiate',
+        <CW721InstantiateProvider>
+            <CW721Instantiate />
+        </CW721InstantiateProvider>,
+        false
+    ),
+    routeByAuth(
+        '/cw721/execute',
+        <CW721ExecuteProvider>
+            <CW721Execute />
+        </CW721ExecuteProvider>,
+        false
+    ),
+    routeByAuth(
+        '/cw721/search',
+        <CW721DetailProvider>
+            <CW721SearchProvider>
+                <CW721Search />
+            </CW721SearchProvider>
+        </CW721DetailProvider>,
+        false
+    ),
     routeByAuth('/cw721/mynft', <CW721MyNFTContracts />, false),
-    routeByAuth('/cw721/mynft/detail/:contractAddress', <CW721NFTContractDetail />, false)
+    routeByAuth(
+        '/cw721/mynft/detail/:contractAddress',
+        <CW721DetailProvider>
+            <CW721NFTContractDetail />
+        </CW721DetailProvider>,
+        false
+    )
 ];
 
 const AppRoutes = () => {

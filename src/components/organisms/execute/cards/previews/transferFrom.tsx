@@ -11,8 +11,8 @@ import {
     getUTokenAmountFromToken
 } from '@/utils/balance';
 import { getUTokenStrFromTokenStr, shortenAddress } from '@/utils/common';
-import useExecuteStore from '../../hooks/useExecuteStore';
-import { useModalStore } from '@/hooks/useModal';
+// import useExecuteStore from '../../hooks/useExecuteStore';
+import useModalStore from '@/store/modalStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { isValidAddress } from '@/utils/address';
 import { TOOLTIP_ID } from '@/constants/tooltip';
@@ -22,9 +22,10 @@ import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { useSnackbar } from 'notistack';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -256,19 +257,21 @@ const FromToAddressLine = ({
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const TransferFromPreview = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const transferFromList = useExecuteStore((state) => state.transferFromList);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
-    const balanceByAddress = useExecuteStore((v) => v.balanceByAddress);
+    const transferFromList = context.transferFromList;
+    const tokenInfo = context.tokenInfo;
+    const allowanceByAddress = context.allowanceByAddress;
+    const balanceByAddress = context.balanceByAddress;
 
-    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
-    const clearTransferFrom = useExecuteStore((state) => state.clearTransferFrom);
+    const setIsFetched = context.setIsFetched;
+    const clearTransferFrom = context.clearTransferFrom;
 
     const { enqueueSnackbar } = useSnackbar();
 

@@ -5,15 +5,17 @@ import Icons from '@/components/atoms/icons';
 import SearchInput2 from '@/components/atoms/input/searchInput';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { compareStringNumbers } from '@/utils/balance';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { useCW20Detail } from '@/context/cw20DetailStore';
 
 const AllAccounts = () => {
-    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
-    const accounts = useTokenDetailStore((state) => state.tokenDetail?.allAccounts);
-    const symbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
+    const { tokenDetail } = useCW20Detail();
+    const decimals = tokenDetail?.decimals || '';
+    const accounts = tokenDetail?.allAccounts;
+    const symbol = tokenDetail?.tokenSymbol;
 
     const [keyword, setKeyword] = useState<string>('');
 

@@ -7,14 +7,15 @@ import LabelInput from '@/components/atoms/input/labelInput';
 import VariableInput from '@/components/atoms/input/variableInput';
 import MintNFTInfoList from '@/components/atoms/walletList/mintNFTInfoList';
 import { v4 } from 'uuid';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import useFormStore from '@/store/formStore';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { isValidAddress } from '@/utils/address';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -127,16 +128,19 @@ const Section = styled.div`
 const BASE_URI_FORM_ID = 'PRESET_BASE_URI_INPUT'; //! DO NOT CHANGE | USING ON PREVIEW FOR BUTTON STATE
 
 const Mint = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
-    const mintBaseURI = useCW721ExecuteStore((state) => state.mintBaseURI);
-    const mintStartTokenId = useCW721ExecuteStore((state) => state.mintStartTokenId);
-    const mintEndTokenId = useCW721ExecuteStore((state) => state.mintEndTokenId);
-    const mintList = useCW721ExecuteStore((state) => state.mintList);
-    const setMintRecipientAddress = useCW721ExecuteStore((state) => state.setMintRecipientAddress);
-    const setMintList = useCW721ExecuteStore((state) => state.setMintList);
-    const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
+    const address = useWalletStore((v) => v.address);
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW721Execute();
+    const contractAddress = context.contractAddress;
+    const mintRecipientAddress = context.mintRecipientAddress;
+    const mintBaseURI = context.mintBaseURI;
+    const mintStartTokenId = context.mintStartTokenId;
+    const mintEndTokenId = context.mintEndTokenId;
+    const mintList = context.mintList;
+    const setMintRecipientAddress = context.setMintRecipientAddress;
+    const setMintList = context.setMintList;
+    const clearMintForm = context.clearMintForm;
 
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
@@ -145,11 +149,11 @@ const Mint = () => {
 
     const { firmaSDK } = useFirmaSDKContext();
 
-    const userNFTIds = useCW721ExecuteStore((v) => v.myNftList);
-    const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
-    const notYetMintList = useCW721ExecuteStore((state) => state.notYetMintList);
-    const setAlreadyMintList = useCW721ExecuteStore((state) => state.setAlreadyMintList);
-    const setNotYetMintList = useCW721ExecuteStore((state) => state.setNotYetMintList);
+    const userNFTIds = context.myNftList;
+    const alreadyMintList = context.alreadyMintList;
+    const notYetMintList = context.notYetMintList;
+    const setAlreadyMintList = context.setAlreadyMintList;
+    const setNotYetMintList = context.setNotYetMintList;
 
     const disableMintIntoList = Boolean(mintStartTokenId && mintEndTokenId);
     const totalMintCount = useMemo(() => {

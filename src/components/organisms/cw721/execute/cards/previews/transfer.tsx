@@ -5,12 +5,11 @@ import styled from 'styled-components';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { isValidAddress } from '@/utils/address';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { formatWithCommas, subtractStringAmount } from '@/utils/balance';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
@@ -19,6 +18,8 @@ import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSnackbar } from 'notistack';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -232,17 +233,19 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const TransferPreview = () => {
-    const userAddress = useSelector((state: rootState) => state.wallet.address);
-    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
+    const { address: userAddress, fctBalance } = useWalletStore();
+    // const userAddress = useSelector((state: rootState) => state.wallet.address);
 
-    const approveInfoById = useCW721ExecuteStore((state) => state.approveInfoById);
-    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const userTransferList = useCW721ExecuteStore((state) => state.transfer);
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
-    const clearTransferForm = useCW721ExecuteStore((state) => state.clearTransferForm);
+    const context = useCW721Execute();
+    const owner = context.ownershipInfo?.owner;
+    const approveInfoById = context.approveInfoById;
+    const nftContractInfo = context.nftContractInfo;
+    // const fctBalance = context.fctBalance
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
+    const contractAddress = context.contractAddress;
+    const userTransferList = context.transfer;
+    const myNftList = context.myNftList;
+    const clearTransferForm = context.clearTransferForm;
 
     const { setMyNftList } = useCW721ExecuteAction();
 
@@ -303,7 +306,8 @@ const TransferPreview = () => {
     }, [userTransferList]);
 
     const enableButton = useMemo(() => {
-        if (userTransferList.some((v) => v.recipient.toLowerCase() === userAddress.toLowerCase())) return false;
+        //? @Dev disable this line for case [when transfer approved nft to connected wallet]
+        // if (userTransferList.some((v) => v.recipient.toLowerCase() === userAddress.toLowerCase())) return false;
 
         //! transfer list has empty value
         if (userTransferList.some((oneData) => oneData.recipient === '' || oneData.token_ids.length === 0)) return false;

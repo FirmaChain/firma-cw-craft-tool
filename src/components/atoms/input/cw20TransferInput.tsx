@@ -5,12 +5,12 @@ import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { getMaxCW20InitWalletAmount, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import WalletRemoveButton from '../buttons/walletRemoveButton';
+import useWalletStore from '@/store/walletStore';
 
 interface IProps {
     index: number;
@@ -44,7 +44,8 @@ const CW20TransferInput = ({
     inputId
 }: IProps) => {
     const id = inputId;
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const userAddress = useWalletStore((v) => v.address);
+    // useSelector((v: rootState) => v.wallet.address);
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);

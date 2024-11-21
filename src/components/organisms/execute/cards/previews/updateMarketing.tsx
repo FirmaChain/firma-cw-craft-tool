@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import { Fragment } from 'react/jsx-runtime';
 
 import { IC_LINK_FILL, IC_TALK, IC_WALLET_FILL } from '@/components/atoms/icons/pngIcons';
-import { useModalStore } from '@/hooks/useModal';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import useModalStore from '@/store/modalStore';
+
 import { CRAFT_CONFIGS } from '@/config';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
 import { TOOLTIP_ID } from '@/constants/tooltip';
@@ -15,6 +14,8 @@ import { isValidAddress } from '@/utils/address';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import { useSnackbar } from 'notistack';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -106,18 +107,20 @@ const ButtonWrap = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateMarketingPreview = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const contractInfo = useExecuteStore((state) => state.contractInfo);
-    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
-    const marketingDescription = useExecuteStore((state) => state.marketingDescription);
-    const marketingAddress = useExecuteStore((state) => state.marketingAddress);
-    const marketingProject = useExecuteStore((state) => state.marketingProject);
-    const clearMarketing = useExecuteStore((state) => state.clearMarketing);
+    const contractInfo = context.contractInfo;
+    const marketingInfo = context.marketingInfo;
+    const marketingDescription = context.marketingDescription;
+    const marketingAddress = context.marketingAddress;
+    const marketingProject = context.marketingProject;
+    const clearMarketing = context.clearMarketing;
     const { setMarketingInfo } = useExecuteActions();
 
     const { enqueueSnackbar } = useSnackbar();

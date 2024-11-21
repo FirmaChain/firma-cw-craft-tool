@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import TokenInfo from '../cards/tokenInfo';
 import Preview from '../cards/preview';
 
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
-import useExecuteStore from '../hooks/useExecuteStore';
+// import useExecuteStore from '../hooks/useExecuteStore';
 import { isValidAddress } from '@/utils/address';
 import useExecuteActions from '../action';
 import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -56,11 +56,13 @@ const LogoBackground = styled.div`
 `;
 
 const Contents = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const clearForm = useExecuteStore((state) => state.clearForm);
+    const { address } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+
+    const context = useCW20Execute();
+    const { contractAddress, contractExist, setContractExist, tokenInfo, clearForm } = context;
+
     const { checkContractExist, searchCW20Contract } = useExecuteActions();
-    const { contractExist, setContractExist, tokenInfo } = useExecuteStore();
 
     const checkExist = async () => {
         const exist = await checkContractExist(contractAddress);

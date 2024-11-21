@@ -18,7 +18,7 @@ import {
 } from './style';
 // import Icons from '../icons';
 import { useSnackbar } from 'notistack';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import NftMintInput from '../input/nftMintInput';
 import AddWalletButton from '../buttons/addWalletButton';

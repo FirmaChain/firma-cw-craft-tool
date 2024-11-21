@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
 import { IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
-import { useModalStore } from '@/hooks/useModal';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import useModalStore from '@/store/modalStore';
 import { isValidAddress } from '@/utils/address';
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
@@ -12,9 +12,10 @@ import TxModal from '@/components/organisms/modal/txModal';
 import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TextEllipsis from '@/components/atoms/ellipsis';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { useSnackbar } from 'notistack';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -131,14 +132,17 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const RevokeAllPreview = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
-    const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW721Execute();
+    const owner = context.ownershipInfo?.owner;
+    const contractAddress = context.contractAddress;
+    const nftContractInfo = context.nftContractInfo;
+    // const fctBalance = context.fctBalance
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
+    const revokeAddress = context.revokeAddress;
+    const clearRevokeForm = context.clearRevokeForm;
 
     const { enqueueSnackbar } = useSnackbar();
 

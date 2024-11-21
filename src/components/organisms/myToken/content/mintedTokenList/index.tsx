@@ -7,9 +7,10 @@ import { Container, CurrentPageNumber, PaginationButton, PaginationContainer, To
 import Icons from '@/components/atoms/icons';
 import RowsPerPageSelect from '@/components/atoms/select/rowsPerPageSelect';
 import NoToken from '../noToken';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { sleep } from '@/utils/common';
+import useGlobalStore from '@/store/globalStore';
 
 interface IContractItem {
     contractAddress: string;
@@ -23,8 +24,9 @@ interface IContractItem {
 const MyMintedTokenList = ({ handleShowCount }: { handleShowCount: (v: boolean) => void }) => {
     const navigate = useNavigate();
 
-    const { getCW20ContractInfo } = useMyToken();
+    // const { getCW20ContractInfo } = useMyToken();
     const { contracts, updateContractInfo, currentPage, setCurrentPage } = useCW20MyTokenContext();
+    const { handleGlobalLoading } = useGlobalStore();
 
     const [pageItems, setPageItems] = useState<IContractItem[]>([]);
     const [rowsPerPage, setRowsPerPage] = useState<number>(8);
@@ -41,7 +43,7 @@ const MyMintedTokenList = ({ handleShowCount }: { handleShowCount: (v: boolean) 
             const endIndex = startIndex + rowsPerPage;
             const currentContracts = contracts.slice(startIndex, endIndex);
 
-            GlobalActions.handleGlobalLoading(true);
+            handleGlobalLoading(true);
 
             const fetchedItems = currentContracts.map((v) => v.info);
 
@@ -85,7 +87,7 @@ const MyMintedTokenList = ({ handleShowCount }: { handleShowCount: (v: boolean) 
         } catch (error) {
             console.error('Error fetching contract items:', error);
         } finally {
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
             setFetching(false);
         }
     };

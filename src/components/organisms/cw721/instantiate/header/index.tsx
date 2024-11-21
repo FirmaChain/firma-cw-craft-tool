@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 import { CONTRACT_MODES, CONTRACT_MODE_TYPE } from '@/constants/common';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import ModeSwitch from '@/components/atoms/switch/modeSwitch';
+import useGlobalStore from '@/store/globalStore';
 
 export const HeaderBox = styled.div`
     width: 100%;
@@ -31,9 +32,11 @@ export const HeaderTitle = styled.div`
 `;
 
 const Header = () => {
+    const { handleMode } = useGlobalStore();
+
     const onChangeMenu = (value: string) => {
         if (hasMode(value)) {
-            GlobalActions.handleMode(value as CONTRACT_MODE_TYPE);
+            handleMode(value as CONTRACT_MODE_TYPE);
         } else {
             console.error(`Invalid value for mode: ${value}`);
         }

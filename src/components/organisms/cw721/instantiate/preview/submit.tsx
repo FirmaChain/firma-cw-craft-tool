@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
-import { rootState } from '@/redux/reducers';
 import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import InstantiateButton from '@/components/atoms/buttons/instantiateButton';
+import useWalletStore from '@/store/walletStore';
 
 export const SubmitWrapper = styled.div`
     width: 100%;
@@ -20,7 +19,8 @@ interface IProps {
 }
 
 const Submit = ({ onClickInstantiate, disableButton }: IProps) => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const { isInit } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
 
     const buttonText = useMemo(() => {
         return isInit ? 'Instantiate' : 'Connect Wallet';

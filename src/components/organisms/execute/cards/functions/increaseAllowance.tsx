@@ -10,15 +10,16 @@ import { getMaxMinterCap, isZeroStringValue } from '@/utils/balance';
 import useFormStore from '@/store/formStore';
 import { addNanoSeconds } from '@/utils/time';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
-import { useModalStore } from '@/hooks/useModal';
-import useExecuteStore from '../../hooks/useExecuteStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import useModalStore from '@/store/modalStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
+
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { isValidAddress } from '@/utils/address';
 import useExecuteActions from '../../action';
 import ExpirationTypeButton from '@/components/atoms/buttons/expirationTypeButton';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -51,14 +52,19 @@ enum ExpirationType {
 }
 
 const IncreaseAllowance = () => {
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const isFetched = useExecuteStore((state) => state.isFetched);
-    const allowance = useExecuteStore((state) => state.allowance);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const cw20Balance = useExecuteStore((state) => state.cw20Balance);
-    const setAllowance = useExecuteStore((state) => state.setAllowance);
-    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW20Execute();
+    const contractAddress = context.contractAddress;
+    const isFetched = context.isFetched;
+    const allowance = context.allowance;
+    const tokenInfo = context.tokenInfo;
+    const cw20Balance = context.cw20Balance;
+    const setAllowance = context.setAllowance;
+    const setIsFetched = context.setIsFetched;
+    const clearAllowance = context.clearAllowance;
+    const clearAllowanceInfo = context.clearAllowanceInfo;
 
     const modal = useModalStore();
 
@@ -96,8 +102,8 @@ const IncreaseAllowance = () => {
 
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearAllowance();
-            useExecuteStore.getState().clearAllowanceInfo();
+            clearAllowance();
+            clearAllowanceInfo();
         };
     }, []);
 

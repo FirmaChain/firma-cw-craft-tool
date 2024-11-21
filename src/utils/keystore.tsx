@@ -1,4 +1,3 @@
-import { WalletActions } from '@/redux/actions';
 import CryptoJS from 'crypto-js';
 
 const keySize = 256;

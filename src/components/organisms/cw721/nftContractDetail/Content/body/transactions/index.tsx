@@ -1,10 +1,11 @@
 import { CradHeaderWrapper, HeaderSubTitleTypo, HeaderTitleTypo, TransactionContent, TransactionsCard } from './style';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 
 const Transactions = () => {
-    const transactions = useNFTContractDetailStore((state) => state.transactions);
+    const { transactions } = useCW721Detail();
 
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },

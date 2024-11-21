@@ -6,11 +6,10 @@ import { IC_CLOCK, IC_COIN_STACK, IC_COIN_STACK2, IC_WALLET } from '@/components
 import { getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 
-import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
+// import useExecuteStore, { IAllowanceInfo } from '../../hooks/useExecuteStore';
 
-import { useModalStore } from '@/hooks/useModal';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import useModalStore from '@/store/modalStore';
+
 import { CRAFT_CONFIGS } from '@/config';
 
 import Divider from '@/components/atoms/divider';
@@ -26,6 +25,8 @@ import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSnackbar } from 'notistack';
 import IconTooltip from '@/components/atoms/tooltip';
+import { IAllowanceInfo, useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -238,18 +239,22 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo: IAllowanceInfo | null
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const IncreaseAllowancePreview = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const allowanceInfo = useExecuteStore((v) => v.allowanceInfo);
-    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
-    const allowance = useExecuteStore((v) => v.allowance);
-    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
-    const clearAllowance = useExecuteStore((v) => v.clearAllowance);
-    const clearAllowanceInfo = useExecuteStore((v) => v.clearAllowanceInfo);
+    const allowanceInfo = context.allowanceInfo;
+    const tokenInfo = context.tokenInfo;
+    const allowance = context.allowance;
+    const setIsFetched = context.setIsFetched;
+    const clearAllowance = context.clearAllowance;
+    const clearAllowanceInfo = context.clearAllowanceInfo;
+    const _setAllowanceInfo = context.setAllowanceInfo;
+
     const { setAllowanceInfo } = useExecuteActions();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -279,11 +284,11 @@ const IncreaseAllowancePreview = () => {
             if (addressExist) {
                 setAllowanceInfo(contractAddress, address, allowance?.address);
             } else {
-                useExecuteStore.getState().setAllowanceInfo(null);
+                _setAllowanceInfo(null);
             }
         } catch (error) {
             console.log(error);
-            useExecuteStore.getState().setAllowanceInfo(null);
+            _setAllowanceInfo(null);
         }
     }, [allowance?.address]);
 

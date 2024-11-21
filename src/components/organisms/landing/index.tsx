@@ -21,20 +21,24 @@ import {
     TitleBox,
     WalletConnectionIndicator
 } from './styles';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import LoadingModal from '../modal/loadingModal';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import CarouselSection from './mobile/carouselSection';
 import DesktopFooter from './footer';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const CW20Btn = () => {
     const modal = useModalStore();
     const closeModal = useModalStore().closeModal;
     const navigate = useNavigate();
 
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const { address } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const { handleCw } = useGlobalStore();
 
     const onClickExecute = () => {
         modal.openModal({
@@ -44,7 +48,7 @@ const CW20Btn = () => {
                     delay={1000}
                     callback={() => {
                         closeModal(id);
-                        GlobalActions.handleCw('CW20');
+                        handleCw('CW20');
                         navigate(address ? 'mytoken' : '/instantiate');
                     }}
                 />
@@ -72,7 +76,10 @@ const CW721Btn = () => {
     const closeModal = useModalStore().closeModal;
     const navigate = useNavigate();
 
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const { address } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const { handleCw } = useGlobalStore();
 
     const onClickExecute = () => {
         modal.openModal({
@@ -82,7 +89,7 @@ const CW721Btn = () => {
                     delay={1000}
                     callback={() => {
                         closeModal(id);
-                        GlobalActions.handleCw('CW721');
+                        handleCw('CW721');
                         navigate(address ? '/cw721/mynft' : '/cw721/instantiate');
                     }}
                 />
@@ -105,7 +112,8 @@ const CW721Btn = () => {
 };
 
 const Landing = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const { address } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
 
     return (
         <ScreenWarpper>

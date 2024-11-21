@@ -17,11 +17,12 @@ import TransferFromWalletInput from '../input/transferFromWalletInput';
 
 import { ITransferFrom } from '@/components/organisms/execute/cards/functions/transferFrom';
 import { addStringAmount, compareStringNumbers, getTokenAmountFromUToken } from '@/utils/balance';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import AddWalletButton from '../buttons/addWalletButton';
-import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+// import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import useFormStore from '@/store/formStore';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 interface IProps {
     contractAddress: string;
@@ -42,8 +43,10 @@ const TransferFromWalletList = ({ contractAddress, decimals, maxWalletCount = 20
     const { enqueueSnackbar } = useSnackbar();
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
-    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
-    const balanceByAddress = useExecuteStore((v) => v.balanceByAddress);
+
+    const context = useCW20Execute();
+    const allowanceByAddress = context.allowanceByAddress;
+    const balanceByAddress = context.balanceByAddress;
 
     const modal = useModalStore();
 

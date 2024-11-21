@@ -12,8 +12,8 @@ import {
 } from '@/utils/balance';
 import { IWallet } from '@/interfaces/wallet';
 import { isValidAddress, shortenAddress } from '@/utils/address';
-import { useModalStore } from '@/hooks/useModal';
-import useExecuteStore from '../../hooks/useExecuteStore';
+import useModalStore from '@/store/modalStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
@@ -25,9 +25,10 @@ import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import { useMeasure } from 'react-use';
 import TextEllipsis from '@/components/atoms/ellipsis';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { useSnackbar } from 'notistack';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -252,16 +253,19 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const MintPreview = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const mintingList = useExecuteStore((state) => state.mintingList);
-    const minterInfo = useExecuteStore((state) => state.minterInfo);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const isFetched = useExecuteStore((state) => state.setIsFetched);
-    const clearMinterList = useExecuteStore((state) => state.clearMinterList);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
+    const mintingList = context.mintingList;
+    const minterInfo = context.minterInfo;
+    const tokenInfo = context.tokenInfo;
+    const isFetched = context.setIsFetched;
+    const clearMinterList = context.clearMinterList;
+
     const { setMinterInfo, setTokenInfo } = useExecuteActions();
 
     const { enqueueSnackbar } = useSnackbar();

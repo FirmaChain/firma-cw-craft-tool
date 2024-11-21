@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
 import { useEffect, useMemo } from 'react';
 import TransferFromWalletList from '@/components/atoms/walletList/transferFromWalletList';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import { getUTokenStrFromTokenStr } from '@/utils/common';
 import useFormStore from '@/store/formStore';
 import { addStringAmountsArray } from '@/utils/balance';
 import commaNumber from 'comma-number';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -55,10 +56,12 @@ export interface ITransferFrom {
 }
 
 const TransferFrom = () => {
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const transferFromList = useExecuteStore((state) => state.transferFromList);
-    const setTransferFromList = useExecuteStore((state) => state.setTransferFromList);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    const context = useCW20Execute();
+    const contractAddress = context.contractAddress;
+    const transferFromList = context.transferFromList;
+    const setTransferFromList = context.setTransferFromList;
+    const tokenInfo = context.tokenInfo;
+    const clearTransferFrom = context.clearTransferFrom;
 
     const totalTransferAmount = useMemo(() => {
         const amounts = transferFromList.map((info) => info.toAmount);
@@ -69,7 +72,7 @@ const TransferFrom = () => {
     useEffect(() => {
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearTransferFrom();
+            clearTransferFrom();
         };
     }, []);
 

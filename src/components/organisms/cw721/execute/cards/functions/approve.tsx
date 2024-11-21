@@ -6,14 +6,15 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
-import { useModalStore } from '@/hooks/useModal';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import useModalStore from '@/store/modalStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { INT_NUMBERS, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
 import ExpirationTypeButton from '@/components/atoms/buttons/expirationTypeButton';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -31,19 +32,21 @@ enum ExpirationType {
 }
 
 const Approve = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
-    const approveTokenId = useCW721ExecuteStore((state) => state.approveTokenId);
-    const approveType = useCW721ExecuteStore((state) => state.approveType);
-    const approveValue = useCW721ExecuteStore((state) => state.approveValue);
+    const address = useWalletStore((v) => v.address);
 
-    const setApproveRecipientAddress = useCW721ExecuteStore((state) => state.setApproveRecipientAddress);
-    const setApproveTokenId = useCW721ExecuteStore((state) => state.setApproveTokenId);
-    const setApproveType = useCW721ExecuteStore((state) => state.setApproveType);
-    const setApproveValue = useCW721ExecuteStore((state) => state.setApproveValue);
-    const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
+    const context = useCW721Execute();
+    const contractAddress = context.contractAddress;
+    const approveRecipientAddress = context.approveRecipientAddress;
+    const approveTokenId = context.approveTokenId;
+    const approveType = context.approveType;
+    const approveValue = context.approveValue;
+
+    const setApproveRecipientAddress = context.setApproveRecipientAddress;
+    const setApproveTokenId = context.setApproveTokenId;
+    const setApproveType = context.setApproveType;
+    const setApproveValue = context.setApproveValue;
+    const clearApproveForm = context.clearApproveForm;
+    const myNftList = context.myNftList;
 
     const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
 

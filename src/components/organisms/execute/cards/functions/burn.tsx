@@ -4,13 +4,14 @@ import { styled } from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import { compareStringNumbers, getTokenAmountFromUToken, getUTokenAmountFromToken, isZeroStringValue } from '@/utils/balance';
 import LabelInput from '@/components/atoms/input/labelInput';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import useFormStore from '@/store/formStore';
 import useExecuteActions from '../../action';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { TOOLTIP_ID } from '@/constants/tooltip';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -34,12 +35,16 @@ const WalletBalanceTypo = styled.div`
 `;
 
 const Burn = () => {
-    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
-    const cw20Balance = useExecuteStore((v) => v.cw20Balance);
-    const burnAmount = useExecuteStore((v) => v.burnAmount);
-    const setBurnAmount = useExecuteStore((v) => v.setBurnAmount);
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const context = useCW20Execute();
+    const tokenInfo = context.tokenInfo;
+    const cw20Balance = context.cw20Balance;
+    const burnAmount = context.burnAmount;
+    const setBurnAmount = context.setBurnAmount;
+    const contractAddress = context.contractAddress;
+    const clearBurn = context.clearBurn;
+
+    const { address } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
     const { setCw20Balance } = useExecuteActions();
 
     const setFormError = useFormStore((state) => state.setFormError);
@@ -61,7 +66,7 @@ const Burn = () => {
         setCw20Balance(contractAddress, address);
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearBurn();
+            clearBurn();
         };
     }, []);
 

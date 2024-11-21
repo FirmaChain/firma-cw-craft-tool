@@ -5,20 +5,22 @@ import { IC_CLOCK, IC_COINS_HAND, IC_ID_CIRCLE, IC_WALLET } from '@/components/a
 import { format } from 'date-fns';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import commaNumber from 'comma-number';
-import { IAllowanceInfo } from '@/components/organisms/execute/hooks/useExecuteStore';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import { IAllowanceInfo } from '@/components/organisms/execute/hooks/useExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { isValidAddress } from '@/utils/address';
 import { CRAFT_CONFIGS } from '@/config';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { addNanoSeconds } from '@/utils/time';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import { shortenAddress } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import TextEllipsis from '@/components/atoms/ellipsis';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { useSnackbar } from 'notistack';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import { IAllowanceInfo } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -151,18 +153,21 @@ const ExpirationBox = ({ allowanceInfo }: { allowanceInfo?: IAllowanceInfo | nul
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const ApprovePreview = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
-    const approveTokenId = useCW721ExecuteStore((state) => state.approveTokenId);
-    const approveType = useCW721ExecuteStore((state) => state.approveType);
-    const approveValue = useCW721ExecuteStore((state) => state.approveValue);
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
-    const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW721Execute();
+    const owner = context.ownershipInfo?.owner;
+    const contractAddress = context.contractAddress;
+    const nftContractInfo = context.nftContractInfo;
+    // const fctBalance = context.fctBalance
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
+    const approveRecipientAddress = context.approveRecipientAddress;
+    const approveTokenId = context.approveTokenId;
+    const approveType = context.approveType;
+    const approveValue = context.approveValue;
+    const myNftList = context.myNftList;
+    const clearApproveForm = context.clearApproveForm;
 
     const { enqueueSnackbar } = useSnackbar();
 

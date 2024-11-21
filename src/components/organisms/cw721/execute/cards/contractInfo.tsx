@@ -1,11 +1,10 @@
 import { Fragment, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+
 import styled from 'styled-components';
 
-import { rootState } from '@/redux/reducers';
 import ExecuteSelect from '@/components/atoms/select/executeSelect';
 import Divider from '@/components/atoms/divider';
-import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 
 import Mint from './functions/mint';
 import Burn from './functions/burn';
@@ -22,6 +21,8 @@ import { CRAFT_CONFIGS } from '@/config';
 import commaNumber from 'comma-number';
 import PinButton from '@/components/atoms/buttons/pinButton';
 import usePinContractStore from '@/store/pinContractStore';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
@@ -189,16 +190,19 @@ const basicMenuItems: IMenuItem[] = [
 ];
 
 const CW721ContractInfo = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
-    const selectMenu = useCW721ExecuteStore((state) => state.selectMenu);
-    const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
-    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
-    const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
-    const minter = useCW721ExecuteStore((state) => state.minter);
-    const setSelectMenu = useCW721ExecuteStore((state) => state.setSelectMenu);
-    const contractExist = useCW721ExecuteStore((v) => v.contractExist);
+    const address = useWalletStore((v) => v.address);
+
+    const context = useCW721Execute();
+
+    const totalSupply = context.totalNfts;
+    const selectMenu = context.selectMenu;
+    const contractInfo = context.contractInfo;
+    const nftContractInfo = context.nftContractInfo;
+    const ownershipInfo = context.ownershipInfo;
+    const blockHeight = context.blockHeight;
+    const minter = context.minter;
+    const setSelectMenu = context.setSelectMenu;
+    const contractExist = context.contractExist;
 
     const { pinList, addPin, removePin } = usePinContractStore();
     const userPinList = pinList[address.toLowerCase()]?.filter((v) => v.type === 'cw721') || [];

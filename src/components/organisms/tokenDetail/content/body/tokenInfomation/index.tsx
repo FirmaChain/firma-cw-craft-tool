@@ -13,25 +13,28 @@ import {
     TokenCardHeaderTypo,
     TokenCardSpecific
 } from './style';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 import { useMemo } from 'react';
 import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
 import { getTokenAmountFromUToken } from '@/utils/balance';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Detail } from '@/context/cw20DetailStore';
 
 const TokenInformation = () => {
-    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
-    const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
+    const { tokenDetail } = useCW20Detail();
 
-    const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName) || '';
-    const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol) || '';
-    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
-    const label = useTokenDetailStore((state) => state.tokenDetail?.label);
-    const addressBalance = useTokenDetailStore((state) => state.tokenDetail?.addressBalance) || '';
-    const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply) || '';
-    const minterAddress = useTokenDetailStore((state) => state.tokenDetail?.minterAddress) || '';
-    const minterCap = useTokenDetailStore((state) => state.tokenDetail?.minterCap);
+    const contractAddress = tokenDetail ? tokenDetail?.contractAddress : '';
+    const codeId = tokenDetail ? tokenDetail?.codeId : '';
+
+    const tokenName = tokenDetail ? tokenDetail?.tokenName : '';
+    const tokenSymbol = tokenDetail ? tokenDetail?.tokenSymbol : '';
+    const decimals = tokenDetail ? tokenDetail?.decimals : '';
+    const label = tokenDetail ? tokenDetail?.label : '';
+    const addressBalance = tokenDetail ? tokenDetail?.addressBalance : '';
+    const totalSupply = tokenDetail ? tokenDetail?.totalSupply : '';
+    const minterAddress = tokenDetail ? tokenDetail?.minterAddress : '';
+    const minterCap = tokenDetail ? tokenDetail?.minterCap : '';
 
     const isBasic = useMemo(() => {
         return codeId === CRAFT_CONFIGS.CW20.BASIC_CODE_ID;

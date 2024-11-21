@@ -14,11 +14,10 @@ import {
     TableExpandButton
 } from './style';
 import { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { CRAFT_CONFIGS } from '@/config';
 import Skeleton from '@/components/atoms/skeleton';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import { IC_EXPAND } from '@/components/atoms/icons/pngIcons';
 import NFTsTable from '@/components/organisms/cw721/common/nftsTable';
@@ -26,10 +25,13 @@ import { useCW721NFTListContext } from '@/context/cw721NFTListContext';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+import useWalletStore from '@/store/walletStore';
 
 const ContractInformation = () => {
-    const { address } = useSelector((state: rootState) => state.wallet);
-    const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
+    const { address } = useWalletStore();
+    // const { address } = useSelector((state: rootState) => state.wallet);
+    const { contractDetail, nftsInfo, ownedNftsInfo } = useCW721Detail();
     const { handleCW721NFTIdList, handleCW721OwnedNFTIdList } = useNFTContractDetail();
     const { nfts, addNFTs, updateNFTs, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
     const {

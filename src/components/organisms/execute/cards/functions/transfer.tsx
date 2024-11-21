@@ -9,15 +9,16 @@ import {
     getTokenAmountFromUToken,
     getUTokenAmountFromToken
 } from '@/utils/balance';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import useFormStore from '@/store/formStore';
 import Cw20TransferInputList from '@/components/atoms/walletList/cw20TransferInputList';
 import Icons from '@/components/atoms/icons';
 import Divider from '@/components/atoms/divider';
 import useExecuteActions from '../../action';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -73,14 +74,19 @@ const ErrorMessageBox = styled.div`
 `;
 
 const Transfer = () => {
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const isFetched = useExecuteStore((state) => state.isFetched);
-    const cw20Balance = useExecuteStore((state) => state.cw20Balance);
-    const transferList = useExecuteStore((state) => state.transferList);
-    const setTransferList = useExecuteStore((state) => state.setTransferList);
-    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW20Execute();
+    const contractAddress = context.contractAddress;
+    const tokenInfo = context.tokenInfo;
+    const isFetched = context.isFetched;
+    const cw20Balance = context.cw20Balance;
+    const transferList = context.transferList;
+    const setTransferList = context.setTransferList;
+    const setIsFetched = context.setIsFetched;
+    const clearTransfer = context.clearTransfer;
+
     const { setCw20Balance } = useExecuteActions();
 
     const totalTransferAmount = useMemo(() => {
@@ -105,7 +111,7 @@ const Transfer = () => {
         setCw20Balance(contractAddress, userAddress);
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearTransfer();
+            clearTransfer();
         };
     }, []);
 

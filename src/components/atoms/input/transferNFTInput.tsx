@@ -5,8 +5,8 @@ import LabelInput from './labelInput';
 import useFormStore from '@/store/formStore';
 import { IExecuteTransfer } from '@/interfaces/cw721';
 import { NUMBERS_WITH_COMMA, WALLET_ADDRESS_REGEX } from '@/constants/regex';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
+import useWalletStore from '@/store/walletStore';
 
 interface IProps {
     index: number;
@@ -47,7 +47,8 @@ const TransferNFTInput = ({
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const address = useWalletStore((v) => v.address);
+    // useSelector((v: rootState) => v.wallet.address);
     const addressError = useFormStore((state) => state.formError[`${id}_${leftTitle}`]) || {};
     const idError = useFormStore((state) => state.formError[`${id}_${rightTitle}`]) || {};
 
@@ -55,11 +56,12 @@ const TransferNFTInput = ({
     const hasIdErr = Object.keys(idError).length > 0;
 
     const handleAddress = (value: string) => {
-        if (value.toLowerCase() === address.toLowerCase()) {
-            setFormError({ id: `${id}_${leftTitle}`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
-        } else {
-            clearFormError({ id: `${id}_${leftTitle}`, type: 'CANNOT_USE_SELF_ADDRESS' });
-        }
+        //? @Dev disable this line for case [when transfer approved nft to connected wallet]
+        // if (value.toLowerCase() === address.toLowerCase()) {
+        //     setFormError({ id: `${id}_${leftTitle}`, type: 'CANNOT_USE_SELF_ADDRESS', message: 'Self address is not allowed.' });
+        // } else {
+        //     clearFormError({ id: `${id}_${leftTitle}`, type: 'CANNOT_USE_SELF_ADDRESS' });
+        // }
 
         onChangeLeft(value);
     };

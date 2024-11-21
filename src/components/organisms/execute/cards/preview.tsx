@@ -11,9 +11,10 @@ import TransferFromPreview from './previews/transferFrom';
 import UpdateMinter from './previews/updateMinter';
 import DecreaseAllowancePreview from './previews/decreaseAllowance';
 import UpdateLogo from './previews/updateLogo';
-import useExecuteStore from '../hooks/useExecuteStore';
+// import useExecuteStore from '../hooks/useExecuteStore';
 import { useScrollContext } from '@/context/scrollContext';
 import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 const Container = styled.div<{ $isSelectMenu: boolean; $scrollY: number }>`
     width: 100%;
@@ -67,7 +68,7 @@ const ScrollButtonBox = styled.div`
 
 const Preview = () => {
     const { scroll } = useScrollContext();
-    const selectMenu = useExecuteStore((v) => v.selectMenu);
+    const { selectMenu } = useCW20Execute();
 
     return (
         <>

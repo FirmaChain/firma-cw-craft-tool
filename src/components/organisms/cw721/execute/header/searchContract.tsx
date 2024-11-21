@@ -3,10 +3,11 @@ import { enqueueSnackbar } from 'notistack';
 import Icons from '@/components/atoms/icons';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 import { useNavigate } from 'react-router-dom';
 import { isValidAddress } from '@/utils/address';
 import { BYPASS_ALL, NORMAL_TEXT } from '@/constants/regex';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
 
 const EndAdornment = ({
     keyword,
@@ -35,11 +36,12 @@ interface ISearchContractProps {
 const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const navigate = useNavigate();
 
-    const contractInfo = useCW721ExecuteStore((state) => state.contractInfo);
-    const storeContractAddress = useCW721ExecuteStore((v) => v.contractAddress);
-    const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
-    const clearInfo = useCW721ExecuteStore((state) => state.clearInfo);
-    const clearForm = useCW721ExecuteStore((state) => state.clearForm);
+    const context = useCW721Execute();
+    const contractInfo = context.contractInfo;
+    const storeContractAddress = context.contractAddress;
+    const setContractAddress = context.setContractAddress;
+    const clearInfo = context.clearInfo;
+    const clearForm = context.clearForm;
 
     const previousKeywordRef = useRef<string | null>(null);
     const [keyword, setKeyword] = useState<string>(contractAddress);

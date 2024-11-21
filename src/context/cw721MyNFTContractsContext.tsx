@@ -1,7 +1,8 @@
 import { ContractInfoFromDB } from '@/interfaces/common';
-import { rootState } from '@/redux/reducers';
+
+import useWalletStore from '@/store/walletStore';
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+
 import { useLocation } from 'react-router-dom';
 
 export interface IContractInfo {
@@ -48,7 +49,8 @@ export const useCW721NFTContractsContext = () => {
 
 export const CW721NFTContractsProvider = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
-    const { address } = useSelector((state: rootState) => state.wallet);
+    const { address } = useWalletStore();
+    // const { address } = useSelector((state: rootState) => state.wallet);
 
     const [contracts, setContracts] = useState<IContractState[] | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);

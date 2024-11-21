@@ -1,23 +1,21 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+
 import { Header, TokenDetailContent } from '@/components/organisms/tokenDetail';
 import { Container } from '@/styles/instantiate';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
-import { rootState } from '@/redux/reducers';
+
 import useTokenDetail from '@/hooks/useTokenDetail';
-// import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useApolloClientContext } from '@/context/apolloClientContext';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { useCW20Detail } from '@/context/cw20DetailStore';
+import useWalletStore from '@/store/walletStore';
 
 const Cw20TokenDetail = () => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const setTokenDetail = useTokenDetailStore((state) => state.setTokenDetail);
-    const setTransactions = useTokenDetailStore((state) => state.setTransactions);
+    const { setTokenDetail, setTransactions, clearForm } = useCW20Detail();
+    const { address, isInit } = useWalletStore();
 
     const contractAddress = window.location.pathname.replace('/mytoken/detail/', '');
 
@@ -26,7 +24,6 @@ const Cw20TokenDetail = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const { client } = useApolloClientContext();
-    // const { client } = useApollo();
 
     const getRequiredInfo = async () => {
         if (isInit && client) {
@@ -74,7 +71,7 @@ const Cw20TokenDetail = () => {
             navigate('/mytoken');
             enqueueSnackbar({ message: 'Connect your wallet first!', variant: 'error' });
         }
-        return () => useTokenDetailStore.getState().clearForm();
+        return () => clearForm();
     }, []);
 
     return (

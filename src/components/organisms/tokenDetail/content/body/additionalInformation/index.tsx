@@ -17,7 +17,7 @@ import JsonViewer from '@/components/atoms/viewer/jsonViewer';
 import { CRAFT_CONFIGS } from '@/config';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import { IC_ROUND_ARROW_UP } from '@/components/atoms/icons/pngIcons';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Skeleton from '@/components/atoms/skeleton';
 import { openLink } from '@/utils/common';
 import CopyMetadata from '@/components/atoms/buttons/copyMetadata';
@@ -25,15 +25,18 @@ import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { useMeasure } from 'react-use';
 import { SpecificDefaultTypo } from '@/components/organisms/cw721/nftContractDetail/Content/body/ownerInformation/style';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Detail } from '@/context/cw20DetailStore';
 
 const AdditionalInformation = () => {
-    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress) || '';
-    const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
-    const marketingLogo = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl) || '';
-    const marketingDescription = useTokenDetailStore((state) => state.tokenDetail?.marketingDescription);
-    const marketingAddress = useTokenDetailStore((state) => state.tokenDetail?.marketing);
-    const marketingProject = useTokenDetailStore((state) => state.tokenDetail?.marketingProject);
-    const metadata = useTokenDetailStore((state) => state.tokenDetail?.metadata);
+    const { tokenDetail } = useCW20Detail();
+
+    const contractAddress = tokenDetail?.contractAddress || '';
+    const codeId = tokenDetail?.codeId;
+    const marketingLogo = tokenDetail?.marketingLogoUrl || '';
+    const marketingDescription = tokenDetail?.marketingDescription;
+    const marketingAddress = tokenDetail?.marketing;
+    const marketingProject = tokenDetail?.marketingProject;
+    const metadata = tokenDetail?.metadata;
 
     const [ref, { width }] = useMeasure();
 

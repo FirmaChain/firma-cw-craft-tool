@@ -2,7 +2,8 @@ import StyledTable, { IColumn } from '@/components/atoms/table';
 import { AllowanceContentWrapper, AllowanceWrapper, ItemLabel, SearchAllowancesTitleTypo, SearchAllowancesWrapper } from './style';
 import Cell from '@/components/atoms/table/cells';
 import { parseExpires } from '@/utils/common';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+import { useCW20Detail } from '@/context/cw20DetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 
 interface IProps {
     searchAllowances: any[];
@@ -11,8 +12,10 @@ interface IProps {
 }
 
 const Allowances = ({ searchAllowances, searchReceivers, isLoading }: IProps) => {
-    const decimals = useTokenDetailStore((state) => state.tokenDetail?.decimals);
-    const symbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
+    const { tokenDetail } = useCW20Detail();
+
+    const decimals = tokenDetail ? tokenDetail?.decimals : '';
+    const symbol = tokenDetail ? tokenDetail?.tokenSymbol : '';
 
     const toOthersTableColumns: IColumn[] = [
         {

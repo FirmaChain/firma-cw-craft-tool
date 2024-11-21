@@ -11,13 +11,12 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { shortenAddress } from '@/utils/common';
 import { isValidAddress } from '@/utils/address';
-import { useModalStore } from '@/hooks/useModal';
-import useExecuteStore from '../../hooks/useExecuteStore';
+import useModalStore from '@/store/modalStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { CRAFT_CONFIGS } from '@/config';
@@ -26,6 +25,8 @@ import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSnackbar } from 'notistack';
 import IconTooltip from '@/components/atoms/tooltip';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -257,16 +258,18 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const TransferPreview = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const cw20Balance = useExecuteStore((state) => state.cw20Balance);
-    const transferList = useExecuteStore((state) => state.transferList);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
-    const clearTransfer = useExecuteStore((state) => state.clearTransfer);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
+    const cw20Balance = context.cw20Balance;
+    const transferList = context.transferList;
+    const tokenInfo = context.tokenInfo;
+    const setIsFetched = context.setIsFetched;
+    const clearTransfer = context.clearTransfer;
 
     const { setCw20Balance } = useExecuteActions();
     const { enqueueSnackbar } = useSnackbar();

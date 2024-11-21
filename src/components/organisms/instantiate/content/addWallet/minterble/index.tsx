@@ -1,39 +1,44 @@
 import { Fragment, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { FirmaUtil } from '@firmachain/firma-js';
+
+// import { FirmaUtil } from '@firmachain/firma-js';
 
 import SimpleSwitch from '@/components/atoms/switch/simpleSwitch';
-import { GlobalActions } from '@/redux/actions';
-import { rootState } from '@/redux/reducers';
+// import { GlobalActions } from '@/redux/actions';
 
 import { MinterbleInputBox, MinterbleOption, MinterbleText, MinterbleWrapper } from './style';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
-import useInstantiateStore from '../../../instaniateStore';
+// import useInstantiateStore from '../../../instaniateStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { getMaxMinterCap, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
+import { useCW20Instantiate } from '@/context/cw20InstantiateContext';
+import useGlobalStore from '@/store/globalStore';
 
 interface IProps {
     decimals: string;
 }
 
 const Minterble = ({ decimals }: IProps) => {
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    const { contractMode } = useGlobalStore();
+    // useSelector((state: rootState) => state.global.contractMode);
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
 
-    const minterble = useInstantiateStore((v) => v.minterble);
-    const minterCap = useInstantiateStore((v) => v.minterCap);
-    const minterAddress = useInstantiateStore((v) => v.minterAddress);
+    const context = useCW20Instantiate();
+
+    const minterble = context.minterble;
+    const minterCap = context.minterCap;
+    const minterAddress = context.minterAddress;
+    const setMinterble = context.setMinterble;
+    const setMinterAddress = context.setMinterAddress;
+    const setMinterCap = context.setMinterCap;
 
     const CAP_TOOLTIP_TEXT = `Minter Cap = Total Supply +\nAdditional Mintable Token Amount`;
     const ADDRESS_TOOLTIP_TEXT = `This is the wallet address with the authority\nto mint additional tokens.`;
 
     const handleMinterble = (value: boolean) => {
-        useInstantiateStore.getState().setMinterble(value);
-
-        GlobalActions.handleCw20Minterble(value);
+        setMinterble(value);
 
         if (!value) {
             clearFormError({ id: 'minterAddress' });
@@ -42,7 +47,7 @@ const Minterble = ({ decimals }: IProps) => {
     };
 
     const handleMinterAddress = (value: string) => {
-        useInstantiateStore.getState().setMinterAddress(value);
+        setMinterAddress(value);
 
         if (isValidAddress(value) || value === '') clearFormError({ id: 'minterAddress', type: 'ADDRESS_VALIDATION' });
         else {
@@ -58,7 +63,7 @@ const Minterble = ({ decimals }: IProps) => {
         if (!isZeroStringValue(value)) clearFormError({ id: 'minterCap', type: 'MINTER_CAP' });
         else setFormError({ id: 'minterCap', type: 'MINTER_CAP', message: 'Please enter a value other than 0.' });
 
-        useInstantiateStore.getState().setMinterCap(value);
+        setMinterCap(value);
     };
 
     useEffect(() => {

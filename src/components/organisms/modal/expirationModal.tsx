@@ -1,6 +1,6 @@
 import { IC_CLOSE } from '@/components/atoms/icons/pngIcons';
 import { ModalBase } from './style';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { styled } from 'styled-components';
 import CustomDatePicker from '@/components/atoms/datePicker/datePicker';
 import IconButton from '@/components/atoms/buttons/iconButton';

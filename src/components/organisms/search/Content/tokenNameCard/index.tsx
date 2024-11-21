@@ -1,8 +1,7 @@
 import { IC_VALID_SHIELD } from '@/components/atoms/icons/pngIcons';
 import Divider from '@/components/atoms/divider';
-import useSearchStore from '../../searchStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import useSearchStore from '../../searchStore';
+
 import {
     Container,
     LabelAdvancedTypo,
@@ -23,19 +22,25 @@ import Skeleton from '@/components/atoms/skeleton';
 import PinButton from '@/components/atoms/buttons/pinButton';
 import usePinContractStore from '@/store/pinContractStore';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Search } from '@/context/cw20SearchContext';
+import useWalletStore from '@/store/walletStore';
 
 const TokenNameCard = () => {
-    const logoUrl = useSearchStore((state) => state.marketingInfo?.logo?.url);
-    const userAddress = useSelector((state: rootState) => state.wallet.address);
-    const symbol = useSearchStore((state) => state.tokenInfo?.symbol);
-    const tokenName = useSearchStore((state) => state.tokenInfo?.name);
-    const ownerAddress = useSearchStore((state) => state.contractInfo?.contract_info.admin);
-    const totalSupply = useSearchStore((state) => state.tokenInfo?.total_supply) || '';
-    const codeId = useSearchStore((state) => state.contractInfo?.contract_info.code_id);
-    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || 0;
-    const contractInfo = useSearchStore((state) => state.contractInfo);
-    const tokenInfo = useSearchStore((state) => state.tokenInfo);
-    const marketingInfo = useSearchStore((state) => state.marketingInfo);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((state: rootState) => state.wallet.address);
+
+    const { marketingInfo, tokenInfo, contractInfo } = useCW20Search();
+    const logoUrl = marketingInfo?.logo?.url;
+
+    const symbol = tokenInfo?.symbol;
+    const tokenName = tokenInfo?.name;
+    const ownerAddress = contractInfo?.contract_info.admin;
+    const totalSupply = tokenInfo?.total_supply || '';
+    const codeId = contractInfo?.contract_info.code_id;
+    const decimals = tokenInfo?.decimals || 0;
+    // const contractInfo = useSearchStore((state) => state.contractInfo);
+    // const tokenInfo = useSearchStore((state) => state.tokenInfo);
+    // const marketingInfo = useSearchStore((state) => state.marketingInfo);
 
     const isOwner = userAddress === ownerAddress;
 

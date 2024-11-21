@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import MintPreview from './previews/mint';
 import DefaultView from './previews/default';
-import useExecuteStore from '../hooks/useCW721ExecuteStore';
+// import useExecuteStore from '../hooks/useCW721ExecuteStore';
 import BurnPreview from './previews/burn';
 import TransferPreview from './previews/transfer';
 import ApprovePreview from './previews/approve';
@@ -15,6 +15,7 @@ import RevokeAllPreview from './previews/revokeAll';
 import UpdateOwnershipTransferPreview from './previews/updateOwnershipTransfer';
 import { useScrollContext } from '@/context/scrollContext';
 import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrolltoTopButton';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
 
 const Container = styled.div<{ $isSelectMenu: boolean; $scrollY: number }>`
     width: 100%;
@@ -68,7 +69,7 @@ const ScrollButtonBox = styled.div`
 
 const Preview = () => {
     const { scroll } = useScrollContext();
-    const selectMenu = useExecuteStore((v) => v.selectMenu);
+    const { selectMenu } = useCW721Execute();
 
     return (
         <>

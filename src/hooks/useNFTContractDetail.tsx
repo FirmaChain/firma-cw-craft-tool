@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { useSelector } from 'react-redux';
+//
 import { Cw721Approval, Cw721Expires, FirmaSDK } from '@firmachain/firma-js';
 
-import { rootState } from '../redux/reducers';
-import { CRAFT_CONFIGS } from '../config';
+// import { rootState } from '../redux/reducers';
+// import { CRAFT_CONFIGS } from '../config';
 import { ITransaction } from '@/interfaces/cw20';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender, sleep } from '@/utils/common';
 // import useApollo from './useApollo';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { useApolloClientContext } from '@/context/apolloClientContext';
+import { useCW721Detail } from '@/context/cw721DetailStore';
 
 export interface IAllowances {
     Spender: string;
@@ -66,7 +67,7 @@ const useNFTContractDetail = () => {
     const { client } = useApolloClientContext();
     // const { client } = useApollo();
 
-    const { nftsInfo, setNftsInfo, ownedNftsInfo, setOwnedNftsInfo } = useNFTContractDetailStore();
+    const { nftsInfo, setNftsInfo, ownedNftsInfo, setOwnedNftsInfo } = useCW721Detail();
 
     const checkExistContract = async (contractAddress: string) => {
         try {
@@ -265,8 +266,6 @@ const useNFTContractDetail = () => {
     );
 
     const getAllTransactinos = async (contractAddress: string): Promise<ITransaction[]> => {
-        console.log(client);
-
         const { messagesByAddress } = await getTransactionsByAddress(client, contractAddress, 15);
 
         const result = messagesByAddress.map((message) => {

@@ -7,14 +7,15 @@ import { ITransferFrom } from '@/components/organisms/execute/cards/functions/tr
 import { getTokenAmountFromUToken, isZeroStringValue } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+// import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import commaNumber from 'comma-number';
 import WalletRemoveButton from '../buttons/walletRemoveButton';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -42,8 +43,15 @@ interface IProps {
 
 const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveClick, isValid, decimals, isLast, inputId }: IProps) => {
     const id = inputId;
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
+    const userAddress = useWalletStore((v) => v.address);
+    // useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW20Execute();
+    const contractAddress = context.contractAddress;
+    const balance = context.balanceByAddress[transferFromInfo.fromAddress.toLowerCase()] || '';
+    const allowance = context.allowanceByAddress[transferFromInfo.fromAddress.toLowerCase()] || '';
+    const setBalanceByAddress = context.setBalanceByAddress;
+    const setAllowanceByAddress = context.setAllowanceByAddress;
 
     const { getCw20Balance, getCw20AllowanceBalance } = useExecuteHook();
 
@@ -51,9 +59,6 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
     const fromBalanceId = `${id}_FROM_BALANCE`;
     const toAddressId = `${id}_TO_ADDRESS`;
     const transferAmountId = `${id}_TO_AMOUNT`;
-
-    const balance = useExecuteStore((v) => v.balanceByAddress[transferFromInfo.fromAddress.toLowerCase()]) || '';
-    const allowance = useExecuteStore((v) => v.allowanceByAddress[transferFromInfo.fromAddress.toLowerCase()]) || '';
 
     const disableRemoveBtn = isLast;
 
@@ -91,9 +96,7 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
     const getOwnerBalance = async (ownerAddress: string) => {
         const { success, balance } = await getCw20Balance(contractAddress, ownerAddress);
 
-        useExecuteStore
-            .getState()
-            .setBalanceByAddress({ address: ownerAddress.toLowerCase(), amount: getTokenAmountFromUToken(balance, decimals) });
+        setBalanceByAddress({ address: ownerAddress.toLowerCase(), amount: getTokenAmountFromUToken(balance, decimals) });
     };
 
     const getUserAllowance = async (ownerAddress: string) => {
@@ -105,7 +108,7 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
 
         if (success) {
             if (expires['never']) {
-                useExecuteStore.getState().setAllowanceByAddress({
+                setAllowanceByAddress({
                     address: ownerAddress.toLowerCase(),
                     amount: allowance
                 });
@@ -114,7 +117,7 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
 
             if (expires['at_height']) {
                 if (BigInt(expires['at_height']) > BigInt(blockHeight)) {
-                    useExecuteStore.getState().setAllowanceByAddress({
+                    setAllowanceByAddress({
                         address: ownerAddress.toLowerCase(),
                         amount: allowance
                     });
@@ -127,7 +130,7 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
                 const expirationTimestamp = BigInt(expires['at_time']) / BigInt(1_000_000);
 
                 if (expirationTimestamp > BigInt(Number(new Date()))) {
-                    useExecuteStore.getState().setAllowanceByAddress({
+                    setAllowanceByAddress({
                         address: ownerAddress.toLowerCase(),
                         amount: allowance //getTokenAmountFromUToken(allowance, decimals)
                     });
@@ -136,7 +139,7 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
             }
         }
 
-        useExecuteStore.getState().setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: '' });
+        setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: '' });
     };
 
     const handleOnChange = (id: string, value: string) => {

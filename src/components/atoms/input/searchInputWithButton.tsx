@@ -2,8 +2,7 @@ import { DEFAULT_INPUT_REGEX } from '@/constants/regex';
 import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { ContractInfoFromDB } from '@/interfaces/common';
 import { useDebounce } from 'react-use';
 import FirmaLoading from '../globalLoader/firmaLoad';
@@ -16,6 +15,8 @@ import IconButton from '../buttons/iconButton';
 import Divider from '../divider';
 import { useSnackbar } from 'notistack';
 import ContractApi from '@/api/contractApi';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const StyledInput = styled.div<{
     $isFocus?: boolean;
@@ -287,7 +288,8 @@ const TokenCard = ({
     // isPinned: boolean;
 }) => {
     const { addPin, removePin } = usePinContractStore();
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const address = useWalletStore((v) => v.address);
+    // useSelector((v: rootState) => v.wallet.address);
     const fullList = usePinContractStore((v) => v.pinList);
     const pinnedList = fullList[address.toLowerCase()]?.filter((one) => one.type === tokenInfo.type) || [];
 
@@ -457,9 +459,11 @@ const AutoCompleteBox = ({
     visible: boolean;
     setVisible: Dispatch<SetStateAction<boolean>>;
 }) => {
-    const cwMode = useSelector((v: rootState) => v.global.cwMode);
+    const cwMode = useGlobalStore((v) => v.cwMode);
+    // useSelector((v: rootState) => v.global.cwMode);
     const isContractAddress = keyword.length > 44 && isValidAddress(keyword);
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const address = useWalletStore((v) => v.address);
+    // useSelector((v: rootState) => v.wallet.address);
 
     const [searchValue, setSearchValue] = useState(keyword);
     const [filter, setFilter] = useState<LocalFilterType>(usePinList ? 'pinned' : 'name');

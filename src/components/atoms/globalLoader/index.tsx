@@ -1,7 +1,6 @@
-import { rootState } from '@/redux/reducers';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import FirmaLoading from './firmaLoad';
+import useGlobalStore from '@/store/globalStore';
 
 const Wrapper = styled.div`
     position: fixed;
@@ -15,7 +14,8 @@ const Wrapper = styled.div`
 `;
 
 const GlobalLoader = () => {
-    const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
+    const globalLoading = useGlobalStore((v) => v.globalLoading);
+    // useSelector((v: rootState) => v.global.globalLoading);
 
     return globalLoading ? (
         <Wrapper>

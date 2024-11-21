@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+
 import styled from 'styled-components';
 
-import { rootState } from '@/redux/reducers';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { CRAFT_CONFIGS } from '@/config';
 
 import { IC_COIN_STACK, IC_COIN_STACK2 } from '@/components/atoms/icons/pngIcons';
@@ -14,7 +13,7 @@ import {
     getUTokenAmountFromToken,
     subtractStringAmount
 } from '@/utils/balance';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
@@ -22,6 +21,9 @@ import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSnackbar } from 'notistack';
+import IconTooltip from '@/components/atoms/tooltip';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -142,16 +144,19 @@ const ButtonWrap = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const BurnPreview = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const cw20Balance = useExecuteStore((v) => v.cw20Balance);
-    const burnAmount = useExecuteStore((v) => v.burnAmount) || '0';
-    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
-    const clearBurn = useExecuteStore((v) => v.clearBurn);
+    const cw20Balance = context.cw20Balance;
+    const burnAmount = context.burnAmount || '0';
+    const tokenInfo = context.tokenInfo;
+    const clearBurn = context.clearBurn;
+
     const { setCw20Balance, setTokenInfo } = useExecuteActions();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -272,7 +277,13 @@ const BurnPreview = () => {
                 <ItemWrap>
                     <ItemLeftWrap>
                         <CoinStack2Icon src={IC_COIN_STACK2} alt={'Burn Update Balance Icon'} />
-                        <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                            <UpdatedBalanceLabelTypo>Updated Balance</UpdatedBalanceLabelTypo>
+                            <IconTooltip
+                                size="14px"
+                                tooltip={'This is the expected balance after the transaction. Make sure to double check before execution.'}
+                            />
+                        </div>
                     </ItemLeftWrap>
                     <ItemRightWrap>
                         <TextEllipsis CustomDiv={UpdatedBalanceTypo} text={formatWithCommas(updatedBalance)} breakMode={'letters'} />

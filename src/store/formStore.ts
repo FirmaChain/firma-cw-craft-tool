@@ -2,13 +2,6 @@ import { omitKey } from '@/utils/common';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-type DataTypes = string;
-
-interface FormData {
-    id: string;
-    value: DataTypes;
-}
-
 interface FormError {
     id: string;
     type: string;
@@ -20,14 +13,11 @@ interface ClearFormErrorTarget {
     type?: string;
 }
 
-type DataStore = Record<string, DataTypes>;
 type ErrorStore = Record<string, Record<string, string>>;
 
 interface FormProps {
-    formData: DataStore;
     formError: ErrorStore;
-    initFormData: (data: Record<string, DataTypes>) => void;
-    setFormData: (data: FormData) => void;
+
     setFormError: (error: FormError) => void;
     clearFormError: (target: ClearFormErrorTarget) => void;
     clearForm: () => void;
@@ -35,17 +25,8 @@ interface FormProps {
 
 const useFormStore = create<FormProps>()(
     immer((set) => ({
-        formData: {},
         formError: {},
-        initFormData: (data) => {
-            set((state) => {
-                state.formData = data;
-            });
-        },
-        setFormData: (data) =>
-            set((state) => {
-                state.formData[data.id] = data.value;
-            }),
+
         setFormError: (error) =>
             set((state) => {
                 if (!state.formError[error.id]) {
@@ -70,7 +51,6 @@ const useFormStore = create<FormProps>()(
             }),
         clearForm: () =>
             set((state) => {
-                state.formData = {};
                 state.formError = {};
             })
     }))

@@ -2,13 +2,14 @@ import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, TitleWrap, SummeryCard, HeaderWrap } from './styles';
 import TransferNFTInputList from '@/components/atoms/walletList/transferNFTInputList';
 import Divider from '@/components/atoms/divider';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useEffect, useMemo, useRef } from 'react';
 import useFormStore from '@/store/formStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const ItemWrap = styled.div`
     display: flex;
@@ -52,21 +53,24 @@ const MyWalletAmountTypo = styled.div`
 `;
 
 const Transfer = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
-    const transferInfo = useCW721ExecuteStore((v) => v.transfer);
-    const approveInfoById = useCW721ExecuteStore((v) => v.approveInfoById);
-    const setTransfer = useCW721ExecuteStore((v) => v.setTransfer);
-    const clearTransferForm = useCW721ExecuteStore((v) => v.clearTransferForm);
-    const setApproveInfoById = useCW721ExecuteStore((v) => v.setApproveInfoById);
+    const address = useWalletStore((v) => v.address);
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW721Execute();
+    const contractAddress = context.contractAddress;
+    const myNftList = context.myNftList;
+    const transferInfo = context.transfer;
+    const approveInfoById = context.approveInfoById;
+    const setTransfer = context.setTransfer;
+    const clearTransferForm = context.clearTransferForm;
+    const setApproveInfoById = context.setApproveInfoById;
     const { setFctBalance, setMyNftList } = useCW721ExecuteAction();
     const { firmaSDK } = useFirmaSDKContext();
 
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
 
-    const transferIds = useMemo(() => {
+    const transferIds: string[] = useMemo(() => {
         const idsMap = new Map();
 
         transferInfo.forEach((v) => v.token_ids.filter((v) => v !== '').map((id) => idsMap.set(BigInt(id).toString(), true)));

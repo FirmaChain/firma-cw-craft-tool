@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ModalBase } from './style';
 import Icons from '@/components/atoms/icons';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 
 const CloseBtnBox = styled.div`
     width: 100%;

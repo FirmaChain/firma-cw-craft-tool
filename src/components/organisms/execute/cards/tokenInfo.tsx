@@ -3,8 +3,7 @@ import styled from 'styled-components';
 
 import Mint from './functions/mint';
 import Burn from './functions/burn';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import BurnFrom from './functions/burnFrom';
 import Transfer from './functions/transfer';
 import UpdateMarketing from './functions/updateMarketing';
@@ -15,7 +14,7 @@ import UpdateMinter from './functions/updateMinter';
 import ExecuteSelect from '@/components/atoms/select/executeSelect';
 import { CRAFT_CONFIGS } from '@/config';
 import UpdateLogo from './functions/updateLogo';
-import useExecuteStore from '../hooks/useExecuteStore';
+// import useExecuteStore from '../hooks/useExecuteStore';
 import Skeleton from '@/components/atoms/skeleton';
 import Divider from '@/components/atoms/divider';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
@@ -27,6 +26,8 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import PinButton from '@/components/atoms/buttons/pinButton';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div<{ $isSelectMenu?: boolean }>`
     width: 100%;
@@ -239,14 +240,17 @@ const advancedMenuItems: IMenuItem[] = [
 ];
 
 const TokenInfo = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const selectMenu = useExecuteStore((state) => state.selectMenu);
-    const contractInfo = useExecuteStore((state) => state.contractInfo);
-    const minterInfo = useExecuteStore((state) => state.minterInfo);
-    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
-    const contractExist = useExecuteStore((v) => v.contractExist);
+    const { address } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+
+    const context = useCW20Execute();
+    const selectMenu = context.selectMenu;
+    const contractInfo = context.contractInfo;
+    const minterInfo = context.minterInfo;
+    const marketingInfo = context.marketingInfo;
+    const tokenInfo = context.tokenInfo;
+    const setSelectMenu = context.setSelectMenu;
+    const contractExist = context.contractExist;
 
     const { pinList, addPin, removePin } = usePinContractStore();
     const userPinList = pinList[address.toLowerCase()]?.filter((v) => v.type === 'cw20') || [];

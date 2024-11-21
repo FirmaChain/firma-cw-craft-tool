@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContentBox, ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, ContracTypo } from './style';
 import ConnectWallet from './connectWallet';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import MyContractList from './contractList';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import { useMyContractQuery } from '@/api/queries';
 import NetworkSelect from '@/components/atoms/select/networkSelect';
 import { IMenuItem } from '@/interfaces/common';
 import { useSnackbar } from 'notistack';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const sortByItems: IMenuItem[] = [
     { value: 'newest', label: 'Newest', isDisabled: false },
@@ -19,11 +20,13 @@ const sortByItems: IMenuItem[] = [
 ];
 
 const MyNFTContent = () => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const { isInit, address } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    // const address = useSelector((v: rootState) => v.wallet.address);
 
     const { contracts, addContracts } = useCW721NFTContractsContext();
     const { enqueueSnackbar } = useSnackbar();
+    const { handleGlobalLoading } = useGlobalStore();
 
     const [showCount, setShowCount] = useState(false);
 
@@ -53,11 +56,11 @@ const MyNFTContent = () => {
                     addContracts(contracts);
 
                     if (contracts.length === 0) {
-                        GlobalActions.handleGlobalLoading(false);
+                        handleGlobalLoading(false);
                     }
                 } catch (error) {
                     console.log(error);
-                    GlobalActions.handleGlobalLoading(false);
+                    handleGlobalLoading(false);
                 }
             },
             onError: (error: any) => {
@@ -73,7 +76,7 @@ const MyNFTContent = () => {
         }
 
         return () => {
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         };
     }, [isInit, sortBy]);
 

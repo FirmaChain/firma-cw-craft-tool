@@ -3,15 +3,17 @@ import Minterble from './minterble';
 import { AddWalletWrapper, IconBackground, TextGroupWrapper, TitleDescription, TitleText, TitleWrapper } from './style';
 import Summery from './summery';
 import Divider from '@/components/atoms/divider';
-import useInstantiateStore from '../../instaniateStore';
+// import useInstantiateStore from '../../instaniateStore';
 import FormWalletList from '@/components/atoms/walletList/formWalletList';
+import { useCW20Instantiate } from '@/context/cw20InstantiateContext';
 
 const AddWallet = () => {
-    const walletList = useInstantiateStore((v) => v.walletList);
-    const totalSupply = useInstantiateStore((v) => v.totalSupply);
-    const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
-    const decimals = useInstantiateStore((v) => v.decimals);
-    const setWalletList = useInstantiateStore((v) => v.setWalletList);
+    const context = useCW20Instantiate();
+    const walletList = context.walletList;
+    const totalSupply = context.totalSupply;
+    const tokenSymbol = context.tokenSymbol;
+    const decimals = context.decimals;
+    const setWalletList = context.setWalletList;
 
     return (
         <AddWalletWrapper>

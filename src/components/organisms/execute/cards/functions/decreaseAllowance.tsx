@@ -16,11 +16,10 @@ import {
     isZeroStringValue
 } from '@/utils/balance';
 import { addNanoSeconds } from '@/utils/time';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
-import { useModalStore } from '@/hooks/useModal';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+import useModalStore from '@/store/modalStore';
+
 import { ONE_TO_MINE, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
@@ -28,6 +27,8 @@ import useExecuteActions from '../../action';
 import useExecuteHook from '../../hooks/useExecueteHook';
 import { isValidAddress } from '@/utils/address';
 import ExpirationTypeButton from '@/components/atoms/buttons/expirationTypeButton';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -55,13 +56,19 @@ enum ExpirationType {
 }
 
 const DecreaseAllowance = () => {
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
-    const isFetched = useExecuteStore((state) => state.isFetched);
-    const allowance = useExecuteStore((state) => state.allowance);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const setAllowance = useExecuteStore((state) => state.setAllowance);
-    const setIsFetched = useExecuteStore((state) => state.setIsFetched);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW20Execute();
+    const contractAddress = context.contractAddress;
+    const isFetched = context.isFetched;
+    const allowance = context.allowance;
+    const tokenInfo = context.tokenInfo;
+    const setAllowance = context.setAllowance;
+    const setIsFetched = context.setIsFetched;
+    const clearAllowance = context.clearAllowance;
+    const clearAllowanceInfo = context.clearAllowanceInfo;
+    const setAllowanceInfo = context.setAllowanceInfo;
 
     const { getCw20AllowanceBalance } = useExecuteHook();
 
@@ -99,8 +106,8 @@ const DecreaseAllowance = () => {
 
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearAllowance();
-            useExecuteStore.getState().clearAllowanceInfo();
+            clearAllowance();
+            clearAllowanceInfo();
         };
     }, []);
 
@@ -123,7 +130,7 @@ const DecreaseAllowance = () => {
     const updateAllowance = async (searchAddress: string) => {
         const { success, blockHeight, data } = await getCw20AllowanceBalance(contractAddress, userAddress, searchAddress);
 
-        useExecuteStore.getState().setAllowanceInfo({ ...data });
+        setAllowanceInfo({ ...data });
 
         if (success) {
             const { allowance, expires } = data;

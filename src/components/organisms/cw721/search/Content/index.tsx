@@ -4,11 +4,12 @@ import { Container, ContractWarp, NoticeText } from './style';
 import TokenNameCard from './tokenNameCard';
 import TokenDetailCard from './tokenDetailCard';
 import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import { useMemo } from 'react';
 import Search from './search';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
+import { useCW721Detail } from '@/context/cw721DetailStore';
+import useWalletStore from '@/store/walletStore';
 
 const LogoBackground = styled.div`
     position: fixed;
@@ -24,8 +25,9 @@ const LogoBackground = styled.div`
 `;
 
 const Content = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const { contractDetail, nftsInfo } = useNFTContractDetailStore();
+    const { address } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
+    const { contractDetail, nftsInfo } = useCW721Detail();
 
     const contractExist = useMemo(() => {
         if (contractDetail === null || nftsInfo === null) return null;

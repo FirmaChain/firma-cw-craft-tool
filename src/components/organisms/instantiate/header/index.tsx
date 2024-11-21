@@ -1,12 +1,15 @@
 import ModeSwitch from '@/components/atoms/switch/modeSwitch';
 import { HeaderBox, HeaderTitle, HeaderWrap } from './style';
 import { CONTRACT_MODES, CONTRACT_MODE_TYPE } from '@/constants/common';
-import { GlobalActions } from '@/redux/actions';
+import useGlobalStore from '@/store/globalStore';
+// import { GlobalActions } from '@/redux/actions';
 
 const Header = () => {
+    const { handleMode } = useGlobalStore();
+
     const onChangeMenu = (value: string) => {
         if (hasMode(value)) {
-            GlobalActions.handleMode(value as CONTRACT_MODE_TYPE);
+            handleMode(value as CONTRACT_MODE_TYPE);
         } else {
             console.error(`Invalid value for mode: ${value}`);
         }

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ColorButton from '@/components/atoms/buttons/colorButton';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { CRAFT_CONFIGS } from '@/config';
 
 const Container = styled.div`

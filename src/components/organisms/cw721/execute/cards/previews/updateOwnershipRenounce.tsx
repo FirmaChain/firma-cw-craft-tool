@@ -1,18 +1,20 @@
 import ColorButton from '@/components/atoms/buttons/colorButton';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import styled from 'styled-components';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { CRAFT_CONFIGS } from '@/config';
 import { IC_WARNING } from '@/components/atoms/icons/pngIcons';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import { useSnackbar } from 'notistack';
 import { sleep } from '@/utils/common';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -53,24 +55,29 @@ const UpdateOwnershipRenouncePreview = () => {
     const WARNING_TEXT: string = `If you renounce ownership of the NFT contract, the contract will stay active,\nbut you’ll lose control, and the Minter role will be removed.`;
     const WARNING_MODAL_TEXT: string = `Are you sure you want to renounce ownership of the NFT contract?\nBy renouncing, you'll lose control and the Minter role will be removed.`;
 
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { isInit, address, fctBalance } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const ownershipInfo = useCW721ExecuteStore((state) => state.ownershipInfo);
+    const context = useCW721Execute();
+    const contractAddress = context.contractAddress;
+    // const fctBalance = context.fctBalance
+    const ownershipInfo = context.ownershipInfo;
+    const setSelectMenu = context.setSelectMenu;
 
     const { setMinter, setOwnershipInfo } = useCW721ExecuteAction();
     const { enqueueSnackbar } = useSnackbar();
 
+    const { handleGlobalLoading } = useGlobalStore();
+
     const onClickConfirm = async () => {
-        GlobalActions.handleGlobalLoading(true);
+        handleGlobalLoading(true);
 
         await sleep(200);
 
         try {
-            useCW721ExecuteStore.getState().setSelectMenu({
+            setSelectMenu({
                 value: 'select',
                 label: 'Select'
             });
@@ -83,7 +90,7 @@ const UpdateOwnershipRenouncePreview = () => {
             console.log(error);
             enqueueSnackbar({ variant: 'error', message: 'Update contract info failed.' });
         } finally {
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         }
     };
 

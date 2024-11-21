@@ -3,15 +3,15 @@ import { HeaderBox, HeaderWrap, Title } from './styles';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
-import { GlobalActions } from '@/redux/actions';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
-import { isValidAddress } from '@/utils/address';
+
 import { sleep } from '@/utils/common';
 import { BYPASS_ALL, NORMAL_TEXT, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import ConnectWallet from '@/components/organisms/execute/header/connectWallet';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const EndAdornment = ({
     keyword,
@@ -39,19 +39,21 @@ const EndAdornment = ({
 };
 
 const Header = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    const { address, isInit } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
     const [keyword, setKeyword] = useState<string>('');
     const prevKeyword = useRef<string | null>(null);
 
-    const { contractDetail } = useNFTContractDetailStore();
+    const { handleGlobalLoading } = useGlobalStore();
+    // const { contractDetail } = useCW721Detail();
 
-    const { setContractDetail, setNftsInfo, setOwnedNftsInfo, setTransactions, clearForm } = useNFTContractDetailStore();
+    const { contractDetail, setContractDetail, setNftsInfo, setOwnedNftsInfo, setTransactions, clearForm } = useCW721Detail();
     const { checkExistContract, getNFTContractDetail, getNFTsInfo, getOwnedNFTsInfo, getNFTContractTransactions } = useNFTContractDetail();
 
     const getRequiredInfo = useCallback(
         async (searchAddress) => {
-            GlobalActions.handleGlobalLoading(true);
+            handleGlobalLoading(true);
 
             try {
                 if (prevKeyword.current === null || prevKeyword.current?.toLowerCase() !== searchAddress.toLowerCase()) {
@@ -85,7 +87,7 @@ const Header = () => {
             } catch (error) {
                 console.log(error);
             } finally {
-                GlobalActions.handleGlobalLoading(false);
+                handleGlobalLoading(false);
             }
         },
         [prevKeyword]

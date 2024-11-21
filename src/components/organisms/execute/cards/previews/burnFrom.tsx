@@ -5,11 +5,10 @@ import { IC_COIN_STACK, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import { isValidAddress, shortenAddress } from '@/utils/address';
 import { addStringAmount, formatWithCommas, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { useModalStore } from '@/hooks/useModal';
-import useExecuteStore from '../../hooks/useExecuteStore';
+import useModalStore from '@/store/modalStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { ONE_TO_MINE } from '@/constants/regex';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import { CRAFT_CONFIGS } from '@/config';
@@ -18,6 +17,8 @@ import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
 import { useSnackbar } from 'notistack';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -202,16 +203,19 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const BurnFromPreview = () => {
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const { address: userAddress, fctBalance } = useWalletStore();
+    // const userAddress = useSelector((v: rootState) => v.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const burnFromList = useExecuteStore((v) => v.burnFromList);
-    const tokenInfo = useExecuteStore((v) => v.tokenInfo);
-    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
-    const clearBurnFrom = useExecuteStore((v) => v.clearBurnFrom);
-    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
+    const burnFromList = context.burnFromList;
+    const tokenInfo = context.tokenInfo;
+    const allowanceByAddress = context.allowanceByAddress;
+    const clearBurnFrom = context.clearBurnFrom;
+    const setIsFetched = context.setIsFetched;
+
     const { setTokenInfo } = useExecuteActions();
 
     const { enqueueSnackbar } = useSnackbar();

@@ -1,18 +1,17 @@
 import { useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
-import { IWallet } from '@/interfaces/wallet';
+// import { IWallet } from '@/interfaces/wallet';
 import { PreviewWrapper } from './style';
 
 import Dashboard from './dashboard';
 import Submit from './submit';
-import { ModalActions } from '@/redux/actions';
-import { rootState } from '@/redux/reducers';
+// import { ModalActions } from '@/redux/actions';
+
 import { compareStringsAsNumbers, getApplyDecimalsAmount, validateSymbol } from '@/utils/common';
 import { CRAFT_CONFIGS } from '@/config';
 import useFormStore from '@/store/formStore';
-import { useModalStore } from '@/hooks/useModal';
-import useInstantiateStore from '../instaniateStore';
+import useModalStore from '@/store/modalStore';
+// import useInstantiateStore from '../instaniateStore';
 import { addStringAmount, compareStringNumbers, isZeroStringValue } from '@/utils/balance';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
@@ -22,6 +21,10 @@ import SectionScrollToTopButton from '@/components/atoms/buttons/sectionScrollto
 import TxModal from '../../modal/txModal';
 import QRModal2, { ModalType } from '../../modal/qrModal2';
 import { useSnackbar } from 'notistack';
+import { useCW20Instantiate } from '@/context/cw20InstantiateContext';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
+// import useModalStore2 from '@/store/modalStore';
 
 interface IProps {
     isBasic: boolean;
@@ -40,25 +43,32 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 const Preview = ({ isBasic }: IProps) => {
     const { scroll } = useScrollContext();
 
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
+    const { address, fctBalance, isInit } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
 
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    const contractMode = useGlobalStore((v) => v.contractMode);
+    // useSelector((state: rootState) => state.global.contractMode);
 
-    const tokenName = useInstantiateStore((v) => v.tokenName);
-    const tokenSymbol = useInstantiateStore((v) => v.tokenSymbol);
-    const tokenLogoUrl = useInstantiateStore((v) => v.tokenLogoUrl);
-    const tokenDescription = useInstantiateStore((v) => v.tokenDescription);
-    const decimals = useInstantiateStore((v) => v.decimals);
-    const label = useInstantiateStore((v) => v.label);
-    const marketingAddress = useInstantiateStore((v) => v.marketingAddress);
-    const marketingProject = useInstantiateStore((v) => v.marketingProject);
-    const minterble = useInstantiateStore((v) => v.minterble);
-    const minterCap = useInstantiateStore((v) => v.minterCap);
-    const minterAddress = useInstantiateStore((v) => v.minterAddress);
-    const walletList = useInstantiateStore((v) => v.walletList);
-    const totalSupply = useInstantiateStore((v) => v.totalSupply);
+    const context = useCW20Instantiate();
+    const tokenName = context.tokenName;
+    const tokenSymbol = context.tokenSymbol;
+    const tokenLogoUrl = context.tokenLogoUrl;
+    const tokenDescription = context.tokenDescription;
+    const decimals = context.decimals;
+    const label = context.label;
+    const marketingAddress = context.marketingAddress;
+    const marketingProject = context.marketingProject;
+    const minterble = context.minterble;
+    const minterCap = context.minterCap;
+    const minterAddress = context.minterAddress;
+    const walletList = context.walletList;
+    const totalSupply = context.totalSupply;
+
+    // const { handleData, handleTxConfirm } = useModalStore2();
+
+    const clearForm = context.clearForm;
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -66,7 +76,7 @@ const Preview = ({ isBasic }: IProps) => {
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
-    const clearForm = useFormStore((state) => state.clearForm);
+    // const clearForm = useFormStore((state) => state.clearForm);
 
     const codeId = useMemo(() => {
         const cw20CodeId = contractMode === 'BASIC' ? CRAFT_CONFIGS.CW20.BASIC_CODE_ID : CRAFT_CONFIGS.CW20.ADVANCED_CODE_ID;
@@ -106,154 +116,154 @@ const Preview = ({ isBasic }: IProps) => {
                     convertWalletList.push({ address, amount: walletObj[address] });
                 }
             }
-            const invalidMessageType = checkInstantiate(isBasic, walletList, decimalsTotalSupply, decimalsMinterCap);
+            // const invalidMessageType = checkInstantiate(isBasic, walletList, decimalsTotalSupply, decimalsMinterCap);
 
-            if (invalidMessageType === '') {
-                const messageData = {
-                    decimals: newDecimals,
-                    name: tokenName,
+            // if (invalidMessageType === '') {
+            const messageData = {
+                decimals: newDecimals,
+                name: tokenName,
+                symbol: tokenSymbol,
+                initial_balances: convertWalletList,
+                ...(minterble && {
+                    mint: {
+                        minter: isBasic ? address : minterAddress,
+                        cap: decimalsMinterCap
+                    }
+                }),
+                marketing: {
+                    description: tokenDescription || '',
+                    logo: { url: tokenLogoUrl || '' },
+                    marketing: isBasic ? address : marketingAddress || address,
+                    project: marketingProject || ''
+                }
+            };
+            const params = {
+                modalType: 'INSTANTIATE' as ModalType,
+                header: {
+                    title: 'CW20 Instantiation'
+                },
+                txParams: {
+                    admin: address,
+                    codeId: codeId,
+                    label: label,
+                    type: 'cw20',
+                    msg: messageData,
+                    walletLength: walletList.length,
+                    totalLength: JSON.stringify(messageData).length
+                },
+                contentParams: {
+                    decimals: newDecimals.toString(),
                     symbol: tokenSymbol,
-                    initial_balances: convertWalletList,
-                    ...(minterble && {
-                        mint: {
-                            minter: isBasic ? address : minterAddress,
-                            cap: decimalsMinterCap
+                    list: [
+                        {
+                            label: 'Token Name',
+                            value: tokenName,
+                            type: 'default',
+                            initColor: '#FFF',
+                            resultColor: '#FFF'
+                        },
+                        {
+                            label: 'Token Symbol',
+                            value: tokenSymbol,
+                            type: 'default',
+                            initColor: '#FFF',
+                            resultColor: '#FFF'
+                        },
+                        {
+                            label: 'Decimal',
+                            value: decimals === '' ? '6' : decimals,
+                            type: 'default',
+                            initColor: '#FFF',
+                            resultColor: '#FFF'
                         }
-                    }),
-                    marketing: {
-                        description: tokenDescription || '',
-                        logo: { url: tokenLogoUrl || '' },
-                        marketing: isBasic ? address : marketingAddress || address,
-                        project: marketingProject || ''
-                    }
-                };
-                const params = {
-                    modalType: 'INSTANTIATE' as ModalType,
-                    header: {
-                        title: 'CW20 Instantiation'
-                    },
-                    txParams: {
-                        admin: address,
-                        codeId: codeId,
-                        label: label,
-                        type: 'cw20',
-                        msg: messageData,
-                        walletLength: walletList.length,
-                        totalLength: JSON.stringify(messageData).length
-                    },
-                    contentParams: {
-                        decimals: newDecimals.toString(),
-                        symbol: tokenSymbol,
-                        list: [
-                            {
-                                label: 'Token Name',
-                                value: tokenName,
-                                type: 'default',
-                                initColor: '#FFF',
-                                resultColor: '#FFF'
-                            },
-                            {
-                                label: 'Token Symbol',
-                                value: tokenSymbol,
-                                type: 'default',
-                                initColor: '#FFF',
-                                resultColor: '#FFF'
-                            },
-                            {
-                                label: 'Decimal',
-                                value: decimals === '' ? '6' : decimals,
-                                type: 'default',
-                                initColor: '#FFF',
-                                resultColor: '#FFF'
-                            }
-                        ],
-                        extraList: [
-                            {
-                                label: 'Supply Amount',
-                                value: decimalsTotalSupply,
-                                type: 'instantiate-amount',
-                                initColor: '#02E191',
-                                resultColor: '#FFF'
-                            },
-                            minterble && {
-                                label: 'Minter Cap',
-                                value: decimalsMinterCap,
-                                type: 'instantiate-amount',
-                                initColor: '#999',
-                                resultColor: '#FFF'
-                            }
-                        ]
-                    }
-                };
+                    ],
+                    extraList: [
+                        {
+                            label: 'Supply Amount',
+                            value: decimalsTotalSupply,
+                            type: 'instantiate-amount',
+                            initColor: '#02E191',
+                            resultColor: '#FFF'
+                        },
+                        minterble && {
+                            label: 'Minter Cap',
+                            value: decimalsMinterCap,
+                            type: 'instantiate-amount',
+                            initColor: '#999',
+                            resultColor: '#FFF'
+                        }
+                    ]
+                }
+            };
 
-                modal.openModal({
-                    modalType: 'custom',
-                    _component: ({ id }) => {
-                        return !USE_WALLET_CONNECT ? (
-                            <TxModal
-                                module="/cw20/instantiateContract"
-                                id={id}
-                                params={params}
-                                onClickConfirm={() => {
-                                    clearForm();
-                                }}
-                            />
-                        ) : (
-                            <QRModal2
-                                module="/cw20/instantiateContract"
-                                id={id}
-                                params={params}
-                                onClickConfirm={() => {
-                                    useInstantiateStore.getState().clearForm();
-                                    useFormStore.getState().clearForm();
-                                    clearForm();
-                                }}
-                            />
-                        );
-                    }
-                });
-            } else {
-                ModalActions.handleData({
-                    module: 'Instantiation',
-                    result: false,
-                    message: invalidMessageType
-                });
+            modal.openModal({
+                modalType: 'custom',
+                _component: ({ id }) => {
+                    return !USE_WALLET_CONNECT ? (
+                        <TxModal
+                            module="/cw20/instantiateContract"
+                            id={id}
+                            params={params}
+                            onClickConfirm={() => {
+                                useFormStore.getState().clearForm();
+                                clearForm();
+                            }}
+                        />
+                    ) : (
+                        <QRModal2
+                            module="/cw20/instantiateContract"
+                            id={id}
+                            params={params}
+                            onClickConfirm={() => {
+                                useFormStore.getState().clearForm();
+                                clearForm();
+                            }}
+                        />
+                    );
+                }
+            });
+            // } else {
+            //     handleData({
+            //         module: 'Instantiation',
+            //         result: false,
+            //         message: invalidMessageType
+            //     });
 
-                ModalActions.handleTxConfirm(true);
-            }
+            //     handleTxConfirm(true);
+            // }
         } else {
             modal.openModal({ modalType: 'connectWallet' });
         }
     };
 
-    const checkInstantiate = (isBasic: boolean, walletList: IWallet[], totalSupply: string, minterCap: string) => {
-        if (tokenName === '') return 'Empty Token Name';
+    // const checkInstantiate = (isBasic: boolean, walletList: IWallet[], totalSupply: string, minterCap: string) => {
+    //     if (tokenName === '') return 'Empty Token Name';
 
-        if (tokenSymbol === '') return 'Empty Token Symbol';
+    //     if (tokenSymbol === '') return 'Empty Token Symbol';
 
-        if (!validateSymbol(tokenSymbol)) return 'Symbol is not in expected format [a-zA-Z0-9\\-]{3,12}';
+    //     if (!validateSymbol(tokenSymbol)) return 'Symbol is not in expected format [a-zA-Z0-9\\-]{3,12}';
 
-        if (!isBasic && decimals === '') return 'Empty Decimals';
+    //     if (!isBasic && decimals === '') return 'Empty Decimals';
 
-        if (label === '' && label.trim() === '') return 'Empty Label';
+    //     if (label === '' && label.trim() === '') return 'Empty Label';
 
-        if (walletList.length === 0) return 'Not add a wallet';
+    //     if (walletList.length === 0) return 'Not add a wallet';
 
-        for (const wallet of walletList) {
-            if (wallet.recipient === '') return 'Empty initial wallet address';
-            if (wallet.amount === '0') return 'Wallet amount must be greater than 0';
-            if (wallet.amount === '') return 'Empty initial wallet amount';
-            if (!isValidAddress(wallet.recipient)) return 'Is valid address in wallet list';
-        }
+    //     for (const wallet of walletList) {
+    //         if (wallet.recipient === '') return 'Empty initial wallet address';
+    //         if (wallet.amount === '0') return 'Wallet amount must be greater than 0';
+    //         if (wallet.amount === '') return 'Empty initial wallet amount';
+    //         if (!isValidAddress(wallet.recipient)) return 'Is valid address in wallet list';
+    //     }
 
-        if (!isBasic && minterble && minterAddress === '') return 'Empty minter address';
+    //     if (!isBasic && minterble && minterAddress === '') return 'Empty minter address';
 
-        if (minterble && minterCap === '') return 'Empty minter cap amount';
+    //     if (minterble && minterCap === '') return 'Empty minter cap amount';
 
-        if (minterble && compareStringsAsNumbers(minterCap, totalSupply) === -1) return 'Initial supply greater than cap';
+    //     if (minterble && compareStringsAsNumbers(minterCap, totalSupply) === -1) return 'Initial supply greater than cap';
 
-        return '';
-    };
+    //     return '';
+    // };
 
     const disableButton = useMemo(() => {
         if (isInit) {

@@ -1,8 +1,8 @@
 import Icons from '@/components/atoms/icons';
 import MarketingItem from './marketingItem';
 import { MarketingWrapper } from './style';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
+import useGlobalStore from '@/store/globalStore';
 
 interface IProps {
     label: string;
@@ -11,7 +11,8 @@ interface IProps {
     marketingProject: string;
 }
 const Marketing = ({ label, decimals, marketingAddress, marketingProject }: IProps) => {
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    const contractMode = useGlobalStore((v) => v.contractMode);
+    // useSelector((state: rootState) => state.global.contractMode);
 
     const isBasic = Boolean(contractMode === 'BASIC');
 

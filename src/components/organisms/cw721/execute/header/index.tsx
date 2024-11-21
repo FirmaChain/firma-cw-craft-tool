@@ -1,8 +1,7 @@
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import ConnectWallet from './connectWallet';
 import SearchContract from './searchContract';
 import styled from 'styled-components';
+import useWalletStore from '@/store/walletStore';
 
 const HeaderBox = styled.div<{ $hideBorder: boolean }>`
     width: 100%;
@@ -35,8 +34,9 @@ interface IProps {
 }
 
 const Header = ({ contractAddress }: IProps) => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { address, isInit } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
     return (
         <HeaderBox $hideBorder={!Boolean(address)}>

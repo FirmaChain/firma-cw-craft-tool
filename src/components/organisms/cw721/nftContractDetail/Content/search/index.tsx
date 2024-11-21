@@ -15,7 +15,7 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import Icons from '@/components/atoms/icons';
 import Divider from '@/components/atoms/divider';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import useNFTContractDetail, { ISearchData } from '@/hooks/useNFTContractDetail';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
@@ -24,6 +24,7 @@ import { INT_NUMBERS } from '@/constants/regex';
 import styled from 'styled-components';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW721Detail } from '@/context/cw721DetailStore';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -92,7 +93,7 @@ const EndAdornment = ({
 };
 
 const Search = () => {
-    const { contractDetail } = useNFTContractDetailStore();
+    const { contractDetail } = useCW721Detail();
     const { getNFTDataByTokenID } = useNFTContractDetail();
 
     const [keyword, setKeyword] = useState<string>('');

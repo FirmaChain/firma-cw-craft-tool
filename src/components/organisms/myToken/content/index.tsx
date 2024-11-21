@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContentBox, ContentControlWrapper, ContentInfoWrapper, ContentWrapper, ContractCountTypo, TokenTypo } from './style';
 import ConnectWallet from './connectWallet';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
-import useMyToken from '@/hooks/useMyToken';
+
+// import useMyToken from '@/hooks/useMyToken';
 
 import MyMintedTokenList from './mintedTokenList';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { IMenuItem } from '@/interfaces/common';
 import { useSnackbar } from 'notistack';
 import { useMyContractQuery } from '@/api/queries';
 import NetworkSelect from '@/components/atoms/select/networkSelect';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const sortByItems: IMenuItem[] = [
     { value: 'newest', label: 'Newest', isDisabled: false },
@@ -20,11 +21,13 @@ const sortByItems: IMenuItem[] = [
 ];
 
 const MyTokenContent = () => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const { address, isInit } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    // const address = useSelector((v: rootState) => v.wallet.address);
 
     const { contracts, addContracts } = useCW20MyTokenContext();
     const { enqueueSnackbar } = useSnackbar();
+    const { handleGlobalLoading } = useGlobalStore();
 
     const [showCount, setShowCount] = useState(false);
 
@@ -54,11 +57,11 @@ const MyTokenContent = () => {
                     addContracts(contracts);
 
                     if (contracts.length === 0) {
-                        GlobalActions.handleGlobalLoading(false);
+                        handleGlobalLoading(false);
                     }
                 } catch (error) {
                     console.log(error);
-                    GlobalActions.handleGlobalLoading(false);
+                    handleGlobalLoading(false);
                 }
             },
             onError: (error: any) => {
@@ -74,7 +77,7 @@ const MyTokenContent = () => {
         }
 
         return () => {
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         };
     }, [isInit, sortBy]);
 

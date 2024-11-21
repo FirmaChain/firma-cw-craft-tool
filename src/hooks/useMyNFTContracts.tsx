@@ -1,18 +1,19 @@
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+
 import { FirmaSDK, Pagination } from '@firmachain/firma-js';
 
-import { rootState } from '../redux/reducers';
 import { CRAFT_CONFIGS } from '../config';
 import { useSnackbar } from 'notistack';
 import { IContractInfo } from '@/context/cw721MyNFTContractsContext';
 import { IMG_NFT_EMPTY_THUMBNAIL } from '@/components/atoms/icons/pngIcons';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import useWalletStore from '@/store/walletStore';
 
 const useMyNFTContracts = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { address } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
     const { firmaSDK } = useFirmaSDKContext();
 

@@ -1,8 +1,7 @@
 import Divider from '@/components/atoms/divider';
 import { CardContainer, SectionContainer } from '../style';
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { CRAFT_CONFIGS } from '@/config';
 import { useEffect, useMemo, useState } from 'react';
 import StyledTable, { IColumn } from '@/components/atoms/table';
@@ -27,21 +26,27 @@ import {
 import NFTsTable from '../../../common/nftsTable';
 import { IC_EXPAND, IC_WARNING_SIGN } from '@/components/atoms/icons/pngIcons';
 import Skeleton from '@/components/atoms/skeleton';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
 import { useCW721NFTListContext } from '@/context/cw721NFTListContext';
 import { useCW721OwnedNFTListContext } from '@/context/cw721OwnedNFTListContext';
 import useCW721ExecuteAction from '../../../execute/hooks/useCW721ExecuteAction';
-import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
 import { compareStringNumbers } from '@/utils/balance';
 import IconTooltip from '@/components/atoms/tooltip';
-import { isValidAddress } from '@/utils/address';
+// import { isValidAddress } from '@/utils/address';
 import { SpecificDefaultTypo } from '../../../nftContractDetail/Content/body/ownerInformation/style';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+// import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import { useSnackbar } from 'notistack';
+import useWalletStore from '@/store/walletStore';
 
 const TokenInfo = () => {
-    const { address } = useSelector((state: rootState) => state.wallet);
-    const { contractDetail, nftsInfo, ownedNftsInfo } = useNFTContractDetailStore((state) => state);
+    const { address } = useWalletStore();
+    // const { address } = useSelector((state: rootState) => state.wallet);
+    const { contractDetail, nftsInfo, ownedNftsInfo } = useCW721Detail();
     const { handleCW721NFTIdList, handleCW721OwnedNFTIdList } = useNFTContractDetail();
     const { nfts, addNFTs, updateNFTs, clearCW721NFTListData, currentPage, setCurrentPage } = useCW721NFTListContext();
     const {
@@ -249,10 +254,13 @@ const TokenInfo = () => {
 };
 
 const OwnerInformation = () => {
-    const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
-    const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
+    const { contractDetail: contractInfo } = useCW721Detail();
+    const { firmaSDK } = useFirmaSDKContext();
 
-    const { setBlockHeight } = useCW721ExecuteAction();
+    const [blockHeight, setBlockHeight] = useState('0');
+    const { enqueueSnackbar } = useSnackbar();
+    // const { blockHeight } = useCW721Execute();
+    // const { setBlockHeight } = useCW721ExecuteAction();
 
     const admin = contractInfo?.ownerInfo.owner;
     const pending_owner = contractInfo?.ownerInfo.pending_owner;
@@ -260,7 +268,13 @@ const OwnerInformation = () => {
     const minter = contractInfo?.minter;
 
     useEffect(() => {
-        setBlockHeight();
+        try {
+            firmaSDK.BlockChain.getChainSyncInfo().then((res) => setBlockHeight(res.latest_block_height));
+        } catch (error) {
+            enqueueSnackbar({ message: 'Failed to get latest block height', variant: 'error' });
+        }
+
+        // setBlockHeight();
     }, []);
 
     const PendingExpiery = ({
@@ -427,7 +441,7 @@ const OwnerInformation = () => {
 };
 
 const Transactions = () => {
-    const transactions = useNFTContractDetailStore((state) => state.transactions);
+    const { transactions } = useCW721Detail();
 
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },

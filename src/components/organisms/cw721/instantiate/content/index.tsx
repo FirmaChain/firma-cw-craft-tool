@@ -1,13 +1,14 @@
 import { IC_DOCUMENT } from '@/components/atoms/icons/pngIcons';
 import LabelInput from '@/components/atoms/input/labelInput';
 import styled from 'styled-components';
-import useInstantiateStore from '../instantiateStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import useInstantiateStore from '../instantiateStore';
+
 import { useEffect } from 'react';
 import { DEFAULT_INPUT_REGEX, NORMAL_TEXT, ONLY_ENGLISH, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useFormStore from '@/store/formStore';
 import { isValidAddress } from '@/utils/address';
+import { useCW721Instantiate } from '@/context/cw721InstantiateContext';
+import useGlobalStore from '@/store/globalStore';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
@@ -79,18 +80,20 @@ const AdvancedContractWrap = styled.div`
 `;
 
 const Content = ({ isBasic }: { isBasic: boolean }) => {
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    const contractMode = useGlobalStore((v) => v.contractMode);
+    // useSelector((state: rootState) => state.global.contractMode);
+    const context = useCW721Instantiate();
 
-    const nftName = useInstantiateStore((v) => v.nftName);
-    const nftSymbol = useInstantiateStore((v) => v.nftSymbol);
-    const minter = useInstantiateStore((v) => v.minter);
-    const admin = useInstantiateStore((v) => v.admin);
-    const label = useInstantiateStore((v) => v.label);
-    const setNftName = useInstantiateStore((v) => v.setNftName);
-    const setNftSymbol = useInstantiateStore((v) => v.setNftSymbol);
-    const setMinter = useInstantiateStore((v) => v.setMinter);
-    const setAdmin = useInstantiateStore((v) => v.setAdmin);
-    const setLabel = useInstantiateStore((v) => v.setLabel);
+    const nftName = context.nftName;
+    const nftSymbol = context.nftSymbol;
+    const minter = context.minter;
+    const admin = context.admin;
+    const label = context.label;
+    const setNftName = context.setNftName;
+    const setNftSymbol = context.setNftSymbol;
+    const setMinter = context.setMinter;
+    const setAdmin = context.setAdmin;
+    const setLabel = context.setLabel;
 
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);

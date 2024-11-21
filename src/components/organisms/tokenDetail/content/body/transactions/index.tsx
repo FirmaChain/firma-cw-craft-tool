@@ -1,10 +1,11 @@
 import { CradHeaderWrapper, HeaderSubTitleTypo, HeaderTitleTypo, TransactionContent, TransactionsCard } from './style';
 import StyledTable, { IColumn } from '@/components/atoms/table';
 import Cell from '@/components/atoms/table/cells';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+import { useCW20Detail } from '@/context/cw20DetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 
 const Transactions = () => {
-    const transactions = useTokenDetailStore((state) => state.transactions);
+    const { transactions } = useCW20Detail();
 
     const columns: IColumn[] = [
         { id: 'hash', label: 'Hash', renderCell: (id, row) => <Cell.Hash hash={row[id]} />, minWidth: '280px' },

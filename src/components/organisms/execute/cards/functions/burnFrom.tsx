@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
 
 import { IWallet } from '@/interfaces/wallet';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import { useEffect, useMemo, useState } from 'react';
 import { addStringAmount, getTokenAmountFromUToken, getUTokenAmountFromToken } from '@/utils/balance';
 
@@ -13,6 +13,7 @@ import Icons from '@/components/atoms/icons';
 import commaNumber from 'comma-number';
 import { isValidAddress } from '@/utils/address';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 const SummeryWrap = styled.div`
     display: flex;
@@ -61,11 +62,12 @@ const ErrorTypo = styled.div`
 `;
 
 const BurnFrom = () => {
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const burnFromList = useExecuteStore((state) => state.burnFromList);
-    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
-
-    const setBurnFromList = useExecuteStore((state) => state.setBurnFromList);
+    const context = useCW20Execute();
+    const tokenInfo = context.tokenInfo;
+    const burnFromList = context.burnFromList;
+    const allowanceByAddress = context.allowanceByAddress;
+    const setBurnFromList = context.setBurnFromList;
+    const clearBurnFrom = context.clearBurnFrom;
 
     const handleWalletList = (value: IWallet[]) => {
         setBurnFromList(value);
@@ -109,7 +111,7 @@ const BurnFrom = () => {
     useEffect(() => {
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearBurnFrom();
+            clearBurnFrom();
         };
     }, []);
 

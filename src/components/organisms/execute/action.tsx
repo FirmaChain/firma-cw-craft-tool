@@ -1,14 +1,31 @@
 import { useSnackbar } from 'notistack';
-import useExecuteStore from './hooks/useExecuteStore';
-import { GlobalActions, WalletActions } from '@/redux/actions';
+// import useExecuteStore from './hooks/useExecuteStore';
+// import { /*GlobalActions,*/ WalletActions } from '@/redux/actions';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { Cw20TokenInfo } from '@firmachain/firma-js';
 import { sleep } from '@/utils/common';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const useExecuteActions = () => {
     const { firmaSDK } = useFirmaSDKContext();
 
     const { enqueueSnackbar } = useSnackbar();
+
+    const {
+        setContractInfo: _setContractInfo,
+        setTokenInfo: _setTokenInfo,
+        setMinterInfo: _setMinterInfo,
+        setMarketingInfo: _setMarketingInfo,
+        setCw20Balance: _setCw20Balance,
+        setAllowanceInfo: _setAllowanceInfo,
+        clearForm: _clearForm,
+        setContractExist: _setContractExist
+    } = useCW20Execute();
+
+    const { handleGlobalLoading } = useGlobalStore();
+    const { handleFCTBalance } = useWalletStore();
 
     const checkContractExist = async (contractAddress: string) => {
         try {
@@ -23,7 +40,7 @@ const useExecuteActions = () => {
     const setContractInfo = async (contractAddress: string) => {
         try {
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
-            useExecuteStore.getState().setContractInfo(contractInfo);
+            _setContractInfo(contractInfo);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -36,7 +53,7 @@ const useExecuteActions = () => {
     const setTokenInfo = async (contractAddress: string) => {
         try {
             const tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
-            useExecuteStore.getState().setTokenInfo(tokenInfo);
+            _setTokenInfo(tokenInfo);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -49,7 +66,7 @@ const useExecuteActions = () => {
     const setMinterInfo = async (contractAddress: string) => {
         try {
             const minterInfo = await firmaSDK.Cw20.getMinter(contractAddress?.toLowerCase());
-            useExecuteStore.getState().setMinterInfo(minterInfo);
+            _setMinterInfo(minterInfo);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -62,7 +79,7 @@ const useExecuteActions = () => {
     const setMarketingInfo = async (contractAddress: string) => {
         try {
             const marketingInfo = await firmaSDK.Cw20.getMarketingInfo(contractAddress?.toLowerCase());
-            useExecuteStore.getState().setMarketingInfo(marketingInfo);
+            _setMarketingInfo(marketingInfo);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -75,7 +92,7 @@ const useExecuteActions = () => {
     const setCw20Balance = async (contractAddress: string, address: string) => {
         try {
             const cw20Balance = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), address?.toLowerCase());
-            useExecuteStore.getState().setCw20Balance(cw20Balance);
+            _setCw20Balance(cw20Balance);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -88,8 +105,8 @@ const useExecuteActions = () => {
     const setFctBalance = async (address: string) => {
         try {
             const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
-            // useExecuteStore.getState().setFctBalance(fctBalance);
-            WalletActions.handleFCTBalance(fctBalance);
+            // _setFctBalance(fctBalance);
+            handleFCTBalance(fctBalance);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -106,7 +123,7 @@ const useExecuteActions = () => {
                 owner?.toLowerCase(),
                 spender?.toLowerCase()
             );
-            useExecuteStore.getState().setAllowanceInfo(allowanceInfo);
+            _setAllowanceInfo(allowanceInfo);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -125,7 +142,7 @@ const useExecuteActions = () => {
         //? in case of searching cw721 contract in cw20 execute page
 
         try {
-            GlobalActions.handleGlobalLoading(true);
+            handleGlobalLoading(true);
 
             await sleep(200);
 
@@ -137,8 +154,8 @@ const useExecuteActions = () => {
                 tokenInfo = await firmaSDK.Cw20.getTokenInfo(contractAddress?.toLowerCase());
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20 contract.' });
-                useExecuteStore.getState().clearForm();
-                useExecuteStore.getState().setContractExist(false);
+                _clearForm();
+                _setContractExist(false);
                 return;
             }
 
@@ -165,13 +182,13 @@ const useExecuteActions = () => {
             checkCurrentHref(href);
 
             await sleep(200);
-            useExecuteStore.getState().setContractInfo(contractInfo);
-            useExecuteStore.getState().setMarketingInfo(marketingInfo);
-            useExecuteStore.getState().setMinterInfo(minterInfo);
-            useExecuteStore.getState().setCw20Balance(cw20Balance);
-            // useExecuteStore.getState().setFctBalance(fctBalance);
-            WalletActions.handleFCTBalance(fctBalance);
-            useExecuteStore.getState().setTokenInfo(tokenInfo);
+            _setContractInfo(contractInfo);
+            _setMarketingInfo(marketingInfo);
+            _setMinterInfo(minterInfo);
+            _setCw20Balance(cw20Balance);
+            // _setFctBalance(fctBalance);
+            handleFCTBalance(fctBalance);
+            _setTokenInfo(tokenInfo);
 
             checkCurrentHref(href);
         } catch (error: any) {
@@ -182,10 +199,10 @@ const useExecuteActions = () => {
                 console.log('CW20 contract search aborted');
             }
 
-            useExecuteStore.getState().clearForm();
+            _clearForm();
         } finally {
             //? close global load
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         }
     };
 

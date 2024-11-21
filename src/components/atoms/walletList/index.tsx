@@ -17,11 +17,12 @@ import { IWallet } from '@/interfaces/wallet';
 import InputAddressAmount from '../input/inputAddressAmount';
 import Icons from '../icons';
 import { useSnackbar } from 'notistack';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
-import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+// import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import AddWalletButton from '../buttons/addWalletButton';
 import { isValidAddress } from '@/utils/address';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 interface IProps {
     decimals: string;
@@ -37,8 +38,9 @@ interface IWalletWithID extends IWallet {
 }
 
 const WalletList = ({ decimals, maxWalletCount = 20, onChangeWalletList, addressTitle, addressPlaceholder, amountTitle }: IProps) => {
-    const isFetched = useExecuteStore((state) => state.isFetched);
-    const setIsFetched = useExecuteStore((v) => v.setIsFetched);
+    const context = useCW20Execute();
+    const isFetched = context.isFetched;
+    const setIsFetched = context.setIsFetched;
 
     const { enqueueSnackbar } = useSnackbar();
     const modal = useModalStore();

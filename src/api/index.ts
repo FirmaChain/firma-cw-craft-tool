@@ -3,8 +3,9 @@ import { getAccessToken, setAccessToken } from '@/utils/token';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import { CRAFT_CONFIGS } from '@/config';
-import { store } from '@/redux';
+// import { store } from '@/redux';
 import ContractApi from './contractApi';
+import useWalletStore from '@/store/walletStore';
 
 export interface CustomApiOptions extends AxiosRequestConfig {
     withJWT?: boolean;
@@ -18,7 +19,7 @@ axiosInstance.interceptors.request.use(
 
         if (!config.url.replace(CRAFT_CONFIGS.CRAFT_SERVER_URI, '').startsWith(`/connect/sign/refreshToken`)) {
             if (!token) {
-                const walletAddress = store.getState().wallet.address;
+                const walletAddress = useWalletStore.getState().address;
                 const data = await ContractApi.refreshToken({ walletAddress });
 
                 setAccessToken(data.result.token, { minutes: 14 });

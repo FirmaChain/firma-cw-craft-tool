@@ -3,17 +3,18 @@ import { IC_COIN_STACK, IC_COIN_STACK2 } from '@/components/atoms/icons/pngIcons
 import IconTooltip from '@/components/atoms/tooltip';
 import Divider from '@/components/atoms/divider';
 import GreenButton from '@/components/atoms/buttons/greenButton';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { useMemo } from 'react';
 import { subtractStringAmount } from '@/utils/balance';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import { useSnackbar } from 'notistack';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -127,17 +128,20 @@ const ButtonWrap = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const BurnPreview = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
-    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const totalSupply = useCW721ExecuteStore((state) => state.totalNfts);
-    const burnList = useCW721ExecuteStore((state) => state.burnList);
-    const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
-    const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+
+    const context = useCW721Execute();
+    const owner = context.ownershipInfo?.owner;
+    const nftContractInfo = context.nftContractInfo;
+    // const fctBalance = context.fctBalance
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
+    const contractAddress = context.contractAddress;
+    const totalSupply = context.totalNfts;
+    const burnList = context.burnList;
+    const nftDatas = context.nftDatas;
+    const myNftList = context.myNftList;
+    const clearBurnForm = context.clearBurnForm;
     const { setMyNftList, setTotalNfts } = useCW721ExecuteAction();
 
     const { enqueueSnackbar } = useSnackbar();

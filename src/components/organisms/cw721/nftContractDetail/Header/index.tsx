@@ -3,10 +3,11 @@ import Icons from '@/components/atoms/icons';
 import IconButton from '@/components/atoms/buttons/iconButton';
 import Skeleton from '@/components/atoms/skeleton';
 import { HeaderBox, HeaderTitle, HeaderWrap } from './styles';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 
 const Header = () => {
-    const detail = useNFTContractDetailStore((state) => state.contractDetail);
+    const { contractDetail: detail } = useCW721Detail();
 
     const navigate = useNavigate();
 

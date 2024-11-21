@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+
 import { Container } from '@/styles/instantiate';
-import { rootState } from '@/redux/reducers';
+
 import { Content, Header } from '@/components/organisms/cw721/nftContractDetail';
 import useNFTContractDetail from '@/hooks/useNFTContractDetail';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+
 import { useApolloClientContext } from '@/context/apolloClientContext';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+import useWalletStore from '@/store/walletStore';
 
 const NFTContractDetail = () => {
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { address, isInit } = useWalletStore();
 
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
 
-    const { setContractDetail, setNftsInfo, setTransactions, clearForm, setOwnedNftsInfo } = useNFTContractDetailStore();
+    const { setContractDetail, setNftsInfo, setTransactions, clearForm, setOwnedNftsInfo } = useCW721Detail();
 
     const contractAddress = window.location.pathname.replace('/cw721/mynft/detail/', '');
 

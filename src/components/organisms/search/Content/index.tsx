@@ -3,10 +3,11 @@ import { Container, ContractWarp, NoticeText } from './style';
 import TokenNameCard from './tokenNameCard';
 import TokenDetailCard from './tokenDetailCard';
 import TokenWalletSearch from './tokenWalletSearch';
-import useSearchStore from '../searchStore';
+// import useSearchStore from '../searchStore';
 import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
+import { useCW20Search } from '@/context/cw20SearchContext';
+import useWalletStore from '@/store/walletStore';
 // import StyledTable, { IColumn } from '@/components/atoms/table';
 // import Cell from '@/components/atoms/table/cells';
 
@@ -44,9 +45,11 @@ const LogoBackground = styled.div`
 // ];
 
 const Content = () => {
-    const contractExist = useSearchStore((v) => v.contractExist);
-    const contractAddress = useSearchStore((v) => v.contractInfo?.address);
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const { contractExist, contractInfo } = useCW20Search();
+    const contractAddress = contractInfo?.address;
+
+    const { address } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
 
     return (
         <Container>

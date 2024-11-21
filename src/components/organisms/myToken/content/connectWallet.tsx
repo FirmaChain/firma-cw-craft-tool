@@ -1,4 +1,4 @@
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import ColorButton from '@/components/atoms/buttons/colorButton';
 import { ContentBodyWrapper } from './style';
 import { CRAFT_CONFIGS } from '@/config';

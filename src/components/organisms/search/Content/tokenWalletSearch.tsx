@@ -7,7 +7,7 @@ import Icons from '@/components/atoms/icons';
 import { useEffect, useRef, useState } from 'react';
 import { parseAmountWithDecimal2, parseExpires } from '@/utils/common';
 import useTokenDetail from '@/hooks/useTokenDetail';
-import useSearchStore from '../searchStore';
+// import useSearchStore from '../searchStore';
 import Cell from '@/components/atoms/table/cells';
 import commaNumber from 'comma-number';
 import { TOOLTIP_ID } from '@/constants/tooltip';
@@ -18,6 +18,7 @@ import { getTokenAmountFromUToken } from '@/utils/balance';
 import { isValidAddress } from '@/utils/address';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Search } from '@/context/cw20SearchContext';
 
 const WalletSearcBtn = styled(GreenButton)`
     min-width: unset;
@@ -54,9 +55,11 @@ const EndAdornment = ({
 };
 
 const TokenWalletSearch = () => {
-    const contractAddress = useSearchStore((v) => v.contractInfo?.address);
-    const symbol = useSearchStore((state) => state.tokenInfo?.symbol);
-    const decimals = useSearchStore((state) => state.tokenInfo?.decimals) || 0;
+    const { contractInfo, tokenInfo } = useCW20Search();
+
+    const contractAddress = contractInfo?.address;
+    const symbol = tokenInfo?.symbol;
+    const decimals = tokenInfo?.decimals || 0;
 
     //? Search keyword (wallet address)
     const [keyword, setKeyword] = useState<string>('');

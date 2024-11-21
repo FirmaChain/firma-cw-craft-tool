@@ -7,9 +7,8 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { IC_MINUS_CIRCLE_DISABLE } from '../icons/pngIcons';
 import styled from 'styled-components';
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
-import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { compareStringNumbers, getTokenAmountFromUToken, isZeroStringValue } from '@/utils/balance';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
@@ -17,6 +16,8 @@ import { TOOLTIP_ID } from '@/constants/tooltip';
 import { useSnackbar } from 'notistack';
 import { isValidAddress } from '@/utils/address';
 import WalletRemoveButton from '../buttons/walletRemoveButton';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -57,12 +58,14 @@ const CW20BurnFromInput = ({
 }: IProps) => {
     const id = inputId;
 
-    const contractAddress = useExecuteStore((v) => v.contractAddress);
-    const allowanceByAddress = useExecuteStore((v) => v.allowanceByAddress);
-    const setAllowanceByAddress = useExecuteStore((v) => v.setAllowanceByAddress);
-    const setCW20BalanceByAddress = useExecuteStore((v) => v.setCW20BalanceByAddress);
+    const context = useCW20Execute();
+    const contractAddress = context.contractAddress;
+    const allowanceByAddress = context.allowanceByAddress;
+    const setAllowanceByAddress = context.setAllowanceByAddress;
+    const setCW20BalanceByAddress = context.setCw20BalanceByAddress;
 
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const userAddress = useWalletStore((v) => v.address);
+    // useSelector((v: rootState) => v.wallet.address);
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
     const { getCw20AllowanceBalance, getCw20Balance } = useExecuteHook();

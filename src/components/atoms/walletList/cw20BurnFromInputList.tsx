@@ -14,7 +14,7 @@ import {
 
 import { IWallet } from '@/interfaces/wallet';
 import Icons from '../icons';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import Cw20BurnFromInput from '../input/cw20BurnFromInput';
 import AddWalletButton from '../buttons/addWalletButton';

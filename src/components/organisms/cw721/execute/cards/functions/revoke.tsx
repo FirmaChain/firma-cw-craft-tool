@@ -4,26 +4,29 @@ import { FirmaUtil } from '@firmachain/firma-js';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { isValidAddress } from '@/utils/address';
 import { INT_NUMBERS, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Revoke = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const address = useWalletStore((v) => v.address);
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const revokeAddress = useCW721ExecuteStore((state) => state.revokeAddress);
-    const revokeTokenId = useCW721ExecuteStore((state) => state.revokeTokenId);
+    const context = useCW721Execute();
+    const contractAddress = context.contractAddress;
+    const revokeAddress = context.revokeAddress;
+    const revokeTokenId = context.revokeTokenId;
 
-    const myNftList = useCW721ExecuteStore((state) => state.myNftList);
-    const nftApprovalInfo = useCW721ExecuteStore((state) => state.nftApprovalInfo);
+    const myNftList = context.myNftList;
+    const nftApprovalInfo = context.nftApprovalInfo;
 
-    const setRevokeAddress = useCW721ExecuteStore((state) => state.setRevokeAddress);
-    const setRevokeTokenId = useCW721ExecuteStore((state) => state.setRevokeTokenId);
-    const clearRevokeForm = useCW721ExecuteStore((state) => state.clearRevokeForm);
+    const setRevokeAddress = context.setRevokeAddress;
+    const setRevokeTokenId = context.setRevokeTokenId;
+    const clearRevokeForm = context.clearRevokeForm;
 
     const { setMyNftList, setNftApprovalInfo } = useCW721ExecuteAction();
 

@@ -18,28 +18,34 @@ import {
 } from './style';
 import { useNavigate } from 'react-router-dom';
 import commaNumber from 'comma-number';
-import useTokenDetailStore from '@/store/useTokenDetailStore';
+// import useTokenDetailStore from '@/store/useTokenDetailStore';
 import Divider from '@/components/atoms/divider';
 import Skeleton from '@/components/atoms/skeleton';
 import TokenLogo from '@/components/atoms/icons/TokenLogo';
 import { getTokenAmountFromUToken } from '@/utils/balance';
-import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
+// import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import { CRAFT_CONFIGS } from '@/config';
+import { useCW20Detail } from '@/context/cw20DetailStore';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useContractAddressStore from '@/store/contractAddressStore';
 
 const Title = () => {
-    const setContractAddress = useExecuteStore((state) => state.setContractAddress);
+    // const { setContractAddress } = useCW20Execute();
+    const { tokenDetail } = useCW20Detail();
 
-    const tokenUrl = useTokenDetailStore((state) => state.tokenDetail?.marketingLogoUrl);
-    const tokenSymbol = useTokenDetailStore((state) => state.tokenDetail?.tokenSymbol);
-    const tokenName = useTokenDetailStore((state) => state.tokenDetail?.tokenName);
-    const totalSupply = useTokenDetailStore((state) => state.tokenDetail?.totalSupply);
-    const codeId = useTokenDetailStore((state) => state.tokenDetail?.codeId);
-    const tokenDecimal = useTokenDetailStore((state) => state.tokenDetail?.decimals) || '';
-    const contractAddress = useTokenDetailStore((state) => state.tokenDetail?.contractAddress);
+    const tokenUrl = tokenDetail?.marketingLogoUrl;
+    const tokenSymbol = tokenDetail?.tokenSymbol;
+    const tokenName = tokenDetail?.tokenName;
+    const totalSupply = tokenDetail?.totalSupply;
+    const codeId = tokenDetail?.codeId;
+    const tokenDecimal = tokenDetail?.decimals || '';
+    const contractAddress = tokenDetail?.contractAddress;
 
     const navigatge = useNavigate();
     const [imgLoading, setImgLoading] = useState(true);
     const [validTokenLogoUrl, setValidTokenLogoUrl] = useState<string>('');
+
+    const { setCW20 } = useContractAddressStore();
 
     useEffect(() => {
         setImgLoading(true);
@@ -62,7 +68,8 @@ const Title = () => {
     }, [tokenUrl]);
 
     const onClickExecute = () => {
-        setContractAddress(contractAddress);
+        // setContractAddress(contractAddress);
+        setCW20(contractAddress);
         navigatge(`/execute`, { replace: true });
     };
 

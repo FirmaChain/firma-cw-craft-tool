@@ -45,15 +45,14 @@ import {
     ModalContentCard,
     AcceptIcon
 } from './style';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN, IC_WARNING } from '@/components/atoms/icons/pngIcons';
 import { useSnackbar } from 'notistack';
-import useInstantiateStore from '../instantiate/instaniateStore';
+// import useInstantiateStore from '../instantiate/instaniateStore';
 import useFormStore from '@/store/formStore';
 import Divider from '@/components/atoms/divider';
 import { scrollToTop } from '@/utils/common';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { CRAFT_CONFIGS } from '@/config';
 import { Cw721Expires, Expires, FirmaUtil } from '@firmachain/firma-js';
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
@@ -81,10 +80,12 @@ import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 // import { useAddContractMutation, useUpdateTokenLogo } from '@/api/mutations';
-import { WalletActions } from '@/redux/actions';
+// import { WalletActions } from '@/redux/actions';
 // import { useDeleteContractFromDB } from '@/api/queries';
 import { AddContractInfo, AddContractReq, DeleteContractFromDBReq, UpdateContractOwnerReq, UpdateTokenLogo } from '@/interfaces/common';
 import ContractApi from '@/api/contractApi';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
@@ -226,10 +227,13 @@ const TxModal = ({
     const { updateContractInfo: updateCW20ContractInfo } = useCW20MyTokenContext();
     const { updateContractInfo: updateCW721ContractInfo, updateThumbnailInfo } = useCW721NFTContractsContext();
 
-    const { passwordWallet, timeKey } = useSelector((state: rootState) => state.wallet);
-    const cwMode = useSelector((v: rootState) => v.global.cwMode);
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
+    const { address, fctBalance, passwordWallet, timeKey, handleFCTBalance } = useWalletStore();
+    // useSelector((state: rootState) => state.wallet);
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
+
+    const cwMode = useGlobalStore((v) => v.cwMode);
+    // useSelector((v: rootState) => v.global.cwMode);
 
     const [error, setError] = useState<any>(null);
     const [result, setResult] = useState<null | IResultState>(null);
@@ -253,12 +257,12 @@ const TxModal = ({
     const getBalance = () => {
         getFctBalance(address)
             .then((result) => {
-                WalletActions.handleFCTBalance(result);
+                handleFCTBalance(result);
                 // setBalance(result);
             })
             .catch((error) => {
                 console.log(error);
-                WalletActions.handleFCTBalance('0');
+                handleFCTBalance('0');
                 // setBalance('0');
             });
     };
@@ -620,8 +624,8 @@ const TxModal = ({
                         setStatus('failure');
                     }
 
-                    useInstantiateStore.getState().clearForm();
-                    useFormStore.getState().clearForm();
+                    // useInstantiateStore.getState().clearForm();
+                    // useFormStore.getState().clearForm();
                     return;
                 case '/cw721/instantiateContract':
                     const cw721info = params.txParams;

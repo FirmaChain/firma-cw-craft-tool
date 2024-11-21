@@ -1,41 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
-import { create } from 'zustand';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { useKeyPress } from 'react-use';
 import { ModalOverlay } from '@/components/modal/style';
 import WalletConnectModal from '@/components/organisms/modal/walletConnectModal';
-
-interface Modal extends ModalContent {
-    id: string;
-}
-
-interface ModalStore {
-    modals: Modal[];
-    openModal: (content: ModalContent) => string;
-    closeModal: (id?: string) => void;
-    closeAllModal: () => void;
-}
-
-export const useModalStore = create<ModalStore>((set) => ({
-    modals: [],
-    openModal: (content: ModalContent) => {
-        const id = uuidv4();
-        set((state) => ({
-            modals: [...state.modals, { id, ...content }]
-        }));
-        return id;
-    },
-    closeModal: (id?: string) => {
-        set((state) => ({
-            modals: id ? state.modals.filter((modal) => modal.id !== id) : state.modals.slice(0, -1)
-        }));
-    },
-    closeAllModal: () => {
-        set({ modals: [] });
-    }
-}));
+import useModalStore from '@/store/modalStore';
 
 export const ModalRenderer = () => {
     const { modals } = useModalStore();

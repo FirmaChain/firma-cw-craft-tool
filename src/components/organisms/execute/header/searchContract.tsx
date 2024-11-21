@@ -4,12 +4,12 @@ import { enqueueSnackbar } from 'notistack';
 import SearchInputWithButton2 from '@/components/atoms/input/searchInputWithButton';
 import IconButton from '@/components/atoms/buttons/iconButton';
 
-import useExecuteStore from '../hooks/useExecuteStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import useExecuteStore from '../hooks/useExecuteStore';
+
 import { useNavigate } from 'react-router-dom';
 import { isValidAddress } from '@/utils/address';
 import { BYPASS_ALL, NORMAL_TEXT, WALLET_ADDRESS_REGEX } from '@/constants/regex';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 const EndAdornment = ({
     keyword,
@@ -38,12 +38,12 @@ interface ISearchContractProps {
 const SearchContract = ({ contractAddress }: ISearchContractProps) => {
     const navigate = useNavigate();
 
-    const setContractAddress = useExecuteStore((state) => state.setContractAddress);
-    const clearForm = useExecuteStore((state) => state.clearForm);
-    const clearInfo = useExecuteStore((state) => state.clearInfo);
-    const contractInfo = useExecuteStore((v) => v.contractInfo);
-
-    const storeContractAddress = useExecuteStore((v) => v.contractAddress);
+    const context = useCW20Execute();
+    const setContractAddress = context.setContractAddress;
+    const clearForm = context.clearForm;
+    const clearInfo = context.clearInfo;
+    const contractInfo = context.contractInfo;
+    const storeContractAddress = context.contractAddress;
 
     const previousKeywordRef = useRef<string | null>(null);
     const [keyword, setKeyword] = useState<string>(contractAddress);

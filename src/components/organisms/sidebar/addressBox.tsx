@@ -3,20 +3,21 @@ import { AddressCard, AddressText } from './style';
 import Icons from '@/components/atoms/icons';
 import { copyToClipboard, shortenAddress } from '@/utils/common';
 import { useSnackbar } from 'notistack';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import Divider from '@/components/atoms/divider';
 import styled from 'styled-components';
 import { IC_LOG_OUT } from '@/components/atoms/icons/pngIcons';
 import { useEffect, useState } from 'react';
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
 import Skeleton from '@/components/atoms/skeleton';
-import { GlobalActions, WalletActions } from '@/redux/actions';
-import { persistor } from '@/redux';
+// import { /*GlobalActions,*/ WalletActions } from '@/redux/actions';
+// import { persistor } from '@/redux';
 import useResetStoreData from '@/hooks/useResetStoreData';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useFirmaSDKInternal from '@/hooks/useFirmaSDKInternal';
 import { removeAccessToken } from '@/utils/token';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const BalanceBox = styled(AddressCard)<{ $isOpen: boolean }>`
     position: absolute;
@@ -131,8 +132,12 @@ const BalanceAmountTypo = styled.div`
 `;
 
 const AddressBox = () => {
-    const { address } = useSelector((state: rootState) => state.wallet);
-    const { cwMode, isFetchedBalance } = useSelector((state: rootState) => state.global);
+    // const { address } = useSelector((state: rootState) => state.wallet);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
+    // useSelector((state: rootState) => state.global);
+
+    const { cwMode, isFetchedBalance, handleFetchedBalance } = useGlobalStore();
+    const { address, fctBalance, handleFCTBalance, clearStore } = useWalletStore();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -143,7 +148,7 @@ const AddressBox = () => {
     const { getFctBalance } = useFirmaSDKInternal();
 
     // const [fctBalance, setBalance] = useState<string>('');
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
+
     const [open, setOpen] = useState(false);
 
     const onClickAddress = async (evt) => {
@@ -157,9 +162,9 @@ const AddressBox = () => {
     };
 
     const onClickLogout = () => {
-        persistor.purge();
+        // persistor.purge();
         resetAll();
-        WalletActions.clearStore();
+        clearStore();
         removeAccessToken();
 
         switch (cwMode) {
@@ -191,9 +196,9 @@ const AddressBox = () => {
 
     useEffect(() => {
         getFctBalance(address).then((res) => {
-            WalletActions.handleFCTBalance(res);
+            handleFCTBalance(res);
         });
-        GlobalActions.handleFetchedBalance(false);
+        handleFetchedBalance(false);
     }, [isFetchedBalance]);
 
     return (

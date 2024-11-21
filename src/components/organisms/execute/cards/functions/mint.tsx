@@ -11,13 +11,14 @@ import {
 } from '@/utils/balance';
 import { IWallet } from '@/interfaces/wallet';
 import IconTooltip from '@/components/atoms/tooltip';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import useFormStore from '@/store/formStore';
 import Divider from '@/components/atoms/divider';
 import Cw20MintInputList from '@/components/atoms/walletList/cw20MintInputList';
 import Icons from '@/components/atoms/icons';
 import useExecuteActions from '../../action';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 const TotalMintWrap = styled.div`
     display: flex;
@@ -73,12 +74,14 @@ const MinterCapExceedBox = styled.div`
 `;
 
 const Mint = () => {
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
-    const minterInfo = useExecuteStore((state) => state.minterInfo);
-    const tokenInfo = useExecuteStore((state) => state.tokenInfo);
-    const mintingList = useExecuteStore((state) => state.mintingList);
-    const setMinterList = useExecuteStore((state) => state.setMinterList);
     const { setTokenInfo } = useExecuteActions();
+
+    const { contractAddress, minterInfo, tokenInfo, mintingList, setMinterList, clearMinterList } = useCW20Execute();
+    // const contractAddress = useExecuteStore((state) => state.contractAddress);
+    // const minterInfo = useExecuteStore((state) => state.minterInfo);
+    // const tokenInfo = useExecuteStore((state) => state.tokenInfo);
+    // const mintingList = useExecuteStore((state) => state.mintingList);
+    // const setMinterList = useExecuteStore((state) => state.setMinterList);
 
     //! if minter cap is zero, or no minter info provided, disable mint
     const DISABLE_MINT = !minterInfo || !minterInfo?.cap || BigInt(minterInfo?.cap) === BigInt(0);
@@ -111,7 +114,7 @@ const Mint = () => {
         setTokenInfo(contractAddress);
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearMinterList();
+            clearMinterList();
         };
     }, []);
 

@@ -1,6 +1,6 @@
 import { FirmaSDK } from '@firmachain/firma-js';
 import { encryptWallet, getRandomKey } from './keystore';
-import { WalletActions } from '@/redux/actions';
+import useWalletStore from '@/store/walletStore';
 
 const storeWalletInternal = (password: string, mnemonic: string, privateKey: string, address: string, timeKey: string) => {
     const wallet: { mnemonic: string; privateKey: string; address: string } = {
@@ -9,22 +9,22 @@ const storeWalletInternal = (password: string, mnemonic: string, privateKey: str
         address
     };
 
-    WalletActions.handleInit(true);
+    useWalletStore.getState().handleInit(true);
 
     const encryptPasswordData = encryptWallet(password, wallet);
     const encryptTimeKeyData = encryptWallet(timeKey, wallet);
 
-    WalletActions.handleTimeKey(timeKey);
-    WalletActions.handlePasswordWallet(encryptPasswordData);
-    WalletActions.handleTimeKeyWallet(encryptTimeKeyData);
-    WalletActions.handleAddress(wallet.address);
+    useWalletStore.getState().handleTimeKey(timeKey);
+    useWalletStore.getState().handlePasswordWallet(encryptPasswordData);
+    useWalletStore.getState().handleTimeKeyWallet(encryptTimeKeyData);
+    useWalletStore.getState().handleAddress(wallet.address);
 };
 
 export const storeWalletFromPrivateKey = async (firmaSDK: FirmaSDK, password: string, privateKey: string) => {
     const walletService = await firmaSDK.Wallet.fromPrivateKey(privateKey);
     const address = await walletService.getAddress();
     const timeKey = getRandomKey();
-    WalletActions.handleTimeKey(timeKey);
+    useWalletStore.getState().handleTimeKey(timeKey);
 
     storeWalletInternal(password, '', privateKey, address, timeKey);
 };
@@ -35,7 +35,7 @@ export const storeWalletFromMnemonic = async (firmaSDK: FirmaSDK, password: stri
     const address = await walletService.getAddress();
 
     const timeKey = getRandomKey();
-    WalletActions.handleTimeKey(timeKey);
+    useWalletStore.getState().handleTimeKey(timeKey);
 
     storeWalletInternal(password, mnemonic, privateKey, address, timeKey);
 };

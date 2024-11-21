@@ -1,9 +1,10 @@
 import { createContext, useContext, ReactNode, useEffect, useRef } from 'react';
 import { useRefreshToken } from '@/api/queries';
-import { rootState } from '@/redux/reducers';
+
 import { getAccessToken, setAccessToken } from '@/utils/token';
-import { useSelector } from 'react-redux';
+
 import { useSnackbar } from 'notistack';
+import useWalletStore from '@/store/walletStore';
 
 interface AuthContextProps {
     refreshToken: () => void;
@@ -21,7 +22,8 @@ export const useAuthContext = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const accessToken = getAccessToken();
-    const walletAddress = useSelector((v: rootState) => v.wallet.address);
+    const { address: walletAddress } = useWalletStore();
+    // const walletAddress = useSelector((v: rootState) => v.wallet.address);
     const { enqueueSnackbar } = useSnackbar();
 
     const { refetch } = useRefreshToken(

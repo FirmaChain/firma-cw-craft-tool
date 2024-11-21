@@ -46,13 +46,12 @@ import {
     AcceptIcon,
     TitleRow
 } from './style';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { IC_ALERT_YELLOW, IC_CEHCK_ROUND, IC_CIRCLE_FAIL, IC_CLOSE, IC_FIRMACHAIN, IC_WARNING } from '@/components/atoms/icons/pngIcons';
 import { useSnackbar } from 'notistack';
 import Divider from '@/components/atoms/divider';
 import { scrollToTop } from '@/utils/common';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { CRAFT_CONFIGS } from '@/config';
 import { FirmaUtil } from '@firmachain/firma-js';
 import { formatWithCommas, getTokenAmountFromUToken } from '@/utils/balance';
@@ -79,11 +78,13 @@ import { useCW20MyTokenContext } from '@/context/cw20MyTokenContext';
 import { useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import RequestQR from '../requestQR';
-import { GlobalActions, WalletActions } from '@/redux/actions';
+// import { /*GlobalActions,*/ WalletActions } from '@/redux/actions';
 import { getTransactionHash } from '@/utils/transaction';
 import { useAddContractMutation, useUpdateTokenLogo } from '@/api/mutations';
 import { DeleteContractFromDBReq, UpdateContractOwnerReq } from '@/interfaces/common';
 import ContractApi from '@/api/contractApi';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 export type ModalType = 'INSTANTIATE' | 'EXECUTES';
 
@@ -178,7 +179,10 @@ const QRModal2 = ({
     onClickConfirm: () => void;
     hideGotoDetail?: boolean;
 }) => {
-    const isInit = useSelector((v: rootState) => v.wallet.isInit);
+    const { isInit, address, fctBalance, handleFCTBalance } = useWalletStore();
+    // const isInit = useSelector((v: rootState) => v.wallet.isInit);
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
 
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
@@ -189,9 +193,8 @@ const QRModal2 = ({
     const { updateContractInfo: updateCW20ContractInfo } = useCW20MyTokenContext();
     const { updateContractInfo: updateCW721ContractInfo, updateThumbnailInfo } = useCW721NFTContractsContext();
 
-    const cwMode = useSelector((v: rootState) => v.global.cwMode);
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
+    const { cwMode, handleFetchedBalance } = useGlobalStore();
+    // const cwMode = useSelector((v: rootState) => v.global.cwMode);
 
     const [error, setError] = useState<any>(null);
     const [result, setResult] = useState<null | SuccessData>(null);
@@ -267,12 +270,12 @@ const QRModal2 = ({
     const getBalance = () => {
         getFctBalance(address)
             .then((result) => {
-                WalletActions.handleFCTBalance(result);
+                handleFCTBalance(result);
                 // setBalance(result);
             })
             .catch((error) => {
                 console.log(error);
-                WalletActions.handleFCTBalance('0');
+                handleFCTBalance('0');
                 // setBalance('0');
             });
     };
@@ -527,7 +530,7 @@ const QRModal2 = ({
                                             ].includes(module)
                                         )
                                             setStatus('success');
-                                        GlobalActions.handleFetchedBalance(true);
+                                        handleFetchedBalance(true);
                                     }}
                                     onFailed={(requestData: any) => {
                                         setResult(requestData);
@@ -537,7 +540,7 @@ const QRModal2 = ({
                                             variant: 'error',
                                             autoHideDuration: 2000
                                         });
-                                        GlobalActions.handleFetchedBalance(true);
+                                        handleFetchedBalance(true);
                                     }}
                                 />
                             </QrCodeWrap>

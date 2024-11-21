@@ -1,19 +1,21 @@
 import styled from 'styled-components';
 
-import useInstantiateStore from '../instantiateStore';
+// import useInstantiateStore from '../instantiateStore';
 import { IC_PREVIEW, IC_TAG, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import ContentItem from './contentItem';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { useMemo } from 'react';
 import Submit from './submit';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import { CRAFT_CONFIGS } from '@/config';
 import { useScrollContext } from '@/context/scrollContext';
 import { isValidAddress } from '@/utils/address';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import { useSnackbar } from 'notistack';
+import { useCW721Instantiate } from '@/context/cw721InstantiateContext';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const ContentWrapper = styled.div`
     box-sizing: border-box;
@@ -125,22 +127,25 @@ const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const Preview = () => {
     const { scroll } = useScrollContext();
-    const isInit = useSelector((state: rootState) => state.wallet.isInit);
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
-    const contractMode = useSelector((state: rootState) => state.global.contractMode);
+    const { isInit, address, fctBalance } = useWalletStore();
+    // const isInit = useSelector((state: rootState) => state.wallet.isInit);
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((state: rootState) => state.wallet.fctBalance);
+    const contractMode = useGlobalStore((v) => v.contractMode);
+    // useSelector((state: rootState) => state.global.contractMode);
 
     const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
 
-    const nftName = useInstantiateStore((v) => v.nftName);
-    const nftSymbol = useInstantiateStore((v) => v.nftSymbol);
-    const admin = useInstantiateStore((v) => v.admin);
-    const minter = useInstantiateStore((v) => v.minter);
-    const label = useInstantiateStore((v) => v.label);
+    const context = useCW721Instantiate();
 
-    const clearForm = useInstantiateStore((v) => v.clearForm);
+    const nftName = context.nftName;
+    const nftSymbol = context.nftSymbol;
+    const admin = context.admin;
+    const minter = context.minter;
+    const label = context.label;
+    const clearForm = context.clearForm;
 
     const disableButton = useMemo(() => {
         if (isInit) {

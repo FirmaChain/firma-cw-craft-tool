@@ -1,17 +1,18 @@
 import Divider from '@/components/atoms/divider';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
 import { Container, TokenName, TokenNameBox, TotalSupplyBox } from './style';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 import PinButton from '@/components/atoms/buttons/pinButton';
 import usePinContractStore from '@/store/pinContractStore';
-import useCW721SearchStore from '../../cw721SearchStore';
+// import useCW721SearchStore from '../../cw721SearchStore';
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+import useWalletStore from '@/store/walletStore';
 
 const TokenNameCard = () => {
-    const userAddress = useSelector((state: rootState) => state.wallet.address);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((state: rootState) => state.wallet.address);
 
-    const { contractDetail, nftsInfo } = useNFTContractDetailStore((state) => state);
+    const { contractDetail, nftsInfo } = useCW721Detail();
     const admin = contractDetail?.admin || '';
     const contractName = contractDetail?.name || '';
     const contractSymbol = contractDetail?.symbol || '';

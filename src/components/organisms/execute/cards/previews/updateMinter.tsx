@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 import { IC_REFRESH, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import IconButton from '@/components/atoms/buttons/iconButton';
-import useExecuteStore from '../../hooks/useExecuteStore';
-import { useModalStore } from '@/hooks/useModal';
+// import useExecuteStore from '../../hooks/useExecuteStore';
+import useModalStore from '@/store/modalStore';
 import { CRAFT_CONFIGS } from '@/config';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import useExecuteActions from '../../action';
@@ -12,9 +12,10 @@ import { isValidAddress } from '@/utils/address';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { useSnackbar } from 'notistack';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -109,16 +110,18 @@ const AccordionTypo = styled.div<{ $disabled?: boolean }>`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const UpdateMinter = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
-    const admin = useExecuteStore((state) => state.contractInfo?.contract_info?.admin);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
 
-    const contractAddress = useExecuteStore((state) => state.contractAddress);
+    const context = useCW20Execute();
+    const admin = context.contractInfo?.contract_info?.admin;
+    const contractAddress = context.contractAddress;
     // const fctBalance = useCW721ExecuteStore((state) => state.fctBalance);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const minterInfo = useExecuteStore((state) => state.minterInfo);
-    const minterAddress = useExecuteStore((state) => state.minterAddress);
-    const clearMinter = useExecuteStore((state) => state.clearMinter);
-    const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
+    const minterInfo = context.minterInfo;
+    const minterAddress = context.minterAddress;
+    const clearMinter = context.clearMinter;
+    const setSelectMenu = context.setSelectMenu;
     const { setMinterInfo } = useExecuteActions();
 
     const { enqueueSnackbar } = useSnackbar();

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import {
     CopyrightText,
@@ -24,14 +23,16 @@ import { CW_MODE_TYPE } from '@/constants/common';
 import Icons from '@/components/atoms/icons';
 import { MenuItemText } from './style';
 import ColorButton from '@/components/atoms/buttons/colorButton';
-import { rootState } from '@/redux/reducers';
-import { GlobalActions } from '@/redux/actions';
+
+// import { GlobalActions } from '@/redux/actions';
 import { CRAFT_CONFIGS } from '@/config';
 import { openLink } from '@/utils/common';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import Divider from '@/components/atoms/divider';
 import { IC_SOCIAL_FIRMACHAIN, IC_SOCIAL_MEDIUM, IC_SOCIAL_TELEGRAM, IC_SOCIAL_TWITTER } from '@/components/atoms/icons/pngIcons';
 import AddressBox from './addressBox';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const SOCIAL_LIST = [
     { Icon: <SocialIcon src={IC_SOCIAL_FIRMACHAIN} />, socialLink: 'https://firmachain.org' },
@@ -41,8 +42,10 @@ const SOCIAL_LIST = [
 ];
 
 const Sidebar = () => {
-    const { isInit, address } = useSelector((state: rootState) => state.wallet);
-    const { cwMode } = useSelector((state: rootState) => state.global);
+    const { address, isInit } = useWalletStore();
+    // const { isInit, address } = useSelector((state: rootState) => state.wallet);
+    const { cwMode, handleCw } = useGlobalStore();
+    // useSelector((state: rootState) => state.global);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -56,14 +59,14 @@ const Sidebar = () => {
 
     useEffect(() => {
         if (location.pathname.includes('cw721')) {
-            GlobalActions.handleCw('CW721');
+            handleCw('CW721');
         } else {
-            GlobalActions.handleCw('CW20');
+            handleCw('CW20');
         }
     }, [location]);
 
     const onChangeSwitch = (type: CW_MODE_TYPE) => {
-        GlobalActions.handleCw(type);
+        handleCw(type);
         switch (type) {
             case 'CW20':
                 if (location.pathname.includes('instantiate')) {

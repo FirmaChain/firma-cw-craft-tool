@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import { QRContainer, TimerTypo, TimerWrap, TxTimerTypo } from './style';
 import ConnectQR from '@/components/atoms/connectQR';
 import { CRAFT_CONFIGS } from '@/config';
-import { rootState } from '@/redux/reducers';
+
 import useAPI from '@/hooks/useAPI';
 import { IC_RESET, IC_RESET_WHITE } from '@/components/atoms/icons/pngIcons';
 import { getTransactionStatusCode } from '@/utils/transaction';

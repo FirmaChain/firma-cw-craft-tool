@@ -15,10 +15,10 @@ import {
 import { IWallet } from '@/interfaces/wallet';
 import InputAddressAmount from '../input/inputAddressAmount';
 import { useSnackbar } from 'notistack';
-import { IWalletWithID } from '@/components/organisms/instantiate/instaniateStore';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import AddWalletButton from '../buttons/addWalletButton';
+import { IWalletWithID } from '@/context/cw20InstantiateContext';
 
 interface IProps {
     walletList: IWalletWithID[];

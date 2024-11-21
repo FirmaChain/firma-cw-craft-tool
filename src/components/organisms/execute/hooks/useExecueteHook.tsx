@@ -1,11 +1,10 @@
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+
 import { useSnackbar } from 'notistack';
 import { Expires, FirmaSDK } from '@firmachain/firma-js';
 
-import { rootState } from '@/redux/reducers';
 import { CRAFT_CONFIGS } from '@/config';
-import useExecuteStore from './useExecuteStore';
+// import useExecuteStore from './useExecuteStore';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 export interface ITokenInfoState {
@@ -46,7 +45,7 @@ interface IAllowanceBalanceState {
 const useExecuteHook = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { firmaSDK } = useFirmaSDKContext();
-    const userAddress = useSelector((state: rootState) => state.wallet.address);
+    // const userAddress = useSelector((state: rootState) => state.wallet.address);
 
     const getContractTokenInfo = useCallback(
         async (contractAddress: string, address: string) => {

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
     GoToButtonTypo,
     GoToExecuteButton,
@@ -17,14 +15,18 @@ import { useNavigate } from 'react-router-dom';
 import commaNumber from 'comma-number';
 import Divider from '@/components/atoms/divider';
 import Skeleton from '@/components/atoms/skeleton';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
-import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
-import { rootState } from '@/redux/reducers';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useCW721ExecuteStore from '../../../execute/hooks/useCW721ExecuteStore';
+
 import TextEllipsis from '@/components/atoms/ellipsis';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useContractAddressStore from '@/store/contractAddressStore';
 
 const Title = () => {
-    const { contractDetail, nftsInfo } = useNFTContractDetailStore();
-    const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
+    const { contractDetail, nftsInfo } = useCW721Detail();
+    // const { setContractAddress } = useCW721Execute();
+    const { setCW721 } = useContractAddressStore();
 
     const contractAddress = contractDetail?.contractAddress || null;
     const name = contractDetail?.name || null;
@@ -34,7 +36,8 @@ const Title = () => {
     const navigatge = useNavigate();
 
     const onClickExecute = () => {
-        setContractAddress(contractAddress);
+        // setContractAddress(contractAddress);
+        setCW721(contractAddress);
         navigatge(`/cw721/execute`);
     };
 

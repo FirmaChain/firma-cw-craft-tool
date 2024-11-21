@@ -1,17 +1,20 @@
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import { useEffect } from 'react';
-import useExecuteStore from '../../hooks/useExecuteStore';
+// import useExecuteStore from '../../hooks/useExecuteStore';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
 import { DEFAULT_INPUT_REGEX } from '@/constants/regex';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
 
 const LOGO_URL_INPUT_FORM_ID = 'EXECUTE_UPDATE_LOGO_URL';
 const LOGO_URL_ERROR_TYPE = 'INVALID_ADDRESS';
 
 const UpdateLogo = () => {
-    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
-    const marketingLogoUrl = useExecuteStore((state) => state.marketingLogoUrl);
-    const setMarketingLogoUrl = useExecuteStore((state) => state.setMarketingLogoUrl);
+    const context = useCW20Execute();
+    const marketingInfo = context.marketingInfo;
+    const marketingLogoUrl = context.marketingLogoUrl;
+    const setMarketingLogoUrl = context.setMarketingLogoUrl;
+    const clearLogoUrl = context.clearLogoUrl;
 
     const onChangeMarketingLogoUrl = (v: string) => {
         setMarketingLogoUrl(v);
@@ -26,7 +29,7 @@ const UpdateLogo = () => {
     useEffect(() => {
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearLogoUrl();
+            clearLogoUrl();
         };
     }, []);
 

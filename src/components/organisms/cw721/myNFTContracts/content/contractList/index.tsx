@@ -1,18 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import { IContractInfo, useCW721NFTContractsContext } from '@/context/cw721MyNFTContractsContext';
 import { Container, CurrentPageNumber, PaginationButton, PaginationContainer, ContractCardBox, ContractCardContainer } from './style';
-import useMyNFTContracts from '@/hooks/useMyNFTContracts';
+// import useMyNFTContracts from '@/hooks/useMyNFTContracts';
 import RowsPerPageSelect from '@/components/atoms/select/rowsPerPageSelect';
 import Icons from '@/components/atoms/icons';
 import NoToken from '../noToken';
 import ContractCard from './contractCard';
-import { sleep } from '@/utils/common';
-import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+// import { sleep } from '@/utils/common';
+// import { useFirmaSDKContext } from '@/context/firmaSDKContext';
+import useGlobalStore from '@/store/globalStore';
 
 const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boolean) => void }) => {
-    const { getCW721ContractInfo } = useMyNFTContracts();
-    const { firmaSDK } = useFirmaSDKContext();
+    // const { getCW721ContractInfo } = useMyNFTContracts();
+    const { handleGlobalLoading } = useGlobalStore();
     const { contracts, updateContractInfo, currentPage, setCurrentPage, updateThumbnailInfo } = useCW721NFTContractsContext();
 
     const [pageItems, setPageItems] = useState<IContractInfo[]>([]);
@@ -31,7 +32,7 @@ const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boole
             const endIndex = startIndex + rowsPerPage;
             const currentContracts = contracts.slice(startIndex, endIndex);
 
-            GlobalActions.handleGlobalLoading(true);
+            handleGlobalLoading(true);
 
             const fetchedItems = currentContracts.map((v) => v.info);
             // const fetchedItems = await Promise.all(
@@ -64,7 +65,7 @@ const MyContractList = ({ handleShowCount }: { handleShowCount: (newValue: boole
         } catch (error) {
             console.error('Error fetching contract items:', error);
         } finally {
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
             setFetching(false);
         }
     };

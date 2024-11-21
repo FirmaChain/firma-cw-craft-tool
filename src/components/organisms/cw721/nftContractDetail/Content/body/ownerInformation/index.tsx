@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 
 import CopyIconButton from '@/components/atoms/buttons/copyIconButton';
 import Skeleton from '@/components/atoms/skeleton';
-import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
+// import useNFTContractDetailStore from '@/store/useNFTContractDetailStore';
 
 import {
     SpecificItem,
@@ -19,17 +19,35 @@ import {
 import { compareStringNumbers } from '@/utils/balance';
 import IconTooltip from '@/components/atoms/tooltip';
 import { IC_WARNING_SIGN } from '@/components/atoms/icons/pngIcons';
-import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
-import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
-import { isValidAddress } from '@/utils/address';
+// import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
+// import useCW721ExecuteAction from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteAction';
+// import { isValidAddress } from '@/utils/address';
 import TextEllipsis from '@/components/atoms/ellipsis';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useCW721Detail } from '@/context/cw721DetailStore';
+// import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import { useSnackbar } from 'notistack';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const OwnerInformation = () => {
-    const contractInfo = useNFTContractDetailStore((state) => state.contractDetail);
-    const blockHeight = useCW721ExecuteStore((state) => state.blockHeight);
+    const { contractDetail: contractInfo } = useCW721Detail();
+    const { firmaSDK } = useFirmaSDKContext();
 
-    const { setBlockHeight } = useCW721ExecuteAction();
+    const [blockHeight, setBlockHeight] = useState('0');
+    const { enqueueSnackbar } = useSnackbar();
+
+    // const { blockHeight } = useCW721Execute();
+    // const { setBlockHeight } = useCW721ExecuteAction();
+
+    useEffect(() => {
+        try {
+            firmaSDK.BlockChain.getChainSyncInfo().then((res) => setBlockHeight(res.latest_block_height));
+        } catch (error) {
+            enqueueSnackbar({ message: 'Failed to get latest block height', variant: 'error' });
+        }
+
+        // setBlockHeight();
+    }, []);
 
     const admin = contractInfo?.ownerInfo.owner;
     const pending_owner = contractInfo?.ownerInfo.pending_owner;
@@ -104,10 +122,6 @@ const OwnerInformation = () => {
 
         return <SpecificValueTypo></SpecificValueTypo>;
     };
-
-    useEffect(() => {
-        setBlockHeight();
-    }, []);
 
     return (
         <ContractCard>

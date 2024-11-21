@@ -2,12 +2,12 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { IC_COIN_STACK, IC_COIN_STACK2, IC_LINK_GRAY, IC_WALLET } from '@/components/atoms/icons/pngIcons';
 import ArrowToggleButton from '@/components/atoms/buttons/arrowToggleButton';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import Divider from '@/components/atoms/divider';
 import IconTooltip from '@/components/atoms/tooltip';
 import GreenButton from '@/components/atoms/buttons/greenButton';
 import { addStringAmount } from '@/utils/balance';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { isValidAddress } from '@/utils/address';
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
@@ -15,9 +15,10 @@ import { CRAFT_CONFIGS } from '@/config';
 import QRModal2, { ModalType } from '@/components/organisms/modal/qrModal2';
 import TxModal from '@/components/organisms/modal/txModal';
 import TextEllipsis from '@/components/atoms/ellipsis';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { useSnackbar } from 'notistack';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -209,22 +210,25 @@ const ScrollbarContainer = styled.div`
 const USE_WALLET_CONNECT = CRAFT_CONFIGS.USE_WALLET_CONNECT;
 
 const MintPreview = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const owner = useCW721ExecuteStore((state) => state.ownershipInfo?.owner);
-    const nftContractInfo = useCW721ExecuteStore((state) => state.nftContractInfo);
-    const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
-    const totalNfts = useCW721ExecuteStore((state) => state.totalNfts);
-    const alreadyMintList = useCW721ExecuteStore((state) => state.alreadyMintList);
-    const notYetMintList = useCW721ExecuteStore((state) => state.notYetMintList);
+    const { address, fctBalance } = useWalletStore();
+    // const address = useSelector((v: rootState) => v.wallet.address);
 
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const mintRecipientAddress = useCW721ExecuteStore((state) => state.mintRecipientAddress);
-    const mintList = useCW721ExecuteStore((state) => state.mintList);
+    const context = useCW721Execute();
+    const owner = context.ownershipInfo?.owner;
+    const nftContractInfo = context.nftContractInfo;
+    // const fctBalance = useSelector((v: rootState) => v.wallet.fctBalance);
+    const totalNfts = context.totalNfts;
+    const alreadyMintList = context.alreadyMintList;
+    const notYetMintList = context.notYetMintList;
+
+    const contractAddress = context.contractAddress;
+    const mintRecipientAddress = context.mintRecipientAddress;
+    const mintList = context.mintList;
+    const clearMintForm = context.clearMintForm;
 
     const { enqueueSnackbar } = useSnackbar();
 
     const modal = useModalStore();
-    const clearMintForm = useCW721ExecuteStore((state) => state.clearMintForm);
 
     const { setTotalNfts } = useCW721ExecuteAction();
 

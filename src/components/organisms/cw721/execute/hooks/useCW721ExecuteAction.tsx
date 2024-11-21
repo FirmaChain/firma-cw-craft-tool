@@ -1,12 +1,14 @@
 import { useSnackbar } from 'notistack';
-import useCW721ExecuteStore from './useCW721ExecuteStore';
-import { GlobalActions, WalletActions } from '@/redux/actions';
+// import useCW721ExecuteStore from './useCW721ExecuteStore';
+// import { /*GlobalActions,*/ WalletActions } from '@/redux/actions';
 import { Cw721Approval, Cw721ContractInfo, Cw721NftInfo } from '@firmachain/firma-js';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { sleep } from '@/utils/common';
 import { useEffect, useState } from 'react';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 interface IValidTokensState {
     tokenId: string;
@@ -16,10 +18,25 @@ interface IValidTokensState {
 
 const useCW721ExecuteAction = () => {
     const { firmaSDK } = useFirmaSDKContext();
-    const userAddress = useSelector((v: rootState) => v.wallet.address);
+    const { address: userAddress, handleFCTBalance } = useWalletStore();
+    // useSelector((v: rootState) => v.wallet.address);
 
-    const burnList = useCW721ExecuteStore((v) => v.burnList);
-    const nftDatas = useCW721ExecuteStore((v) => v.nftDatas);
+    const { handleGlobalLoading } = useGlobalStore();
+
+    const context = useCW721Execute();
+    const burnList = context.burnList;
+    const nftDatas = context.nftDatas;
+    const _setContractInfo = context.setContractInfo;
+    const _setNftContractInfo = context.setNftContractInfo;
+    const clearForm = context.clearForm;
+    const setContractExist = context.setContractExist;
+    const _setTotalNfts = context.setTotalNfts;
+    const _setOwnershipInfo = context.setOwnershipInfo;
+    const _setMyNftList = context.setMyNftList;
+    const _setBlockHeight = context.setBlockHeight;
+    const _setNftApprovalInfo = context.setNftApprovalInfo;
+    const _setMinter = context.setMinter;
+    const _setNftDatas = context.setNftDatas;
 
     const { enqueueSnackbar } = useSnackbar();
     const [validTokens, setValidTokens] = useState<IValidTokensState[]>([]);
@@ -37,7 +54,7 @@ const useCW721ExecuteAction = () => {
     const setContractInfo = async (contractAddress: string) => {
         try {
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
-            useCW721ExecuteStore.getState().setContractInfo(contractInfo);
+            _setContractInfo(contractInfo);
         } catch (error) {
             console.log('error - contractAddress', contractAddress);
             console.log(error);
@@ -51,7 +68,7 @@ const useCW721ExecuteAction = () => {
     const setNftContractInfo = async (contractAddress: string) => {
         try {
             const nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
-            useCW721ExecuteStore.getState().setNftContractInfo(nftContractInfo);
+            _setNftContractInfo(nftContractInfo);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -65,7 +82,7 @@ const useCW721ExecuteAction = () => {
         try {
             const fctBalance = await firmaSDK.Bank.getBalance(address?.toLowerCase());
             // useCW721ExecuteStore.getState().setFctBalance(fctBalance);
-            WalletActions.handleFCTBalance(fctBalance);
+            handleFCTBalance(fctBalance);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -84,7 +101,7 @@ const useCW721ExecuteAction = () => {
         //? in case of searching cw721 contract in cw20 execute page
 
         try {
-            GlobalActions.handleGlobalLoading(true);
+            handleGlobalLoading(true);
 
             let nftContractInfo: Cw721ContractInfo;
 
@@ -94,8 +111,8 @@ const useCW721ExecuteAction = () => {
                 nftContractInfo = await firmaSDK.Cw721.getContractInfo(contractAddress?.toLowerCase());
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721 contract.' });
-                useCW721ExecuteStore.getState().clearForm();
-                useCW721ExecuteStore.getState().setContractExist(false);
+                clearForm();
+                setContractExist(false);
                 return;
             }
 
@@ -103,7 +120,7 @@ const useCW721ExecuteAction = () => {
 
             await sleep(150);
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(contractAddress?.toLowerCase());
-            useCW721ExecuteStore.getState().setContractInfo(contractInfo);
+            _setContractInfo(contractInfo);
 
             checkCurrentHref(href);
 
@@ -138,7 +155,7 @@ const useCW721ExecuteAction = () => {
             checkCurrentHref(href);
 
             await sleep(150);
-            useCW721ExecuteStore.getState().setNftContractInfo(nftContractInfo);
+            _setNftContractInfo(nftContractInfo);
 
             checkCurrentHref(href);
         } catch (error: any) {
@@ -149,17 +166,17 @@ const useCW721ExecuteAction = () => {
                 console.log('CW721 contract search aborted');
             }
 
-            useCW721ExecuteStore.getState().clearForm();
+            clearForm();
         } finally {
             //? close global load
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         }
     };
 
     const setTotalNfts = async (contractAddress: string) => {
         try {
             const totalNfts = await firmaSDK.Cw721.getTotalNfts(contractAddress?.toLowerCase());
-            useCW721ExecuteStore.getState().setTotalNfts(totalNfts.toString());
+            _setTotalNfts(totalNfts.toString());
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -172,7 +189,7 @@ const useCW721ExecuteAction = () => {
     const setOwnershipInfo = async (contractAddress: string) => {
         try {
             const ownerShip = await firmaSDK.Cw721.getOwnerShip(contractAddress?.toLowerCase());
-            useCW721ExecuteStore.getState().setOwnershipInfo(ownerShip);
+            _setOwnershipInfo(ownerShip);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -205,7 +222,7 @@ const useCW721ExecuteAction = () => {
                 startAfter = completeNftList[completeNftList.length - 1];
             }
 
-            useCW721ExecuteStore.getState().setMyNftList(completeNftList);
+            _setMyNftList(completeNftList);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -218,7 +235,7 @@ const useCW721ExecuteAction = () => {
     const setBlockHeight = async () => {
         try {
             const height = (await firmaSDK.BlockChain.getChainSyncInfo()).latest_block_height;
-            useCW721ExecuteStore.getState().setBlockHeight(height);
+            _setBlockHeight(height);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -231,9 +248,9 @@ const useCW721ExecuteAction = () => {
     const setNftApprovalInfo = async (contractAddress: string, address: string, token_id: string) => {
         try {
             const result = await firmaSDK.Cw721.getApproval(contractAddress?.toLowerCase(), token_id, address?.toLowerCase(), false);
-            useCW721ExecuteStore.getState().setNftApprovalInfo(result);
+            _setNftApprovalInfo(result);
         } catch (error) {
-            useCW721ExecuteStore.getState().setNftApprovalInfo({ spender: '', expires: null });
+            _setNftApprovalInfo({ spender: '', expires: null });
             console.log(error);
         }
     };
@@ -241,7 +258,7 @@ const useCW721ExecuteAction = () => {
     const setMinter = async (contractAddress: string) => {
         try {
             const minter = await firmaSDK.Cw721.getMinter(contractAddress?.toLowerCase());
-            useCW721ExecuteStore.getState().setMinter(minter);
+            _setMinter(minter);
         } catch (error) {
             console.log(error);
             enqueueSnackbar({
@@ -357,7 +374,7 @@ const useCW721ExecuteAction = () => {
                 }
             }
 
-            useCW721ExecuteStore.getState().setNftDatas(newNftInfo);
+            _setNftDatas(newNftInfo);
         } catch (error) {
             console.log(error);
         }

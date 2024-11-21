@@ -7,14 +7,15 @@ import IconButton from '@/components/atoms/buttons/iconButton';
 import VariableInput from '@/components/atoms/input/variableInput';
 import useFormStore from '@/store/formStore';
 import ExpirationModal from '@/components/organisms/modal/expirationModal';
-import { useModalStore } from '@/hooks/useModal';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+import useModalStore from '@/store/modalStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { isValidAddress } from '@/utils/address';
 import ExpirationTypeButton from '@/components/atoms/buttons/expirationTypeButton';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const InputTitle = styled.div`
     color: var(--Gray-800, #dcdcdc);
@@ -34,14 +35,17 @@ enum ExpirationType {
 }
 
 const ApproveAll = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
-    const approveRecipientAddress = useCW721ExecuteStore((state) => state.approveRecipientAddress);
-    const approveType = useCW721ExecuteStore((state) => state.approveType);
-    const approveValue = useCW721ExecuteStore((state) => state.approveValue);
-    const setApproveRecipientAddress = useCW721ExecuteStore((state) => state.setApproveRecipientAddress);
-    const setApproveType = useCW721ExecuteStore((state) => state.setApproveType);
-    const setApproveValue = useCW721ExecuteStore((state) => state.setApproveValue);
-    const clearApproveForm = useCW721ExecuteStore((state) => state.clearApproveForm);
+    const address = useWalletStore((v) => v.address);
+    // const address = useSelector((v: rootState) => v.wallet.address);
+
+    const context = useCW721Execute();
+    const approveRecipientAddress = context.approveRecipientAddress;
+    const approveType = context.approveType;
+    const approveValue = context.approveValue;
+    const setApproveRecipientAddress = context.setApproveRecipientAddress;
+    const setApproveType = context.setApproveType;
+    const setApproveValue = context.setApproveValue;
+    const clearApproveForm = context.clearApproveForm;
 
     const { setFctBalance } = useCW721ExecuteAction();
 

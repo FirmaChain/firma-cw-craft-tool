@@ -1,30 +1,41 @@
 import React, { useEffect } from 'react';
-import useCW721ExecuteStore from '@/components/organisms/cw721/execute/hooks/useCW721ExecuteStore';
 import Header from '@/components/organisms/cw721/execute/header';
 import { Container } from '../../styles/instantiate';
 import Contents from '@/components/organisms/cw721/execute/contents';
-import { GlobalActions } from '@/redux/actions';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
+import useContractAddressStore from '@/store/contractAddressStore';
 
 const CW721Execute = () => {
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const setContractAddress = useCW721ExecuteStore((state) => state.setContractAddress);
+    const { isInit } = useWalletStore();
+    const { cw721, setCW721 } = useContractAddressStore();
+    const context = useCW721Execute();
+    const contractAddress = cw721 || context.contractAddress || '';
+    const setContractAddress = context.setContractAddress;
+    const clearForm = context.clearForm;
+
+    const { handleGlobalLoading } = useGlobalStore();
 
     useEffect(() => {
-        if (contractAddress === null) return;
-        setContractAddress(contractAddress);
-    }, [contractAddress]);
+        if (cw721) {
+            setContractAddress(cw721);
+            setCW721('');
+        }
+    }, []);
 
     useEffect(() => {
         return () => {
-            GlobalActions.handleGlobalLoading(false);
-            useCW721ExecuteStore.getState().clearForm();
+            handleGlobalLoading(false);
+            clearForm();
         };
     }, []);
 
     return (
         <Container style={{ gap: '0px' }}>
-            <Header contractAddress={contractAddress === null ? '' : contractAddress} />
-            <Contents />
+            <Header contractAddress={contractAddress} />
+            {isInit && <Contents />}
         </Container>
     );
 };

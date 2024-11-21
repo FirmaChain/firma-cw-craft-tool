@@ -3,12 +3,13 @@ import { styled } from 'styled-components';
 
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, SummeryCard, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
-import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../../hooks/useCW721ExecuteStore';
 import useFormStore from '@/store/formStore';
 import useCW721ExecuteAction from '../../hooks/useCW721ExecuteAction';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+
 import { NUMBERS_WITH_COMMA } from '@/constants/regex';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -41,14 +42,16 @@ const TotalMintSupplyBalance = styled.div`
 `;
 
 const Burn = () => {
-    const address = useSelector((v: rootState) => v.wallet.address);
+    const address = useWalletStore((v) => v.address);
+    // const address = useSelector((v: rootState) => v.wallet.address);
 
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const burnList = useCW721ExecuteStore((state) => state.burnList);
-    const nftDatas = useCW721ExecuteStore((state) => state.nftDatas);
+    const context = useCW721Execute();
+    const contractAddress = context.contractAddress;
+    const burnList = context.burnList;
+    const nftDatas = context.nftDatas;
 
-    const setBurnList = useCW721ExecuteStore((state) => state.setBurnList);
-    const clearBurnForm = useCW721ExecuteStore((state) => state.clearBurnForm);
+    const setBurnList = context.setBurnList;
+    const clearBurnForm = context.clearBurnForm;
     const setFormError = useFormStore((v) => v.setFormError);
     const clearFormError = useFormStore((v) => v.clearFormError);
 

@@ -12,7 +12,7 @@ import {
     DeleteAllButton
 } from './style';
 import Icons from '../icons';
-import { useModalStore } from '@/hooks/useModal';
+import useModalStore from '@/store/modalStore';
 import DeleteAllModal from '@/components/organisms/modal/deleteAllModal';
 import TransferNFTInput from '../input/transferNFTInput';
 import { IExecuteTransfer } from '@/interfaces/cw721';

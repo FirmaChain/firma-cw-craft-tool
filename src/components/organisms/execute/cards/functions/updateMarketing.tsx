@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import { Container, HeaderDescTypo, HeaderTitleTypo, HeaderWrap, TitleWrap } from './styles';
 import LabelInput from '@/components/atoms/input/labelInput';
 import useFormStore from '@/store/formStore';
-import useExecuteStore from '../../hooks/useExecuteStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import useExecuteStore from '../../hooks/useExecuteStore';
+
 import { CRAFT_CONFIGS } from '@/config';
 import { DEFAULT_INPUT_REGEX, NORMAL_TEXT, WALLET_ADDRESS_REGEX } from '@/constants/regex';
 import { isValidAddress } from '@/utils/address';
+import { useCW20Execute } from '@/context/cw20ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const ContentWrap = styled.div`
     display: flex;
@@ -18,17 +19,20 @@ const ContentWrap = styled.div`
 `;
 
 const UpdateMarketing = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { address } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
-    const contractInfo = useExecuteStore((state) => state.contractInfo);
-    const marketingInfo = useExecuteStore((state) => state.marketingInfo);
-    const marketingDescription = useExecuteStore((state) => state.marketingDescription);
-    const marketingAddress = useExecuteStore((state) => state.marketingAddress);
-    const marketingProject = useExecuteStore((state) => state.marketingProject);
-    const setMarketingDescription = useExecuteStore((state) => state.setMarketingDescription);
-    const setMarketingAddress = useExecuteStore((state) => state.setMarketingAddress);
-    const setMarketingProject = useExecuteStore((state) => state.setMarketingProject);
-    const setSelectMenu = useExecuteStore((state) => state.setSelectMenu);
+    const context = useCW20Execute();
+    const contractInfo = context.contractInfo;
+    const marketingInfo = context.marketingInfo;
+    const marketingDescription = context.marketingDescription;
+    const marketingAddress = context.marketingAddress;
+    const marketingProject = context.marketingProject;
+    const setMarketingDescription = context.setMarketingDescription;
+    const setMarketingAddress = context.setMarketingAddress;
+    const setMarketingProject = context.setMarketingProject;
+    const setSelectMenu = context.setSelectMenu;
+    const clearMarketing = context.clearMarketing;
 
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
@@ -62,7 +66,7 @@ const UpdateMarketing = () => {
     useEffect(() => {
         return () => {
             useFormStore.getState().clearForm();
-            useExecuteStore.getState().clearMarketing();
+            clearMarketing();
         };
     }, []);
 

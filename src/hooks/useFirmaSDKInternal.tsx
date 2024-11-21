@@ -1,19 +1,36 @@
 import { CRAFT_CONFIGS } from '@/config';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
-import { rootState } from '@/redux/reducers';
+// import { WalletActions } from '@/redux/actions';
+
+import useWalletStore from '@/store/walletStore';
 import { getFeesFromGas } from '@/utils/balance';
 import { decryptWallet } from '@/utils/keystore';
 import { Cw721Expires, Expires, FirmaWalletService } from '@firmachain/firma-js';
-import { enqueueSnackbar } from 'notistack';
-import { useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
+
+import { useNavigate } from 'react-router-dom';
 
 const useFirmaSDKInternal = () => {
     const { firmaSDK } = useFirmaSDKContext();
-    const { passwordWallet, timeKeyWallet, timeKey } = useSelector((state: rootState) => state.wallet);
+
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
+    const { passwordWallet, timeKeyWallet, timeKey, address, clearStore } = useWalletStore();
 
     const getWallet = async (password: string) => {
         const walletData = password === '' ? decryptWallet(timeKeyWallet, timeKey) : decryptWallet(passwordWallet, password);
-        return await firmaSDK.Wallet.fromPrivateKey(walletData.privateKey);
+
+        if (walletData.address !== address) {
+            enqueueSnackbar({
+                message: 'Wallet data has been corrupted. Please connect again.',
+                variant: 'error'
+            });
+            clearStore();
+            navigate('/');
+            return;
+        } else {
+            return await firmaSDK.Wallet.fromPrivateKey(walletData.privateKey);
+        }
     };
 
     const getFctBalance = async (address: string) => {

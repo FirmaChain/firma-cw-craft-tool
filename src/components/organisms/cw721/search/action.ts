@@ -1,38 +1,55 @@
 import { useSnackbar } from 'notistack';
-import useCW721SearchStore from './cw721SearchStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import useCW721SearchStore from './cw721SearchStore';
+
 // import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 import { isValidAddress } from '@/utils/address';
 import { useApolloClientContext } from '@/context/apolloClientContext';
+import { useCW721Search } from '@/context/cw721SearchContext';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const useCW721SearchActions = () => {
     const { firmaSDK } = useFirmaSDKContext();
     const { client } = useApolloClientContext();
+    const {
+        contractInfo,
+        clearSearchInfo,
+        setContractExist,
+        setUserNftIds,
+        setNftInfo,
+        setContractInfo,
+        setMinterInfo,
+        setOwnerInfo,
+        setAllNftIds,
+        setTotalNfts,
+        setAllTransactions
+    } = useCW721Search();
     // const { client } = useApollo();
-    const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
+    const { globalLoading, handleGlobalLoading } = useGlobalStore();
+    // useSelector((v: rootState) => v.global.globalLoading);
     const { enqueueSnackbar } = useSnackbar();
 
-    const userAddress = useSelector((state: rootState) => state.wallet.address);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((state: rootState) => state.wallet.address);
     const previousKeywordRef = useRef<string | null>(null);
 
     useEffect(() => {
         //? update balance info when wallet connected, or changed
-        const contractAddress = useCW721SearchStore.getState().contractInfo?.address;
+        const contractAddress = contractInfo?.address;
         if (contractAddress) updateMyBalance(contractAddress);
     }, [userAddress]);
 
     useEffect(() => {
-        useCW721SearchStore.getState().clearSearchInfo();
+        clearSearchInfo();
         return () => {
-            GlobalActions.handleGlobalLoading(false);
-            useCW721SearchStore.getState().setContractExist(null);
+            handleGlobalLoading(false);
+            setContractExist(null);
         };
     }, []);
 
@@ -43,7 +60,7 @@ const useCW721SearchActions = () => {
     const updateMyBalance = async (contractAddress: string) => {
         //! change to user nft ids
         const userNFTIdList = await firmaSDK.Cw721.getNFTIdListOfOwner(contractAddress?.toLowerCase(), userAddress?.toLowerCase());
-        useCW721SearchStore.getState().setUserNftIds(userNFTIdList);
+        setUserNftIds(userNFTIdList);
     };
 
     const checkContractExist = async (contractAddress: string) => {
@@ -57,11 +74,11 @@ const useCW721SearchActions = () => {
             }
 
             const exist = await firmaSDK.CosmWasm.getContractState(contractAddress?.toLowerCase());
-            useCW721SearchStore.getState().setContractExist(exist.length > 0);
+            setContractExist(exist.length > 0);
             await searchTokenInfo(contractAddress);
         } catch (error) {
             console.log(error);
-            useCW721SearchStore.getState().setContractExist(false);
+            setContractExist(false);
         } finally {
             previousKeywordRef.current = contractAddress;
         }
@@ -73,8 +90,8 @@ const useCW721SearchActions = () => {
 
     const href = window.location.href;
     const searchTokenInfo = async (keyword: string) => {
-        useCW721SearchStore.getState().clearSearchInfo();
-        GlobalActions.handleGlobalLoading(true);
+        clearSearchInfo();
+        handleGlobalLoading(true);
 
         try {
             checkCurrentHref(href);
@@ -83,7 +100,7 @@ const useCW721SearchActions = () => {
                 //? Try to get nft info
                 //? if error occurs in this stage, this contract is not cw721.
                 const nftInfo = await firmaSDK.Cw721.getContractInfo(keyword?.toLowerCase());
-                useCW721SearchStore.getState().setNftInfo(nftInfo);
+                setNftInfo(nftInfo);
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW721 contract.' });
                 return;
@@ -94,7 +111,7 @@ const useCW721SearchActions = () => {
             if (userAddress) {
                 const userNFTIdList = await firmaSDK.Cw721.getNFTIdListOfOwner(keyword?.toLowerCase(), userAddress?.toLowerCase());
                 checkCurrentHref(href);
-                useCW721SearchStore.getState().setUserNftIds(userNFTIdList);
+                setUserNftIds(userNFTIdList);
             }
 
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword?.toLowerCase());
@@ -115,12 +132,12 @@ const useCW721SearchActions = () => {
             const recentTx = await getAllTransactinos(keyword?.toLowerCase());
             checkCurrentHref(href);
 
-            useCW721SearchStore.getState().setContractInfo(contractInfo);
-            useCW721SearchStore.getState().setMinterInfo(minterInfo);
-            useCW721SearchStore.getState().setOwnerInfo(ownerInfo);
-            useCW721SearchStore.getState().setAllNftIds(nftIdList);
-            useCW721SearchStore.getState().setTotalNfts(totalNfts);
-            useCW721SearchStore.getState().setAllTransactions(recentTx);
+            setContractInfo(contractInfo);
+            setMinterInfo(minterInfo);
+            setOwnerInfo(ownerInfo);
+            setAllNftIds(nftIdList);
+            setTotalNfts(totalNfts);
+            setAllTransactions(recentTx);
 
             previousKeywordRef.current = keyword;
         } catch (error: any) {
@@ -130,9 +147,9 @@ const useCW721SearchActions = () => {
             } else {
                 console.log('CW721 contract search aborted');
             }
-            useCW721SearchStore.getState().clearSearchInfo();
+            clearSearchInfo();
         } finally {
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         }
     };
 

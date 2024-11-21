@@ -1,38 +1,56 @@
 import { useSnackbar } from 'notistack';
 import useExecuteHook from '../execute/hooks/useExecueteHook';
-import useSearchStore from './searchStore';
-import { useSelector } from 'react-redux';
-import { rootState } from '@/redux/reducers';
+// import useSearchStore from './searchStore';
+
 // import useApollo from '@/hooks/useApollo';
 import { getTransactionsByAddress } from '@/apollo/queries';
 import { determineMsgTypeAndSpender, sleep } from '@/utils/common';
 import { ITransaction } from '@/interfaces/cw20';
 import { useEffect, useRef } from 'react';
-import { GlobalActions } from '@/redux/actions';
+// import { GlobalActions } from '@/redux/actions';
 import { isValidAddress } from '@/utils/address';
 import { useApolloClientContext } from '@/context/apolloClientContext';
+import { useCW20Search } from '@/context/cw20SearchContext';
+import useGlobalStore from '@/store/globalStore';
+import useWalletStore from '@/store/walletStore';
 
 const useSearchActions = () => {
     const { firmaSDK, getCw20Balance } = useExecuteHook();
     const { client } = useApolloClientContext();
+
+    const {
+        contractInfo,
+        setContractExist,
+        setUserBalance,
+        clearSearchInfo,
+        setTokenInfo,
+        setMinterInfo,
+        setMarketingInfo,
+        setContractHistory,
+        setAllAccounts,
+        setAllTransactions,
+        setContractInfo
+    } = useCW20Search();
     // const { client } = useApollo();
-    const userAddress = useSelector((state: rootState) => state.wallet.address);
+    const { address: userAddress } = useWalletStore();
+    // const userAddress = useSelector((state: rootState) => state.wallet.address);
 
     const { enqueueSnackbar } = useSnackbar();
-    const globalLoading = useSelector((v: rootState) => v.global.globalLoading);
+    const { globalLoading, handleGlobalLoading } = useGlobalStore();
+    // useSelector((v: rootState) => v.global.globalLoading);
     const previousKeywordRef = useRef<string | null>(null);
 
     useEffect(() => {
         //? update balance info when wallet connected, or changed
-        const contractAddress = useSearchStore.getState().contractInfo?.address;
+        const contractAddress = contractInfo?.address;
         if (contractAddress && isValidAddress(userAddress?.toLowerCase())) updateMyBalance(contractAddress);
     }, [userAddress]);
 
     useEffect(() => {
-        useSearchStore.getState().clearSearchInfo();
+        clearSearchInfo();
         return () => {
-            GlobalActions.handleGlobalLoading(false);
-            useSearchStore.getState().setContractExist(null);
+            handleGlobalLoading(false);
+            setContractExist(null);
         };
     }, []);
 
@@ -42,12 +60,12 @@ const useSearchActions = () => {
 
     const updateMyBalance = async (contractAddress: string) => {
         const userBalance = await firmaSDK.Cw20.getBalance(contractAddress?.toLowerCase(), userAddress?.toLowerCase());
-        useSearchStore.getState().setUserBalance(userBalance);
+        setUserBalance(userBalance);
     };
 
     const checkContractExist = async (contractAddress: string) => {
         try {
-            GlobalActions.handleGlobalLoading(true);
+            handleGlobalLoading(true);
             if (previousKeywordRef.current?.toLowerCase() === contractAddress.toLowerCase()) return;
             if (globalLoading) return null;
 
@@ -60,14 +78,14 @@ const useSearchActions = () => {
 
             await sleep(500);
 
-            useSearchStore.getState().setContractExist(exist.length > 0);
+            setContractExist(exist.length > 0);
             await searchTokenInfo(contractAddress);
         } catch (error) {
             console.log(error);
-            useSearchStore.getState().setContractExist(false);
+            setContractExist(false);
         } finally {
             previousKeywordRef.current = contractAddress;
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         }
     };
 
@@ -77,8 +95,8 @@ const useSearchActions = () => {
 
     const href = window.location.href;
     const searchTokenInfo = async (keyword: string) => {
-        useSearchStore.getState().clearSearchInfo();
-        GlobalActions.handleGlobalLoading(true);
+        clearSearchInfo();
+        handleGlobalLoading(true);
 
         try {
             checkCurrentHref(href);
@@ -87,7 +105,7 @@ const useSearchActions = () => {
                 //? Try to get token info
                 //? if error occurs in this stage, this contract is not cw20.
                 const tokenInfo = await firmaSDK.Cw20.getTokenInfo(keyword?.toLowerCase());
-                useSearchStore.getState().setTokenInfo(tokenInfo);
+                setTokenInfo(tokenInfo);
             } catch (error) {
                 enqueueSnackbar({ variant: 'error', message: 'This contract is not CW20 contract.' });
                 return;
@@ -98,7 +116,7 @@ const useSearchActions = () => {
             if (userAddress) {
                 const userBalance = await firmaSDK.Cw20.getBalance(keyword?.toLowerCase(), userAddress?.toLowerCase());
                 checkCurrentHref(href);
-                useSearchStore.getState().setUserBalance(userBalance);
+                setUserBalance(userBalance);
             }
 
             const contractInfo = await firmaSDK.CosmWasm.getContractInfo(keyword?.toLowerCase());
@@ -119,12 +137,12 @@ const useSearchActions = () => {
             const allTransactions = await getAllTransactinos(keyword?.toLowerCase());
             checkCurrentHref(href);
 
-            useSearchStore.getState().setContractInfo(contractInfo);
-            useSearchStore.getState().setMinterInfo(minterInfo);
-            useSearchStore.getState().setMarketingInfo(marketingInfo);
-            useSearchStore.getState().setContractHistory(contractHistory);
-            useSearchStore.getState().setAllAccounts(allAccounts);
-            useSearchStore.getState().setAllTransactions(allTransactions);
+            setContractInfo(contractInfo);
+            setMinterInfo(minterInfo);
+            setMarketingInfo(marketingInfo);
+            setContractHistory(contractHistory);
+            setAllAccounts(allAccounts);
+            setAllTransactions(allTransactions);
 
             previousKeywordRef.current = keyword;
         } catch (error: any) {
@@ -135,9 +153,9 @@ const useSearchActions = () => {
                 console.log('CW20 contract search aborted');
             }
 
-            useSearchStore.getState().clearSearchInfo();
+            clearSearchInfo();
         } finally {
-            GlobalActions.handleGlobalLoading(false);
+            handleGlobalLoading(false);
         }
     };
 

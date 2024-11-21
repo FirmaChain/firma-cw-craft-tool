@@ -1,15 +1,16 @@
 import { Fragment, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+
 import styled from 'styled-components';
 
-import { rootState } from '@/redux/reducers';
 import { isValidAddress } from '@/utils/address';
 import { FIRMA_DIM_LOGO } from '@/components/atoms/icons/pngIcons';
 
-import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
+// import useCW721ExecuteStore from '../hooks/useCW721ExecuteStore';
 import useCW721ExecuteAction from '../hooks/useCW721ExecuteAction';
 import CW721ContractInfo from '../cards/contractInfo';
 import Preview from '../cards/preview';
+import { useCW721Execute } from '@/context/cw721ExecuteContext';
+import useWalletStore from '@/store/walletStore';
 
 const Container = styled.div`
     width: 100%;
@@ -43,16 +44,18 @@ const LogoBackground = styled.div`
 `;
 
 const Contents = () => {
-    const address = useSelector((state: rootState) => state.wallet.address);
+    const { address } = useWalletStore();
+    // const address = useSelector((state: rootState) => state.wallet.address);
 
-    const contractAddress = useCW721ExecuteStore((state) => state.contractAddress);
-    const contractExist = useCW721ExecuteStore((state) => state.contractExist);
-    const setContractExist = useCW721ExecuteStore((state) => state.setContractExist);
+    const context = useCW721Execute();
+    const contractAddress = context.contractAddress;
+    const contractExist = context.contractExist;
+    const setContractExist = context.setContractExist;
 
     const { searchCW721Contract } = useCW721ExecuteAction();
 
-    const clearForm = useCW721ExecuteStore((state) => state.clearForm);
-    const contractName = useCW721ExecuteStore((state) => state.nftContractInfo.name);
+    const clearForm = context.clearForm;
+    const contractName = context.nftContractInfo.name;
 
     const { checkContractExist } = useCW721ExecuteAction();
 
