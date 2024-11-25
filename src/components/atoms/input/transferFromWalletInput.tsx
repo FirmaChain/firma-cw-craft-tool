@@ -10,12 +10,12 @@ import { WALLET_ADDRESS_REGEX } from '@/constants/regex';
 
 import { parseAmountWithDecimal2 } from '@/utils/common';
 import { TOOLTIP_ID } from '@/constants/tooltip';
-// import useExecuteStore from '@/components/organisms/execute/hooks/useExecuteStore';
 import useExecuteHook from '@/components/organisms/execute/hooks/useExecueteHook';
 import commaNumber from 'comma-number';
 import WalletRemoveButton from '../buttons/walletRemoveButton';
 import { useCW20Execute } from '@/context/cw20ExecuteContext';
 import useWalletStore from '@/store/walletStore';
+import useExecuteActions from '@/components/organisms/execute/action';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -53,7 +53,8 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
     const setBalanceByAddress = context.setBalanceByAddress;
     const setAllowanceByAddress = context.setAllowanceByAddress;
 
-    const { getCw20Balance, getCw20AllowanceBalance } = useExecuteHook();
+    const { getCw20Balance /*getCw20AllowanceBalance*/ } = useExecuteHook();
+    const { setAllowanceInfo } = useExecuteActions();
 
     const fromAddressId = `${id}_FROM_ADDRESS`;
     const fromBalanceId = `${id}_FROM_BALANCE`;
@@ -100,46 +101,9 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
     };
 
     const getUserAllowance = async (ownerAddress: string) => {
-        const {
-            success,
-            blockHeight,
-            data: { allowance, expires }
-        } = await getCw20AllowanceBalance(contractAddress, ownerAddress, userAddress);
-
-        if (success) {
-            if (expires['never']) {
-                setAllowanceByAddress({
-                    address: ownerAddress.toLowerCase(),
-                    amount: allowance
-                });
-                return;
-            }
-
-            if (expires['at_height']) {
-                if (BigInt(expires['at_height']) > BigInt(blockHeight)) {
-                    setAllowanceByAddress({
-                        address: ownerAddress.toLowerCase(),
-                        amount: allowance
-                    });
-                    return;
-                }
-            }
-
-            if (expires['at_time']) {
-                //? approved to certain time. need to check
-                const expirationTimestamp = BigInt(expires['at_time']) / BigInt(1_000_000);
-
-                if (expirationTimestamp > BigInt(Number(new Date()))) {
-                    setAllowanceByAddress({
-                        address: ownerAddress.toLowerCase(),
-                        amount: allowance //getTokenAmountFromUToken(allowance, decimals)
-                    });
-                    return;
-                }
-            }
-        }
-
-        setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: '' });
+        // return 0 if expired
+        const { allowance, expires } = await setAllowanceInfo(contractAddress, ownerAddress, userAddress);
+        setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: allowance });
     };
 
     const handleOnChange = (id: string, value: string) => {

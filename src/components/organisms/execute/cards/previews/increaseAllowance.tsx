@@ -280,17 +280,22 @@ const IncreaseAllowancePreview = () => {
     }, [allowance, allowanceInfo, tokenInfo]);
 
     useEffect(() => {
-        try {
-            if (addressExist) {
-                setAllowanceInfo(contractAddress, address, allowance?.address);
-            } else {
+        const updateAllowance = async () => {
+            try {
+                if (addressExist) {
+                    const result = await setAllowanceInfo(contractAddress, address, allowance?.address);
+                    _setAllowanceInfo(result);
+                } else {
+                    _setAllowanceInfo(null);
+                }
+            } catch (error) {
+                console.log(error);
                 _setAllowanceInfo(null);
             }
-        } catch (error) {
-            console.log(error);
-            _setAllowanceInfo(null);
-        }
-    }, [allowance?.address]);
+        };
+
+        updateAllowance();
+    }, [allowance?.address, addressExist]);
 
     const hideGotoDetail = address !== admin;
 

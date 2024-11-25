@@ -7,6 +7,7 @@ import { useCW721Execute } from '@/context/cw721ExecuteContext';
 import useGlobalStore from '@/store/globalStore';
 import useWalletStore from '@/store/walletStore';
 import useContractAddressStore from '@/store/contractAddressStore';
+import { sleep } from '@/utils/common';
 
 const CW721Execute = () => {
     const { isInit } = useWalletStore();
@@ -20,12 +21,12 @@ const CW721Execute = () => {
 
     useEffect(() => {
         if (cw721) {
-            setContractAddress(cw721);
-            setCW721('');
+            sleep(100).then(() => {
+                setContractAddress(cw721);
+                setCW721('');
+            });
         }
-    }, []);
 
-    useEffect(() => {
         return () => {
             handleGlobalLoading(false);
             clearForm();

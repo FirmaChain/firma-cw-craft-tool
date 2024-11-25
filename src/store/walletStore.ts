@@ -6,6 +6,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
+const STORE_NAME = 'firma-cw-craft-wallet';
+const STORE_VERSION = 0;
+
 export interface IWalletStateProps {
     address: string;
     fctBalance: string;
@@ -77,8 +80,9 @@ const useWalletStore = create<IWalletStateProps>()(
         })),
 
         {
-            name: 'firma-cw-craft-wallet',
-            partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => !['balance'].includes(key.toLowerCase()))),
+            version: STORE_VERSION,
+            name: STORE_NAME,
+            partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => !['fctBalance'].includes(key))), //? remove fct balance info
             merge: (persistedState, currentState: IWalletStateProps) => {
                 // Migrate Redux store to Zustand Store
                 // Run once when the page loads
@@ -105,6 +109,17 @@ const useWalletStore = create<IWalletStateProps>()(
                     // Remove persist:root data permanently
                     localStorage.removeItem('persist:root');
                 }
+
+                // Force save wallet data to localstorage
+                // when wallet data copied from persist:root, the data is not saved to localstorage at the same time
+                // so force save current data with this line
+                localStorage.setItem(
+                    STORE_NAME,
+                    JSON.stringify({
+                        state: Object.fromEntries(Object.entries(currentState).filter(([key]) => !['fctBalance'].includes(key))),
+                        version: STORE_VERSION
+                    })
+                );
 
                 return currentState;
             }

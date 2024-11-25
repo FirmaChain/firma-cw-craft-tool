@@ -18,6 +18,7 @@ import { isValidAddress } from '@/utils/address';
 import WalletRemoveButton from '../buttons/walletRemoveButton';
 import { useCW20Execute } from '@/context/cw20ExecuteContext';
 import useWalletStore from '@/store/walletStore';
+import useExecuteActions from '@/components/organisms/execute/action';
 
 const UserBalanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -68,7 +69,8 @@ const CW20BurnFromInput = ({
     // useSelector((v: rootState) => v.wallet.address);
     const setFormError = useFormStore((state) => state.setFormError);
     const clearFormError = useFormStore((state) => state.clearFormError);
-    const { getCw20AllowanceBalance, getCw20Balance } = useExecuteHook();
+    const { /*getCw20AllowanceBalance,*/ getCw20Balance } = useExecuteHook();
+    const { setAllowanceInfo } = useExecuteActions();
 
     const [addressCW20Balance, setAddressCW20Balance] = useState<string>('0');
 
@@ -124,40 +126,9 @@ const CW20BurnFromInput = ({
     };
 
     const getAllownace = async () => {
-        const {
-            success,
-            blockHeight: nowBlockHeight,
-            data: allowance
-        } = await getCw20AllowanceBalance(contractAddress, address, userAddress);
-
-        if (success) {
-            if (allowance.expires['never']) {
-                setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
-                return;
-            }
-
-            if (allowance.expires['at_time']) {
-                const nowTimestamp = Number(new Date());
-                const expiresTimestamp = Math.floor(Number(allowance.expires['at_time']) / 1000000);
-
-                if (expiresTimestamp > nowTimestamp) {
-                    setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
-                    return;
-                }
-            }
-
-            if (allowance.expires['at_height']) {
-                //? at_height
-                const expiresBlockHeight = allowance.expires['at_height'];
-
-                if (expiresBlockHeight > nowBlockHeight) {
-                    setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance.allowance });
-                    return;
-                }
-            }
-        }
-
-        setAllowanceByAddress({ address: address.toLowerCase(), amount: '' });
+        // return 0 if expired
+        const { allowance, expires } = await setAllowanceInfo(contractAddress, address, userAddress);
+        setAllowanceByAddress({ address: address.toLowerCase(), amount: allowance });
     };
 
     const getAddressCW20Balance = async () => {

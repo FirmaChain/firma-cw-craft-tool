@@ -13,9 +13,11 @@ import { useApolloClientContext } from '@/context/apolloClientContext';
 import { useCW20Search } from '@/context/cw20SearchContext';
 import useGlobalStore from '@/store/globalStore';
 import useWalletStore from '@/store/walletStore';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const useSearchActions = () => {
-    const { firmaSDK, getCw20Balance } = useExecuteHook();
+    const { firmaSDK } = useFirmaSDKContext();
+    const { /*firmaSDK,*/ getCw20Balance } = useExecuteHook();
     const { client } = useApolloClientContext();
 
     const {

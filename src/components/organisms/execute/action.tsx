@@ -1,12 +1,11 @@
 import { useSnackbar } from 'notistack';
-// import useExecuteStore from './hooks/useExecuteStore';
-// import { /*GlobalActions,*/ WalletActions } from '@/redux/actions';
 import { useFirmaSDKContext } from '@/context/firmaSDKContext';
-import { Cw20TokenInfo } from '@firmachain/firma-js';
+import { Cw20Allowance, Cw20TokenInfo, Expires } from '@firmachain/firma-js';
 import { sleep } from '@/utils/common';
 import { useCW20Execute } from '@/context/cw20ExecuteContext';
 import useGlobalStore from '@/store/globalStore';
 import useWalletStore from '@/store/walletStore';
+import { isAfter } from 'date-fns';
 
 const useExecuteActions = () => {
     const { firmaSDK } = useFirmaSDKContext();
@@ -26,6 +25,30 @@ const useExecuteActions = () => {
 
     const { handleGlobalLoading } = useGlobalStore();
     const { handleFCTBalance } = useWalletStore();
+
+    const isExpired = async (expire: Expires) => {
+        //! @DEV
+        //! WASM codes used between Mannet/Testnet is diffreent, and Allowance logic is NOT SAME.
+        //! Mainnet: after expiration, previous allowance used when update.
+        //! Testnet: after expiration, previous allowance "WILL NOT" used. (considered as "0")
+        //! so i added this line for mainnet:
+        if (firmaSDK.Config.chainID.includes('colosseum')) return false;
+        //! Once you've decided which WASM file to use, remove this line or modify the entire function!
+
+        if (expire['never']) return false;
+        else if (expire['at_height']) {
+            const nowHeight = (await firmaSDK.BlockChain.getChainSyncInfo()).latest_block_height;
+
+            if (expire['at_height'] > nowHeight) return false;
+        } else if (expire['at_time']) {
+            const expireTime = new Date(Number(expire['at_time']) / 1000000);
+            const now = new Date();
+
+            if (isAfter(expireTime, now)) return false;
+        }
+
+        return true;
+    };
 
     const checkContractExist = async (contractAddress: string) => {
         try {
@@ -116,14 +139,24 @@ const useExecuteActions = () => {
         }
     };
 
-    const setAllowanceInfo = async (contractAddress: string, owner: string, spender: string) => {
+    const setAllowanceInfo = async (contractAddress: string, owner: string, spender: string): Promise<Cw20Allowance> => {
         try {
             const allowanceInfo = await firmaSDK.Cw20.getAllowance(
                 contractAddress?.toLowerCase(),
                 owner?.toLowerCase(),
                 spender?.toLowerCase()
             );
-            _setAllowanceInfo(allowanceInfo);
+
+            const expired = await isExpired(allowanceInfo.expires);
+
+            let result: Cw20Allowance = {
+                allowance: '0',
+                expires: { never: {} }
+            };
+
+            if (!expired) result = allowanceInfo;
+
+            return result;
         } catch (error) {
             console.log(error);
             enqueueSnackbar({

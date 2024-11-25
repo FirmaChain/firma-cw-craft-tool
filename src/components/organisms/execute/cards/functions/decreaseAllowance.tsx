@@ -70,7 +70,8 @@ const DecreaseAllowance = () => {
     const clearAllowanceInfo = context.clearAllowanceInfo;
     const setAllowanceInfo = context.setAllowanceInfo;
 
-    const { getCw20AllowanceBalance } = useExecuteHook();
+    // const { getCw20AllowanceBalance } = useExecuteHook();
+    const { setAllowanceInfo: _setAllowanceInfo } = useExecuteActions();
 
     const modal = useModalStore();
 
@@ -128,40 +129,11 @@ const DecreaseAllowance = () => {
     };
 
     const updateAllowance = async (searchAddress: string) => {
-        const { success, blockHeight, data } = await getCw20AllowanceBalance(contractAddress, userAddress, searchAddress);
+        // return 0 if expired
+        const { allowance, expires } = await _setAllowanceInfo(contractAddress, userAddress, searchAddress);
 
-        setAllowanceInfo({ ...data });
-
-        if (success) {
-            const { allowance, expires } = data;
-
-            if (expires['never']) {
-                setAllowAmount(allowance);
-                return;
-            }
-
-            if (expires['at_time']) {
-                const nowTimestamp = Number(new Date());
-                const expiresTimestamp = Math.floor(Number(expires['at_time']) / 1000000);
-
-                if (expiresTimestamp > nowTimestamp) {
-                    setAllowAmount(allowance);
-                    return;
-                }
-            }
-
-            if (expires['at_height']) {
-                //? at_height
-                const expiresBlockHeight = expires['at_height'];
-
-                if (expiresBlockHeight > blockHeight) {
-                    setAllowAmount(allowance);
-                    return;
-                }
-            }
-
-            setAllowAmount('');
-        }
+        setAllowanceInfo({ allowance, expires });
+        setAllowAmount(allowance);
     };
 
     const handleChangeAddress = (value: string) => {
