@@ -16,6 +16,8 @@ import WalletRemoveButton from '../buttons/walletRemoveButton';
 import { useCW20Execute } from '@/context/cw20ExecuteContext';
 import useWalletStore from '@/store/walletStore';
 import useExecuteActions from '@/components/organisms/execute/action';
+import { isAfter } from 'date-fns';
+import { useFirmaSDKContext } from '@/context/firmaSDKContext';
 
 const AllowanceTypo = styled.div`
     color: var(--Gray-550, #444);
@@ -46,6 +48,7 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
     const userAddress = useWalletStore((v) => v.address);
     // useSelector((v: rootState) => v.wallet.address);
 
+    const { firmaSDK } = useFirmaSDKContext();
     const context = useCW20Execute();
     const contractAddress = context.contractAddress;
     const balance = context.balanceByAddress[transferFromInfo.fromAddress.toLowerCase()] || '';
@@ -103,7 +106,22 @@ const TransferFromWalletInput = ({ index, transferFromInfo, onChange, onRemoveCl
     const getUserAllowance = async (ownerAddress: string) => {
         // return 0 if expired
         const { allowance, expires } = await setAllowanceInfo(contractAddress, ownerAddress, userAddress);
-        setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: allowance });
+
+        let result: string = '0';
+
+        if (expires['never']) result = allowance;
+        else if (expires['at_height']) {
+            const nowHeight = (await firmaSDK.BlockChain.getChainSyncInfo()).latest_block_height;
+
+            if (expires['at_height'] > nowHeight) result = allowance;
+        } else if (expires['at_time']) {
+            const expireTime = new Date(Number(expires['at_time']) / 1000000);
+            const now = new Date();
+
+            if (isAfter(expireTime, now)) result = allowance;
+        }
+
+        setAllowanceByAddress({ address: ownerAddress.toLowerCase(), amount: result });
     };
 
     const handleOnChange = (id: string, value: string) => {
