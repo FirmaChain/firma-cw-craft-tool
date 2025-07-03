@@ -220,7 +220,8 @@ const QRModal2 = ({
         }
 
         const { address, chainId, rawData } = JSON.parse(signData);
-        const { code, gasUsed, gasWanted, height, rawLog, transactionHash } = JSON.parse(rawData);
+        const resultFromRawData = JSON.parse(rawData);
+        const { code, gasUsed, gasWanted, height, events, transactionHash } = resultFromRawData;
         let tmpParsedLogs = '';
         let tmpContractAddress = '';
 
@@ -228,9 +229,9 @@ const QRModal2 = ({
             setStatus('failure');
         } else {
             // write logs on succesful transactions
-            const parsedLogs = JSON.parse(rawLog)[0]; // would fail on reverted transactions
-            const contractAddress = parsedLogs.events[0].attributes[0].value;
-            tmpParsedLogs = parsedLogs;
+            //! Update: since v0.3.0, rawLog is not used
+            const contractAddress = events[0].attributes[0].value;
+            tmpParsedLogs = resultFromRawData;
             tmpContractAddress = contractAddress;
         }
 
