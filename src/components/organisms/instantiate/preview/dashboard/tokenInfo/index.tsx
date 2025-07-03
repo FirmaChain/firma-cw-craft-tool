@@ -23,7 +23,7 @@ interface IProps {
 }
 
 const TokenInfo = ({ tokenLogoUrl, tokenName, tokenSymbol, tokenDescription }: IProps) => {
-    const descRef = useRef<HTMLDivElement>();
+    const descRef = useRef<HTMLDivElement>(null);
     const [needClamp, setNeedClamp] = useState(false);
     const [isClamped, setIsClamped] = useState(true);
 

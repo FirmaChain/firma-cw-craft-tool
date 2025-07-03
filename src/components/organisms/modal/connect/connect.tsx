@@ -219,8 +219,8 @@ const Connect = ({ closeModal }: IProps) => {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
 
-    const inputRefMnemonic = useRef<HTMLTextAreaElement>();
-    const inputRefPrivateKey = useRef<HTMLTextAreaElement>();
+    const inputRefMnemonic = useRef<HTMLTextAreaElement>(null);
+    const inputRefPrivateKey = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         setInputKeyword('');

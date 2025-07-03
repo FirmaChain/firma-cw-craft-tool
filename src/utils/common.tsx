@@ -87,25 +87,33 @@ export const shortenAddress = (address: string, startLength: number = 6, endLeng
 };
 
 export const determineMsgTypeAndSpender = (messages: IMsg[]): { type: string; sender: string }[] => {
-    return messages.map((item) => {
-        const msgKey = Object.keys(item.msg)[0];
-        const messageType =
-            CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey) || CW721_TRANSACTION_TYPES.find((type) => type.key === msgKey);
-        const sender = item.sender;
+    try {
+        return messages.map((item) => {
+            const msgKey = Object.keys(item.msg)[0];
+            const messageType =
+                CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey) || CW721_TRANSACTION_TYPES.find((type) => type.key === msgKey);
+            const sender = item.sender;
 
-        return {
-            type: messageType ? messageType.value : 'Unknown',
-            sender: sender
-        };
-    });
+            return {
+                type: messageType ? messageType.value : 'Unknown',
+                sender: sender
+            };
+        });
+    } catch (error) {
+        return [];
+    }
 };
 
 export const determineMsgType = (data: IMsg[]): string[] => {
-    return data.map((item) => {
-        const msgKey = Object.keys(item.msg)[0];
-        const messageType = CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey);
-        return messageType ? messageType.value : 'Unknown';
-    });
+    try {
+        return data.map((item) => {
+            const msgKey = Object.keys(item.msg)[0];
+            const messageType = CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey);
+            return messageType ? messageType.value : 'Unknown';
+        });
+    } catch (error) {
+        return [];
+    }
 };
 
 export const compareStringsAsNumbers = (str1: string, str2: string) => {
