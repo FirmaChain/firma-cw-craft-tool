@@ -202,6 +202,11 @@ const RevokePreview = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            spender: revokeAddress,
+            token_id: revokeTokenId
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -209,10 +214,8 @@ const RevokePreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: {
-                    spender: revokeAddress,
-                    token_id: revokeTokenId
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

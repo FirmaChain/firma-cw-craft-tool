@@ -352,7 +352,8 @@ const MintPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: convertWalletList
+                msg: convertWalletList,
+                totalLength: JSON.stringify(convertWalletList).length
             },
             contentParams: {
                 symbol: tokenInfo.symbol,

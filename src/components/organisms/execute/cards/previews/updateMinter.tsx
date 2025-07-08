@@ -147,6 +147,10 @@ const UpdateMinter = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            new_minter: minterAddress
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -155,9 +159,8 @@ const UpdateMinter = () => {
             txParams: {
                 contract: contractAddress,
                 type: 'cw20',
-                msg: {
-                    new_minter: minterAddress
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 fctAmount: fctBalance,

@@ -300,7 +300,9 @@ const MintPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: convertMintList
+                msg: convertMintList,
+                totalLength: JSON.stringify(convertMintList).length,
+                walletLength: convertMintList.length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

@@ -303,6 +303,12 @@ const DecreaseAllowancePreview = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            amount: getUTokenAmountFromToken(allowance.amount, tokenInfo.decimals.toString()),
+            expires: expires,
+            spender: allowance.address
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -310,11 +316,8 @@ const DecreaseAllowancePreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: {
-                    amount: getUTokenAmountFromToken(allowance.amount, tokenInfo.decimals.toString()),
-                    expires: expires,
-                    spender: allowance.address
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 fctAmount: fctBalance,

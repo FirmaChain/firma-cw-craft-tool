@@ -168,6 +168,10 @@ const RevokeAllPreview = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            operator: revokeAddress
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -175,9 +179,8 @@ const RevokeAllPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: {
-                    operator: revokeAddress
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

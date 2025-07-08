@@ -191,7 +191,8 @@ const Preview = () => {
                     label: label,
                     type: 'cw721',
                     msg: messageData,
-                    contract: ''
+                    contract: '',
+                    totalLength: JSON.stringify(messageData).length
                 },
                 contentParams: {
                     list: [

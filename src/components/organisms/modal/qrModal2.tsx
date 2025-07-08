@@ -203,48 +203,38 @@ const QRModal2 = ({
 
     const parsedData = useMemo(() => {
         if (result === null) return null;
+        try {
+            //! since firma-js v0.3.0, need to dig the result signData to get result
+            const resultObj = JSON.parse(JSON.parse(result.signData).rawData);
 
-        const { message, signData, status, ...rest } = result;
+            const { status, signData } = result;
+            const { transactionHash, events, code } = resultObj;
 
-        const parsedMessage = JSON.parse(message);
+            if (status !== '1' || signData === '' || code !== 0) {
+                setStatus('failure');
+                return {
+                    contractAddress: '',
+                    transactionHash: '',
+                    code: code || -1
+                };
+            }
 
-        if (status !== '1' || signData === '') {
-            setStatus('failure');
+            //! Update: since v0.3.0, rawLog is not used
+            const instantiateEvent = events.find((v) => v.type === 'instantiate');
+            const contractAddress = instantiateEvent?.attributes.find((v) => v.key === '_contract_address')?.value;
+
             return {
-                message: parsedMessage,
-                signData: signData,
+                contractAddress: contractAddress,
+                transactionHash,
+                code
+            };
+        } catch (error) {
+            return {
                 contractAddress: '',
                 transactionHash: '',
-                ...rest
+                code: -1
             };
         }
-
-        const { address, chainId, rawData } = JSON.parse(signData);
-        const resultFromRawData = JSON.parse(rawData);
-        const { code, gasUsed, gasWanted, height, events, transactionHash } = resultFromRawData;
-        let tmpParsedLogs = '';
-        let tmpContractAddress = '';
-
-        if (code !== 0) {
-            setStatus('failure');
-        } else {
-            // write logs on succesful transactions
-            //! Update: since v0.3.0, rawLog is not used
-            const contractAddress = events[0].attributes[0].value;
-            tmpParsedLogs = resultFromRawData;
-            tmpContractAddress = contractAddress;
-        }
-
-        const _rawData = { code, gasUsed, gasWanted, height, rawLog: tmpParsedLogs, transactionHash };
-        const _signData = { address, chainId, rawData: _rawData };
-
-        return {
-            message: parsedMessage,
-            contractAddress: tmpContractAddress,
-            transactionHash,
-            _signData,
-            ...rest
-        };
     }, [result]);
 
     const instantiateFee = useMemo(() => {
@@ -260,6 +250,27 @@ const QRModal2 = ({
                 const defaultLength = Number(params.txParams.walletLength) - 1;
                 const fee = defaultLength * CRAFT_CONFIGS.INSTANTIATE_WALLET_FEE;
                 return resultFee + fee;
+            } else {
+                return resultFee;
+            }
+        } catch (error) {
+            return 0;
+        }
+    }, [params.txParams]);
+
+    const executeFee = useMemo(() => {
+        try {
+            let resultFee = CRAFT_CONFIGS.DEFAULT_FEE;
+
+            if (params.txParams.totalLength > 1200) {
+                const multipleCount = (Number(params.txParams.totalLength.toString().length) - 1200) / 100;
+                resultFee = resultFee + multipleCount * Number(CRAFT_CONFIGS.INSTANTIATE_LENGTH_FEE);
+            }
+
+            if (params.txParams.walletLength >= 2) {
+                const defaultLength = Number(params.txParams.walletLength);
+                const fee = defaultLength * CRAFT_CONFIGS.BULK_FEE;
+                return fee;
             } else {
                 return resultFee;
             }
@@ -391,7 +402,8 @@ const QRModal2 = ({
     }, [address]);
 
     useEffect(() => {
-        const code = typeof parsedData?._signData?.rawData?.code === 'number' ? parsedData?._signData?.rawData?.code : -1;
+        const code = parsedData?.code;
+        // const code = typeof parsedData?._signData?.rawData?.code === 'number' ? parsedData?._signData?.rawData?.code : -1;
 
         if (code === 0) {
             if ((module === '/cw20/instantiateContract' || module === '/cw721/instantiateContract') && parsedData?.contractAddress) {
@@ -617,7 +629,11 @@ const QRModal2 = ({
                                     <ItemWrap>
                                         <FeeLabel>{`${params.modalType === 'INSTANTIATE' ? 'Instantiation' : params.header.title} Fee`}</FeeLabel>
                                         <ItemValueWrap>
-                                            <FeeAmount>{FirmaUtil.getFCTStringFromUFCT(Number(instantiateFee))}</FeeAmount>
+                                            <FeeAmount>
+                                                {FirmaUtil.getFCTStringFromUFCT(
+                                                    Number(params.modalType === 'INSTANTIATE' ? instantiateFee : executeFee)
+                                                )}
+                                            </FeeAmount>
                                             <FCTSymbolIcon src={IC_FIRMACHAIN} alt={'FCT Symbol Icon'} />
                                         </ItemValueWrap>
                                     </ItemWrap>

@@ -218,7 +218,9 @@ const BurnPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: convertList
+                msg: convertList,
+                totalLength: JSON.stringify(convertList).length,
+                walletLength: convertList.length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

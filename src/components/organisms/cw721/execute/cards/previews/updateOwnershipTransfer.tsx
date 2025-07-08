@@ -223,6 +223,11 @@ const UpdateOwnershipTransferPreview = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            expiry: expires,
+            new_owner: approveRecipientAddress
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -230,10 +235,8 @@ const UpdateOwnershipTransferPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: {
-                    expiry: expires,
-                    new_owner: approveRecipientAddress
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

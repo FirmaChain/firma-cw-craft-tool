@@ -353,7 +353,9 @@ const TransferPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: transferListForModal
+                msg: transferListForModal,
+                totalLength: JSON.stringify(transferListForModal).length,
+                walletLength: transferListForModal.length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

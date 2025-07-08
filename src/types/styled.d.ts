@@ -20,7 +20,7 @@ declare module 'styled-components' {
             white_3: string;
             green_1: string;
             green_2: string;
-            mainred?: string; // connect.tsx에서 사용하는 속성
+            mainred?: string;
         };
         sizes: {
             navbar_width: string;
@@ -28,7 +28,7 @@ declare module 'styled-components' {
             cw_switch: string;
         };
         images?: {
-            ic_refresh?: string; // requestQR/style.tsx에서 사용하는 속성
+            ic_refresh?: string;
         };
     }
 }

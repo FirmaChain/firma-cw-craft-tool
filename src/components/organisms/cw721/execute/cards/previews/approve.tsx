@@ -231,6 +231,12 @@ const ApprovePreview = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            expires: expires,
+            spender: approveRecipientAddress,
+            token_id: approveTokenId
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -238,11 +244,8 @@ const ApprovePreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: {
-                    expires: expires,
-                    spender: approveRecipientAddress,
-                    token_id: approveTokenId
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

@@ -184,6 +184,10 @@ const BurnPreview = () => {
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
         const amount = getUTokenAmountFromToken(burnAmount, tokenInfo.decimals.toString());
 
+        const msg = {
+            amount
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -191,9 +195,8 @@ const BurnPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: {
-                    amount
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 symbol: tokenInfo.symbol,
