@@ -60,8 +60,12 @@ const TransactionType = ({ type }: { type: string }) => {
     let typoColor = '';
 
     switch (type) {
+        case 'InstantiateContract':
+            bgColor = 'rgba(255, 185, 74, 0.10)';
+            typoColor = 'rgba(241, 168, 52, 0.6)';
+            break;
+
         case 'Mint':
-        case 'Transfer':
         case 'TransferFrom':
         case 'Burn':
         case 'BurnFrom':

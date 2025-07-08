@@ -87,11 +87,23 @@ export const shortenAddress = (address: string, startLength: number = 6, endLeng
 };
 
 export const determineMsgTypeAndSpender = (messages: IMsg[]): { type: string; sender: string }[] => {
+    //! Since v0.3.0, instantiateContract needs to be determined by @type field.
+
     try {
         return messages.map((item) => {
             const msgKey = Object.keys(item.msg)[0];
-            const messageType =
+
+            let messageType =
                 CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey) || CW721_TRANSACTION_TYPES.find((type) => type.key === msgKey);
+
+            if (!messageType) {
+                //! if type is not found, check @type field
+                const type = item['@type'];
+                if (type === '/cosmwasm.wasm.v1.MsgInstantiateContract') {
+                    messageType = CW20_TRANSACTION_TYPES.find((type) => type.key === 'instantiate_contract');
+                }
+            }
+
             const sender = item.sender;
 
             return {
