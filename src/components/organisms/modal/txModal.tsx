@@ -611,7 +611,7 @@ const TxModal = ({
                     if (cw20InstantiateResult.code === 0) {
                         await addContractToDB({
                             type: cwMode.toLowerCase() as 'cw20' | 'cw721',
-                            address,
+                            address: cw20info.admin,
                             contractAddress: cw20InstantiateResult?.contractAddress
                             // name: params.txParams.msg.name,
                             // symbol: params.txParams.msg.symbol,
@@ -643,7 +643,7 @@ const TxModal = ({
                     if (cw721nstantiateResult.code === 0) {
                         await addContractToDB({
                             type: cwMode.toLowerCase() as 'cw20' | 'cw721',
-                            address,
+                            address: cw721info.admin,
                             contractAddress: cw721nstantiateResult?.contractAddress
                             // name: params.txParams.msg.name,
                             // symbol: params.txParams.msg.symbol,
