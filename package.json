@@ -33,7 +33,8 @@
         "slick-carousel": "^1.8.1",
         "styled-components": "^6.1.11",
         "uuid": "^10.0.0",
-        "zustand": "^4.5.4"
+        "zustand": "^4.5.4",
+        "cypress": "^14.5.4"
     },
     "scripts": {
         "start": "craco start",
@@ -44,7 +45,9 @@
         "deploy-testnet": "aws s3 sync ./build s3://deploy-ecosystem/testnet/firma-cw-craft-tool --profile=firmachain-deploy --delete",
         "invalidate-testnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E1GWLY1LQSOILF --paths '/*'",
         "deploy-mainnet": "aws s3 sync ./build s3://deploy-ecosystem/mainnet/firma-cw-craft-tool --profile=firmachain-deploy --delete",
-        "invalidate-mainnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E24C7PNS1BNJWM --paths '/*'"
+        "invalidate-mainnet": "aws cloudfront create-invalidation --profile=firmachain-deploy --distribution-id E24C7PNS1BNJWM --paths '/*'",
+        "cypress:open": "cypress open",
+        "cypress:run": "cypress run"
     },
     "eslintConfig": {
         "extends": [
