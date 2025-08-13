@@ -172,13 +172,13 @@ describe('cw721 ownership transfer-block', () => {
 
     cy.get('input[type="string"][placeholder="Input Wallet Address"]')
     .clear()
-    .type(Cypress.env('ADDRESS_6')) //지갑 주소 변경 필요
+    .type(Cypress.env('ADDRESS_6'))//The wallet to receive this contract’s ownership
 
     cy.get('button').contains('Forever').click()
     cy.get('button').should('not.be.disabled').contains('Update Ownership Transfer').click()
     cy.wait(1000)
 
-    // mnemonic 인증
+    // verification with mnemonic
     cy.wait(1000)
     cy.contains('div', 'Update Ownership Transfer')
         .get('input[type="password"][placeholder="Enter Password"]')
@@ -194,25 +194,25 @@ describe('cw721 ownership transfer-block', () => {
     cy.get('button').contains('Confirm',{timeout: 15000}).click()
     cy.wait(1000)
     
-    //등록과 만료 search 에서 확인
+    //check registration and expiration on search page
     cy.get('button').contains('Search').click()
     cy.wait(1000)
 
     cy.get('input[type="text"][placeholder="Search by NFT Contract Name / Symbol / Label / Address"]')
       .first().clear().type(Cypress.env('CW721_CONTRACT_ADDRESS_3'))
 
-    // search 결과 확인
+    // check search result
     cy.get('span[class="highlight"]')
       .contains(Cypress.env('CW721_CONTRACT_ADDRESS_3'))
       .click()
 
-    // search 에서 owner imformation 확인
-    // Minter가 있는 곳까지 스크롤 내리기
+    // check owner information on search page
+    // scroll down to Minter
     cy.contains('Minter').scrollIntoView()
-    cy.wait(1000) // 스크롤 애니메이션 대기
+    cy.wait(1000) // wait for scroll animation
 
 
-    // 스크린샷 찍기
+    // take screenshot
     cy.screenshot('cw721-ownership-transfer-forever')
 
     

@@ -34,7 +34,7 @@ describe('create cw721 basic contract', () => {
         cy.wait(1000)
         cy.get('button').contains('div', 'Confirm').click()
 
-        // 결과 모달이 나타날 때까지 충분히 대기
+        // wait for the result modal to appear
         cy.wait(8000)
         cy.screenshot('create cw721 basic contract')
         
@@ -47,35 +47,37 @@ describe('create cw721 advanced contract', () => {
         cy.visit(Cypress.env('URL') + '/cw721/instantiate')
         cy.loginWithMnemonic(Cypress.env('MNEMONIC_5'), Cypress.env('PASSWORD'))
 
-        // advanced contract 토글 선택
+        // select advanced contract toggle
         cy.contains('div', 'ADVANCED')
             .should('be.visible')
             .click()
 
-        // NFT contract name 
+        // input NFT contract name 
         cy.get('input[type="string"][placeholder="ex) MY CW NFT Contract"]')
             .clear()
             .type('My NFT Contract Name advanced 0730')
 
-        // NFT contract symbol 
+        // input NFT contract symbol 
         cy.get('input[placeholder="ex) MCT, FCT"]')
             .clear()
             .type('MNCN advanced')
 
-        // admin address 
+        // input admin address 
         cy.contains('Admin Address').get('input[type="string"][placeholder="Input wallet Address"]').eq(0)
             .clear()
             .type(Cypress.env('ADDRESS_5'))
 
-        // minter address
+        // input minter address
         cy.get('input[type="string"][placeholder="Input wallet Address"]').eq(1)
             .clear()
             .type(Cypress.env('ADDRESS_5'))
 
+        // input the contract label
         cy.get('input[placeholder="ex) Event reward contract"]')
             .clear()
             .type('My NFT Contract Label')
 
+        // click Instantiate button
         cy.wait(1000)
         cy.get('span[class="button-text"]').contains('Instantiate')
             .should('not.be.disabled')

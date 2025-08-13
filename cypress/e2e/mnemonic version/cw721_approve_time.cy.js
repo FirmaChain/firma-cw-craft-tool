@@ -3,7 +3,7 @@
 4,5,6, approve-time
 4-burn from
 5-revoke
-6-만료 확인
+6-check expiration
 */
 
 describe('CW721 Approv time', () => {
@@ -24,6 +24,7 @@ describe('CW721 Approv time', () => {
             .clear()
             .type(Cypress.env('ADDRESS_20'))
 
+        // input token ID-4
         cy.get('input[type="text"][placeholder="0"]')
             .clear()
             .type('4')
@@ -44,7 +45,7 @@ describe('CW721 Approv time', () => {
             .contains('Approve')
             .click()
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -66,7 +67,7 @@ describe('CW721 Approv time', () => {
             .parent()
             .click()
 
-        // approve 5
+        // input token ID-5
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
             .type(Cypress.env('ADDRESS_20'))
@@ -75,7 +76,7 @@ describe('CW721 Approv time', () => {
             .clear()
             .type('5')
 
-        // time setting
+        //set expiration date and time
         cy.get('button').contains('At Time').click()
         cy.get('input[type="text"][placeholder="ex) MM-DD-YYYY  HH:MM:SS"]')
             .click()
@@ -91,7 +92,7 @@ describe('CW721 Approv time', () => {
             .contains('Approve')
             .click()
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -114,7 +115,7 @@ describe('CW721 Approv time', () => {
             .parent()
             .click()
 
-        // approve 6
+        // input token ID-6
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
             .type(Cypress.env('ADDRESS_20'))
@@ -123,7 +124,7 @@ describe('CW721 Approv time', () => {
             .clear()
             .type('6')
 
-        // time setting
+        //set expiration date and time
         cy.get('button').contains('At Time').click()
         cy.get('input[type="text"][placeholder="ex) MM-DD-YYYY  HH:MM:SS"]')
             .click()
@@ -138,7 +139,7 @@ describe('CW721 Approv time', () => {
             .contains('Approve')
             .click()
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -168,7 +169,7 @@ describe('burn from - 4', () => {
     it('burn from - 4', () => {
 
         cy.visit(Cypress.env('URL') + '/cw721/execute')
-        //approve 받은 지갑 주소 입력
+        //login as the wallet that approved token ID-4
         cy.loginWithMnemonic(Cypress.env('MNEMONIC_20'), Cypress.env('PASSWORD'))
 
         // search on execute page
@@ -179,6 +180,7 @@ describe('burn from - 4', () => {
         cy.get('[role="option"]').contains('Burn').click()
         cy.wait(1000)
 
+        //input token ID-4
         cy.get('input[type="string"][placeholder="Input the numbers : You can input multiple numbers separated by commas (,)"]')
             .clear()
             .type('4').blur()
@@ -187,7 +189,7 @@ describe('burn from - 4', () => {
         cy.get('button').contains('Burn')
             .click()
 
-        // mnemonic 인증   
+        // verification with mnemonic   
         cy.wait(1000)
         cy.contains('div', 'Burn')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -211,6 +213,7 @@ describe('revoke -5', () => {
     it('revoke - 5', () => {
 
         cy.visit(Cypress.env('URL') + '/cw721/execute')
+        //login as the wallet that approved token ID-5
         cy.loginWithMnemonic(Cypress.env('MNEMONIC_5'), Cypress.env('PASSWORD'))
 
         cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
@@ -225,6 +228,7 @@ describe('revoke -5', () => {
             .clear()
             .type(Cypress.env('ADDRESS_20'))
 
+        //input token ID-5
         cy.get('input[type="text"][placeholder="0"]')
             .clear()
             .type('5')
@@ -234,7 +238,7 @@ describe('revoke -5', () => {
             .should('not.be.disabled')
             .click()
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Revoke')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -253,6 +257,6 @@ describe('revoke -5', () => {
 })
 
 
-//4-owner 확인
-//5-이력 확인(없어야함)
-//6-만료 확인
+//4-check owner
+//5-check history(should be empty)
+//6-check expiration

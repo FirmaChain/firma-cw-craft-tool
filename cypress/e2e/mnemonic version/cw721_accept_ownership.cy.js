@@ -21,7 +21,7 @@ describe('cw721 accept ownership', () => {
         cy.wait(1000)
         
         cy.get('button').contains('Accept').click()
-        // mnemonic 인증
+        // mnemonic verification
         cy.wait(1000)
         cy.contains('div', 'Update Ownership Accept')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -37,7 +37,7 @@ describe('cw721 accept ownership', () => {
         cy.get('button').contains('Confirm',{timeout: 10000}).click()
         cy.wait(1000)
         
-        //search 확인
+        //search check
         cy.get('button').contains('Search').parent().click()
         cy.get('input[type="text"][placeholder="Search by NFT Contract Name / Symbol / Label / Address"]')
             .first().clear().type(Cypress.env('CW721_CONTRACT_ADDRESS_3'))
@@ -47,11 +47,11 @@ describe('cw721 accept ownership', () => {
         cy.wait(1000)
         
         cy.contains('Minter').scrollIntoView()
-        cy.wait(1000) // 스크롤 애니메이션 대기
+        cy.wait(1000) // wait for scroll animation
     
     
-        // 스크린샷 찍기
+        // take screenshot
         cy.screenshot('cw721-accept-ownership')
-        //My NFT Contract 에서는 직접 확인
+        //My NFT Contract - check directly
     })
 })

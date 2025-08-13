@@ -3,7 +3,7 @@
 1,2,3 approve-block
 1-transfer form
 2-revoke
-3-만료 확인
+3-check expiration
 */
 
 describe('CW721 Approv block', () => {
@@ -28,6 +28,7 @@ describe('CW721 Approv block', () => {
             .clear()
             .type('1')
 
+        //set block height(BLOCK_HEIGHT + 100)
         const blockHeight = Number(Cypress.env('BLOCK_HEIGHT').replace(/,/g, '')) + 100
         cy.get('input[type="text"][placeholder="ex) 7216240"]')
             .clear()
@@ -38,7 +39,7 @@ describe('CW721 Approv block', () => {
             .contains('Approve')
             .click()
 
-        // mnemonic 인증
+        //verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -60,7 +61,7 @@ describe('CW721 Approv block', () => {
             .parent()
             .click()
 
-        //approve 2
+        //approve 2nd time
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
             .type(Cypress.env('ADDRESS_20'))
@@ -78,7 +79,7 @@ describe('CW721 Approv block', () => {
             .contains('Approve')
             .click()
 
-        // mnemonic 인증
+        //verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -101,7 +102,7 @@ describe('CW721 Approv block', () => {
             .parent()
             .click()
 
-        //approve 3
+        //approve 3rd time
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
             .type(Cypress.env('ADDRESS_20'))
@@ -119,7 +120,7 @@ describe('CW721 Approv block', () => {
             .contains('Approve')
             .click()
 
-        // mnemonic 인증
+        //verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -151,7 +152,7 @@ describe('transfer form - 1', () => {
     it('transfer form - 1', () => {
 
         cy.visit(Cypress.env('URL') + '/cw721/execute')
-        //approve 받은 지갑 주소 입력
+        //input the wallet address to be approved
         cy.loginWithMnemonic(Cypress.env('MNEMONIC_20'), Cypress.env('PASSWORD'))
 
         // search on execute page
@@ -174,7 +175,7 @@ describe('transfer form - 1', () => {
         cy.get('button').contains('Transfer')
             .click()
 
-        // mnemonic 인증   
+        //verification with mnemonic   
         cy.wait(1000)
         cy.contains('div', 'Transfer')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -221,7 +222,7 @@ describe('revoke - 2', () => {
             .should('not.be.disabled')
             .click()
 
-        // mnemonic 인증
+        //verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Revoke')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -238,7 +239,7 @@ describe('revoke - 2', () => {
         cy.wait(10000)
     })
 })
-//검색을 통해 1,2,3 상태 확인
-//1 - owner 확인
-//2 - 이력 확인(없어야함)
-//3 - 이력 확인(만료/없어야함)
+//search to check 1,2,3 status
+//1 - check owner
+//2 - check history(should be empty)
+//3 - check history(should be empty or expired)

@@ -24,7 +24,7 @@ describe('CW721 Approv forever', () => {
             .clear()
             .type(Cypress.env('ADDRESS_6'))
 
-        // token ID
+        // input token ID-7
         cy.get('input[type="text"][placeholder="0"]')
             .clear()
             .type('7')
@@ -35,7 +35,7 @@ describe('CW721 Approv forever', () => {
         cy.get('button').should('not.be.disabled').contains('Approve').click()
         cy.wait(1000)
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -53,24 +53,24 @@ describe('CW721 Approv forever', () => {
 
         cy.get('button').contains('Confirm').click()
 
-        // NFT 8
+        // input wallet address to be approved token ID-8
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
             .type(Cypress.env('ADDRESS_6'))
             .blur()
 
-        // token ID
+        // input token ID-8
         cy.get('input[type="text"][placeholder="0"]')
             .clear()
             .type('8')
 
-        // click 
+        // click Forever button
         cy.get('button').contains('Forever').click()
 
         cy.get('button').should('not.be.disabled').contains('Approve').click()
         cy.wait(1000)
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Approve')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -114,7 +114,7 @@ describe('burn from - 7', () => {
             .should('not.be.disabled')
             .click()
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Burn')
             .get('input[type="password"][placeholder="Enter Password"]')
@@ -162,7 +162,7 @@ describe('revoke - 8', () => {
             .should('not.be.disabled')
             .click()
 
-        // mnemonic 인증
+        // verification with mnemonic
         cy.wait(1000)
         cy.contains('div', 'Revoke').should('be.visible')
             .get('input[type="password"][placeholder="Enter Password"]')

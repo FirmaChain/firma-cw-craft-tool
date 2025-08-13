@@ -4,18 +4,19 @@ describe('CW721 Mint-mnemonic', () => {
   it('NFT mint 1-9', () => {
     cy.visit(Cypress.env('URL') + '/cw721/execute')
     cy.loginWithMnemonic(Cypress.env('MNEMONIC_5'), Cypress.env('PASSWORD'))
-    // execute page 로 이동
+    // go to execute page
     cy.visit(Cypress.env('URL') + '/cw721/execute')
 
     cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
 
-    // mint - 드롭다운에서 Mint 선택
+    // select Mint from dropdown
     cy.get('span[class="typo"]').contains('Select').click()
     cy.wait(1000)
 
     cy.get('[role="option"]').contains('Mint').click()
     cy.wait(1000)
 
+    // input wallet address to receive NFTs
     cy.get('input[type="string"][placeholder="Input wallet address"]')
       .clear()
       .type(Cypress.env('ADDRESS_5'))
@@ -34,7 +35,7 @@ describe('CW721 Mint-mnemonic', () => {
         .clear()
         .type(nft.metadataUri)
 
-      // 마지막이 아니면 Add 버튼 클릭
+      // if not the last one, click Add button
       if (index < nftData.length - 1) {
         cy.get('span').contains('Add').click()
       }
@@ -45,7 +46,7 @@ describe('CW721 Mint-mnemonic', () => {
       .should('not.be.disabled', { timeout: 1000000 })
       .click()
 
-    // mnemonic 인증
+    // verification mnemonic
     cy.wait(1000)
     cy.contains('div', 'Mint')
     .get('input[type="password"][placeholder="Enter Password"]')
@@ -57,24 +58,24 @@ describe('CW721 Mint-mnemonic', () => {
     cy.get('button').contains('div', 'Confirm').click()
 
     cy.wait(10000)
-    //Go to My NFT Details 로 이동
+    //go to My NFT Details
     cy.get('button').contains('Go to My NFT Details').should('be.visible').parent().click()
 
   })
 
- // all approve & revoke를 위해 추가 민팅
+ // all approve & revoke - additional mint
   it('additional NFT mint', () => {
     cy.visit(Cypress.env('URL') + '/cw721/execute')
     cy.loginWithMnemonic(Cypress.env('MNEMONIC_5'), Cypress.env('PASSWORD'))
 
     cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
 
-    // execute page 로 이동
+    // go to execute page
     cy.visit(Cypress.env('URL') + '/cw721/execute')
 
     cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
 
-    // mint - 드롭다운에서 Mint 선택
+    // select Mint from dropdown
     cy.get('span[class="typo"]').contains('Select').click()
     cy.wait(1000)
 
@@ -85,7 +86,7 @@ describe('CW721 Mint-mnemonic', () => {
       .clear()
       .type(Cypress.env('ADDRESS_5'))
 
-    // 원하는 번호의 NFT 생성
+    // input the desired NFT ID and metadata URI
     const nftData = [
       { NFT_ID: '11', metadataUri: Cypress.env('IMAGE_URL') },
       { NFT_ID: '12', metadataUri: Cypress.env('IMAGE_URL') },
@@ -103,7 +104,7 @@ describe('CW721 Mint-mnemonic', () => {
         .clear()
         .type(nft.metadataUri)
 
-      // 마지막이 아니면 Add 버튼 클릭
+      // if not the last one, click Add button
       if (index < nftData.length - 1) {
         cy.get('span').contains('Add').click()
       }
@@ -114,7 +115,7 @@ describe('CW721 Mint-mnemonic', () => {
       .should('not.be.disabled')
       .click()
 
-   // mnemonic 인증
+   // verification with mnemonic
    cy.wait(1000)
    cy.contains('div', 'Mint')
    .get('input[type="password"][placeholder="Enter Password"]')
@@ -126,7 +127,7 @@ describe('CW721 Mint-mnemonic', () => {
    cy.get('button').contains('div', 'Confirm').click()
 
    cy.wait(10000)
-   //Go to My NFT Details 로 이동
+   //go to My NFT Details
    cy.get('button').contains('Go to My NFT Details').should('be.visible').parent().click()
 
   })
