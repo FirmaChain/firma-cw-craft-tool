@@ -8,37 +8,48 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+// TypeScript declarations for custom commands
+declare namespace Cypress {
+  interface Chainable {
+    loginWithMnemonic(mnemonic: string, password: string): Chainable<JQuery<HTMLElement>>
+    searchAndSelectToken(tokenAddress: string): Chainable<JQuery<HTMLElement>>
+    searchAndSelectNFT_cw721(NFT_CONTRACT_ADDRESS: string): Chainable<JQuery<HTMLElement>>
+    walletConnectViaQR(): Chainable<JQuery<HTMLElement>>
+    QR_verification(): Chainable<JQuery<HTMLElement>>
+  }
+}
+
 // Custom command for login with mnemonic
-Cypress.Commands.add('loginWithMnemonic', (mnemonic, password) => {
-  // 매개변수 검증
+Cypress.Commands.add('loginWithMnemonic', (mnemonic: string, password: string) => {
+  // Parameter validation
   if (!password) {
     throw new Error(`PASSWORD is ${password}! Check environment variables.`)
   }
   
-  // Connect Wallet 버튼 클릭
+  // Click the Connect Wallet button
   cy.contains('Connect Wallet').click()
   cy.wait(1000)
-  // Mnemonic 입력란에 니모닉 값 입력
+  // Enter mnemonic value in the mnemonic input field
   cy.get('textarea[placeholder="Enter Mnemonic"]')
     .clear()
     .type(mnemonic)
   
-  // 첫 번째 비밀번호 입력란
+  // First password input field
   cy.get('input[type="password"]').eq(0)
     .clear()
     .type(password)
   
-  // 두 번째 비밀번호 입력란 (확인용)
+  // Second password input field (for confirmation)
   cy.get('input[type="password"]').eq(1)
     .clear()
     .type(password)
 
-  // 로그인 버튼 클릭
+  // Click the Login button
   cy.get('button').contains('Login').click()
 })
 
-//search and select CW20 token
-Cypress.Commands.add('searchAndSelectToken', (tokenAddress) => {
+// Search and select CW20 token
+Cypress.Commands.add('searchAndSelectToken', (tokenAddress: string) => {
   cy.get('input[type="text"][placeholder="Search by Token Name / Symbol / Label / Address"]')
   .clear()
   .type(tokenAddress)
@@ -49,7 +60,8 @@ Cypress.Commands.add('searchAndSelectToken', (tokenAddress) => {
   .click()
 })
 
-Cypress.Commands.add('searchAndSelectNFT_cw721', (NFT_CONTRACT_ADDRESS) => {
+// Search and select CW721 NFT
+Cypress.Commands.add('searchAndSelectNFT_cw721', (NFT_CONTRACT_ADDRESS: string) => {
   cy.get('input[type="text"][placeholder="Search by NFT Contract Name / Symbol / Label / Address"]')
   .clear()
   .type(NFT_CONTRACT_ADDRESS)
@@ -60,29 +72,29 @@ Cypress.Commands.add('searchAndSelectNFT_cw721', (NFT_CONTRACT_ADDRESS) => {
   .click()
 })
 
-//QR - wallet connect
+// QR - wallet connect
 Cypress.Commands.add('walletConnectViaQR', () => {
 
   cy.intercept('GET', '**/connect/requests/**').as('connectStatus')
     
-  // 페이지 방문 및 지갑 연결 시작
+  // Visit the page and start wallet connection
   cy.visit('https://craft-cw-testnet.firmachain.dev/instantiate')
   cy.contains('Connect Wallet').click()
   
-  // QR 코드 표시 확인 및 스크린샷
+  // Check QR code display and take screenshot
   cy.get('#react-qrcode-logo', { timeout: 10000 })
     .should('be.visible')
   
-  // 수동 스캔 안내
+  // Manual scan guide
   cy.log('📱 QR Code is displayed! Please scan with your mobile wallet')
   cy.log('⏳ Test will wait for connection approval...')
   
-  // 연결 성공을 기다림 (간단한 방법)
+  // Wait for connection success (simple way)
   cy.wait('@connectStatus', { timeout: 120000 }).then((interception) => {
     const response = interception.response.body
     cy.log('📡 First API response:', response)
     
-    // 성공 여부 체크
+    // Check if connection is successful
     if (response.code === 0 && 
         response.message === "success" && 
         response.result?.status === "1") {
@@ -94,7 +106,7 @@ Cypress.Commands.add('walletConnectViaQR', () => {
     } else {
       cy.log('⏳ First check shows pending, continuing to wait...')
       
-      // 두 번째 시도
+      // Second attempt
       cy.wait('@connectStatus', { timeout: 60000 }).then((interception2) => {
         const response2 = interception2.response.body
         cy.log('📡 Second API response:', response2)
@@ -107,29 +119,28 @@ Cypress.Commands.add('walletConnectViaQR', () => {
     }
   })
   
-  // 연결 완료 후 UI 변화 확인
-  // "Connect to Mobile" 타이틀이 들어간 모달이 사라지는지 확인
+  // After connection, check UI changes
+  // Check if the modal with "Connect to Mobile" title disappears
   cy.get('body', { timeout: 30000 }).should('not.contain', 'Connect to Mobile')
   cy.log('✅ Connect Wallet button disappeared - connection successful!')
 })
 
 
-
-//execute qr verification
+// Execute QR verification
 Cypress.Commands.add('QR_verification', () => {
 
   //cy.intercept('GET', '**/connect/requests/**').as('connectStatus')
     
-  // 수동 스캔 안내
+  // Manual scan guide
   cy.log('📱 QR Code is displayed! Please scan with your mobile wallet')
   cy.log('⏳ Test will wait for connection approval...')
   
-  // 연결 성공을 기다림 (간단한 방법)
+  // Wait for connection success (simple way)
   cy.wait('@connectStatus', { timeout: 120000 }).then((interception) => {
     const response = interception.response.body
     cy.log('📡 First API response:', response)
     
-    // 성공 여부 체크
+    // Check if connection is successful
     if (response.code === 0 && 
         response.message === "success" && 
         response.result?.status === "1") {
@@ -141,7 +152,7 @@ Cypress.Commands.add('QR_verification', () => {
     } else {
       cy.log('⏳ First check shows pending, continuing to wait...')
       
-      // 두 번째 시도
+      // Second attempt
       cy.wait('@connectStatus', { timeout: 600000 }).then((interception2) => {
         const response2 = interception2.response.body
         cy.log('📡 Second API response:', response2)
@@ -154,8 +165,8 @@ Cypress.Commands.add('QR_verification', () => {
     }
   })
   
-  // 연결 완료 후 UI 변화 확인
-  // "Connect to Mobile" 타이틀이 들어간 모달이 사라지는지 확인
+  // After connection, check UI changes
+  // Check if the modal with "Connect to Mobile" title disappears
   cy.get('body', { timeout: 30000 }).should('not.contain', 'Connect to Mobile')
   cy.log('✅ Connect Wallet button disappeared - connection successful!')
 })
