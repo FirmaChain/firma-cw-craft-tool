@@ -180,7 +180,7 @@ const MoreInfo = () => {
 
     const [ref, { width }] = useMeasure();
 
-    const descRef = useRef<HTMLDivElement>();
+    const descRef = useRef<HTMLDivElement>(null);
     const [needClamp, setNeedClamp] = useState(false);
     const [isClamped, setIsClamped] = useState(true);
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import VariableInput from './variableInput';
 import useFormStore from '@/store/formStore';
 import Icons from '../icons';

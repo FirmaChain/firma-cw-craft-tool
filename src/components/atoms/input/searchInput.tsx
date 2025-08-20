@@ -121,7 +121,7 @@ const SearchInput2 = ({
 }: InputProps) => {
     const [isFocus, setIsFocus] = useState(false);
 
-    const inputRef = useRef<HTMLInputElement>();
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let inputValue = event.currentTarget.value.replace(DEFAULT_INPUT_REGEX, '');

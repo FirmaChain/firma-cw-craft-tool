@@ -148,6 +148,10 @@ const UpdateLogo = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            url: marketingLogoUrl
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -156,9 +160,8 @@ const UpdateLogo = () => {
             txParams: {
                 type: 'cw20',
                 contract: contractAddress,
-                msg: {
-                    url: marketingLogoUrl
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 fctAmount: fctBalance,

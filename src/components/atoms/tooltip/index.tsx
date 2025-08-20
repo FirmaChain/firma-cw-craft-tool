@@ -1,5 +1,6 @@
 import { TOOLTIP_ID } from '@/constants/tooltip';
 import Icons from '../icons';
+import { JSX } from 'react';
 
 const IconTooltip = ({
     size = '12px',

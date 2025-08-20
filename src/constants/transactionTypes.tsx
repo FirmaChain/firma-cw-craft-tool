@@ -1,3 +1,9 @@
+export const INSTANTIATE_CONTRACT = {
+    key: 'instantiate_contract',
+    value: 'InstantiateContract'
+};
+
+//? For CW20 TX types, may be wrong
 export const MINT = {
     key: 'mint',
     value: 'Mint'
@@ -49,6 +55,7 @@ export const UPLOAD_LOGO = {
 };
 
 export const CW20_TRANSACTION_TYPES = [
+    INSTANTIATE_CONTRACT,
     MINT,
     TRANSFER,
     TRANSFER_FROM,
@@ -108,6 +115,7 @@ export const UPDATE_OWNERSHIP = {
 };
 
 export const CW721_TRANSACTION_TYPES = [
+    INSTANTIATE_CONTRACT,
     MINT,
     BURN,
     TRANSFER_NFT,

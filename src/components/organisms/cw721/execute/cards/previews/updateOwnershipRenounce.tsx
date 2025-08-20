@@ -113,6 +113,8 @@ const UpdateOwnershipRenouncePreview = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = { update: 'renounce_ownership' };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -120,7 +122,8 @@ const UpdateOwnershipRenouncePreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: { update: 'renounce_ownership' }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 fctAmount: fctBalance,

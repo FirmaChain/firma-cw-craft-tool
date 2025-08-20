@@ -365,7 +365,9 @@ const TransferFromPreview = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: convertTransferList
+                msg: convertTransferList,
+                totalLength: JSON.stringify(convertTransferList).length,
+                walletLength: convertTransferList.length
             },
             contentParams: {
                 symbol: tokenInfo.symbol,

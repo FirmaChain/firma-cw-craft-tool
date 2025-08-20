@@ -337,12 +337,11 @@ const useFirmaSDKInternal = () => {
             fee: getFeesFromGas(estimatedGas)
         });
 
-        const { rawLog } = JSON.parse(JSON.stringify(result));
-        const parsedLogs = JSON.parse(rawLog)[0];
-        const contractAddress = parsedLogs.events[0].attributes[0].value;
+        const instantiateResult = result.events.find((x) => x.type === 'instantiate');
+        const addressInfo = instantiateResult.attributes.find((v) => v.key === '_contract_address');
 
         return {
-            contractAddress,
+            contractAddress: addressInfo.value,
             transactionHash: result.transactionHash,
             code: result.code
         };

@@ -644,11 +644,11 @@ const AutoCompleteBox = ({
         onClickContract(address);
     };
 
-    const pinRef = useRef<HTMLDivElement>();
-    const nameRef = useRef<HTMLDivElement>();
-    const symbolRef = useRef<HTMLDivElement>();
-    const labelRef = useRef<HTMLDivElement>();
-    const addrRef = useRef<HTMLDivElement>();
+    const pinRef = useRef<HTMLDivElement>(null);
+    const nameRef = useRef<HTMLDivElement>(null);
+    const symbolRef = useRef<HTMLDivElement>(null);
+    const labelRef = useRef<HTMLDivElement>(null);
+    const addrRef = useRef<HTMLDivElement>(null);
 
     const handleChangeFilter = (filterType: LocalFilterType) => {
         scrollByJSRef.current = true;
@@ -662,7 +662,7 @@ const AutoCompleteBox = ({
     };
 
     const sectionRefs = useRef([]);
-    const scrollBaseRef = useRef<HTMLDivElement>();
+    const scrollBaseRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -1042,7 +1042,7 @@ const SearchInputWithButton2 = React.forwardRef(
 
         const [isVisible, setVisible] = useState(false);
 
-        const inputRef = useRef<HTMLInputElement>();
+        const inputRef = useRef<HTMLInputElement>(null);
 
         const divRef = useRef(null);
 

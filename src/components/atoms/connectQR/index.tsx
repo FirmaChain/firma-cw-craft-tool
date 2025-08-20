@@ -100,7 +100,7 @@ const ConnectQR = ({ qrSize, qrcode, expireDate, isActive, setTimerText, onExpir
 };
 
 const useInterval = (callback: () => void, delay: number | null) => {
-    const savedCallback = useRef<() => void>();
+    const savedCallback = useRef<() => void>(() => {});
 
     useEffect(() => {
         savedCallback.current = callback;

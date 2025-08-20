@@ -181,6 +181,12 @@ const UpdateMarketingPreview = () => {
             ];
         }
 
+        const msg = {
+            project: isBasic ? '' : finalProejct,
+            marketing: finalAddress === '' ? address : finalAddress,
+            description: finalDesc
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -189,11 +195,8 @@ const UpdateMarketingPreview = () => {
             txParams: {
                 contract: contractAddress,
                 type: 'cw20',
-                msg: {
-                    project: isBasic ? '' : finalProejct,
-                    marketing: finalAddress === '' ? address : finalAddress,
-                    description: finalDesc
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 fctAmount: fctBalance,

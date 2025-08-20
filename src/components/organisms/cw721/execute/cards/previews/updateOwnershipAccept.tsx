@@ -232,6 +232,10 @@ const UpdateOwnershipAccept = () => {
 
         const feeAmount = CRAFT_CONFIGS.DEFAULT_FEE;
 
+        const msg = {
+            key: 'accept_ownership'
+        };
+
         const params = {
             modalType: 'EXECUTES' as ModalType,
             header: {
@@ -239,9 +243,8 @@ const UpdateOwnershipAccept = () => {
             },
             txParams: {
                 contract: contractAddress,
-                msg: {
-                    key: 'accept_ownership'
-                }
+                msg,
+                totalLength: JSON.stringify(msg).length
             },
             contentParams: {
                 symbol: nftContractInfo.symbol,

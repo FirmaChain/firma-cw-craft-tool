@@ -87,25 +87,45 @@ export const shortenAddress = (address: string, startLength: number = 6, endLeng
 };
 
 export const determineMsgTypeAndSpender = (messages: IMsg[]): { type: string; sender: string }[] => {
-    return messages.map((item) => {
-        const msgKey = Object.keys(item.msg)[0];
-        const messageType =
-            CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey) || CW721_TRANSACTION_TYPES.find((type) => type.key === msgKey);
-        const sender = item.sender;
+    //! Since v0.3.0, instantiateContract needs to be determined by @type field.
 
-        return {
-            type: messageType ? messageType.value : 'Unknown',
-            sender: sender
-        };
-    });
+    try {
+        return messages.map((item) => {
+            const msgKey = Object.keys(item.msg)[0];
+
+            let messageType =
+                CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey) || CW721_TRANSACTION_TYPES.find((type) => type.key === msgKey);
+
+            if (!messageType) {
+                //! if type is not found, check @type field
+                const type = item['@type'];
+                if (type === '/cosmwasm.wasm.v1.MsgInstantiateContract') {
+                    messageType = CW20_TRANSACTION_TYPES.find((type) => type.key === 'instantiate_contract');
+                }
+            }
+
+            const sender = item.sender;
+
+            return {
+                type: messageType ? messageType.value : 'Unknown',
+                sender: sender
+            };
+        });
+    } catch (error) {
+        return [];
+    }
 };
 
 export const determineMsgType = (data: IMsg[]): string[] => {
-    return data.map((item) => {
-        const msgKey = Object.keys(item.msg)[0];
-        const messageType = CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey);
-        return messageType ? messageType.value : 'Unknown';
-    });
+    try {
+        return data.map((item) => {
+            const msgKey = Object.keys(item.msg)[0];
+            const messageType = CW20_TRANSACTION_TYPES.find((type) => type.key === msgKey);
+            return messageType ? messageType.value : 'Unknown';
+        });
+    } catch (error) {
+        return [];
+    }
 };
 
 export const compareStringsAsNumbers = (str1: string, str2: string) => {

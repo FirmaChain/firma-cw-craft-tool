@@ -151,7 +151,7 @@ const VariableInput = ({
 
     const [isFocus, setIsFocus] = useState(false);
 
-    const inputRef = useRef<HTMLInputElement>();
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const valueLength = typeof value === 'object' ? 0 : String(value).length;
     const isError = errorMessage.length > 0;
