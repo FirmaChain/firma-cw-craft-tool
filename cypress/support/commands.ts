@@ -15,7 +15,7 @@ declare namespace Cypress {
     searchAndSelectToken(tokenAddress: string): Chainable<JQuery<HTMLElement>>
     searchAndSelectNFT_cw721(NFT_CONTRACT_ADDRESS: string): Chainable<JQuery<HTMLElement>>
     walletConnectViaQR(): Chainable<JQuery<HTMLElement>>
-    QR_verification(): Chainable<JQuery<HTMLElement>>
+    QR_authentication(): Chainable<JQuery<HTMLElement>>
   }
 }
 
@@ -127,7 +127,7 @@ Cypress.Commands.add('walletConnectViaQR', () => {
 
 
 // Execute QR verification
-Cypress.Commands.add('QR_verification', () => {
+Cypress.Commands.add('QR_authentication', () => {
 
   //cy.intercept('GET', '**/connect/requests/**').as('connectStatus')
     
