@@ -29,7 +29,7 @@ describe('CW721 Approv block', () => {
             .type('1')
 
         //set block height(BLOCK_HEIGHT + 100)
-        const blockHeight = Number(Cypress.env('BLOCK_HEIGHT').replace(/,/g, '')) + 100
+        const blockHeight = (Number(Cypress.env('BLOCK_HEIGHT').replace(/,/g, '')) + 100).toString()
         cy.get('input[type="text"][placeholder="ex) 7216240"]')
             .clear()
             .type(blockHeight)

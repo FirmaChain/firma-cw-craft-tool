@@ -1,5 +1,3 @@
-
-
 describe('cw721 accept ownership', () => {
     it('cw721 accept ownership', () => {
         cy.visit(Cypress.env('URL') + '/cw721/execute')
