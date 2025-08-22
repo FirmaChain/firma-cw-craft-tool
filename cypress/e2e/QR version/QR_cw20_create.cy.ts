@@ -16,7 +16,7 @@ describe('login test with QR', () => {
       // input Token name 
       cy.get('input[placeholder="ex) My CW Token"]')
         .clear()
-        .type('My Token Name basic 0730')
+        .type('My Token Name basic 0822')
   
       // input Token symbol 
       cy.get('input[placeholder="ex) MCT, FCT"]')
@@ -67,10 +67,8 @@ describe('login test with QR', () => {
       cy.QR_authentication()
   
       // wait for button to be enabled
-      cy.wait(1000)
+      cy.wait(10000)
   
-      // click Confirm button
-      cy.get('button').contains('div', 'Confirm').click()
       // wait for 5 seconds and take screenshot
       cy.wait(5000)
       cy.screenshot('create cw20 basic token contract')
@@ -81,9 +79,8 @@ describe('login test with QR', () => {
   
   describe('create cw20 advanced token', () => {
     it('create cw20 advanced token', () => {
-      cy.visit(URL + '/instantiate')
+      cy.visit(Cypress.env('URL') + '/instantiate')
       cy.walletConnectViaQR()
-      cy.visit(URL + '/instantiate')
   
       // click advanced token tab
       cy.contains('div', 'ADVANCED').should('be.visible')

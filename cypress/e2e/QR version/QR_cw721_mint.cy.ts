@@ -1,9 +1,8 @@
 describe('CW721 Mint-mnemonic', () => {
 
     it('NFT mint 1-9', () => {
-      cy.visit(Cypress.env('URL') + '/cw721/execute')
       cy.walletConnectViaQR()
-
+      cy.visit(Cypress.env('URL') + '/cw721/execute')
       // go to execute page
       cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
   
@@ -17,7 +16,7 @@ describe('CW721 Mint-mnemonic', () => {
       // input wallet address to receive NFTs
       cy.get('input[type="string"][placeholder="Input wallet address"]')
         .clear()
-        .type(Cypress.env('ADDRESS_5'))
+        .type(Cypress.env('ADDRESS_30'))
   
       const nftData = Array.from({ length: 8 }, (_, index) => ({
         NFT_ID: String(index + 1),
@@ -58,12 +57,7 @@ describe('CW721 Mint-mnemonic', () => {
   
    // all approve & revoke - additional mint
     it('additional NFT mint', () => {
-      cy.visit(Cypress.env('URL') + '/cw721/execute')
       cy.walletConnectViaQR()
-  
-      cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
-  
-      // go to execute page
       cy.visit(Cypress.env('URL') + '/cw721/execute')
   
       cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
@@ -77,7 +71,7 @@ describe('CW721 Mint-mnemonic', () => {
   
       cy.get('input[type="string"][placeholder="Input wallet address"]').eq(0)
         .clear()
-        .type(Cypress.env('ADDRESS_5'))
+        .type(Cypress.env('ADDRESS_30'))
   
       // input the desired NFT ID and metadata URI
       const nftData = [

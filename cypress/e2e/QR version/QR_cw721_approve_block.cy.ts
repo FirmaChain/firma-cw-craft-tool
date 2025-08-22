@@ -8,7 +8,6 @@
 
 describe('CW721 Approv block', () => {
     it('cw721 approvev block', () => {
-        cy.visit(Cypress.env('URL') + '/cw721/execute')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/cw721/execute')
 
@@ -43,7 +42,7 @@ describe('CW721 Approv block', () => {
         //QR authentication
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(20000)
         cy.screenshot('cw721-approve-block-transaction-completed')
 
         //close the modal 
@@ -74,7 +73,7 @@ describe('CW721 Approv block', () => {
         //QR authentication
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(20000)
         cy.screenshot('cw721-approve-block-transaction-completed')
 
         //close the modal 
@@ -105,7 +104,7 @@ describe('CW721 Approv block', () => {
         //QR authentication
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(20000)
         cy.screenshot('cw721-approve-block-transaction-completed')
 
         //close the modal 
@@ -135,7 +134,7 @@ describe('transfer form - 1', () => {
 
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
-            .type(Cypress.env('ADDRESS_6'))
+            .type(Cypress.env('ADDRESS_20'))
 
         cy.get('input[type="string"][placeholder="Input the numbers : You can input multiple numbers separated by commas (,)"]')
             .clear()
@@ -186,7 +185,7 @@ describe('revoke - 2', () => {
         //QR authentication
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(20000)
         cy.screenshot('cw721-revoke-transaction-completed')
     })
 })

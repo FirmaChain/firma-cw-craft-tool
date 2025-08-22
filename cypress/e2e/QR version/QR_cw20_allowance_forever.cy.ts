@@ -1,7 +1,6 @@
 describe('cw20 allowance_forever', () => {
   
   it('cw20 decrease allowance_forever', () => {
-    cy.visit(Cypress.env('URL') + '/execute');
     cy.walletConnectViaQR()
     cy.visit(Cypress.env('URL') + '/execute')
 
@@ -17,7 +16,7 @@ describe('cw20 allowance_forever', () => {
     cy.get('input[type="string"][placeholder="Input Wallet Address"]')
       .eq(0)
       .clear()
-      .type(Cypress.env('ADDRESS_6'));
+      .type(Cypress.env('ADDRESS_20'));
 
     cy.get('input[type="text"][placeholder="0"]')
       .clear()
@@ -36,11 +35,10 @@ describe('cw20 allowance_forever', () => {
 
     // wait for 10 seconds and capture screen
     cy.wait(10000);
-    cy.screenshot('increase allowance_forever-transaction-completed');
+    cy.screenshot('increase allowance-forever-transaction-completed');
   });
 
   it('cw20 burn from', () => {
-    cy.visit(Cypress.env('URL') + '/execute');
     cy.walletConnectViaQR()
     cy.visit(Cypress.env('URL') + '/execute')
 
@@ -56,7 +54,7 @@ describe('cw20 allowance_forever', () => {
     cy.get('input[type="string"][placeholder="Input Wallet Address"]')
       .eq(0)
       .clear()
-      .type(Cypress.env('ADDRESS_5'));
+      .type(Cypress.env('ADDRESS_30'));
 
     cy.get('input[type="text"][placeholder="0"]')
       .clear()
@@ -75,7 +73,6 @@ describe('cw20 allowance_forever', () => {
   });
 
   it('cw20 decrease allowance_forever', () => {
-    cy.visit(Cypress.env('URL') + '/execute');
     cy.walletConnectViaQR()
     cy.visit(Cypress.env('URL') + '/execute')
     
@@ -91,7 +88,7 @@ describe('cw20 allowance_forever', () => {
     cy.get('input[type="string"][placeholder="Input Wallet Address"]')
       .eq(0)
       .clear()
-      .type(Cypress.env('ADDRESS_6'));
+      .type(Cypress.env('ADDRESS_20'));
 
     cy.get('input[type="text"][placeholder="0"]')
       .clear()

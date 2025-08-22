@@ -8,7 +8,6 @@
 
 describe('CW721 Approv time', () => {
     it('cw721 approvev time', () => {
-        cy.visit(Cypress.env('URL') + '/cw721/execute')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/cw721/execute')
 
@@ -124,10 +123,10 @@ describe('CW721 Approv time', () => {
             .click()
 
         // QR authentication
-        cy.wait(1000)
+        cy.wait(10000)
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(20000)
         cy.screenshot('cw721-approve-time-transaction-completed')
 
     })
@@ -136,9 +135,6 @@ describe('CW721 Approv time', () => {
 
 describe('burn from - 4', () => {
     it('burn from - 4', () => {
-
-        cy.visit(Cypress.env('URL') + '/cw721/execute')
-        //login as the wallet that approved token ID-4
         cy.walletConnectViaQR() //input the wallet address to be approved nft id 4
         cy.visit(Cypress.env('URL') + '/cw721/execute')
 
@@ -172,10 +168,7 @@ describe('burn from - 4', () => {
 
 describe('revoke -5', () => {
     it('revoke - 5', () => {
-
-        cy.visit(Cypress.env('URL') + '/cw721/execute')
-        //login as the wallet that approved token ID-5
-        cy.walletConnectViaQR() //input the wallet address to be approved nft id 5
+        cy.walletConnectViaQR() 
         cy.visit(Cypress.env('URL') + '/cw721/execute')
 
         cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
@@ -204,7 +197,7 @@ describe('revoke -5', () => {
         cy.wait(1000)
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(20000)
         cy.screenshot('cw721-revoke-transaction-completed')
 
     })

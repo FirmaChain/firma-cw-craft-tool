@@ -8,8 +8,8 @@
 describe('CW721 Approv forever', () => {
 
     it('cw721 approve-forever', () => {
-        cy.visit(Cypress.env('URL') + '/cw721/execute')
         cy.walletConnectViaQR()
+        cy.visit(Cypress.env('URL') + '/cw721/execute')
 
         // search on execute page
         cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
@@ -22,7 +22,7 @@ describe('CW721 Approv forever', () => {
 
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
-            .type(Cypress.env('ADDRESS_6'))
+            .type(Cypress.env('ADDRESS_20'))
 
         // input token ID-7
         cy.get('input[type="text"][placeholder="0"]')
@@ -39,7 +39,7 @@ describe('CW721 Approv forever', () => {
         cy.wait(1000)
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(15000)
         cy.screenshot('cw721-approve-forever-transaction-completed')
 
         cy.get('button').contains('Confirm').click()
@@ -47,7 +47,7 @@ describe('CW721 Approv forever', () => {
         // input wallet address to be approved token ID-8
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
-            .type(Cypress.env('ADDRESS_6'))
+            .type(Cypress.env('ADDRESS_20'))
             .blur()
 
         // input token ID-8
@@ -65,7 +65,7 @@ describe('CW721 Approv forever', () => {
         cy.wait(1000)
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(15000)
         cy.screenshot('cw721-approve-forever-transaction-completed')
 
     })
@@ -73,9 +73,8 @@ describe('CW721 Approv forever', () => {
 
 describe('burn from - 7', () => {
     it('burn from - 7', () => {
-
+        cy.walletConnectViaQR() //login with the wallet address to be approved nft id 7
         cy.visit(Cypress.env('URL') + '/cw721/execute')
-        cy.walletConnectViaQR() //input the wallet address to be approved nft id 7
         // search on execute page
         cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
 
@@ -98,7 +97,7 @@ describe('burn from - 7', () => {
         cy.wait(1000)
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(15000)
         cy.screenshot('cw721-burn-transaction-completed')
 
     })
@@ -107,9 +106,8 @@ describe('burn from - 7', () => {
 
 describe('revoke - 8', () => {
     it('revoke - 8', () => {
-
+        cy.walletConnectViaQR() 
         cy.visit(Cypress.env('URL') + '/cw721/execute')
-        cy.walletConnectViaQR() //input the wallet address to be approved nft id 8
         
         // search on execute page
         cy.searchAndSelectNFT_cw721(Cypress.env('CW721_CONTRACT_ADDRESS'))
@@ -122,7 +120,7 @@ describe('revoke - 8', () => {
 
         cy.get('input[type="string"][placeholder="Input Wallet Address"]')
             .clear()
-            .type(Cypress.env('ADDRESS_6'))
+            .type(Cypress.env('ADDRESS_20'))
             .blur()
 
         cy.get('input[type="text"][placeholder="0"]')
@@ -138,7 +136,7 @@ describe('revoke - 8', () => {
         cy.wait(1000)
         cy.QR_authentication()
 
-        cy.wait(10000)
+        cy.wait(15000)
         cy.screenshot('cw721-revoke-transaction-completed')
 
     })

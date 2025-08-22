@@ -78,7 +78,7 @@ Cypress.Commands.add('walletConnectViaQR', () => {
   cy.intercept('GET', '**/connect/requests/**').as('connectStatus')
     
   // Visit the page and start wallet connection
-  cy.visit('https://craft-cw-testnet.firmachain.dev/instantiate')
+  cy.visit('https://craft.firmachain.io/instantiate')
   cy.contains('Connect Wallet').click()
   
   // Check QR code display and take screenshot

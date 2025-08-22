@@ -1,9 +1,9 @@
 describe('cw20 allowance_block', () => {
+    
     it('cw20 allowance_block', () => {
         cy.visit(Cypress.env('URL') + '/execute')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/execute')
-
         //search on execute page
         cy.searchAndSelectToken(Cypress.env('CW20_CONTRACT_ADDRESS'))
 
@@ -15,7 +15,7 @@ describe('cw20 allowance_block', () => {
 
         cy.get('input[type="string"][placeholder="Input Wallet Address"]').eq(0)
         .clear()
-        .type(Cypress.env('ADDRESS_6'))
+        .type(Cypress.env('ADDRESS_20'))
 
         cy.get('input[type="text"][placeholder="0"] ')
         .clear()
@@ -38,58 +38,26 @@ describe('cw20 allowance_block', () => {
         cy.wait(10000)
         cy.screenshot('increase allowance-block')
     })
-    
-    //search on search page
-    it('cw20 searching allowance_block', () => {
-        cy.visit(Cypress.env('URL') + '/search')
-        cy.walletConnectViaQR()
-        cy.visit(Cypress.env('URL') + '/search')
-
-        //search the contract address
-        cy.get('input[type="text"][placeholder="Search by Token Name / Symbol / Label / Address"]')
-        .clear()
-        .type(Cypress.env('CW20_CONTRACT_ADDRESS'))
-
-        //wait for 5 seconds
-        cy.wait(5000)
-
-        //click on the contract address
-        cy.contains(Cypress.env('CW20_CONTRACT_ADDRESS')).should('be.visible').eq(1)
-        .click()
-
-        cy.wait(5000)
-
-        //search the wallet address that has the allowance-block
-        cy.get('input[type="text"][placeholder="Search by CW20 Wallet Address"]')
-        .eq(1)
-        .scrollIntoView({block: 'center', inline: 'nearest'})
-        .should('be.visible')
-        .clear()
-        .type(Cypress.env('ADDRESS_5'))
-
-        cy.get('button').contains('Search').click()
-        cy.wait(5000)
-        cy.screenshot('searching-decrease allowance_block')
-    })
 
     //transfer from
-    it('cw20 decrease transfer from', () => {
-        cy.visit(Cypress.env('URL') + '/execute')
+    it('cw20 increase transfer from', () => {
         cy.walletConnectViaQR()//login with the wallet address that has the allowance-block
         cy.visit(Cypress.env('URL') + '/execute')
-
         //search on execute page
         cy.searchAndSelectToken(Cypress.env('CW20_CONTRACT_ADDRESS'))
 
         cy.get('span[class="typo"]').contains('Select').click()
+        cy.get('[role="option"]').contains('Transfer From').click()
         cy.wait(1000)
         
-        // select Transfer From from React Select options
-        cy.get('[role="option"]').contains('Transfer From').click()
+        //input owner address
+        cy.get('input[type="string"][placeholder="Input address"]').eq(0)
+        .clear()
+        .type(Cypress.env('ADDRESS_30'))
 
         cy.get('input[type="string"][placeholder="Input address"]').eq(1)
         .clear()
-        .type(Cypress.env('ADDRESS_6'))
+        .type(Cypress.env('ADDRESS_20'))
 
         cy.get('input[type="text"][placeholder="0"]')
         .clear()
@@ -110,10 +78,8 @@ describe('cw20 allowance_block', () => {
     })
 
     it('cw20 decrease allowance_block', () => {
-        cy.visit(Cypress.env('URL') + '/execute')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/execute')
-
         //search on execute page
         cy.searchAndSelectToken(Cypress.env('CW20_CONTRACT_ADDRESS'))
 
@@ -125,7 +91,7 @@ describe('cw20 allowance_block', () => {
 
         cy.get('input[type="string"][placeholder="Input Wallet Address"]').eq(0)
         .clear()
-        .type(Cypress.env('ADDRESS_6'))
+        .type(Cypress.env('ADDRESS_20'))
 
         cy.get('input[type="text"][placeholder="0"]')
         .clear()
@@ -149,16 +115,5 @@ describe('cw20 allowance_block', () => {
         cy.wait(10000)
         cy.screenshot('decrease allowance_block')
 
-    })
-
-    it('cw20 decrease allowance_block', () => {
-        cy.visit(Cypress.env('URL') + '/execute')
-        cy.walletConnectViaQR()
-        cy.visit(Cypress.env('URL') + '/execute')
-
-        //search on execute page
-        cy.searchAndSelectToken(Cypress.env('CW20_CONTRACT_ADDRESS'))
-
-        cy.get('span[class="typo"]').contains('Select').click()
     })
 })

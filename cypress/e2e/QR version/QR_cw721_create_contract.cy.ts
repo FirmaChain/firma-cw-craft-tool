@@ -1,6 +1,5 @@
 describe('create cw721 basic contract', () => {
     it('create cw721 basic contract', () => {
-        cy.visit(Cypress.env('URL') + '/cw721/instantiate')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/cw721/instantiate')
 
@@ -35,7 +34,6 @@ describe('create cw721 basic contract', () => {
 
 describe('create cw721 advanced contract', () => {
     it('create cw721 advanced contract', () => {
-        cy.visit(Cypress.env('URL') + '/cw721/instantiate')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/cw721/instantiate')
 
@@ -57,12 +55,12 @@ describe('create cw721 advanced contract', () => {
         // input admin address 
         cy.contains('Admin Address').get('input[type="string"][placeholder="Input wallet Address"]').eq(0)
             .clear()
-            .type(Cypress.env('ADDRESS_5'))
+            .type(Cypress.env('ADDRESS_30'))
 
         // input minter address
         cy.get('input[type="string"][placeholder="Input wallet Address"]').eq(1)
             .clear()
-            .type(Cypress.env('ADDRESS_5'))
+            .type(Cypress.env('ADDRESS_30'))
 
         // input the contract label
         cy.get('input[placeholder="ex) Event reward contract"]')

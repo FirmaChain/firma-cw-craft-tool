@@ -1,7 +1,6 @@
 describe('cw20 allowance_time', () => {
 
     it('cw20 increase allowance_time', () => {
-        cy.visit(Cypress.env('URL') + '/execute')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/execute')
 
@@ -16,7 +15,7 @@ describe('cw20 allowance_time', () => {
 
         cy.get('input[type="string"][placeholder="Input Wallet Address"]').eq(0)
         .clear()
-        .type(Cypress.env('ADDRESS_6'))
+        .type(Cypress.env('ADDRESS_20'))
 
         cy.get('input[type="text"][placeholder="0"] ')
         .clear()
@@ -47,7 +46,6 @@ describe('cw20 allowance_time', () => {
     })
 
     it('cw20 burn from to check the allowance-time', () => {
-        cy.visit(Cypress.env('URL') + '/execute');
         cy.walletConnectViaQR();//login with the wallet address that has the allowance-time
         cy.visit(Cypress.env('URL') + '/execute');
 
@@ -64,7 +62,7 @@ describe('cw20 allowance_time', () => {
         // input wallet address
         cy.get('input[type="string"][placeholder="Input Wallet Address"]').eq(0)
             .clear()
-            .type(Cypress.env('ADDRESS_5'));
+            .type(Cypress.env('ADDRESS_30'));
 
         // input amount to burn
         cy.get('input[type="text"][placeholder="0"]')
@@ -85,9 +83,9 @@ describe('cw20 allowance_time', () => {
         cy.wait(10000);
         cy.screenshot('burn from-transaction-completed');
     });
+    
 
     it('cw20 decrease allowance_time', () => {
-        cy.visit(Cypress.env('URL') + '/execute')
         cy.walletConnectViaQR()
         cy.visit(Cypress.env('URL') + '/execute')
 
@@ -98,11 +96,11 @@ describe('cw20 allowance_time', () => {
         cy.wait(1000)
         
         // select Increase Allowance from React Select options
-        cy.get('[role="option"]').contains('Increase Allowance').click()
+        cy.get('[role="option"]').contains('Decrease Allowance').click()
 
         cy.get('input[type="string"][placeholder="Input Wallet Address"]').eq(0)
         .clear()
-        .type(Cypress.env('ADDRESS_6'))
+        .type(Cypress.env('ADDRESS_20'))
 
         cy.get('input[type="text"][placeholder="0"]')
         .clear()
@@ -117,7 +115,7 @@ describe('cw20 allowance_time', () => {
         .get('button').contains('button','Set').click()
 
         cy.wait(1000)
-        cy.get('button').contains('Increase Allowance').parent()
+        cy.get('button').contains('Decrease Allowance').parent()
         .should('not.be.disabled')
         .click()
 
@@ -128,7 +126,7 @@ describe('cw20 allowance_time', () => {
 
         // wait for 10 seconds and capture screen
         cy.wait(10000)
-        cy.screenshot('increase allowance_time-transaction-completed')
+        cy.screenshot('Decrease allowance_time-transaction-completed')
         
     })
 })
